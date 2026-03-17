@@ -100,6 +100,7 @@
     .audit-dot.auth{background:#ef4444}
     .audit-dot.key{background:#f59e0b}
     .audit-dot.gateway{background:#8b5cf6}
+    .audit-dot.blockchain{background:#f97316}
     .audit-dot.other{background:#9ca3af}
 
     /* Toast */
@@ -156,7 +157,12 @@
       <div class="stat-card">
         <div class="label">Server Status</div>
         <div class="value" style="font-size:24px" id="statStatus">—</div>
-        <div class="sub" id="statVersion">v3.0.0</div>
+        <div class="sub" id="statVersion">v4.0.0</div>
+      </div>
+      <div class="stat-card" id="blockchainCard">
+        <div class="label">Blockchain</div>
+        <div class="value" style="font-size:20px" id="statChain">—</div>
+        <div class="sub" id="statChainSub">Polygon status</div>
       </div>
     </div>
 
@@ -164,6 +170,7 @@
     <div class="tabs">
       <button class="tab active" onclick="switchTab('keys')">API Keys</button>
       <button class="tab" onclick="switchTab('audit')">Audit Log</button>
+      <button class="tab" onclick="switchTab('blockchain')">Blockchain</button>
     </div>
 
     <!-- API Keys Panel -->
@@ -200,6 +207,7 @@
             <option value="api_key_created">Key Created</option>
             <option value="gateway_intake">Gateway Intake</option>
             <option value="gateway_batch">Gateway Batch</option>
+            <option value="blockchain_registered">Blockchain Registered</option>
           </select>
         </div>
       </div>
@@ -217,6 +225,50 @@
         <button id="auditPrev" onclick="auditPage(-1)" disabled>Previous</button>
         <span id="auditInfo">Page 1</span>
         <button id="auditNext" onclick="auditPage(1)">Next</button>
+      </div>
+    </div>
+
+    <!-- Blockchain Panel -->
+    <div class="panel" id="panel-blockchain">
+      <div class="panel-header">
+        <h3>Blockchain — Polygon</h3>
+        <span class="badge" id="chainStatusBadge" style="font-size:12px">Checking...</span>
+      </div>
+      <div style="padding:24px" id="chainContent">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+          <div>
+            <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Network</div>
+            <div style="font-size:14px;font-weight:600" id="chainNetwork">—</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Contract</div>
+            <div style="font-size:12px;font-family:monospace;color:#7c3aed;word-break:break-all" id="chainContract">—</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Wallet</div>
+            <div style="font-size:12px;font-family:monospace;color:#7c3aed;word-break:break-all" id="chainWallet">—</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">On-Chain Docs</div>
+            <div style="font-size:24px;font-weight:800;color:#1e1b4b" id="chainDocs">—</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Balance</div>
+            <div style="font-size:14px;font-weight:600" id="chainBalance">—</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Explorer</div>
+            <a href="#" target="_blank" id="chainExplorer" style="font-size:13px;color:#7c3aed;text-decoration:none">View on Polygonscan</a>
+          </div>
+        </div>
+        <div id="chainOffline" style="display:none;text-align:center;padding:40px 0">
+          <div style="font-size:40px;margin-bottom:12px">🔗</div>
+          <div style="font-size:16px;font-weight:600;color:#374151;margin-bottom:8px">Blockchain Not Connected</div>
+          <div style="font-size:13px;color:#9ca3af;max-width:400px;margin:0 auto;line-height:1.6">
+            Set <code style="background:#f3f4f6;padding:2px 6px;border-radius:4px">POLYGON_PRIVATE_KEY</code> and
+            <code style="background:#f3f4f6;padding:2px 6px;border-radius:4px">POLYGON_CONTRACT</code> environment variables to enable on-chain document registration.
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -299,6 +351,34 @@ async function loadStats() {
   document.getElementById('statStatus').textContent = health.status === 'online' ? 'Online' : 'Offline';
   document.getElementById('statStatus').style.color = health.status === 'online' ? '#16a34a' : '#dc2626';
   document.getElementById('statVersion').textContent = 'v' + health.version;
+
+  // Blockchain stats
+  const bc = data.blockchain || {};
+  if (bc.connected) {
+    document.getElementById('statChain').textContent = 'Connected';
+    document.getElementById('statChain').style = 'font-size:20px;color:#16a34a;-webkit-text-fill-color:#16a34a';
+    document.getElementById('statChainSub').textContent = bc.network || 'Polygon';
+    document.getElementById('chainStatusBadge').textContent = 'Connected';
+    document.getElementById('chainStatusBadge').className = 'badge active';
+    document.getElementById('chainNetwork').textContent = bc.network || '—';
+    document.getElementById('chainContract').textContent = bc.contract || '—';
+    document.getElementById('chainWallet').textContent = bc.wallet || '—';
+    document.getElementById('chainDocs').textContent = (bc.totalDocuments || 0).toLocaleString();
+    document.getElementById('chainBalance').textContent = bc.balance || '—';
+    if (bc.explorer) {
+      document.getElementById('chainExplorer').href = bc.explorer;
+      document.getElementById('chainExplorer').textContent = 'View on Polygonscan';
+    }
+    document.getElementById('chainOffline').style.display = 'none';
+  } else {
+    document.getElementById('statChain').textContent = 'Off-Chain';
+    document.getElementById('statChain').style = 'font-size:20px;color:#f59e0b;-webkit-text-fill-color:#f59e0b';
+    document.getElementById('statChainSub').textContent = 'Not configured';
+    document.getElementById('chainStatusBadge').textContent = 'Offline';
+    document.getElementById('chainStatusBadge').className = 'badge inactive';
+    document.getElementById('chainContent').querySelector('div').style.display = 'none';
+    document.getElementById('chainOffline').style.display = 'block';
+  }
 }
 
 async function loadKeys() {
@@ -338,7 +418,8 @@ async function loadAudit() {
                        e.event.startsWith('verify') ? 'verify' :
                        e.event.startsWith('auth') ? 'auth' :
                        e.event.startsWith('api_key') ? 'key' :
-                       e.event.startsWith('gateway') ? 'gateway' : 'other';
+                       e.event.startsWith('gateway') ? 'gateway' :
+                       e.event.startsWith('blockchain') ? 'blockchain' : 'other';
       const details = typeof e.details === 'object' ? Object.entries(e.details).map(([k,v]) => `<span class="text-muted">${k}:</span> ${escHtml(String(v).substring(0, 40))}`).join(' &middot; ') : '';
       return `<tr>
         <td class="text-muted" style="white-space:nowrap">${time}</td>
@@ -365,6 +446,7 @@ function switchTab(tab) {
   document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
   document.getElementById('panel-' + tab).classList.add('active');
   if (tab === 'audit') { currentAuditPage = 0; loadAudit(); }
+  if (tab === 'blockchain') { loadStats(); }
 }
 
 // Create Key Modal

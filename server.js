@@ -1023,9 +1023,10 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'online',
     service: 'Vertifile',
-    version: '3.0.0',
+    version: '4.0.0',
     documents: stats.totalDocuments,
-    organizations: stats.totalOrganizations
+    organizations: stats.totalOrganizations,
+    blockchain: chain.isConnected() ? 'connected' : 'off-chain'
   });
 });
 
@@ -1033,73 +1034,104 @@ app.get('/api/health', (req, res) => {
 app.get('/api/docs', (req, res) => {
   res.json({
     service: 'Vertifile API',
-    version: '3.0.0',
+    version: '4.0.0',
+    description: 'Document protection and verification platform with blockchain anchoring',
+    security: {
+      authentication: 'API Key (X-API-Key header) or Admin Secret (X-Admin-Secret header)',
+      encryption: 'HMAC-SHA256 signatures, blind hashing (server never reads content)',
+      pvfProtection: ['Code obfuscation', 'Recipient binding', 'Screen capture detection', 'DevTools detection', 'Unique visual fingerprint per document'],
+      blockchain: 'Polygon (optional on-chain registration)'
+    },
     endpoints: {
-      'POST /api/create-pvf': {
-        description: 'Create a PVF file from an uploaded document',
-        auth: 'X-API-Key header',
-        body: 'multipart/form-data with "file" field',
-        response: '.pvf file download'
+      document: {
+        'POST /api/create-pvf': {
+          description: 'Create a PVF file from an uploaded document',
+          auth: 'X-API-Key header',
+          body: 'multipart/form-data — file (required), recipient (optional email for binding)',
+          response: '.pvf file download (obfuscated, with live verification stamp)',
+          features: ['Blind hashing', 'HMAC signing', 'Code obfuscation', 'Recipient binding', 'On-chain registration (if blockchain enabled)', 'Unique animation per hash']
+        },
+        'POST /api/verify': {
+          description: 'Verify a document hash (public endpoint)',
+          auth: 'None',
+          body: '{ hash, signature, recipientHash? }',
+          response: '{ verified, token, timestamp, orgName, blockchain? }'
+        },
+        'POST /api/token/refresh': {
+          description: 'Refresh session token (heartbeat, every 30s)',
+          auth: 'None',
+          body: '{ hash }',
+          response: '{ token, expiresIn: 30 }'
+        }
       },
-      'POST /api/verify': {
-        description: 'Verify a document hash (public)',
-        auth: 'None',
-        body: '{ "hash": "sha256...", "signature": "hmac..." }',
-        response: '{ verified: true/false }'
+      organization: {
+        'GET /api/org/stats': {
+          description: 'Organization statistics',
+          auth: 'X-API-Key header'
+        },
+        'GET /api/org/documents': {
+          description: 'Paginated document list for organization',
+          auth: 'X-API-Key header',
+          query: '?limit=50&offset=0'
+        }
       },
-      'POST /api/token/refresh': {
-        description: 'Refresh session token (heartbeat)',
-        auth: 'None',
-        body: '{ "hash": "sha256..." }',
-        response: '{ token: "..." }'
+      gateway: {
+        'POST /api/gateway/intake': {
+          description: 'Upload .pvf file for automated verification + original document extraction',
+          auth: 'X-API-Key header',
+          body: 'multipart/form-data with .pvf file',
+          response: '{ verified, document, extractedFile (base64) }'
+        },
+        'POST /api/gateway/batch': {
+          description: 'Batch verify up to 50 .pvf files at once',
+          auth: 'X-API-Key header',
+          body: 'multipart/form-data with multiple .pvf files',
+          response: '{ results: [...], summary }'
+        }
       },
-      'GET /api/org/stats': {
-        description: 'Organization statistics',
-        auth: 'X-API-Key header'
+      webhooks: {
+        'POST /api/webhooks/register': {
+          description: 'Register webhook for verification events',
+          auth: 'X-API-Key header',
+          body: '{ url, events: ["verification.success", "verification.failed"] }'
+        },
+        'GET /api/webhooks': {
+          description: 'List registered webhooks',
+          auth: 'X-API-Key header'
+        },
+        'DELETE /api/webhooks/:id': {
+          description: 'Remove a webhook',
+          auth: 'X-API-Key header'
+        }
       },
-      'GET /api/org/documents': {
-        description: 'List documents issued by organization (paginated)',
-        auth: 'X-API-Key header',
-        query: '?limit=50&offset=0'
+      admin: {
+        'GET /api/admin/stats': {
+          description: 'Global system statistics + blockchain status',
+          auth: 'X-Admin-Secret header'
+        },
+        'GET /api/admin/audit': {
+          description: 'Audit log viewer (paginated, filterable by event/org)',
+          auth: 'X-Admin-Secret header',
+          query: '?limit=50&offset=0&event=pvf_created&orgId=org_xxx'
+        },
+        'POST /api/keys/create': {
+          description: 'Create a new API key for an organization',
+          auth: 'X-Admin-Secret header',
+          body: '{ orgName, plan: "free"|"professional" }'
+        },
+        'GET /api/keys': {
+          description: 'List all API keys',
+          auth: 'X-Admin-Secret header'
+        }
       },
-      'POST /api/gateway/intake': {
-        description: 'Verification Gateway — upload a .pvf file for automated verification',
-        auth: 'X-API-Key header',
-        body: 'multipart/form-data with "file" field (.pvf)',
-        response: '{ verified: true/false, document: {...}, extractedFile: "base64..." }'
-      },
-      'POST /api/gateway/batch': {
-        description: 'Batch verification — verify multiple .pvf files at once',
-        auth: 'X-API-Key header',
-        body: 'multipart/form-data with "files" field (multiple .pvf)',
-        response: '{ results: [...] }'
-      },
-      'POST /api/webhooks/register': {
-        description: 'Register webhook for verification events',
-        auth: 'X-API-Key header',
-        body: '{ "url": "https://...", "events": ["verification.success"] }'
-      },
-      'GET /api/webhooks': {
-        description: 'List registered webhooks',
-        auth: 'X-API-Key header'
-      },
-      'DELETE /api/webhooks/:id': {
-        description: 'Remove a webhook',
-        auth: 'X-API-Key header'
-      },
-      'GET /api/admin/stats': {
-        description: 'Global system statistics',
-        auth: 'X-Admin-Secret header'
-      },
-      'GET /api/admin/audit': {
-        description: 'Audit log viewer (paginated, filterable)',
-        auth: 'X-Admin-Secret header',
-        query: '?limit=50&offset=0&event=pvf_created&orgId=org_xxx'
-      },
-      'GET /api/health': {
-        description: 'Service health check',
-        auth: 'None'
+      system: {
+        'GET /api/health': { description: 'Service health check', auth: 'None' },
+        'GET /api/docs': { description: 'This documentation', auth: 'None' }
       }
+    },
+    sdk: {
+      cli: 'node sdk.js document.pdf [output.pvf]',
+      library: 'const { convertToPvf } = require("./sdk"); await convertToPvf("file.pdf", "out.pvf")'
     }
   });
 });
@@ -1481,7 +1513,7 @@ if (require.main === module) {
     const defaultKey = keys.length > 0 ? keys[0].apiKey : null;
     console.log('');
     console.log('╔══════════════════════════════════════════════════╗');
-    console.log('║     Vertifile — Protected Verified File  v3.0   ║');
+    console.log('║     Vertifile — Protected Verified File  v4.0   ║');
     console.log('╠══════════════════════════════════════════════════╣');
     console.log(`║  Port:       ${PORT}                                ║`);
     console.log(`║  Home:       http://localhost:${PORT}                  ║`);
