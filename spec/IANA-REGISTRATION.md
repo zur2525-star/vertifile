@@ -136,7 +136,7 @@ Additional information:
 
 Person & email address to contact for further information:
   Zur Halfon
-  zur@vertifile.com
+  zur2525@gmail.com
 
 Intended usage: COMMON
 
@@ -148,7 +148,7 @@ Author:
 
 Change controller:
   Zur Halfon
-  zur@vertifile.com
+  zur2525@gmail.com
 ```
 
 ---
@@ -216,7 +216,7 @@ Search for `vnd.vertifile.pvf` under the `application` type to confirm publicati
 
 2. **Provide a reachable published specification URL.** The GitHub link must be publicly accessible at the time of submission. Verify the link resolves before submitting.
 
-3. **Use a stable contact email address.** IANA will use this address for all correspondence. Ensure `zur@vertifile.com` is monitored.
+3. **Use a stable contact email address.** IANA will use this address for all correspondence. Ensure `zur2525@gmail.com` is monitored.
 
 4. **Do not request a standards tree name.** Standards tree registrations (`application/pvf`) require an IETF-approved specification. The vendor tree (`application/vnd.vertifile.pvf`) is appropriate for a product-specific format and does not require IETF review.
 
