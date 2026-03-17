@@ -368,6 +368,8 @@ body.forged{background:#2a0a0a}
 .stamp,.stamp *{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-user-drag:none;user-drag:none}
 .page-bg img{-webkit-user-drag:none;user-drag:none;pointer-events:none}
 @media print{body{display:none!important}body::after{content:"This document is protected by Vertifile and cannot be printed.";display:block;padding:60px;text-align:center;font-size:24px;color:#c62828;font-weight:bold}}
+/* Screen capture CSS protection — content-visibility hidden for captured contexts */
+@media (display-mode: picture-in-picture){.page-wrap{filter:blur(30px)!important}.stamp{display:none!important}}
 </style>
 </head>
 <body>
@@ -561,6 +563,55 @@ document.addEventListener("visibilitychange", function() {
     // Tab went to background — no action needed, but track it
   }
 });
+
+// ===== SECURITY: Screen Recording / Screen Capture detection =====
+(function screenCaptureGuard(){
+  var __screenCaptured = false;
+  function blankForCapture() {
+    if (__screenCaptured) return;
+    __screenCaptured = true;
+    document.body.classList.add("forged");
+    var pg = document.getElementById("pg");
+    if (pg) pg.style.filter = "blur(30px)";
+    freezeStamp();
+    var overlay = document.createElement("div");
+    overlay.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;background:#121212;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#c62828;font-family:Heebo,sans-serif";
+    overlay.innerHTML = '<div style="font-size:48px;font-weight:900;margin-bottom:16px">⛔</div><div style="font-size:20px;font-weight:700">Screen Recording Detected</div><div style="font-size:14px;color:#888;margin-top:8px">This document cannot be captured.</div>';
+    document.body.appendChild(overlay);
+  }
+  // Method 1: Display Capture API detection (navigator.mediaDevices)
+  if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
+    navigator.mediaDevices.addEventListener("devicechange", function() {
+      // Device change during viewing — suspicious
+    });
+  }
+  // Method 2: CSS media query for display-mode capture (experimental)
+  try {
+    var mq = window.matchMedia("(display-mode: picture-in-picture)");
+    if (mq && mq.addEventListener) {
+      mq.addEventListener("change", function(e) { if (e.matches) blankForCapture(); });
+    }
+  } catch(e){}
+  // Method 3: Monitor getDisplayMedia usage via permissions
+  if (navigator.permissions && navigator.permissions.query) {
+    try {
+      navigator.permissions.query({name:"display-capture"}).then(function(status){
+        if (status.state === "granted") blankForCapture();
+        status.addEventListener("change", function(){
+          if (status.state === "granted") blankForCapture();
+        });
+      }).catch(function(){});
+    } catch(e){}
+  }
+  // Method 4: Intercept getDisplayMedia if available
+  if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+    var origGetDisplay = navigator.mediaDevices.getDisplayMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getDisplayMedia = function() {
+      blankForCapture();
+      return origGetDisplay.apply(this, arguments);
+    };
+  }
+})();
 
 var HASH="${fileHash}";
 var SIG="${signature}";
