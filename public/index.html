@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertifile — Protect Any Document From Forgery</title>
+  <meta name="description" content="Vertifile creates tamper-proof digital documents with live animated verification stamps. Total privacy — we never read your content.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Heebo',sans-serif;color:#333;background:#fff;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}
+
+    /* ===== NAVBAR ===== */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.06);transition:box-shadow .3s}
+    .navbar.scrolled{box-shadow:0 2px 20px rgba(0,0,0,.08)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:900;color:#1a237e}
+    .nav-logo .icon-box{width:36px;height:36px;background:linear-gradient(135deg,#1a237e,#0d47a1);border-radius:10px;display:flex;align-items:center;justify-content:center}
+    .nav-logo .icon-box svg{width:20px;height:20px}
+    .nav-links{display:flex;align-items:center;gap:28px}
+    .nav-links a{font-size:14px;font-weight:500;color:#555;transition:color .2s}
+    .nav-links a:hover{color:#1a237e}
+    .nav-cta{padding:9px 22px;background:linear-gradient(135deg,#1a237e,#0d47a1);color:#fff!important;border-radius:10px;font-weight:700;font-size:13px;transition:transform .2s,box-shadow .2s}
+    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 15px rgba(26,35,126,.3)}
+    .lang-btn{position:relative;display:flex;align-items:center;gap:5px;cursor:pointer;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:500;color:#555;border:1px solid #e0e0e0;background:#fff;transition:.2s}
+    .lang-btn:hover{border-color:#1a237e;color:#1a237e}
+    .lang-btn svg{width:16px;height:16px}
+    .lang-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.12);min-width:160px;padding:6px 0;display:none;z-index:100}
+    [dir="rtl"] .lang-dropdown{right:auto;left:0}
+    .lang-dropdown.show{display:block}
+    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:#333;transition:.15s}
+    .lang-dropdown a:hover{background:#f5f7fa;color:#1a237e}
+    .lang-dropdown a.active{color:#1a237e;font-weight:700}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+    .hamburger span{width:22px;height:2px;background:#333;border-radius:2px;transition:.3s}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;padding:20px 24px;box-shadow:0 8px 30px rgba(0,0,0,.1);z-index:999}
+    .mobile-menu.show{display:block}
+    .mobile-menu a{display:block;padding:12px 0;font-size:16px;font-weight:500;color:#333;border-bottom:1px solid #f0f0f0}
+    .mobile-menu a:last-child{border:none}
+
+    @media(max-width:768px){
+      .nav-links{display:none}
+      .hamburger{display:flex}
+    }
+
+    /* ===== HERO ===== */
+    .hero{padding:140px 24px 80px;text-align:center;background:linear-gradient(180deg,#f8f9ff 0%,#fff 100%);position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:-200px;right:-200px;width:500px;height:500px;background:radial-gradient(circle,rgba(26,35,126,.04),transparent 70%);border-radius:50%}
+    .hero::after{content:'';position:absolute;bottom:-150px;left:-150px;width:400px;height:400px;background:radial-gradient(circle,rgba(76,175,80,.04),transparent 70%);border-radius:50%}
+    .hero-content{max-width:800px;margin:0 auto;position:relative;z-index:1}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:linear-gradient(135deg,rgba(26,35,126,.08),rgba(13,71,161,.08));border-radius:20px;font-size:12px;font-weight:700;color:#1a237e;margin-bottom:24px;letter-spacing:.5px}
+    .hero-badge .pulse{width:8px;height:8px;border-radius:50%;background:#4caf50;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+    .hero h1{font-size:52px;font-weight:900;color:#1a237e;line-height:1.15;margin-bottom:20px}
+    .hero p.sub{font-size:19px;color:#666;line-height:1.7;max-width:620px;margin:0 auto 36px;font-weight:300}
+    .hero-buttons{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+    .btn-primary{padding:15px 36px;background:linear-gradient(135deg,#1a237e,#0d47a1);color:#fff;border-radius:14px;font-weight:700;font-size:16px;transition:all .3s;border:none;cursor:pointer;font-family:'Heebo',sans-serif}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(26,35,126,.3)}
+    .btn-secondary{padding:15px 36px;background:#fff;color:#1a237e;border-radius:14px;font-weight:700;font-size:16px;border:2px solid #e0e0e0;transition:all .3s;cursor:pointer;font-family:'Heebo',sans-serif}
+    .btn-secondary:hover{border-color:#1a237e;transform:translateY(-2px)}
+
+    /* Hero stamp animation */
+    .hero-stamp{margin:50px auto 0;width:160px;height:160px;position:relative}
+    .hero-stamp .ring-outer{width:100%;height:100%;animation:rotateSeal 20s linear infinite}
+    @keyframes rotateSeal{to{transform:rotate(360deg)}}
+    .hero-stamp .shimmer{position:absolute;top:8%;left:8%;width:84%;height:84%;border-radius:50%;background:conic-gradient(from 0deg,rgba(26,35,126,.06),rgba(13,71,161,.12) 60deg,rgba(76,175,80,.08) 120deg,rgba(26,35,126,.06) 180deg,rgba(13,71,161,.12) 240deg,rgba(76,175,80,.08) 300deg,rgba(26,35,126,.06));animation:shimmerRot 4s linear infinite}
+    @keyframes shimmerRot{to{transform:rotate(-360deg)}}
+    .hero-stamp .glow-ring{position:absolute;top:18%;left:18%;width:64%;height:64%;border-radius:50%;background:radial-gradient(circle,rgba(76,175,80,.12),transparent 70%);animation:glowPulse 3s ease-in-out infinite}
+    @keyframes glowPulse{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
+    .hero-stamp .inner{position:absolute;top:24%;left:24%;width:52%;height:52%;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(26,35,126,.12);display:flex;align-items:center;justify-content:center}
+    .hero-stamp .inner svg{width:36px;height:36px}
+    .hero-stamp .chk-anim{stroke-dasharray:50;stroke-dashoffset:50;animation:drawCheck 1.2s ease forwards 1s}
+    @keyframes drawCheck{to{stroke-dashoffset:0}}
+
+    @media(max-width:600px){
+      .hero{padding:110px 20px 60px}
+      .hero h1{font-size:32px}
+      .hero p.sub{font-size:16px}
+      .btn-primary,.btn-secondary{padding:13px 28px;font-size:14px;width:100%}
+    }
+
+    /* ===== SECTIONS COMMON ===== */
+    section{padding:90px 24px}
+    .section-header{text-align:center;max-width:600px;margin:0 auto 55px}
+    .section-header h2{font-size:36px;font-weight:900;color:#1a237e;margin-bottom:12px}
+    .section-header p{font-size:17px;color:#888;font-weight:300}
+    .fade-up{opacity:0;transform:translateY(30px);transition:opacity .6s,transform .6s}
+    .fade-up.visible{opacity:1;transform:translateY(0)}
+
+    /* ===== HOW IT WORKS ===== */
+    .how{background:#f8f9ff}
+    .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;max-width:1000px;margin:0 auto;position:relative}
+    .steps-grid::before{content:'';position:absolute;top:40px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,#1a237e,#0d47a1,#2e7d32,#4caf50);opacity:.15}
+    [dir="rtl"] .steps-grid::before{background:linear-gradient(270deg,#1a237e,#0d47a1,#2e7d32,#4caf50)}
+    .step-card{text-align:center;position:relative;z-index:1}
+    .step-num{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#1a237e,#0d47a1);color:#fff;font-size:22px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 4px 15px rgba(26,35,126,.2)}
+    .step-icon{font-size:32px;margin-bottom:10px}
+    .step-card h3{font-size:17px;font-weight:700;color:#1a237e;margin-bottom:6px}
+    .step-card p{font-size:13px;color:#888;line-height:1.6}
+    @media(max-width:768px){
+      .steps-grid{grid-template-columns:repeat(2,1fr);gap:25px}
+      .steps-grid::before{display:none}
+    }
+    @media(max-width:480px){.steps-grid{grid-template-columns:1fr}}
+
+    /* ===== FEATURES ===== */
+    .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto}
+    .feat-card{padding:30px;border-radius:16px;background:#fff;border:1px solid #f0f0f0;transition:all .3s}
+    .feat-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,.06);border-color:#e8eaf6}
+    .feat-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
+    .feat-icon.privacy{background:#e8f5e9}
+    .feat-icon.blockchain{background:#e3f2fd}
+    .feat-icon.stamp{background:#f3e5f5}
+    .feat-icon.forgery{background:#fce4ec}
+    .feat-icon.format{background:#fff3e0}
+    .feat-icon.docs{background:#e8eaf6}
+    .feat-card h3{font-size:17px;font-weight:700;color:#1a237e;margin-bottom:8px}
+    .feat-card p{font-size:14px;color:#888;line-height:1.7}
+    @media(max-width:768px){.features-grid{grid-template-columns:1fr;gap:16px}}
+
+    /* ===== DEMO ===== */
+    .demo-section{background:#f8f9ff}
+    .demo-wrapper{max-width:700px;margin:0 auto}
+    .demo-toggles{display:flex;justify-content:center;gap:8px;margin-bottom:30px}
+    .demo-toggle{padding:10px 24px;border:2px solid #e0e0e0;border-radius:12px;background:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:.2s;color:#666}
+    .demo-toggle.active{border-color:#1a237e;background:#1a237e;color:#fff}
+    .demo-toggle.forged-active{border-color:#c62828;background:#c62828;color:#fff}
+    .demo-doc{background:#fff;border-radius:16px;box-shadow:0 4px 30px rgba(0,0,0,.08);padding:50px;position:relative;min-height:300px;overflow:hidden;transition:box-shadow .4s,border-color .4s;border:2px solid transparent}
+    .demo-doc.forged{box-shadow:0 0 0 3px #e53935,0 4px 30px rgba(255,0,0,.15);border-color:#e53935}
+    .demo-doc-content{opacity:.6}
+    .demo-doc-content .line{height:12px;background:#e0e0e0;border-radius:6px;margin-bottom:10px}
+    .demo-doc-content .line.short{width:60%}
+    .demo-doc-content .line.med{width:80%}
+    .demo-doc-content .line.title-line{height:20px;width:40%;background:#c5cae9;margin-bottom:20px}
+    .demo-doc-content .spacer{height:20px}
+    .demo-stamp-area{position:absolute;bottom:30px;right:30px;width:120px;height:120px}
+    [dir="rtl"] .demo-stamp-area{right:auto;left:30px}
+    .demo-stamp-area .ds-outer{width:100%;height:100%;animation:rotateSeal 20s linear infinite}
+    .demo-stamp-area .ds-outer.frozen{animation:none}
+    .demo-stamp-area .ds-shimmer{position:absolute;top:6%;left:6%;width:88%;height:88%;border-radius:50%;background:conic-gradient(from 0deg,rgba(26,35,126,.06),rgba(13,71,161,.12) 60deg,rgba(76,175,80,.08) 120deg,rgba(26,35,126,.06) 180deg,rgba(13,71,161,.12) 240deg,rgba(76,175,80,.08) 300deg,rgba(26,35,126,.06));animation:shimmerRot 4s linear infinite}
+    .demo-stamp-area .ds-shimmer.frozen{animation:none;background:rgba(229,57,53,.08)}
+    .demo-stamp-area .ds-glow{position:absolute;top:16%;left:16%;width:68%;height:68%;border-radius:50%;background:radial-gradient(circle,rgba(76,175,80,.12),transparent 70%);animation:glowPulse 3s ease-in-out infinite}
+    .demo-stamp-area .ds-glow.frozen{animation:none;background:radial-gradient(circle,rgba(229,57,53,.1),transparent 70%)}
+    .demo-stamp-area .ds-inner{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(26,35,126,.12);display:flex;align-items:center;justify-content:center;flex-direction:column}
+    .demo-stamp-area .ds-label{font-size:8px;font-weight:900;letter-spacing:1px;margin-top:2px}
+    .demo-stamp-area .ds-label.ok{color:rgba(46,125,50,.7)}
+    .demo-stamp-area .ds-label.bad{color:rgba(198,40,40,.7)}
+    .demo-forged-overlay{display:none;position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none}
+    .demo-forged-overlay.show{display:block}
+    .demo-forged-overlay .watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-size:48px;font-weight:900;color:rgba(229,57,53,.08);letter-spacing:6px;white-space:nowrap}
+
+    /* ===== INDUSTRIES ===== */
+    .industries-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:0 auto}
+    .ind-card{display:flex;align-items:center;gap:16px;padding:22px 24px;border-radius:14px;background:#f8f9ff;border:1px solid #e8eaf6;transition:.3s}
+    .ind-card:hover{background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.06);transform:translateY(-2px)}
+    .ind-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+    .ind-icon.uni{background:#e8eaf6}
+    .ind-icon.health{background:#e8f5e9}
+    .ind-icon.legal{background:#fff3e0}
+    .ind-icon.gov{background:#e3f2fd}
+    .ind-icon.hr{background:#f3e5f5}
+    .ind-icon.fin{background:#fce4ec}
+    .ind-card h3{font-size:15px;font-weight:700;color:#1a237e;margin-bottom:3px}
+    .ind-card p{font-size:12px;color:#999}
+    @media(max-width:768px){.industries-grid{grid-template-columns:1fr}}
+
+    /* ===== PRICING ===== */
+    .pricing-section{background:#f8f9ff}
+    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:960px;margin:0 auto;align-items:start}
+    .price-card{background:#fff;border-radius:20px;padding:36px 28px;border:1px solid #e8e8e8;text-align:center;transition:.3s;position:relative}
+    .price-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,.08)}
+    .price-card.popular{border:2px solid #1a237e;box-shadow:0 8px 30px rgba(26,35,126,.12)}
+    .price-card .pop-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:4px 16px;background:#1a237e;color:#fff;font-size:11px;font-weight:700;border-radius:20px;white-space:nowrap}
+    .price-card h3{font-size:20px;font-weight:700;color:#1a237e;margin-bottom:14px}
+    .price-amount{font-size:44px;font-weight:900;color:#1a237e}
+    .price-period{font-size:15px;color:#888;font-weight:400}
+    .price-features{list-style:none;margin:24px 0;text-align:start}
+    .price-features li{padding:8px 0;font-size:14px;color:#666;display:flex;align-items:center;gap:8px}
+    .price-features li::before{content:'✓';color:#4caf50;font-weight:700;font-size:14px}
+    .price-btn{width:100%;padding:14px;border:none;border-radius:12px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:.3s}
+    .price-btn.outline{background:#fff;color:#1a237e;border:2px solid #e0e0e0}
+    .price-btn.outline:hover{border-color:#1a237e}
+    .price-btn.filled{background:linear-gradient(135deg,#1a237e,#0d47a1);color:#fff}
+    .price-btn.filled:hover{box-shadow:0 4px 15px rgba(26,35,126,.3);transform:translateY(-1px)}
+    @media(max-width:768px){.pricing-grid{grid-template-columns:1fr;max-width:400px}}
+
+    /* ===== BOTTOM CTA ===== */
+    .bottom-cta{background:linear-gradient(135deg,#1a237e,#0d47a1);padding:80px 24px;text-align:center;color:#fff}
+    .bottom-cta h2{font-size:36px;font-weight:900;margin-bottom:14px}
+    .bottom-cta p{font-size:17px;opacity:.8;margin-bottom:32px;max-width:500px;margin-left:auto;margin-right:auto;font-weight:300}
+    .bottom-cta .btn-white{padding:16px 40px;background:#fff;color:#1a237e;border-radius:14px;font-weight:700;font-size:16px;border:none;cursor:pointer;transition:.3s;font-family:'Heebo',sans-serif}
+    .bottom-cta .btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,.2)}
+
+    /* ===== FOOTER ===== */
+    footer{background:#0a1628;color:#fff;padding:60px 24px 30px}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;max-width:1000px;margin:0 auto}
+    .footer-brand .f-logo{font-size:20px;font-weight:900;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+    .footer-brand p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;max-width:260px}
+    .footer-col h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);margin-bottom:14px}
+    .footer-col a{display:block;font-size:14px;color:rgba(255,255,255,.7);padding:4px 0;transition:.2s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{max-width:1000px;margin:30px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.3)}
+    .footer-lang{display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(255,255,255,.5);font-size:12px}
+    .footer-lang:hover{color:#fff}
+    @media(max-width:768px){
+      .footer-grid{grid-template-columns:1fr 1fr;gap:30px}
+      .footer-bottom{flex-direction:column;gap:10px;text-align:center}
+    }
+    @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="icon-box"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="#fff" stroke-width="1.5"/></svg></div>
+      Vertifile
+    </a>
+    <div class="nav-links">
+      <a href="#how" data-i18n="nav.howItWorks">How It Works</a>
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="#industries" data-i18n="nav.industries">Industries</a>
+      <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
+      <div style="position:relative">
+        <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+          <span id="langLabel">EN</span>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+          <a href="?lang=he" onclick="switchLang('he',event)">עברית</a>
+          <a href="?lang=ar" onclick="switchLang('ar',event)">العربية</a>
+          <a href="?lang=fr" onclick="switchLang('fr',event)">Français</a>
+          <a href="?lang=es" onclick="switchLang('es',event)">Español</a>
+          <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+          <a href="?lang=ru" onclick="switchLang('ru',event)">Русский</a>
+          <a href="?lang=zh" onclick="switchLang('zh',event)">简体中文</a>
+          <a href="?lang=ja" onclick="switchLang('ja',event)">日本語</a>
+          <a href="?lang=pt" onclick="switchLang('pt',event)">Português</a>
+        </div>
+      </div>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect a Document</a>
+    </div>
+    <div class="hamburger" onclick="toggleMobile()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#how" data-i18n="nav.howItWorks" onclick="closeMobile()">How It Works</a>
+    <a href="#features" data-i18n="nav.features" onclick="closeMobile()">Features</a>
+    <a href="#industries" data-i18n="nav.industries" onclick="closeMobile()">Industries</a>
+    <a href="#pricing" data-i18n="nav.pricing" onclick="closeMobile()">Pricing</a>
+    <a href="/upload" data-i18n="nav.upload" onclick="closeMobile()">Protect a Document</a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-content fade-up">
+    <div class="hero-badge"><div class="pulse"></div><span data-i18n="hero.badge">Blockchain Verified</span></div>
+    <h1 data-i18n="hero.headline">Protect Any Document From Forgery</h1>
+    <p class="sub" data-i18n="hero.subheadline">Vertifile creates tamper-proof digital documents with live animated verification stamps. Zero access to your content — total privacy.</p>
+    <div class="hero-buttons">
+      <a href="/upload" class="btn-primary" data-i18n="hero.cta1">Protect a Document</a>
+      <a href="#how" class="btn-secondary" data-i18n="hero.cta2">See How It Works</a>
+    </div>
+    <div class="hero-stamp" aria-hidden="true">
+      <svg class="ring-outer" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(26,35,126,.18)" stroke-width="1.5"/>
+        <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(26,35,126,.08)" stroke-width=".5" stroke-dasharray="4 4"/>
+        <line x1="100" y1="2" x2="100" y2="10" stroke="rgba(26,35,126,.2)" stroke-width="1.5"/>
+        <line x1="100" y1="190" x2="100" y2="198" stroke="rgba(26,35,126,.2)" stroke-width="1.5"/>
+        <line x1="2" y1="100" x2="10" y2="100" stroke="rgba(26,35,126,.2)" stroke-width="1.5"/>
+        <line x1="190" y1="100" x2="198" y2="100" stroke="rgba(26,35,126,.2)" stroke-width="1.5"/>
+        <defs><path id="heroArc" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+        <text font-size="7" fill="rgba(26,35,126,.25)" font-weight="700" letter-spacing="2"><textPath href="#heroArc">PROTECTED VERIFIED FILE &#x2022; BLOCKCHAIN SECURED &#x2022; AUTHENTIC &#x2022;</textPath></text>
+      </svg>
+      <div class="shimmer"></div>
+      <div class="glow-ring"></div>
+      <div class="inner">
+        <svg viewBox="0 0 50 50" fill="none"><path class="chk-anim" d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.6)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="how" id="how">
+  <div class="section-header fade-up">
+    <h2 data-i18n="howItWorks.title">How It Works</h2>
+    <p data-i18n="howItWorks.subtitle">Four simple steps to protect any document</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card fade-up">
+      <div class="step-num">1</div>
+      <div class="step-icon">📄</div>
+      <h3 data-i18n="howItWorks.step1title">Upload</h3>
+      <p data-i18n="howItWorks.step1desc">Upload any document — PDF, image, or text file</p>
+    </div>
+    <div class="step-card fade-up">
+      <div class="step-num">2</div>
+      <div class="step-icon">🔐</div>
+      <h3 data-i18n="howItWorks.step2title">Fingerprint</h3>
+      <p data-i18n="howItWorks.step2desc">System computes a unique hash without reading content</p>
+    </div>
+    <div class="step-card fade-up">
+      <div class="step-num">3</div>
+      <div class="step-icon">✨</div>
+      <h3 data-i18n="howItWorks.step3title">Stamp</h3>
+      <p data-i18n="howItWorks.step3desc">Animated holographic stamp is embedded in the document</p>
+    </div>
+    <div class="step-card fade-up">
+      <div class="step-num">4</div>
+      <div class="step-icon">🛡️</div>
+      <h3 data-i18n="howItWorks.step4title">Protected</h3>
+      <p data-i18n="howItWorks.step4desc">Download your .pvf file — tamper-proof and verifiable</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section id="features">
+  <div class="section-header fade-up">
+    <h2 data-i18n="features.title">Why Vertifile</h2>
+    <p data-i18n="features.subtitle">Enterprise-grade document protection</p>
+  </div>
+  <div class="features-grid">
+    <div class="feat-card fade-up">
+      <div class="feat-icon privacy">🔒</div>
+      <h3 data-i18n="features.f1title">Total Privacy</h3>
+      <p data-i18n="features.f1desc">We never read or store your document content. Only a cryptographic fingerprint is processed.</p>
+    </div>
+    <div class="feat-card fade-up">
+      <div class="feat-icon blockchain">⛓️</div>
+      <h3 data-i18n="features.f2title">Blockchain Secured</h3>
+      <p data-i18n="features.f2desc">Every document hash is registered on blockchain for immutable verification.</p>
+    </div>
+    <div class="feat-card fade-up">
+      <div class="feat-icon stamp">💫</div>
+      <h3 data-i18n="features.f3title">Live Stamp</h3>
+      <p data-i18n="features.f3desc">Animated holographic stamp that rotates in real-time — impossible to forge.</p>
+    </div>
+    <div class="feat-card fade-up">
+      <div class="feat-icon forgery">🚨</div>
+      <h3 data-i18n="features.f4title">Forgery Detection</h3>
+      <p data-i18n="features.f4desc">Any modification instantly freezes the stamp and marks the document as forged.</p>
+    </div>
+    <div class="feat-card fade-up">
+      <div class="feat-icon format">🌐</div>
+      <h3 data-i18n="features.f5title">Universal Format</h3>
+      <p data-i18n="features.f5desc">.pvf files open in any browser — no special software needed.</p>
+    </div>
+    <div class="feat-card fade-up">
+      <div class="feat-icon docs">📁</div>
+      <h3 data-i18n="features.f6title">All Document Types</h3>
+      <p data-i18n="features.f6desc">Works with PDF, images, text files and more. Any file can be protected.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DEMO ===== -->
+<section class="demo-section" id="demo">
+  <div class="section-header fade-up">
+    <h2 data-i18n="demo.title">See It In Action</h2>
+    <p data-i18n="demo.subtitle">Toggle between original and forged to see the difference</p>
+  </div>
+  <div class="demo-wrapper fade-up">
+    <div class="demo-toggles">
+      <button class="demo-toggle active" id="demoOkBtn" onclick="demoOriginal()" data-i18n="demo.btnOriginal">Original</button>
+      <button class="demo-toggle" id="demoFkBtn" onclick="demoForged()" data-i18n="demo.btnForged">Forged</button>
+    </div>
+    <div class="demo-doc" id="demoDoc">
+      <div class="demo-forged-overlay" id="demoOverlay">
+        <div class="watermark">FORGED</div>
+      </div>
+      <div class="demo-doc-content">
+        <div class="line title-line"></div>
+        <div class="line"></div>
+        <div class="line med"></div>
+        <div class="line"></div>
+        <div class="line short"></div>
+        <div class="spacer"></div>
+        <div class="line"></div>
+        <div class="line med"></div>
+        <div class="line short"></div>
+        <div class="spacer"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line med"></div>
+        <div class="line short"></div>
+      </div>
+      <div class="demo-stamp-area">
+        <svg class="ds-outer" id="dsOuter" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(26,35,126,.2)" stroke-width="1.5"/>
+          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(26,35,126,.1)" stroke-width=".5" stroke-dasharray="4 4"/>
+          <defs><path id="demoArc" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+          <text font-size="7.5" fill="rgba(26,35,126,.3)" font-weight="700" letter-spacing="2"><textPath href="#demoArc">PROTECTED VERIFIED FILE &#x2022; BLOCKCHAIN SECURED &#x2022;</textPath></text>
+        </svg>
+        <div class="ds-shimmer" id="dsShimmer"></div>
+        <div class="ds-glow" id="dsGlow"></div>
+        <div class="ds-inner" id="dsInner">
+          <svg width="24" height="24" viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.6)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="ds-label ok" id="dsLabel" data-i18n="demo.labelVerified">VERIFIED</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INDUSTRIES ===== -->
+<section id="industries">
+  <div class="section-header fade-up">
+    <h2 data-i18n="industries.title">Built for Every Industry</h2>
+    <p data-i18n="industries.subtitle">Organizations worldwide trust Vertifile</p>
+  </div>
+  <div class="industries-grid">
+    <div class="ind-card fade-up">
+      <div class="ind-icon uni">🎓</div>
+      <div><h3 data-i18n="industries.i1">Universities</h3><p data-i18n="industries.i1desc">Diplomas, transcripts, certificates</p></div>
+    </div>
+    <div class="ind-card fade-up">
+      <div class="ind-icon health">🏥</div>
+      <div><h3 data-i18n="industries.i2">Healthcare</h3><p data-i18n="industries.i2desc">Medical records, prescriptions, lab results</p></div>
+    </div>
+    <div class="ind-card fade-up">
+      <div class="ind-icon legal">⚖️</div>
+      <div><h3 data-i18n="industries.i3">Legal</h3><p data-i18n="industries.i3desc">Contracts, court documents, notarizations</p></div>
+    </div>
+    <div class="ind-card fade-up">
+      <div class="ind-icon gov">🏛️</div>
+      <div><h3 data-i18n="industries.i4">Government</h3><p data-i18n="industries.i4desc">IDs, permits, official documents</p></div>
+    </div>
+    <div class="ind-card fade-up">
+      <div class="ind-icon hr">👥</div>
+      <div><h3 data-i18n="industries.i5">HR & Recruitment</h3><p data-i18n="industries.i5desc">Employment letters, payslips, references</p></div>
+    </div>
+    <div class="ind-card fade-up">
+      <div class="ind-icon fin">💰</div>
+      <div><h3 data-i18n="industries.i6">Finance</h3><p data-i18n="industries.i6desc">Invoices, bank statements, audit reports</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRICING ===== -->
+<section class="pricing-section" id="pricing">
+  <div class="section-header fade-up">
+    <h2 data-i18n="pricing.title">Simple Pricing</h2>
+    <p data-i18n="pricing.subtitle">Start free — upgrade as you grow</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card fade-up">
+      <h3 data-i18n="pricing.free">Free</h3>
+      <div><span class="price-amount" data-i18n="pricing.freePrice">$0</span><span class="price-period" data-i18n="pricing.freePeriod">/month</span></div>
+      <ul class="price-features">
+        <li data-i18n="pricing.freeF1">5 documents/month</li>
+        <li data-i18n="pricing.freeF2">Basic stamp</li>
+        <li data-i18n="pricing.freeF3">Email support</li>
+      </ul>
+      <button class="price-btn outline" data-i18n="pricing.freeCta" onclick="location.href='/upload'">Get Started</button>
+    </div>
+    <div class="price-card popular fade-up">
+      <div class="pop-badge" data-i18n="pricing.popular">Most Popular</div>
+      <h3 data-i18n="pricing.pro">Professional</h3>
+      <div><span class="price-amount" data-i18n="pricing.proPrice">$29</span><span class="price-period" data-i18n="pricing.proPeriod">/month</span></div>
+      <ul class="price-features">
+        <li data-i18n="pricing.proF1">100 documents/month</li>
+        <li data-i18n="pricing.proF2">Custom branding</li>
+        <li data-i18n="pricing.proF3">API access</li>
+        <li data-i18n="pricing.proF4">Priority support</li>
+      </ul>
+      <button class="price-btn filled" data-i18n="pricing.proCta">Start Free Trial</button>
+    </div>
+    <div class="price-card fade-up">
+      <h3 data-i18n="pricing.enterprise">Enterprise</h3>
+      <div><span class="price-amount" data-i18n="pricing.enterprisePrice">Custom</span><span class="price-period" data-i18n="pricing.enterprisePeriod"></span></div>
+      <ul class="price-features">
+        <li data-i18n="pricing.enterpriseF1">Unlimited documents</li>
+        <li data-i18n="pricing.enterpriseF2">White-label solution</li>
+        <li data-i18n="pricing.enterpriseF3">Dedicated account manager</li>
+        <li data-i18n="pricing.enterpriseF4">SLA guarantee</li>
+      </ul>
+      <button class="price-btn outline" data-i18n="pricing.enterpriseCta">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BOTTOM CTA ===== -->
+<section class="bottom-cta">
+  <div class="fade-up">
+    <h2 data-i18n="cta.title">Ready to Protect Your Documents?</h2>
+    <p data-i18n="cta.subtitle">Join thousands of organizations that trust Vertifile for document security.</p>
+    <a href="/upload"><button class="btn-white" data-i18n="cta.button">Start Protecting Now</button></a>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="f-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="#fff" stroke-width="1.5"/></svg>
+        Vertifile
+      </div>
+      <p data-i18n="hero.subheadline">Vertifile creates tamper-proof digital documents with live animated verification stamps. Zero access to your content — total privacy.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="#how" data-i18n="nav.howItWorks">How It Works</a>
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
+      <a href="/upload" data-i18n="nav.upload">Protect a Document</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.company">Company</h4>
+      <a href="#" data-i18n="footer.about">About</a>
+      <a href="#" data-i18n="footer.blog">Blog</a>
+      <a href="#" data-i18n="footer.careers">Careers</a>
+      <a href="#" data-i18n="footer.contact">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.legal">Legal</h4>
+      <a href="#" data-i18n="footer.privacy">Privacy Policy</a>
+      <a href="#" data-i18n="footer.terms">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="footer.copyright">&copy; 2024 Vertifile. All rights reserved.</span>
+    <div class="footer-lang" onclick="toggleLangDropdown()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+      <span id="footerLangLabel">English</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== i18n ENGINE + SCRIPTS ===== -->
+<script>
+(function(){
+  // ===== i18n Engine =====
+  const SUPPORTED = ['en','he','ar','fr','es','de','ru','zh','ja','pt'];
+  const RTL_LANGS = ['he','ar'];
+  let currentLang = 'en';
+  let translations = {};
+
+  function detectLang(){
+    const params = new URLSearchParams(window.location.search);
+    if(params.get('lang') && SUPPORTED.includes(params.get('lang'))) return params.get('lang');
+    const stored = localStorage.getItem('vf-lang');
+    if(stored && SUPPORTED.includes(stored)) return stored;
+    const nav = (navigator.language||'').substring(0,2).toLowerCase();
+    if(SUPPORTED.includes(nav)) return nav;
+    return 'en';
+  }
+
+  function getNestedValue(obj, path){
+    return path.split('.').reduce((o,k) => o && o[k], obj);
+  }
+
+  function applyTranslations(){
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const val = getNestedValue(translations, el.getAttribute('data-i18n'));
+      if(val) el.textContent = val;
+    });
+    // Update page title
+    const heroTitle = getNestedValue(translations, 'hero.headline');
+    if(heroTitle) document.title = 'Vertifile — ' + heroTitle;
+  }
+
+  function setDirection(lang){
+    const isRtl = RTL_LANGS.includes(lang);
+    document.documentElement.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', lang);
+  }
+
+  function updateLangLabels(lang){
+    const code = lang.toUpperCase();
+    const el = document.getElementById('langLabel');
+    if(el) el.textContent = code;
+    const fn = getNestedValue(translations, 'langName');
+    const fl = document.getElementById('footerLangLabel');
+    if(fl && fn) fl.textContent = fn;
+    // Mark active in dropdown
+    document.querySelectorAll('.lang-dropdown a').forEach(a => {
+      const href = a.getAttribute('href')||'';
+      const m = href.match(/lang=(\w+)/);
+      a.classList.toggle('active', m && m[1]===lang);
+    });
+  }
+
+  async function loadLang(lang){
+    try{
+      const res = await fetch('/locales/'+lang+'.json');
+      if(!res.ok) throw new Error();
+      translations = await res.json();
+      currentLang = lang;
+      localStorage.setItem('vf-lang', lang);
+      setDirection(lang);
+      applyTranslations();
+      updateLangLabels(lang);
+    }catch(e){
+      if(lang !== 'en'){
+        loadLang('en');
+      }
+    }
+  }
+
+  // Expose global functions
+  window.switchLang = function(lang, e){
+    if(e) e.preventDefault();
+    loadLang(lang);
+    closeLangDropdown();
+  };
+
+  window.toggleLangDropdown = function(){
+    const dd = document.getElementById('langDropdown');
+    dd.classList.toggle('show');
+  };
+
+  window.closeLangDropdown = function(){
+    document.getElementById('langDropdown').classList.remove('show');
+  };
+
+  // Close dropdown on outside click
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('.lang-btn') && !e.target.closest('.lang-dropdown') && !e.target.closest('.footer-lang')){
+      closeLangDropdown();
+    }
+  });
+
+  // Init
+  const lang = detectLang();
+  loadLang(lang);
+
+  // ===== Navbar scroll effect =====
+  window.addEventListener('scroll', function(){
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  // ===== Mobile menu =====
+  window.toggleMobile = function(){
+    document.getElementById('mobileMenu').classList.toggle('show');
+  };
+  window.closeMobile = function(){
+    document.getElementById('mobileMenu').classList.remove('show');
+  };
+
+  // ===== Scroll animations =====
+  const observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {threshold: 0.1, rootMargin: '0px 0px -40px 0px'});
+
+  document.querySelectorAll('.fade-up').forEach(function(el){
+    observer.observe(el);
+  });
+
+  // ===== Demo toggle =====
+  window.demoOriginal = function(){
+    document.getElementById('demoOkBtn').className = 'demo-toggle active';
+    document.getElementById('demoFkBtn').className = 'demo-toggle';
+    document.getElementById('demoDoc').classList.remove('forged');
+    document.getElementById('demoOverlay').classList.remove('show');
+    document.getElementById('dsOuter').classList.remove('frozen');
+    document.getElementById('dsShimmer').classList.remove('frozen');
+    document.getElementById('dsGlow').classList.remove('frozen');
+    var lbl = getNestedValue(translations,'demo.labelVerified') || 'VERIFIED';
+    document.getElementById('dsInner').innerHTML = '<svg width="24" height="24" viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.6)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="ds-label ok">'+lbl+'</div>';
+  };
+
+  window.demoForged = function(){
+    document.getElementById('demoFkBtn').className = 'demo-toggle forged-active';
+    document.getElementById('demoOkBtn').className = 'demo-toggle';
+    document.getElementById('demoDoc').classList.add('forged');
+    document.getElementById('demoOverlay').classList.add('show');
+    document.getElementById('dsOuter').classList.add('frozen');
+    document.getElementById('dsShimmer').classList.add('frozen');
+    document.getElementById('dsGlow').classList.add('frozen');
+    var lbl = getNestedValue(translations,'demo.labelForged') || 'FORGED';
+    document.getElementById('dsInner').innerHTML = '<svg width="24" height="24" viewBox="0 0 50 50" fill="none"><path d="M15 15L35 35" stroke="rgba(198,40,40,.6)" stroke-width="3.5" stroke-linecap="round"/><path d="M35 15L15 35" stroke="rgba(198,40,40,.6)" stroke-width="3.5" stroke-linecap="round"/></svg><div class="ds-label bad">'+lbl+'</div>';
+  };
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertifile — Secure Document Issuance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.06)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:900;color:#1a237e;text-decoration:none}
+    .nav-logo .icon-box{width:36px;height:36px;background:linear-gradient(135deg,#1a237e,#0d47a1);border-radius:10px;display:flex;align-items:center;justify-content:center}
+    .nav-logo .icon-box svg{width:20px;height:20px}
+    .nav-links{display:flex;align-items:center;gap:20px}
+    .nav-links a{font-size:14px;font-weight:500;color:#555;text-decoration:none;transition:color .2s}
+    .nav-links a:hover{color:#1a237e}
+    .nav-cta{padding:9px 22px;background:linear-gradient(135deg,#1a237e,#0d47a1);color:#fff!important;border-radius:10px;font-weight:700;font-size:13px}
+    .lang-btn{display:flex;align-items:center;gap:5px;cursor:pointer;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:500;color:#555;border:1px solid #e0e0e0;background:#fff;position:relative}
+    .lang-btn:hover{border-color:#1a237e;color:#1a237e}
+    .lang-btn svg{width:16px;height:16px}
+    .lang-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.12);min-width:160px;padding:6px 0;display:none;z-index:100}
+    [dir="rtl"] .lang-dropdown{right:auto;left:0}
+    .lang-dropdown.show{display:block}
+    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:#333;text-decoration:none;transition:.15s}
+    .lang-dropdown a:hover{background:#f5f7fa;color:#1a237e}
+    .lang-dropdown a.active{color:#1a237e;font-weight:700}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+    .hamburger span{width:22px;height:2px;background:#333;border-radius:2px}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;padding:20px 24px;box-shadow:0 8px 30px rgba(0,0,0,.1);z-index:999}
+    .mobile-menu.show{display:block}
+    .mobile-menu a{display:block;padding:12px 0;font-size:16px;font-weight:500;color:#333;border-bottom:1px solid #f0f0f0;text-decoration:none}
+    @media(max-width:768px){.nav-links{display:none}.hamburger{display:flex}}
+
+    /* ===== UPLOAD CARD ===== */
+    .card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+      max-width: 550px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+      padding: 25px 30px;
+      color: white;
+    }
+
+    .card-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .card-header p {
+      font-size: 13px;
+      opacity: 0.7;
+      font-weight: 300;
+    }
+
+    .card-body { padding: 30px; }
+
+    /* ===== PRIVACY BADGE ===== */
+    .privacy-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: #e8f5e9;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      border: 1px solid #c8e6c9;
+    }
+
+    .privacy-badge .shield {
+      width: 32px; height: 32px;
+      background: #2e7d32;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .privacy-badge .shield svg { width: 18px; height: 18px; }
+
+    .privacy-badge .text {
+      font-size: 13px;
+      color: #2e7d32;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .privacy-badge .text strong { font-weight: 800; }
+
+    /* ===== DROP ZONE ===== */
+    .drop-zone {
+      border: 2px dashed #ccc;
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: #1a237e;
+      background: #f0f2ff;
+    }
+
+    .drop-zone .icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .drop-zone .main-text {
+      font-size: 16px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .drop-zone .sub-text {
+      font-size: 13px;
+      color: #999;
+    }
+
+    .drop-zone input { display: none; }
+
+    /* Selected file */
+    .file-info {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: #f5f7fa;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .file-info.show { display: flex; }
+
+    .file-icon {
+      width: 42px; height: 42px;
+      background: #e8eaf6;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .file-details { flex: 1; }
+    .file-name { font-size: 14px; font-weight: 700; color: #333; }
+    .file-size { font-size: 12px; color: #999; }
+
+    .file-remove {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: #ffebee;
+      color: #c62828;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #1a237e, #0d47a1);
+      color: white;
+      font-family: 'Heebo', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(26,35,126,0.3); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* Progress */
+    .progress {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .progress.show { display: block; }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, #1a237e, #4caf50);
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.5s;
+    }
+
+    .progress-text {
+      font-size: 13px;
+      color: #666;
+      text-align: center;
+    }
+
+    .card { margin-top: 0; }
+
+    /* Result */
+    .result {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .result.show { display: block; }
+
+    .result .check {
+      width: 60px; height: 60px;
+      background: #e8f5e9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+      font-size: 30px;
+    }
+
+    .result h3 {
+      font-size: 20px;
+      font-weight: 900;
+      color: #2e7d32;
+      margin-bottom: 5px;
+    }
+
+    .result p {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    .result .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #2e7d32, #43a047);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .result .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(46,125,50,0.3);
+    }
+
+    .result .another {
+      display: block;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #1a237e;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: 'Heebo', sans-serif;
+      font-weight: 600;
+    }
+
+    /* Steps */
+    .steps {
+      display: none;
+      margin-top: 15px;
+    }
+
+    .steps.show { display: block; }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 13px;
+      color: #ccc;
+      transition: color 0.3s;
+    }
+
+    .step.active { color: #1a237e; }
+    .step.done { color: #4caf50; }
+
+    .step .s-dot {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+
+    .step.done .s-dot::after { content: '\2713'; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="icon-box"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="#fff" stroke-width="1.5"/></svg></div>
+      Vertifile
+    </a>
+    <div class="nav-links">
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
+      <div style="position:relative">
+        <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+          <span id="langLabel">EN</span>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+          <a href="?lang=he" onclick="switchLang('he',event)">עברית</a>
+          <a href="?lang=ar" onclick="switchLang('ar',event)">العربية</a>
+          <a href="?lang=fr" onclick="switchLang('fr',event)">Français</a>
+          <a href="?lang=es" onclick="switchLang('es',event)">Español</a>
+          <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+          <a href="?lang=ru" onclick="switchLang('ru',event)">Русский</a>
+          <a href="?lang=zh" onclick="switchLang('zh',event)">简体中文</a>
+          <a href="?lang=ja" onclick="switchLang('ja',event)">日本語</a>
+          <a href="?lang=pt" onclick="switchLang('pt',event)">Português</a>
+        </div>
+      </div>
+    </div>
+    <div class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('show')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/" data-i18n="nav.home">Home</a>
+    <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
+  </div>
+</nav>
+
+  <div style="margin-top:80px"></div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 data-i18n="upload.cardTitle">Upload Document for PVF Issuance</h2>
+      <p data-i18n="upload.cardSubtitle">Upload a PDF, image or text file — the system will protect it and return a .pvf file</p>
+    </div>
+
+    <div class="card-body">
+
+      <div class="privacy-badge">
+        <div class="shield">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" fill="white" opacity="0.9"/>
+          </svg>
+        </div>
+        <div class="text">
+          <strong data-i18n="upload.privacyTitle">Total Privacy</strong> — <span data-i18n="upload.privacyDesc">The system never reads or stores your document content. It only computes a unique fingerprint and magnetizes the file.</span>
+        </div>
+      </div>
+
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <div class="icon">📄</div>
+        <div class="main-text" data-i18n="upload.dropMain">Drag a file here or click to select</div>
+        <div class="sub-text" data-i18n="upload.dropSub">PDF, image (JPG/PNG), or text file — up to 50MB</div>
+        <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.gif,.txt,.doc,.docx">
+      </div>
+
+      <div class="file-info" id="fileInfo">
+        <div class="file-icon" id="fileIcon">📄</div>
+        <div class="file-details">
+          <div class="file-name" id="fileName"></div>
+          <div class="file-size" id="fileSize"></div>
+        </div>
+        <button class="file-remove" onclick="removeFile()">✕</button>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" disabled onclick="createPvf()">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 2v12M10 2l-4 4M10 2l4 4M3 14v2a2 2 0 002 2h10a2 2 0 002-2v-2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span data-i18n="upload.submitBtn">Issue Secure PVF File</span>
+      </button>
+
+      <div class="steps" id="steps">
+        <div class="step" id="s1"><div class="s-dot"></div><span data-i18n="upload.s1">Receiving file...</span></div>
+        <div class="step" id="s2"><div class="s-dot"></div><span data-i18n="upload.s2">Computing fingerprint (hash)...</span></div>
+        <div class="step" id="s3"><div class="s-dot"></div><span data-i18n="upload.s3">Registering on Blockchain...</span></div>
+        <div class="step" id="s4"><div class="s-dot"></div><span data-i18n="upload.s4">Attaching live stamp...</span></div>
+        <div class="step" id="s5"><div class="s-dot"></div><span data-i18n="upload.s5">Creating PVF file...</span></div>
+      </div>
+
+      <div class="progress" id="progress">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-text" id="progressText">מעבד...</div>
+      </div>
+
+      <div class="result" id="result">
+        <div class="check">&#10003;</div>
+        <h3 data-i18n="upload.successTitle">PVF File Created Successfully!</h3>
+        <p data-i18n="upload.successDesc">The document is protected and cryptographically signed. Send it to the recipient — only the .pvf file will be accepted.</p>
+        <a class="download-btn" id="downloadLink" href="#" download>
+          <span data-i18n="upload.downloadBtn">Download .pvf file</span>
+        </a>
+        <button class="another" onclick="reset()" data-i18n="upload.another">Upload another document</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ===== i18n Engine =====
+    (function(){
+      const SUPPORTED=['en','he','ar','fr','es','de','ru','zh','ja','pt'];
+      const RTL_LANGS=['he','ar'];
+      let translations={};
+
+      function detectLang(){
+        const p=new URLSearchParams(location.search);
+        if(p.get('lang')&&SUPPORTED.includes(p.get('lang')))return p.get('lang');
+        const s=localStorage.getItem('vf-lang');
+        if(s&&SUPPORTED.includes(s))return s;
+        const n=(navigator.language||'').substring(0,2).toLowerCase();
+        if(SUPPORTED.includes(n))return n;
+        return 'en';
+      }
+
+      function gv(obj,path){return path.split('.').reduce((o,k)=>o&&o[k],obj)}
+
+      function apply(){
+        document.querySelectorAll('[data-i18n]').forEach(el=>{
+          const v=gv(translations,el.getAttribute('data-i18n'));
+          if(v)el.textContent=v;
+        });
+        const t=gv(translations,'upload.pageTitle');
+        if(t)document.title='Vertifile — '+t;
+      }
+
+      async function loadLang(lang){
+        try{
+          const r=await fetch('/locales/'+lang+'.json');
+          if(!r.ok)throw 0;
+          translations=await r.json();
+          localStorage.setItem('vf-lang',lang);
+          const isRtl=RTL_LANGS.includes(lang);
+          document.documentElement.setAttribute('dir',isRtl?'rtl':'ltr');
+          document.documentElement.setAttribute('lang',lang);
+          apply();
+          const el=document.getElementById('langLabel');
+          if(el)el.textContent=lang.toUpperCase();
+          document.querySelectorAll('.lang-dropdown a').forEach(a=>{
+            const m=(a.getAttribute('href')||'').match(/lang=(\w+)/);
+            a.classList.toggle('active',m&&m[1]===lang);
+          });
+        }catch(e){if(lang!=='en')loadLang('en')}
+      }
+
+      window.switchLang=function(l,e){if(e)e.preventDefault();loadLang(l);closeLangDropdown()};
+      window.toggleLangDropdown=function(){document.getElementById('langDropdown').classList.toggle('show')};
+      window.closeLangDropdown=function(){document.getElementById('langDropdown').classList.remove('show')};
+      document.addEventListener('click',function(e){
+        if(!e.target.closest('.lang-btn')&&!e.target.closest('.lang-dropdown'))closeLangDropdown();
+      });
+
+      loadLang(detectLang());
+    })();
+
+    let selectedFile = null;
+
+    // ===== Drag & Drop =====
+    const dropZone = document.getElementById('dropZone');
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+
+    document.getElementById('fileInput').addEventListener('change', (e) => {
+      if (e.target.files.length) handleFile(e.target.files[0]);
+    });
+
+    function handleFile(file) {
+      selectedFile = file;
+      document.getElementById('fileName').textContent = file.name;
+      document.getElementById('fileSize').textContent = formatSize(file.size);
+
+      const ext = file.name.split('.').pop().toLowerCase();
+      const icons = { pdf: '📕', jpg: '🖼', jpeg: '🖼', png: '🖼', gif: '🖼', txt: '📝', doc: '📘', docx: '📘' };
+      document.getElementById('fileIcon').textContent = icons[ext] || '📄';
+
+      document.getElementById('fileInfo').classList.add('show');
+      dropZone.style.display = 'none';
+      document.getElementById('submitBtn').disabled = false;
+    }
+
+    function removeFile() {
+      selectedFile = null;
+      document.getElementById('fileInfo').classList.remove('show');
+      dropZone.style.display = '';
+      document.getElementById('submitBtn').disabled = true;
+      document.getElementById('fileInput').value = '';
+    }
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    // ===== Create PVF =====
+    async function createPvf() {
+      if (!selectedFile) return;
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = '...';
+
+      document.getElementById('steps').classList.add('show');
+      document.getElementById('progress').classList.add('show');
+
+      // Animated steps
+      const steps = ['s1', 's2', 's3', 's4', 's5'];
+      const pcts = [10, 30, 55, 80, 100];
+      const msgs = ['⏳', '🔐', '⛓️', '✨', '📄'];
+
+      for (let i = 0; i < steps.length; i++) {
+        document.getElementById(steps[i]).classList.add('active');
+        document.getElementById('progressFill').style.width = pcts[i] + '%';
+        document.getElementById('progressText').textContent = msgs[i];
+        await sleep(500);
+        document.getElementById(steps[i]).classList.remove('active');
+        document.getElementById(steps[i]).classList.add('done');
+      }
+
+      // Actually send to server
+      try {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        const response = await fetch('/api/create-pvf', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) throw new Error('Server error');
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const pvfName = selectedFile.name.replace(/\.[^.]+$/, '') + '.pvf';
+
+        document.getElementById('downloadLink').href = url;
+        document.getElementById('downloadLink').download = pvfName;
+
+        // Show result
+        document.getElementById('steps').classList.remove('show');
+        document.getElementById('progress').classList.remove('show');
+        document.getElementById('result').classList.add('show');
+        btn.style.display = 'none';
+        document.getElementById('fileInfo').classList.remove('show');
+
+      } catch (error) {
+        alert('Error creating PVF: ' + error.message);
+        btn.disabled = false;
+        btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2v12M10 2l-4 4M10 2l4 4M3 14v2a2 2 0 002 2h10a2 2 0 002-2v-2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> <span data-i18n="upload.submitBtn">Issue Secure PVF File</span>';
+      }
+    }
+
+    function reset() {
+      selectedFile = null;
+      document.getElementById('result').classList.remove('show');
+      document.getElementById('submitBtn').style.display = '';
+      document.getElementById('submitBtn').disabled = true;
+      document.getElementById('submitBtn').innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2v12M10 2l-4 4M10 2l4 4M3 14v2a2 2 0 002 2h10a2 2 0 002-2v-2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> <span data-i18n="upload.submitBtn">Issue Secure PVF File</span>';
+      dropZone.style.display = '';
+      document.getElementById('fileInput').value = '';
+      document.getElementById('steps').classList.remove('show');
+      document.getElementById('progress').classList.remove('show');
+      document.getElementById('progressFill').style.width = '0%';
+      ['s1','s2','s3','s4','s5'].forEach(s => {
+        document.getElementById(s).className = 'step';
+      });
+    }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  </script>
+</body>
+</html>
