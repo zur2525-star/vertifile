@@ -1,0 +1,76 @@
+{
+  "name": "pvf-viewer",
+  "version": "1.0.0",
+  "description": "PVF Viewer — Open and verify .pvf documents",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "build:all": "electron-builder --mac --win"
+  },
+  "build": {
+    "appId": "com.vertifile.viewer",
+    "productName": "PVF Viewer",
+    "files": [
+      "main.js",
+      "preload.js",
+      "viewer.html",
+      "icons/**"
+    ],
+    "fileAssociations": [
+      {
+        "ext": "pvf",
+        "name": "PVF Document",
+        "description": "Protected Verified File",
+        "role": "Viewer",
+        "mimeType": "text/html"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "icons/icon.png",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "icon": "icons/icon.png",
+      "target": [
+        "nsis"
+      ]
+    },
+    "dmg": {
+      "title": "PVF Viewer",
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "vertifile",
+      "repo": "pvf-viewer"
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.3"
+  }
+}

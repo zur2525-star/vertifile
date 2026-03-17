@@ -5,19 +5,28 @@
     "features": "Fonctionnalités",
     "industries": "Secteurs",
     "pricing": "Tarifs",
-    "upload": "Protéger un document",
-    "verify": "Vérifier un document"
+    "upload": "Protéger",
+    "verify": "Vérifier"
   },
   "hero": {
     "headline": "Protégez tout document contre la falsification",
+    "headline1": "Protégez tout document",
+    "headline2": "contre la falsification",
     "subheadline": "Vertifile crée des documents numériques inviolables avec des cachets de vérification animés. Aucun accès à votre contenu — confidentialité totale.",
     "cta1": "Protéger un document",
     "cta2": "Voir comment ça marche",
     "badge": "Vérifié par Blockchain"
   },
+  "stats": {
+    "encryption": "Chiffrement SHA-256",
+    "documents": "Documents protégés",
+    "tokenRefresh": "Cycle de rafraîchissement du jeton",
+    "securityLayers": "Couches de sécurité"
+  },
   "howItWorks": {
     "title": "Comment ça marche",
     "subtitle": "Quatre étapes simples pour protéger tout document",
+    "label": "Processus",
     "step1title": "Téléverser",
     "step1desc": "Téléversez n'importe quel document — PDF, image ou fichier texte",
     "step2title": "Empreinte",
@@ -30,6 +39,7 @@
   "features": {
     "title": "Pourquoi Vertifile",
     "subtitle": "Protection de documents de niveau entreprise",
+    "label": "Fonctionnalités",
     "f1title": "Confidentialité totale",
     "f1desc": "Nous ne lisons ni ne stockons jamais le contenu de votre document. Seule une empreinte cryptographique est traitée.",
     "f2title": "Sécurisé par Blockchain",
@@ -43,9 +53,23 @@
     "f6title": "Tous types de documents",
     "f6desc": "Compatible avec PDF, images, fichiers texte et plus. Tout fichier peut être protégé."
   },
+  "security": {
+    "label": "Sécurité",
+    "title": "8 couches de protection",
+    "subtitle": "Sécurité de niveau entreprise rendant la falsification mathématiquement impossible.",
+    "s1title": "Signature cryptographique",
+    "s1desc": "Signature numérique SHA-256 + HMAC sur chaque document",
+    "s2title": "Horodatage Blockchain",
+    "s2desc": "Enregistrement immuable sur Polygon — existe pour toujours",
+    "s3title": "Rafraîchissement du jeton toutes les 30 secondes",
+    "s3desc": "Empêche les captures d'écran et les attaques par rejeu",
+    "s4title": "Détection d'environnement",
+    "s4desc": "Détecte les outils de manipulation, éditeurs et DevTools"
+  },
   "demo": {
     "title": "Voyez-le en action",
-    "subtitle": "Basculez entre l'original et le falsifié pour voir la différence",
+    "label": "Démo en direct",
+    "subtitle": "Un vrai diplôme universitaire protégé par Vertifile",
     "btnOriginal": "Original",
     "btnForged": "Falsifié",
     "labelVerified": "VÉRIFIÉ",
@@ -54,6 +78,7 @@
   "industries": {
     "title": "Conçu pour chaque secteur",
     "subtitle": "Des organisations du monde entier font confiance à Vertifile",
+    "label": "Secteurs",
     "i1": "Universités",
     "i1desc": "Diplômes, relevés de notes, certificats",
     "i2": "Santé",
@@ -70,6 +95,7 @@
   "pricing": {
     "title": "Tarification simple",
     "subtitle": "Commencez gratuitement — évoluez selon vos besoins",
+    "label": "Tarifs",
     "free": "Gratuit",
     "freePrice": "$0",
     "freePeriod": "/mois",
@@ -101,6 +127,7 @@
     "button": "Commencer la protection"
   },
   "footer": {
+    "description": "Documents numériques inviolables avec des cachets de vérification animés. Aucun accès à votre contenu.",
     "product": "Produit",
     "company": "Entreprise",
     "legal": "Mentions légales",
@@ -144,5 +171,10 @@
     "failedDesc": "Ce document n'a pas pu être vérifié. Il a peut-être été altéré ou n'est pas enregistré.",
     "tryAnother": "Vérifier un autre document"
   },
-  "langName": "Français"
+  "langName": "Français",
+  "heroDoc": {
+    "uni": "SORBONNE UNIVERSITÉ",
+    "faculty": "Faculté des Sciences",
+    "title": "Diplôme de Grade"
+  }
 }

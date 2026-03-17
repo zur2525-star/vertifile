@@ -5,206 +5,443 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vertifile — Protect Any Document From Forgery</title>
   <meta name="description" content="Vertifile creates tamper-proof digital documents with live animated verification stamps. Total privacy — we never read your content.">
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <meta property="og:title" content="Vertifile — Protect Any Document From Forgery">
+  <meta property="og:description" content="Tamper-proof digital documents with live animated verification stamps. Blockchain verified. Total privacy.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#ffffff">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{font-family:'Heebo',sans-serif;color:#333;background:#fff;overflow-x:hidden}
+    body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden}
+    [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
     a{text-decoration:none;color:inherit}
 
     /* ===== NAVBAR ===== */
-    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.06);transition:box-shadow .3s}
-    .navbar.scrolled{box-shadow:0 2px 20px rgba(0,0,0,.08)}
-    .nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
-    .nav-logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:900;color:#1a237e}
-    .nav-logo .icon-box{width:36px;height:36px;background:linear-gradient(135deg,#1a237e,#0d47a1);border-radius:10px;display:flex;align-items:center;justify-content:center}
-    .nav-logo .icon-box svg{width:20px;height:20px}
-    .nav-links{display:flex;align-items:center;gap:28px}
-    .nav-links a{font-size:14px;font-weight:500;color:#555;transition:color .2s}
-    .nav-links a:hover{color:#1a237e}
-    .nav-cta{padding:9px 22px;background:linear-gradient(135deg,#1a237e,#0d47a1);color:#fff!important;border-radius:10px;font-weight:700;font-size:13px;transition:transform .2s,box-shadow .2s}
-    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 15px rgba(26,35,126,.3)}
-    .lang-btn{position:relative;display:flex;align-items:center;gap:5px;cursor:pointer;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:500;color:#555;border:1px solid #e0e0e0;background:#fff;transition:.2s}
-    .lang-btn:hover{border-color:#1a237e;color:#1a237e}
-    .lang-btn svg{width:16px;height:16px}
-    .lang-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.12);min-width:160px;padding:6px 0;display:none;z-index:100}
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:1px solid transparent;transition:background .35s,border-color .35s,box-shadow .35s,backdrop-filter .35s}
+    .navbar.scrolled{background:rgba(255,255,255,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,0,0,.04);box-shadow:0 1px 12px rgba(0,0,0,.06)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{display:flex;align-items:center}
+    .nav-logo img{height:32px;width:auto}
+    .nav-center{display:flex;align-items:center;gap:28px}
+    .nav-center a{font-size:13.5px;font-weight:500;color:#6b7280;transition:color .2s;letter-spacing:0;position:relative;padding:4px 0}
+    .nav-center a:hover{color:#111827}
+    .nav-center a::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:1.5px;background:#7c3aed;transition:all .25s;transform:translateX(-50%)}
+    .nav-center a:hover::after{width:100%}
+    .nav-actions{display:flex;align-items:center;gap:10px}
+    .nav-verify{padding:7px 18px;background:transparent;color:#4b5563;border:1px solid rgba(0,0,0,.1);border-radius:8px;font-weight:500;font-size:13px;transition:all .25s;cursor:pointer;letter-spacing:0;text-decoration:none}
+    .nav-verify:hover{border-color:#7c3aed;color:#7c3aed;background:rgba(124,58,237,.03)}
+    .nav-cta{padding:7px 18px;background:#7c3aed;color:#fff!important;border-radius:8px;font-weight:600;font-size:13px;transition:all .25s;border:1px solid transparent;cursor:pointer;letter-spacing:0;text-decoration:none}
+    .nav-cta:hover{background:#6d28d9;box-shadow:0 4px 14px rgba(124,58,237,.25)}
+    .lang-btn{position:relative;display:flex;align-items:center;gap:4px;cursor:pointer;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:500;color:#9ca3af;border:none;background:transparent;transition:.2s}
+    .lang-btn:hover{color:#6b7280;background:rgba(0,0,0,.03)}
+    .lang-btn svg{width:14px;height:14px}
+    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.1);min-width:160px;padding:4px 0;display:none;z-index:100}
     [dir="rtl"] .lang-dropdown{right:auto;left:0}
     .lang-dropdown.show{display:block}
-    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:#333;transition:.15s}
-    .lang-dropdown a:hover{background:#f5f7fa;color:#1a237e}
-    .lang-dropdown a.active{color:#1a237e;font-weight:700}
-    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
-    .hamburger span{width:22px;height:2px;background:#333;border-radius:2px;transition:.3s}
-    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;padding:20px 24px;box-shadow:0 8px 30px rgba(0,0,0,.1);z-index:999}
+    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:#4b5563;transition:.15s}
+    .lang-dropdown a:hover{background:rgba(0,0,0,.03);color:#111827}
+    .lang-dropdown a.active{color:#7c3aed;font-weight:600}
+    .nav-sep{width:1px;height:20px;background:rgba(0,0,0,.08);margin:0 4px}
+    .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:6px}
+    .hamburger span{width:20px;height:1.5px;background:#374151;border-radius:2px;transition:.3s}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(255,255,255,.98);backdrop-filter:blur(20px);padding:16px 24px;box-shadow:0 12px 40px rgba(0,0,0,.08);z-index:999;border-bottom:1px solid rgba(0,0,0,.04)}
     .mobile-menu.show{display:block}
-    .mobile-menu a{display:block;padding:12px 0;font-size:16px;font-weight:500;color:#333;border-bottom:1px solid #f0f0f0}
+    .mobile-menu a{display:block;padding:12px 0;font-size:15px;font-weight:500;color:#4b5563;border-bottom:1px solid rgba(0,0,0,.04)}
     .mobile-menu a:last-child{border:none}
-
+    .mobile-menu .mob-actions{display:flex;gap:10px;padding-top:14px;margin-top:6px;border-top:1px solid rgba(0,0,0,.06)}
+    .mobile-menu .mob-actions a{border:none;padding:10px 0;text-align:center;flex:1;border-radius:8px;font-size:14px;font-weight:600}
+    .mobile-menu .mob-actions .mob-verify{background:rgba(0,0,0,.04);color:#4b5563}
+    .mobile-menu .mob-actions .mob-protect{background:#7c3aed;color:#fff}
     @media(max-width:768px){
-      .nav-links{display:none}
+      .nav-center,.nav-actions{display:none}
       .hamburger{display:flex}
+      .nav-inner{padding:0 20px}
     }
 
     /* ===== HERO ===== */
-    .hero{padding:140px 24px 80px;text-align:center;background:linear-gradient(180deg,#f8f9ff 0%,#fff 100%);position:relative;overflow:hidden}
-    .hero::before{content:'';position:absolute;top:-200px;right:-200px;width:500px;height:500px;background:radial-gradient(circle,rgba(26,35,126,.04),transparent 70%);border-radius:50%}
-    .hero::after{content:'';position:absolute;bottom:-150px;left:-150px;width:400px;height:400px;background:radial-gradient(circle,rgba(76,175,80,.04),transparent 70%);border-radius:50%}
-    .hero-content{max-width:800px;margin:0 auto;position:relative;z-index:1}
-    .hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:linear-gradient(135deg,rgba(26,35,126,.08),rgba(13,71,161,.08));border-radius:20px;font-size:12px;font-weight:700;color:#1a237e;margin-bottom:24px;letter-spacing:.5px}
-    .hero-badge .pulse{width:8px;height:8px;border-radius:50%;background:#4caf50;animation:pulse 2s infinite}
-    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
-    .hero h1{font-size:52px;font-weight:900;color:#1a237e;line-height:1.15;margin-bottom:20px}
-    .hero p.sub{font-size:19px;color:#666;line-height:1.7;max-width:620px;margin:0 auto 36px;font-weight:300}
-    .hero-buttons{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
-    .btn-primary{padding:15px 36px;background:linear-gradient(135deg,#1a237e,#0d47a1);color:#fff;border-radius:14px;font-weight:700;font-size:16px;transition:all .3s;border:none;cursor:pointer;font-family:'Heebo',sans-serif}
-    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(26,35,126,.3)}
-    .btn-secondary{padding:15px 36px;background:#fff;color:#1a237e;border-radius:14px;font-weight:700;font-size:16px;border:2px solid #e0e0e0;transition:all .3s;cursor:pointer;font-family:'Heebo',sans-serif}
-    .btn-secondary:hover{border-color:#1a237e;transform:translateY(-2px)}
+    .hero{padding:130px 60px 80px;position:relative;overflow:hidden;background:linear-gradient(180deg,#e8e0ff 0%,#ece9ff 25%,#f5f3ff 60%,#ffffff 100%)}
+    .hero-bg{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
+    .hero-bg .grid{position:absolute;top:0;left:50%;transform:translateX(-50%);width:1400px;height:100%;background-image:linear-gradient(rgba(139,92,246,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.07) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%)}
+    .hero-bg .glow-1{position:absolute;top:-15%;left:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(139,92,246,.14),transparent 70%);filter:blur(80px);animation:nebulaFloat1 20s ease-in-out infinite alternate}
+    .hero-bg .glow-2{position:absolute;bottom:-25%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(168,85,247,.10),transparent 70%);filter:blur(80px);animation:nebulaFloat2 25s ease-in-out infinite alternate}
+    .hero-bg .glow-3{position:absolute;top:20%;right:15%;width:400px;height:400px;background:radial-gradient(circle,rgba(6,182,212,.08),transparent 70%);filter:blur(60px);animation:nebulaFloat3 18s ease-in-out infinite alternate}
+    .hero-bg .glow-4{position:absolute;top:50%;left:30%;width:500px;height:500px;background:radial-gradient(circle,rgba(236,72,153,.06),transparent 70%);filter:blur(90px);animation:nebulaFloat4 22s ease-in-out infinite alternate}
+    .hero-bg .glow-5{position:absolute;top:10%;left:50%;width:350px;height:350px;background:radial-gradient(circle,rgba(79,70,229,.10),transparent 70%);filter:blur(70px);animation:nebulaFloat5 15s ease-in-out infinite alternate}
+    @keyframes nebulaFloat1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(40px,30px) scale(1.1)}}
+    @keyframes nebulaFloat2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-30px,-40px) scale(1.15)}}
+    @keyframes nebulaFloat3{0%{transform:translate(0,0) scale(1)}100%{transform:translate(25px,-20px) scale(1.08)}}
+    @keyframes nebulaFloat4{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-35px,25px) scale(1.12)}}
+    @keyframes nebulaFloat5{0%{transform:translate(0,0) scale(1)}100%{transform:translate(20px,35px) scale(1.05)}}
 
-    /* Hero stamp animation */
-    .hero-stamp{margin:50px auto 0;width:160px;height:160px;position:relative}
-    .hero-stamp .ring-outer{width:100%;height:100%;animation:rotateSeal 20s linear infinite}
-    @keyframes rotateSeal{to{transform:rotate(360deg)}}
-    .hero-stamp .shimmer{position:absolute;top:8%;left:8%;width:84%;height:84%;border-radius:50%;background:conic-gradient(from 0deg,rgba(26,35,126,.06),rgba(13,71,161,.12) 60deg,rgba(76,175,80,.08) 120deg,rgba(26,35,126,.06) 180deg,rgba(13,71,161,.12) 240deg,rgba(76,175,80,.08) 300deg,rgba(26,35,126,.06));animation:shimmerRot 4s linear infinite}
-    @keyframes shimmerRot{to{transform:rotate(-360deg)}}
-    .hero-stamp .glow-ring{position:absolute;top:18%;left:18%;width:64%;height:64%;border-radius:50%;background:radial-gradient(circle,rgba(76,175,80,.12),transparent 70%);animation:glowPulse 3s ease-in-out infinite}
-    @keyframes glowPulse{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
-    .hero-stamp .inner{position:absolute;top:24%;left:24%;width:52%;height:52%;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(26,35,126,.12);display:flex;align-items:center;justify-content:center}
-    .hero-stamp .inner svg{width:36px;height:36px}
-    .hero-stamp .chk-anim{stroke-dasharray:50;stroke-dashoffset:50;animation:drawCheck 1.2s ease forwards 1s}
-    @keyframes drawCheck{to{stroke-dashoffset:0}}
+    /* Stars */
+    .hero-stars{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none}
+    .hero-stars .stars-sm,.hero-stars .stars-md,.hero-stars .stars-lg{position:absolute;top:0;left:0;right:0;bottom:0}
+    .hero-stars .stars-sm{background-image:radial-gradient(1px 1px at 100px 50px,rgba(139,92,246,.35),transparent),radial-gradient(1px 1px at 300px 120px,rgba(139,92,246,.30),transparent),radial-gradient(1px 1px at 500px 80px,rgba(168,85,247,.25),transparent),radial-gradient(1px 1px at 700px 200px,rgba(139,92,246,.20),transparent),radial-gradient(1px 1px at 150px 300px,rgba(124,58,237,.30),transparent),radial-gradient(1px 1px at 900px 150px,rgba(167,139,250,.25),transparent),radial-gradient(1px 1px at 50px 250px,rgba(196,181,253,.35),transparent),radial-gradient(1px 1px at 1100px 100px,rgba(139,92,246,.20),transparent),radial-gradient(1px 1px at 250px 400px,rgba(168,85,247,.30),transparent),radial-gradient(1px 1px at 800px 350px,rgba(139,92,246,.25),transparent),radial-gradient(1px 1px at 450px 250px,rgba(196,181,253,.20),transparent),radial-gradient(1px 1px at 1000px 300px,rgba(167,139,250,.30),transparent),radial-gradient(1px 1px at 350px 150px,rgba(124,58,237,.25),transparent),radial-gradient(1px 1px at 650px 400px,rgba(139,92,246,.20),transparent),radial-gradient(1px 1px at 1200px 250px,rgba(168,85,247,.25),transparent);animation:starsTwinkle 8s ease-in-out infinite alternate}
+    .hero-stars .stars-md{background-image:radial-gradient(1.5px 1.5px at 200px 100px,rgba(167,139,250,.45),transparent),radial-gradient(1.5px 1.5px at 600px 250px,rgba(139,92,246,.40),transparent),radial-gradient(1.5px 1.5px at 1000px 80px,rgba(196,181,253,.35),transparent),radial-gradient(1.5px 1.5px at 400px 350px,rgba(168,85,247,.40),transparent),radial-gradient(1.5px 1.5px at 800px 180px,rgba(139,92,246,.30),transparent),radial-gradient(1.5px 1.5px at 100px 420px,rgba(167,139,250,.35),transparent),radial-gradient(1.5px 1.5px at 1150px 320px,rgba(124,58,237,.30),transparent),radial-gradient(1.5px 1.5px at 550px 50px,rgba(196,181,253,.40),transparent);animation:starsTwinkle 12s ease-in-out infinite alternate-reverse}
+    .hero-stars .stars-lg{background-image:radial-gradient(2px 2px at 350px 200px,rgba(167,139,250,.50),transparent),radial-gradient(2px 2px at 750px 100px,rgba(139,92,246,.45),transparent),radial-gradient(2px 2px at 1100px 350px,rgba(196,181,253,.40),transparent),radial-gradient(2.5px 2.5px at 180px 380px,rgba(168,85,247,.35),transparent),radial-gradient(2px 2px at 950px 250px,rgba(167,139,250,.45),transparent);animation:starsFloat 15s ease-in-out infinite alternate}
+    @keyframes starsTwinkle{0%{opacity:.6}50%{opacity:1}100%{opacity:.7}}
+    @keyframes starsFloat{0%{opacity:.5;transform:translateY(0)}100%{opacity:1;transform:translateY(-8px)}}
 
+    /* Orbital Rings */
+    .hero-orbits{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none}
+    .hero-orbit{position:absolute;border-radius:50%;border:1px solid transparent}
+    .hero-orbit-1{width:500px;height:500px;top:50%;right:-50px;transform:translate(0,-50%) rotate(-15deg);border-color:rgba(139,92,246,.10);border-style:dashed;animation:orbitSpin1 60s linear infinite}
+    .hero-orbit-2{width:700px;height:700px;top:50%;right:-120px;transform:translate(0,-50%) rotate(10deg);border-color:rgba(167,139,250,.08);animation:orbitSpin2 90s linear infinite reverse}
+    .hero-orbit-3{width:350px;height:350px;top:50%;right:45px;transform:translate(0,-50%) rotate(30deg);border-color:rgba(196,181,253,.12);border-style:dotted;animation:orbitSpin3 45s linear infinite}
+    .hero-orbit-1::before{content:'';position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(139,92,246,.30);top:-3px;left:50%;box-shadow:0 0 8px rgba(139,92,246,.25)}
+    .hero-orbit-2::before{content:'';position:absolute;width:4px;height:4px;border-radius:50%;background:rgba(167,139,250,.25);bottom:-2px;left:30%;box-shadow:0 0 6px rgba(167,139,250,.20)}
+    .hero-orbit-3::before{content:'';position:absolute;width:5px;height:5px;border-radius:50%;background:rgba(196,181,253,.35);top:50%;right:-3px;box-shadow:0 0 10px rgba(196,181,253,.30)}
+    @keyframes orbitSpin1{to{transform:translate(0,-50%) rotate(345deg)}}
+    @keyframes orbitSpin2{to{transform:translate(0,-50%) rotate(370deg)}}
+    @keyframes orbitSpin3{to{transform:translate(0,-50%) rotate(390deg)}}
+    [dir="rtl"] .hero-orbit-1,[dir="rtl"] .hero-orbit-2,[dir="rtl"] .hero-orbit-3{right:auto}
+    [dir="rtl"] .hero-orbit-1{left:-50px}
+    [dir="rtl"] .hero-orbit-2{left:-120px}
+    [dir="rtl"] .hero-orbit-3{left:45px}
+
+    .hero-split{max-width:1200px;margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:36px}
+
+    /* Hero Right — Text */
+    .hero-right{flex:1;text-align:left}
+    [dir="rtl"] .hero-right{text-align:right}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:rgba(79,70,229,.08);border:1px solid rgba(79,70,229,.15);border-radius:24px;font-size:13px;font-weight:600;color:#4f46e5;margin-bottom:28px;letter-spacing:.3px}
+    .hero-badge .pulse{width:8px;height:8px;border-radius:50%;background:#34d399;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+    .hero h1{font-size:56px;font-weight:900;color:#111827;line-height:1.1;margin-bottom:24px;letter-spacing:-2px}
+    .hero h1 .gradient{background:linear-gradient(135deg,#a78bfa,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p.sub{font-size:18px;color:#6b7280;line-height:1.8;max-width:520px;margin:0 0 36px;font-weight:400}
+    .hero-buttons{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    .btn-primary{padding:16px 36px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:14px;font-weight:700;font-size:16px;transition:all .3s;border:none;cursor:pointer;font-family:inherit;letter-spacing:-.2px;box-shadow:0 4px 20px rgba(79,70,229,.3)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,70,229,.5)}
+    .btn-secondary{padding:16px 36px;background:transparent;color:#374151;border-radius:14px;font-weight:700;font-size:16px;border:1px solid rgba(0,0,0,.15);transition:all .3s;cursor:pointer;font-family:inherit;letter-spacing:-.2px}
+    .btn-secondary:hover{border-color:rgba(0,0,0,.3);background:rgba(0,0,0,.02);transform:translateY(-2px)}
+
+    /* Hero Left — Document Scan Animation */
+    .hero-left{flex:1;display:flex;align-items:center;justify-content:center;perspective:1000px}
+    .doc-scene{position:relative;width:340px;height:440px}
+    .doc-paper{position:absolute;top:0;left:0;width:100%;height:100%;background:#fff;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.12),0 1px 3px rgba(0,0,0,.08);overflow:hidden;opacity:0;transform:translateY(60px);transition:opacity .8s,transform .8s cubic-bezier(.16,1,.3,1)}
+    .doc-paper.visible{opacity:1;transform:translateY(0)}
+    .doc-paper.exit{opacity:0;transform:translateY(-40px) scale(.95);transition:opacity .6s,transform .6s}
+    .doc-header{padding:28px 28px 0;text-align:center}
+    .doc-header .doc-line-thick{height:3px;background:linear-gradient(90deg,transparent,rgba(79,70,229,.2),transparent);border-radius:2px;margin-bottom:16px}
+    .doc-header .doc-uni{font-size:13px;font-weight:800;color:#6d28d9;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+    .doc-header .doc-fac{font-size:10px;color:#6b7280;letter-spacing:.5px}
+    .doc-header .doc-line-thick:last-child{margin-top:16px;margin-bottom:0}
+    .doc-body{padding:20px 28px}
+    .doc-body .doc-title{font-size:11px;font-weight:700;color:#374151;text-align:center;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+    .doc-body .doc-line{height:8px;background:#f3f4f6;border-radius:4px;margin-bottom:10px}
+    .doc-body .doc-line.w70{width:70%}
+    .doc-body .doc-line.w85{width:85%}
+    .doc-body .doc-line.w60{width:60%}
+    .doc-body .doc-line.w50{width:50%;margin:0 auto 10px}
+    .doc-body .doc-line.w40{width:40%}
+    .doc-body .doc-sig{margin-top:16px;text-align:right;border-top:1px solid #e5e7eb;padding-top:12px}
+    .doc-body .doc-sig .doc-line{display:inline-block;width:100px;margin:0}
+
+    /* Scan line on document */
+    .doc-scan{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(79,70,229,.5) 20%,rgba(124,58,237,.8) 50%,rgba(79,70,229,.5) 80%,transparent);pointer-events:none;z-index:5;opacity:0;top:0;box-shadow:0 0 20px rgba(79,70,229,.4),0 0 60px rgba(79,70,229,.2);transition:opacity .3s}
+    .doc-scan.active{opacity:1;animation:docScanDown 3.5s ease-in-out forwards}
+    @keyframes docScanDown{0%{top:0}100%{top:100%}}
+    .doc-scan-glow{position:absolute;left:0;right:0;height:60px;background:linear-gradient(180deg,rgba(79,70,229,.08),transparent);pointer-events:none;z-index:4;opacity:0;top:0}
+    .doc-scan-glow.active{opacity:1;animation:docScanDown 3.5s ease-in-out forwards}
+
+    /* Hash terminal */
+    .doc-hash{position:absolute;bottom:-52px;left:0;right:0;font-family:'Courier New',monospace;font-size:10px;color:rgba(79,70,229,.6);text-align:center;opacity:0;transition:opacity .4s;letter-spacing:.5px;line-height:1.6}
+    .doc-hash.visible{opacity:1}
+    .doc-hash .hash-label{color:#4f46e5;font-weight:700;font-size:11px}
+
+    /* Stamp on document */
+    .doc-stamp{position:absolute;bottom:50px;right:20px;width:90px;height:90px;z-index:10;pointer-events:none;opacity:0;perspective:800px}
+    .doc-stamp.active{opacity:1}
+    .doc-stamp-coin{width:100%;height:100%;transform-style:preserve-3d;opacity:0}
+    .doc-stamp-coin.animate{animation:heroStampFlip 1.8s ease-out forwards}
+    @keyframes heroStampFlip{
+      0%{opacity:0;transform:translateY(-200px) rotateY(0) scale(.3)}
+      20%{opacity:1;transform:translateY(-100px) rotateY(540deg) scale(.7)}
+      45%{transform:translateY(-20px) rotateY(1080deg) scale(1.15)}
+      65%{transform:translateY(8px) rotateY(1440deg) scale(.97)}
+      80%{transform:translateY(-4px) rotateY(1620deg) scale(1.03)}
+      100%{opacity:1;transform:translateY(0) rotateY(1800deg) scale(1)}
+    }
+    .doc-stamp-coin.breathe{opacity:1;animation:stampBreathe2 3s ease-in-out infinite}
+    @keyframes stampBreathe2{0%,100%{transform:rotateY(1800deg) scale(1)}50%{transform:rotateY(1800deg) scale(1.06)}}
+    .doc-stamp .s-ring{width:100%;height:100%;position:relative}
+    .doc-stamp .s-outer{position:absolute;top:0;left:0;width:100%;height:100%;animation:rotStamp2 25s linear infinite}
+    @keyframes rotStamp2{to{transform:rotate(360deg)}}
+    .doc-stamp .s-shim{position:absolute;top:5%;left:5%;width:90%;height:90%;border-radius:50%;background:conic-gradient(from 0deg,rgba(124,58,237,.05),rgba(109,40,217,.1) 60deg,rgba(76,175,80,.07) 120deg,rgba(124,58,237,.05) 180deg,rgba(109,40,217,.1) 240deg,rgba(76,175,80,.07) 300deg,rgba(124,58,237,.05));animation:shimRot2 4s linear infinite}
+    @keyframes shimRot2{to{transform:rotate(-360deg)}}
+    .doc-stamp .s-glow{position:absolute;top:15%;left:15%;width:70%;height:70%;border-radius:50%;background:radial-gradient(circle,rgba(76,175,80,.12),transparent 70%);animation:glowP2 3s ease-in-out infinite}
+    @keyframes glowP2{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
+    .doc-stamp .s-inner{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.8);border:1px solid rgba(124,58,237,.12)}
+    .doc-stamp .s-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+    .doc-stamp .s-center svg{width:22px;height:22px}
+    .doc-stamp .s-brand{font-size:5px;font-weight:900;letter-spacing:1px;color:rgba(124,58,237,.4);margin-top:1px}
+    .doc-stamp .s-lbl{font-size:6px;font-weight:900;letter-spacing:.5px;color:rgba(46,125,50,.5);margin-top:1px}
+
+    /* Holo waves on document */
+    .doc-waves{position:absolute;left:0;right:0;bottom:0;height:30%;z-index:6;pointer-events:none;overflow:hidden;border-radius:0 0 8px 8px;opacity:0;transition:opacity 1s;mask-image:linear-gradient(to bottom,transparent 0%,black 50%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 50%)}
+    .doc-waves.active{opacity:1}
+    .doc-waves svg{position:absolute;top:0;width:200%;height:100%;left:-50%}
+    .doc-waves .dw-a{animation:dwDrift 8s ease-in-out infinite}
+    .doc-waves .dw-b{animation:dwDrift2 10s ease-in-out infinite}
+    @keyframes dwDrift{0%,100%{transform:translateX(-3%)}50%{transform:translateX(3%)}}
+    @keyframes dwDrift2{0%,100%{transform:translateX(3%)}50%{transform:translateX(-3%)}}
+
+    /* Status text */
+    .doc-status{position:absolute;bottom:-80px;left:0;right:0;text-align:center;font-size:13px;font-weight:600;opacity:0;transition:opacity .4s,transform .3s;transform:translateY(5px)}
+    .doc-status.visible{opacity:1;transform:translateY(0)}
+    .doc-status.scanning{color:#4f46e5}
+    .doc-status.protected{color:#16a34a}
+    .doc-status .status-icon{display:inline-block;margin-right:6px;vertical-align:middle}
+
+    /* Green glow flash */
+    .doc-glow-flash{position:absolute;top:0;left:0;right:0;bottom:0;border-radius:8px;box-shadow:0 0 0 0 rgba(52,211,153,0);pointer-events:none;z-index:8;transition:box-shadow .3s}
+    .doc-glow-flash.active{box-shadow:0 0 40px rgba(52,211,153,.3),0 0 80px rgba(52,211,153,.15);transition:box-shadow .6s}
+
+    @media(max-width:900px){
+      .hero{padding:120px 24px 60px}
+      .hero-split{flex-direction:column;gap:40px;text-align:center}
+      .hero-right{text-align:center}
+      [dir="rtl"] .hero-right{text-align:center}
+      .hero p.sub{margin:0 auto 36px}
+      .hero-buttons{justify-content:center}
+      .doc-scene{width:280px;height:360px}
+      .hero h1{font-size:40px}
+      .hero-orbit-1{width:300px;height:300px;right:-30px}
+      .hero-orbit-2{width:450px;height:450px;right:-80px}
+      .hero-orbit-3{width:200px;height:200px;right:20px}
+      [dir="rtl"] .hero-orbit-1{left:-30px;right:auto}
+      [dir="rtl"] .hero-orbit-2{left:-80px;right:auto}
+      [dir="rtl"] .hero-orbit-3{left:20px;right:auto}
+    }
     @media(max-width:600px){
-      .hero{padding:110px 20px 60px}
-      .hero h1{font-size:32px}
-      .hero p.sub{font-size:16px}
-      .btn-primary,.btn-secondary{padding:13px 28px;font-size:14px;width:100%}
+      .hero{padding:100px 20px 40px}
+      .hero h1{font-size:32px;letter-spacing:-1px}
+      .hero p.sub{font-size:15px}
+      .btn-primary,.btn-secondary{padding:14px 28px;font-size:14px;width:100%}
+      .doc-scene{width:240px;height:310px}
+      .doc-header .doc-uni{font-size:11px}
+      .doc-body .doc-title{font-size:10px}
+      .hero-orbit-1,.hero-orbit-2{display:none}
+      .hero-orbit-3{width:180px;height:180px;top:30%;right:auto;left:50%;transform:translateX(-50%) rotate(30deg)}
+      .hero-stars .stars-lg{display:none}
     }
 
+    /* ===== STATS BAR ===== */
+    .stats-bar{background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 50%,#f5f3ff 100%);border-top:1px solid rgba(124,58,237,.08);border-bottom:1px solid rgba(124,58,237,.08);padding:48px 32px;margin-top:40px;margin-bottom:20px;position:relative;overflow:hidden}
+    .stats-bar::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 50%,rgba(124,58,237,.06),transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(6,182,212,.04),transparent 60%);pointer-events:none}
+    .stats-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;position:relative;z-index:1}
+    .stat-item{padding:12px 8px;border-radius:16px;transition:transform .3s}
+    .stat-item:hover{transform:translateY(-2px)}
+    .stat-item .stat-num{font-size:36px;font-weight:800;color:#111827;letter-spacing:-1px}
+    .stat-item .stat-num .accent{background:linear-gradient(135deg,#4f46e5,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .stat-item .stat-label{font-size:13px;color:#6b7280;margin-top:6px;font-weight:500}
+    @media(max-width:600px){.stats-inner{grid-template-columns:repeat(2,1fr);gap:20px}.stat-item .stat-num{font-size:28px}}
+
     /* ===== SECTIONS COMMON ===== */
-    section{padding:90px 24px}
-    .section-header{text-align:center;max-width:600px;margin:0 auto 55px}
-    .section-header h2{font-size:36px;font-weight:900;color:#1a237e;margin-bottom:12px}
-    .section-header p{font-size:17px;color:#888;font-weight:300}
-    .fade-up{opacity:0;transform:translateY(30px);transition:opacity .6s,transform .6s}
+    section{padding:100px 32px}
+    .section-header{text-align:center;max-width:600px;margin:0 auto 60px}
+    .section-header .label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7c3aed;margin-bottom:16px;background:rgba(124,58,237,.08);padding:6px 16px;border-radius:20px;border:1px solid rgba(124,58,237,.12)}
+    .section-header h2{font-size:40px;font-weight:800;color:#111827;margin-bottom:14px;letter-spacing:-1px}
+    .section-header p{font-size:17px;color:#6b7280;font-weight:400;line-height:1.7}
+    .fade-up{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
     .fade-up.visible{opacity:1;transform:translateY(0)}
+    .fade-up:nth-child(2){transition-delay:.1s}
+    .fade-up:nth-child(3){transition-delay:.2s}
+    .fade-up:nth-child(4){transition-delay:.3s}
+    .fade-up:nth-child(5){transition-delay:.35s}
+    .fade-up:nth-child(6){transition-delay:.4s}
+    .fade-up:nth-child(7){transition-delay:.45s}
+    .fade-up:nth-child(8){transition-delay:.5s}
+
+    /* ===== FLOATING PARTICLES ===== */
+    /* ===== CYBER NETWORK CANVAS ===== */
+    .cyber-canvas{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;opacity:.6}
+
+    /* ===== FLOATING SECURITY ICONS ===== */
+    .cyber-floaters{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;overflow:hidden}
+    .cyber-icon{position:absolute;opacity:.06;animation:cyberFloat linear infinite}
+    .cyber-icon svg{width:100%;height:100%}
+    .cyber-icon.shield{color:#4f46e5}
+    .cyber-icon.lock{color:#7c3aed}
+    .cyber-icon.key{color:#06b6d4}
+    .cyber-icon.fingerprint{color:#34d399}
+    @keyframes cyberFloat{0%{transform:translateY(110vh) rotate(0deg) scale(.8)}100%{transform:translateY(-10vh) rotate(360deg) scale(1.1)}}
+
+    /* ===== SCAN LINE ===== */
+    .scan-line{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 5%,rgba(79,70,229,.12) 20%,rgba(124,58,237,.18) 50%,rgba(79,70,229,.12) 80%,transparent 95%);pointer-events:none;z-index:2;animation:scanDown 8s linear infinite;box-shadow:0 0 20px rgba(79,70,229,.06),0 0 60px rgba(79,70,229,.03)}
+    @keyframes scanDown{0%{top:-2px}100%{top:100%}}
+
+    /* ===== HEX GRID OVERLAY ===== */
+    .hex-grid{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%234f46e5' fill-opacity='1'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+
+    /* ===== ANIMATED SECTION DIVIDERS ===== */
+    .section-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(79,70,229,.12) 30%,rgba(124,58,237,.12) 50%,rgba(6,182,212,.08) 70%,transparent);position:relative;overflow:visible}
+    .section-divider::after{content:'';position:absolute;top:-2px;width:80px;height:5px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.4),transparent);border-radius:3px;animation:dividerGlow 4s ease-in-out infinite;filter:blur(1px)}
+    @keyframes dividerGlow{0%{left:-80px}100%{left:calc(100% + 80px)}}
+
+    /* ===== GLOW CURSOR ===== */
+    .glow-cursor{position:fixed;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(79,70,229,.06) 0%,rgba(124,58,237,.02) 40%,transparent 70%);pointer-events:none;z-index:0;transition:transform .15s ease-out,opacity .3s;will-change:transform;mix-blend-mode:multiply}
 
     /* ===== HOW IT WORKS ===== */
-    .how{background:#f8f9ff}
-    .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;max-width:1000px;margin:0 auto;position:relative}
-    .steps-grid::before{content:'';position:absolute;top:40px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,#1a237e,#0d47a1,#2e7d32,#4caf50);opacity:.15}
-    [dir="rtl"] .steps-grid::before{background:linear-gradient(270deg,#1a237e,#0d47a1,#2e7d32,#4caf50)}
-    .step-card{text-align:center;position:relative;z-index:1}
-    .step-num{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#1a237e,#0d47a1);color:#fff;font-size:22px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 4px 15px rgba(26,35,126,.2)}
-    .step-icon{font-size:32px;margin-bottom:10px}
-    .step-card h3{font-size:17px;font-weight:700;color:#1a237e;margin-bottom:6px}
-    .step-card p{font-size:13px;color:#888;line-height:1.6}
+    .how{background:#ffffff;position:relative;overflow:hidden}
+    .how::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.03),transparent 50%);pointer-events:none}
+    .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:1000px;margin:0 auto;position:relative}
+    .steps-grid::before{content:'';position:absolute;top:42px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,#4f46e5,#7c3aed,#06b6d4,#34d399);opacity:.18;border-radius:2px}
+    [dir="rtl"] .steps-grid::before{background:linear-gradient(270deg,#4f46e5,#7c3aed,#06b6d4,#34d399)}
+    .step-card{text-align:center;position:relative;z-index:1;padding:20px 16px;border-radius:20px;transition:all .3s}
+    .step-card:hover{background:rgba(124,58,237,.03)}
+    .step-num{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 4px 20px rgba(79,70,229,.3);transition:transform .3s,box-shadow .3s}
+    .step-card:hover .step-num{transform:scale(1.08);box-shadow:0 8px 30px rgba(79,70,229,.4)}
+    .step-icon{font-size:28px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;width:48px;height:48px;margin:0 auto 12px;background:rgba(79,70,229,.04);border:1px solid rgba(79,70,229,.08);border-radius:12px}
+    .step-icon svg{width:24px;height:24px}
+    .step-card h3{font-size:16px;font-weight:700;color:#111827;margin-bottom:8px}
+    .step-card p{font-size:13px;color:#6b7280;line-height:1.7}
     @media(max-width:768px){
-      .steps-grid{grid-template-columns:repeat(2,1fr);gap:25px}
+      .steps-grid{grid-template-columns:repeat(2,1fr);gap:30px}
       .steps-grid::before{display:none}
     }
     @media(max-width:480px){.steps-grid{grid-template-columns:1fr}}
 
     /* ===== FEATURES ===== */
-    .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto}
-    .feat-card{padding:30px;border-radius:16px;background:#fff;border:1px solid #f0f0f0;transition:all .3s}
-    .feat-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,.06);border-color:#e8eaf6}
-    .feat-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
-    .feat-icon.privacy{background:#e8f5e9}
-    .feat-icon.blockchain{background:#e3f2fd}
-    .feat-icon.stamp{background:#f3e5f5}
-    .feat-icon.forgery{background:#fce4ec}
-    .feat-icon.format{background:#fff3e0}
-    .feat-icon.docs{background:#e8eaf6}
-    .feat-card h3{font-size:17px;font-weight:700;color:#1a237e;margin-bottom:8px}
-    .feat-card p{font-size:14px;color:#888;line-height:1.7}
-    @media(max-width:768px){.features-grid{grid-template-columns:1fr;gap:16px}}
+    .features-section{background:linear-gradient(180deg,#f8f7ff 0%,#f5f3ff 50%,#f8f7ff 100%);position:relative;overflow:hidden}
+    .features-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 20% 80%,rgba(124,58,237,.04),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(6,182,212,.03),transparent 50%);pointer-events:none}
+    .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1060px;margin:0 auto;position:relative;z-index:1}
+    .feat-card{padding:32px;border-radius:20px;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.06);transition:all .4s cubic-bezier(.16,1,.3,1);box-shadow:0 2px 8px rgba(124,58,237,.04);transform-style:preserve-3d;will-change:transform}
+    .feat-card:hover{transform:translateY(-8px) scale(1.02);background:rgba(255,255,255,.95);border-color:rgba(124,58,237,.18);box-shadow:0 12px 40px rgba(124,58,237,.12),0 0 0 1px rgba(124,58,237,.05)}
+    .feat-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+    .feat-icon svg{width:24px;height:24px}
+    .feat-icon.privacy{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.15)}
+    .feat-icon.privacy svg{color:#34d399}
+    .feat-icon.blockchain{background:rgba(79,70,229,.1);border:1px solid rgba(79,70,229,.15)}
+    .feat-icon.blockchain svg{color:#818cf8}
+    .feat-icon.stamp{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.15)}
+    .feat-icon.stamp svg{color:#a855f7}
+    .feat-icon.forgery{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.15)}
+    .feat-icon.forgery svg{color:#ef4444}
+    .feat-icon.format{background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.15)}
+    .feat-icon.format svg{color:#06b6d4}
+    .feat-icon.docs{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.15)}
+    .feat-icon.docs svg{color:#fbbf24}
+    .feat-card h3{font-size:17px;font-weight:700;color:#111827;margin-bottom:10px}
+    .feat-card p{font-size:14px;color:#6b7280;line-height:1.8}
+    @media(max-width:768px){.features-grid{grid-template-columns:1fr;gap:14px}}
+
+    /* ===== SECURITY ===== */
+    .security-section{background:linear-gradient(180deg,#ffffff 0%,#faf8ff 40%,#f5f3ff 70%,#ffffff 100%);border-top:none;position:relative;overflow:hidden}
+    .security-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 30%,rgba(79,70,229,.05) 0%,transparent 60%);pointer-events:none}
+    .security-visual{text-align:center;margin-bottom:60px}
+    .shield-anim{width:180px;height:180px;margin:0 auto;position:relative}
+    .shield-anim svg{width:100%;height:100%;filter:drop-shadow(0 0 40px rgba(79,70,229,.25));position:relative;z-index:2}
+    .shield-anim .pulse-ring{position:absolute;top:50%;left:50%;width:100%;height:100%;transform:translate(-50%,-50%);border-radius:50%;border:2px solid rgba(79,70,229,.15);animation:shieldPulse 3s ease-in-out infinite}
+    .shield-anim .pulse-ring:nth-child(2){width:140%;height:140%;animation-delay:.5s;border-color:rgba(79,70,229,.08)}
+    .shield-anim .pulse-ring:nth-child(3){width:180%;height:180%;animation-delay:1s;border-color:rgba(79,70,229,.04)}
+    @keyframes shieldPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1}50%{transform:translate(-50%,-50%) scale(1.05);opacity:.5}}
+    .security-layers{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1060px;margin:0 auto}
+    .sec-layer{padding:24px;border-radius:16px;background:rgba(255,255,255,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(124,58,237,.06);transition:all .4s cubic-bezier(.16,1,.3,1);text-align:center;box-shadow:0 2px 8px rgba(124,58,237,.04);transform-style:preserve-3d;will-change:transform}
+    .sec-layer:hover{transform:translateY(-8px) scale(1.02);background:rgba(255,255,255,.95);border-color:rgba(124,58,237,.18);box-shadow:0 12px 40px rgba(124,58,237,.12),0 0 0 1px rgba(124,58,237,.05)}
+    .sec-layer .layer-num{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:13px;font-weight:800;color:#fff}
+    .sec-layer .sec-icon{width:44px;height:44px;border-radius:12px;background:rgba(79,70,229,.1);border:1px solid rgba(79,70,229,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+    .sec-layer .sec-icon svg{width:22px;height:22px;color:#818cf8}
+    .sec-layer h4{font-size:14px;font-weight:700;color:#111827;margin-bottom:6px}
+    .sec-layer p{font-size:12px;color:#9ca3af;line-height:1.6}
+    @media(max-width:768px){.security-layers{grid-template-columns:repeat(2,1fr);gap:12px}}
+    @media(max-width:480px){.security-layers{grid-template-columns:1fr}}
 
     /* ===== DEMO ===== */
-    .demo-section{background:#f8f9ff}
-    .demo-wrapper{max-width:700px;margin:0 auto}
-    .demo-toggles{display:flex;justify-content:center;gap:8px;margin-bottom:30px}
-    .demo-toggle{padding:10px 24px;border:2px solid #e0e0e0;border-radius:12px;background:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:.2s;color:#666}
-    .demo-toggle.active{border-color:#1a237e;background:#1a237e;color:#fff}
-    .demo-toggle.forged-active{border-color:#c62828;background:#c62828;color:#fff}
-    .demo-doc{background:#fff;border-radius:16px;box-shadow:0 4px 30px rgba(0,0,0,.08);padding:50px;position:relative;min-height:300px;overflow:hidden;transition:box-shadow .4s,border-color .4s;border:2px solid transparent}
-    .demo-doc.forged{box-shadow:0 0 0 3px #e53935,0 4px 30px rgba(255,0,0,.15);border-color:#e53935}
-    .demo-doc-content{opacity:.6}
-    .demo-doc-content .line{height:12px;background:#e0e0e0;border-radius:6px;margin-bottom:10px}
-    .demo-doc-content .line.short{width:60%}
-    .demo-doc-content .line.med{width:80%}
-    .demo-doc-content .line.title-line{height:20px;width:40%;background:#c5cae9;margin-bottom:20px}
-    .demo-doc-content .spacer{height:20px}
-    .demo-stamp-area{position:absolute;bottom:30px;right:30px;width:120px;height:120px}
-    [dir="rtl"] .demo-stamp-area{right:auto;left:30px}
-    .demo-stamp-area .ds-outer{width:100%;height:100%;animation:rotateSeal 20s linear infinite}
-    .demo-stamp-area .ds-outer.frozen{animation:none}
-    .demo-stamp-area .ds-shimmer{position:absolute;top:6%;left:6%;width:88%;height:88%;border-radius:50%;background:conic-gradient(from 0deg,rgba(26,35,126,.06),rgba(13,71,161,.12) 60deg,rgba(76,175,80,.08) 120deg,rgba(26,35,126,.06) 180deg,rgba(13,71,161,.12) 240deg,rgba(76,175,80,.08) 300deg,rgba(26,35,126,.06));animation:shimmerRot 4s linear infinite}
-    .demo-stamp-area .ds-shimmer.frozen{animation:none;background:rgba(229,57,53,.08)}
-    .demo-stamp-area .ds-glow{position:absolute;top:16%;left:16%;width:68%;height:68%;border-radius:50%;background:radial-gradient(circle,rgba(76,175,80,.12),transparent 70%);animation:glowPulse 3s ease-in-out infinite}
-    .demo-stamp-area .ds-glow.frozen{animation:none;background:radial-gradient(circle,rgba(229,57,53,.1),transparent 70%)}
-    .demo-stamp-area .ds-inner{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(26,35,126,.12);display:flex;align-items:center;justify-content:center;flex-direction:column}
-    .demo-stamp-area .ds-label{font-size:8px;font-weight:900;letter-spacing:1px;margin-top:2px}
-    .demo-stamp-area .ds-label.ok{color:rgba(46,125,50,.7)}
-    .demo-stamp-area .ds-label.bad{color:rgba(198,40,40,.7)}
-    .demo-forged-overlay{display:none;position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none}
-    .demo-forged-overlay.show{display:block}
-    .demo-forged-overlay .watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-size:48px;font-weight:900;color:rgba(229,57,53,.08);letter-spacing:6px;white-space:nowrap}
+    .demo-section{background:linear-gradient(180deg,#f8f7ff,#ede9fe 50%,#f8f7ff);position:relative;overflow:hidden}
+    .demo-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 50%,rgba(124,58,237,.05),transparent 60%);pointer-events:none}
+    .demo-wrapper{max-width:880px;margin:0 auto;position:relative;z-index:1}
+    .demo-browser{border-radius:16px;overflow:hidden;border:1px solid rgba(124,58,237,.12);background:#fff;box-shadow:0 8px 60px rgba(124,58,237,.12),0 2px 8px rgba(0,0,0,.04)}
+    .demo-topbar{height:40px;background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-bottom:1px solid rgba(124,58,237,.08);display:flex;align-items:center;padding:0 16px;gap:8px}
+    .demo-dot{width:10px;height:10px;border-radius:50%;background:rgba(0,0,0,.1)}
+    .demo-dot:nth-child(1){background:rgba(239,68,68,.6)}
+    .demo-dot:nth-child(2){background:rgba(251,191,36,.6)}
+    .demo-dot:nth-child(3){background:rgba(52,211,153,.6)}
+    .demo-url{margin-left:16px;flex:1;height:26px;background:#fff;border-radius:6px;display:flex;align-items:center;padding:0 12px;font-size:11px;color:#9ca3af;font-family:'Inter',monospace;border:1px solid rgba(0,0,0,.06)}
+    [dir="rtl"] .demo-url{margin-left:0;margin-right:16px}
+    .demo-iframe{width:100%;height:1200px;border:none;display:block;background:#fff}
+    @media(max-width:768px){.demo-iframe{height:900px}}
 
     /* ===== INDUSTRIES ===== */
-    .industries-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:0 auto}
-    .ind-card{display:flex;align-items:center;gap:16px;padding:22px 24px;border-radius:14px;background:#f8f9ff;border:1px solid #e8eaf6;transition:.3s}
-    .ind-card:hover{background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.06);transform:translateY(-2px)}
-    .ind-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
-    .ind-icon.uni{background:#e8eaf6}
-    .ind-icon.health{background:#e8f5e9}
-    .ind-icon.legal{background:#fff3e0}
-    .ind-icon.gov{background:#e3f2fd}
-    .ind-icon.hr{background:#f3e5f5}
-    .ind-icon.fin{background:#fce4ec}
-    .ind-card h3{font-size:15px;font-weight:700;color:#1a237e;margin-bottom:3px}
-    .ind-card p{font-size:12px;color:#999}
+    .industries-section{background:#ffffff;position:relative;overflow:hidden}
+    .industries-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 70%,rgba(124,58,237,.03),transparent 50%),radial-gradient(ellipse at 70% 30%,rgba(52,211,153,.02),transparent 50%);pointer-events:none}
+    .industries-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:900px;margin:0 auto;position:relative;z-index:1}
+    .ind-card{display:flex;align-items:center;gap:16px;padding:22px 24px;border-radius:16px;background:rgba(255,255,255,.8);border:1px solid rgba(124,58,237,.05);transition:all .3s;box-shadow:0 2px 6px rgba(124,58,237,.03)}
+    .ind-card:hover{background:#fff;border-color:rgba(124,58,237,.18);transform:translateY(-4px);box-shadow:0 8px 30px rgba(124,58,237,.1)}
+    .ind-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .ind-icon svg{width:22px;height:22px}
+    .ind-icon.uni{background:rgba(79,70,229,.1);border:1px solid rgba(79,70,229,.15)}
+    .ind-icon.uni svg{color:#818cf8}
+    .ind-icon.health{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.15)}
+    .ind-icon.health svg{color:#34d399}
+    .ind-icon.legal{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.15)}
+    .ind-icon.legal svg{color:#fbbf24}
+    .ind-icon.gov{background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.15)}
+    .ind-icon.gov svg{color:#06b6d4}
+    .ind-icon.hr{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.15)}
+    .ind-icon.hr svg{color:#a855f7}
+    .ind-icon.fin{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.15)}
+    .ind-icon.fin svg{color:#f43f5e}
+    .ind-card h3{font-size:15px;font-weight:700;color:#111827;margin-bottom:3px}
+    .ind-card p{font-size:12px;color:#9ca3af}
     @media(max-width:768px){.industries-grid{grid-template-columns:1fr}}
 
     /* ===== PRICING ===== */
-    .pricing-section{background:#f8f9ff}
-    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:960px;margin:0 auto;align-items:start}
-    .price-card{background:#fff;border-radius:20px;padding:36px 28px;border:1px solid #e8e8e8;text-align:center;transition:.3s;position:relative}
-    .price-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,.08)}
-    .price-card.popular{border:2px solid #1a237e;box-shadow:0 8px 30px rgba(26,35,126,.12)}
-    .price-card .pop-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:4px 16px;background:#1a237e;color:#fff;font-size:11px;font-weight:700;border-radius:20px;white-space:nowrap}
-    .price-card h3{font-size:20px;font-weight:700;color:#1a237e;margin-bottom:14px}
-    .price-amount{font-size:44px;font-weight:900;color:#1a237e}
-    .price-period{font-size:15px;color:#888;font-weight:400}
-    .price-features{list-style:none;margin:24px 0;text-align:start}
-    .price-features li{padding:8px 0;font-size:14px;color:#666;display:flex;align-items:center;gap:8px}
-    .price-features li::before{content:'✓';color:#4caf50;font-weight:700;font-size:14px}
-    .price-btn{width:100%;padding:14px;border:none;border-radius:12px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:.3s}
-    .price-btn.outline{background:#fff;color:#1a237e;border:2px solid #e0e0e0}
-    .price-btn.outline:hover{border-color:#1a237e}
-    .price-btn.filled{background:linear-gradient(135deg,#1a237e,#0d47a1);color:#fff}
-    .price-btn.filled:hover{box-shadow:0 4px 15px rgba(26,35,126,.3);transform:translateY(-1px)}
+    .pricing-section{background:linear-gradient(180deg,#f8f7ff 0%,#f3f0ff 50%,#f8f7ff 100%);border-top:none;position:relative;overflow:hidden}
+    .pricing-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 60%,rgba(124,58,237,.04),transparent 50%);pointer-events:none}
+    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:960px;margin:0 auto;align-items:start;position:relative;z-index:1}
+    .price-card{background:rgba(255,255,255,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:24px;padding:40px 30px;border:1px solid rgba(124,58,237,.06);text-align:center;transition:all .4s;position:relative;box-shadow:0 2px 8px rgba(124,58,237,.04)}
+    .price-card:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 12px 40px rgba(124,58,237,.12),0 0 0 1px rgba(124,58,237,.08)}
+    .price-card.popular{border:1px solid rgba(124,58,237,.25);background:rgba(255,255,255,.95);box-shadow:0 8px 50px rgba(124,58,237,.15),0 0 0 1px rgba(124,58,237,.08)}
+    .price-card.popular:hover{box-shadow:0 16px 60px rgba(124,58,237,.2),0 0 0 1px rgba(124,58,237,.12)}
+    .price-card .pop-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);padding:6px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-size:11px;font-weight:700;border-radius:20px;white-space:nowrap;letter-spacing:.5px;box-shadow:0 4px 15px rgba(124,58,237,.3)}
+    .price-card h3{font-size:18px;font-weight:700;color:#6b7280;margin-bottom:16px}
+    .price-amount{font-size:48px;font-weight:900;color:#111827;letter-spacing:-2px}
+    .price-period{font-size:15px;color:#9ca3af;font-weight:400}
+    .price-features{list-style:none;margin:28px 0;text-align:start}
+    .price-features li{padding:9px 0;font-size:14px;color:#4b5563;display:flex;align-items:center;gap:10px}
+    .price-features li::before{content:'';display:inline-block;width:18px;height:18px;background:rgba(52,211,153,.15);border-radius:50%;flex-shrink:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 12l2 2 4-4' stroke='%2334d399' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-position:center;background-repeat:no-repeat;background-size:14px}
+    .price-btn{width:100%;padding:14px;border:none;border-radius:12px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:all .3s;letter-spacing:-.1px}
+    .price-btn.outline{background:#fff;color:#374151;border:1px solid rgba(0,0,0,.15)}
+    .price-btn.outline:hover{border-color:rgba(0,0,0,.3);background:rgba(0,0,0,.02)}
+    .price-btn.filled{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;box-shadow:0 4px 15px rgba(79,70,229,.3)}
+    .price-btn.filled:hover{box-shadow:0 8px 25px rgba(79,70,229,.5);transform:translateY(-1px)}
     @media(max-width:768px){.pricing-grid{grid-template-columns:1fr;max-width:400px}}
 
     /* ===== BOTTOM CTA ===== */
-    .bottom-cta{background:linear-gradient(135deg,#1a237e,#0d47a1);padding:80px 24px;text-align:center;color:#fff}
-    .bottom-cta h2{font-size:36px;font-weight:900;margin-bottom:14px}
-    .bottom-cta p{font-size:17px;opacity:.8;margin-bottom:32px;max-width:500px;margin-left:auto;margin-right:auto;font-weight:300}
-    .bottom-cta .btn-white{padding:16px 40px;background:#fff;color:#1a237e;border-radius:14px;font-weight:700;font-size:16px;border:none;cursor:pointer;transition:.3s;font-family:'Heebo',sans-serif}
-    .bottom-cta .btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,.2)}
+    .bottom-cta{background:linear-gradient(135deg,#4338ca 0%,#6d28d9 40%,#7c3aed 70%,#8b5cf6 100%);padding:100px 32px;text-align:center;position:relative;overflow:hidden;border-radius:32px;max-width:1100px;margin:0 auto 60px}
+    .bottom-cta::before{content:'';position:absolute;top:-50%;left:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(255,255,255,.1),transparent 60%);filter:blur(80px);animation:ctaGlow1 8s ease-in-out infinite alternate}
+    .bottom-cta::after{content:'';position:absolute;bottom:-40%;right:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(6,182,212,.15),transparent 60%);filter:blur(60px);animation:ctaGlow2 10s ease-in-out infinite alternate}
+    @keyframes ctaGlow1{0%{transform:translate(0,0)}100%{transform:translate(30px,20px)}}
+    @keyframes ctaGlow2{0%{transform:translate(0,0)}100%{transform:translate(-20px,-30px)}}
+    .bottom-cta>*{position:relative;z-index:1}
+    .bottom-cta h2{font-size:40px;font-weight:800;margin-bottom:16px;color:#fff;letter-spacing:-1px}
+    .bottom-cta p{font-size:17px;color:rgba(255,255,255,.75);margin-bottom:36px;max-width:500px;margin-left:auto;margin-right:auto;font-weight:400;line-height:1.7}
+    .bottom-cta .btn-white{padding:16px 40px;background:#fff;color:#6d28d9;border-radius:14px;font-weight:800;font-size:16px;border:none;cursor:pointer;transition:all .3s;font-family:inherit;letter-spacing:-.2px;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+    .bottom-cta .btn-white:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,.3);background:#f5f3ff;color:#4f46e5}
+    @media(max-width:768px){.bottom-cta{padding:60px 24px;border-radius:24px;margin:0 auto 40px}.bottom-cta h2{font-size:28px}}
 
     /* ===== FOOTER ===== */
-    footer{background:#0a1628;color:#fff;padding:60px 24px 30px}
-    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;max-width:1000px;margin:0 auto}
-    .footer-brand .f-logo{font-size:20px;font-weight:900;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-    .footer-brand p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;max-width:260px}
-    .footer-col h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);margin-bottom:14px}
-    .footer-col a{display:block;font-size:14px;color:rgba(255,255,255,.7);padding:4px 0;transition:.2s}
+    footer{background:linear-gradient(180deg,#f8f7ff 0%,#1e1b4b 30%,#1e1b4b 100%);color:#e2e0f0;padding:100px 32px 30px;border-top:none;position:relative;overflow:hidden}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(180deg,#f8f7ff,transparent);pointer-events:none;z-index:1}
+    footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;background:radial-gradient(ellipse at 30% 80%,rgba(124,58,237,.15),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.08),transparent 50%);pointer-events:none}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;max-width:1000px;margin:0 auto;position:relative;z-index:2}
+    .footer-brand .f-logo{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:10px;letter-spacing:-.5px;color:#fff}
+    .footer-brand .f-logo img{height:28px;width:auto;filter:brightness(0) invert(1)}
+    .footer-brand p{font-size:13px;color:rgba(196,181,253,.6);line-height:1.8;max-width:280px}
+    .footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(167,139,250,.7);margin-bottom:16px}
+    .footer-col a{display:block;font-size:14px;color:rgba(196,181,253,.5);padding:5px 0;transition:.2s}
     .footer-col a:hover{color:#fff}
-    .footer-bottom{max-width:1000px;margin:30px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.3)}
-    .footer-lang{display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(255,255,255,.5);font-size:12px}
+    .footer-bottom{max-width:1000px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.4);position:relative;z-index:2}
+    .footer-lang{display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(196,181,253,.5);font-size:12px;transition:.2s}
     .footer-lang:hover{color:#fff}
+    .footer-lang svg{stroke:rgba(196,181,253,.5)}
+    .footer-lang:hover svg{stroke:#fff}
     @media(max-width:768px){
       .footer-grid{grid-template-columns:1fr 1fr;gap:30px}
       .footer-bottom{flex-direction:column;gap:10px;text-align:center}
@@ -214,18 +451,26 @@
 </head>
 <body>
 
+<!-- Floating Particles -->
+<canvas class="cyber-canvas" id="cyberCanvas"></canvas>
+<div class="hex-grid"></div>
+<div class="cyber-floaters" id="cyberFloaters"></div>
+<!-- Mouse Glow -->
+<div class="glow-cursor" id="glowCursor"></div>
+
 <!-- ===== NAVBAR ===== -->
 <nav class="navbar" id="navbar">
   <div class="nav-inner">
     <a href="/" class="nav-logo">
-      <div class="icon-box"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="#fff" stroke-width="1.5"/></svg></div>
-      Vertifile
+      <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
     </a>
-    <div class="nav-links">
+    <div class="nav-center">
       <a href="#how" data-i18n="nav.howItWorks">How It Works</a>
       <a href="#features" data-i18n="nav.features">Features</a>
       <a href="#industries" data-i18n="nav.industries">Industries</a>
       <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
+    </div>
+    <div class="nav-actions">
       <div style="position:relative">
         <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
@@ -233,18 +478,20 @@
         </button>
         <div class="lang-dropdown" id="langDropdown">
           <a href="?lang=en" onclick="switchLang('en',event)">English</a>
-          <a href="?lang=he" onclick="switchLang('he',event)">עברית</a>
-          <a href="?lang=ar" onclick="switchLang('ar',event)">العربية</a>
-          <a href="?lang=fr" onclick="switchLang('fr',event)">Français</a>
-          <a href="?lang=es" onclick="switchLang('es',event)">Español</a>
+          <a href="?lang=he" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+          <a href="?lang=ar" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+          <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+          <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
           <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
-          <a href="?lang=ru" onclick="switchLang('ru',event)">Русский</a>
-          <a href="?lang=zh" onclick="switchLang('zh',event)">简体中文</a>
-          <a href="?lang=ja" onclick="switchLang('ja',event)">日本語</a>
-          <a href="?lang=pt" onclick="switchLang('pt',event)">Português</a>
+          <a href="?lang=ru" onclick="switchLang('ru',event)">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</a>
+          <a href="?lang=zh" onclick="switchLang('zh',event)">&#31616;&#20307;&#20013;&#25991;</a>
+          <a href="?lang=ja" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
+          <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
         </div>
       </div>
-      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect a Document</a>
+      <div class="nav-sep"></div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
     </div>
     <div class="hamburger" onclick="toggleMobile()">
       <span></span><span></span><span></span>
@@ -255,68 +502,158 @@
     <a href="#features" data-i18n="nav.features" onclick="closeMobile()">Features</a>
     <a href="#industries" data-i18n="nav.industries" onclick="closeMobile()">Industries</a>
     <a href="#pricing" data-i18n="nav.pricing" onclick="closeMobile()">Pricing</a>
-    <a href="/upload" data-i18n="nav.upload" onclick="closeMobile()">Protect a Document</a>
+    <div class="mob-actions">
+      <a href="/verify" class="mob-verify" data-i18n="nav.verify" onclick="closeMobile()">Verify</a>
+      <a href="/upload" class="mob-protect" data-i18n="nav.upload" onclick="closeMobile()">Protect</a>
+    </div>
   </div>
 </nav>
 
 <!-- ===== HERO ===== -->
 <section class="hero">
-  <div class="hero-content fade-up">
-    <div class="hero-badge"><div class="pulse"></div><span data-i18n="hero.badge">Blockchain Verified</span></div>
-    <h1 data-i18n="hero.headline">Protect Any Document From Forgery</h1>
-    <p class="sub" data-i18n="hero.subheadline">Vertifile creates tamper-proof digital documents with live animated verification stamps. Zero access to your content — total privacy.</p>
-    <div class="hero-buttons">
-      <a href="/upload" class="btn-primary" data-i18n="hero.cta1">Protect a Document</a>
-      <a href="#how" class="btn-secondary" data-i18n="hero.cta2">See How It Works</a>
+  <div class="scan-line"></div>
+  <div class="hero-bg">
+    <div class="grid"></div>
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+    <div class="glow-3"></div>
+    <div class="glow-4"></div>
+    <div class="glow-5"></div>
+  </div>
+  <div class="hero-stars">
+    <div class="stars-sm"></div>
+    <div class="stars-md"></div>
+    <div class="stars-lg"></div>
+  </div>
+  <div class="hero-orbits">
+    <div class="hero-orbit hero-orbit-1"></div>
+    <div class="hero-orbit hero-orbit-2"></div>
+    <div class="hero-orbit hero-orbit-3"></div>
+  </div>
+  <div class="hero-split">
+    <!-- Text Content -->
+    <div class="hero-right fade-up">
+      <div class="hero-badge"><div class="pulse"></div><span data-i18n="hero.badge">Blockchain Verified</span></div>
+      <h1><span data-i18n="hero.headline1">Protect Any Document</span><br><span class="gradient" data-i18n="hero.headline2">From Forgery</span></h1>
+      <p class="sub" data-i18n="hero.subheadline">Vertifile creates tamper-proof digital documents with live animated verification stamps. Zero access to your content — total privacy.</p>
+      <div class="hero-buttons">
+        <a href="/upload" class="btn-primary" data-i18n="hero.cta1">Protect a Document</a>
+        <a href="#how" class="btn-secondary" data-i18n="hero.cta2">See How It Works</a>
+      </div>
     </div>
-    <div class="hero-stamp" aria-hidden="true">
-      <svg class="ring-outer" viewBox="0 0 200 200">
-        <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(26,35,126,.18)" stroke-width="1.5"/>
-        <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(26,35,126,.08)" stroke-width=".5" stroke-dasharray="4 4"/>
-        <line x1="100" y1="2" x2="100" y2="10" stroke="rgba(26,35,126,.2)" stroke-width="1.5"/>
-        <line x1="100" y1="190" x2="100" y2="198" stroke="rgba(26,35,126,.2)" stroke-width="1.5"/>
-        <line x1="2" y1="100" x2="10" y2="100" stroke="rgba(26,35,126,.2)" stroke-width="1.5"/>
-        <line x1="190" y1="100" x2="198" y2="100" stroke="rgba(26,35,126,.2)" stroke-width="1.5"/>
-        <defs><path id="heroArc" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-        <text font-size="7" fill="rgba(26,35,126,.25)" font-weight="700" letter-spacing="2"><textPath href="#heroArc">PROTECTED VERIFIED FILE &#x2022; BLOCKCHAIN SECURED &#x2022; AUTHENTIC &#x2022;</textPath></text>
-      </svg>
-      <div class="shimmer"></div>
-      <div class="glow-ring"></div>
-      <div class="inner">
-        <svg viewBox="0 0 50 50" fill="none"><path class="chk-anim" d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.6)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <!-- Document Scanning Animation -->
+    <div class="hero-left fade-up">
+      <div class="doc-scene" id="docScene">
+        <div class="doc-paper" id="docPaper">
+          <div class="doc-header">
+            <div class="doc-line-thick"></div>
+            <div class="doc-uni" data-i18n="heroDoc.uni">TEL AVIV UNIVERSITY</div>
+            <div class="doc-fac" data-i18n="heroDoc.faculty">Faculty of Engineering</div>
+            <div class="doc-line-thick"></div>
+          </div>
+          <div class="doc-body">
+            <div class="doc-title" data-i18n="heroDoc.title">Certificate of Degree</div>
+            <div class="doc-line w85"></div>
+            <div class="doc-line w70"></div>
+            <div class="doc-line w60"></div>
+            <div class="doc-line w85"></div>
+            <div class="doc-line w50"></div>
+            <div class="doc-line w40"></div>
+            <div class="doc-sig">
+              <div class="doc-line"></div>
+            </div>
+          </div>
+          <div class="doc-scan" id="docScan"></div>
+          <div class="doc-scan-glow" id="docScanGlow"></div>
+          <div class="doc-waves" id="docWaves">
+            <svg class="dw-a" viewBox="0 0 1400 200" preserveAspectRatio="none">
+              <path d="M-200,100 Q-60,40 80,100 Q220,160 360,100 Q500,40 640,100 Q780,160 920,100 Q1060,40 1200,100 Q1340,160 1480,100" stroke="rgba(79,70,229,.15)" stroke-width="2" fill="none"/>
+              <path d="M-200,130 Q-40,170 120,130 Q280,90 440,130 Q600,170 760,130 Q920,90 1080,130 Q1240,170 1400,130" stroke="rgba(6,182,212,.12)" stroke-width="1.5" fill="none"/>
+            </svg>
+            <svg class="dw-b" viewBox="0 0 1400 200" preserveAspectRatio="none">
+              <path d="M-200,80 Q-50,130 100,80 Q250,30 400,80 Q550,130 700,80 Q850,30 1000,80 Q1150,130 1300,80" stroke="rgba(124,58,237,.12)" stroke-width="1.8" fill="none"/>
+              <path d="M-200,60 Q-30,100 170,60 Q370,20 570,60 Q770,100 970,60 Q1170,20 1370,60" stroke="rgba(46,125,50,.1)" stroke-width="1.5" fill="none"/>
+            </svg>
+          </div>
+          <div class="doc-glow-flash" id="docGlow"></div>
+          <!-- Stamp -->
+          <div class="doc-stamp" id="docStamp">
+            <div class="doc-stamp-coin" id="docStampCoin">
+              <div class="s-ring">
+                <svg class="s-outer" viewBox="0 0 200 200">
+                  <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(124,58,237,.18)" stroke-width="1.2"/>
+                  <circle cx="100" cy="100" r="89" fill="none" stroke="rgba(124,58,237,.08)" stroke-width=".5" stroke-dasharray="3 3"/>
+                  <defs><path id="hsa" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+                  <text font-size="7" fill="rgba(124,58,237,.25)" font-weight="700" letter-spacing="2.5"><textPath href="#hsa">VERTIFILE &#x2022; PROTECTED VERIFIED FILE &#x2022; SECURED &#x2022;</textPath></text>
+                </svg>
+                <div class="s-shim"></div>
+                <div class="s-glow"></div>
+                <div class="s-inner"></div>
+                <div class="s-center">
+                  <svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <div class="s-brand">VERTIFILE</div>
+                  <div class="s-lbl">VERIFIED</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Hash output -->
+        <div class="doc-hash" id="docHash">
+          <div class="hash-label">SHA-256 Fingerprint</div>
+          <div id="hashText">—</div>
+        </div>
+        <!-- Status -->
+        <div class="doc-status" id="docStatus">
+          <span class="status-icon" id="statusIcon"></span>
+          <span id="statusText"></span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ===== STATS BAR ===== -->
+<div class="stats-bar fade-up">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-num"><span class="accent">256</span>-bit</div><div class="stat-label" data-i18n="stats.encryption">SHA-256 Encryption</div></div>
+    <div class="stat-item"><div class="stat-num">10<span class="accent">k+</span></div><div class="stat-label" data-i18n="stats.documents">Documents Protected</div></div>
+    <div class="stat-item"><div class="stat-num">30<span class="accent">s</span></div><div class="stat-label" data-i18n="stats.tokenRefresh">Token Refresh Cycle</div></div>
+    <div class="stat-item"><div class="stat-num">8</div><div class="stat-label" data-i18n="stats.securityLayers">Security Layers</div></div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
 <!-- ===== HOW IT WORKS ===== -->
 <section class="how" id="how">
   <div class="section-header fade-up">
+    <div class="label" data-i18n="howItWorks.label">Process</div>
     <h2 data-i18n="howItWorks.title">How It Works</h2>
     <p data-i18n="howItWorks.subtitle">Four simple steps to protect any document</p>
   </div>
   <div class="steps-grid">
     <div class="step-card fade-up">
       <div class="step-num">1</div>
-      <div class="step-icon">📄</div>
+      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
       <h3 data-i18n="howItWorks.step1title">Upload</h3>
       <p data-i18n="howItWorks.step1desc">Upload any document — PDF, image, or text file</p>
     </div>
     <div class="step-card fade-up">
       <div class="step-num">2</div>
-      <div class="step-icon">🔐</div>
+      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
       <h3 data-i18n="howItWorks.step2title">Fingerprint</h3>
       <p data-i18n="howItWorks.step2desc">System computes a unique hash without reading content</p>
     </div>
     <div class="step-card fade-up">
       <div class="step-num">3</div>
-      <div class="step-icon">✨</div>
+      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
       <h3 data-i18n="howItWorks.step3title">Stamp</h3>
       <p data-i18n="howItWorks.step3desc">Animated holographic stamp is embedded in the document</p>
     </div>
     <div class="step-card fade-up">
       <div class="step-num">4</div>
-      <div class="step-icon">🛡️</div>
+      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
       <h3 data-i18n="howItWorks.step4title">Protected</h3>
       <p data-i18n="howItWorks.step4desc">Download your .pvf file — tamper-proof and verifiable</p>
     </div>
@@ -324,41 +661,113 @@
 </section>
 
 <!-- ===== FEATURES ===== -->
-<section id="features">
+<section class="features-section" id="features">
   <div class="section-header fade-up">
+    <div class="label" data-i18n="features.label">Features</div>
     <h2 data-i18n="features.title">Why Vertifile</h2>
     <p data-i18n="features.subtitle">Enterprise-grade document protection</p>
   </div>
   <div class="features-grid">
     <div class="feat-card fade-up">
-      <div class="feat-icon privacy">🔒</div>
+      <div class="feat-icon privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
       <h3 data-i18n="features.f1title">Total Privacy</h3>
       <p data-i18n="features.f1desc">We never read or store your document content. Only a cryptographic fingerprint is processed.</p>
     </div>
     <div class="feat-card fade-up">
-      <div class="feat-icon blockchain">⛓️</div>
+      <div class="feat-icon blockchain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
       <h3 data-i18n="features.f2title">Blockchain Secured</h3>
       <p data-i18n="features.f2desc">Every document hash is registered on blockchain for immutable verification.</p>
     </div>
     <div class="feat-card fade-up">
-      <div class="feat-icon stamp">💫</div>
+      <div class="feat-icon stamp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z"/></svg></div>
       <h3 data-i18n="features.f3title">Live Stamp</h3>
       <p data-i18n="features.f3desc">Animated holographic stamp that rotates in real-time — impossible to forge.</p>
     </div>
     <div class="feat-card fade-up">
-      <div class="feat-icon forgery">🚨</div>
+      <div class="feat-icon forgery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
       <h3 data-i18n="features.f4title">Forgery Detection</h3>
       <p data-i18n="features.f4desc">Any modification instantly freezes the stamp and marks the document as forged.</p>
     </div>
     <div class="feat-card fade-up">
-      <div class="feat-icon format">🌐</div>
+      <div class="feat-icon format"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg></div>
       <h3 data-i18n="features.f5title">Universal Format</h3>
       <p data-i18n="features.f5desc">.pvf files open in any browser — no special software needed.</p>
     </div>
     <div class="feat-card fade-up">
-      <div class="feat-icon docs">📁</div>
+      <div class="feat-icon docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
       <h3 data-i18n="features.f6title">All Document Types</h3>
       <p data-i18n="features.f6desc">Works with PDF, images, text files and more. Any file can be protected.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECURITY ===== -->
+<section class="security-section" id="security">
+  <div class="section-header fade-up">
+    <div class="label" data-i18n="security.label">Security</div>
+    <h2 data-i18n="security.title">8 Layers of Protection</h2>
+    <p data-i18n="security.subtitle">Enterprise-grade security that makes forgery mathematically impossible.</p>
+  </div>
+  <div class="security-visual fade-up">
+    <div class="shield-anim">
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <svg viewBox="0 0 100 100" fill="none">
+        <path d="M50 8l30 14v18c0 20-12 38-30 44C32 78 20 60 20 40V22L50 8z" fill="url(#shieldGrad)" stroke="rgba(167,139,250,.3)" stroke-width="1.5"/>
+        <path d="M40 50l8 8 14-14" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs><linearGradient id="shieldGrad" x1="20" y1="8" x2="80" y2="84"><stop offset="0%" stop-color="rgba(79,70,229,.15)"/><stop offset="100%" stop-color="rgba(124,58,237,.05)"/></linearGradient></defs>
+      </svg>
+    </div>
+  </div>
+  <div class="security-layers">
+    <div class="sec-layer fade-up">
+      <div class="layer-num">1</div>
+      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <h4 data-i18n="security.s1title">Cryptographic Signing</h4>
+      <p data-i18n="security.s1desc">SHA-256 + HMAC digital signature on every document</p>
+    </div>
+    <div class="sec-layer fade-up">
+      <div class="layer-num">2</div>
+      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <h4 data-i18n="security.s2title">Blockchain Timestamp</h4>
+      <p data-i18n="security.s2desc">Immutable record on Polygon — exists forever</p>
+    </div>
+    <div class="sec-layer fade-up">
+      <div class="layer-num">3</div>
+      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+      <h4 data-i18n="security.s3title">30s Token Refresh</h4>
+      <p data-i18n="security.s3desc">Prevents screen recordings and replay attacks</p>
+    </div>
+    <div class="sec-layer fade-up">
+      <div class="layer-num">4</div>
+      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <h4 data-i18n="security.s4title">Environment Detection</h4>
+      <p data-i18n="security.s4desc">Detects tampering tools, editors, and DevTools</p>
+    </div>
+    <div class="sec-layer fade-up">
+      <div class="layer-num">5</div>
+      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+      <h4 data-i18n="security.s5title">DevTools Detection</h4>
+      <p data-i18n="security.s5desc">Freezes stamp when browser developer tools are opened</p>
+    </div>
+    <div class="sec-layer fade-up">
+      <div class="layer-num">6</div>
+      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+      <h4 data-i18n="security.s6title">Right-Click Block</h4>
+      <p data-i18n="security.s6desc">Prevents saving, copying, and inspecting the stamp</p>
+    </div>
+    <div class="sec-layer fade-up">
+      <div class="layer-num">7</div>
+      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></div>
+      <h4 data-i18n="security.s7title">Print Prevention</h4>
+      <p data-i18n="security.s7desc">CSS and JS guards block printing and PDF export</p>
+    </div>
+    <div class="sec-layer fade-up">
+      <div class="layer-num">8</div>
+      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+      <h4 data-i18n="security.s8title">Audit Logging</h4>
+      <p data-i18n="security.s8desc">Every access attempt is logged with timestamp and IP</p>
     </div>
   </div>
 </section>
@@ -366,81 +775,53 @@
 <!-- ===== DEMO ===== -->
 <section class="demo-section" id="demo">
   <div class="section-header fade-up">
+    <div class="label" data-i18n="demo.label">Live Demo</div>
     <h2 data-i18n="demo.title">See It In Action</h2>
-    <p data-i18n="demo.subtitle">Toggle between original and forged to see the difference</p>
+    <p data-i18n="demo.subtitle">A real university diploma protected by Vertifile</p>
   </div>
   <div class="demo-wrapper fade-up">
-    <div class="demo-toggles">
-      <button class="demo-toggle active" id="demoOkBtn" onclick="demoOriginal()" data-i18n="demo.btnOriginal">Original</button>
-      <button class="demo-toggle" id="demoFkBtn" onclick="demoForged()" data-i18n="demo.btnForged">Forged</button>
-    </div>
-    <div class="demo-doc" id="demoDoc">
-      <div class="demo-forged-overlay" id="demoOverlay">
-        <div class="watermark">FORGED</div>
+    <div class="demo-browser">
+      <div class="demo-topbar">
+        <div class="demo-dot"></div>
+        <div class="demo-dot"></div>
+        <div class="demo-dot"></div>
+        <div class="demo-url">vertifile.com/demo</div>
       </div>
-      <div class="demo-doc-content">
-        <div class="line title-line"></div>
-        <div class="line"></div>
-        <div class="line med"></div>
-        <div class="line"></div>
-        <div class="line short"></div>
-        <div class="spacer"></div>
-        <div class="line"></div>
-        <div class="line med"></div>
-        <div class="line short"></div>
-        <div class="spacer"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line med"></div>
-        <div class="line short"></div>
-      </div>
-      <div class="demo-stamp-area">
-        <svg class="ds-outer" id="dsOuter" viewBox="0 0 200 200">
-          <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(26,35,126,.2)" stroke-width="1.5"/>
-          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(26,35,126,.1)" stroke-width=".5" stroke-dasharray="4 4"/>
-          <defs><path id="demoArc" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-          <text font-size="7.5" fill="rgba(26,35,126,.3)" font-weight="700" letter-spacing="2"><textPath href="#demoArc">PROTECTED VERIFIED FILE &#x2022; BLOCKCHAIN SECURED &#x2022;</textPath></text>
-        </svg>
-        <div class="ds-shimmer" id="dsShimmer"></div>
-        <div class="ds-glow" id="dsGlow"></div>
-        <div class="ds-inner" id="dsInner">
-          <svg width="24" height="24" viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.6)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div class="ds-label ok" id="dsLabel" data-i18n="demo.labelVerified">VERIFIED</div>
-        </div>
-      </div>
+      <iframe src="/demo" class="demo-iframe" id="demoIframe" scrolling="no"></iframe>
     </div>
   </div>
 </section>
 
 <!-- ===== INDUSTRIES ===== -->
-<section id="industries">
+<section class="industries-section" id="industries">
   <div class="section-header fade-up">
+    <div class="label" data-i18n="industries.label">Industries</div>
     <h2 data-i18n="industries.title">Built for Every Industry</h2>
     <p data-i18n="industries.subtitle">Organizations worldwide trust Vertifile</p>
   </div>
   <div class="industries-grid">
     <div class="ind-card fade-up">
-      <div class="ind-icon uni">🎓</div>
+      <div class="ind-icon uni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
       <div><h3 data-i18n="industries.i1">Universities</h3><p data-i18n="industries.i1desc">Diplomas, transcripts, certificates</p></div>
     </div>
     <div class="ind-card fade-up">
-      <div class="ind-icon health">🏥</div>
+      <div class="ind-icon health"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
       <div><h3 data-i18n="industries.i2">Healthcare</h3><p data-i18n="industries.i2desc">Medical records, prescriptions, lab results</p></div>
     </div>
     <div class="ind-card fade-up">
-      <div class="ind-icon legal">⚖️</div>
+      <div class="ind-icon legal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="14.31" y1="8" x2="20.05" y2="17.94"/><line x1="9.69" y1="8" x2="21.17" y2="8"/><line x1="7.38" y1="12" x2="13.12" y2="2.06"/><line x1="9.69" y1="16" x2="3.95" y2="6.06"/><line x1="14.31" y1="16" x2="2.83" y2="16"/><line x1="16.62" y1="12" x2="10.88" y2="21.94"/></svg></div>
       <div><h3 data-i18n="industries.i3">Legal</h3><p data-i18n="industries.i3desc">Contracts, court documents, notarizations</p></div>
     </div>
     <div class="ind-card fade-up">
-      <div class="ind-icon gov">🏛️</div>
+      <div class="ind-icon gov"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="21" x2="21" y2="21"/><path d="M5 21V7l7-4 7 4v14"/><line x1="9" y1="21" x2="9" y2="14"/><line x1="15" y1="21" x2="15" y2="14"/><line x1="9" y1="10" x2="15" y2="10"/></svg></div>
       <div><h3 data-i18n="industries.i4">Government</h3><p data-i18n="industries.i4desc">IDs, permits, official documents</p></div>
     </div>
     <div class="ind-card fade-up">
-      <div class="ind-icon hr">👥</div>
+      <div class="ind-icon hr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
       <div><h3 data-i18n="industries.i5">HR & Recruitment</h3><p data-i18n="industries.i5desc">Employment letters, payslips, references</p></div>
     </div>
     <div class="ind-card fade-up">
-      <div class="ind-icon fin">💰</div>
+      <div class="ind-icon fin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
       <div><h3 data-i18n="industries.i6">Finance</h3><p data-i18n="industries.i6desc">Invoices, bank statements, audit reports</p></div>
     </div>
   </div>
@@ -449,6 +830,7 @@
 <!-- ===== PRICING ===== -->
 <section class="pricing-section" id="pricing">
   <div class="section-header fade-up">
+    <div class="label" data-i18n="pricing.label">Pricing</div>
     <h2 data-i18n="pricing.title">Simple Pricing</h2>
     <p data-i18n="pricing.subtitle">Start free — upgrade as you grow</p>
   </div>
@@ -490,6 +872,7 @@
 </section>
 
 <!-- ===== BOTTOM CTA ===== -->
+<div style="padding:0 32px;max-width:1200px;margin:60px auto">
 <section class="bottom-cta">
   <div class="fade-up">
     <h2 data-i18n="cta.title">Ready to Protect Your Documents?</h2>
@@ -497,16 +880,16 @@
     <a href="/upload"><button class="btn-white" data-i18n="cta.button">Start Protecting Now</button></a>
   </div>
 </section>
+</div>
 
 <!-- ===== FOOTER ===== -->
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
       <div class="f-logo">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="#fff" stroke-width="1.5"/></svg>
-        Vertifile
+        <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
       </div>
-      <p data-i18n="hero.subheadline">Vertifile creates tamper-proof digital documents with live animated verification stamps. Zero access to your content — total privacy.</p>
+      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer.product">Product</h4>
@@ -540,151 +923,378 @@
 <!-- ===== i18n ENGINE + SCRIPTS ===== -->
 <script>
 (function(){
-  // ===== i18n Engine =====
-  const SUPPORTED = ['en','he','ar','fr','es','de','ru','zh','ja','pt'];
-  const RTL_LANGS = ['he','ar'];
-  let currentLang = 'en';
-  let translations = {};
+  var SUPPORTED = ['en','he','ar','fr','es','de','ru','zh','ja','pt'];
+  var RTL_LANGS = ['he','ar'];
+  var currentLang = 'en';
+  var translations = {};
 
   function detectLang(){
-    const params = new URLSearchParams(window.location.search);
-    if(params.get('lang') && SUPPORTED.includes(params.get('lang'))) return params.get('lang');
-    const stored = localStorage.getItem('vf-lang');
-    if(stored && SUPPORTED.includes(stored)) return stored;
-    const nav = (navigator.language||'').substring(0,2).toLowerCase();
-    if(SUPPORTED.includes(nav)) return nav;
+    var params = new URLSearchParams(window.location.search);
+    if(params.get('lang') && SUPPORTED.indexOf(params.get('lang'))!==-1) return params.get('lang');
+    var stored = localStorage.getItem('vf-lang');
+    if(stored && SUPPORTED.indexOf(stored)!==-1) return stored;
+    var nav = (navigator.language||'').substring(0,2).toLowerCase();
+    if(SUPPORTED.indexOf(nav)!==-1) return nav;
     return 'en';
   }
 
-  function getNestedValue(obj, path){
-    return path.split('.').reduce((o,k) => o && o[k], obj);
+  function getVal(obj, path){
+    return path.split('.').reduce(function(o,k){return o&&o[k]},obj);
   }
 
   function applyTranslations(){
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const val = getNestedValue(translations, el.getAttribute('data-i18n'));
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var val = getVal(translations, el.getAttribute('data-i18n'));
       if(val) el.textContent = val;
     });
-    // Update page title
-    const heroTitle = getNestedValue(translations, 'hero.headline');
-    if(heroTitle) document.title = 'Vertifile — ' + heroTitle;
+    var t = getVal(translations,'hero.headline1');
+    if(t) document.title = 'Vertifile \u2014 '+t;
   }
 
   function setDirection(lang){
-    const isRtl = RTL_LANGS.includes(lang);
-    document.documentElement.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+    var isRtl = RTL_LANGS.indexOf(lang)!==-1;
+    document.documentElement.setAttribute('dir', isRtl?'rtl':'ltr');
     document.documentElement.setAttribute('lang', lang);
   }
 
-  function updateLangLabels(lang){
-    const code = lang.toUpperCase();
-    const el = document.getElementById('langLabel');
-    if(el) el.textContent = code;
-    const fn = getNestedValue(translations, 'langName');
-    const fl = document.getElementById('footerLangLabel');
-    if(fl && fn) fl.textContent = fn;
-    // Mark active in dropdown
-    document.querySelectorAll('.lang-dropdown a').forEach(a => {
-      const href = a.getAttribute('href')||'';
-      const m = href.match(/lang=(\w+)/);
-      a.classList.toggle('active', m && m[1]===lang);
+  function updateLabels(lang){
+    var el=document.getElementById('langLabel');
+    if(el) el.textContent=lang.toUpperCase();
+    var fn=getVal(translations,'langName');
+    var fl=document.getElementById('footerLangLabel');
+    if(fl&&fn) fl.textContent=fn;
+    document.querySelectorAll('.lang-dropdown a').forEach(function(a){
+      var href=a.getAttribute('href')||'';
+      var m=href.match(/lang=(\w+)/);
+      a.classList.toggle('active',!!(m&&m[1]===lang));
     });
   }
 
-  async function loadLang(lang){
-    try{
-      const res = await fetch('/locales/'+lang+'.json');
-      if(!res.ok) throw new Error();
-      translations = await res.json();
-      currentLang = lang;
-      localStorage.setItem('vf-lang', lang);
-      setDirection(lang);
-      applyTranslations();
-      updateLangLabels(lang);
-    }catch(e){
-      if(lang !== 'en'){
-        loadLang('en');
-      }
-    }
+  function loadLang(lang){
+    fetch('/locales/'+lang+'.json').then(function(r){
+      if(!r.ok) throw new Error();
+      return r.json();
+    }).then(function(d){
+      translations=d;currentLang=lang;
+      localStorage.setItem('vf-lang',lang);
+      setDirection(lang);applyTranslations();updateLabels(lang);
+    }).catch(function(){if(lang!=='en')loadLang('en')});
   }
 
-  // Expose global functions
-  window.switchLang = function(lang, e){
-    if(e) e.preventDefault();
-    loadLang(lang);
-    closeLangDropdown();
-  };
+  window.switchLang=function(lang,e){if(e)e.preventDefault();loadLang(lang);closeLangDropdown()};
+  window.toggleLangDropdown=function(){document.getElementById('langDropdown').classList.toggle('show')};
+  window.closeLangDropdown=function(){document.getElementById('langDropdown').classList.remove('show')};
 
-  window.toggleLangDropdown = function(){
-    const dd = document.getElementById('langDropdown');
-    dd.classList.toggle('show');
-  };
+  document.addEventListener('click',function(e){
+    if(!e.target.closest('.lang-btn')&&!e.target.closest('.lang-dropdown')&&!e.target.closest('.footer-lang'))closeLangDropdown();
+  });
 
-  window.closeLangDropdown = function(){
-    document.getElementById('langDropdown').classList.remove('show');
-  };
+  loadLang(detectLang());
 
-  // Close dropdown on outside click
-  document.addEventListener('click', function(e){
-    if(!e.target.closest('.lang-btn') && !e.target.closest('.lang-dropdown') && !e.target.closest('.footer-lang')){
-      closeLangDropdown();
+  window.addEventListener('scroll',function(){
+    document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>10);
+  });
+
+  window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
+  window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
+
+  // ===== SCROLL REVEAL =====
+  var observer=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible')}});
+  },{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
+  document.querySelectorAll('.fade-up').forEach(function(el){observer.observe(el)});
+
+  // ===== CYBER NETWORK CANVAS =====
+  (function(){
+    var canvas=document.getElementById('cyberCanvas');
+    if(!canvas||window.innerWidth<768)return;
+    var ctx=canvas.getContext('2d');
+    var W,H,nodes=[],mouse={x:-9999,y:-9999};
+    var NODE_COUNT=50,CONNECT_DIST=160,MOUSE_DIST=200;
+    function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+    resize();
+    window.addEventListener('resize',resize);
+    document.addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY});
+    for(var i=0;i<NODE_COUNT;i++){
+      nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1,pulse:0,pulseSpeed:Math.random()*.02+.005});
     }
-  });
-
-  // Init
-  const lang = detectLang();
-  loadLang(lang);
-
-  // ===== Navbar scroll effect =====
-  window.addEventListener('scroll', function(){
-    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
-  });
-
-  // ===== Mobile menu =====
-  window.toggleMobile = function(){
-    document.getElementById('mobileMenu').classList.toggle('show');
-  };
-  window.closeMobile = function(){
-    document.getElementById('mobileMenu').classList.remove('show');
-  };
-
-  // ===== Scroll animations =====
-  const observer = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(entry.isIntersecting){
-        entry.target.classList.add('visible');
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      // update & draw nodes
+      for(var i=0;i<nodes.length;i++){
+        var n=nodes[i];
+        n.x+=n.vx;n.y+=n.vy;
+        n.pulse+=n.pulseSpeed;
+        if(n.x<0||n.x>W)n.vx*=-1;
+        if(n.y<0||n.y>H)n.vy*=-1;
+        // mouse repulsion
+        var dmx=n.x-mouse.x,dmy=n.y-mouse.y;
+        var dMouse=Math.sqrt(dmx*dmx+dmy*dmy);
+        if(dMouse<MOUSE_DIST){
+          var force=(1-dMouse/MOUSE_DIST)*.5;
+          n.x+=dmx/dMouse*force;
+          n.y+=dmy/dMouse*force;
+        }
+        var pulseR=n.r+Math.sin(n.pulse)*1;
+        ctx.beginPath();
+        ctx.arc(n.x,n.y,pulseR,0,Math.PI*2);
+        ctx.fillStyle='rgba(79,70,229,'+(0.12+Math.sin(n.pulse)*.06)+')';
+        ctx.fill();
+        // outer ring
+        if(i%4===0){
+          ctx.beginPath();
+          ctx.arc(n.x,n.y,pulseR+4,0,Math.PI*2);
+          ctx.strokeStyle='rgba(124,58,237,'+(0.04+Math.sin(n.pulse)*.02)+')';
+          ctx.lineWidth=.5;
+          ctx.stroke();
+        }
       }
+      // draw connections
+      for(var i=0;i<nodes.length;i++){
+        for(var j=i+1;j<nodes.length;j++){
+          var dx=nodes[i].x-nodes[j].x;
+          var dy=nodes[i].y-nodes[j].y;
+          var d=Math.sqrt(dx*dx+dy*dy);
+          if(d<CONNECT_DIST){
+            var alpha=(1-d/CONNECT_DIST)*.08;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x,nodes[i].y);
+            ctx.lineTo(nodes[j].x,nodes[j].y);
+            ctx.strokeStyle='rgba(79,70,229,'+alpha+')';
+            ctx.lineWidth=.5;
+            ctx.stroke();
+          }
+        }
+      }
+      // mouse connections
+      for(var i=0;i<nodes.length;i++){
+        var dx=nodes[i].x-mouse.x,dy=nodes[i].y-mouse.y;
+        var d=Math.sqrt(dx*dx+dy*dy);
+        if(d<MOUSE_DIST){
+          var alpha=(1-d/MOUSE_DIST)*.15;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x,nodes[i].y);
+          ctx.lineTo(mouse.x,mouse.y);
+          ctx.strokeStyle='rgba(124,58,237,'+alpha+')';
+          ctx.lineWidth=.8;
+          ctx.stroke();
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  // ===== FLOATING SECURITY ICONS =====
+  (function(){
+    var container=document.getElementById('cyberFloaters');
+    if(!container)return;
+    var icons=[
+      {cls:'shield',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'},
+      {cls:'lock',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'},
+      {cls:'key',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 2l-2 2m-7.6 7.6a5.5 5.5 0 1 0-7.8 7.8 5.5 5.5 0 0 0 7.8-7.8zm0 0L15 7l-1.5 1.5L17 12l2-2 2-2"/></svg>'},
+      {cls:'fingerprint',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4"/><path d="M5 19.5C5.5 18 6 15 6 12c0-3.3 2.7-6 6-6 1.8 0 3.4.8 4.5 2"/><path d="M12 10a2 2 0 0 0-2 2c0 4.1-1.2 7.3-3.5 9"/><path d="M14 12c0 3.2-.7 5.8-2 8"/><path d="M18 12c0 5-1.8 8.3-5 11"/></svg>'}
+    ];
+    for(var i=0;i<12;i++){
+      var icon=icons[i%icons.length];
+      var el=document.createElement('div');
+      el.className='cyber-icon '+icon.cls;
+      el.innerHTML=icon.svg;
+      var size=20+Math.random()*30;
+      el.style.width=size+'px';el.style.height=size+'px';
+      el.style.left=Math.random()*100+'%';
+      el.style.animationDuration=(20+Math.random()*25)+'s';
+      el.style.animationDelay=(Math.random()*15)+'s';
+      container.appendChild(el);
+    }
+  })();
+
+  // ===== MOUSE GLOW =====
+  (function(){
+    var glow=document.getElementById('glowCursor');
+    if(!glow||window.innerWidth<768)return;
+    var mx=0,my=0,cx=0,cy=0;
+    document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY});
+    function animate(){
+      cx+=(mx-cx)*.1;cy+=(my-cy)*.1;
+      glow.style.transform='translate('+(cx-200)+'px,'+(cy-200)+'px)';
+      requestAnimationFrame(animate);
+    }
+    animate();
+  })();
+
+  // ===== PARALLAX ON SCROLL =====
+  (function(){
+    var heroSplit=document.querySelector('.hero-split');
+    var heroBg=document.querySelector('.hero-bg');
+    window.addEventListener('scroll',function(){
+      var s=window.scrollY;
+      if(s<800){
+        if(heroSplit)heroSplit.style.transform='translateY('+s*.12+'px)';
+        if(heroBg)heroBg.style.transform='translateY('+s*.06+'px)';
+        if(heroSplit)heroSplit.style.opacity=Math.max(0,1-s/700);
+      }
+    },{passive:true});
+  })();
+
+  // ===== DOCUMENT SCAN ANIMATION =====
+  (function(){
+    var paper=document.getElementById('docPaper');
+    var scan=document.getElementById('docScan');
+    var scanGlow=document.getElementById('docScanGlow');
+    var hashEl=document.getElementById('docHash');
+    var hashText=document.getElementById('hashText');
+    var stamp=document.getElementById('docStamp');
+    var coin=document.getElementById('docStampCoin');
+    var waves=document.getElementById('docWaves');
+    var glow=document.getElementById('docGlow');
+    var status=document.getElementById('docStatus');
+    var statusText=document.getElementById('statusText');
+    var statusIcon=document.getElementById('statusIcon');
+    if(!paper)return;
+
+    var HASH='8f3a2b9c1d4e5f6a7b8c9d0e1f2a3b4c';
+    var phase=0;
+    var hashTimer=null;
+
+    function reset(){
+      paper.className='doc-paper';
+      scan.className='doc-scan';
+      scanGlow.className='doc-scan-glow';
+      hashEl.className='doc-hash';
+      hashText.textContent='—';
+      stamp.className='doc-stamp';
+      coin.className='doc-stamp-coin';
+      waves.className='doc-waves';
+      glow.className='doc-glow-flash';
+      status.className='doc-status';
+      statusText.textContent='';
+      statusIcon.innerHTML='';
+      if(hashTimer)clearInterval(hashTimer);
+    }
+
+    function typeHash(){
+      var i=0;
+      var full='8f3a2b9c1d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a';
+      hashText.textContent='';
+      hashTimer=setInterval(function(){
+        if(i<full.length){
+          hashText.textContent+=full[i];
+          i++;
+        }else{
+          clearInterval(hashTimer);
+        }
+      },60);
+    }
+
+    function runCycle(){
+      reset();
+
+      // Phase 1: Document slides in (0-1s)
+      setTimeout(function(){
+        paper.classList.add('visible');
+        status.className='doc-status visible scanning';
+        statusIcon.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>';
+        statusText.textContent='Uploading document...';
+      },200);
+
+      // Phase 2: Scan starts (1.5s)
+      setTimeout(function(){
+        scan.classList.add('active');
+        scanGlow.classList.add('active');
+        statusText.textContent='Computing fingerprint...';
+        hashEl.classList.add('visible');
+        typeHash();
+      },1500);
+
+      // Phase 3: Stamp drops (5.5s)
+      setTimeout(function(){
+        scan.className='doc-scan';
+        scanGlow.className='doc-scan-glow';
+        stamp.classList.add('active');
+        coin.classList.add('animate');
+        statusText.textContent='Embedding verification stamp...';
+      },5500);
+
+      // Phase 4: Waves + protected (7.5s)
+      setTimeout(function(){
+        waves.classList.add('active');
+        glow.classList.add('active');
+        coin.classList.remove('animate');
+        coin.classList.add('breathe');
+        status.className='doc-status visible protected';
+        statusIcon.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>';
+        statusText.textContent='Document Protected \u2713';
+      },7500);
+
+      // Phase 5: Hold & fade out (10.5s)
+      setTimeout(function(){
+        paper.classList.remove('visible');
+        paper.classList.add('exit');
+        hashEl.className='doc-hash';
+        status.className='doc-status';
+        stamp.className='doc-stamp';
+        waves.className='doc-waves';
+        glow.className='doc-glow-flash';
+      },10500);
+
+      // Phase 6: Restart (12s)
+      setTimeout(function(){
+        runCycle();
+      },12000);
+    }
+
+    // Start after a brief delay
+    setTimeout(runCycle,800);
+  })();
+
+  // ===== COUNTER ANIMATION =====
+  (function(){
+    var counters=document.querySelectorAll('.stat-num');
+    var counted=false;
+    var counterObserver=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting&&!counted){
+          counted=true;
+          counters.forEach(function(el){
+            var text=el.textContent;
+            var match=text.match(/(\d+)/);
+            if(match){
+              var target=parseInt(match[1]);
+              var start=0;
+              var duration=1500;
+              var startTime=null;
+              function step(ts){
+                if(!startTime)startTime=ts;
+                var progress=Math.min((ts-startTime)/duration,1);
+                var ease=1-Math.pow(1-progress,3);
+                var current=Math.floor(ease*target);
+                el.innerHTML=text.replace(match[1],current);
+                if(progress<1)requestAnimationFrame(step);
+                else el.innerHTML=text.replace(match[1],target);
+              }
+              requestAnimationFrame(step);
+            }
+          });
+        }
+      });
+    },{threshold:0.5});
+    if(counters.length)counterObserver.observe(counters[0].closest('.stats-bar')||counters[0]);
+  })();
+
+  // ===== 3D TILT EFFECT ON CARDS =====
+  document.querySelectorAll('.feat-card,.sec-layer,.price-card,.step-card').forEach(function(card){
+    card.addEventListener('mousemove',function(e){
+      if(window.innerWidth<768)return;
+      var rect=card.getBoundingClientRect();
+      var x=(e.clientX-rect.left)/rect.width-.5;
+      var y=(e.clientY-rect.top)/rect.height-.5;
+      card.style.transform='translateY(-4px) perspective(600px) rotateX('+(-y*5)+'deg) rotateY('+(x*5)+'deg)';
     });
-  }, {threshold: 0.1, rootMargin: '0px 0px -40px 0px'});
-
-  document.querySelectorAll('.fade-up').forEach(function(el){
-    observer.observe(el);
+    card.addEventListener('mouseleave',function(){
+      card.style.transform='';
+    });
   });
-
-  // ===== Demo toggle =====
-  window.demoOriginal = function(){
-    document.getElementById('demoOkBtn').className = 'demo-toggle active';
-    document.getElementById('demoFkBtn').className = 'demo-toggle';
-    document.getElementById('demoDoc').classList.remove('forged');
-    document.getElementById('demoOverlay').classList.remove('show');
-    document.getElementById('dsOuter').classList.remove('frozen');
-    document.getElementById('dsShimmer').classList.remove('frozen');
-    document.getElementById('dsGlow').classList.remove('frozen');
-    var lbl = getNestedValue(translations,'demo.labelVerified') || 'VERIFIED';
-    document.getElementById('dsInner').innerHTML = '<svg width="24" height="24" viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.6)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="ds-label ok">'+lbl+'</div>';
-  };
-
-  window.demoForged = function(){
-    document.getElementById('demoFkBtn').className = 'demo-toggle forged-active';
-    document.getElementById('demoOkBtn').className = 'demo-toggle';
-    document.getElementById('demoDoc').classList.add('forged');
-    document.getElementById('demoOverlay').classList.add('show');
-    document.getElementById('dsOuter').classList.add('frozen');
-    document.getElementById('dsShimmer').classList.add('frozen');
-    document.getElementById('dsGlow').classList.add('frozen');
-    var lbl = getNestedValue(translations,'demo.labelForged') || 'FORGED';
-    document.getElementById('dsInner').innerHTML = '<svg width="24" height="24" viewBox="0 0 50 50" fill="none"><path d="M15 15L35 35" stroke="rgba(198,40,40,.6)" stroke-width="3.5" stroke-linecap="round"/><path d="M35 15L15 35" stroke="rgba(198,40,40,.6)" stroke-width="3.5" stroke-linecap="round"/></svg><div class="ds-label bad">'+lbl+'</div>';
-  };
 
 })();
 </script>

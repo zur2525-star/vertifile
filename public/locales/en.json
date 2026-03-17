@@ -5,19 +5,28 @@
     "features": "Features",
     "industries": "Industries",
     "pricing": "Pricing",
-    "upload": "Protect a Document",
-    "verify": "Verify a Document"
+    "upload": "Protect",
+    "verify": "Verify"
   },
   "hero": {
     "headline": "Protect Any Document From Forgery",
+    "headline1": "Protect Any Document",
+    "headline2": "From Forgery",
     "subheadline": "Vertifile creates tamper-proof digital documents with live animated verification stamps. Zero access to your content — total privacy.",
     "cta1": "Protect a Document",
     "cta2": "See How It Works",
     "badge": "Blockchain Verified"
   },
+  "stats": {
+    "encryption": "SHA-256 Encryption",
+    "documents": "Documents Protected",
+    "tokenRefresh": "Token Refresh Cycle",
+    "securityLayers": "Security Layers"
+  },
   "howItWorks": {
     "title": "How It Works",
     "subtitle": "Four simple steps to protect any document",
+    "label": "Process",
     "step1title": "Upload",
     "step1desc": "Upload any document — PDF, image, or text file",
     "step2title": "Fingerprint",
@@ -30,6 +39,7 @@
   "features": {
     "title": "Why Vertifile",
     "subtitle": "Enterprise-grade document protection",
+    "label": "Features",
     "f1title": "Total Privacy",
     "f1desc": "We never read or store your document content. Only a cryptographic fingerprint is processed.",
     "f2title": "Blockchain Secured",
@@ -43,9 +53,23 @@
     "f6title": "All Document Types",
     "f6desc": "Works with PDF, images, text files and more. Any file can be protected."
   },
+  "security": {
+    "label": "Security",
+    "title": "8 Layers of Protection",
+    "subtitle": "Enterprise-grade security that makes forgery mathematically impossible.",
+    "s1title": "Cryptographic Signing",
+    "s1desc": "SHA-256 + HMAC digital signature on every document",
+    "s2title": "Blockchain Timestamp",
+    "s2desc": "Immutable record on Polygon — exists forever",
+    "s3title": "30-Second Token Refresh",
+    "s3desc": "Prevents screen recordings and replay attacks",
+    "s4title": "Environment Detection",
+    "s4desc": "Detects tampering tools, editors, and DevTools"
+  },
   "demo": {
     "title": "See It In Action",
-    "subtitle": "Toggle between original and forged to see the difference",
+    "label": "Live Demo",
+    "subtitle": "A real university diploma protected by Vertifile",
     "btnOriginal": "Original",
     "btnForged": "Forged",
     "labelVerified": "VERIFIED",
@@ -54,6 +78,7 @@
   "industries": {
     "title": "Built for Every Industry",
     "subtitle": "Organizations worldwide trust Vertifile",
+    "label": "Industries",
     "i1": "Universities",
     "i1desc": "Diplomas, transcripts, certificates",
     "i2": "Healthcare",
@@ -70,6 +95,7 @@
   "pricing": {
     "title": "Simple Pricing",
     "subtitle": "Start free — upgrade as you grow",
+    "label": "Pricing",
     "free": "Free",
     "freePrice": "$0",
     "freePeriod": "/month",
@@ -101,6 +127,7 @@
     "button": "Start Protecting Now"
   },
   "footer": {
+    "description": "Tamper-proof digital documents with live animated verification stamps. Zero access to your content.",
     "product": "Product",
     "company": "Company",
     "legal": "Legal",
@@ -144,5 +171,10 @@
     "failedDesc": "This document could not be verified. It may have been tampered with or is not registered.",
     "tryAnother": "Verify another document"
   },
-  "langName": "English"
+  "langName": "English",
+  "heroDoc": {
+    "uni": "HARVARD UNIVERSITY",
+    "faculty": "Faculty of Arts and Sciences",
+    "title": "Certificate of Degree"
+  }
 }

@@ -5,19 +5,28 @@
     "features": "Funktionen",
     "industries": "Branchen",
     "pricing": "Preise",
-    "upload": "Dokument schützen",
-    "verify": "Dokument verifizieren"
+    "upload": "Schützen",
+    "verify": "Verifizieren"
   },
   "hero": {
     "headline": "Schützen Sie jedes Dokument vor Fälschung",
+    "headline1": "Schützen Sie jedes Dokument",
+    "headline2": "vor Fälschung",
     "subheadline": "Vertifile erstellt manipulationssichere digitale Dokumente mit animierten Verifizierungsstempeln. Kein Zugriff auf Ihre Inhalte — absolute Privatsphäre.",
     "cta1": "Dokument schützen",
     "cta2": "So funktioniert's",
     "badge": "Blockchain-verifiziert"
   },
+  "stats": {
+    "encryption": "SHA-256-Verschlüsselung",
+    "documents": "Geschützte Dokumente",
+    "tokenRefresh": "Token-Aktualisierungszyklus",
+    "securityLayers": "Sicherheitsebenen"
+  },
   "howItWorks": {
     "title": "So funktioniert's",
     "subtitle": "Vier einfache Schritte zum Schutz jedes Dokuments",
+    "label": "Prozess",
     "step1title": "Hochladen",
     "step1desc": "Laden Sie ein beliebiges Dokument hoch — PDF, Bild oder Textdatei",
     "step2title": "Fingerabdruck",
@@ -30,6 +39,7 @@
   "features": {
     "title": "Warum Vertifile",
     "subtitle": "Dokumentenschutz auf Enterprise-Niveau",
+    "label": "Funktionen",
     "f1title": "Absolute Privatsphäre",
     "f1desc": "Wir lesen oder speichern niemals Ihre Dokumentinhalte. Nur ein kryptografischer Fingerabdruck wird verarbeitet.",
     "f2title": "Blockchain-gesichert",
@@ -43,9 +53,23 @@
     "f6title": "Alle Dokumenttypen",
     "f6desc": "Funktioniert mit PDF, Bildern, Textdateien und mehr. Jede Datei kann geschützt werden."
   },
+  "security": {
+    "label": "Sicherheit",
+    "title": "8 Schutzebenen",
+    "subtitle": "Sicherheit auf Enterprise-Niveau, die Fälschung mathematisch unmöglich macht.",
+    "s1title": "Kryptografische Signatur",
+    "s1desc": "SHA-256 + HMAC digitale Signatur auf jedem Dokument",
+    "s2title": "Blockchain-Zeitstempel",
+    "s2desc": "Unveränderlicher Eintrag auf Polygon — existiert für immer",
+    "s3title": "Token-Aktualisierung alle 30 Sekunden",
+    "s3desc": "Verhindert Bildschirmaufnahmen und Replay-Angriffe",
+    "s4title": "Umgebungserkennung",
+    "s4desc": "Erkennt Manipulationstools, Editoren und DevTools"
+  },
   "demo": {
     "title": "Sehen Sie es in Aktion",
-    "subtitle": "Wechseln Sie zwischen Original und Fälschung, um den Unterschied zu sehen",
+    "label": "Live-Demo",
+    "subtitle": "Ein echtes Universitätsdiplom, geschützt durch Vertifile",
     "btnOriginal": "Original",
     "btnForged": "Gefälscht",
     "labelVerified": "VERIFIZIERT",
@@ -54,6 +78,7 @@
   "industries": {
     "title": "Für jede Branche entwickelt",
     "subtitle": "Organisationen weltweit vertrauen Vertifile",
+    "label": "Branchen",
     "i1": "Universitäten",
     "i1desc": "Diplome, Zeugnisse, Zertifikate",
     "i2": "Gesundheitswesen",
@@ -70,6 +95,7 @@
   "pricing": {
     "title": "Einfache Preisgestaltung",
     "subtitle": "Kostenlos starten — upgraden nach Bedarf",
+    "label": "Preise",
     "free": "Kostenlos",
     "freePrice": "$0",
     "freePeriod": "/Monat",
@@ -101,6 +127,7 @@
     "button": "Jetzt mit dem Schutz beginnen"
   },
   "footer": {
+    "description": "Manipulationssichere digitale Dokumente mit animierten Verifizierungsstempeln. Kein Zugriff auf Ihre Inhalte.",
     "product": "Produkt",
     "company": "Unternehmen",
     "legal": "Rechtliches",
@@ -144,5 +171,10 @@
     "failedDesc": "Dieses Dokument konnte nicht verifiziert werden. Es wurde möglicherweise manipuliert oder ist nicht registriert.",
     "tryAnother": "Weiteres Dokument verifizieren"
   },
-  "langName": "Deutsch"
+  "langName": "Deutsch",
+  "heroDoc": {
+    "uni": "LUDWIG-MAXIMILIANS-UNIVERSITÄT",
+    "faculty": "Fakultät für Ingenieurwesen",
+    "title": "Abschlusszeugnis"
+  }
 }

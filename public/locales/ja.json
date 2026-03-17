@@ -5,19 +5,28 @@
     "features": "特長",
     "industries": "対応業界",
     "pricing": "料金プラン",
-    "upload": "ドキュメントを保護",
-    "verify": "ドキュメントを検証"
+    "upload": "保護",
+    "verify": "検証"
   },
   "hero": {
     "headline": "あらゆるドキュメントを偽造から守る",
+    "headline1": "あらゆるドキュメントを",
+    "headline2": "偽造から守る",
     "subheadline": "Vertifile はアニメーション認証スタンプ付きの改ざん防止デジタルドキュメントを作成します。コンテンツへのアクセスは一切なし — 完全なプライバシー。",
     "cta1": "ドキュメントを保護",
     "cta2": "仕組みを見る",
     "badge": "Blockchain 認証済み"
   },
+  "stats": {
+    "encryption": "SHA-256 暗号化",
+    "documents": "保護済みドキュメント",
+    "tokenRefresh": "トークン更新サイクル",
+    "securityLayers": "セキュリティレイヤー"
+  },
   "howItWorks": {
     "title": "仕組み",
     "subtitle": "4つのシンプルなステップであらゆるドキュメントを保護",
+    "label": "プロセス",
     "step1title": "アップロード",
     "step1desc": "任意のドキュメントをアップロード — PDF、画像、テキストファイル",
     "step2title": "フィンガープリント",
@@ -30,6 +39,7 @@
   "features": {
     "title": "Vertifile が選ばれる理由",
     "subtitle": "エンタープライズグレードのドキュメント保護",
+    "label": "特長",
     "f1title": "完全なプライバシー",
     "f1desc": "ドキュメントの内容を読み取ったり保存したりすることは一切ありません。暗号化フィンガープリントのみを処理します。",
     "f2title": "Blockchain で保護",
@@ -43,9 +53,23 @@
     "f6title": "全ドキュメントタイプ対応",
     "f6desc": "PDF、画像、テキストファイルなどに対応。あらゆるファイルを保護可能。"
   },
+  "security": {
+    "label": "セキュリティ",
+    "title": "8層の保護",
+    "subtitle": "エンタープライズグレードのセキュリティで、偽造を数学的に不可能にします。",
+    "s1title": "暗号署名",
+    "s1desc": "すべてのドキュメントに SHA-256 + HMAC デジタル署名",
+    "s2title": "Blockchain タイムスタンプ",
+    "s2desc": "Polygon 上の不変記録 — 永久に存在",
+    "s3title": "30秒トークン更新",
+    "s3desc": "画面録画やリプレイ攻撃を防止",
+    "s4title": "環境検出",
+    "s4desc": "改ざんツール、エディター、DevTools を検出"
+  },
   "demo": {
     "title": "実際の動作を確認",
-    "subtitle": "オリジナルと偽造を切り替えて違いをご確認ください",
+    "label": "ライブデモ",
+    "subtitle": "Vertifile で保護された実際の大学卒業証書",
     "btnOriginal": "オリジナル",
     "btnForged": "偽造",
     "labelVerified": "認証済み",
@@ -54,6 +78,7 @@
   "industries": {
     "title": "あらゆる業界に対応",
     "subtitle": "世界中の組織が Vertifile を信頼",
+    "label": "対応業界",
     "i1": "大学",
     "i1desc": "卒業証書、成績証明書、資格証明書",
     "i2": "医療",
@@ -70,6 +95,7 @@
   "pricing": {
     "title": "シンプルな料金体系",
     "subtitle": "無料で始めて、成長に合わせてアップグレード",
+    "label": "料金プラン",
     "free": "無料プラン",
     "freePrice": "$0",
     "freePeriod": "/月",
@@ -101,6 +127,7 @@
     "button": "今すぐ保護を開始"
   },
   "footer": {
+    "description": "アニメーション認証スタンプ付きの改ざん防止デジタルドキュメント。コンテンツへのアクセスは一切なし。",
     "product": "製品",
     "company": "会社情報",
     "legal": "法的情報",
@@ -144,5 +171,10 @@
     "failedDesc": "このドキュメントを検証できませんでした。改ざんされたか、登録されていない可能性があります。",
     "tryAnother": "別のドキュメントを検証"
   },
-  "langName": "日本語"
+  "langName": "日本語",
+  "heroDoc": {
+    "uni": "東京大学",
+    "faculty": "工学部",
+    "title": "学位記"
+  }
 }

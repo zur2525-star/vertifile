@@ -1,0 +1,288 @@
+/**
+ * Vertifile Blockchain Integration
+ * Connects to Polygon (Mumbai testnet / Mainnet) for on-chain document registration.
+ *
+ * Usage:
+ *   const chain = require('./blockchain');
+ *   await chain.init();                           // Connect to Polygon
+ *   await chain.register(hash, signature, org);   // Register on-chain
+ *   const result = await chain.verify(hash, sig); // Verify on-chain
+ */
+
+const { ethers } = require('ethers');
+const fs = require('fs');
+const path = require('path');
+
+// Contract ABI — only the functions we need
+const CONTRACT_ABI = [
+  "function register(bytes32 docHash, bytes32 sigHash, string orgName) external",
+  "function registerBatch(bytes32[] docHashes, bytes32[] sigHashes, string orgName) external",
+  "function verify(bytes32 docHash, bytes32 sigHash) external view returns (bool verified, uint40 timestamp, string orgName)",
+  "function isRegistered(bytes32 docHash) external view returns (bool)",
+  "function totalDocuments() external view returns (uint256)",
+  "function getOrgCount() external view returns (uint256)",
+  "event DocumentRegistered(bytes32 indexed docHash, uint16 orgIdx, uint40 timestamp)"
+];
+
+// Network configs
+const NETWORKS = {
+  mumbai: {
+    name: 'Polygon Mumbai Testnet',
+    rpc: 'https://rpc-mumbai.maticvigil.com',
+    chainId: 80001,
+    explorer: 'https://mumbai.polygonscan.com'
+  },
+  amoy: {
+    name: 'Polygon Amoy Testnet',
+    rpc: 'https://rpc-amoy.polygon.technology',
+    chainId: 80002,
+    explorer: 'https://amoy.polygonscan.com'
+  },
+  polygon: {
+    name: 'Polygon Mainnet',
+    rpc: 'https://polygon-rpc.com',
+    chainId: 137,
+    explorer: 'https://polygonscan.com'
+  }
+};
+
+// State file for persisting contract address
+const STATE_FILE = path.join(__dirname, 'data', 'blockchain-state.json');
+
+let provider = null;
+let wallet = null;
+let contract = null;
+let networkConfig = null;
+let initialized = false;
+
+/**
+ * Convert a hex string (SHA-256 hash) to bytes32 by keccak256 hashing it.
+ * This maps our 64-char hex hashes into Solidity bytes32 format.
+ */
+function toBytes32(hexString) {
+  return ethers.keccak256(ethers.toUtf8Bytes(hexString));
+}
+
+/**
+ * Load persisted state (contract address, network).
+ */
+function loadState() {
+  try {
+    if (fs.existsSync(STATE_FILE)) {
+      return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+    }
+  } catch (e) { /* ignore */ }
+  return {};
+}
+
+/**
+ * Save state to disk.
+ */
+function saveState(state) {
+  const dir = path.dirname(STATE_FILE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
+}
+
+/**
+ * Initialize blockchain connection.
+ * Requires environment variables:
+ *   POLYGON_PRIVATE_KEY — wallet private key
+ *   POLYGON_CONTRACT    — deployed contract address
+ *   POLYGON_NETWORK     — 'mumbai', 'amoy', or 'polygon' (default: amoy)
+ */
+async function init() {
+  if (initialized) return true;
+
+  const privateKey = process.env.POLYGON_PRIVATE_KEY;
+  const contractAddress = process.env.POLYGON_CONTRACT;
+  const network = process.env.POLYGON_NETWORK || 'amoy';
+
+  if (!privateKey || !contractAddress) {
+    console.log('[BLOCKCHAIN] Skipped — POLYGON_PRIVATE_KEY and POLYGON_CONTRACT not set');
+    return false;
+  }
+
+  networkConfig = NETWORKS[network];
+  if (!networkConfig) {
+    console.error(`[BLOCKCHAIN] Unknown network: ${network}. Use: mumbai, amoy, polygon`);
+    return false;
+  }
+
+  try {
+    provider = new ethers.JsonRpcProvider(networkConfig.rpc, networkConfig.chainId);
+    wallet = new ethers.Wallet(privateKey, provider);
+    contract = new ethers.Contract(contractAddress, CONTRACT_ABI, wallet);
+
+    // Verify connection
+    const totalDocs = await contract.totalDocuments();
+    const balance = await provider.getBalance(wallet.address);
+
+    console.log(`[BLOCKCHAIN] Connected to ${networkConfig.name}`);
+    console.log(`  Wallet:   ${wallet.address}`);
+    console.log(`  Contract: ${contractAddress}`);
+    console.log(`  Balance:  ${ethers.formatEther(balance)} MATIC`);
+    console.log(`  On-chain: ${totalDocs} documents`);
+
+    // Save state
+    saveState({ network, contractAddress, walletAddress: wallet.address });
+
+    initialized = true;
+    return true;
+  } catch (error) {
+    console.error('[BLOCKCHAIN] Connection failed:', error.message);
+    return false;
+  }
+}
+
+/**
+ * Register a document hash on-chain.
+ * @param {string} hash     — SHA-256 hex hash (64 chars)
+ * @param {string} signature — HMAC signature hex (64 chars)
+ * @param {string} orgName  — Organization name
+ * @returns {object}  { success, txHash, blockNumber, gasUsed }
+ */
+async function register(hash, signature, orgName) {
+  if (!initialized) {
+    return { success: false, error: 'Blockchain not initialized' };
+  }
+
+  try {
+    const docHash = toBytes32(hash);
+    const sigHash = toBytes32(signature);
+
+    // Check if already registered
+    const exists = await contract.isRegistered(docHash);
+    if (exists) {
+      return { success: true, alreadyRegistered: true };
+    }
+
+    const tx = await contract.register(docHash, sigHash, orgName);
+    const receipt = await tx.wait();
+
+    console.log(`[BLOCKCHAIN] Registered: ${hash.substring(0, 16)}... tx=${receipt.hash}`);
+
+    return {
+      success: true,
+      txHash: receipt.hash,
+      blockNumber: receipt.blockNumber,
+      gasUsed: receipt.gasUsed.toString(),
+      explorer: `${networkConfig.explorer}/tx/${receipt.hash}`
+    };
+  } catch (error) {
+    console.error('[BLOCKCHAIN] Register failed:', error.message);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Batch register multiple documents on-chain (up to 50).
+ * @param {Array} documents — [{ hash, signature }]
+ * @param {string} orgName
+ * @returns {object}  { success, txHash, count }
+ */
+async function registerBatch(documents, orgName) {
+  if (!initialized) {
+    return { success: false, error: 'Blockchain not initialized' };
+  }
+
+  try {
+    const docHashes = documents.map(d => toBytes32(d.hash));
+    const sigHashes = documents.map(d => toBytes32(d.signature));
+
+    const tx = await contract.registerBatch(docHashes, sigHashes, orgName);
+    const receipt = await tx.wait();
+
+    console.log(`[BLOCKCHAIN] Batch registered: ${documents.length} docs, tx=${receipt.hash}`);
+
+    return {
+      success: true,
+      txHash: receipt.hash,
+      blockNumber: receipt.blockNumber,
+      gasUsed: receipt.gasUsed.toString(),
+      count: documents.length,
+      explorer: `${networkConfig.explorer}/tx/${receipt.hash}`
+    };
+  } catch (error) {
+    console.error('[BLOCKCHAIN] Batch register failed:', error.message);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Verify a document on-chain.
+ * @param {string} hash      — SHA-256 hex hash
+ * @param {string} signature — HMAC signature hex (optional)
+ * @returns {object}  { verified, timestamp, orgName, onChain }
+ */
+async function verify(hash, signature) {
+  if (!initialized) {
+    return { onChain: false, reason: 'Blockchain not initialized' };
+  }
+
+  try {
+    const docHash = toBytes32(hash);
+    const sigHash = signature ? toBytes32(signature) : ethers.ZeroHash;
+
+    const [verified, timestamp, orgName] = await contract.verify(docHash, sigHash);
+
+    return {
+      onChain: true,
+      verified,
+      timestamp: Number(timestamp),
+      registeredAt: timestamp > 0 ? new Date(Number(timestamp) * 1000).toISOString() : null,
+      orgName,
+      explorer: `${networkConfig.explorer}/address/${contract.target}`
+    };
+  } catch (error) {
+    console.error('[BLOCKCHAIN] Verify failed:', error.message);
+    return { onChain: false, error: error.message };
+  }
+}
+
+/**
+ * Get blockchain stats.
+ */
+async function getStats() {
+  if (!initialized) {
+    return { connected: false };
+  }
+
+  try {
+    const [totalDocs, orgCount, balance] = await Promise.all([
+      contract.totalDocuments(),
+      contract.getOrgCount(),
+      provider.getBalance(wallet.address)
+    ]);
+
+    return {
+      connected: true,
+      network: networkConfig.name,
+      wallet: wallet.address,
+      contract: contract.target,
+      totalDocuments: Number(totalDocs),
+      organizations: Number(orgCount),
+      balance: ethers.formatEther(balance) + ' MATIC',
+      explorer: networkConfig.explorer
+    };
+  } catch (error) {
+    return { connected: true, error: error.message };
+  }
+}
+
+/**
+ * Check if blockchain is enabled and connected.
+ */
+function isConnected() {
+  return initialized;
+}
+
+module.exports = {
+  init,
+  register,
+  registerBatch,
+  verify,
+  getStats,
+  isConnected,
+  toBytes32
+};

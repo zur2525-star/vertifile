@@ -5,19 +5,28 @@
     "features": "产品特性",
     "industries": "行业应用",
     "pricing": "价格方案",
-    "upload": "保护文档",
-    "verify": "验证文档"
+    "upload": "保护",
+    "verify": "验证"
   },
   "hero": {
     "headline": "保护任何文档免受伪造",
+    "headline1": "保护任何文档",
+    "headline2": "免受伪造",
     "subheadline": "Vertifile 创建防篡改数字文档，内置动态验证印章。完全不接触您的内容——绝对隐私。",
     "cta1": "保护文档",
     "cta2": "了解工作原理",
     "badge": "Blockchain 验证"
   },
+  "stats": {
+    "encryption": "SHA-256 加密",
+    "documents": "已保护文档",
+    "tokenRefresh": "令牌刷新周期",
+    "securityLayers": "安全层级"
+  },
   "howItWorks": {
     "title": "工作原理",
     "subtitle": "四个简单步骤保护任何文档",
+    "label": "流程",
     "step1title": "上传",
     "step1desc": "上传任意文档——PDF、图片或文本文件",
     "step2title": "指纹提取",
@@ -30,6 +39,7 @@
   "features": {
     "title": "为什么选择 Vertifile",
     "subtitle": "企业级文档保护",
+    "label": "产品特性",
     "f1title": "绝对隐私",
     "f1desc": "我们绝不读取或存储您的文档内容。仅处理加密指纹。",
     "f2title": "Blockchain 加密保护",
@@ -43,9 +53,23 @@
     "f6title": "支持所有文档类型",
     "f6desc": "兼容 PDF、图片、文本文件等。任何文件都可以被保护。"
   },
+  "security": {
+    "label": "安全",
+    "title": "8层防护体系",
+    "subtitle": "企业级安全防护，使伪造在数学上成为不可能。",
+    "s1title": "加密签名",
+    "s1desc": "每份文档均采用 SHA-256 + HMAC 数字签名",
+    "s2title": "Blockchain 时间戳",
+    "s2desc": "Polygon 上的不可篡改记录——永久存在",
+    "s3title": "30秒令牌刷新",
+    "s3desc": "防止屏幕录制和重放攻击",
+    "s4title": "环境检测",
+    "s4desc": "检测篡改工具、编辑器和开发者工具"
+  },
   "demo": {
     "title": "实际效果演示",
-    "subtitle": "在原始文档和伪造文档之间切换查看差异",
+    "label": "在线演示",
+    "subtitle": "一份由 Vertifile 保护的真实大学文凭",
     "btnOriginal": "原始",
     "btnForged": "伪造",
     "labelVerified": "已验证",
@@ -54,6 +78,7 @@
   "industries": {
     "title": "为各行各业打造",
     "subtitle": "全球各类机构信赖 Vertifile",
+    "label": "行业应用",
     "i1": "高校",
     "i1desc": "毕业证书、成绩单、资格证书",
     "i2": "医疗健康",
@@ -70,6 +95,7 @@
   "pricing": {
     "title": "简单定价",
     "subtitle": "免费起步——随业务增长升级",
+    "label": "价格方案",
     "free": "免费版",
     "freePrice": "$0",
     "freePeriod": "/月",
@@ -101,6 +127,7 @@
     "button": "立即开始保护"
   },
   "footer": {
+    "description": "防篡改数字文档，内置动态验证印章。完全不接触您的内容。",
     "product": "产品",
     "company": "公司",
     "legal": "法律信息",
@@ -144,5 +171,10 @@
     "failedDesc": "无法验证此文档。文档可能已被篡改或未注册。",
     "tryAnother": "验证其他文档"
   },
-  "langName": "简体中文"
+  "langName": "简体中文",
+  "heroDoc": {
+    "uni": "北京大学",
+    "faculty": "工学院",
+    "title": "学位证书"
+  }
 }

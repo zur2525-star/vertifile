@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertifile — Admin Dashboard</title>
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#f5f3ff;color:#1e1b4b;min-height:100vh}
+
+    /* Login Screen */
+    .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 50%,#ddd6fe 100%)}
+    .login-card{background:#fff;border-radius:16px;padding:48px;box-shadow:0 8px 40px rgba(124,58,237,.1);max-width:400px;width:90%;text-align:center}
+    .login-card img{height:36px;margin-bottom:24px}
+    .login-card h2{font-size:20px;font-weight:700;margin-bottom:8px;color:#1e1b4b}
+    .login-card p{font-size:13px;color:#6b7280;margin-bottom:24px}
+    .login-card input{width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:border .2s}
+    .login-card input:focus{border-color:#7c3aed}
+    .login-card button{width:100%;padding:12px;background:#7c3aed;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;transition:background .2s}
+    .login-card button:hover{background:#6d28d9}
+    .login-error{color:#dc2626;font-size:13px;margin-top:12px;display:none}
+
+    /* Dashboard Layout */
+    .dashboard{display:none}
+    .dash-header{background:#fff;border-bottom:1px solid #e5e7eb;padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+    .dash-header .logo{display:flex;align-items:center;gap:12px}
+    .dash-header .logo img{height:28px}
+    .dash-header .logo span{font-size:13px;color:#7c3aed;font-weight:600;background:rgba(124,58,237,.08);padding:3px 10px;border-radius:6px}
+    .dash-header .actions{display:flex;align-items:center;gap:12px}
+    .dash-header .actions button{padding:6px 14px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;font-family:inherit;color:#4b5563;transition:.2s}
+    .dash-header .actions button:hover{border-color:#7c3aed;color:#7c3aed}
+
+    .dash-body{max-width:1200px;margin:0 auto;padding:32px}
+
+    /* Stats Cards */
+    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:32px}
+    .stat-card{background:#fff;border-radius:12px;padding:24px;border:1px solid rgba(124,58,237,.08)}
+    .stat-card .label{font-size:12px;font-weight:500;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+    .stat-card .value{font-size:32px;font-weight:800;background:linear-gradient(135deg,#7c3aed,#6d28d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .stat-card .sub{font-size:12px;color:#6b7280;margin-top:4px}
+
+    /* Tabs */
+    .tabs{display:flex;gap:4px;margin-bottom:24px;background:#fff;border-radius:10px;padding:4px;border:1px solid #e5e7eb}
+    .tab{padding:8px 20px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;color:#6b7280;transition:.2s;border:none;background:none;font-family:inherit}
+    .tab.active{background:#7c3aed;color:#fff}
+    .tab:hover:not(.active){color:#1e1b4b;background:rgba(124,58,237,.05)}
+
+    /* Tables */
+    .panel{background:#fff;border-radius:12px;border:1px solid rgba(124,58,237,.08);overflow:hidden;display:none}
+    .panel.active{display:block}
+    .panel-header{padding:20px 24px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between}
+    .panel-header h3{font-size:15px;font-weight:600}
+    .panel-header .btn{padding:8px 16px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:.2s}
+    .panel-header .btn:hover{background:#6d28d9}
+    table{width:100%;border-collapse:collapse}
+    th{text-align:left;padding:10px 24px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;background:#faf9ff;border-bottom:1px solid #f3f4f6}
+    td{padding:12px 24px;font-size:13px;border-bottom:1px solid #f9fafb;color:#374151}
+    tr:hover td{background:#faf9ff}
+    .badge{padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;display:inline-block}
+    .badge.pro{background:rgba(124,58,237,.1);color:#7c3aed}
+    .badge.free{background:rgba(34,197,94,.1);color:#16a34a}
+    .badge.ent{background:rgba(245,158,11,.1);color:#d97706}
+    .badge.active{background:rgba(34,197,94,.1);color:#16a34a}
+    .badge.inactive{background:rgba(239,68,68,.1);color:#dc2626}
+    .mono{font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:#7c3aed}
+    .text-muted{color:#9ca3af}
+    .pagination{padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #f3f4f6}
+    .pagination button{padding:6px 14px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;font-size:12px;cursor:pointer;font-family:inherit;transition:.2s}
+    .pagination button:hover{border-color:#7c3aed;color:#7c3aed}
+    .pagination button:disabled{opacity:.4;cursor:default}
+    .pagination span{font-size:12px;color:#9ca3af}
+
+    /* Create Key Modal */
+    .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}
+    .modal-overlay.show{display:flex}
+    .modal{background:#fff;border-radius:16px;padding:32px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+    .modal h3{font-size:18px;font-weight:700;margin-bottom:16px}
+    .modal label{display:block;font-size:12px;font-weight:600;color:#6b7280;margin-bottom:6px;margin-top:16px}
+    .modal input,.modal select{width:100%;padding:10px 14px;border:1px solid #e5e7eb;border-radius:8px;font-size:14px;font-family:inherit;outline:none}
+    .modal input:focus,.modal select:focus{border-color:#7c3aed}
+    .modal .modal-actions{display:flex;gap:10px;margin-top:24px}
+    .modal .modal-actions button{flex:1;padding:10px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:.2s}
+    .modal .cancel{background:#f3f4f6;color:#4b5563}
+    .modal .cancel:hover{background:#e5e7eb}
+    .modal .submit{background:#7c3aed;color:#fff}
+    .modal .submit:hover{background:#6d28d9}
+
+    /* Key Display */
+    .key-display{background:#1e1b4b;color:#a5b4fc;padding:12px 16px;border-radius:8px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;word-break:break-all;margin-top:12px;position:relative}
+    .key-display .copy{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.1);border:none;color:#a5b4fc;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer}
+    .key-display .copy:hover{background:rgba(255,255,255,.2)}
+
+    /* Audit Log */
+    .audit-event{display:inline-flex;align-items:center;gap:6px}
+    .audit-dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+    .audit-dot.create{background:#22c55e}
+    .audit-dot.verify{background:#3b82f6}
+    .audit-dot.auth{background:#ef4444}
+    .audit-dot.key{background:#f59e0b}
+    .audit-dot.gateway{background:#8b5cf6}
+    .audit-dot.other{background:#9ca3af}
+
+    /* Toast */
+    .toast{position:fixed;bottom:24px;right:24px;background:#1e1b4b;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:.3s;z-index:300}
+    .toast.show{transform:translateY(0);opacity:1}
+  </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <img src="/images/logo-horizontal.png" alt="Vertifile">
+    <h2>Admin Dashboard</h2>
+    <p>Enter the admin secret to access the dashboard.</p>
+    <input type="password" id="secretInput" placeholder="Admin Secret" autocomplete="off">
+    <button onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="loginError">Invalid admin secret</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+  <!-- Header -->
+  <div class="dash-header">
+    <div class="logo">
+      <img src="/images/logo-horizontal.png" alt="Vertifile">
+      <span>Dashboard</span>
+    </div>
+    <div class="actions">
+      <button onclick="refreshData()">Refresh</button>
+      <button onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="dash-body">
+    <!-- Stats -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card">
+        <div class="label">Total Documents</div>
+        <div class="value" id="statDocs">—</div>
+        <div class="sub">Protected files</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Organizations</div>
+        <div class="value" id="statOrgs">—</div>
+        <div class="sub">Active API keys</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Audit Events</div>
+        <div class="value" id="statAudit">—</div>
+        <div class="sub">Logged actions</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Server Status</div>
+        <div class="value" style="font-size:24px" id="statStatus">—</div>
+        <div class="sub" id="statVersion">v3.0.0</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('keys')">API Keys</button>
+      <button class="tab" onclick="switchTab('audit')">Audit Log</button>
+    </div>
+
+    <!-- API Keys Panel -->
+    <div class="panel active" id="panel-keys">
+      <div class="panel-header">
+        <h3>API Keys</h3>
+        <button class="btn" onclick="showCreateModal()">+ Create Key</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>API Key</th>
+            <th>Organization</th>
+            <th>Plan</th>
+            <th>Documents</th>
+            <th>Status</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="keysBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Audit Log Panel -->
+    <div class="panel" id="panel-audit">
+      <div class="panel-header">
+        <h3>Audit Log</h3>
+        <div style="display:flex;gap:8px">
+          <select id="auditFilter" onchange="loadAudit()" style="padding:6px 12px;border:1px solid #e5e7eb;border-radius:6px;font-size:12px;font-family:inherit">
+            <option value="">All Events</option>
+            <option value="pvf_created">PVF Created</option>
+            <option value="verify_attempt">Verification</option>
+            <option value="auth_failed">Auth Failed</option>
+            <option value="api_key_created">Key Created</option>
+            <option value="gateway_intake">Gateway Intake</option>
+            <option value="gateway_batch">Gateway Batch</option>
+          </select>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Event</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody id="auditBody"></tbody>
+      </table>
+      <div class="pagination">
+        <button id="auditPrev" onclick="auditPage(-1)" disabled>Previous</button>
+        <span id="auditInfo">Page 1</span>
+        <button id="auditNext" onclick="auditPage(1)">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Key Modal -->
+<div class="modal-overlay" id="createModal">
+  <div class="modal">
+    <h3>Create API Key</h3>
+    <label>Organization Name</label>
+    <input type="text" id="newOrgName" placeholder="e.g. Tel Aviv University">
+    <label>Plan</label>
+    <select id="newPlan">
+      <option value="free">Free (5 docs/day)</option>
+      <option value="professional">Professional (100 docs/day)</option>
+      <option value="enterprise">Enterprise (10,000 docs/day)</option>
+    </select>
+    <div id="newKeyResult"></div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="hideCreateModal()">Cancel</button>
+      <button class="submit" onclick="createKey()">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+let adminSecret = '';
+let currentAuditPage = 0;
+const AUDIT_LIMIT = 25;
+
+// Login
+function doLogin() {
+  adminSecret = document.getElementById('secretInput').value;
+  fetch('/api/admin/stats', { headers: { 'X-Admin-Secret': adminSecret } })
+    .then(r => {
+      if (!r.ok) throw new Error('Invalid');
+      return r.json();
+    })
+    .then(() => {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      refreshData();
+    })
+    .catch(() => {
+      document.getElementById('loginError').style.display = 'block';
+    });
+}
+
+function doLogout() {
+  adminSecret = '';
+  document.getElementById('loginScreen').style.display = '';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('secretInput').value = '';
+  document.getElementById('loginError').style.display = 'none';
+}
+
+// Enter key on login
+document.getElementById('secretInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// Data loading
+async function refreshData() {
+  await Promise.all([loadStats(), loadKeys(), loadAudit()]);
+  toast('Dashboard refreshed');
+}
+
+async function loadStats() {
+  const r = await fetch('/api/admin/stats', { headers: { 'X-Admin-Secret': adminSecret } });
+  const data = await r.json();
+  document.getElementById('statDocs').textContent = data.totalDocuments.toLocaleString();
+  document.getElementById('statOrgs').textContent = data.totalOrganizations.toLocaleString();
+  document.getElementById('statAudit').textContent = data.totalAuditEntries.toLocaleString();
+
+  const hr = await fetch('/api/health');
+  const health = await hr.json();
+  document.getElementById('statStatus').textContent = health.status === 'online' ? 'Online' : 'Offline';
+  document.getElementById('statStatus').style.color = health.status === 'online' ? '#16a34a' : '#dc2626';
+  document.getElementById('statVersion').textContent = 'v' + health.version;
+}
+
+async function loadKeys() {
+  const r = await fetch('/api/keys', { headers: { 'X-Admin-Secret': adminSecret } });
+  const data = await r.json();
+  const tbody = document.getElementById('keysBody');
+  tbody.innerHTML = data.keys.map(k => {
+    const planClass = k.plan === 'enterprise' ? 'ent' : k.plan === 'professional' ? 'pro' : 'free';
+    const statusClass = k.active ? 'active' : 'inactive';
+    const date = new Date(k.created).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    return `<tr>
+      <td><span class="mono">${k.apiKey}</span></td>
+      <td><strong>${escHtml(k.orgName)}</strong><br><span class="text-muted" style="font-size:11px">${k.orgId}</span></td>
+      <td><span class="badge ${planClass}">${k.plan}</span></td>
+      <td>${k.documentsCreated}</td>
+      <td><span class="badge ${statusClass}">${k.active ? 'Active' : 'Inactive'}</span></td>
+      <td class="text-muted">${date}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function loadAudit() {
+  const event = document.getElementById('auditFilter').value;
+  const params = new URLSearchParams({ limit: AUDIT_LIMIT, offset: currentAuditPage * AUDIT_LIMIT });
+  if (event) params.set('event', event);
+
+  const r = await fetch('/api/admin/audit?' + params, { headers: { 'X-Admin-Secret': adminSecret } });
+  const data = await r.json();
+  const tbody = document.getElementById('auditBody');
+
+  if (data.entries.length === 0 && currentAuditPage === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#9ca3af;padding:32px">No audit entries yet</td></tr>';
+  } else {
+    tbody.innerHTML = data.entries.map(e => {
+      const time = new Date(e.timestamp).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+      const dotClass = e.event.startsWith('pvf_') ? 'create' :
+                       e.event.startsWith('verify') ? 'verify' :
+                       e.event.startsWith('auth') ? 'auth' :
+                       e.event.startsWith('api_key') ? 'key' :
+                       e.event.startsWith('gateway') ? 'gateway' : 'other';
+      const details = typeof e.details === 'object' ? Object.entries(e.details).map(([k,v]) => `<span class="text-muted">${k}:</span> ${escHtml(String(v).substring(0, 40))}`).join(' &middot; ') : '';
+      return `<tr>
+        <td class="text-muted" style="white-space:nowrap">${time}</td>
+        <td><span class="audit-event"><span class="audit-dot ${dotClass}"></span>${e.event}</span></td>
+        <td style="font-size:12px">${details}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  document.getElementById('auditPrev').disabled = currentAuditPage === 0;
+  document.getElementById('auditNext').disabled = data.entries.length < AUDIT_LIMIT;
+  document.getElementById('auditInfo').textContent = `Page ${currentAuditPage + 1}`;
+}
+
+function auditPage(dir) {
+  currentAuditPage = Math.max(0, currentAuditPage + dir);
+  loadAudit();
+}
+
+// Tabs
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+  if (tab === 'audit') { currentAuditPage = 0; loadAudit(); }
+}
+
+// Create Key Modal
+function showCreateModal() {
+  document.getElementById('createModal').classList.add('show');
+  document.getElementById('newOrgName').value = '';
+  document.getElementById('newKeyResult').innerHTML = '';
+  document.getElementById('newOrgName').focus();
+}
+
+function hideCreateModal() {
+  document.getElementById('createModal').classList.remove('show');
+}
+
+async function createKey() {
+  const orgName = document.getElementById('newOrgName').value.trim();
+  const plan = document.getElementById('newPlan').value;
+  if (!orgName) return;
+
+  const r = await fetch('/api/keys/create', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': adminSecret },
+    body: JSON.stringify({ orgName, plan })
+  });
+  const data = await r.json();
+
+  if (data.success) {
+    document.getElementById('newKeyResult').innerHTML = `
+      <div style="margin-top:16px">
+        <label style="display:block;font-size:12px;font-weight:600;color:#16a34a;margin-bottom:4px">Key Created Successfully</label>
+        <div class="key-display">${data.apiKey}<button class="copy" onclick="copyKey('${data.apiKey}')">Copy</button></div>
+        <p style="font-size:11px;color:#ef4444;margin-top:8px;font-weight:500">Save this key now — it won't be shown again.</p>
+      </div>
+    `;
+    loadKeys();
+    loadStats();
+  }
+}
+
+function copyKey(key) {
+  navigator.clipboard.writeText(key).then(() => toast('API key copied'));
+}
+
+// Toast
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Helpers
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>

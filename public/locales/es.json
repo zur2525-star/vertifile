@@ -5,19 +5,28 @@
     "features": "Características",
     "industries": "Sectores",
     "pricing": "Precios",
-    "upload": "Proteger un documento",
-    "verify": "Verificar un documento"
+    "upload": "Proteger",
+    "verify": "Verificar"
   },
   "hero": {
     "headline": "Protege cualquier documento contra la falsificación",
+    "headline1": "Protege cualquier documento",
+    "headline2": "contra la falsificación",
     "subheadline": "Vertifile crea documentos digitales a prueba de manipulaciones con sellos de verificación animados. Sin acceso a tu contenido — privacidad total.",
     "cta1": "Proteger un documento",
     "cta2": "Ver cómo funciona",
     "badge": "Verificado por Blockchain"
   },
+  "stats": {
+    "encryption": "Cifrado SHA-256",
+    "documents": "Documentos protegidos",
+    "tokenRefresh": "Ciclo de actualización de token",
+    "securityLayers": "Capas de seguridad"
+  },
   "howItWorks": {
     "title": "Cómo funciona",
     "subtitle": "Cuatro pasos simples para proteger cualquier documento",
+    "label": "Proceso",
     "step1title": "Subir",
     "step1desc": "Sube cualquier documento — PDF, imagen o archivo de texto",
     "step2title": "Huella digital",
@@ -30,6 +39,7 @@
   "features": {
     "title": "Por qué Vertifile",
     "subtitle": "Protección de documentos de nivel empresarial",
+    "label": "Características",
     "f1title": "Privacidad total",
     "f1desc": "Nunca leemos ni almacenamos el contenido de tu documento. Solo se procesa una huella criptográfica.",
     "f2title": "Asegurado por Blockchain",
@@ -43,9 +53,23 @@
     "f6title": "Todos los tipos de documentos",
     "f6desc": "Funciona con PDF, imágenes, archivos de texto y más. Cualquier archivo puede ser protegido."
   },
+  "security": {
+    "label": "Seguridad",
+    "title": "8 capas de protección",
+    "subtitle": "Seguridad de nivel empresarial que hace la falsificación matemáticamente imposible.",
+    "s1title": "Firma criptográfica",
+    "s1desc": "Firma digital SHA-256 + HMAC en cada documento",
+    "s2title": "Marca de tiempo Blockchain",
+    "s2desc": "Registro inmutable en Polygon — existe para siempre",
+    "s3title": "Actualización de token cada 30 segundos",
+    "s3desc": "Previene grabaciones de pantalla y ataques de repetición",
+    "s4title": "Detección de entorno",
+    "s4desc": "Detecta herramientas de manipulación, editores y DevTools"
+  },
   "demo": {
     "title": "Míralo en acción",
-    "subtitle": "Alterna entre original y falsificado para ver la diferencia",
+    "label": "Demo en vivo",
+    "subtitle": "Un diploma universitario real protegido por Vertifile",
     "btnOriginal": "Original",
     "btnForged": "Falsificado",
     "labelVerified": "VERIFICADO",
@@ -54,6 +78,7 @@
   "industries": {
     "title": "Diseñado para cada sector",
     "subtitle": "Organizaciones en todo el mundo confían en Vertifile",
+    "label": "Sectores",
     "i1": "Universidades",
     "i1desc": "Diplomas, expedientes académicos, certificados",
     "i2": "Salud",
@@ -70,6 +95,7 @@
   "pricing": {
     "title": "Precios simples",
     "subtitle": "Empieza gratis — escala según crezcas",
+    "label": "Precios",
     "free": "Gratuito",
     "freePrice": "$0",
     "freePeriod": "/mes",
@@ -101,6 +127,7 @@
     "button": "Empezar a proteger ahora"
   },
   "footer": {
+    "description": "Documentos digitales a prueba de manipulaciones con sellos de verificación animados. Sin acceso a tu contenido.",
     "product": "Producto",
     "company": "Empresa",
     "legal": "Legal",
@@ -144,5 +171,10 @@
     "failedDesc": "No se pudo verificar este documento. Puede haber sido alterado o no estar registrado.",
     "tryAnother": "Verificar otro documento"
   },
-  "langName": "Español"
+  "langName": "Español",
+  "heroDoc": {
+    "uni": "UNIVERSIDAD DE SALAMANCA",
+    "faculty": "Facultad de Ciencias",
+    "title": "Certificado de Título"
+  }
 }

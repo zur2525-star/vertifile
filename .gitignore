@@ -4,3 +4,9 @@ output/
 .vercel/
 .env
 .DS_Store
+.vercel
+data/
+.claude/
+viewer/dist/
+viewer/node_modules/
+*.log
