@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertifile — API & SDK Integration Guide</title>
+  <meta name="description" content="Integrate Vertifile's document protection into your application. REST API docs, SDK examples, and webhook guides.">
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden;line-height:1.7}
+    a{text-decoration:none;color:inherit}
+
+    /* ===== NAVBAR ===== */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,0,0,.04);box-shadow:0 1px 12px rgba(0,0,0,.06)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{display:flex;align-items:center}
+    .nav-logo img{height:32px;width:auto}
+    .nav-center{display:flex;align-items:center;gap:28px}
+    .nav-center a{font-size:13.5px;font-weight:500;color:#6b7280;transition:color .2s;position:relative;padding:4px 0}
+    .nav-center a:hover{color:#111827}
+    .nav-center a::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:1.5px;background:#7c3aed;transition:all .25s;transform:translateX(-50%)}
+    .nav-center a:hover::after{width:100%}
+    .nav-center a.active{color:#7c3aed;font-weight:600}
+    .nav-center a.active::after{width:100%}
+    .nav-actions{display:flex;align-items:center;gap:10px}
+    .nav-sep{width:1px;height:20px;background:rgba(0,0,0,.08);margin:0 4px}
+    .nav-verify{padding:7px 18px;background:transparent;color:#4b5563;border:1px solid rgba(0,0,0,.1);border-radius:8px;font-weight:500;font-size:13px;transition:all .25s;cursor:pointer;text-decoration:none}
+    .nav-verify:hover{border-color:#7c3aed;color:#7c3aed;background:rgba(124,58,237,.03)}
+    .nav-cta{padding:7px 18px;background:#7c3aed;color:#fff!important;border-radius:8px;font-weight:600;font-size:13px;transition:all .25s;border:1px solid transparent;cursor:pointer;text-decoration:none}
+    .nav-cta:hover{background:#6d28d9;box-shadow:0 4px 14px rgba(124,58,237,.25)}
+    .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:6px}
+    .hamburger span{width:20px;height:1.5px;background:#374151;border-radius:2px;transition:.3s}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(255,255,255,.98);backdrop-filter:blur(20px);padding:16px 24px;box-shadow:0 12px 40px rgba(0,0,0,.08);z-index:999;border-bottom:1px solid rgba(0,0,0,.04)}
+    .mobile-menu.show{display:block}
+    .mobile-menu a{display:block;padding:12px 0;font-size:15px;font-weight:500;color:#4b5563;border-bottom:1px solid rgba(0,0,0,.04)}
+    .mobile-menu a:last-child{border:none}
+    @media(max-width:768px){
+      .nav-center,.nav-actions{display:none}
+      .hamburger{display:flex}
+      .nav-inner{padding:0 20px}
+    }
+
+    /* ===== HERO ===== */
+    .hero{padding:130px 40px 70px;text-align:center;background:linear-gradient(180deg,#f0ebff 0%,#f5f3ff 50%,#ffffff 100%);position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:1400px;height:100%;background-image:linear-gradient(rgba(139,92,246,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.06) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,black 20%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,black 20%,transparent 75%);pointer-events:none}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.15);border-radius:100px;font-size:12px;font-weight:600;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;margin-bottom:24px}
+    .hero-badge svg{width:16px;height:16px}
+    .hero h1{font-size:clamp(32px,5vw,52px);font-weight:800;color:#111827;letter-spacing:-1.5px;line-height:1.15;margin-bottom:16px}
+    .hero h1 span{background:linear-gradient(135deg,#7c3aed,#4f46e5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p{font-size:18px;color:#6b7280;max-width:600px;margin:0 auto 36px;line-height:1.7}
+    .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn-primary{padding:12px 28px;background:#7c3aed;color:#fff;border-radius:10px;font-weight:600;font-size:15px;transition:all .25s;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+    .btn-primary:hover{background:#6d28d9;box-shadow:0 8px 24px rgba(124,58,237,.3);transform:translateY(-1px)}
+    .btn-secondary{padding:12px 28px;background:#fff;color:#374151;border:1px solid rgba(0,0,0,.12);border-radius:10px;font-weight:600;font-size:15px;transition:all .25s;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+    .btn-secondary:hover{border-color:#7c3aed;color:#7c3aed;background:rgba(124,58,237,.02)}
+
+    /* ===== CONTAINER ===== */
+    .container{max-width:900px;margin:0 auto;padding:0 40px}
+    @media(max-width:768px){.container{padding:0 20px}}
+
+    /* ===== SECTIONS ===== */
+    section{padding:80px 0}
+    section:nth-child(even){background:#faf9ff}
+    .section-label{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.12);border-radius:100px;font-size:11px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:16px}
+    .section-title{font-size:clamp(24px,3.5vw,36px);font-weight:800;color:#111827;letter-spacing:-.8px;margin-bottom:12px;line-height:1.2}
+    .section-desc{font-size:16px;color:#6b7280;max-width:600px;line-height:1.7;margin-bottom:40px}
+
+    /* ===== QUICK START STEPS ===== */
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+    .step{background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:16px;padding:32px 28px;position:relative;transition:all .3s}
+    .step:hover{border-color:rgba(124,58,237,.2);box-shadow:0 8px 32px rgba(124,58,237,.08);transform:translateY(-2px)}
+    .step-num{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+    .step h3{font-size:17px;font-weight:700;color:#111827;margin-bottom:8px}
+    .step p{font-size:14px;color:#6b7280;line-height:1.7}
+    @media(max-width:768px){.steps{grid-template-columns:1fr}}
+
+    /* ===== CODE BLOCKS ===== */
+    .code-block{background:#1e1b2e;border-radius:14px;overflow:hidden;margin:20px 0;border:1px solid rgba(124,58,237,.15);box-shadow:0 4px 24px rgba(0,0,0,.12)}
+    .code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.06)}
+    .code-header span{font-size:12px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px}
+    .code-copy{background:none;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-size:11px;padding:4px 12px;border-radius:6px;cursor:pointer;font-weight:500;transition:all .2s;font-family:inherit}
+    .code-copy:hover{border-color:rgba(124,58,237,.5);color:#c4b5fd}
+    .code-copy.copied{border-color:#10b981;color:#10b981}
+    pre{padding:24px;overflow-x:auto;font-size:13.5px;line-height:1.8;margin:0}
+    pre code{font-family:'SF Mono','Fira Code','Cascadia Code',monospace;color:#e2e0f0}
+    /* Syntax colors */
+    .kw{color:#c792ea}      /* keywords */
+    .str{color:#c3e88d}     /* strings */
+    .fn{color:#82aaff}      /* functions */
+    .cm{color:#676e95}      /* comments */
+    .vr{color:#89ddff}      /* variables / operators */
+    .num{color:#f78c6c}     /* numbers */
+    .prop{color:#f07178}    /* properties */
+    .type{color:#ffcb6b}    /* types / classes */
+
+    /* ===== TABS ===== */
+    .tabs{display:flex;gap:0;margin-bottom:0;border-bottom:2px solid rgba(0,0,0,.06);margin-top:32px}
+    .tab{padding:10px 24px;font-size:14px;font-weight:600;color:#9ca3af;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit}
+    .tab:hover{color:#6b7280}
+    .tab.active{color:#7c3aed;border-bottom-color:#7c3aed}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* ===== ENDPOINT ===== */
+    .endpoint{margin:32px 0;padding:28px;background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:14px;transition:all .3s}
+    .endpoint:hover{border-color:rgba(124,58,237,.15);box-shadow:0 4px 20px rgba(124,58,237,.06)}
+    .endpoint-method{display:inline-block;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-right:10px}
+    .method-post{background:rgba(16,185,129,.1);color:#059669}
+    .method-get{background:rgba(59,130,246,.1);color:#2563eb}
+    .endpoint-path{font-family:'SF Mono','Fira Code',monospace;font-size:14px;font-weight:600;color:#111827}
+    .endpoint-desc{font-size:14px;color:#6b7280;margin-top:10px;line-height:1.7}
+
+    /* ===== TABLE ===== */
+    .api-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:14px}
+    .api-table thead{background:#f9fafb}
+    .api-table th{text-align:left;padding:12px 16px;font-weight:700;color:#374151;font-size:12px;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid rgba(0,0,0,.06)}
+    .api-table td{padding:12px 16px;border-bottom:1px solid rgba(0,0,0,.04);color:#4b5563;vertical-align:top}
+    .api-table tr:hover td{background:rgba(124,58,237,.02)}
+    .api-table code{font-family:'SF Mono','Fira Code',monospace;font-size:12px;background:rgba(124,58,237,.06);color:#7c3aed;padding:2px 8px;border-radius:5px}
+
+    /* ===== PLANS TABLE ===== */
+    .plans-table{width:100%;border-collapse:separate;border-spacing:0;margin:24px 0;border-radius:14px;overflow:hidden;border:1px solid rgba(0,0,0,.06)}
+    .plans-table th{text-align:left;padding:14px 20px;font-weight:700;color:#374151;font-size:12px;text-transform:uppercase;letter-spacing:.5px;background:#f9fafb;border-bottom:2px solid rgba(0,0,0,.06)}
+    .plans-table td{padding:14px 20px;border-bottom:1px solid rgba(0,0,0,.04);color:#4b5563;font-size:14px}
+    .plans-table tr:last-child td{border-bottom:none}
+    .plans-table tr:hover td{background:rgba(124,58,237,.02)}
+    .plan-name{font-weight:700;color:#111827}
+    .plan-highlight{background:rgba(124,58,237,.03)}
+    .plan-highlight td{border-bottom-color:rgba(124,58,237,.08)}
+
+    /* ===== CALLOUT ===== */
+    .callout{padding:20px 24px;border-radius:12px;margin:24px 0;display:flex;gap:14px;align-items:flex-start;font-size:14px;line-height:1.7}
+    .callout-info{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.12);color:#1e40af}
+    .callout-warn{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.12);color:#92400e}
+    .callout-success{background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.12);color:#065f46}
+    .callout svg{width:20px;height:20px;flex-shrink:0;margin-top:2px}
+
+    /* ===== INLINE CODE ===== */
+    p code, li code, td code{font-family:'SF Mono','Fira Code',monospace;font-size:12.5px;background:rgba(124,58,237,.06);color:#7c3aed;padding:2px 8px;border-radius:5px}
+
+    /* ===== SIDEBAR NAV ===== */
+    .page-layout{display:flex;gap:0;max-width:1200px;margin:0 auto}
+    .sidebar{width:220px;flex-shrink:0;padding:100px 0 40px 40px;position:sticky;top:0;height:100vh;overflow-y:auto}
+    .sidebar-nav{list-style:none}
+    .sidebar-nav li{margin-bottom:2px}
+    .sidebar-nav a{display:block;padding:7px 16px;font-size:13px;font-weight:500;color:#9ca3af;border-radius:8px;transition:all .2s;border-left:2px solid transparent}
+    .sidebar-nav a:hover{color:#4b5563;background:rgba(0,0,0,.02)}
+    .sidebar-nav a.active{color:#7c3aed;font-weight:600;background:rgba(124,58,237,.05);border-left-color:#7c3aed}
+    .main-content{flex:1;min-width:0}
+    @media(max-width:1024px){
+      .sidebar{display:none}
+      .main-content{width:100%}
+    }
+
+    /* ===== FOOTER ===== */
+    footer{background:linear-gradient(180deg,#f8f7ff 0%,#1e1b4b 30%,#1e1b4b 100%);color:#e2e0f0;padding:100px 32px 30px;position:relative;overflow:hidden}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(180deg,#f8f7ff,transparent);pointer-events:none;z-index:1}
+    footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;background:radial-gradient(ellipse at 30% 80%,rgba(124,58,237,.15),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.08),transparent 50%);pointer-events:none}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;max-width:1000px;margin:0 auto;position:relative;z-index:2}
+    .footer-brand .f-logo{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:10px;letter-spacing:-.5px;color:#fff}
+    .footer-brand .f-logo img{height:28px;width:auto;filter:brightness(0) invert(1)}
+    .footer-brand p{font-size:13px;color:rgba(196,181,253,.6);line-height:1.8;max-width:280px}
+    .footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(167,139,250,.7);margin-bottom:16px}
+    .footer-col a{display:block;font-size:14px;color:rgba(196,181,253,.5);padding:5px 0;transition:.2s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{max-width:1000px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.4);position:relative;z-index:2}
+    @media(max-width:768px){
+      .footer-grid{grid-template-columns:1fr 1fr;gap:30px}
+      .footer-bottom{flex-direction:column;gap:10px;text-align:center}
+    }
+    @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+
+    /* ===== PARAM LIST ===== */
+    .param-list{margin:16px 0}
+    .param-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.04);font-size:14px;flex-wrap:wrap}
+    .param-item:last-child{border-bottom:none}
+    .param-name{font-family:'SF Mono','Fira Code',monospace;font-size:13px;font-weight:600;color:#111827;min-width:120px}
+    .param-type{font-size:11px;font-weight:600;color:#7c3aed;background:rgba(124,58,237,.08);padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.3px;line-height:20px}
+    .param-req{font-size:11px;font-weight:600;color:#dc2626;background:rgba(220,38,38,.06);padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.3px;line-height:20px}
+    .param-opt{font-size:11px;font-weight:600;color:#9ca3af;background:rgba(0,0,0,.04);padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.3px;line-height:20px}
+    .param-desc{flex-basis:100%;color:#6b7280;padding-left:132px;margin-top:-2px}
+    @media(max-width:768px){.param-desc{padding-left:0}}
+
+    /* ===== RESPONSE BLOCK ===== */
+    .response-label{font-size:12px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;margin-top:24px}
+
+    /* ===== MISC ===== */
+    h3.sub-heading{font-size:20px;font-weight:700;color:#111827;margin:40px 0 16px;letter-spacing:-.3px}
+    .text-muted{color:#9ca3af}
+    .badge-new{display:inline-block;padding:2px 8px;background:rgba(16,185,129,.1);color:#059669;font-size:10px;font-weight:700;border-radius:4px;text-transform:uppercase;letter-spacing:.5px;margin-left:8px;vertical-align:middle}
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
+    </a>
+    <div class="nav-center">
+      <a href="/">Home</a>
+      <a href="/#how">How It Works</a>
+      <a href="/#features">Features</a>
+      <a href="/integration" class="active">API Docs</a>
+    </div>
+    <div class="nav-actions">
+      <div class="nav-sep"></div>
+      <a href="/verify" class="nav-verify">Verify</a>
+      <a href="/upload" class="nav-cta">Protect</a>
+    </div>
+    <div class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('show')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/">Home</a>
+    <a href="/#how">How It Works</a>
+    <a href="/#features">Features</a>
+    <a href="/integration">API Docs</a>
+    <a href="/verify">Verify</a>
+    <a href="/upload">Protect a Document</a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-badge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    Developer Platform
+  </div>
+  <h1>Build with <span>Vertifile</span></h1>
+  <p>Integrate tamper-proof document protection into your application with a simple REST API. Protect, verify, and manage documents programmatically.</p>
+  <div class="hero-actions">
+    <a href="#quickstart" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Quick Start
+    </a>
+    <a href="#endpoints" class="btn-secondary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      Full Reference
+    </a>
+  </div>
+</div>
+
+<!-- ===== PAGE LAYOUT ===== -->
+<div class="page-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <ul class="sidebar-nav">
+      <li><a href="#quickstart">Quick Start</a></li>
+      <li><a href="#authentication">Authentication</a></li>
+      <li><a href="#examples">Code Examples</a></li>
+      <li><a href="#endpoints">Endpoints</a></li>
+      <li><a href="#webhooks">Webhooks</a></li>
+      <li><a href="#responses">Response Examples</a></li>
+      <li><a href="#rate-limits">Rate Limits & Plans</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+
+    <!-- ===== QUICK START ===== -->
+    <section id="quickstart">
+      <div class="container">
+        <div class="section-label">Getting Started</div>
+        <div class="section-title">Quick Start</div>
+        <div class="section-desc">Get up and running with Vertifile in three steps. Protect your first document in under five minutes.</div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <h3>Get Your API Key</h3>
+            <p>Sign up for a Vertifile organization account and generate an API key from your dashboard settings.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <h3>Install the SDK</h3>
+            <p>Install our official SDK for Node.js or Python, or use the REST API directly with cURL.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <h3>Protect a Document</h3>
+            <p>Upload any file to create a tamper-proof .pvf document with embedded verification.</p>
+          </div>
+        </div>
+
+        <div class="code-block" style="margin-top:32px">
+          <div class="code-header">
+            <span>Install</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="cm"># Node.js</span>
+<span class="fn">npm</span> <span class="str">install</span> vertifile
+
+<span class="cm"># Python</span>
+<span class="fn">pip</span> <span class="str">install</span> vertifile</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== AUTHENTICATION ===== -->
+    <section id="authentication">
+      <div class="container">
+        <div class="section-label">Security</div>
+        <div class="section-title">Authentication</div>
+        <div class="section-desc">All API requests require authentication via an API key passed in the request header.</div>
+
+        <p style="margin-bottom:16px">Include your API key in every request using the <code>X-API-Key</code> header:</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>Request Header</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="prop">X-API-Key</span><span class="vr">:</span> <span class="str">your_api_key_here</span></code></pre>
+        </div>
+
+        <div class="callout callout-warn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div>Keep your API key secret. Never expose it in client-side code or public repositories. Use environment variables to store it securely.</div>
+        </div>
+
+        <p style="margin-top:20px">The API base URL depends on your deployment. For the hosted service, use:</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>Base URL</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="str">https://api.vertifile.com</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CODE EXAMPLES ===== -->
+    <section id="examples">
+      <div class="container">
+        <div class="section-label">SDK</div>
+        <div class="section-title">Code Examples</div>
+        <div class="section-desc">Full examples for creating protected documents, verifying them, and using the gateway API.</div>
+
+        <!-- TABS -->
+        <div class="tabs" id="codeTabs">
+          <button class="tab active" data-tab="nodejs">Node.js</button>
+          <button class="tab" data-tab="python">Python</button>
+          <button class="tab" data-tab="curl">cURL</button>
+        </div>
+
+        <!-- NODE.JS -->
+        <div class="tab-panel active" id="panel-nodejs">
+
+          <h3 class="sub-heading">Create a Protected Document</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span>Node.js</span>
+              <button class="code-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+<pre><code><span class="kw">const</span> <span class="type">FormData</span> <span class="vr">=</span> <span class="fn">require</span>(<span class="str">'form-data'</span>);
+<span class="kw">const</span> fs <span class="vr">=</span> <span class="fn">require</span>(<span class="str">'fs'</span>);
+<span class="kw">const</span> axios <span class="vr">=</span> <span class="fn">require</span>(<span class="str">'axios'</span>);
+
+<span class="kw">const</span> API_KEY <span class="vr">=</span> <span class="str">'your_api_key_here'</span>;
+<span class="kw">const</span> BASE_URL <span class="vr">=</span> <span class="str">'https://api.vertifile.com'</span>;
+
+<span class="kw">async function</span> <span class="fn">createPvf</span>(<span class="vr">filePath</span>, <span class="vr">recipientEmail</span>) {
+  <span class="kw">const</span> form <span class="vr">=</span> <span class="kw">new</span> <span class="type">FormData</span>();
+  form.<span class="fn">append</span>(<span class="str">'file'</span>, fs.<span class="fn">createReadStream</span>(filePath));
+
+  <span class="cm">// Optional: bind document to a specific recipient</span>
+  <span class="kw">if</span> (recipientEmail) {
+    form.<span class="fn">append</span>(<span class="str">'recipient'</span>, recipientEmail);
+  }
+
+  <span class="kw">const</span> response <span class="vr">=</span> <span class="kw">await</span> axios.<span class="fn">post</span>(
+    <span class="str">`<span class="vr">${</span>BASE_URL<span class="vr">}</span>/api/create-pvf`</span>,
+    form,
+    {
+      <span class="prop">headers</span>: {
+        <span class="str">'X-API-Key'</span>: API_KEY,
+        ...form.<span class="fn">getHeaders</span>()
+      },
+      <span class="prop">responseType</span>: <span class="str">'arraybuffer'</span>
+    }
+  );
+
+  <span class="cm">// Save the .pvf file</span>
+  fs.<span class="fn">writeFileSync</span>(<span class="str">'protected.pvf.html'</span>, response.data);
+  console.<span class="fn">log</span>(<span class="str">'Document protected successfully.'</span>);
+}
+
+<span class="fn">createPvf</span>(<span class="str">'./contract.pdf'</span>, <span class="str">'recipient@example.com'</span>);</code></pre>
+          </div>
+
+          <h3 class="sub-heading">Verify a Document</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span>Node.js</span>
+              <button class="code-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+<pre><code><span class="kw">async function</span> <span class="fn">verifyDocument</span>(<span class="vr">hash</span>, <span class="vr">signature</span>) {
+  <span class="kw">const</span> response <span class="vr">=</span> <span class="kw">await</span> axios.<span class="fn">post</span>(
+    <span class="str">`<span class="vr">${</span>BASE_URL<span class="vr">}</span>/api/verify`</span>,
+    { <span class="prop">hash</span>, <span class="prop">signature</span> },
+    {
+      <span class="prop">headers</span>: { <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span> }
+    }
+  );
+
+  <span class="kw">if</span> (response.data.<span class="prop">verified</span>) {
+    console.<span class="fn">log</span>(<span class="str">'Document is authentic.'</span>);
+    console.<span class="fn">log</span>(<span class="str">'Details:'</span>, response.data.<span class="prop">document</span>);
+  } <span class="kw">else</span> {
+    console.<span class="fn">log</span>(<span class="str">'Verification failed.'</span>);
+  }
+}
+</code></pre>
+          </div>
+
+          <h3 class="sub-heading">Gateway: Intake & Extract</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span>Node.js</span>
+              <button class="code-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+<pre><code><span class="kw">async function</span> <span class="fn">gatewayIntake</span>(<span class="vr">pvfFilePath</span>) {
+  <span class="kw">const</span> form <span class="vr">=</span> <span class="kw">new</span> <span class="type">FormData</span>();
+  form.<span class="fn">append</span>(<span class="str">'file'</span>, fs.<span class="fn">createReadStream</span>(pvfFilePath));
+
+  <span class="kw">const</span> response <span class="vr">=</span> <span class="kw">await</span> axios.<span class="fn">post</span>(
+    <span class="str">`<span class="vr">${</span>BASE_URL<span class="vr">}</span>/api/gateway/intake`</span>,
+    form,
+    {
+      <span class="prop">headers</span>: {
+        <span class="str">'X-API-Key'</span>: API_KEY,
+        ...form.<span class="fn">getHeaders</span>()
+      }
+    }
+  );
+
+  <span class="kw">const</span> { <span class="prop">verified</span>, <span class="prop">originalFile</span> } <span class="vr">=</span> response.data;
+
+  <span class="kw">if</span> (verified) {
+    <span class="cm">// Decode and save the extracted original file</span>
+    <span class="kw">const</span> buffer <span class="vr">=</span> Buffer.<span class="fn">from</span>(originalFile, <span class="str">'base64'</span>);
+    fs.<span class="fn">writeFileSync</span>(<span class="str">'extracted-original.pdf'</span>, buffer);
+    console.<span class="fn">log</span>(<span class="str">'Verified & extracted successfully.'</span>);
+  }
+}
+</code></pre>
+          </div>
+        </div>
+
+        <!-- PYTHON -->
+        <div class="tab-panel" id="panel-python">
+
+          <h3 class="sub-heading">Create a Protected Document</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span>Python</span>
+              <button class="code-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+<pre><code><span class="kw">import</span> requests
+
+API_KEY <span class="vr">=</span> <span class="str">'your_api_key_here'</span>
+BASE_URL <span class="vr">=</span> <span class="str">'https://api.vertifile.com'</span>
+
+<span class="kw">def</span> <span class="fn">create_pvf</span>(<span class="vr">file_path</span>, <span class="vr">recipient</span><span class="vr">=</span><span class="kw">None</span>):
+    <span class="str">"""Upload a file and receive a protected .pvf document."""</span>
+    <span class="kw">with</span> <span class="fn">open</span>(file_path, <span class="str">'rb'</span>) <span class="kw">as</span> f:
+        files <span class="vr">=</span> {<span class="str">'file'</span>: f}
+        data <span class="vr">=</span> {}
+        <span class="kw">if</span> recipient:
+            data[<span class="str">'recipient'</span>] <span class="vr">=</span> recipient
+
+        response <span class="vr">=</span> requests.<span class="fn">post</span>(
+            <span class="str">f'<span class="vr">{</span>BASE_URL<span class="vr">}</span>/api/create-pvf'</span>,
+            files<span class="vr">=</span>files,
+            data<span class="vr">=</span>data,
+            headers<span class="vr">=</span>{<span class="str">'X-API-Key'</span>: API_KEY}
+        )
+
+    <span class="cm"># Save the .pvf file</span>
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="str">'protected.pvf.html'</span>, <span class="str">'wb'</span>) <span class="kw">as</span> out:
+        out.<span class="fn">write</span>(response.content)
+
+    <span class="fn">print</span>(<span class="str">'Document protected successfully.'</span>)
+
+<span class="fn">create_pvf</span>(<span class="str">'./contract.pdf'</span>, <span class="str">'recipient@example.com'</span>)</code></pre>
+          </div>
+
+          <h3 class="sub-heading">Verify a Document</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span>Python</span>
+              <button class="code-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+<pre><code><span class="kw">def</span> <span class="fn">verify_document</span>(<span class="vr">doc_hash</span>, <span class="vr">signature</span>):
+    <span class="str">"""Verify a document's authenticity."""</span>
+    response <span class="vr">=</span> requests.<span class="fn">post</span>(
+        <span class="str">f'<span class="vr">{</span>BASE_URL<span class="vr">}</span>/api/verify'</span>,
+        json<span class="vr">=</span>{
+            <span class="str">'hash'</span>: doc_hash,
+            <span class="str">'signature'</span>: signature
+        }
+    )
+
+    result <span class="vr">=</span> response.<span class="fn">json</span>()
+
+    <span class="kw">if</span> result[<span class="str">'verified'</span>]:
+        <span class="fn">print</span>(<span class="str">'Document is authentic.'</span>)
+        <span class="fn">print</span>(<span class="str">'Details:'</span>, result[<span class="str">'document'</span>])
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">'Verification failed.'</span>)
+</code></pre>
+          </div>
+
+          <h3 class="sub-heading">Gateway: Intake & Extract</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span>Python</span>
+              <button class="code-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+<pre><code><span class="kw">import</span> base64
+
+<span class="kw">def</span> <span class="fn">gateway_intake</span>(<span class="vr">pvf_path</span>):
+    <span class="str">"""Send a .pvf file for verification and extract the original."""</span>
+    <span class="kw">with</span> <span class="fn">open</span>(pvf_path, <span class="str">'rb'</span>) <span class="kw">as</span> f:
+        response <span class="vr">=</span> requests.<span class="fn">post</span>(
+            <span class="str">f'<span class="vr">{</span>BASE_URL<span class="vr">}</span>/api/gateway/intake'</span>,
+            files<span class="vr">=</span>{<span class="str">'file'</span>: f},
+            headers<span class="vr">=</span>{<span class="str">'X-API-Key'</span>: API_KEY}
+        )
+
+    result <span class="vr">=</span> response.<span class="fn">json</span>()
+
+    <span class="kw">if</span> result[<span class="str">'verified'</span>]:
+        <span class="cm"># Decode and save the original file</span>
+        original <span class="vr">=</span> base64.<span class="fn">b64decode</span>(result[<span class="str">'originalFile'</span>])
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="str">'extracted-original.pdf'</span>, <span class="str">'wb'</span>) <span class="kw">as</span> out:
+            out.<span class="fn">write</span>(original)
+        <span class="fn">print</span>(<span class="str">'Verified & extracted successfully.'</span>)
+</code></pre>
+          </div>
+        </div>
+
+        <!-- CURL -->
+        <div class="tab-panel" id="panel-curl">
+
+          <h3 class="sub-heading">Create a Protected Document</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span>cURL</span>
+              <button class="code-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+<pre><code><span class="cm"># Create a .pvf from a local file</span>
+<span class="fn">curl</span> <span class="vr">-X</span> POST <span class="str">https://api.vertifile.com/api/create-pvf</span> \
+  <span class="vr">-H</span> <span class="str">"X-API-Key: your_api_key_here"</span> \
+  <span class="vr">-F</span> <span class="str">"file=@contract.pdf"</span> \
+  <span class="vr">-F</span> <span class="str">"recipient=recipient@example.com"</span> \
+  <span class="vr">-o</span> <span class="str">protected.pvf.html</span></code></pre>
+          </div>
+
+          <h3 class="sub-heading">Verify a Document</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span>cURL</span>
+              <button class="code-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+<pre><code><span class="cm"># Verify using hash and signature</span>
+<span class="fn">curl</span> <span class="vr">-X</span> POST <span class="str">https://api.vertifile.com/api/verify</span> \
+  <span class="vr">-H</span> <span class="str">"Content-Type: application/json"</span> \
+  <span class="vr">-d</span> <span class="str">'{
+    "hash": "a1b2c3d4e5f6...",
+    "signature": "3045022100..."
+  }'</span></code></pre>
+          </div>
+
+          <h3 class="sub-heading">Gateway: Intake & Extract</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span>cURL</span>
+              <button class="code-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+<pre><code><span class="cm"># Send a .pvf for verification + extraction</span>
+<span class="fn">curl</span> <span class="vr">-X</span> POST <span class="str">https://api.vertifile.com/api/gateway/intake</span> \
+  <span class="vr">-H</span> <span class="str">"X-API-Key: your_api_key_here"</span> \
+  <span class="vr">-F</span> <span class="str">"file=@document.pvf.html"</span></code></pre>
+          </div>
+
+          <h3 class="sub-heading">Batch Verification</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span>cURL</span>
+              <button class="code-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+<pre><code><span class="cm"># Batch verify multiple documents</span>
+<span class="fn">curl</span> <span class="vr">-X</span> POST <span class="str">https://api.vertifile.com/api/gateway/batch</span> \
+  <span class="vr">-H</span> <span class="str">"X-API-Key: your_api_key_here"</span> \
+  <span class="vr">-F</span> <span class="str">"files=@doc1.pvf.html"</span> \
+  <span class="vr">-F</span> <span class="str">"files=@doc2.pvf.html"</span> \
+  <span class="vr">-F</span> <span class="str">"files=@doc3.pvf.html"</span></code></pre>
+          </div>
+
+          <h3 class="sub-heading">Organization Stats</h3>
+          <div class="code-block">
+            <div class="code-header">
+              <span>cURL</span>
+              <button class="code-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+<pre><code><span class="cm"># Get organization statistics</span>
+<span class="fn">curl</span> <span class="str">https://api.vertifile.com/api/org/stats</span> \
+  <span class="vr">-H</span> <span class="str">"X-API-Key: your_api_key_here"</span>
+
+<span class="cm"># List documents (paginated)</span>
+<span class="fn">curl</span> <span class="str">"https://api.vertifile.com/api/org/documents?page=1&amp;limit=20"</span> \
+  <span class="vr">-H</span> <span class="str">"X-API-Key: your_api_key_here"</span></code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ENDPOINTS ===== -->
+    <section id="endpoints">
+      <div class="container">
+        <div class="section-label">Reference</div>
+        <div class="section-title">API Endpoints</div>
+        <div class="section-desc">Complete reference for all available API endpoints.</div>
+
+        <!-- Create PVF -->
+        <div class="endpoint">
+          <span class="endpoint-method method-post">POST</span>
+          <span class="endpoint-path">/api/create-pvf</span>
+          <p class="endpoint-desc">Upload a file and receive a tamper-proof .pvf document. Optionally bind the document to a specific recipient email.</p>
+
+          <div class="response-label">Parameters</div>
+          <div class="param-list">
+            <div class="param-item">
+              <span class="param-name">file</span>
+              <span class="param-type">file</span>
+              <span class="param-req">required</span>
+              <div class="param-desc">The document file to protect. Sent as multipart/form-data.</div>
+            </div>
+            <div class="param-item">
+              <span class="param-name">recipient</span>
+              <span class="param-type">string</span>
+              <span class="param-opt">optional</span>
+              <div class="param-desc">Email address to bind the document to a specific recipient.</div>
+            </div>
+          </div>
+
+          <div class="response-label">Headers</div>
+          <div class="param-list">
+            <div class="param-item">
+              <span class="param-name">X-API-Key</span>
+              <span class="param-type">string</span>
+              <span class="param-req">required</span>
+              <div class="param-desc">Your organization API key.</div>
+            </div>
+          </div>
+
+          <div class="response-label">Response</div>
+          <p style="font-size:14px;color:#6b7280">Returns the .pvf HTML file as a binary download.</p>
+        </div>
+
+        <!-- Verify -->
+        <div class="endpoint">
+          <span class="endpoint-method method-post">POST</span>
+          <span class="endpoint-path">/api/verify</span>
+          <p class="endpoint-desc">Verify a document's authenticity by its cryptographic hash and signature.</p>
+
+          <div class="response-label">Body <span class="text-muted" style="font-size:11px;font-weight:400;text-transform:none;letter-spacing:0">(JSON)</span></div>
+          <div class="param-list">
+            <div class="param-item">
+              <span class="param-name">hash</span>
+              <span class="param-type">string</span>
+              <span class="param-req">required</span>
+              <div class="param-desc">The SHA-256 hash of the original document content.</div>
+            </div>
+            <div class="param-item">
+              <span class="param-name">signature</span>
+              <span class="param-type">string</span>
+              <span class="param-req">required</span>
+              <div class="param-desc">The cryptographic signature embedded in the .pvf file.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gateway Intake -->
+        <div class="endpoint">
+          <span class="endpoint-method method-post">POST</span>
+          <span class="endpoint-path">/api/gateway/intake</span>
+          <p class="endpoint-desc">Organizations send a .pvf file for server-side verification and extraction of the original document.</p>
+
+          <div class="response-label">Parameters</div>
+          <div class="param-list">
+            <div class="param-item">
+              <span class="param-name">file</span>
+              <span class="param-type">file</span>
+              <span class="param-req">required</span>
+              <div class="param-desc">The .pvf file to verify and extract. Sent as multipart/form-data.</div>
+            </div>
+          </div>
+
+          <div class="response-label">Headers</div>
+          <div class="param-list">
+            <div class="param-item">
+              <span class="param-name">X-API-Key</span>
+              <span class="param-type">string</span>
+              <span class="param-req">required</span>
+              <div class="param-desc">Your organization API key.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gateway Batch -->
+        <div class="endpoint">
+          <span class="endpoint-method method-post">POST</span>
+          <span class="endpoint-path">/api/gateway/batch</span>
+          <span class="badge-new">New</span>
+          <p class="endpoint-desc">Batch verification of multiple .pvf documents in a single request.</p>
+
+          <div class="response-label">Parameters</div>
+          <div class="param-list">
+            <div class="param-item">
+              <span class="param-name">files</span>
+              <span class="param-type">file[]</span>
+              <span class="param-req">required</span>
+              <div class="param-desc">Multiple .pvf files to verify. Sent as multipart/form-data.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Org Stats -->
+        <div class="endpoint">
+          <span class="endpoint-method method-get">GET</span>
+          <span class="endpoint-path">/api/org/stats</span>
+          <p class="endpoint-desc">Retrieve usage statistics for your organization, including document counts and verification metrics.</p>
+        </div>
+
+        <!-- Org Documents -->
+        <div class="endpoint">
+          <span class="endpoint-method method-get">GET</span>
+          <span class="endpoint-path">/api/org/documents</span>
+          <p class="endpoint-desc">List all documents created by your organization. Supports pagination.</p>
+
+          <div class="response-label">Query Parameters</div>
+          <div class="param-list">
+            <div class="param-item">
+              <span class="param-name">page</span>
+              <span class="param-type">integer</span>
+              <span class="param-opt">optional</span>
+              <div class="param-desc">Page number (default: 1).</div>
+            </div>
+            <div class="param-item">
+              <span class="param-name">limit</span>
+              <span class="param-type">integer</span>
+              <span class="param-opt">optional</span>
+              <div class="param-desc">Results per page (default: 20, max: 100).</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Webhook Register -->
+        <div class="endpoint">
+          <span class="endpoint-method method-post">POST</span>
+          <span class="endpoint-path">/api/webhooks/register</span>
+          <p class="endpoint-desc">Register a webhook URL to receive real-time notifications for verification events.</p>
+
+          <div class="response-label">Body <span class="text-muted" style="font-size:11px;font-weight:400;text-transform:none;letter-spacing:0">(JSON)</span></div>
+          <div class="param-list">
+            <div class="param-item">
+              <span class="param-name">url</span>
+              <span class="param-type">string</span>
+              <span class="param-req">required</span>
+              <div class="param-desc">The HTTPS URL to receive webhook POST requests.</div>
+            </div>
+            <div class="param-item">
+              <span class="param-name">events</span>
+              <span class="param-type">string[]</span>
+              <span class="param-req">required</span>
+              <div class="param-desc">Event types to subscribe to: <code>document.verified</code>, <code>document.failed</code>, <code>document.created</code>.</div>
+            </div>
+            <div class="param-item">
+              <span class="param-name">secret</span>
+              <span class="param-type">string</span>
+              <span class="param-opt">optional</span>
+              <div class="param-desc">A shared secret for signing webhook payloads (recommended).</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== WEBHOOKS ===== -->
+    <section id="webhooks">
+      <div class="container">
+        <div class="section-label">Events</div>
+        <div class="section-title">Webhook Integration</div>
+        <div class="section-desc">Receive real-time notifications when documents are verified or created.</div>
+
+        <h3 class="sub-heading">Register a Webhook</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>Node.js</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="kw">async function</span> <span class="fn">registerWebhook</span>() {
+  <span class="kw">const</span> response <span class="vr">=</span> <span class="kw">await</span> axios.<span class="fn">post</span>(
+    <span class="str">`<span class="vr">${</span>BASE_URL<span class="vr">}</span>/api/webhooks/register`</span>,
+    {
+      <span class="prop">url</span>: <span class="str">'https://yourapp.com/webhooks/vertifile'</span>,
+      <span class="prop">events</span>: [<span class="str">'document.verified'</span>, <span class="str">'document.failed'</span>],
+      <span class="prop">secret</span>: <span class="str">'whsec_your_secret_here'</span>
+    },
+    {
+      <span class="prop">headers</span>: {
+        <span class="str">'X-API-Key'</span>: API_KEY,
+        <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span>
+      }
+    }
+  );
+
+  console.<span class="fn">log</span>(<span class="str">'Webhook registered:'</span>, response.data);
+}
+</code></pre>
+        </div>
+
+        <h3 class="sub-heading">Handle Incoming Webhooks</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>Node.js (Express)</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code><span class="kw">const</span> crypto <span class="vr">=</span> <span class="fn">require</span>(<span class="str">'crypto'</span>);
+<span class="kw">const</span> express <span class="vr">=</span> <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> app <span class="vr">=</span> <span class="fn">express</span>();
+
+app.<span class="fn">use</span>(express.<span class="fn">json</span>());
+
+<span class="kw">const</span> WEBHOOK_SECRET <span class="vr">=</span> <span class="str">'whsec_your_secret_here'</span>;
+
+<span class="kw">function</span> <span class="fn">verifySignature</span>(<span class="vr">payload</span>, <span class="vr">receivedSig</span>) {
+  <span class="kw">const</span> expected <span class="vr">=</span> crypto
+    .<span class="fn">createHmac</span>(<span class="str">'sha256'</span>, WEBHOOK_SECRET)
+    .<span class="fn">update</span>(JSON.<span class="fn">stringify</span>(payload))
+    .<span class="fn">digest</span>(<span class="str">'hex'</span>);
+  <span class="kw">return</span> crypto.<span class="fn">timingSafeEqual</span>(
+    Buffer.<span class="fn">from</span>(expected),
+    Buffer.<span class="fn">from</span>(receivedSig)
+  );
+}
+
+app.<span class="fn">post</span>(<span class="str">'/webhooks/vertifile'</span>, (<span class="vr">req</span>, <span class="vr">res</span>) <span class="vr">=></span> {
+  <span class="kw">const</span> signature <span class="vr">=</span> req.headers[<span class="str">'x-vertifile-signature'</span>];
+
+  <span class="cm">// Verify the webhook signature</span>
+  <span class="kw">if</span> (!<span class="fn">verifySignature</span>(req.body, signature)) {
+    <span class="kw">return</span> res.<span class="fn">status</span>(<span class="num">401</span>).<span class="fn">json</span>({ <span class="prop">error</span>: <span class="str">'Invalid signature'</span> });
+  }
+
+  <span class="kw">const</span> { <span class="prop">event</span>, <span class="prop">data</span> } <span class="vr">=</span> req.body;
+
+  <span class="kw">switch</span> (event) {
+    <span class="kw">case</span> <span class="str">'document.verified'</span>:
+      console.<span class="fn">log</span>(<span class="str">'Document verified:'</span>, data.documentId);
+      <span class="cm">// Handle successful verification</span>
+      <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="str">'document.failed'</span>:
+      console.<span class="fn">log</span>(<span class="str">'Verification failed:'</span>, data.reason);
+      <span class="cm">// Handle failed verification</span>
+      <span class="kw">break</span>;
+  }
+
+  res.<span class="fn">status</span>(<span class="num">200</span>).<span class="fn">json</span>({ <span class="prop">received</span>: <span class="kw">true</span> });
+});
+</code></pre>
+        </div>
+
+        <div class="callout callout-info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <div>Webhook payloads are signed with your shared secret using HMAC-SHA256. Always verify the <code>x-vertifile-signature</code> header before processing events.</div>
+        </div>
+
+        <div class="response-label">Available Events</div>
+        <table class="api-table">
+          <thead>
+            <tr><th>Event</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>document.created</code></td><td>A new .pvf document was created via the API</td></tr>
+            <tr><td><code>document.verified</code></td><td>A document was successfully verified</td></tr>
+            <tr><td><code>document.failed</code></td><td>A document verification attempt failed</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== RESPONSE EXAMPLES ===== -->
+    <section id="responses">
+      <div class="container">
+        <div class="section-label">Responses</div>
+        <div class="section-title">Response Examples</div>
+        <div class="section-desc">Typical JSON responses from the API.</div>
+
+        <h3 class="sub-heading">Verification Success</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>POST /api/verify &mdash; 200 OK</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code>{
+  <span class="prop">"success"</span>: <span class="kw">true</span>,
+  <span class="prop">"verified"</span>: <span class="kw">true</span>,
+  <span class="prop">"document"</span>: {
+    <span class="prop">"id"</span>: <span class="str">"doc_8f3a1b2c4d5e"</span>,
+    <span class="prop">"filename"</span>: <span class="str">"contract.pdf"</span>,
+    <span class="prop">"createdAt"</span>: <span class="str">"2025-01-15T10:30:00Z"</span>,
+    <span class="prop">"hash"</span>: <span class="str">"a1b2c3d4e5f6..."</span>,
+    <span class="prop">"recipient"</span>: <span class="str">"john@example.com"</span>,
+    <span class="prop">"organization"</span>: <span class="str">"Acme Corp"</span>
+  }
+}</code></pre>
+        </div>
+
+        <h3 class="sub-heading">Verification Failure</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>POST /api/verify &mdash; 200 OK</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code>{
+  <span class="prop">"success"</span>: <span class="kw">true</span>,
+  <span class="prop">"verified"</span>: <span class="kw">false</span>,
+  <span class="prop">"reason"</span>: <span class="str">"Document hash does not match any known record"</span>
+}</code></pre>
+        </div>
+
+        <h3 class="sub-heading">Gateway Intake Response</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>POST /api/gateway/intake &mdash; 200 OK</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code>{
+  <span class="prop">"success"</span>: <span class="kw">true</span>,
+  <span class="prop">"verified"</span>: <span class="kw">true</span>,
+  <span class="prop">"document"</span>: {
+    <span class="prop">"id"</span>: <span class="str">"doc_8f3a1b2c4d5e"</span>,
+    <span class="prop">"filename"</span>: <span class="str">"contract.pdf"</span>,
+    <span class="prop">"mimeType"</span>: <span class="str">"application/pdf"</span>,
+    <span class="prop">"size"</span>: <span class="num">245780</span>
+  },
+  <span class="prop">"originalFile"</span>: <span class="str">"JVBERi0xLjQKMS..."</span> <span class="cm">// base64-encoded</span>
+}</code></pre>
+        </div>
+
+        <h3 class="sub-heading">Organization Stats</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>GET /api/org/stats &mdash; 200 OK</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code>{
+  <span class="prop">"success"</span>: <span class="kw">true</span>,
+  <span class="prop">"stats"</span>: {
+    <span class="prop">"totalDocuments"</span>: <span class="num">1284</span>,
+    <span class="prop">"totalVerifications"</span>: <span class="num">3891</span>,
+    <span class="prop">"documentsThisMonth"</span>: <span class="num">142</span>,
+    <span class="prop">"verificationsThisMonth"</span>: <span class="num">467</span>,
+    <span class="prop">"plan"</span>: <span class="str">"business"</span>,
+    <span class="prop">"usage"</span>: {
+      <span class="prop">"documentsUsed"</span>: <span class="num">142</span>,
+      <span class="prop">"documentsLimit"</span>: <span class="num">500</span>
+    }
+  }
+}</code></pre>
+        </div>
+
+        <h3 class="sub-heading">Webhook Registration</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>POST /api/webhooks/register &mdash; 201 Created</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code>{
+  <span class="prop">"success"</span>: <span class="kw">true</span>,
+  <span class="prop">"webhook"</span>: {
+    <span class="prop">"id"</span>: <span class="str">"wh_9a8b7c6d5e4f"</span>,
+    <span class="prop">"url"</span>: <span class="str">"https://yourapp.com/webhooks/vertifile"</span>,
+    <span class="prop">"events"</span>: [<span class="str">"document.verified"</span>, <span class="str">"document.failed"</span>],
+    <span class="prop">"createdAt"</span>: <span class="str">"2025-01-15T10:30:00Z"</span>,
+    <span class="prop">"active"</span>: <span class="kw">true</span>
+  }
+}</code></pre>
+        </div>
+
+        <h3 class="sub-heading">Error Response</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>Error &mdash; 401 Unauthorized</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+<pre><code>{
+  <span class="prop">"success"</span>: <span class="kw">false</span>,
+  <span class="prop">"error"</span>: <span class="str">"Invalid or missing API key"</span>,
+  <span class="prop">"code"</span>: <span class="str">"UNAUTHORIZED"</span>
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== RATE LIMITS & PLANS ===== -->
+    <section id="rate-limits">
+      <div class="container">
+        <div class="section-label">Plans</div>
+        <div class="section-title">Rate Limits & Plans</div>
+        <div class="section-desc">Choose the plan that fits your organization's needs. All plans include full API access.</div>
+
+        <table class="plans-table">
+          <thead>
+            <tr>
+              <th>Plan</th>
+              <th>Documents / mo</th>
+              <th>API Requests / min</th>
+              <th>Batch Size</th>
+              <th>Webhooks</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="plan-name">Free</td>
+              <td>50</td>
+              <td>10</td>
+              <td>5</td>
+              <td>1</td>
+              <td>$0</td>
+            </tr>
+            <tr>
+              <td class="plan-name">Starter</td>
+              <td>200</td>
+              <td>30</td>
+              <td>10</td>
+              <td>3</td>
+              <td>$29/mo</td>
+            </tr>
+            <tr class="plan-highlight">
+              <td class="plan-name" style="color:#7c3aed">Business</td>
+              <td>500</td>
+              <td>60</td>
+              <td>25</td>
+              <td>10</td>
+              <td>$99/mo</td>
+            </tr>
+            <tr>
+              <td class="plan-name">Enterprise</td>
+              <td>Unlimited</td>
+              <td>200</td>
+              <td>100</td>
+              <td>Unlimited</td>
+              <td>Custom</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <div>Rate limits are applied per API key. When you exceed a limit, the API returns a <code>429 Too Many Requests</code> response with a <code>Retry-After</code> header indicating when you can retry.</div>
+        </div>
+
+        <div class="callout callout-success" style="margin-top:12px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+          <div>Verifications (the <code>/api/verify</code> endpoint) are always free and unlimited across all plans. Only document creation counts toward your monthly quota.</div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /main-content -->
+</div><!-- /page-layout -->
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="f-logo">
+        <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
+      </div>
+      <p>Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="/#how">How It Works</a>
+      <a href="/#features">Features</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/upload">Protect a Document</a>
+    </div>
+    <div class="footer-col">
+      <h4>Developers</h4>
+      <a href="/integration">API Docs</a>
+      <a href="/integration#examples">SDK Examples</a>
+      <a href="/integration#webhooks">Webhooks</a>
+      <a href="/integration#rate-limits">Plans</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2024 Vertifile. All rights reserved.</span>
+    <a href="/" style="color:rgba(196,181,253,.5);transition:.2s">Back to main site</a>
+  </div>
+</footer>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+(function(){
+
+  // ===== TAB SWITCHING =====
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      var target = this.getAttribute('data-tab');
+      // Deactivate all tabs and panels in the same group
+      var parent = this.closest('section');
+      parent.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+      parent.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+      // Activate clicked tab and its panel
+      this.classList.add('active');
+      var panel = document.getElementById('panel-' + target);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  // ===== COPY CODE =====
+  window.copyCode = function(btn) {
+    var block = btn.closest('.code-block');
+    var code = block.querySelector('code');
+    var text = code.textContent || code.innerText;
+    navigator.clipboard.writeText(text).then(function(){
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(function(){
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  };
+
+  // ===== SIDEBAR ACTIVE STATE =====
+  var sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+  var sections = [];
+  sidebarLinks.forEach(function(link){
+    var id = link.getAttribute('href').replace('#','');
+    var el = document.getElementById(id);
+    if (el) sections.push({ el: el, link: link });
+  });
+
+  function updateSidebar() {
+    var scrollPos = window.scrollY + 120;
+    var current = null;
+    sections.forEach(function(s){
+      if (s.el.offsetTop <= scrollPos) current = s;
+    });
+    sidebarLinks.forEach(function(l){ l.classList.remove('active'); });
+    if (current) current.link.classList.add('active');
+  }
+
+  window.addEventListener('scroll', updateSidebar);
+  updateSidebar();
+
+  // ===== SMOOTH SCROLL FOR SIDEBAR =====
+  sidebarLinks.forEach(function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      var id = this.getAttribute('href').replace('#','');
+      var target = document.getElementById(id);
+      if (target) {
+        window.scrollTo({
+          top: target.offsetTop - 80,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+
+  // ===== SMOOTH SCROLL FOR HERO BUTTONS =====
+  document.querySelectorAll('.hero-actions a[href^="#"]').forEach(function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      var id = this.getAttribute('href').replace('#','');
+      var target = document.getElementById(id);
+      if (target) {
+        window.scrollTo({
+          top: target.offsetTop - 80,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

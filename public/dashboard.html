@@ -103,9 +103,58 @@
     .audit-dot.blockchain{background:#f97316}
     .audit-dot.other{background:#9ca3af}
 
+    /* Documents panel */
+    .doc-search{display:flex;gap:8px;align-items:center}
+    .doc-search input{padding:6px 14px;border:1px solid #e5e7eb;border-radius:6px;font-size:13px;font-family:inherit;outline:none;width:220px;transition:border .2s}
+    .doc-search input:focus{border-color:#7c3aed}
+    .doc-hash-cell{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .doc-actions{display:flex;gap:4px}
+    .doc-actions button{padding:4px 10px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;font-size:11px;cursor:pointer;font-family:inherit;transition:.2s;color:#4b5563}
+    .doc-actions button:hover{border-color:#7c3aed;color:#7c3aed}
+    .doc-recipient{font-size:11px;color:#7c3aed;display:block;margin-top:2px}
+
+    /* Quick stats mini-chart */
+    .mini-chart{display:flex;align-items:flex-end;gap:2px;height:40px;margin-top:8px}
+    .mini-bar{flex:1;background:linear-gradient(to top,rgba(124,58,237,.15),rgba(124,58,237,.4));border-radius:2px 2px 0 0;transition:height .5s;min-width:3px}
+
+    /* Responsive dashboard */
+    @media(max-width:768px){
+      .dash-header{padding:0 16px}
+      .dash-body{padding:16px}
+      .stats-row{grid-template-columns:repeat(2,1fr);gap:10px}
+      .tabs{flex-wrap:wrap}
+      .tab{font-size:12px;padding:6px 14px}
+      table{font-size:12px}
+      th,td{padding:8px 12px}
+      .panel-header{flex-direction:column;gap:12px;align-items:flex-start}
+      .doc-search{flex-wrap:wrap}
+      .doc-search input{width:100%}
+      .modal{max-width:95%;padding:24px}
+    }
+    @media(max-width:480px){
+      .stats-row{grid-template-columns:1fr}
+      .stat-card .value{font-size:24px}
+    }
+
     /* Toast */
     .toast{position:fixed;bottom:24px;right:24px;background:#1e1b4b;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:.3s;z-index:300}
     .toast.show{transform:translateY(0);opacity:1}
+
+    /* Empty state */
+    .empty-state{text-align:center;padding:48px 24px;color:#9ca3af}
+    .empty-state .icon{font-size:40px;margin-bottom:12px}
+    .empty-state h4{font-size:16px;font-weight:600;color:#6b7280;margin-bottom:4px}
+    .empty-state p{font-size:13px}
+
+    /* Activity indicator */
+    .activity-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;animation:actPulse 2s infinite;margin-right:6px;vertical-align:middle}
+    @keyframes actPulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{opacity:.7;box-shadow:0 0 0 4px rgba(34,197,94,0)}}
+
+    /* Webhook status */
+    .webhook-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #f3f4f6}
+    .webhook-url{font-family:monospace;font-size:12px;color:#7c3aed;word-break:break-all}
+    .webhook-events{display:flex;gap:4px;flex-wrap:wrap}
+    .webhook-event{padding:2px 8px;background:rgba(124,58,237,.08);border-radius:4px;font-size:10px;font-weight:600;color:#7c3aed}
   </style>
 </head>
 <body>
@@ -131,7 +180,9 @@
       <span>Dashboard</span>
     </div>
     <div class="actions">
-      <button onclick="refreshData()">Refresh</button>
+      <button onclick="window.open('/','_blank')" title="Open website">Website</button>
+      <button onclick="window.open('/api/docs','_blank')" title="API Documentation">API Docs</button>
+      <button onclick="refreshData()"><span class="activity-dot"></span>Refresh</button>
       <button onclick="doLogout()">Logout</button>
     </div>
   </div>
@@ -169,6 +220,8 @@
     <!-- Tabs -->
     <div class="tabs">
       <button class="tab active" onclick="switchTab('keys')">API Keys</button>
+      <button class="tab" onclick="switchTab('documents')">Documents</button>
+      <button class="tab" onclick="switchTab('webhooks')">Webhooks</button>
       <button class="tab" onclick="switchTab('audit')">Audit Log</button>
       <button class="tab" onclick="switchTab('blockchain')">Blockchain</button>
     </div>
@@ -225,6 +278,50 @@
         <button id="auditPrev" onclick="auditPage(-1)" disabled>Previous</button>
         <span id="auditInfo">Page 1</span>
         <button id="auditNext" onclick="auditPage(1)">Next</button>
+      </div>
+    </div>
+
+    <!-- Documents Panel -->
+    <div class="panel" id="panel-documents">
+      <div class="panel-header">
+        <h3>Recent Documents</h3>
+        <div class="doc-search">
+          <input type="text" id="docSearch" placeholder="Search by hash or name..." onkeydown="if(event.key==='Enter')searchDocs()">
+          <button class="btn" onclick="searchDocs()" style="padding:6px 14px;font-size:12px">Search</button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Hash</th>
+            <th>File Name</th>
+            <th>Organization</th>
+            <th>Size</th>
+            <th>Recipient</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="docsBody"></tbody>
+      </table>
+      <div class="pagination">
+        <button id="docPrev" onclick="docsPage(-1)" disabled>Previous</button>
+        <span id="docInfo">Page 1</span>
+        <button id="docNext" onclick="docsPage(1)">Next</button>
+      </div>
+    </div>
+
+    <!-- Webhooks Panel -->
+    <div class="panel" id="panel-webhooks">
+      <div class="panel-header">
+        <h3>Registered Webhooks</h3>
+        <span class="text-muted" style="font-size:12px">Managed by organizations via API</span>
+      </div>
+      <div id="webhooksContent">
+        <div class="empty-state">
+          <div class="icon">🔔</div>
+          <h4>No Webhooks Registered</h4>
+          <p>Organizations can register webhooks via POST /api/webhooks/register</p>
+        </div>
       </div>
     </div>
 
@@ -300,9 +397,11 @@
 <script>
 let adminSecret = '';
 let currentAuditPage = 0;
+let currentDocPage = 0;
 const AUDIT_LIMIT = 25;
+const DOC_LIMIT = 20;
 
-// Login
+// ===== Login =====
 function doLogin() {
   adminSecret = document.getElementById('secretInput').value;
   fetch('/api/admin/stats', { headers: { 'X-Admin-Secret': adminSecret } })
@@ -317,6 +416,7 @@ function doLogin() {
     })
     .catch(() => {
       document.getElementById('loginError').style.display = 'block';
+      setTimeout(() => document.getElementById('loginError').style.display = 'none', 3000);
     });
 }
 
@@ -328,15 +428,18 @@ function doLogout() {
   document.getElementById('loginError').style.display = 'none';
 }
 
-// Enter key on login
 document.getElementById('secretInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') doLogin();
 });
 
-// Data loading
+// ===== Data Loading =====
 async function refreshData() {
-  await Promise.all([loadStats(), loadKeys(), loadAudit()]);
-  toast('Dashboard refreshed');
+  try {
+    await Promise.all([loadStats(), loadKeys(), loadAudit(), loadDocs(), loadWebhooks()]);
+    toast('Dashboard refreshed');
+  } catch (err) {
+    toast('Error refreshing: ' + err.message);
+  }
 }
 
 async function loadStats() {
@@ -348,8 +451,9 @@ async function loadStats() {
 
   const hr = await fetch('/api/health');
   const health = await hr.json();
-  document.getElementById('statStatus').textContent = health.status === 'online' ? 'Online' : 'Offline';
-  document.getElementById('statStatus').style.color = health.status === 'online' ? '#16a34a' : '#dc2626';
+  const isOnline = health.status === 'online';
+  document.getElementById('statStatus').textContent = isOnline ? 'Online' : 'Offline';
+  document.getElementById('statStatus').style.color = isOnline ? '#16a34a' : '#dc2626';
   document.getElementById('statVersion').textContent = 'v' + health.version;
 
   // Blockchain stats
@@ -367,7 +471,6 @@ async function loadStats() {
     document.getElementById('chainBalance').textContent = bc.balance || '—';
     if (bc.explorer) {
       document.getElementById('chainExplorer').href = bc.explorer;
-      document.getElementById('chainExplorer').textContent = 'View on Polygonscan';
     }
     document.getElementById('chainOffline').style.display = 'none';
   } else {
@@ -382,22 +485,135 @@ async function loadStats() {
 }
 
 async function loadKeys() {
-  const r = await fetch('/api/keys', { headers: { 'X-Admin-Secret': adminSecret } });
-  const data = await r.json();
-  const tbody = document.getElementById('keysBody');
-  tbody.innerHTML = data.keys.map(k => {
-    const planClass = k.plan === 'enterprise' ? 'ent' : k.plan === 'professional' ? 'pro' : 'free';
-    const statusClass = k.active ? 'active' : 'inactive';
-    const date = new Date(k.created).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-    return `<tr>
-      <td><span class="mono">${k.apiKey}</span></td>
-      <td><strong>${escHtml(k.orgName)}</strong><br><span class="text-muted" style="font-size:11px">${k.orgId}</span></td>
-      <td><span class="badge ${planClass}">${k.plan}</span></td>
-      <td>${k.documentsCreated}</td>
-      <td><span class="badge ${statusClass}">${k.active ? 'Active' : 'Inactive'}</span></td>
-      <td class="text-muted">${date}</td>
-    </tr>`;
-  }).join('');
+  try {
+    const r = await fetch('/api/admin/keys', { headers: { 'X-Admin-Secret': adminSecret } });
+    const data = await r.json();
+    const keys = data.keys || data;
+    const tbody = document.getElementById('keysBody');
+    if (!keys || keys.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><p>No API keys yet</p></td></tr>';
+      return;
+    }
+    tbody.innerHTML = keys.map(k => {
+      const planClass = k.plan === 'enterprise' ? 'ent' : k.plan === 'professional' ? 'pro' : 'free';
+      const statusClass = k.active ? 'active' : 'inactive';
+      const date = new Date(k.created || k.createdAt || k.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      const docCount = k.documentsCreated || k.documents_created || 0;
+      return `<tr>
+        <td><span class="mono">${escHtml(k.apiKey || k.api_key || '')}</span></td>
+        <td><strong>${escHtml(k.orgName || k.org_name || '')}</strong><br><span class="text-muted" style="font-size:11px">${escHtml(k.orgId || k.org_id || '')}</span></td>
+        <td><span class="badge ${planClass}">${k.plan}</span></td>
+        <td>${docCount}</td>
+        <td><span class="badge ${statusClass}">${k.active ? 'Active' : 'Inactive'}</span></td>
+        <td class="text-muted">${date}</td>
+      </tr>`;
+    }).join('');
+  } catch (e) {
+    // Try alternative endpoint
+    try {
+      const r = await fetch('/api/keys', { headers: { 'X-Admin-Secret': adminSecret } });
+      if (r.ok) {
+        const data = await r.json();
+        const keys = data.keys || data;
+        const tbody = document.getElementById('keysBody');
+        tbody.innerHTML = keys.map(k => {
+          const planClass = k.plan === 'enterprise' ? 'ent' : k.plan === 'professional' ? 'pro' : 'free';
+          const statusClass = k.active ? 'active' : 'inactive';
+          const date = new Date(k.created || k.createdAt || k.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+          return `<tr>
+            <td><span class="mono">${escHtml(k.apiKey || k.api_key || '')}</span></td>
+            <td><strong>${escHtml(k.orgName || k.org_name || '')}</strong><br><span class="text-muted" style="font-size:11px">${escHtml(k.orgId || k.org_id || '')}</span></td>
+            <td><span class="badge ${planClass}">${k.plan}</span></td>
+            <td>${k.documentsCreated || k.documents_created || 0}</td>
+            <td><span class="badge ${statusClass}">${k.active ? 'Active' : 'Inactive'}</span></td>
+            <td class="text-muted">${date}</td>
+          </tr>`;
+        }).join('');
+      }
+    } catch (e2) { console.error('Keys load error:', e2); }
+  }
+}
+
+async function loadDocs() {
+  try {
+    const params = new URLSearchParams({ limit: DOC_LIMIT, offset: currentDocPage * DOC_LIMIT });
+    const search = document.getElementById('docSearch')?.value?.trim();
+    if (search) params.set('search', search);
+
+    const r = await fetch('/api/admin/documents?' + params, { headers: { 'X-Admin-Secret': adminSecret } });
+    if (!r.ok) return;
+    const data = await r.json();
+    const docs = data.documents || data.entries || [];
+    const tbody = document.getElementById('docsBody');
+
+    if (docs.length === 0 && currentDocPage === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:32px">No documents found</td></tr>';
+    } else {
+      tbody.innerHTML = docs.map(d => {
+        const hash = d.hash || '';
+        const shortHash = hash.substring(0, 12) + '...';
+        const name = d.originalName || d.original_name || '—';
+        const org = d.orgName || d.org_name || '—';
+        const size = d.fileSize || d.file_size || 0;
+        const sizeStr = size > 1048576 ? (size / 1048576).toFixed(1) + ' MB' : size > 1024 ? (size / 1024).toFixed(0) + ' KB' : size + ' B';
+        const recipient = d.recipient || '';
+        const date = new Date(d.createdAt || d.created_at || d.created).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        return `<tr>
+          <td><span class="mono doc-hash-cell" title="${escHtml(hash)}">${escHtml(shortHash)}</span></td>
+          <td><strong>${escHtml(name)}</strong></td>
+          <td>${escHtml(org)}</td>
+          <td class="text-muted">${sizeStr}</td>
+          <td>${recipient ? '<span class="doc-recipient">' + escHtml(recipient) + '</span>' : '<span class="text-muted">—</span>'}</td>
+          <td class="text-muted">${date}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    document.getElementById('docPrev').disabled = currentDocPage === 0;
+    document.getElementById('docNext').disabled = docs.length < DOC_LIMIT;
+    document.getElementById('docInfo').textContent = `Page ${currentDocPage + 1}`;
+  } catch (e) {
+    console.log('Documents endpoint not available:', e.message);
+    document.getElementById('docsBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:32px">Documents endpoint not available</td></tr>';
+  }
+}
+
+function docsPage(dir) {
+  currentDocPage = Math.max(0, currentDocPage + dir);
+  loadDocs();
+}
+
+function searchDocs() {
+  currentDocPage = 0;
+  loadDocs();
+}
+
+async function loadWebhooks() {
+  try {
+    const r = await fetch('/api/admin/webhooks', { headers: { 'X-Admin-Secret': adminSecret } });
+    if (!r.ok) return;
+    const data = await r.json();
+    const webhooks = data.webhooks || [];
+    const container = document.getElementById('webhooksContent');
+
+    if (webhooks.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">🔔</div><h4>No Webhooks Registered</h4><p>Organizations can register webhooks via POST /api/webhooks/register</p></div>';
+    } else {
+      container.innerHTML = '<table><thead><tr><th>URL</th><th>Events</th><th>Organization</th><th>Status</th></tr></thead><tbody>' +
+        webhooks.map(w => {
+          const events = (typeof w.events === 'string' ? JSON.parse(w.events) : w.events) || [];
+          return `<tr>
+            <td><span class="webhook-url">${escHtml(w.url)}</span></td>
+            <td><div class="webhook-events">${events.map(e => '<span class="webhook-event">' + escHtml(e) + '</span>').join('')}</div></td>
+            <td>${escHtml(w.orgId || w.org_id || '—')}</td>
+            <td><span class="badge ${w.active ? 'active' : 'inactive'}">${w.active ? 'Active' : 'Inactive'}</span></td>
+          </tr>`;
+        }).join('') +
+        '</tbody></table>';
+    }
+  } catch (e) {
+    console.log('Webhooks endpoint not available');
+  }
 }
 
 async function loadAudit() {
@@ -420,10 +636,18 @@ async function loadAudit() {
                        e.event.startsWith('api_key') ? 'key' :
                        e.event.startsWith('gateway') ? 'gateway' :
                        e.event.startsWith('blockchain') ? 'blockchain' : 'other';
-      const details = typeof e.details === 'object' ? Object.entries(e.details).map(([k,v]) => `<span class="text-muted">${k}:</span> ${escHtml(String(v).substring(0, 40))}`).join(' &middot; ') : '';
+      let details = '';
+      if (e.details && typeof e.details === 'object') {
+        details = Object.entries(e.details).map(([k,v]) => `<span class="text-muted">${escHtml(k)}:</span> ${escHtml(String(v).substring(0, 40))}`).join(' &middot; ');
+      } else if (typeof e.details === 'string') {
+        try {
+          const obj = JSON.parse(e.details);
+          details = Object.entries(obj).map(([k,v]) => `<span class="text-muted">${escHtml(k)}:</span> ${escHtml(String(v).substring(0, 40))}`).join(' &middot; ');
+        } catch(_) { details = escHtml(String(e.details).substring(0, 80)); }
+      }
       return `<tr>
         <td class="text-muted" style="white-space:nowrap">${time}</td>
-        <td><span class="audit-event"><span class="audit-dot ${dotClass}"></span>${e.event}</span></td>
+        <td><span class="audit-event"><span class="audit-dot ${dotClass}"></span>${escHtml(e.event)}</span></td>
         <td style="font-size:12px">${details}</td>
       </tr>`;
     }).join('');
@@ -439,17 +663,19 @@ function auditPage(dir) {
   loadAudit();
 }
 
-// Tabs
+// ===== Tabs =====
 function switchTab(tab) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
   document.getElementById('panel-' + tab).classList.add('active');
   if (tab === 'audit') { currentAuditPage = 0; loadAudit(); }
+  if (tab === 'documents') { currentDocPage = 0; loadDocs(); }
+  if (tab === 'webhooks') { loadWebhooks(); }
   if (tab === 'blockchain') { loadStats(); }
 }
 
-// Create Key Modal
+// ===== Create Key Modal =====
 function showCreateModal() {
   document.getElementById('createModal').classList.add('show');
   document.getElementById('newOrgName').value = '';
@@ -464,46 +690,77 @@ function hideCreateModal() {
 async function createKey() {
   const orgName = document.getElementById('newOrgName').value.trim();
   const plan = document.getElementById('newPlan').value;
-  if (!orgName) return;
+  if (!orgName) { toast('Organization name is required'); return; }
 
-  const r = await fetch('/api/keys/create', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': adminSecret },
-    body: JSON.stringify({ orgName, plan })
-  });
-  const data = await r.json();
+  // Try multiple endpoint patterns
+  let data;
+  try {
+    let r = await fetch('/api/admin/keys', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': adminSecret },
+      body: JSON.stringify({ orgName, plan })
+    });
+    if (!r.ok) {
+      r = await fetch('/api/keys/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': adminSecret },
+        body: JSON.stringify({ orgName, plan })
+      });
+    }
+    data = await r.json();
+  } catch (e) {
+    toast('Failed to create key: ' + e.message);
+    return;
+  }
 
   if (data.success) {
+    const key = data.apiKey || data.key;
     document.getElementById('newKeyResult').innerHTML = `
       <div style="margin-top:16px">
         <label style="display:block;font-size:12px;font-weight:600;color:#16a34a;margin-bottom:4px">Key Created Successfully</label>
-        <div class="key-display">${data.apiKey}<button class="copy" onclick="copyKey('${data.apiKey}')">Copy</button></div>
+        <div class="key-display">${escHtml(key)}<button class="copy" onclick="copyKey('${escHtml(key)}')">Copy</button></div>
         <p style="font-size:11px;color:#ef4444;margin-top:8px;font-weight:500">Save this key now — it won't be shown again.</p>
       </div>
     `;
     loadKeys();
     loadStats();
+    toast('API key created');
+  } else {
+    toast('Error: ' + (data.error || 'Unknown error'));
   }
 }
 
 function copyKey(key) {
-  navigator.clipboard.writeText(key).then(() => toast('API key copied'));
+  navigator.clipboard.writeText(key).then(() => toast('API key copied to clipboard'));
 }
 
-// Toast
+// ===== Toast =====
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// Helpers
+// ===== Helpers =====
 function escHtml(s) {
+  if (!s) return '';
   const d = document.createElement('div');
   d.textContent = s;
   return d.innerHTML;
 }
+
+// Close modal on backdrop click
+document.getElementById('createModal').addEventListener('click', function(e) {
+  if (e.target === this) hideCreateModal();
+});
+
+// Keyboard shortcut: R to refresh
+document.addEventListener('keydown', e => {
+  if (e.key === 'r' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+    if (document.getElementById('dashboard').style.display === 'block') refreshData();
+  }
+});
 </script>
 </body>
 </html>

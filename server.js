@@ -1023,7 +1023,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'online',
     service: 'Vertifile',
-    version: '4.0.0',
+    version: '4.1.0',
     documents: stats.totalDocuments,
     organizations: stats.totalOrganizations,
     blockchain: chain.isConnected() ? 'connected' : 'off-chain'
@@ -1034,7 +1034,7 @@ app.get('/api/health', (req, res) => {
 app.get('/api/docs', (req, res) => {
   res.json({
     service: 'Vertifile API',
-    version: '4.0.0',
+    version: '4.1.0',
     description: 'Document protection and verification platform with blockchain anchoring',
     security: {
       authentication: 'API Key (X-API-Key header) or Admin Secret (X-Admin-Secret header)',
@@ -1185,6 +1185,64 @@ app.get('/api/admin/audit', authenticateAdmin, (req, res) => {
 
   const entries = db.getAuditLog({ limit, offset, event, orgId });
   res.json({ success: true, entries, limit, offset });
+});
+
+// Admin — list API keys
+app.get('/api/admin/keys', authenticateAdmin, (req, res) => {
+  const keys = db.listApiKeys();
+  res.json({ success: true, keys });
+});
+
+// Admin — create API key
+app.post('/api/admin/keys', authenticateAdmin, (req, res) => {
+  const { orgName, plan } = req.body;
+  if (!orgName) return res.status(400).json({ success: false, error: 'orgName required' });
+
+  const orgId = 'org_' + orgName.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 30) + '_' + crypto.randomBytes(4).toString('hex');
+  const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
+  const rateLimit = plan === 'enterprise' ? 10000 : plan === 'professional' ? 100 : 5;
+
+  db.createApiKey({ apiKey, orgId, orgName, plan: plan || 'free', rateLimit });
+  db.log('api_key_created', { orgId, orgName, plan, ip: getClientIP(req) });
+
+  res.json({ success: true, apiKey, orgId, orgName, plan: plan || 'free' });
+});
+
+// Admin — delete API key
+app.delete('/api/admin/keys/:key', authenticateAdmin, (req, res) => {
+  try {
+    const key = db.getApiKey(req.params.key);
+    if (!key) return res.status(404).json({ success: false, error: 'API key not found' });
+    db.deactivateApiKey(req.params.key);
+    db.log('api_key_deleted', { apiKey: req.params.key.substring(0, 12) + '...', orgId: key.orgId, ip: getClientIP(req) });
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ success: false, error: 'Failed to delete key' });
+  }
+});
+
+// Admin — list all documents (paginated, searchable)
+app.get('/api/admin/documents', authenticateAdmin, (req, res) => {
+  const limit = Math.min(parseInt(req.query.limit) || 50, 200);
+  const offset = parseInt(req.query.offset) || 0;
+  const search = req.query.search || '';
+
+  try {
+    const docs = db.getAllDocuments({ limit, offset, search });
+    res.json({ success: true, documents: docs, limit, offset });
+  } catch (e) {
+    res.json({ success: true, documents: [], limit, offset });
+  }
+});
+
+// Admin — list all webhooks
+app.get('/api/admin/webhooks', authenticateAdmin, (req, res) => {
+  try {
+    const webhooks = db.getAllWebhooks ? db.getAllWebhooks() : [];
+    res.json({ success: true, webhooks });
+  } catch (e) {
+    res.json({ success: true, webhooks: [] });
+  }
 });
 
 // ================================================================
@@ -1440,6 +1498,14 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
+app.get('/enterprise', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'enterprise.html'));
+});
+
+app.get('/integration', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'integration.html'));
+});
+
 app.get('/demo', (req, res) => {
   const p = path.join(__dirname, 'demo.pvf');
   if (fs.existsSync(p)) {
@@ -1513,7 +1579,7 @@ if (require.main === module) {
     const defaultKey = keys.length > 0 ? keys[0].apiKey : null;
     console.log('');
     console.log('╔══════════════════════════════════════════════════╗');
-    console.log('║     Vertifile — Protected Verified File  v4.0   ║');
+    console.log('║     Vertifile — Protected Verified File v4.1    ║');
     console.log('╠══════════════════════════════════════════════════╣');
     console.log(`║  Port:       ${PORT}                                ║`);
     console.log(`║  Home:       http://localhost:${PORT}                  ║`);

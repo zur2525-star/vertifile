@@ -115,6 +115,12 @@ const stmts = {
   getWebhooksByOrg: db.prepare('SELECT * FROM webhooks WHERE org_id = ? AND active = 1'),
   insertWebhook: db.prepare('INSERT INTO webhooks (org_id, url, events, secret, active) VALUES (?, ?, ?, ?, 1)'),
   deleteWebhook: db.prepare('DELETE FROM webhooks WHERE id = ? AND org_id = ?'),
+  allWebhooks: db.prepare('SELECT * FROM webhooks ORDER BY created_at DESC'),
+
+  // Admin queries
+  allDocs: db.prepare('SELECT hash, original_name, mime_type, file_size, created_at, org_id, org_name, recipient, recipient_hash FROM documents ORDER BY created_at DESC LIMIT ? OFFSET ?'),
+  searchDocs: db.prepare("SELECT hash, original_name, mime_type, file_size, created_at, org_id, org_name, recipient, recipient_hash FROM documents WHERE hash LIKE ? OR original_name LIKE ? OR org_name LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?"),
+  deactivateKey: db.prepare('UPDATE api_keys SET active = 0 WHERE api_key = ?'),
 };
 
 // ================================================================
@@ -378,6 +384,45 @@ function migrateFromJson() {
 }
 
 // ================================================================
+// ADMIN — extended queries
+// ================================================================
+function getAllDocuments({ limit = 50, offset = 0, search = '' } = {}) {
+  let rows;
+  if (search) {
+    const pattern = '%' + search + '%';
+    rows = stmts.searchDocs.all(pattern, pattern, pattern, limit, offset);
+  } else {
+    rows = stmts.allDocs.all(limit, offset);
+  }
+  return rows.map(row => ({
+    hash: row.hash,
+    originalName: row.original_name,
+    mimeType: row.mime_type,
+    fileSize: row.file_size,
+    createdAt: row.created_at,
+    orgId: row.org_id,
+    orgName: row.org_name,
+    recipient: row.recipient,
+    recipientHash: row.recipient_hash
+  }));
+}
+
+function deactivateApiKey(apiKey) {
+  return stmts.deactivateKey.run(apiKey);
+}
+
+function getAllWebhooks() {
+  return stmts.allWebhooks.all().map(row => ({
+    id: row.id,
+    orgId: row.org_id,
+    url: row.url,
+    events: typeof row.events === 'string' ? JSON.parse(row.events) : row.events,
+    active: !!row.active,
+    createdAt: row.created_at
+  }));
+}
+
+// ================================================================
 // CLOSE (for graceful shutdown)
 // ================================================================
 function close() {
@@ -391,12 +436,14 @@ module.exports = {
   updateDocumentToken,
   getDocumentsByOrg,
   getDocumentCount,
+  getAllDocuments,
 
   // API Keys
   getApiKey,
   createApiKey,
   incrementDocCount,
   listApiKeys,
+  deactivateApiKey,
 
   // Audit
   log,
@@ -406,6 +453,7 @@ module.exports = {
   getWebhooksByOrg,
   registerWebhook,
   removeWebhook,
+  getAllWebhooks,
 
   // Stats
   getStats,
