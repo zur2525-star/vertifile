@@ -241,11 +241,21 @@ function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature
   const isImage = mimeType.startsWith('image/');
   const isPdf = mimeType === 'application/pdf';
 
-  return `<!DOCTYPE html>
+  const createdAt = new Date().toISOString();
+
+  return `<!--PVF:1.0-->
+<!DOCTYPE html>
 <html lang="en" dir="ltr" class="no-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="pvf:version" content="1.0">
+<meta name="pvf:hash" content="${fileHash}">
+<meta name="pvf:signature" content="${signature}">
+<meta name="pvf:original-name" content="${originalName}">
+<meta name="pvf:mime-type" content="${mimeType}">
+<meta name="pvf:created" content="${createdAt}">
+${recipientHash ? `<meta name="pvf:recipient-hash" content="${recipientHash}">` : ''}
 <title>PVF — ${originalName}</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
@@ -841,6 +851,15 @@ app.post('/api/create-pvf', createLimiter, authenticateApiKey, upload.single('fi
       ip: getClientIP(req)
     });
 
+    // Generate shareable link ID
+    const shareId = crypto.randomBytes(8).toString('base64url'); // Short URL-safe ID
+    db.setShareId(fileHash, shareId);
+
+    // Save PVF file for shareable link access
+    const pvfDir = path.join(__dirname, 'data', 'pvf');
+    if (!fs.existsSync(pvfDir)) fs.mkdirSync(pvfDir, { recursive: true });
+    fs.writeFileSync(path.join(pvfDir, shareId + '.html'), pvfHtml);
+
     // Register on blockchain (non-blocking — doesn't fail PVF creation)
     if (chain.isConnected()) {
       chain.register(fileHash, signature, req.org.orgName).then(result => {
@@ -852,11 +871,32 @@ app.post('/api/create-pvf', createLimiter, authenticateApiKey, upload.single('fi
       });
     }
 
+    // Build share URL
+    const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
+    const shareUrl = `${baseUrl}/d/${shareId}`;
+
+    console.log(`  Share URL: ${shareUrl}`);
+
+    // Check if client wants JSON response (for API integrations)
+    if (req.query.format === 'json' || req.headers.accept === 'application/json') {
+      return res.json({
+        success: true,
+        hash: fileHash,
+        signature: signature.substring(0, 16) + '...',
+        shareUrl,
+        shareId,
+        fileName: originalName.replace(/\.[^.]+$/, '') + '.pvf',
+        fileSize: pvfHtml.length,
+        downloadUrl: `${baseUrl}/d/${shareId}/download`
+      });
+    }
+
     // Return .pvf file with security headers
     const pvfFileName = originalName.replace(/\.[^.]+$/, '') + '.pvf';
     setPvfSecurityHeaders(res);
-    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Content-Type', 'application/vnd.vertifile.pvf; charset=utf-8');
     res.setHeader('Content-Disposition', `attachment; filename="${pvfFileName}"`);
+    res.setHeader('X-PVF-Share-URL', shareUrl);
     res.send(pvfHtml);
 
   } catch (error) {
@@ -1505,6 +1545,105 @@ app.get('/enterprise', (req, res) => {
 app.get('/integration', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'integration.html'));
 });
+
+app.get('/open', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'open.html'));
+});
+
+// ================================================================
+// SHAREABLE DOCUMENT LINKS — /d/:shareId
+// Anyone with the link can view the PVF document in-browser
+// ================================================================
+app.get('/d/:shareId', (req, res) => {
+  const { shareId } = req.params;
+
+  // Validate share ID format
+  if (!shareId || shareId.length < 6 || shareId.length > 20) {
+    return res.status(404).send(notFoundPage('Invalid document link'));
+  }
+
+  // Look up document by share ID
+  const doc = db.getDocumentByShareId(shareId);
+  if (!doc) {
+    return res.status(404).send(notFoundPage('Document not found'));
+  }
+
+  // Serve the stored PVF HTML directly in the browser
+  const pvfPath = path.join(__dirname, 'data', 'pvf', shareId + '.html');
+  if (!fs.existsSync(pvfPath)) {
+    return res.status(404).send(notFoundPage('Document file not available'));
+  }
+
+  // Log the view
+  db.log('document_viewed', { shareId, hash: doc.hash, ip: getClientIP(req) });
+
+  // Serve as HTML so browser renders it directly
+  setPvfSecurityHeaders(res);
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.sendFile(pvfPath);
+});
+
+// Download route — /d/:shareId/download — downloads as .pvf file
+app.get('/d/:shareId/download', (req, res) => {
+  const { shareId } = req.params;
+
+  const doc = db.getDocumentByShareId(shareId);
+  if (!doc) {
+    return res.status(404).json({ success: false, error: 'Document not found' });
+  }
+
+  const pvfPath = path.join(__dirname, 'data', 'pvf', shareId + '.html');
+  if (!fs.existsSync(pvfPath)) {
+    return res.status(404).json({ success: false, error: 'Document file not available' });
+  }
+
+  const pvfFileName = (doc.originalName || 'document').replace(/\.[^.]+$/, '') + '.pvf';
+  res.setHeader('Content-Type', 'application/vnd.vertifile.pvf; charset=utf-8');
+  res.setHeader('Content-Disposition', `attachment; filename="${pvfFileName}"`);
+  res.sendFile(pvfPath);
+});
+
+// Document info API — /d/:shareId/info — returns metadata (no content)
+app.get('/d/:shareId/info', (req, res) => {
+  const { shareId } = req.params;
+
+  const doc = db.getDocumentByShareId(shareId);
+  if (!doc) {
+    return res.status(404).json({ success: false, error: 'Document not found' });
+  }
+
+  res.json({
+    success: true,
+    document: {
+      originalName: doc.originalName,
+      mimeType: doc.mimeType,
+      fileSize: doc.fileSize,
+      issuedAt: doc.timestamp,
+      issuedBy: doc.orgName,
+      verified: true
+    }
+  });
+});
+
+// 404 page helper
+function notFoundPage(message) {
+  return `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Document Not Found — Vertifile</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#0f0e17;color:#e2e0f0;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.c{text-align:center;padding:40px}
+h1{font-size:72px;font-weight:900;color:#7c3aed;margin-bottom:16px}
+p{font-size:18px;color:#9ca3af;margin-bottom:32px}
+a{display:inline-block;padding:12px 28px;background:#7c3aed;color:#fff;border-radius:12px;text-decoration:none;font-weight:600;transition:.2s}
+a:hover{background:#6d28d9;transform:translateY(-1px)}
+</style></head><body><div class="c">
+<h1>404</h1>
+<p>${message}</p>
+<a href="/">Back to Vertifile</a>
+</div></body></html>`;
+}
 
 app.get('/demo', (req, res) => {
   const p = path.join(__dirname, 'demo.pvf');

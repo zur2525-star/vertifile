@@ -78,6 +78,12 @@ try {
 try {
   db.exec(`ALTER TABLE documents ADD COLUMN recipient_hash TEXT`);
 } catch (e) { /* column already exists */ }
+try {
+  db.exec(`ALTER TABLE documents ADD COLUMN share_id TEXT`);
+} catch (e) { /* column already exists */ }
+try {
+  db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_docs_share ON documents(share_id) WHERE share_id IS NOT NULL`);
+} catch (e) { /* index already exists */ }
 
 // ================================================================
 // PREPARED STATEMENTS
@@ -85,10 +91,12 @@ try {
 const stmts = {
   // Documents
   getDoc: db.prepare('SELECT * FROM documents WHERE hash = ?'),
+  getDocByShareId: db.prepare('SELECT * FROM documents WHERE share_id = ?'),
   insertDoc: db.prepare(`
-    INSERT INTO documents (hash, signature, original_name, mime_type, file_size, created_at, token, token_created_at, org_id, org_name, recipient, recipient_hash)
-    VALUES (@hash, @signature, @original_name, @mime_type, @file_size, @created_at, @token, @token_created_at, @org_id, @org_name, @recipient, @recipient_hash)
+    INSERT INTO documents (hash, signature, original_name, mime_type, file_size, created_at, token, token_created_at, org_id, org_name, recipient, recipient_hash, share_id)
+    VALUES (@hash, @signature, @original_name, @mime_type, @file_size, @created_at, @token, @token_created_at, @org_id, @org_name, @recipient, @recipient_hash, @share_id)
   `),
+  updateShareId: db.prepare('UPDATE documents SET share_id = ? WHERE hash = ?'),
   updateToken: db.prepare('UPDATE documents SET token = ?, token_created_at = ? WHERE hash = ?'),
   docsByOrg: db.prepare('SELECT hash, original_name, mime_type, file_size, created_at, org_name FROM documents WHERE org_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?'),
   docCountByOrg: db.prepare('SELECT COUNT(*) as count FROM documents WHERE org_id = ?'),
@@ -145,7 +153,7 @@ function getDocument(hash) {
   };
 }
 
-function createDocument({ hash, signature, originalName, mimeType, fileSize, orgId, orgName, token, tokenCreatedAt, recipient, recipientHash }) {
+function createDocument({ hash, signature, originalName, mimeType, fileSize, orgId, orgName, token, tokenCreatedAt, recipient, recipientHash, shareId }) {
   stmts.insertDoc.run({
     hash,
     signature,
@@ -158,8 +166,31 @@ function createDocument({ hash, signature, originalName, mimeType, fileSize, org
     org_id: orgId,
     org_name: orgName,
     recipient: recipient || null,
-    recipient_hash: recipientHash || null
+    recipient_hash: recipientHash || null,
+    share_id: shareId || null
   });
+}
+
+function getDocumentByShareId(shareId) {
+  const row = stmts.getDocByShareId.get(shareId);
+  if (!row) return null;
+  return {
+    hash: row.hash,
+    signature: row.signature,
+    originalName: row.original_name,
+    mimeType: row.mime_type,
+    fileSize: row.file_size,
+    timestamp: row.created_at,
+    orgId: row.org_id,
+    orgName: row.org_name,
+    shareId: row.share_id,
+    recipient: row.recipient || null,
+    recipientHash: row.recipient_hash || null
+  };
+}
+
+function setShareId(hash, shareId) {
+  stmts.updateShareId.run(shareId, hash);
 }
 
 function updateDocumentToken(hash, token) {
@@ -432,8 +463,10 @@ function close() {
 module.exports = {
   // Documents
   getDocument,
+  getDocumentByShareId,
   createDocument,
   updateDocumentToken,
+  setShareId,
   getDocumentsByOrg,
   getDocumentCount,
   getAllDocuments,
