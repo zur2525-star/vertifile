@@ -286,11 +286,11 @@
     <span class="dot"></span>
     <span data-i18n="open.badge">Browser-Based Viewer</span>
   </div>
-  <h1 data-i18n="open.title">Open <span class="gradient">PVF Document</span></h1>
-  <p class="sub" data-i18n="open.subtitle">View protected .pvf files instantly in your browser. No software installation required, no account needed.</p>
+  <h1 data-i18n="open.heroTitle">Open <span class="gradient">PVF Document</span></h1>
+  <p class="sub" data-i18n="open.heroSubtitle">View protected .pvf files instantly in your browser. No software installation required, no account needed.</p>
   <div class="privacy-inline">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-    <span data-i18n="open.privacy">Your file stays on your device. Nothing is uploaded.</span>
+    <span data-i18n="open.privacyNote">Your file stays on your device. Nothing is uploaded.</span>
   </div>
 </section>
 
@@ -309,7 +309,7 @@
     <div class="dz-sub" data-i18n="open.dropSub">or use the button below to browse your files</div>
     <button class="dz-btn" onclick="document.getElementById('fileInput').click();event.stopPropagation()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-      <span data-i18n="open.openFile">Open File</span>
+      <span data-i18n="open.openFileBtn">Open File</span>
     </button>
     <input type="file" id="fileInput" accept=".pvf,.html,.htm">
   </div>
@@ -343,9 +343,9 @@
 <!-- ===== HOW IT WORKS ===== -->
 <section class="how-section">
   <div class="section-header fade-up">
-    <div class="label" data-i18n="open.howLabel">How It Works</div>
-    <h2 data-i18n="open.howTitle">Three Simple Steps</h2>
-    <p data-i18n="open.howDesc">Open any .pvf document in seconds, right in your browser</p>
+    <div class="label" data-i18n="open.howItWorksLabel">How It Works</div>
+    <h2 data-i18n="open.howItWorksTitle">Three Simple Steps</h2>
+    <p data-i18n="open.howItWorksSubtitle">Open any .pvf document in seconds, right in your browser</p>
   </div>
   <div class="steps-grid">
     <div class="step-card fade-up">
@@ -394,7 +394,7 @@
   <div class="section-header fade-up">
     <div class="label" data-i18n="open.altLabel">Alternative</div>
     <h2 data-i18n="open.altTitle">Open PVF Files Directly</h2>
-    <p data-i18n="open.altDesc">Set your system to always open .pvf files in your browser</p>
+    <p data-i18n="open.altSubtitle">Set your system to always open .pvf files in your browser</p>
   </div>
   <div class="alt-grid">
     <div class="alt-card fade-up">
@@ -403,8 +403,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94a9.5 9.5 0 1 1 0-17.88"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M19.07 4.93l-2.83 2.83"/><path d="M20 12h-4"/></svg>
         </div>
         <div>
-          <div class="alt-title">macOS</div>
-          <div class="alt-subtitle">Safari, Chrome, or any browser</div>
+          <div class="alt-title" data-i18n="open.macosTitle">macOS</div>
+          <div class="alt-subtitle" data-i18n="open.macosSubtitle">Safari, Chrome, or any browser</div>
         </div>
       </div>
       <ol class="alt-steps">
@@ -419,8 +419,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         </div>
         <div>
-          <div class="alt-title">Windows</div>
-          <div class="alt-subtitle">Chrome, Edge, or Firefox</div>
+          <div class="alt-title" data-i18n="open.windowsTitle">Windows</div>
+          <div class="alt-subtitle" data-i18n="open.windowsSubtitle">Chrome, Edge, or Firefox</div>
         </div>
       </div>
       <ol class="alt-steps">
@@ -443,14 +443,14 @@
         <line x1="12" y1="15" x2="12" y2="3"/>
       </svg>
     </div>
-    <h3 data-i18n="open.downloadTitle">PVF Viewer Desktop App</h3>
-    <p data-i18n="open.downloadDesc">For the best experience, download the dedicated PVF Viewer. Features offline support, batch viewing, and system-level file associations.</p>
+    <h3 data-i18n="open.desktopAppTitle">PVF Viewer Desktop App</h3>
+    <p data-i18n="open.desktopAppDesc">For the best experience, download the dedicated PVF Viewer. Features offline support, batch viewing, and system-level file associations.</p>
     <div class="dl-buttons">
-      <a href="#" class="dl-btn primary" onclick="event.preventDefault();alert('Desktop app downloads coming soon! Use the browser-based viewer above in the meantime.')">
+      <a href="#" class="dl-btn primary" data-i18n="open.downloadMac" onclick="event.preventDefault();alert('Desktop app downloads coming soon! Use the browser-based viewer above in the meantime.')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94a9.5 9.5 0 1 1 0-17.88"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
         Download for Mac
       </a>
-      <a href="#" class="dl-btn secondary" onclick="event.preventDefault();alert('Desktop app downloads coming soon! Use the browser-based viewer above in the meantime.')">
+      <a href="#" class="dl-btn secondary" data-i18n="open.downloadWindows" onclick="event.preventDefault();alert('Desktop app downloads coming soon! Use the browser-based viewer above in the meantime.')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         Download for Windows
       </a>
@@ -489,7 +489,7 @@
   </div>
   <div class="footer-bottom">
     <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
-    <span>Built with privacy in mind</span>
+    <span data-i18n="footer.builtWithPrivacy">Built with privacy in mind</span>
   </div>
 </footer>
 

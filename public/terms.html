@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertifile — Terms of Service</title>
+  <meta name="description" content="Vertifile Terms of Service. Rules and guidelines for using our document verification and protection platform.">
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <meta property="og:title" content="Vertifile — Terms of Service">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden}
+    [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
+    a{text-decoration:none;color:inherit}
+
+    /* ===== NAVBAR ===== */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:100%;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo img{height:28px}
+    .nav-center{display:flex;gap:28px;position:absolute;left:50%;transform:translateX(-50%)}
+    .nav-center a{font-size:14px;font-weight:500;color:#374151;text-decoration:none;transition:.2s}
+    .nav-center a:hover{color:#7c3aed}
+    [dir="rtl"] .nav-center{direction:rtl}
+    .nav-actions{display:flex;align-items:center;gap:12px}
+    .nav-verify{font-size:13px;font-weight:500;color:#4f46e5;text-decoration:none}
+    .nav-cta{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
+    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.3)}
+    .lang-btn{display:flex;align-items:center;gap:5px;cursor:pointer;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#4b5563;border:1px solid rgba(0,0,0,.12);background:transparent;position:relative;transition:.2s}
+    .lang-btn:hover{border-color:rgba(0,0,0,.3);color:#111827}
+    .lang-btn svg{width:16px;height:16px}
+    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.1);min-width:160px;padding:4px 0;display:none;z-index:100}
+    [dir="rtl"] .lang-dropdown{right:auto;left:0}
+    .lang-dropdown.show{display:block}
+    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:#4b5563;transition:.15s}
+    .lang-dropdown a:hover{background:rgba(0,0,0,.03);color:#111827}
+    .lang-dropdown a.active{color:#7c3aed;font-weight:600}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px}
+    .hamburger span{display:block;width:20px;height:2px;background:#111827;margin:4px 0;border-radius:2px}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;border-bottom:1px solid rgba(0,0,0,.06);padding:16px 24px;z-index:999;flex-direction:column;gap:12px}
+    .mobile-menu.show{display:flex}
+    .mobile-menu a{font-size:15px;color:#374151;text-decoration:none;padding:8px 0}
+    .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06)}
+    @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
+
+    /* ===== LEGAL PAGE CONTENT ===== */
+    .legal-page{padding:120px 32px 80px;max-width:800px;margin:0 auto}
+    .legal-page h1{font-size:40px;font-weight:900;color:#111827;margin-bottom:8px;letter-spacing:-1.5px}
+    .legal-page .legal-updated{font-size:14px;color:#9ca3af;margin-bottom:48px}
+    .legal-page h2{font-size:22px;font-weight:700;color:#111827;margin-top:48px;margin-bottom:16px;letter-spacing:-.5px}
+    .legal-page h3{font-size:17px;font-weight:600;color:#374151;margin-top:28px;margin-bottom:10px}
+    .legal-page p{font-size:15px;line-height:1.85;color:#4b5563;margin-bottom:16px}
+    .legal-page ul{margin:0 0 16px 24px;font-size:15px;line-height:1.85;color:#4b5563}
+    [dir="rtl"] .legal-page ul{margin:0 24px 16px 0}
+    .legal-page li{margin-bottom:6px}
+    .legal-page a{color:#4f46e5;text-decoration:underline}
+    .legal-page a:hover{color:#7c3aed}
+    .legal-page .highlight-box{background:#f5f3ff;border:1px solid rgba(124,58,237,.12);border-radius:12px;padding:20px 24px;margin:24px 0}
+    .legal-page .highlight-box p{color:#4b5563;margin-bottom:0}
+    .legal-page .highlight-box strong{color:#4f46e5}
+
+    @media(max-width:768px){
+      .legal-page{padding:100px 20px 60px}
+      .legal-page h1{font-size:30px}
+      .legal-page h2{font-size:19px;margin-top:36px}
+    }
+
+    /* ===== FOOTER ===== */
+    footer{background:linear-gradient(180deg,#f8f7ff 0%,#1e1b4b 30%,#1e1b4b 100%);color:#e2e0f0;padding:100px 32px 30px;border-top:none;position:relative;overflow:hidden}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(180deg,#f8f7ff,transparent);pointer-events:none;z-index:1}
+    footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;background:radial-gradient(ellipse at 30% 80%,rgba(124,58,237,.15),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.08),transparent 50%);pointer-events:none}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;max-width:1000px;margin:0 auto;position:relative;z-index:2}
+    .footer-brand .f-logo{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:10px;letter-spacing:-.5px;color:#fff}
+    .footer-brand .f-logo img{height:28px;width:auto;filter:brightness(0) invert(1)}
+    .footer-brand p{font-size:13px;color:rgba(196,181,253,.6);line-height:1.8;max-width:280px}
+    .footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(167,139,250,.7);margin-bottom:16px}
+    .footer-col a{display:block;font-size:14px;color:rgba(196,181,253,.5);padding:5px 0;transition:.2s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{max-width:1000px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.4);position:relative;z-index:2}
+    .footer-lang{display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(196,181,253,.5);font-size:12px;transition:.2s}
+    .footer-lang:hover{color:#fff}
+    .footer-lang svg{stroke:rgba(196,181,253,.5)}
+    .footer-lang:hover svg{stroke:#fff}
+    @media(max-width:768px){
+      .footer-grid{grid-template-columns:1fr 1fr;gap:30px}
+      .footer-bottom{flex-direction:column;gap:10px;text-align:center}
+    }
+    @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
+    <div class="nav-center">
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
+    </div>
+    <div class="nav-actions">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#31616;&#20307;&#20013;&#25991;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
+    </div>
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
+
+<!-- ===== TERMS OF SERVICE ===== -->
+<div class="legal-page">
+  <h1 data-i18n="terms.title">Terms of Service</h1>
+  <p class="legal-updated" data-i18n="terms.updated">Last updated: March 18, 2026</p>
+
+  <h2 data-i18n="terms.serviceTitle">1. Service Description</h2>
+  <p>Vertifile provides a document verification and protection platform that creates tamper-proof .pvf files using cryptographic signatures and blockchain timestamping. Our service includes:</p>
+  <ul>
+    <li>Document protection via SHA-256 hashing and HMAC signatures</li>
+    <li>Blockchain timestamp registration on the Polygon network</li>
+    <li>Live animated verification stamps embedded in .pvf files</li>
+    <li>Document verification through our web interface and API</li>
+    <li>A browser-based .pvf file viewer</li>
+  </ul>
+  <p>Vertifile uses BLIND processing: we never read, access, or store the content of your documents. Only cryptographic hashes are processed.</p>
+
+  <h2 data-i18n="terms.acceptanceTitle">2. Acceptance of Terms</h2>
+  <p>By accessing or using Vertifile's services, you agree to be bound by these Terms of Service. If you are using our services on behalf of an organization, you represent that you have the authority to bind that organization to these terms.</p>
+  <p>If you do not agree to these terms, you must not use our services.</p>
+
+  <h2 data-i18n="terms.accountTitle">3. Account Responsibilities</h2>
+  <p>If you create an account or obtain API credentials:</p>
+  <ul>
+    <li>You are responsible for maintaining the confidentiality of your API keys and credentials</li>
+    <li>You are responsible for all activity that occurs under your account</li>
+    <li>You must notify us immediately of any unauthorized use of your account</li>
+    <li>You must provide accurate and complete registration information</li>
+    <li>You must not share API keys or allow others to use your credentials</li>
+  </ul>
+
+  <h2 data-i18n="terms.acceptableUseTitle">4. Acceptable Use</h2>
+  <p>You agree to use Vertifile only for lawful purposes. You must not:</p>
+  <ul>
+    <li>Use the service to protect, verify, or distribute documents related to illegal activities</li>
+    <li>Attempt to reverse-engineer, decompile, or disassemble any part of the service</li>
+    <li>Attempt to bypass security measures, rate limits, or access controls</li>
+    <li>Use automated tools to scrape or overload the service</li>
+    <li>Impersonate other users or organizations</li>
+    <li>Interfere with or disrupt the service or its infrastructure</li>
+    <li>Use the service to infringe on the intellectual property rights of others</li>
+    <li>Resell or redistribute the service without prior written consent</li>
+  </ul>
+
+  <h2 data-i18n="terms.apiTitle">5. API Usage and Rate Limits</h2>
+  <p>API access is subject to the following conditions:</p>
+  <ul>
+    <li><strong>Free tier:</strong> Limited to 100 documents per month and 10 API requests per minute</li>
+    <li><strong>Pro tier:</strong> Up to 5,000 documents per month with higher rate limits</li>
+    <li><strong>Enterprise tier:</strong> Custom limits based on your agreement</li>
+  </ul>
+  <p>We reserve the right to throttle or suspend API access if usage exceeds agreed limits or if we detect abusive patterns. Rate limit headers are included in all API responses.</p>
+
+  <h2 data-i18n="terms.ipTitle">6. Intellectual Property</h2>
+  <p>All rights, title, and interest in the Vertifile service, including its software, design, trademarks, and documentation, remain the exclusive property of Vertifile.</p>
+  <p>You retain all rights to your documents. Vertifile does not claim any ownership over documents you protect or verify using our service. Since we never access document content, no license to your content is required or implied.</p>
+  <p>The .pvf file format, verification stamps, and related technologies are proprietary to Vertifile.</p>
+
+  <h2 data-i18n="terms.warrantyTitle">7. Disclaimer of Warranties</h2>
+  <div class="highlight-box">
+    <p data-i18n="terms.warrantyDesc">THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. VERTIFILE DOES NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED, ERROR-FREE, OR COMPLETELY SECURE.</p>
+  </div>
+  <p>While we strive for high availability and reliability, we do not guarantee that:</p>
+  <ul>
+    <li>The service will be available at all times</li>
+    <li>Blockchain transactions will be confirmed within a specific timeframe</li>
+    <li>The service will meet all of your specific requirements</li>
+  </ul>
+
+  <h2 data-i18n="terms.liabilityTitle">8. Limitation of Liability</h2>
+  <p>To the maximum extent permitted by applicable law, Vertifile shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to:</p>
+  <ul>
+    <li>Loss of profits, revenue, or data</li>
+    <li>Business interruption</li>
+    <li>Cost of substitute services</li>
+    <li>Damages arising from unauthorized access to or alteration of your data</li>
+  </ul>
+  <p>Our total liability for any claim arising from or related to the service shall not exceed the amount you paid to Vertifile in the twelve (12) months preceding the claim.</p>
+
+  <h2 data-i18n="terms.indemnityTitle">9. Indemnification</h2>
+  <p>You agree to indemnify, defend, and hold harmless Vertifile, its officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including reasonable attorneys' fees) arising from:</p>
+  <ul>
+    <li>Your use of the service</li>
+    <li>Your violation of these terms</li>
+    <li>Your violation of any third-party rights</li>
+    <li>Documents you protect or distribute using the service</li>
+  </ul>
+
+  <h2 data-i18n="terms.terminationTitle">10. Termination</h2>
+  <p>Either party may terminate the use of Vertifile services at any time:</p>
+  <ul>
+    <li><strong>By you:</strong> You may stop using the service and request account deletion at any time</li>
+    <li><strong>By us:</strong> We may suspend or terminate your access if you violate these terms, engage in abusive behavior, or fail to pay applicable fees</li>
+  </ul>
+  <p>Upon termination:</p>
+  <ul>
+    <li>Your API keys will be revoked</li>
+    <li>Existing blockchain records will remain on-chain (they are immutable)</li>
+    <li>Previously issued .pvf files will continue to be verifiable</li>
+    <li>Account data will be deleted within 30 days, subject to legal retention requirements</li>
+  </ul>
+
+  <h2 data-i18n="terms.modificationsTitle">11. Modifications to Terms</h2>
+  <p>We reserve the right to modify these Terms of Service at any time. Material changes will be communicated to registered users via email at least 30 days before they take effect. Continued use of the service after the effective date constitutes acceptance of the modified terms.</p>
+
+  <h2 data-i18n="terms.governingLawTitle">12. Governing Law</h2>
+  <p>These Terms of Service shall be governed by and construed in accordance with the laws of the State of Israel, without regard to conflict of law principles. Any disputes arising from or related to these terms or the service shall be subject to the exclusive jurisdiction of the courts located in Tel Aviv-Jaffa, Israel.</p>
+
+  <h2 data-i18n="terms.severabilityTitle">13. Severability</h2>
+  <p>If any provision of these Terms is found to be unenforceable or invalid, that provision shall be modified to the minimum extent necessary to make it enforceable, and the remaining provisions shall continue in full force and effect.</p>
+
+  <h2 data-i18n="terms.contactTitle">14. Contact Us</h2>
+  <p>If you have questions about these Terms of Service, contact us at:</p>
+  <p>
+    <strong>Vertifile</strong><br>
+    Rishon LeZion, Israel<br>
+    Email: <a href="mailto:info@vertifile.com">info@vertifile.com</a><br>
+    Website: <a href="https://vertifile.com">vertifile.com</a>
+  </p>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="f-logo">
+        <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
+      </div>
+      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="#how" data-i18n="nav.howItWorks">How It Works</a>
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="/upload" data-i18n="nav.upload">Protect a Document</a>
+      <a href="/enterprise" data-i18n="footer.enterprise">Enterprise</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.developers">Developers</h4>
+      <a href="/integration" data-i18n="footer.integrationGuide">Integration Guide</a>
+      <a href="/api/docs" data-i18n="footer.apiDocumentation">API Documentation</a>
+      <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.company">Company</h4>
+      <a href="/about" data-i18n="footer.about">About</a>
+      <a href="/blog" data-i18n="footer.blog">Blog</a>
+      <a href="/careers" data-i18n="footer.careers">Careers</a>
+      <a href="/contact" data-i18n="footer.contact">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.legal">Legal</h4>
+      <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
+      <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
+    <div class="footer-lang" onclick="toggleLangDropdown()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+      <span id="footerLangLabel">English</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/i18n.js"></script>
+<script>
+(function(){
+  window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
+  window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
+})();
+</script>
+</body>
+</html>

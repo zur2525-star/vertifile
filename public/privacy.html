@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertifile — Privacy Policy</title>
+  <meta name="description" content="Vertifile Privacy Policy. Learn how we protect your data with BLIND processing — we never read your document content.">
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <meta property="og:title" content="Vertifile — Privacy Policy">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden}
+    [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
+    a{text-decoration:none;color:inherit}
+
+    /* ===== NAVBAR ===== */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:100%;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo img{height:28px}
+    .nav-center{display:flex;gap:28px;position:absolute;left:50%;transform:translateX(-50%)}
+    .nav-center a{font-size:14px;font-weight:500;color:#374151;text-decoration:none;transition:.2s}
+    .nav-center a:hover{color:#7c3aed}
+    [dir="rtl"] .nav-center{direction:rtl}
+    .nav-actions{display:flex;align-items:center;gap:12px}
+    .nav-verify{font-size:13px;font-weight:500;color:#4f46e5;text-decoration:none}
+    .nav-cta{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
+    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.3)}
+    .lang-btn{display:flex;align-items:center;gap:5px;cursor:pointer;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#4b5563;border:1px solid rgba(0,0,0,.12);background:transparent;position:relative;transition:.2s}
+    .lang-btn:hover{border-color:rgba(0,0,0,.3);color:#111827}
+    .lang-btn svg{width:16px;height:16px}
+    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.1);min-width:160px;padding:4px 0;display:none;z-index:100}
+    [dir="rtl"] .lang-dropdown{right:auto;left:0}
+    .lang-dropdown.show{display:block}
+    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:#4b5563;transition:.15s}
+    .lang-dropdown a:hover{background:rgba(0,0,0,.03);color:#111827}
+    .lang-dropdown a.active{color:#7c3aed;font-weight:600}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px}
+    .hamburger span{display:block;width:20px;height:2px;background:#111827;margin:4px 0;border-radius:2px}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;border-bottom:1px solid rgba(0,0,0,.06);padding:16px 24px;z-index:999;flex-direction:column;gap:12px}
+    .mobile-menu.show{display:flex}
+    .mobile-menu a{font-size:15px;color:#374151;text-decoration:none;padding:8px 0}
+    .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06)}
+    @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
+
+    /* ===== LEGAL PAGE CONTENT ===== */
+    .legal-page{padding:120px 32px 80px;max-width:800px;margin:0 auto}
+    .legal-page h1{font-size:40px;font-weight:900;color:#111827;margin-bottom:8px;letter-spacing:-1.5px}
+    .legal-page .legal-updated{font-size:14px;color:#9ca3af;margin-bottom:48px}
+    .legal-page h2{font-size:22px;font-weight:700;color:#111827;margin-top:48px;margin-bottom:16px;letter-spacing:-.5px}
+    .legal-page h3{font-size:17px;font-weight:600;color:#374151;margin-top:28px;margin-bottom:10px}
+    .legal-page p{font-size:15px;line-height:1.85;color:#4b5563;margin-bottom:16px}
+    .legal-page ul{margin:0 0 16px 24px;font-size:15px;line-height:1.85;color:#4b5563}
+    [dir="rtl"] .legal-page ul{margin:0 24px 16px 0}
+    .legal-page li{margin-bottom:6px}
+    .legal-page a{color:#4f46e5;text-decoration:underline}
+    .legal-page a:hover{color:#7c3aed}
+    .legal-page .highlight-box{background:#f5f3ff;border:1px solid rgba(124,58,237,.12);border-radius:12px;padding:20px 24px;margin:24px 0}
+    .legal-page .highlight-box p{color:#4b5563;margin-bottom:0}
+    .legal-page .highlight-box strong{color:#4f46e5}
+
+    @media(max-width:768px){
+      .legal-page{padding:100px 20px 60px}
+      .legal-page h1{font-size:30px}
+      .legal-page h2{font-size:19px;margin-top:36px}
+    }
+
+    /* ===== FOOTER ===== */
+    footer{background:linear-gradient(180deg,#f8f7ff 0%,#1e1b4b 30%,#1e1b4b 100%);color:#e2e0f0;padding:100px 32px 30px;border-top:none;position:relative;overflow:hidden}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(180deg,#f8f7ff,transparent);pointer-events:none;z-index:1}
+    footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;background:radial-gradient(ellipse at 30% 80%,rgba(124,58,237,.15),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.08),transparent 50%);pointer-events:none}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;max-width:1000px;margin:0 auto;position:relative;z-index:2}
+    .footer-brand .f-logo{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:10px;letter-spacing:-.5px;color:#fff}
+    .footer-brand .f-logo img{height:28px;width:auto;filter:brightness(0) invert(1)}
+    .footer-brand p{font-size:13px;color:rgba(196,181,253,.6);line-height:1.8;max-width:280px}
+    .footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(167,139,250,.7);margin-bottom:16px}
+    .footer-col a{display:block;font-size:14px;color:rgba(196,181,253,.5);padding:5px 0;transition:.2s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{max-width:1000px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.4);position:relative;z-index:2}
+    .footer-lang{display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(196,181,253,.5);font-size:12px;transition:.2s}
+    .footer-lang:hover{color:#fff}
+    .footer-lang svg{stroke:rgba(196,181,253,.5)}
+    .footer-lang:hover svg{stroke:#fff}
+    @media(max-width:768px){
+      .footer-grid{grid-template-columns:1fr 1fr;gap:30px}
+      .footer-bottom{flex-direction:column;gap:10px;text-align:center}
+    }
+    @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
+    <div class="nav-center">
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
+    </div>
+    <div class="nav-actions">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#31616;&#20307;&#20013;&#25991;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
+    </div>
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
+
+<!-- ===== PRIVACY POLICY ===== -->
+<div class="legal-page">
+  <h1 data-i18n="privacy.title">Privacy Policy</h1>
+  <p class="legal-updated" data-i18n="privacy.updated">Last updated: March 18, 2026</p>
+
+  <div class="highlight-box">
+    <p><strong data-i18n="privacy.blindLabel">BLIND Processing:</strong> <span data-i18n="privacy.blindSummary">Vertifile never reads, accesses, or stores the content of your documents. We only process cryptographic hashes (fingerprints) of your files. Your document content never leaves your device.</span></p>
+  </div>
+
+  <h2 data-i18n="privacy.introTitle">Introduction</h2>
+  <p>Vertifile ("we," "our," or "us") operates the vertifile.com website and document verification service. This Privacy Policy explains how we collect, use, and protect information when you use our services.</p>
+  <p>We are committed to protecting your privacy. Our core architecture is built on the principle of BLIND processing, meaning we are technically unable to read or access the content of documents you protect with Vertifile.</p>
+
+  <h2 data-i18n="privacy.collectTitle">What We Collect</h2>
+
+  <h3 data-i18n="privacy.collectHashTitle">Document Hashes (Fingerprints)</h3>
+  <p>When you protect a document, our system computes a SHA-256 cryptographic hash of your file. This hash is a one-way mathematical fingerprint that cannot be reversed to reconstruct your document. We store this hash for verification purposes.</p>
+
+  <h3 data-i18n="privacy.collectAccountTitle">Account and Organization Data</h3>
+  <p>If you create an API account, we collect:</p>
+  <ul>
+    <li>Organization name and contact information</li>
+    <li>Email address</li>
+    <li>API keys (stored securely, hashed)</li>
+    <li>Usage statistics (number of documents protected, API call counts)</li>
+  </ul>
+
+  <h3 data-i18n="privacy.collectTechnicalTitle">Technical Data</h3>
+  <p>We automatically collect standard technical information:</p>
+  <ul>
+    <li>IP address (for rate limiting and security)</li>
+    <li>Browser type and version</li>
+    <li>Device type and operating system</li>
+    <li>Pages visited and timestamps</li>
+  </ul>
+
+  <h2 data-i18n="privacy.notCollectTitle">What We Do NOT Collect</h2>
+  <div class="highlight-box">
+    <p data-i18n="privacy.notCollectDesc">We do not collect, read, store, transmit, or access the content of your documents at any point. Our BLIND processing architecture means that document content is hashed entirely on the client side. Only the resulting cryptographic fingerprint is sent to our servers. It is mathematically impossible to reconstruct document content from a hash.</p>
+  </div>
+  <p>We also do not collect:</p>
+  <ul>
+    <li>Personal documents or their contents</li>
+    <li>Biometric data</li>
+    <li>Financial information (payments are handled by third-party processors)</li>
+    <li>Social media profiles or data</li>
+  </ul>
+
+  <h2 data-i18n="privacy.useTitle">How We Use Your Data</h2>
+  <p>We use the information we collect for the following purposes:</p>
+  <ul>
+    <li><strong>Document verification:</strong> Comparing submitted hashes against stored records to verify document authenticity</li>
+    <li><strong>Blockchain registration:</strong> Recording document hashes on the Polygon blockchain for immutable proof of authenticity</li>
+    <li><strong>Audit logging:</strong> Maintaining records of verification attempts for security and compliance</li>
+    <li><strong>Service improvement:</strong> Analyzing usage patterns to improve our platform</li>
+    <li><strong>Security:</strong> Detecting and preventing fraud, abuse, and unauthorized access</li>
+    <li><strong>Communication:</strong> Sending service-related notifications and updates</li>
+  </ul>
+
+  <h2 data-i18n="privacy.blockchainTitle">Blockchain Records</h2>
+  <p>When a document is protected, its SHA-256 hash and HMAC signature are registered on the Polygon blockchain. These records are:</p>
+  <ul>
+    <li><strong>Immutable:</strong> Once recorded, they cannot be modified or deleted</li>
+    <li><strong>Public:</strong> Transaction hashes are publicly visible on the blockchain</li>
+    <li><strong>Non-reversible:</strong> The hash cannot be used to reconstruct the original document</li>
+    <li><strong>Permanent:</strong> Records exist on the blockchain indefinitely</li>
+  </ul>
+  <p>Blockchain records contain only cryptographic hashes, timestamps, and transaction metadata. No personal information or document content is stored on the blockchain.</p>
+
+  <h2 data-i18n="privacy.cookiesTitle">Cookies and Analytics</h2>
+  <p>We use minimal cookies for essential functionality:</p>
+  <ul>
+    <li><strong>Language preference:</strong> Stores your selected language</li>
+    <li><strong>Session management:</strong> Maintains your authenticated session (API users)</li>
+  </ul>
+  <p>We may use privacy-respecting analytics to understand how our service is used. We do not use third-party advertising trackers or sell data to advertisers.</p>
+
+  <h2 data-i18n="privacy.retentionTitle">Data Retention</h2>
+  <p>We retain data according to the following schedule:</p>
+  <ul>
+    <li><strong>Document hashes:</strong> Retained indefinitely for verification purposes (also permanently stored on blockchain)</li>
+    <li><strong>Account data:</strong> Retained while your account is active, and for 30 days after deletion request</li>
+    <li><strong>Audit logs:</strong> Retained for 12 months</li>
+    <li><strong>Technical logs:</strong> Retained for 90 days</li>
+  </ul>
+
+  <h2 data-i18n="privacy.sharingTitle">Data Sharing</h2>
+  <p>We do not sell your data. We may share limited information with:</p>
+  <ul>
+    <li><strong>Blockchain networks:</strong> Document hashes are published to the Polygon blockchain</li>
+    <li><strong>Infrastructure providers:</strong> Cloud hosting and CDN providers who process data on our behalf under strict data processing agreements</li>
+    <li><strong>Legal requirements:</strong> When required by law, court order, or governmental authority</li>
+  </ul>
+
+  <h2 data-i18n="privacy.securityTitle">Security</h2>
+  <p>We implement industry-standard security measures including:</p>
+  <ul>
+    <li>Encryption in transit (TLS 1.3) and at rest</li>
+    <li>API key hashing and secure storage</li>
+    <li>Rate limiting and DDoS protection</li>
+    <li>Regular security audits</li>
+    <li>Principle of least privilege access controls</li>
+  </ul>
+
+  <h2 data-i18n="privacy.gdprTitle">GDPR Compliance</h2>
+  <p>If you are located in the European Economic Area (EEA), you have the following rights under the General Data Protection Regulation (GDPR):</p>
+  <ul>
+    <li><strong>Right of access:</strong> Request a copy of the personal data we hold about you</li>
+    <li><strong>Right to rectification:</strong> Request correction of inaccurate personal data</li>
+    <li><strong>Right to erasure:</strong> Request deletion of your personal data (note: blockchain records are immutable and cannot be deleted)</li>
+    <li><strong>Right to restriction:</strong> Request restriction of processing of your personal data</li>
+    <li><strong>Right to data portability:</strong> Request transfer of your data in a machine-readable format</li>
+    <li><strong>Right to object:</strong> Object to processing of your personal data</li>
+  </ul>
+  <p>To exercise any of these rights, contact us at <a href="mailto:info@vertifile.com">info@vertifile.com</a>.</p>
+
+  <h2 data-i18n="privacy.childrenTitle">Children's Privacy</h2>
+  <p>Vertifile is not directed at children under 16. We do not knowingly collect personal information from children. If you believe we have inadvertently collected data from a child, please contact us immediately.</p>
+
+  <h2 data-i18n="privacy.changesTitle">Changes to This Policy</h2>
+  <p>We may update this Privacy Policy from time to time. We will notify registered users of material changes via email. Continued use of our service after changes constitutes acceptance of the updated policy.</p>
+
+  <h2 data-i18n="privacy.contactTitle">Contact Us</h2>
+  <p>If you have questions about this Privacy Policy or our data practices, contact us at:</p>
+  <p>
+    <strong>Vertifile</strong><br>
+    Rishon LeZion, Israel<br>
+    Email: <a href="mailto:info@vertifile.com">info@vertifile.com</a><br>
+    Website: <a href="https://vertifile.com">vertifile.com</a>
+  </p>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="f-logo">
+        <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
+      </div>
+      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="#how" data-i18n="nav.howItWorks">How It Works</a>
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="/upload" data-i18n="nav.upload">Protect a Document</a>
+      <a href="/enterprise" data-i18n="footer.enterprise">Enterprise</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.developers">Developers</h4>
+      <a href="/integration" data-i18n="footer.integrationGuide">Integration Guide</a>
+      <a href="/api/docs" data-i18n="footer.apiDocumentation">API Documentation</a>
+      <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.company">Company</h4>
+      <a href="/about" data-i18n="footer.about">About</a>
+      <a href="/blog" data-i18n="footer.blog">Blog</a>
+      <a href="/careers" data-i18n="footer.careers">Careers</a>
+      <a href="/contact" data-i18n="footer.contact">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.legal">Legal</h4>
+      <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
+      <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
+    <div class="footer-lang" onclick="toggleLangDropdown()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+      <span id="footerLangLabel">English</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/i18n.js"></script>
+<script>
+(function(){
+  window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
+  window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
+})();
+</script>
+</body>
+</html>

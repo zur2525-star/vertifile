@@ -72,7 +72,15 @@
     "s3title": "רענון טוקן כל 30 שניות",
     "s3desc": "מונע הקלטות מסך והתקפות שידור חוזר",
     "s4title": "זיהוי סביבה",
-    "s4desc": "מזהה כלי פריצה, עורכים וכלי מפתחים"
+    "s4desc": "מזהה כלי פריצה, עורכים וכלי מפתחים",
+    "s5title": "זיהוי כלי מפתחים",
+    "s5desc": "מקפיא את החותמת כאשר כלי המפתחים של הדפדפן נפתחים",
+    "s6title": "חסימת לחצן ימני",
+    "s6desc": "מונע שמירה, העתקה ובדיקת החותמת",
+    "s7title": "מניעת הדפסה",
+    "s7desc": "הגנות CSS ו-JS חוסמות הדפסה וייצוא PDF",
+    "s8title": "רישום ביקורת",
+    "s8desc": "כל ניסיון גישה נרשם עם חותמת זמן וכתובת IP"
   },
   "demo": {
     "title": "ראו את זה בפעולה",
@@ -128,7 +136,8 @@
     "openPvfFile": "פתיחת קובץ PVF",
     "backToMainSite": "חזרה לאתר הראשי",
     "builtWithPrivacy": "נבנה עם פרטיות בראש",
-    "enterpriseDocProtection": "הגנה ארגונית על מסמכים"
+    "enterpriseDocProtection": "הגנה ארגונית על מסמכים",
+    "enterprise": "ארגוני"
   },
   "upload": {
     "pageTitle": "Vertifile — הנפקת מסמכים מאובטחת",
@@ -148,7 +157,10 @@
     "successTitle": "קובץ PVF נוצר בהצלחה!",
     "successDesc": "המסמך מוגן וחתום קריפטוגרפית. שלחו אותו לנמען — רק קובץ ה-.pvf יתקבל.",
     "downloadBtn": "הורדת קובץ .pvf",
-    "another": "העלאת מסמך נוסף"
+    "another": "העלאת מסמך נוסף",
+    "shareLabel": "קישור לשיתוף (לא צריך התקנה):",
+    "copyBtn": "העתק",
+    "copiedBtn": "הועתק!"
   },
   "verify": {
     "pageTitle": "אימות מסמך",
@@ -161,6 +173,48 @@
     "failed": "האימות נכשל",
     "failedDesc": "לא ניתן היה לאמת מסמך זה. ייתכן שנעשה בו שינוי או שאינו רשום.",
     "tryAnother": "אימות מסמך נוסף"
+  },
+  "privacy": {
+    "title": "מדיניות פרטיות",
+    "updated": "עדכון אחרון: 18 במרץ 2026",
+    "blindLabel": "עיבוד עיוור (BLIND):",
+    "blindSummary": "Vertifile לעולם לא קוראת, ניגשת או שומרת את תוכן המסמכים שלכם. אנחנו מעבדים רק גיבובים קריפטוגרפיים (טביעות אצבע) של הקבצים שלכם. תוכן המסמך לעולם לא עוזב את המכשיר שלכם.",
+    "introTitle": "הקדמה",
+    "collectTitle": "מה אנחנו אוספים",
+    "collectHashTitle": "גיבובי מסמכים (טביעות אצבע)",
+    "collectAccountTitle": "נתוני חשבון וארגון",
+    "collectTechnicalTitle": "נתונים טכניים",
+    "notCollectTitle": "מה אנחנו לא אוספים",
+    "notCollectDesc": "אנחנו לא אוספים, קוראים, שומרים, משדרים או ניגשים לתוכן המסמכים שלכם בשום שלב. ארכיטקטורת העיבוד העיוור שלנו פירושה שתוכן המסמך מגובב כולו בצד הלקוח. רק טביעת האצבע הקריפטוגרפית נשלחת לשרתים שלנו. מבחינה מתמטית בלתי אפשרי לשחזר תוכן מסמך מגיבוב.",
+    "useTitle": "כיצד אנחנו משתמשים בנתונים שלכם",
+    "blockchainTitle": "רשומות Blockchain",
+    "cookiesTitle": "עוגיות וניתוח נתונים",
+    "retentionTitle": "שמירת נתונים",
+    "sharingTitle": "שיתוף נתונים",
+    "securityTitle": "אבטחה",
+    "gdprTitle": "תאימות GDPR",
+    "childrenTitle": "פרטיות ילדים",
+    "changesTitle": "שינויים במדיניות זו",
+    "contactTitle": "יצירת קשר"
+  },
+  "terms": {
+    "title": "תנאי שימוש",
+    "updated": "עדכון אחרון: 18 במרץ 2026",
+    "serviceTitle": "1. תיאור השירות",
+    "acceptanceTitle": "2. קבלת התנאים",
+    "accountTitle": "3. אחריות חשבון",
+    "acceptableUseTitle": "4. שימוש מקובל",
+    "apiTitle": "5. שימוש ב-API ומגבלות קצב",
+    "ipTitle": "6. קניין רוחני",
+    "warrantyTitle": "7. הגבלת אחריות",
+    "warrantyDesc": "השירות מסופק \"כמות שהוא\" ו\"כפי שזמין\" ללא אחריות מכל סוג, בין אם מפורשת או משתמעת, לרבות אחריות לסחירות, התאמה למטרה מסוימת ואי-הפרה.",
+    "liabilityTitle": "8. הגבלת חבות",
+    "indemnityTitle": "9. שיפוי",
+    "terminationTitle": "10. סיום",
+    "modificationsTitle": "11. שינויים בתנאים",
+    "governingLawTitle": "12. דין חל",
+    "severabilityTitle": "13. עקרון ההפרדה",
+    "contactTitle": "14. יצירת קשר"
   },
   "langName": "עברית",
   "heroDoc": {
@@ -317,7 +371,13 @@
     "bottomCtaSubtitle": "הצטרפו לארגונים ברחבי העולם שסומכים על Vertifile להגנה על הרשומות החשובות ביותר שלהם.",
     "scheduleCall": "תיאום שיחה",
     "security": "אבטחה",
-    "compliance": "ציות"
+    "compliance": "ציות",
+    "sectorEducation": "חינוך",
+    "sectorGovernment": "ממשל",
+    "sectorHealthcare": "בריאות",
+    "sectorFinance": "פיננסים",
+    "sectorLegal": "משפטים",
+    "sectorOther": "אחר"
   },
   "integration": {
     "badge": "פלטפורמת מפתחים",
@@ -468,6 +528,7 @@
   },
   "demoPage": {
     "badge": "הדגמה חיה",
+    "title": "נסו את Vertifile — הגנו על מסמך תוך שניות",
     "heroTitle1": "נסו את Vertifile —",
     "heroTitle2": "הגנו על מסמך",
     "heroTitle3": "תוך שניות",
@@ -508,6 +569,11 @@
     "chooseFile": "בחרו קובץ",
     "rateNote": "5 מסמכים לשעה במצב הדגמה",
     "protectBtn": "הגנה על מסמך זה",
+    "proc1": "מקבל קובץ...",
+    "proc2": "מחשב טביעת אצבע (hash)...",
+    "proc3": "רושם ב-Blockchain...",
+    "proc4": "מצרף חותמת חיה...",
+    "proc5": "יוצר קובץ PVF...",
     "s1": "מקבל קובץ...",
     "s2": "מחשב טביעת אצבע (hash)...",
     "s3": "רושם ב-Blockchain...",
@@ -519,8 +585,10 @@
     "shareLinkLabel": "קישור שיתוף (ללא צורך בהתקנה)",
     "copyBtn": "העתקה",
     "downloadPvf": "הורדת קובץ .pvf",
+    "openViewer": "פתח בצפייה",
     "openInViewer": "פתיחה במציג",
     "viewOnline": "צפייה מקוונת",
+    "anotherBtn": "הגן על מסמך נוסף",
     "uploadAnother": "העלאת מסמך נוסף",
     "underTheHoodLabel": "מאחורי הקלעים",
     "underTheHoodTitle": "כיצד הגנת PVF עובדת",
