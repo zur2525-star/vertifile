@@ -69,8 +69,8 @@
       <div class="drop-hint">or drag & drop a .pvf file here</div>
     </div>
     <div class="error-overlay" id="errorOverlay">
-      <svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="1.5" fill="rgba(239,68,68,.1)"/><line x1="15" y1="9" x2="9" y2="15" stroke="#f87171" stroke-width="2" stroke-linecap="round"/><line x1="9" y1="9" x2="15" y2="15" stroke="#f87171" stroke-width="2" stroke-linecap="round"/></svg>
-      <h3>Invalid File</h3>
+      <div id="errorIcon"></div>
+      <h3 id="errorTitle">Invalid File</h3>
       <p id="errorMessage" style="white-space:pre-line">Something went wrong.</p>
       <button class="toolbar-btn" style="margin-top:24px;padding:10px 24px;font-size:14px;-webkit-app-region:no-drag" onclick="openFile()">Check Another Document</button>
     </div>
@@ -86,6 +86,8 @@
     document.getElementById('fileName').textContent = data.fileName;
     document.getElementById('welcome').style.display = 'none';
     document.getElementById('errorOverlay').classList.remove('show');
+    okCount = 0;
+    resolved = false;
 
     var badge = document.getElementById('statusBadge');
     badge.style.display = 'flex';
@@ -108,14 +110,55 @@
         var badge = document.getElementById('statusBadge');
         badge.className = 'toolbar-status failed';
         document.getElementById('statusText').textContent = 'Verification Failed';
-        document.getElementById('errorOverlay').classList.add('show');
-        document.getElementById('errorMessage').textContent = 'This document failed verification.\n\nThe file may have been tampered with or is not authentic.\nDo not trust the content of this document.';
+        showError('timeout');
       }
     }, 15000);
   });
 
   var okCount = 0;
   var resolved = false;
+
+  var ERROR_TYPES = {
+    forged: {
+      icon: '<svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="1.5" fill="rgba(239,68,68,.1)"/><line x1="15" y1="9" x2="9" y2="15" stroke="#f87171" stroke-width="2" stroke-linecap="round"/><line x1="9" y1="9" x2="15" y2="15" stroke="#f87171" stroke-width="2" stroke-linecap="round"/></svg>',
+      title: 'Document Tampered',
+      message: 'The content of this document has been modified after it was signed.\n\nThe digital signature does not match the file contents.\nDo not trust this document.'
+    },
+    invalid: {
+      icon: '<svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="1.5" fill="rgba(239,68,68,.1)"/><path d="M12 8v5" stroke="#f87171" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#f87171"/></svg>',
+      title: 'Invalid File',
+      message: 'This is not a valid PVF file.\n\nOnly documents created and signed by Vertifile can be opened.'
+    },
+    not_found: {
+      icon: '<svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#fbbf24" stroke-width="1.5" fill="rgba(251,191,36,.1)"/><path d="M9 9h.01M15 9h.01M8 14s1.5 2 4 2 4-2 4-2" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/></svg>',
+      title: 'File Not Found',
+      message: 'The file could not be found at the specified location.\n\nIt may have been moved, renamed, or deleted.'
+    },
+    wrong_type: {
+      icon: '<svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="1.5" fill="rgba(239,68,68,.1)"/><path d="M12 8v5" stroke="#f87171" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#f87171"/></svg>',
+      title: 'Unsupported File Type',
+      message: 'Only .pvf files can be opened in PVF Viewer.\n\nMake sure you are opening a file with the .pvf extension.'
+    },
+    timeout: {
+      icon: '<svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#fbbf24" stroke-width="1.5" fill="rgba(251,191,36,.1)"/><path d="M12 6v6l4 2" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      title: 'Verification Timeout',
+      message: 'Could not verify this document within the expected time.\n\nThe verification server may be unreachable.\nCheck your internet connection and try again.'
+    },
+    read_error: {
+      icon: '<svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="1.5" fill="rgba(239,68,68,.1)"/><path d="M12 8v5" stroke="#f87171" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#f87171"/></svg>',
+      title: 'Read Error',
+      message: 'Failed to read the file.\n\nThe file may be corrupted or inaccessible.'
+    }
+  };
+
+  function showError(type, customMsg) {
+    var err = ERROR_TYPES[type] || ERROR_TYPES.invalid;
+    document.getElementById('errorIcon').innerHTML = err.icon;
+    document.getElementById('errorTitle').textContent = err.title;
+    document.getElementById('errorMessage').textContent = customMsg || err.message;
+    document.getElementById('errorOverlay').classList.add('show');
+    document.getElementById('pvfFrame').style.display = 'none';
+  }
 
   function checkStatus(frame, interval) {
     if (resolved) return;
@@ -128,16 +171,12 @@
       var isForged = bigX || stampBad || (doc.body && doc.body.classList.contains('forged'));
 
       if (isForged) {
-        // Forged detected — immediately block, never show content
         resolved = true;
         if (interval) clearInterval(interval);
         badge.className = 'toolbar-status failed';
         document.getElementById('statusText').textContent = 'Verification Failed';
-        frame.style.display = 'none';
-        document.getElementById('errorOverlay').classList.add('show');
-        document.getElementById('errorMessage').textContent = 'This document failed verification.\n\nThe file may have been tampered with or is not authentic.\nDo not trust the content of this document.';
+        showError('forged');
       } else if (stampOk) {
-        // Require OK to be stable for 5 consecutive checks (2.5s) before showing
         okCount++;
         if (okCount >= 5) {
           resolved = true;
@@ -153,9 +192,12 @@
   }
 
   bridge.onPvfError(function(msg) {
-    document.getElementById('errorOverlay').classList.add('show');
-    document.getElementById('errorMessage').textContent = msg;
-    document.getElementById('pvfFrame').style.display = 'none';
+    var type = 'invalid';
+    if (msg.includes('not found')) type = 'not_found';
+    else if (msg.includes('extension')) type = 'wrong_type';
+    else if (msg.includes('not a valid')) type = 'invalid';
+    else if (msg.includes('Error:')) type = 'read_error';
+    showError(type, msg);
     document.getElementById('statusBadge').style.display = 'none';
   });
 
