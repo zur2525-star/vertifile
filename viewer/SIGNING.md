@@ -33,7 +33,7 @@ With signing, the app installs and opens cleanly — no warnings.
 #### 3. Set Environment Variables
 ```bash
 # Your Apple Developer email
-export APPLE_ID="zur2525@gmail.com"
+export APPLE_ID="info@vertifile.com"
 
 # App-specific password (generate at appleid.apple.com → Security → App-Specific Passwords)
 export APPLE_ID_PASSWORD="xxxx-xxxx-xxxx-xxxx"

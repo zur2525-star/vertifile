@@ -446,11 +446,11 @@
     <h3 data-i18n="open.downloadTitle">PVF Viewer Desktop App</h3>
     <p data-i18n="open.downloadDesc">For the best experience, download the dedicated PVF Viewer. Features offline support, batch viewing, and system-level file associations.</p>
     <div class="dl-buttons">
-      <a href="#" class="dl-btn primary">
+      <a href="#" class="dl-btn primary" onclick="event.preventDefault();alert('Desktop app downloads coming soon! Use the browser-based viewer above in the meantime.')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94a9.5 9.5 0 1 1 0-17.88"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
         Download for Mac
       </a>
-      <a href="#" class="dl-btn secondary">
+      <a href="#" class="dl-btn secondary" onclick="event.preventDefault();alert('Desktop app downloads coming soon! Use the browser-based viewer above in the meantime.')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         Download for Windows
       </a>
@@ -465,30 +465,30 @@
       <div class="f-logo">
         <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
       </div>
-      <p>Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
     </div>
     <div class="footer-col">
-      <h4>Product</h4>
-      <a href="/">Home</a>
-      <a href="/upload">Protect a Document</a>
-      <a href="/verify">Verify a Document</a>
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/upload" data-i18n="nav.upload">Protect a Document</a>
+      <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
       <a href="/open">Open PVF File</a>
-      <a href="/enterprise">Enterprise</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
     </div>
     <div class="footer-col">
-      <h4>Developers</h4>
-      <a href="/integration">Integration Guide</a>
+      <h4 data-i18n="footer.developers">Developers</h4>
+      <a href="/integration" data-i18n="nav.developers">Integration Guide</a>
       <a href="/api/docs">API Documentation</a>
     </div>
     <div class="footer-col">
-      <h4>Legal</h4>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-      <a href="#">Contact</a>
+      <h4 data-i18n="footer.legal">Legal</h4>
+      <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
+      <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
+      <a href="/contact" data-i18n="footer.contact">Contact</a>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2025 Vertifile. All rights reserved.</span>
+    <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
     <span>Built with privacy in mind</span>
   </div>
 </footer>
@@ -521,11 +521,6 @@ document.addEventListener('click',function(e){
   var viewerStatus = document.getElementById('viewerStatus');
   var viewerStatusText = document.getElementById('viewerStatusText');
   var currentFile = null;
-
-  // ===== NAVBAR SCROLL =====
-  window.addEventListener('scroll', function(){
-    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
-  }, {passive: true});
 
   // ===== MOBILE MENU =====
   window.toggleMobile = function(){

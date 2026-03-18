@@ -1,0 +1,6 @@
+node_modules
+viewer
+viewer-tauri
+data
+.env
+*.db

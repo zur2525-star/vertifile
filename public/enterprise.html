@@ -642,11 +642,11 @@ console.<span class="fn">log</span>(<span class="str">`Blockchain TX: <span clas
     <p data-i18n="enterprise.plansSubtitle">Contact us for a custom plan tailored to your organization's document protection needs.</p>
   </div>
   <div class="fade-up" style="max-width:500px;margin:0 auto">
-    <a href="mailto:zur2525@gmail.com" style="display:inline-flex;align-items:center;gap:10px;padding:16px 40px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:14px;font-weight:700;font-size:16px;transition:all .3s;border:none;cursor:pointer;font-family:inherit;letter-spacing:-.2px;box-shadow:0 4px 20px rgba(79,70,229,.3);text-decoration:none">
+    <a href="mailto:info@vertifile.com" style="display:inline-flex;align-items:center;gap:10px;padding:16px 40px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:14px;font-weight:700;font-size:16px;transition:all .3s;border:none;cursor:pointer;font-family:inherit;letter-spacing:-.2px;box-shadow:0 4px 20px rgba(79,70,229,.3);text-decoration:none">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
       <span data-i18n="enterprise.contactUs">Contact Us</span>
     </a>
-    <p style="margin-top:16px;font-size:14px;color:#6b7280">Or email us directly at <a href="mailto:zur2525@gmail.com" style="color:#7c3aed;font-weight:600;text-decoration:none">zur2525@gmail.com</a></p>
+    <p style="margin-top:16px;font-size:14px;color:#6b7280">Or email us directly at <a href="mailto:info@vertifile.com" style="color:#7c3aed;font-weight:600;text-decoration:none">info@vertifile.com</a></p>
   </div>
 </section>
 
@@ -715,28 +715,28 @@ console.<span class="fn">log</span>(<span class="str">`Blockchain TX: <span clas
       <p data-i18n="enterprise.footerDesc">Enterprise-grade document protection with tamper-proof .pvf files, blockchain verification, and complete blind processing.</p>
     </div>
     <div class="footer-col">
-      <h4>Product</h4>
-      <a href="/">Home</a>
-      <a href="#benefits">Benefits</a>
-      <a href="#integration">Integration</a>
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="#benefits" data-i18n="enterprise.benefitsLabel">Benefits</a>
+      <a href="#integration" data-i18n="enterprise.integrationLabel">Integration</a>
     </div>
     <div class="footer-col">
-      <h4>Company</h4>
-      <a href="#">About</a>
-      <a href="#">Blog</a>
-      <a href="#">Careers</a>
-      <a href="#contact">Contact</a>
+      <h4 data-i18n="footer.company">Company</h4>
+      <a href="/about" data-i18n="footer.about">About</a>
+      <a href="/blog" data-i18n="footer.blog">Blog</a>
+      <a href="/careers" data-i18n="footer.careers">Careers</a>
+      <a href="/contact" data-i18n="footer.contact">Contact</a>
     </div>
     <div class="footer-col">
-      <h4>Legal</h4>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-      <a href="#">Security</a>
-      <a href="#">Compliance</a>
+      <h4 data-i18n="footer.legal">Legal</h4>
+      <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
+      <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
+      <a href="/privacy" data-i18n="footer.security">Security</a>
+      <a href="/terms" data-i18n="footer.compliance">Compliance</a>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2026 Vertifile. All rights reserved.</span>
+    <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
     <span>Enterprise Document Protection</span>
   </div>
 </footer>
@@ -744,12 +744,6 @@ console.<span class="fn">log</span>(<span class="str">`Blockchain TX: <span clas
 <!-- ===== SCRIPTS ===== -->
 <script>
 (function(){
-  // Navbar scroll effect
-  var navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', function(){
-    navbar.classList.toggle('scrolled', window.scrollY > 20);
-  });
-
   // Mobile menu
   window.toggleMobile = function(){
     var menu = document.getElementById('mobileMenu');

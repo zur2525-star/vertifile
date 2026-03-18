@@ -69,7 +69,12 @@ function toBytes32(hexString) {
 function loadState() {
   try {
     if (fs.existsSync(STATE_FILE)) {
-      return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+      const state = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+      if (state.contractAddress && typeof state.contractAddress !== 'string') {
+        console.warn('[BLOCKCHAIN] Invalid state file, resetting');
+        return {};
+      }
+      return state;
     }
   } catch (e) { /* ignore */ }
   return {};
@@ -103,6 +108,11 @@ async function init() {
     return false;
   }
 
+  if (!/^(0x)?[0-9a-fA-F]{64}$/.test(privateKey)) {
+    console.log('[BLOCKCHAIN] Invalid private key format');
+    return false;
+  }
+
   networkConfig = NETWORKS[network];
   if (!networkConfig) {
     console.error(`[BLOCKCHAIN] Unknown network: ${network}. Use: mumbai, amoy, polygon`);
@@ -114,9 +124,12 @@ async function init() {
     wallet = new ethers.Wallet(privateKey, provider);
     contract = new ethers.Contract(contractAddress, CONTRACT_ABI, wallet);
 
-    // Verify connection
-    const totalDocs = await contract.totalDocuments();
-    const balance = await provider.getBalance(wallet.address);
+    // Verify connection with timeout
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('RPC connection timeout')), 10000)
+    );
+    const totalDocs = await Promise.race([contract.totalDocuments(), timeoutPromise]);
+    const balance = await Promise.race([provider.getBalance(wallet.address), timeoutPromise]);
 
     console.log(`[BLOCKCHAIN] Connected to ${networkConfig.name}`);
     console.log(`  Wallet:   ${wallet.address}`);

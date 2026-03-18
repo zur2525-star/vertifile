@@ -468,23 +468,15 @@
 <!-- ===== FOOTER ===== -->
 <footer class="site-footer">
   <div class="f-links">
-    <a href="/">Home</a>
-    <a href="/verify">Verify a Document</a>
-    <a href="/upload">Protect a Document</a>
+    <a href="/" data-i18n="nav.home">Home</a>
+    <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
+    <a href="/upload" data-i18n="nav.upload">Protect a Document</a>
     <a href="/api/docs">API Documentation</a>
   </div>
-  <div class="f-copy">&copy; 2024 Vertifile. All rights reserved.</div>
+  <div class="f-copy" data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</div>
 </footer>
 
 <script>
-// ===== Navbar scroll =====
-(function(){
-  var nav = document.getElementById('navbar');
-  window.addEventListener('scroll', function(){
-    nav.classList.toggle('scrolled', window.scrollY > 20);
-  });
-})();
-
 function closeMobile(){
   document.getElementById('mobileMenu').classList.remove('show');
 }
@@ -608,8 +600,12 @@ async function createPvf(){
     var url = URL.createObjectURL(blob);
     var pvfName = selectedFile.name.replace(/\.[^.]+$/, '') + '.pvf';
 
-    document.getElementById('downloadLink').href = url;
-    document.getElementById('downloadLink').download = pvfName;
+    var dlLink = document.getElementById('downloadLink');
+    dlLink.href = url;
+    dlLink.download = pvfName;
+    dlLink.addEventListener('click', function(){
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    }, {once: true});
 
     // Show share URL
     if(data.shareUrl){

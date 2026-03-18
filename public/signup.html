@@ -300,12 +300,12 @@ form.<span class="fn">append</span>(<span class="str">'file'</span>, fileBuffer)
 
 <footer class="site-footer">
   <div class="f-links">
-    <a href="/">Home</a>
-    <a href="/verify">Verify a Document</a>
-    <a href="#">Privacy Policy</a>
-    <a href="#">Terms of Service</a>
+    <a href="/" data-i18n="nav.home">Home</a>
+    <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
+    <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
+    <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
   </div>
-  <div class="f-copy">&copy; 2024 Vertifile. All rights reserved.</div>
+  <div class="f-copy" data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</div>
 </footer>
 
 <script>
@@ -459,13 +459,7 @@ function closeMobile(){
   document.getElementById('mobileMenu').classList.remove('show');
 }
 
-// Navbar scroll effect
-var navbar = document.getElementById('navbar');
-if (navbar) {
-  window.addEventListener('scroll', function(){
-    navbar.classList.toggle('scrolled', window.scrollY > 20);
-  });
-}
+
 </script>
 <script src="/js/i18n.js"></script>
 </body>

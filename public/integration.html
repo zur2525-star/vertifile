@@ -1040,7 +1040,7 @@ app.<span class="fn">post</span>(<span class="str">'/webhooks/vertifile'</span>,
           <div>Verifications (the <code>/api/verify</code> endpoint) are always free and unlimited. Only document creation counts toward your quota.</div>
         </div>
 
-        <p style="margin-top:24px;font-size:15px;color:#6b7280">For details about plans and limits, <a href="mailto:zur2525@gmail.com" style="color:#7c3aed;font-weight:600;text-decoration:none">contact us</a>.</p>
+        <p style="margin-top:24px;font-size:15px;color:#6b7280">For details about plans and limits, <a href="mailto:info@vertifile.com" style="color:#7c3aed;font-weight:600;text-decoration:none">contact us</a>.</p>
       </div>
     </section>
 
@@ -1054,29 +1054,29 @@ app.<span class="fn">post</span>(<span class="str">'/webhooks/vertifile'</span>,
       <div class="f-logo">
         <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
       </div>
-      <p>Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
     </div>
     <div class="footer-col">
-      <h4>Product</h4>
-      <a href="/#how">How It Works</a>
-      <a href="/#features">Features</a>
-      <a href="/upload">Protect a Document</a>
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="/#how" data-i18n="nav.howItWorks">How It Works</a>
+      <a href="/#features" data-i18n="nav.features">Features</a>
+      <a href="/upload" data-i18n="nav.upload">Protect a Document</a>
     </div>
     <div class="footer-col">
-      <h4>Developers</h4>
-      <a href="/integration">API Docs</a>
+      <h4 data-i18n="footer.developers">Developers</h4>
+      <a href="/integration" data-i18n="nav.developers">API Docs</a>
       <a href="/integration#examples">SDK Examples</a>
       <a href="/integration#webhooks">Webhooks</a>
       <a href="/integration#rate-limits">Rate Limits</a>
     </div>
     <div class="footer-col">
-      <h4>Legal</h4>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
+      <h4 data-i18n="footer.legal">Legal</h4>
+      <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
+      <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2024 Vertifile. All rights reserved.</span>
+    <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
     <a href="/" style="color:rgba(196,181,253,.5);transition:.2s">Back to main site</a>
   </div>
 </footer>
@@ -1176,13 +1176,6 @@ app.<span class="fn">post</span>(<span class="str">'/webhooks/vertifile'</span>,
     document.getElementById('mobileMenu').classList.remove('show');
   };
 
-  // Navbar scroll effect
-  var navbar = document.getElementById('navbar');
-  if (navbar) {
-    window.addEventListener('scroll', function(){
-      navbar.classList.toggle('scrolled', window.scrollY > 20);
-    });
-  }
 })();
 </script>
 <script src="/js/i18n.js"></script>

@@ -76,14 +76,22 @@ async function convertToPvf(inputPath, outputPath, options = {}) {
   const bodyEnd = Buffer.from(`\r\n--${boundary}--\r\n`);
   const body = Buffer.concat([bodyStart, fileBuffer, bodyEnd]);
 
-  const response = await fetchFn(`${server}/api/create-pvf`, {
-    method: 'POST',
-    headers: {
-      'X-API-Key': apiKey,
-      'Content-Type': `multipart/form-data; boundary=${boundary}`,
-    },
-    body: body,
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000);
+  let response;
+  try {
+    response = await fetchFn(`${server}/api/create-pvf`, {
+      method: 'POST',
+      headers: {
+        'X-API-Key': apiKey,
+        'Content-Type': `multipart/form-data; boundary=${boundary}`,
+      },
+      body: body,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: 'Unknown error' }));
@@ -91,6 +99,10 @@ async function convertToPvf(inputPath, outputPath, options = {}) {
   }
 
   const pvfContent = await response.text();
+
+  if (!pvfContent.includes('PVF') && !pvfContent.includes('Vertifile')) {
+    throw new Error('Invalid PVF response from server');
+  }
 
   // Save .pvf file
   fs.writeFileSync(outputPath, pvfContent, 'utf8');
@@ -155,23 +167,8 @@ Environment:
   const apiKey = process.env.VERTIFILE_API_KEY;
 
   if (!apiKey) {
-    // Try to read from local data/api-keys.json
-    try {
-      const keysFile = path.join(__dirname, 'data', 'api-keys.json');
-      if (fs.existsSync(keysFile)) {
-        const keys = JSON.parse(fs.readFileSync(keysFile, 'utf8'));
-        const firstKey = Object.keys(keys)[0];
-        if (firstKey) {
-          process.env.VERTIFILE_API_KEY = firstKey;
-          console.log(`🔑 Using local API key: ${firstKey.substring(0, 20)}...`);
-        }
-      }
-    } catch (e) {}
-
-    if (!process.env.VERTIFILE_API_KEY) {
-      console.error('❌ Set VERTIFILE_API_KEY environment variable');
-      process.exit(1);
-    }
+    console.error('❌ Set VERTIFILE_API_KEY environment variable');
+    process.exit(1);
   }
 
   console.log('');

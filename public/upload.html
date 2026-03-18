@@ -245,18 +245,16 @@
   <div class="f-links">
     <a href="/" data-i18n="nav.home">Home</a>
     <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
-    <a href="#" data-i18n="footer.privacy">Privacy Policy</a>
-    <a href="#" data-i18n="footer.terms">Terms of Service</a>
+    <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
+    <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
   </div>
-  <div class="f-copy" data-i18n="footer.copyright">&copy; 2024 Vertifile. All rights reserved.</div>
+  <div class="f-copy" data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</div>
 </footer>
 
 <script src="/js/i18n.js"></script>
 <script>
 window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
 window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
-window.addEventListener('scroll',function(){document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>10)});
-
 var selectedFile=null;
 var dropZone=document.getElementById('dropZone');
 

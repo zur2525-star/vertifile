@@ -191,7 +191,7 @@ const verifyLimiter = rateLimit({
 // API KEY AUTHENTICATION MIDDLEWARE
 // ================================================================
 function authenticateApiKey(req, res, next) {
-  const apiKey = req.headers['x-api-key'] || req.query.apiKey;
+  const apiKey = req.headers['x-api-key'];
   const clientIP = getClientIP(req);
 
   if (!apiKey) {
@@ -816,16 +816,34 @@ const signupLimiter = rateLimit({
   message: { success: false, error: 'Too many signup attempts. Try again later.' }
 });
 
+// Daily signup tracking per IP
+const _dailySignups = new Map(); // IP -> { count, resetAt }
+
 app.post('/api/signup', signupLimiter, (req, res) => {
   try {
-    const { orgName, contactName, email, useCase, plan } = req.body;
+    const { orgName, contactName, email, useCase } = req.body;
 
     if (!orgName || !contactName || !email) {
       return res.status(400).json({ success: false, error: 'orgName, contactName, and email are required' });
     }
 
-    // Validate email format
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    // Daily IP signup limit (max 3 per day)
+    const clientIP = getClientIP(req);
+    const now = Date.now();
+    const dayMs = 24 * 60 * 60 * 1000;
+    const ipEntry = _dailySignups.get(clientIP);
+    if (ipEntry && ipEntry.resetAt > now) {
+      if (ipEntry.count >= 3) {
+        db.log('signup_blocked', { reason: 'daily_ip_limit', ip: clientIP, email });
+        return res.status(429).json({ success: false, error: 'Daily signup limit reached. Try again tomorrow.' });
+      }
+      ipEntry.count++;
+    } else {
+      _dailySignups.set(clientIP, { count: 1, resetAt: now + dayMs });
+    }
+
+    // Validate email format (strict)
+    if (!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/.test(email)) {
       return res.status(400).json({ success: false, error: 'Invalid email format' });
     }
 
@@ -833,10 +851,9 @@ app.post('/api/signup', signupLimiter, (req, res) => {
     const orgId = 'org_' + orgName.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 30) + '_' + crypto.randomBytes(4).toString('hex');
     const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
 
-    // Set rate limit based on plan
-    const validPlans = ['free', 'professional', 'enterprise'];
-    const selectedPlan = validPlans.includes(plan) ? plan : 'free';
-    const rateLimit = selectedPlan === 'enterprise' ? 10000 : selectedPlan === 'professional' ? 100 : 5;
+    // Force plan to 'free' on signup — upgrades require admin action
+    const selectedPlan = 'free';
+    const rateLimit = 5;
 
     // Create the API key
     db.createApiKey({
@@ -995,7 +1012,11 @@ function handleCreatePvf(req, res) {
           db.log('blockchain_registered', { hash: fileHash, txHash: result.txHash, blockNumber: result.blockNumber });
         }
       }).catch(err => {
-        console.error('[BLOCKCHAIN] Non-critical registration error:', err.message);
+        console.warn('[BLOCKCHAIN] Registration failed, queued for retry:', err.message);
+        db.log('blockchain_failed', { hash: fileHash, orgId: req.org.orgId, error: err.message });
+        // Store failed registration for retry
+        if (!global._blockchainRetryQueue) global._blockchainRetryQueue = [];
+        global._blockchainRetryQueue.push({ hash: fileHash, signature, orgName: req.org.orgName, failedAt: Date.now() });
       });
     }
 
@@ -1129,6 +1150,11 @@ app.post('/api/token/refresh', verifyLimiter, (req, res) => {
     const doc = db.getDocument(hash);
     if (!doc) return res.json({ success: false, error: 'Not found' });
 
+    // Don't refresh if token was created less than 60 seconds ago
+    if (doc.tokenCreatedAt && (Date.now() - doc.tokenCreatedAt) < 60000) {
+      return res.json({ success: true, token: doc.token, expiresIn: 30, cached: true });
+    }
+
     const newToken = generateToken();
     db.updateDocumentToken(hash, newToken);
     res.json({ success: true, token: newToken, expiresIn: 30 });
@@ -1142,13 +1168,7 @@ app.post('/api/token/refresh', verifyLimiter, (req, res) => {
 // ================================================================
 
 // Generate new API key
-app.post('/api/keys/create', (req, res) => {
-  const adminSecret = req.headers['x-admin-secret'];
-  if (!isValidAdminSecret(adminSecret)) {
-    db.log('auth_failed', { reason: 'invalid_admin_secret', ip: getClientIP(req), path: '/api/keys/create' });
-    return res.status(403).json({ success: false, error: 'Unauthorized' });
-  }
-
+app.post('/api/keys/create', authenticateAdmin, (req, res) => {
   const { orgName, plan, allowedIPs } = req.body;
   if (!orgName) return res.status(400).json({ success: false, error: 'orgName required' });
 
@@ -1489,11 +1509,20 @@ app.post('/api/gateway/intake', authenticateApiKey, upload.single('file'), (req,
     const textMatch = pvfContent.match(/<div class="text-doc">([\s\S]*?)<\/div>/);
 
     if (imgMatch) {
-      extractedFile = imgMatch[1];
+      // Validate base64 before returning
+      const b64 = imgMatch[1];
+      if (/^[A-Za-z0-9+/=]+$/.test(b64)) {
+        extractedFile = b64;
+      }
     } else if (pdfMatch) {
-      extractedFile = pdfMatch[1];
+      const b64 = pdfMatch[1];
+      if (/^[A-Za-z0-9+/=]+$/.test(b64)) {
+        extractedFile = b64;
+      }
     } else if (textMatch) {
-      extractedFile = Buffer.from(textMatch[1].trim()).toString('base64');
+      // Strip HTML tags from extracted text content
+      const cleanText = textMatch[1].trim().replace(/<[^>]*>/g, '');
+      extractedFile = Buffer.from(cleanText).toString('base64');
     }
 
     db.log('gateway_intake', { orgId: req.org.orgId, hash, ip: getClientIP(req), result: 'verified', issuedBy: doc.orgName });
@@ -1633,12 +1662,23 @@ function isValidWebhookUrl(urlStr) {
     const parsed = new URL(urlStr);
     // Must be HTTPS
     if (parsed.protocol !== 'https:') return false;
+    // Block non-standard ports (only allow 443)
+    if (parsed.port && parsed.port !== '443') return false;
     // Block private/internal IP ranges
     const host = parsed.hostname.toLowerCase();
     if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return false;
-    if (host.startsWith('10.') || host.startsWith('192.168.') || host.startsWith('172.')) return false;
-    if (host === '169.254.169.254') return false; // AWS metadata
+    // Block 10.x.x.x
+    if (/^10\./.test(host)) return false;
+    // Block 172.16.x.x - 172.31.x.x
+    const m172 = host.match(/^172\.(\d+)\./);
+    if (m172 && parseInt(m172[1]) >= 16 && parseInt(m172[1]) <= 31) return false;
+    // Block 192.168.x.x
+    if (/^192\.168\./.test(host)) return false;
+    // Block link-local and metadata
+    if (/^169\.254\./.test(host)) return false;
     if (host.endsWith('.internal') || host.endsWith('.local')) return false;
+    // Block 0.x.x.x and 127.x.x.x
+    if (/^0\./.test(host) || /^127\./.test(host)) return false;
     return true;
   } catch { return false; }
 }

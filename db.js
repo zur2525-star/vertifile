@@ -193,8 +193,12 @@ function setShareId(hash, shareId) {
   stmts.updateShareId.run(shareId, hash);
 }
 
-function updateDocumentToken(hash, token) {
+const updateDocumentTokenTx = db.transaction((hash, token) => {
   stmts.updateToken.run(token, Date.now(), hash);
+});
+
+function updateDocumentToken(hash, token) {
+  updateDocumentTokenTx(hash, token);
 }
 
 function getDocumentsByOrg(orgId, { limit = 50, offset = 0 } = {}) {
@@ -226,7 +230,7 @@ function getApiKey(key) {
     documentsCreated: row.documents_created,
     active: row.active === 1,
     rateLimit: row.rate_limit,
-    allowedIPs: row.allowed_ips ? JSON.parse(row.allowed_ips) : undefined
+    allowedIPs: row.allowed_ips ? (() => { try { return JSON.parse(row.allowed_ips); } catch(e) { return []; } })() : undefined
   };
 }
 
@@ -289,7 +293,7 @@ function getAuditLog({ limit = 50, offset = 0, event, orgId } = {}) {
     id: row.id,
     timestamp: row.timestamp,
     event: row.event,
-    details: row.details ? JSON.parse(row.details) : {}
+    details: row.details ? (() => { try { return JSON.parse(row.details); } catch(e) { return {}; } })() : {}
   }));
 }
 
@@ -300,7 +304,7 @@ function getWebhooksByOrg(orgId) {
   return stmts.getWebhooksByOrg.all(orgId).map(row => ({
     id: row.id,
     url: row.url,
-    events: JSON.parse(row.events),
+    events: (() => { try { return JSON.parse(row.events); } catch(e) { return []; } })(),
     secret: row.secret,
     createdAt: row.created_at
   }));
@@ -448,7 +452,7 @@ function getAllWebhooks() {
     id: row.id,
     orgId: row.org_id,
     url: row.url,
-    events: typeof row.events === 'string' ? JSON.parse(row.events) : row.events,
+    events: typeof row.events === 'string' ? (() => { try { return JSON.parse(row.events); } catch(e) { return []; } })() : row.events,
     active: !!row.active,
     createdAt: row.created_at
   }));

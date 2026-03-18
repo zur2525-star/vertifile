@@ -1207,13 +1207,13 @@ Additional information:
 
 Person to contact for further information:
   Name: Zur Halfon
-  Email: zur2525@gmail.com
+  Email: info@vertifile.com
 
 Intended usage: COMMON
 
 Author/Change controller:
   Vertifile Ltd
-  zur2525@gmail.com
+  info@vertifile.com
 ```
 
 ---
