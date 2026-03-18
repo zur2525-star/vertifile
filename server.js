@@ -122,7 +122,7 @@ app.use(helmet({
 // CORS — restricted to same origin and configured allowed origins
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
-  : [`http://localhost:${PORT}`, `https://localhost:${PORT}`, 'https://vertifile.com', 'https://www.vertifile.com'];
+  : [`http://localhost:${PORT}`, `https://localhost:${PORT}`, 'https://vertifile.com', 'https://www.vertifile.com', 'https://vertifile.onrender.com'];
 
 app.use(cors({
   origin: function (origin, callback) {
