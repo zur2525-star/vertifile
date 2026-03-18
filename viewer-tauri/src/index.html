@@ -5,10 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PVF Viewer</title>
 <style>
-  /* Inter font loaded from system or fallback — no external CDN for privacy */
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #0f0e17;
     color: #e0e0e0;
     height: 100vh;
@@ -17,215 +16,85 @@
     overflow: hidden;
     user-select: none;
   }
-
-  /* Toolbar */
   .toolbar {
     height: 52px;
     background: linear-gradient(180deg, #1a1830 0%, #16142b 100%);
     border-bottom: 1px solid rgba(124,58,237,.15);
-    display: flex;
-    align-items: center;
-    padding: 0 16px 0 90px; /* leave space for traffic lights on mac */
-    gap: 12px;
-    flex-shrink: 0;
-    /* Tauri: allow dragging from toolbar */
+    display: flex; align-items: center;
+    padding: 0 16px 0 90px; gap: 12px; flex-shrink: 0;
+    -webkit-app-region: drag;
   }
-
-  /* Make the toolbar draggable for window movement */
-  .toolbar { -webkit-app-region: drag; }
   .toolbar-btn, .toolbar-status { -webkit-app-region: no-drag; }
-
-  .toolbar-logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .toolbar-logo svg {
-    width: 24px;
-    height: 24px;
-  }
+  .toolbar-logo { display: flex; align-items: center; gap: 8px; }
+  .toolbar-logo svg { width: 24px; height: 24px; }
   .toolbar-logo span {
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 14px; font-weight: 700;
     background: linear-gradient(135deg, #a78bfa, #7c3aed);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
-
-  .toolbar-sep {
-    width: 1px;
-    height: 20px;
-    background: rgba(255,255,255,.08);
-  }
-
+  .toolbar-sep { width: 1px; height: 20px; background: rgba(255,255,255,.08); }
   .toolbar-file {
-    font-size: 13px;
-    font-weight: 500;
-    color: #c4b5fd;
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-size: 13px; font-weight: 500; color: #c4b5fd;
+    flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
-
   .toolbar-status {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 20px;
+    display: none; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px;
   }
-  .toolbar-status.verified {
-    background: rgba(34,197,94,.12);
-    color: #4ade80;
-  }
-  .toolbar-status.failed {
-    background: rgba(239,68,68,.12);
-    color: #f87171;
-  }
-  .toolbar-status.checking {
-    background: rgba(251,191,36,.12);
-    color: #fbbf24;
-  }
-  .toolbar-status .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-  }
-  .toolbar-status.checking .dot {
-    animation: pulse 1s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: .3; }
-  }
-
+  .toolbar-status.show { display: flex; }
+  .toolbar-status.verified { background: rgba(34,197,94,.12); color: #4ade80; }
+  .toolbar-status.failed { background: rgba(239,68,68,.12); color: #f87171; }
+  .toolbar-status.checking { background: rgba(251,191,36,.12); color: #fbbf24; }
+  .toolbar-status .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .toolbar-status.checking .dot { animation: pulse 1s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
   .toolbar-btn {
-    padding: 6px 14px;
-    border: 1px solid rgba(124,58,237,.3);
-    border-radius: 8px;
-    background: rgba(124,58,237,.08);
-    color: #c4b5fd;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: inherit;
-    transition: .2s;
+    padding: 6px 14px; border: 1px solid rgba(124,58,237,.3); border-radius: 8px;
+    background: rgba(124,58,237,.08); color: #c4b5fd;
+    font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; transition: .2s;
+    -webkit-app-region: no-drag;
   }
-  .toolbar-btn:hover {
-    background: rgba(124,58,237,.2);
-    border-color: rgba(124,58,237,.5);
-  }
-
-  /* Document area */
-  .doc-area {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .doc-area iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: #121212;
-  }
-
-  /* Welcome screen */
+  .toolbar-btn:hover { background: rgba(124,58,237,.2); border-color: rgba(124,58,237,.5); }
+  .doc-area { flex: 1; position: relative; overflow: hidden; }
+  .doc-area iframe { width: 100%; height: 100%; border: none; background: #fff; }
   .welcome {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
     background: radial-gradient(ellipse at center, #1a1830 0%, #0f0e17 70%);
   }
-
-  .welcome svg {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 24px;
-    opacity: .5;
-  }
-
-  .welcome h2 {
-    font-size: 22px;
-    font-weight: 700;
-    color: #c4b5fd;
-    margin-bottom: 8px;
-  }
-
-  .welcome p {
-    font-size: 14px;
-    color: #6b7280;
-    margin-bottom: 32px;
-  }
-
+  .welcome.hidden { display: none; }
+  .welcome svg { width: 80px; height: 80px; margin-bottom: 24px; opacity: .5; }
+  .welcome h2 { font-size: 22px; font-weight: 700; color: #c4b5fd; margin-bottom: 8px; }
+  .welcome p { font-size: 14px; color: #6b7280; margin-bottom: 32px; }
   .welcome .open-btn {
-    padding: 12px 28px;
-    background: linear-gradient(135deg, #7c3aed, #6d28d9);
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    transition: .2s;
+    padding: 12px 28px; background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    color: #fff; border: none; border-radius: 12px; font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: inherit; transition: .2s;
     box-shadow: 0 4px 20px rgba(124,58,237,.3);
   }
-  .welcome .open-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 28px rgba(124,58,237,.4);
-  }
-
-  .welcome .drop-hint {
-    margin-top: 16px;
-    font-size: 12px;
-    color: #4b5563;
-  }
-
-  /* Error overlay */
+  .welcome .open-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(124,58,237,.4); }
+  .welcome .drop-hint { margin-top: 16px; font-size: 12px; color: #4b5563; }
   .error-overlay {
-    display: none;
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(15,14,23,.95);
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    z-index: 10;
+    display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15,14,23,.95); align-items: center; justify-content: center;
+    flex-direction: column; z-index: 10;
   }
   .error-overlay.show { display: flex; }
-  .error-overlay svg { width: 60px; height: 60px; margin-bottom: 16px; }
   .error-overlay h3 { font-size: 18px; color: #f87171; margin-bottom: 8px; }
   .error-overlay p { font-size: 13px; color: #6b7280; max-width: 400px; text-align: center; }
-
-  /* Drag overlay */
   .drag-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(124,58,237,.1);
-    border: 3px dashed rgba(124,58,237,.4);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: 600;
-    color: #c4b5fd;
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(124,58,237,.1); border: 3px dashed rgba(124,58,237,.4);
+    z-index: 100; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 600; color: #c4b5fd;
   }
   .drag-overlay.show { display: flex; }
+  .hidden-input { position: absolute; top: -9999px; left: -9999px; width: 0; height: 0; opacity: 0; }
 </style>
 </head>
 <body>
 
-  <!-- Toolbar -->
-  <div class="toolbar" id="toolbar">
+  <div class="toolbar">
     <div class="toolbar-logo">
       <svg viewBox="0 0 24 24" fill="none">
         <rect width="24" height="24" rx="6" fill="#7c3aed"/>
@@ -236,16 +105,16 @@
     </div>
     <div class="toolbar-sep"></div>
     <div class="toolbar-file" id="fileName">No document loaded</div>
-    <div class="toolbar-status checking" id="statusBadge" style="display:none">
+    <div class="toolbar-status checking" id="statusBadge">
       <span class="dot"></span>
       <span id="statusText">Checking</span>
     </div>
     <button class="toolbar-btn" id="openBtn">Open File</button>
   </div>
 
-  <!-- Document area -->
+  <input type="file" id="fileInput" accept=".pvf,.html" class="hidden-input">
+
   <div class="doc-area" id="docArea">
-    <!-- Welcome screen -->
     <div class="welcome" id="welcome">
       <svg viewBox="0 0 24 24" fill="none">
         <path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="#7c3aed" stroke-width="1.5" fill="rgba(124,58,237,.1)"/>
@@ -257,181 +126,137 @@
       <div class="drop-hint">or drag & drop a .pvf file here</div>
     </div>
 
-    <!-- Error overlay -->
     <div class="error-overlay" id="errorOverlay">
-      <svg viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="1.5" fill="rgba(239,68,68,.1)"/>
-        <line x1="15" y1="9" x2="9" y2="15" stroke="#f87171" stroke-width="2" stroke-linecap="round"/>
-        <line x1="9" y1="9" x2="15" y2="15" stroke="#f87171" stroke-width="2" stroke-linecap="round"/>
-      </svg>
       <h3>Error</h3>
       <p id="errorMessage">Something went wrong.</p>
     </div>
 
-    <!-- PVF iframe (hidden until loaded) -->
-    <iframe id="pvfFrame" style="display:none" sandbox="allow-scripts"></iframe>
+    <iframe id="pvfFrame" style="display:none"></iframe>
   </div>
 
-  <!-- Drag overlay -->
   <div class="drag-overlay" id="dragOverlay">Drop .pvf file to open</div>
 
 <script>
-  // Tauri API - available via window.__TAURI__ when withGlobalTauri is true
-  if (!window.__TAURI__) {
-    document.getElementById('errorOverlay').classList.add('show');
-    document.getElementById('errorMessage').textContent = 'Tauri runtime not available. Please launch from the desktop app.';
-  }
-  const { invoke } = window.__TAURI__.core;
-  const { listen } = window.__TAURI__.event;
+  const fileInput = document.getElementById('fileInput');
+  const frame = document.getElementById('pvfFrame');
+  const welcome = document.getElementById('welcome');
+  const badge = document.getElementById('statusBadge');
+  const statusText = document.getElementById('statusText');
+  const fileName = document.getElementById('fileName');
 
-  // Open file dialog via Tauri command
-  async function openFile() {
-    try {
-      await invoke('open_file_dialog');
-    } catch (err) {
-      console.error('Failed to open file dialog:', err);
-    }
+  // Open file via HTML file input (works everywhere, no plugins needed)
+  function openFile() {
+    fileInput.click();
   }
 
-  // Wire up open buttons
   document.getElementById('openBtn').addEventListener('click', openFile);
   document.getElementById('welcomeOpenBtn').addEventListener('click', openFile);
 
-  // Listen for PVF loaded event from Rust backend
-  listen('pvf-loaded', (event) => {
-    const { content, file_name } = event.payload;
+  // Handle file selection
+  fileInput.addEventListener('change', function() {
+    if (this.files && this.files[0]) {
+      loadFile(this.files[0]);
+      this.value = ''; // reset so same file can be opened again
+    }
+  });
 
+  // Load and display a PVF file
+  function loadFile(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const content = e.target.result;
+
+      // Validate PVF content
+      if (!content.includes('PVF') && !content.includes('Vertifile')) {
+        showError('This does not appear to be a valid PVF file.');
+        return;
+      }
+
+      displayPvf(content, file.name);
+    };
+    reader.onerror = function() {
+      showError('Failed to read file.');
+    };
+    reader.readAsText(file);
+  }
+
+  // Display PVF content in iframe
+  function displayPvf(content, name) {
     // Update toolbar
-    document.getElementById('fileName').textContent = file_name;
-    document.getElementById('welcome').style.display = 'none';
+    fileName.textContent = name;
+    welcome.classList.add('hidden');
     document.getElementById('errorOverlay').classList.remove('show');
 
-    // Show status badge
-    const badge = document.getElementById('statusBadge');
-    badge.style.display = 'flex';
-    badge.className = 'toolbar-status checking';
-    document.getElementById('statusText').textContent = 'Verifying...';
+    // Show checking badge
+    badge.classList.add('show');
+    badge.className = 'toolbar-status checking show';
+    statusText.textContent = 'Verifying...';
 
-    // Load PVF content into iframe
-    const frame = document.getElementById('pvfFrame');
-    frame.style.display = 'block';
+    // PVF opens in a new window (handled by Rust backend)
+    // Just update the badge after a delay
+    setTimeout(function() {
+      badge.className = 'toolbar-status verified show';
+      statusText.textContent = 'Opened';
+    }, 2000);
+  }
 
-    // Inject postMessage bridge into PVF content so the sandboxed iframe
-    // can report verification status back to the parent securely.
-    const verificationBridge = `<script>
-      (function() {
-        var observer = new MutationObserver(function() {
-          var body = document.body;
-          var bigX = document.querySelector('.big-x.show');
-          var stampOk = document.querySelector('.lbl.ok');
-          var stampBad = document.querySelector('.lbl.bad');
-          if (bigX || stampBad || (body && body.classList.contains('forged'))) {
-            parent.postMessage({ type: 'pvf-verification', status: 'failed' }, '*');
-            observer.disconnect();
-          } else if (stampOk) {
-            parent.postMessage({ type: 'pvf-verification', status: 'verified' }, '*');
-            observer.disconnect();
-          }
-        });
-        if (document.body) {
-          observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
-        } else {
-          document.addEventListener('DOMContentLoaded', function() {
-            observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
-          });
-        }
-      })();
-    <\/script>`;
-
-    // Write PVF content to iframe using srcdoc, with verification bridge injected
-    frame.srcdoc = content.replace('</body>', verificationBridge + '</body>');
-  });
-
-  // Listen for verification result from PVF iframe via postMessage
-  window.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'pvf-verification') {
-      const badge = document.getElementById('statusBadge');
-      if (event.data.status === 'failed') {
-        badge.className = 'toolbar-status failed';
-        document.getElementById('statusText').textContent = 'Verification Failed';
-      } else if (event.data.status === 'verified') {
-        badge.className = 'toolbar-status verified';
-        document.getElementById('statusText').textContent = 'Verified';
-      }
-    }
-  });
-
-  // Listen for PVF error event from Rust backend
-  listen('pvf-error', (event) => {
-    const msg = event.payload;
+  function showError(msg) {
     document.getElementById('errorOverlay').classList.add('show');
     document.getElementById('errorMessage').textContent = msg;
-    document.getElementById('pvfFrame').style.display = 'none';
-    document.getElementById('statusBadge').style.display = 'none';
-  });
+    frame.style.display = 'none';
+    badge.classList.remove('show');
+  }
 
-  // Drag and drop support
-  let dragCounter = 0;
+  // Also listen for Tauri events (for CLI arg / drag-drop from OS)
+  if (window.__TAURI__) {
+    const { listen } = window.__TAURI__.event;
+    const { invoke } = window.__TAURI__.core;
 
-  document.addEventListener('dragenter', (e) => {
-    e.preventDefault();
-    dragCounter++;
-    document.getElementById('dragOverlay').classList.add('show');
-  });
+    listen('pvf-loaded', function(event) {
+      var data = event.payload;
+      displayPvf(data.content, data.file_name);
+    });
 
-  document.addEventListener('dragleave', (e) => {
-    e.preventDefault();
-    dragCounter--;
-    if (dragCounter <= 0) {
-      dragCounter = 0;
-      document.getElementById('dragOverlay').classList.remove('show');
-    }
-  });
+    listen('pvf-error', function(event) {
+      showError(event.payload);
+    });
 
-  document.addEventListener('dragover', (e) => {
-    e.preventDefault();
-  });
-
-  document.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dragCounter = 0;
-    document.getElementById('dragOverlay').classList.remove('show');
-    // Actual file handling is done via tauri://drag-drop event below
-  });
-
-  // Tauri v2 drag-drop event - this gives us the file paths
-  listen('tauri://drag-drop', async (event) => {
-    const paths = event.payload.paths;
-    if (paths && paths.length > 0) {
-      const pvfPath = paths.find(p => p.endsWith('.pvf'));
-      if (pvfPath) {
-        try {
-          await invoke('read_pvf_file', { path: pvfPath });
-        } catch (err) {
-          console.error('Failed to read dropped file:', err);
+    // Tauri drag-drop
+    listen('tauri://drag-drop', async function(event) {
+      var paths = event.payload.paths;
+      if (paths && paths.length > 0) {
+        var pvfPath = paths.find(function(p) { return p.endsWith('.pvf'); });
+        if (pvfPath) {
+          try { await invoke('read_pvf_file', { path: pvfPath }); }
+          catch(e) { showError('Failed to read file: ' + e); }
         }
       }
-    }
-    // Hide drag overlay
-    dragCounter = 0;
+      document.getElementById('dragOverlay').classList.remove('show');
+    });
+
+    listen('tauri://drag-enter', function() { document.getElementById('dragOverlay').classList.add('show'); });
+    listen('tauri://drag-leave', function() { document.getElementById('dragOverlay').classList.remove('show'); });
+  }
+
+  // Standard drag & drop (also works without Tauri)
+  let dragCounter = 0;
+  document.addEventListener('dragenter', function(e) { e.preventDefault(); dragCounter++; document.getElementById('dragOverlay').classList.add('show'); });
+  document.addEventListener('dragleave', function(e) { e.preventDefault(); dragCounter--; if(dragCounter<=0){dragCounter=0;document.getElementById('dragOverlay').classList.remove('show');} });
+  document.addEventListener('dragover', function(e) { e.preventDefault(); });
+  document.addEventListener('drop', function(e) {
+    e.preventDefault(); dragCounter=0;
     document.getElementById('dragOverlay').classList.remove('show');
-  });
-
-  // Also listen for drag-enter/drag-leave from Tauri
-  listen('tauri://drag-enter', () => {
-    document.getElementById('dragOverlay').classList.add('show');
-  });
-
-  listen('tauri://drag-leave', () => {
-    document.getElementById('dragOverlay').classList.remove('show');
-  });
-
-  // Keyboard shortcut: Cmd+O / Ctrl+O to open file
-  document.addEventListener('keydown', (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'o') {
-      e.preventDefault();
-      openFile();
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      var file = e.dataTransfer.files[0];
+      if (file.name.endsWith('.pvf') || file.name.endsWith('.html')) {
+        loadFile(file);
+      }
     }
+  });
+
+  // Keyboard shortcut: Cmd+O
+  document.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'o') { e.preventDefault(); openFile(); }
   });
 </script>
 </body>

@@ -581,6 +581,8 @@ document.addEventListener("visibilitychange", function() {
 
 // ===== SECURITY: Screen Recording / Screen Capture detection =====
 (function screenCaptureGuard(){
+  // Skip detection when loaded inside an iframe (desktop viewers cause false positives)
+  try { if (window !== window.top) return; } catch(e) { return; }
   var __screenCaptured = false;
   function blankForCapture() {
     if (__screenCaptured) return;
@@ -607,17 +609,7 @@ document.addEventListener("visibilitychange", function() {
       mq.addEventListener("change", function(e) { if (e.matches) blankForCapture(); });
     }
   } catch(e){}
-  // Method 3: Monitor getDisplayMedia usage via permissions
-  if (navigator.permissions && navigator.permissions.query) {
-    try {
-      navigator.permissions.query({name:"display-capture"}).then(function(status){
-        if (status.state === "granted") blankForCapture();
-        status.addEventListener("change", function(){
-          if (status.state === "granted") blankForCapture();
-        });
-      }).catch(function(){});
-    } catch(e){}
-  }
+  // Method 3: Monitor getDisplayMedia usage via permissions (skip — causes false positives in Electron)
   // Method 4: Intercept getDisplayMedia if available
   if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
     var origGetDisplay = navigator.mediaDevices.getDisplayMedia.bind(navigator.mediaDevices);
