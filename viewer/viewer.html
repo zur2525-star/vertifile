@@ -3,400 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; frame-src 'self' blob: data:;">
 <title>PVF Viewer</title>
 <style>
-  /* Inter font loaded from system or fallback — no external CDN for privacy */
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #0f0e17;
-    color: #e0e0e0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    -webkit-app-region: drag;
-    user-select: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0f0e17; color: #e0e0e0;
+    height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+    -webkit-app-region: drag; user-select: none;
   }
-
-  /* Toolbar */
   .toolbar {
-    height: 52px;
-    background: linear-gradient(180deg, #1a1830 0%, #16142b 100%);
+    height: 52px; background: linear-gradient(180deg, #1a1830 0%, #16142b 100%);
     border-bottom: 1px solid rgba(124,58,237,.15);
-    display: flex;
-    align-items: center;
-    padding: 0 90px 0 16px; /* leave space for traffic lights on mac */
-    gap: 12px;
-    flex-shrink: 0;
+    display: flex; align-items: center; padding: 0 90px 0 16px; gap: 12px; flex-shrink: 0;
     -webkit-app-region: drag;
   }
-
-  .toolbar-logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .toolbar-logo svg {
-    width: 24px;
-    height: 24px;
-  }
-  .toolbar-logo span {
-    font-size: 14px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #a78bfa, #7c3aed);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .toolbar-sep {
-    width: 1px;
-    height: 20px;
-    background: rgba(255,255,255,.08);
-  }
-
-  .toolbar-file {
-    font-size: 13px;
-    font-weight: 500;
-    color: #c4b5fd;
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .toolbar-status {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 20px;
-    -webkit-app-region: no-drag;
-  }
-  .toolbar-status.verified {
-    background: rgba(34,197,94,.12);
-    color: #4ade80;
-  }
-  .toolbar-status.failed {
-    background: rgba(239,68,68,.12);
-    color: #f87171;
-  }
-  .toolbar-status.checking {
-    background: rgba(251,191,36,.12);
-    color: #fbbf24;
-  }
-  .toolbar-status .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-  }
-  .toolbar-status.checking .dot {
-    animation: pulse 1s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: .3; }
-  }
-
-  .toolbar-btn {
-    -webkit-app-region: no-drag;
-    padding: 6px 14px;
-    border: 1px solid rgba(124,58,237,.3);
-    border-radius: 8px;
-    background: rgba(124,58,237,.08);
-    color: #c4b5fd;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: inherit;
-    transition: .2s;
-  }
-  .toolbar-btn:hover {
-    background: rgba(124,58,237,.2);
-    border-color: rgba(124,58,237,.5);
-  }
-
-  /* Document area */
-  .doc-area {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-    -webkit-app-region: no-drag;
-  }
-
-  .doc-area iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: #121212;
-  }
-
-  /* Welcome screen */
-  .welcome {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(ellipse at center, #1a1830 0%, #0f0e17 70%);
-    -webkit-app-region: no-drag;
-  }
-
-  .welcome svg {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 24px;
-    opacity: .5;
-  }
-
-  .welcome h2 {
-    font-size: 22px;
-    font-weight: 700;
-    color: #c4b5fd;
-    margin-bottom: 8px;
-  }
-
-  .welcome p {
-    font-size: 14px;
-    color: #6b7280;
-    margin-bottom: 32px;
-  }
-
-  .welcome .open-btn {
-    padding: 12px 28px;
-    background: linear-gradient(135deg, #7c3aed, #6d28d9);
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    transition: .2s;
-    box-shadow: 0 4px 20px rgba(124,58,237,.3);
-  }
-  .welcome .open-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 28px rgba(124,58,237,.4);
-  }
-
-  .welcome .drop-hint {
-    margin-top: 16px;
-    font-size: 12px;
-    color: #4b5563;
-  }
-
-  /* Error overlay */
-  .error-overlay {
-    display: none;
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(15,14,23,.95);
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    z-index: 10;
-  }
+  .toolbar-logo { display: flex; align-items: center; gap: 8px; }
+  .toolbar-logo svg { width: 24px; height: 24px; }
+  .toolbar-logo span { font-size: 14px; font-weight: 700; background: linear-gradient(135deg, #a78bfa, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .toolbar-sep { width: 1px; height: 20px; background: rgba(255,255,255,.08); }
+  .toolbar-file { font-size: 13px; font-weight: 500; color: #c4b5fd; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .toolbar-status { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; -webkit-app-region: no-drag; }
+  .toolbar-status.verified { background: rgba(34,197,94,.12); color: #4ade80; }
+  .toolbar-status.failed { background: rgba(239,68,68,.12); color: #f87171; }
+  .toolbar-status.checking { background: rgba(251,191,36,.12); color: #fbbf24; }
+  .toolbar-status .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .toolbar-status.checking .dot { animation: pulse 1s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .toolbar-btn { -webkit-app-region: no-drag; padding: 6px 14px; border: 1px solid rgba(124,58,237,.3); border-radius: 8px; background: rgba(124,58,237,.08); color: #c4b5fd; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; transition: .2s; }
+  .toolbar-btn:hover { background: rgba(124,58,237,.2); border-color: rgba(124,58,237,.5); }
+  .doc-area { flex: 1; position: relative; overflow: hidden; -webkit-app-region: no-drag; }
+  .doc-area iframe { width: 100%; height: 100%; border: none; background: #fff; }
+  .welcome { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(ellipse at center, #1a1830 0%, #0f0e17 70%); -webkit-app-region: no-drag; }
+  .welcome svg { width: 80px; height: 80px; margin-bottom: 24px; opacity: .5; }
+  .welcome h2 { font-size: 22px; font-weight: 700; color: #c4b5fd; margin-bottom: 8px; }
+  .welcome p { font-size: 14px; color: #6b7280; margin-bottom: 32px; }
+  .welcome .open-btn { padding: 12px 28px; background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: .2s; box-shadow: 0 4px 20px rgba(124,58,237,.3); }
+  .welcome .open-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(124,58,237,.4); }
+  .welcome .drop-hint { margin-top: 16px; font-size: 12px; color: #4b5563; }
+  .error-overlay { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,14,23,.95); align-items: center; justify-content: center; flex-direction: column; z-index: 10; }
   .error-overlay.show { display: flex; }
-  .error-overlay svg { width: 60px; height: 60px; margin-bottom: 16px; }
   .error-overlay h3 { font-size: 18px; color: #f87171; margin-bottom: 8px; }
   .error-overlay p { font-size: 13px; color: #6b7280; max-width: 400px; text-align: center; }
-
-  /* Drag overlay */
-  .drag-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(124,58,237,.1);
-    border: 3px dashed rgba(124,58,237,.4);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: 600;
-    color: #c4b5fd;
-  }
+  .drag-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(124,58,237,.1); border: 3px dashed rgba(124,58,237,.4); z-index: 100; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; color: #c4b5fd; }
   .drag-overlay.show { display: flex; }
 </style>
 </head>
 <body>
-
-  <!-- Toolbar -->
-  <div class="toolbar" id="toolbar">
+  <div class="toolbar">
     <div class="toolbar-logo">
-      <svg viewBox="0 0 24 24" fill="none">
-        <rect width="24" height="24" rx="6" fill="#7c3aed"/>
-        <path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="#fff" stroke-width="1.5"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#7c3aed"/><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="#fff" stroke-width="1.5"/></svg>
       <span>PVF Viewer</span>
     </div>
     <div class="toolbar-sep"></div>
     <div class="toolbar-file" id="fileName">No document loaded</div>
-    <div class="toolbar-status checking" id="statusBadge" style="display:none">
-      <span class="dot"></span>
-      <span id="statusText">Checking</span>
-    </div>
-    <button class="toolbar-btn" id="openBtn" onclick="openFile()">Open File</button>
+    <div class="toolbar-status checking" id="statusBadge" style="display:none"><span class="dot"></span><span id="statusText">Checking</span></div>
+    <button class="toolbar-btn" onclick="openFile()">Open File</button>
   </div>
-
-  <!-- Document area -->
-  <div class="doc-area" id="docArea">
-    <!-- Welcome screen -->
+  <div class="doc-area">
     <div class="welcome" id="welcome">
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="#7c3aed" stroke-width="1.5" fill="rgba(124,58,237,.1)"/>
-        <path d="M9 12l2 2 4-4" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="#7c3aed" stroke-width="1.5" fill="rgba(124,58,237,.1)"/><path d="M9 12l2 2 4-4" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <h2>PVF Viewer</h2>
       <p>Open a .pvf file to view and verify the document.</p>
       <button class="open-btn" onclick="openFile()">Open PVF Document</button>
       <div class="drop-hint">or drag & drop a .pvf file here</div>
     </div>
-
-    <!-- Error overlay -->
-    <div class="error-overlay" id="errorOverlay">
-      <svg viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="1.5" fill="rgba(239,68,68,.1)"/>
-        <line x1="15" y1="9" x2="9" y2="15" stroke="#f87171" stroke-width="2" stroke-linecap="round"/>
-        <line x1="9" y1="9" x2="15" y2="15" stroke="#f87171" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-      <h3>Error</h3>
-      <p id="errorMessage">Something went wrong.</p>
-    </div>
-
-    <!-- PVF iframe — sandbox="allow-scripts" only (no allow-same-origin for security) -->
-    <iframe id="pvfFrame" style="display:none" sandbox="allow-scripts"></iframe>
+    <div class="error-overlay" id="errorOverlay"><h3>Error</h3><p id="errorMessage">Something went wrong.</p></div>
+    <iframe id="pvfFrame" style="display:none" sandbox="allow-scripts allow-same-origin"></iframe>
   </div>
-
-  <!-- Drag overlay -->
   <div class="drag-overlay" id="dragOverlay">Drop .pvf file to open</div>
-
 <script>
-  const { pvfBridge } = window;
+  var bridge = window.pvfBridge;
 
-  // Open file dialog
-  async function openFile() {
-    await pvfBridge.openFileDialog();
-  }
+  async function openFile() { await bridge.openFileDialog(); }
 
-  // Handle PVF loaded from main process
-  pvfBridge.onPvfLoaded((data) => {
-    const { content, fileName } = data;
-
-    // Update toolbar
-    document.getElementById('fileName').textContent = fileName;
+  bridge.onPvfLoaded(function(data) {
+    document.getElementById('fileName').textContent = data.fileName;
     document.getElementById('welcome').style.display = 'none';
     document.getElementById('errorOverlay').classList.remove('show');
 
-    // Show status badge
-    const badge = document.getElementById('statusBadge');
+    var badge = document.getElementById('statusBadge');
     badge.style.display = 'flex';
     badge.className = 'toolbar-status checking';
     document.getElementById('statusText').textContent = 'Verifying...';
 
-    // Load PVF content into iframe
-    const frame = document.getElementById('pvfFrame');
+    var frame = document.getElementById('pvfFrame');
     frame.style.display = 'block';
+    frame.srcdoc = data.content;
 
-    // Inject postMessage bridge into PVF content so the sandboxed iframe
-    // can report verification status back to the parent securely.
-    const verificationBridge = `<script>
-      (function() {
-        var observer = new MutationObserver(function() {
-          var body = document.body;
-          var bigX = document.querySelector('.big-x.show');
-          var stampOk = document.querySelector('.lbl.ok');
-          var stampBad = document.querySelector('.lbl.bad');
-          if (bigX || stampBad || (body && body.classList.contains('forged'))) {
-            parent.postMessage({ type: 'pvf-verification', status: 'failed' }, '*');
-            observer.disconnect();
-          } else if (stampOk) {
-            parent.postMessage({ type: 'pvf-verification', status: 'verified' }, '*');
-            observer.disconnect();
-          }
-        });
-        if (document.body) {
-          observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
-        } else {
-          document.addEventListener('DOMContentLoaded', function() {
-            observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
-          });
-        }
-      })();
-    <\/script>`;
-
-    // Write PVF content to iframe using srcdoc, with verification bridge injected
-    frame.srcdoc = content.replace('</body>', verificationBridge + '</body>');
+    setTimeout(function() { checkStatus(frame); }, 3000);
+    setTimeout(function() { checkStatus(frame); }, 6000);
+    setTimeout(function() { checkStatus(frame); }, 10000);
   });
 
-  // Listen for verification result from PVF iframe via postMessage
-  window.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'pvf-verification') {
-      const badge = document.getElementById('statusBadge');
-      if (event.data.status === 'failed') {
+  function checkStatus(frame) {
+    try {
+      var doc = frame.contentDocument || frame.contentWindow.document;
+      var badge = document.getElementById('statusBadge');
+      var bigX = doc.querySelector('.big-x.show');
+      var stampOk = doc.querySelector('.lbl.ok');
+      var stampBad = doc.querySelector('.lbl.bad');
+      if (bigX || stampBad || (doc.body && doc.body.classList.contains('forged'))) {
         badge.className = 'toolbar-status failed';
         document.getElementById('statusText').textContent = 'Verification Failed';
-      } else if (event.data.status === 'verified') {
+      } else if (stampOk) {
         badge.className = 'toolbar-status verified';
         document.getElementById('statusText').textContent = 'Verified';
       }
-    }
-  });
+    } catch(e) {}
+  }
 
-  // Handle errors
-  pvfBridge.onPvfError((msg) => {
+  bridge.onPvfError(function(msg) {
     document.getElementById('errorOverlay').classList.add('show');
     document.getElementById('errorMessage').textContent = msg;
     document.getElementById('pvfFrame').style.display = 'none';
     document.getElementById('statusBadge').style.display = 'none';
   });
 
-  // Handle menu open trigger
-  pvfBridge.onTriggerOpen(() => openFile());
+  bridge.onTriggerOpen(function() { openFile(); });
 
-  // Drag and drop — use IPC for file reading (file.path deprecated in sandbox mode)
-  let dragCounter = 0;
-
-  document.addEventListener('dragenter', (e) => {
-    e.preventDefault();
-    dragCounter++;
-    document.getElementById('dragOverlay').classList.add('show');
-  });
-
-  document.addEventListener('dragleave', (e) => {
-    e.preventDefault();
-    dragCounter--;
-    if (dragCounter <= 0) {
-      dragCounter = 0;
-      document.getElementById('dragOverlay').classList.remove('show');
-    }
-  });
-
-  document.addEventListener('dragover', (e) => {
-    e.preventDefault();
-  });
-
-  document.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dragCounter = 0;
-    document.getElementById('dragOverlay').classList.remove('show');
-
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      const file = files[0];
-      // Use file.name for validation, file.path for reading (Electron-specific)
-      if (file.name && file.name.endsWith('.pvf')) {
-        // file.path may be available in non-sandboxed Electron
-        if (file.path) {
-          pvfBridge.readPvfFile(file.path);
-        }
-      }
+  var dragCounter = 0;
+  document.addEventListener('dragenter', function(e) { e.preventDefault(); dragCounter++; document.getElementById('dragOverlay').classList.add('show'); });
+  document.addEventListener('dragleave', function(e) { e.preventDefault(); dragCounter--; if(dragCounter<=0){dragCounter=0;document.getElementById('dragOverlay').classList.remove('show');} });
+  document.addEventListener('dragover', function(e) { e.preventDefault(); });
+  document.addEventListener('drop', function(e) {
+    e.preventDefault(); dragCounter=0; document.getElementById('dragOverlay').classList.remove('show');
+    if (e.dataTransfer.files.length > 0) {
+      var file = e.dataTransfer.files[0];
+      if (file.path && file.path.endsWith('.pvf')) bridge.readPvfFile(file.path);
     }
   });
 </script>
