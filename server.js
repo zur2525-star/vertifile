@@ -653,7 +653,7 @@ var API=window.location.origin;
   document.head.appendChild(s);
 })();
 var token=null;
-var isLocal=location.protocol==="file:";
+var isLocal=location.protocol==="file:"||location.protocol==="about:"||window!==window.top;
 
 async function init(){
   // Security: if environment is frozen (cross-origin iframe / missing navigator), show forged
