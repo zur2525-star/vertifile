@@ -491,6 +491,11 @@
     "severabilityTitle": "13. Severability",
     "contactTitle": "14. Contact Us"
   },
+  "notFound": {
+    "title": "Page Not Found",
+    "message": "The page you're looking for doesn't exist or has been moved.",
+    "backHome": "Back to Home"
+  },
   "langName": "English",
   "heroDoc": {
     "uni": "HARVARD UNIVERSITY",

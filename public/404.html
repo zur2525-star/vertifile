@@ -3,25 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vertifile — Terms of Service</title>
-  <meta name="description" content="Vertifile Terms of Service — usage terms for our document verification platform.">
-  <meta name="keywords" content="document verification, tamper-proof, digital signature, PVF, blockchain verification">
+  <title>404 — Page Not Found | Vertifile</title>
+  <meta name="description" content="The page you're looking for doesn't exist or has been moved.">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
-  <meta property="og:title" content="Terms of Service — Vertifile">
-  <meta property="og:description" content="Vertifile Terms of Service — usage terms for our document verification platform.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://vertifile.com/terms">
-  <meta property="og:image" content="https://vertifile.com/images/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Terms of Service — Vertifile">
-  <meta name="twitter:description" content="Vertifile Terms of Service — usage terms for our document verification platform.">
   <meta name="theme-color" content="#ffffff">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden}
+    body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column}
     [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
     a{text-decoration:none;color:inherit}
 
@@ -54,26 +45,18 @@
     .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06)}
     @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
 
-    /* ===== LEGAL PAGE CONTENT ===== */
-    .legal-page{padding:120px 32px 80px;max-width:800px;margin:0 auto}
-    .legal-page h1{font-size:40px;font-weight:900;color:#111827;margin-bottom:8px;letter-spacing:-1.5px}
-    .legal-page .legal-updated{font-size:14px;color:#9ca3af;margin-bottom:48px}
-    .legal-page h2{font-size:22px;font-weight:700;color:#111827;margin-top:48px;margin-bottom:16px;letter-spacing:-.5px}
-    .legal-page h3{font-size:17px;font-weight:600;color:#374151;margin-top:28px;margin-bottom:10px}
-    .legal-page p{font-size:15px;line-height:1.85;color:#4b5563;margin-bottom:16px}
-    .legal-page ul{margin:0 0 16px 24px;font-size:15px;line-height:1.85;color:#4b5563}
-    [dir="rtl"] .legal-page ul{margin:0 24px 16px 0}
-    .legal-page li{margin-bottom:6px}
-    .legal-page a{color:#4f46e5;text-decoration:underline}
-    .legal-page a:hover{color:#7c3aed}
-    .legal-page .highlight-box{background:#f5f3ff;border:1px solid rgba(124,58,237,.12);border-radius:12px;padding:20px 24px;margin:24px 0}
-    .legal-page .highlight-box p{color:#4b5563;margin-bottom:0}
-    .legal-page .highlight-box strong{color:#4f46e5}
-
+    /* ===== 404 CONTENT ===== */
+    .error-section{flex:1;display:flex;align-items:center;justify-content:center;padding:140px 32px 80px;text-align:center;background:linear-gradient(180deg,#f5f3ff 0%,#ffffff 100%)}
+    .error-content{max-width:500px}
+    .error-code{font-size:140px;font-weight:900;line-height:1;background:linear-gradient(135deg,#4f46e5,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;letter-spacing:-4px}
+    .error-title{font-size:28px;font-weight:700;color:#111827;margin-bottom:12px}
+    .error-message{font-size:16px;color:#6b7280;line-height:1.6;margin-bottom:32px}
+    .error-btn{display:inline-block;padding:12px 32px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:12px;font-size:15px;font-weight:600;text-decoration:none;transition:.2s}
+    .error-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,.3)}
     @media(max-width:768px){
-      .legal-page{padding:100px 20px 60px}
-      .legal-page h1{font-size:30px}
-      .legal-page h2{font-size:19px;margin-top:36px}
+      .error-code{font-size:100px}
+      .error-title{font-size:22px}
+      .error-section{padding:120px 24px 60px}
     }
 
     /* ===== FOOTER ===== */
@@ -97,10 +80,16 @@
       .footer-bottom{flex-direction:column;gap:10px;text-align:center}
     }
     @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+
+    /* ===== RTL ===== */
+    [dir="rtl"] .error-section{direction:rtl}
+    [dir="rtl"] .footer-grid{direction:rtl}
+    [dir="rtl"] .footer-bottom{direction:rtl}
   </style>
 </head>
 <body>
 
+<!-- ===== NAVBAR ===== -->
 <nav class="navbar" id="navbar">
   <div class="nav-inner">
     <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
@@ -146,126 +135,17 @@
   </div>
 </div>
 
-<!-- ===== TERMS OF SERVICE ===== -->
-<div class="legal-page">
-  <h1 data-i18n="terms.title">Terms of Service</h1>
-  <p class="legal-updated" data-i18n="terms.updated">Last updated: March 18, 2026</p>
-
-  <h2 data-i18n="terms.serviceTitle">1. Service Description</h2>
-  <p>Vertifile provides a document verification and protection platform that creates tamper-proof .pvf files using cryptographic signatures and blockchain timestamping. Our service includes:</p>
-  <ul>
-    <li>Document protection via SHA-256 hashing and HMAC signatures</li>
-    <li>Blockchain timestamp registration on the Polygon network</li>
-    <li>Live animated verification stamps embedded in .pvf files</li>
-    <li>Document verification through our web interface and API</li>
-    <li>A browser-based .pvf file viewer</li>
-  </ul>
-  <p>Vertifile uses BLIND processing: we never read, access, or store the content of your documents. Only cryptographic hashes are processed.</p>
-
-  <h2 data-i18n="terms.acceptanceTitle">2. Acceptance of Terms</h2>
-  <p>By accessing or using Vertifile's services, you agree to be bound by these Terms of Service. If you are using our services on behalf of an organization, you represent that you have the authority to bind that organization to these terms.</p>
-  <p>If you do not agree to these terms, you must not use our services.</p>
-
-  <h2 data-i18n="terms.accountTitle">3. Account Responsibilities</h2>
-  <p>If you create an account or obtain API credentials:</p>
-  <ul>
-    <li>You are responsible for maintaining the confidentiality of your API keys and credentials</li>
-    <li>You are responsible for all activity that occurs under your account</li>
-    <li>You must notify us immediately of any unauthorized use of your account</li>
-    <li>You must provide accurate and complete registration information</li>
-    <li>You must not share API keys or allow others to use your credentials</li>
-  </ul>
-
-  <h2 data-i18n="terms.acceptableUseTitle">4. Acceptable Use</h2>
-  <p>You agree to use Vertifile only for lawful purposes. You must not:</p>
-  <ul>
-    <li>Use the service to protect, verify, or distribute documents related to illegal activities</li>
-    <li>Attempt to reverse-engineer, decompile, or disassemble any part of the service</li>
-    <li>Attempt to bypass security measures, rate limits, or access controls</li>
-    <li>Use automated tools to scrape or overload the service</li>
-    <li>Impersonate other users or organizations</li>
-    <li>Interfere with or disrupt the service or its infrastructure</li>
-    <li>Use the service to infringe on the intellectual property rights of others</li>
-    <li>Resell or redistribute the service without prior written consent</li>
-  </ul>
-
-  <h2 data-i18n="terms.apiTitle">5. API Usage and Rate Limits</h2>
-  <p>API access is subject to the following conditions:</p>
-  <ul>
-    <li><strong>Free tier:</strong> Limited to 100 documents per month and 10 API requests per minute</li>
-    <li><strong>Pro tier:</strong> Up to 5,000 documents per month with higher rate limits</li>
-    <li><strong>Enterprise tier:</strong> Custom limits based on your agreement</li>
-  </ul>
-  <p>We reserve the right to throttle or suspend API access if usage exceeds agreed limits or if we detect abusive patterns. Rate limit headers are included in all API responses.</p>
-
-  <h2 data-i18n="terms.ipTitle">6. Intellectual Property</h2>
-  <p>All rights, title, and interest in the Vertifile service, including its software, design, trademarks, and documentation, remain the exclusive property of Vertifile.</p>
-  <p>You retain all rights to your documents. Vertifile does not claim any ownership over documents you protect or verify using our service. Since we never access document content, no license to your content is required or implied.</p>
-  <p>The .pvf file format, verification stamps, and related technologies are proprietary to Vertifile.</p>
-
-  <h2 data-i18n="terms.warrantyTitle">7. Disclaimer of Warranties</h2>
-  <div class="highlight-box">
-    <p data-i18n="terms.warrantyDesc">THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. VERTIFILE DOES NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED, ERROR-FREE, OR COMPLETELY SECURE.</p>
+<!-- ===== 404 CONTENT ===== -->
+<section class="error-section">
+  <div class="error-content">
+    <div class="error-code">404</div>
+    <h1 class="error-title" data-i18n="notFound.title">Page Not Found</h1>
+    <p class="error-message" data-i18n="notFound.message">The page you're looking for doesn't exist or has been moved.</p>
+    <a href="/" class="error-btn" data-i18n="notFound.backHome">Back to Home</a>
   </div>
-  <p>While we strive for high availability and reliability, we do not guarantee that:</p>
-  <ul>
-    <li>The service will be available at all times</li>
-    <li>Blockchain transactions will be confirmed within a specific timeframe</li>
-    <li>The service will meet all of your specific requirements</li>
-  </ul>
+</section>
 
-  <h2 data-i18n="terms.liabilityTitle">8. Limitation of Liability</h2>
-  <p>To the maximum extent permitted by applicable law, Vertifile shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to:</p>
-  <ul>
-    <li>Loss of profits, revenue, or data</li>
-    <li>Business interruption</li>
-    <li>Cost of substitute services</li>
-    <li>Damages arising from unauthorized access to or alteration of your data</li>
-  </ul>
-  <p>Our total liability for any claim arising from or related to the service shall not exceed the amount you paid to Vertifile in the twelve (12) months preceding the claim.</p>
-
-  <h2 data-i18n="terms.indemnityTitle">9. Indemnification</h2>
-  <p>You agree to indemnify, defend, and hold harmless Vertifile, its officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including reasonable attorneys' fees) arising from:</p>
-  <ul>
-    <li>Your use of the service</li>
-    <li>Your violation of these terms</li>
-    <li>Your violation of any third-party rights</li>
-    <li>Documents you protect or distribute using the service</li>
-  </ul>
-
-  <h2 data-i18n="terms.terminationTitle">10. Termination</h2>
-  <p>Either party may terminate the use of Vertifile services at any time:</p>
-  <ul>
-    <li><strong>By you:</strong> You may stop using the service and request account deletion at any time</li>
-    <li><strong>By us:</strong> We may suspend or terminate your access if you violate these terms, engage in abusive behavior, or fail to pay applicable fees</li>
-  </ul>
-  <p>Upon termination:</p>
-  <ul>
-    <li>Your API keys will be revoked</li>
-    <li>Existing blockchain records will remain on-chain (they are immutable)</li>
-    <li>Previously issued .pvf files will continue to be verifiable</li>
-    <li>Account data will be deleted within 30 days, subject to legal retention requirements</li>
-  </ul>
-
-  <h2 data-i18n="terms.modificationsTitle">11. Modifications to Terms</h2>
-  <p>We reserve the right to modify these Terms of Service at any time. Material changes will be communicated to registered users via email at least 30 days before they take effect. Continued use of the service after the effective date constitutes acceptance of the modified terms.</p>
-
-  <h2 data-i18n="terms.governingLawTitle">12. Governing Law</h2>
-  <p>These Terms of Service shall be governed by and construed in accordance with the laws of the State of Israel, without regard to conflict of law principles. Any disputes arising from or related to these terms or the service shall be subject to the exclusive jurisdiction of the courts located in Tel Aviv-Jaffa, Israel.</p>
-
-  <h2 data-i18n="terms.severabilityTitle">13. Severability</h2>
-  <p>If any provision of these Terms is found to be unenforceable or invalid, that provision shall be modified to the minimum extent necessary to make it enforceable, and the remaining provisions shall continue in full force and effect.</p>
-
-  <h2 data-i18n="terms.contactTitle">14. Contact Us</h2>
-  <p>If you have questions about these Terms of Service, contact us at:</p>
-  <p>
-    <strong>Vertifile</strong><br>
-    Rishon LeZion, Israel<br>
-    Email: <a href="mailto:info@vertifile.com">info@vertifile.com</a><br>
-    Website: <a href="https://vertifile.com">vertifile.com</a>
-  </p>
-</div>
-
+<!-- ===== FOOTER ===== -->
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
@@ -309,6 +189,7 @@
   </div>
 </footer>
 
+<!-- ===== SCRIPTS ===== -->
 <script src="/js/i18n.js"></script>
 <script>
 (function(){

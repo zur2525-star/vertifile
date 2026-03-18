@@ -1871,6 +1871,24 @@ app.get('/demo-pvf', (req, res) => {
 });
 
 // ================================================================
+// CONTACT FORM
+// ================================================================
+
+const contactLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 3, message: { error: 'Too many submissions' } });
+
+app.post('/api/contact', contactLimiter, (req, res) => {
+  const { name, email, organization, orgType, message } = req.body;
+  if (!name || !email || !organization) {
+    return res.status(400).json({ success: false, error: 'Name, email, and organization are required' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ success: false, error: 'Invalid email address' });
+  }
+  db.log('contact_form', { name, email, organization, orgType: orgType || 'not specified', message: message || '', ip: getClientIP(req) });
+  res.json({ success: true });
+});
+
+// ================================================================
 // ERROR HANDLING
 // ================================================================
 
@@ -1921,6 +1939,13 @@ if (!db.getDocument(demoHash)) {
     tokenCreatedAt: Date.now()
   });
 }
+
+// ================================================================
+// 404 CATCH-ALL (must be after all other routes)
+// ================================================================
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+});
 
 // ================================================================
 // START SERVER
