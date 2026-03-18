@@ -26,39 +26,32 @@
     a{text-decoration:none;color:inherit}
 
     /* ===== NAVBAR ===== */
-    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(15,14,23,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(124,58,237,.1);transition:background .35s,box-shadow .35s}
-    .navbar.scrolled{background:rgba(15,14,23,.97);box-shadow:0 1px 20px rgba(0,0,0,.4)}
-    .nav-inner{max-width:1200px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
-    .nav-logo{display:flex;align-items:center}
-    .nav-logo img{height:32px;width:auto;filter:brightness(0) invert(1)}
-    .nav-center{display:flex;align-items:center;gap:28px}
-    .nav-center a{font-size:13.5px;font-weight:500;color:rgba(196,181,253,.6);transition:color .2s;position:relative;padding:4px 0}
-    .nav-center a:hover{color:#fff}
-    .nav-center a::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:1.5px;background:#7c3aed;transition:all .25s;transform:translateX(-50%)}
-    .nav-center a:hover::after{width:100%}
-    .nav-center a.active{color:#a78bfa;font-weight:600}
-    .nav-center a.active::after{width:100%}
-    .nav-actions{display:flex;align-items:center;gap:10px}
-    .nav-sep{width:1px;height:20px;background:rgba(124,58,237,.2);margin:0 4px}
-    .nav-verify{padding:7px 18px;background:transparent;color:rgba(196,181,253,.7);border:1px solid rgba(124,58,237,.25);border-radius:8px;font-weight:500;font-size:13px;transition:all .25s;cursor:pointer;text-decoration:none}
-    .nav-verify:hover{border-color:#7c3aed;color:#c4b5fd;background:rgba(124,58,237,.08)}
-    .nav-cta{padding:7px 18px;background:#7c3aed;color:#fff!important;border-radius:8px;font-weight:600;font-size:13px;transition:all .25s;border:1px solid transparent;cursor:pointer;text-decoration:none}
-    .nav-cta:hover{background:#6d28d9;box-shadow:0 4px 14px rgba(124,58,237,.35)}
-    .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:6px}
-    .hamburger span{width:20px;height:1.5px;background:#c4b5fd;border-radius:2px;transition:.3s}
-    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(15,14,23,.98);backdrop-filter:blur(20px);padding:16px 24px;box-shadow:0 12px 40px rgba(0,0,0,.4);z-index:999;border-bottom:1px solid rgba(124,58,237,.1)}
-    .mobile-menu.show{display:block}
-    .mobile-menu a{display:block;padding:12px 0;font-size:15px;font-weight:500;color:rgba(196,181,253,.6);border-bottom:1px solid rgba(124,58,237,.08)}
-    .mobile-menu a:last-child{border:none}
-    .mobile-menu .mob-actions{display:flex;gap:10px;padding-top:14px;margin-top:6px;border-top:1px solid rgba(124,58,237,.12)}
-    .mobile-menu .mob-actions a{border:none;padding:10px 0;text-align:center;flex:1;border-radius:8px;font-size:14px;font-weight:600}
-    .mobile-menu .mob-actions .mob-verify{background:rgba(124,58,237,.1);color:#c4b5fd}
-    .mobile-menu .mob-actions .mob-protect{background:#7c3aed;color:#fff}
-    @media(max-width:768px){
-      .nav-center,.nav-actions{display:none}
-      .hamburger{display:flex}
-      .nav-inner{padding:0 20px}
-    }
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 64px; transition: .3s; }
+    .navbar.scrolled { background: rgba(15,14,23,.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 32px; height: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo img { height: 28px; }
+    .nav-center { display: flex; gap: 28px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .nav-center a { font-size: 14px; font-weight: 500; color: rgba(196,181,253,.6); text-decoration: none; transition: .2s; }
+    .nav-center a:hover { color: #c4b5fd; }
+    [dir="rtl"] .nav-center { direction: rtl; }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .nav-verify { font-size: 13px; font-weight: 500; color: #a78bfa; text-decoration: none; }
+    .nav-cta { padding: 8px 20px; background: linear-gradient(135deg,#4f46e5,#7c3aed); color: #fff; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; transition: .2s; }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(124,58,237,.3); }
+    .lang-btn { position: relative; display: flex; align-items: center; gap: 4px; background: none; border: 1px solid rgba(124,58,237,.2); border-radius: 8px; padding: 6px 10px; cursor: pointer; color: #c4b5fd; font-size: 12px; font-weight: 500; font-family: inherit; }
+    .lang-dropdown { position: absolute; top: calc(100% + 8px); right: 0; display: none; min-width: 140px; background: #1e1b4b; border: 1px solid rgba(124,58,237,.2); border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.3); padding: 6px 0; z-index: 1001; }
+    [dir="rtl"] .lang-dropdown { right: auto; left: 0; }
+    .lang-dropdown.show { display: block; }
+    .lang-dropdown a { display: block; padding: 8px 16px; font-size: 13px; color: #c4b5fd; text-decoration: none; transition: .15s; }
+    .lang-dropdown a:hover { background: rgba(124,58,237,.15); color: #fff; }
+    .lang-dropdown a.active { color: #a78bfa; font-weight: 600; }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 20px; height: 2px; background: #c4b5fd; margin: 4px 0; border-radius: 2px; }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: #1e1b4b; border-bottom: 1px solid rgba(124,58,237,.15); padding: 16px 24px; z-index: 999; flex-direction: column; gap: 12px; }
+    .mobile-menu.show { display: flex; }
+    .mobile-menu a { font-size: 15px; color: #c4b5fd; text-decoration: none; padding: 8px 0; }
+    .mob-actions { display: flex; gap: 12px; margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(124,58,237,.15); }
+    @media(max-width:768px) { .nav-center, .nav-actions { display: none; } .hamburger { display: block; } }
 
     /* ===== BACKGROUND ===== */
     .bg-glow{position:fixed;pointer-events:none;z-index:0}
@@ -244,47 +237,60 @@
 <!-- ===== NAVBAR ===== -->
 <nav class="navbar" id="navbar">
   <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
-    </a>
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28" style="filter:brightness(0) invert(1)"></a>
     <div class="nav-center">
-      <a href="/">Home</a>
-      <a href="/enterprise">Enterprise</a>
-      <a href="/integration">Developers</a>
-      <a href="/open" class="active">Open PVF</a>
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
     </div>
     <div class="nav-actions">
-      <a href="/verify" class="nav-verify">Verify</a>
-      <div class="nav-sep"></div>
-      <a href="/upload" class="nav-cta">Protect a Document</a>
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#x05E2;&#x05D1;&#x05E8;&#x05D9;&#x05EA;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#x0627;&#x0644;&#x0639;&#x0631;&#x0628;&#x064A;&#x0629;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#x0420;&#x0443;&#x0441;&#x0441;&#x043A;&#x0438;&#x0439;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#x7B80;&#x4F53;&#x4E2D;&#x6587;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#x65E5;&#x672C;&#x8A9E;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
     </div>
-    <div class="hamburger" onclick="toggleMobile()">
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
       <span></span><span></span><span></span>
-    </div>
-  </div>
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="/">Home</a>
-    <a href="/enterprise">Enterprise</a>
-    <a href="/integration">Developers</a>
-    <a href="/verify">Verify a Document</a>
-    <div class="mob-actions">
-      <a href="/open" class="mob-verify">Open PVF</a>
-      <a href="/upload" class="mob-protect">Protect</a>
-    </div>
+    </button>
   </div>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
 
 <!-- ===== HERO ===== -->
 <section class="hero">
   <div class="hero-badge">
     <span class="dot"></span>
-    Browser-Based Viewer
+    <span data-i18n="open.badge">Browser-Based Viewer</span>
   </div>
-  <h1>Open <span class="gradient">PVF Document</span></h1>
-  <p class="sub">View protected .pvf files instantly in your browser. No software installation required, no account needed.</p>
+  <h1 data-i18n="open.title">Open <span class="gradient">PVF Document</span></h1>
+  <p class="sub" data-i18n="open.subtitle">View protected .pvf files instantly in your browser. No software installation required, no account needed.</p>
   <div class="privacy-inline">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-    Your file stays on your device. Nothing is uploaded.
+    <span data-i18n="open.privacy">Your file stays on your device. Nothing is uploaded.</span>
   </div>
 </section>
 
@@ -299,11 +305,11 @@
         <path d="M9 15l3-3 3 3"/>
       </svg>
     </div>
-    <div class="dz-title">Drop .pvf file here</div>
-    <div class="dz-sub">or use the button below to browse your files</div>
+    <div class="dz-title" data-i18n="open.dropTitle">Drop .pvf file here</div>
+    <div class="dz-sub" data-i18n="open.dropSub">or use the button below to browse your files</div>
     <button class="dz-btn" onclick="document.getElementById('fileInput').click();event.stopPropagation()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-      Open File
+      <span data-i18n="open.openFile">Open File</span>
     </button>
     <input type="file" id="fileInput" accept=".pvf,.html,.htm">
   </div>
@@ -337,9 +343,9 @@
 <!-- ===== HOW IT WORKS ===== -->
 <section class="how-section">
   <div class="section-header fade-up">
-    <div class="label">How It Works</div>
-    <h2>Three Simple Steps</h2>
-    <p>Open any .pvf document in seconds, right in your browser</p>
+    <div class="label" data-i18n="open.howLabel">How It Works</div>
+    <h2 data-i18n="open.howTitle">Three Simple Steps</h2>
+    <p data-i18n="open.howDesc">Open any .pvf document in seconds, right in your browser</p>
   </div>
   <div class="steps-grid">
     <div class="step-card fade-up">
@@ -352,8 +358,8 @@
           <path d="M9 15l3-3 3 3"/>
         </svg>
       </div>
-      <h3>Drop Your File</h3>
-      <p>Drag and drop a .pvf file onto the page or click to browse your files</p>
+      <h3 data-i18n="open.step1Title">Drop Your File</h3>
+      <p data-i18n="open.step1Desc">Drag and drop a .pvf file onto the page or click to browse your files</p>
     </div>
     <svg class="step-arrow step-arrow-1" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     <div class="step-card fade-up">
@@ -364,8 +370,8 @@
           <path d="M9 12l2 2 4-4"/>
         </svg>
       </div>
-      <h3>Instant Verification</h3>
-      <p>The embedded hash and signature are checked automatically in your browser</p>
+      <h3 data-i18n="open.step2Title">Instant Verification</h3>
+      <p data-i18n="open.step2Desc">The embedded hash and signature are checked automatically in your browser</p>
     </div>
     <svg class="step-arrow step-arrow-2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     <div class="step-card fade-up">
@@ -377,8 +383,8 @@
           <line x1="12" y1="17" x2="12" y2="21"/>
         </svg>
       </div>
-      <h3>View Document</h3>
-      <p>The protected document renders securely in a sandboxed viewer with full fidelity</p>
+      <h3 data-i18n="open.step3Title">View Document</h3>
+      <p data-i18n="open.step3Desc">The protected document renders securely in a sandboxed viewer with full fidelity</p>
     </div>
   </div>
 </section>
@@ -386,9 +392,9 @@
 <!-- ===== ALTERNATIVE METHODS ===== -->
 <section class="alt-section">
   <div class="section-header fade-up">
-    <div class="label">Alternative</div>
-    <h2>Open PVF Files Directly</h2>
-    <p>Set your system to always open .pvf files in your browser</p>
+    <div class="label" data-i18n="open.altLabel">Alternative</div>
+    <h2 data-i18n="open.altTitle">Open PVF Files Directly</h2>
+    <p data-i18n="open.altDesc">Set your system to always open .pvf files in your browser</p>
   </div>
   <div class="alt-grid">
     <div class="alt-card fade-up">
@@ -437,8 +443,8 @@
         <line x1="12" y1="15" x2="12" y2="3"/>
       </svg>
     </div>
-    <h3>PVF Viewer Desktop App</h3>
-    <p>For the best experience, download the dedicated PVF Viewer. Features offline support, batch viewing, and system-level file associations.</p>
+    <h3 data-i18n="open.downloadTitle">PVF Viewer Desktop App</h3>
+    <p data-i18n="open.downloadDesc">For the best experience, download the dedicated PVF Viewer. Features offline support, batch viewing, and system-level file associations.</p>
     <div class="dl-buttons">
       <a href="#" class="dl-btn primary">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94a9.5 9.5 0 1 1 0-17.88"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
@@ -488,6 +494,18 @@
 </footer>
 
 <script>
+function closeMobile(){
+  document.getElementById('mobileMenu').classList.remove('show');
+}
+function toggleLangDropdown(){
+  document.getElementById('langDropdown').classList.toggle('show');
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.lang-btn')&&!e.target.closest('.lang-dropdown')){
+    document.getElementById('langDropdown').classList.remove('show');
+  }
+});
+
 (function(){
   'use strict';
 
@@ -782,5 +800,6 @@ function formatSize(bytes) {
   return (bytes / 1048576).toFixed(1) + ' MB';
 }
 </script>
+<script src="/js/i18n.js"></script>
 </body>
 </html>

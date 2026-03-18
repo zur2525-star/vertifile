@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,35 +14,35 @@
     body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden;line-height:1.7}
     a{text-decoration:none;color:inherit}
 
+    [dir="rtl"] body { font-family: 'Heebo','Inter',sans-serif; }
+
     /* ===== NAVBAR ===== */
-    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,0,0,.04);box-shadow:0 1px 12px rgba(0,0,0,.06)}
-    .nav-inner{max-width:1200px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
-    .nav-logo{display:flex;align-items:center}
-    .nav-logo img{height:32px;width:auto}
-    .nav-center{display:flex;align-items:center;gap:28px}
-    .nav-center a{font-size:13.5px;font-weight:500;color:#6b7280;transition:color .2s;position:relative;padding:4px 0}
-    .nav-center a:hover{color:#111827}
-    .nav-center a::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:1.5px;background:#7c3aed;transition:all .25s;transform:translateX(-50%)}
-    .nav-center a:hover::after{width:100%}
-    .nav-center a.active{color:#7c3aed;font-weight:600}
-    .nav-center a.active::after{width:100%}
-    .nav-actions{display:flex;align-items:center;gap:10px}
-    .nav-sep{width:1px;height:20px;background:rgba(0,0,0,.08);margin:0 4px}
-    .nav-verify{padding:7px 18px;background:transparent;color:#4b5563;border:1px solid rgba(0,0,0,.1);border-radius:8px;font-weight:500;font-size:13px;transition:all .25s;cursor:pointer;text-decoration:none}
-    .nav-verify:hover{border-color:#7c3aed;color:#7c3aed;background:rgba(124,58,237,.03)}
-    .nav-cta{padding:7px 18px;background:#7c3aed;color:#fff!important;border-radius:8px;font-weight:600;font-size:13px;transition:all .25s;border:1px solid transparent;cursor:pointer;text-decoration:none}
-    .nav-cta:hover{background:#6d28d9;box-shadow:0 4px 14px rgba(124,58,237,.25)}
-    .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:6px}
-    .hamburger span{width:20px;height:1.5px;background:#374151;border-radius:2px;transition:.3s}
-    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(255,255,255,.98);backdrop-filter:blur(20px);padding:16px 24px;box-shadow:0 12px 40px rgba(0,0,0,.08);z-index:999;border-bottom:1px solid rgba(0,0,0,.04)}
-    .mobile-menu.show{display:block}
-    .mobile-menu a{display:block;padding:12px 0;font-size:15px;font-weight:500;color:#4b5563;border-bottom:1px solid rgba(0,0,0,.04)}
-    .mobile-menu a:last-child{border:none}
-    @media(max-width:768px){
-      .nav-center,.nav-actions{display:none}
-      .hamburger{display:flex}
-      .nav-inner{padding:0 20px}
-    }
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 64px; transition: .3s; }
+    .navbar.scrolled { background: rgba(255,255,255,.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 32px; height: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo img { height: 28px; }
+    .nav-center { display: flex; gap: 28px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .nav-center a { font-size: 14px; font-weight: 500; color: #374151; text-decoration: none; transition: .2s; }
+    .nav-center a:hover { color: #7c3aed; }
+    [dir="rtl"] .nav-center { direction: rtl; }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .nav-verify { font-size: 13px; font-weight: 500; color: #4f46e5; text-decoration: none; }
+    .nav-cta { padding: 8px 20px; background: linear-gradient(135deg,#4f46e5,#7c3aed); color: #fff; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; transition: .2s; }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(124,58,237,.3); }
+    .lang-btn { position: relative; display: flex; align-items: center; gap: 4px; background: none; border: 1px solid rgba(0,0,0,.08); border-radius: 8px; padding: 6px 10px; cursor: pointer; color: #374151; font-size: 12px; font-weight: 500; font-family: inherit; }
+    .lang-dropdown { position: absolute; top: calc(100% + 8px); right: 0; display: none; min-width: 140px; background: #fff; border: 1px solid rgba(0,0,0,.08); border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.12); padding: 6px 0; z-index: 1001; }
+    [dir="rtl"] .lang-dropdown { right: auto; left: 0; }
+    .lang-dropdown.show { display: block; }
+    .lang-dropdown a { display: block; padding: 8px 16px; font-size: 13px; color: #374151; text-decoration: none; transition: .15s; }
+    .lang-dropdown a:hover { background: rgba(124,58,237,.06); color: #7c3aed; }
+    .lang-dropdown a.active { color: #7c3aed; font-weight: 600; }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 20px; height: 2px; background: #111827; margin: 4px 0; border-radius: 2px; }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: #fff; border-bottom: 1px solid rgba(0,0,0,.06); padding: 16px 24px; z-index: 999; flex-direction: column; gap: 12px; }
+    .mobile-menu.show { display: flex; }
+    .mobile-menu a { font-size: 15px; color: #374151; text-decoration: none; padding: 8px 0; }
+    .mob-actions { display: flex; gap: 12px; margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,.06); }
+    @media(max-width:768px) { .nav-center, .nav-actions { display: none; } .hamburger { display: block; } }
 
     /* ===== HERO ===== */
     .hero{padding:130px 40px 70px;text-align:center;background:linear-gradient(180deg,#f0ebff 0%,#f5f3ff 50%,#ffffff 100%);position:relative;overflow:hidden}
@@ -188,52 +188,67 @@
 <body>
 
 <!-- ===== NAVBAR ===== -->
-<nav class="navbar">
+<nav class="navbar" id="navbar">
   <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
-    </a>
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
     <div class="nav-center">
-      <a href="/">Home</a>
-      <a href="/#how">How It Works</a>
-      <a href="/#features">Features</a>
-      <a href="/integration" class="active">API Docs</a>
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
     </div>
     <div class="nav-actions">
-      <div class="nav-sep"></div>
-      <a href="/verify" class="nav-verify">Verify</a>
-      <a href="/upload" class="nav-cta">Protect</a>
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#x05E2;&#x05D1;&#x05E8;&#x05D9;&#x05EA;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#x0627;&#x0644;&#x0639;&#x0631;&#x0628;&#x064A;&#x0629;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#x0420;&#x0443;&#x0441;&#x0441;&#x043A;&#x0438;&#x0439;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#x7B80;&#x4F53;&#x4E2D;&#x6587;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#x65E5;&#x672C;&#x8A9E;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
     </div>
-    <div class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('show')">
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
       <span></span><span></span><span></span>
-    </div>
-  </div>
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="/">Home</a>
-    <a href="/#how">How It Works</a>
-    <a href="/#features">Features</a>
-    <a href="/integration">API Docs</a>
-    <a href="/verify">Verify</a>
-    <a href="/upload">Protect a Document</a>
+    </button>
   </div>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
 
 <!-- ===== HERO ===== -->
 <div class="hero">
   <div class="hero-badge">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-    Developer Platform
+    <span data-i18n="integration.badge">Developer Platform</span>
   </div>
-  <h1>Build with <span>Vertifile</span></h1>
-  <p>Integrate tamper-proof document protection into your application with a simple REST API. Protect, verify, and manage documents programmatically.</p>
+  <h1 data-i18n="integration.heroTitle">Build with <span>Vertifile</span></h1>
+  <p data-i18n="integration.heroSubtitle">Integrate tamper-proof document protection into your application with a simple REST API. Protect, verify, and manage documents programmatically.</p>
   <div class="hero-actions">
     <a href="#quickstart" class="btn-primary">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-      Quick Start
+      <span data-i18n="integration.quickStart">Quick Start</span>
     </a>
     <a href="#endpoints" class="btn-secondary">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-      Full Reference
+      <span data-i18n="integration.fullReference">Full Reference</span>
     </a>
   </div>
 </div>
@@ -244,13 +259,13 @@
   <!-- Sidebar -->
   <aside class="sidebar">
     <ul class="sidebar-nav">
-      <li><a href="#quickstart">Quick Start</a></li>
-      <li><a href="#authentication">Authentication</a></li>
-      <li><a href="#examples">Code Examples</a></li>
-      <li><a href="#endpoints">Endpoints</a></li>
-      <li><a href="#webhooks">Webhooks</a></li>
-      <li><a href="#responses">Response Examples</a></li>
-      <li><a href="#rate-limits">Rate Limits</a></li>
+      <li><a href="#quickstart" data-i18n="integration.sidebarQuickStart">Quick Start</a></li>
+      <li><a href="#authentication" data-i18n="integration.sidebarAuth">Authentication</a></li>
+      <li><a href="#examples" data-i18n="integration.sidebarExamples">Code Examples</a></li>
+      <li><a href="#endpoints" data-i18n="integration.sidebarEndpoints">Endpoints</a></li>
+      <li><a href="#webhooks" data-i18n="integration.sidebarWebhooks">Webhooks</a></li>
+      <li><a href="#responses" data-i18n="integration.sidebarResponses">Response Examples</a></li>
+      <li><a href="#rate-limits" data-i18n="integration.sidebarRateLimits">Rate Limits</a></li>
     </ul>
   </aside>
 
@@ -260,25 +275,25 @@
     <!-- ===== QUICK START ===== -->
     <section id="quickstart">
       <div class="container">
-        <div class="section-label">Getting Started</div>
-        <div class="section-title">Quick Start</div>
-        <div class="section-desc">Get up and running with Vertifile in three steps. Protect your first document in under five minutes.</div>
+        <div class="section-label" data-i18n="integration.gettingStartedLabel">Getting Started</div>
+        <div class="section-title" data-i18n="integration.quickStartTitle">Quick Start</div>
+        <div class="section-desc" data-i18n="integration.quickStartDesc">Get up and running with Vertifile in three steps. Protect your first document in under five minutes.</div>
 
         <div class="steps">
           <div class="step">
             <div class="step-num">1</div>
-            <h3>Get Your API Key</h3>
-            <p>Sign up for a Vertifile organization account and generate an API key from your dashboard settings.</p>
+            <h3 data-i18n="integration.step1Title">Get Your API Key</h3>
+            <p data-i18n="integration.step1Desc">Sign up for a Vertifile organization account and generate an API key from your dashboard settings.</p>
           </div>
           <div class="step">
             <div class="step-num">2</div>
-            <h3>Install the SDK</h3>
-            <p>Install our official SDK for Node.js or Python, or use the REST API directly with cURL.</p>
+            <h3 data-i18n="integration.step2Title">Install the SDK</h3>
+            <p data-i18n="integration.step2Desc">Install our official SDK for Node.js or Python, or use the REST API directly with cURL.</p>
           </div>
           <div class="step">
             <div class="step-num">3</div>
-            <h3>Protect a Document</h3>
-            <p>Upload any file to create a tamper-proof .pvf document with embedded verification.</p>
+            <h3 data-i18n="integration.step3Title">Protect a Document</h3>
+            <p data-i18n="integration.step3Desc">Upload any file to create a tamper-proof .pvf document with embedded verification.</p>
           </div>
         </div>
 
@@ -299,9 +314,9 @@
     <!-- ===== AUTHENTICATION ===== -->
     <section id="authentication">
       <div class="container">
-        <div class="section-label">Security</div>
-        <div class="section-title">Authentication</div>
-        <div class="section-desc">All API requests require authentication via an API key passed in the request header.</div>
+        <div class="section-label" data-i18n="integration.securityLabel">Security</div>
+        <div class="section-title" data-i18n="integration.authTitle">Authentication</div>
+        <div class="section-desc" data-i18n="integration.authDesc">All API requests require authentication via an API key passed in the request header.</div>
 
         <p style="margin-bottom:16px">Include your API key in every request using the <code>X-API-Key</code> header:</p>
 
@@ -315,7 +330,7 @@
 
         <div class="callout callout-warn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <div>Keep your API key secret. Never expose it in client-side code or public repositories. Use environment variables to store it securely.</div>
+          <div data-i18n="integration.authWarning">Keep your API key secret. Never expose it in client-side code or public repositories. Use environment variables to store it securely.</div>
         </div>
 
         <p style="margin-top:20px">The API base URL depends on your deployment. For the hosted service, use:</p>
@@ -333,9 +348,9 @@
     <!-- ===== CODE EXAMPLES ===== -->
     <section id="examples">
       <div class="container">
-        <div class="section-label">SDK</div>
-        <div class="section-title">Code Examples</div>
-        <div class="section-desc">Full examples for creating protected documents, verifying them, and using the gateway API.</div>
+        <div class="section-label" data-i18n="integration.sdkLabel">SDK</div>
+        <div class="section-title" data-i18n="integration.codeExamplesTitle">Code Examples</div>
+        <div class="section-desc" data-i18n="integration.codeExamplesDesc">Full examples for creating protected documents, verifying them, and using the gateway API.</div>
 
         <!-- TABS -->
         <div class="tabs" id="codeTabs">
@@ -620,9 +635,9 @@ BASE_URL <span class="vr">=</span> <span class="str">'https://api.vertifile.com'
     <!-- ===== ENDPOINTS ===== -->
     <section id="endpoints">
       <div class="container">
-        <div class="section-label">Reference</div>
-        <div class="section-title">API Endpoints</div>
-        <div class="section-desc">Complete reference for all available API endpoints.</div>
+        <div class="section-label" data-i18n="integration.referenceLabel">Reference</div>
+        <div class="section-title" data-i18n="integration.endpointsTitle">API Endpoints</div>
+        <div class="section-desc" data-i18n="integration.endpointsDesc">Complete reference for all available API endpoints.</div>
 
         <!-- Create PVF -->
         <div class="endpoint">
@@ -793,9 +808,9 @@ BASE_URL <span class="vr">=</span> <span class="str">'https://api.vertifile.com'
     <!-- ===== WEBHOOKS ===== -->
     <section id="webhooks">
       <div class="container">
-        <div class="section-label">Events</div>
-        <div class="section-title">Webhook Integration</div>
-        <div class="section-desc">Receive real-time notifications when documents are verified or created.</div>
+        <div class="section-label" data-i18n="integration.eventsLabel">Events</div>
+        <div class="section-title" data-i18n="integration.webhookTitle">Webhook Integration</div>
+        <div class="section-desc" data-i18n="integration.webhookDesc">Receive real-time notifications when documents are verified or created.</div>
 
         <h3 class="sub-heading">Register a Webhook</h3>
         <div class="code-block">
@@ -897,9 +912,9 @@ app.<span class="fn">post</span>(<span class="str">'/webhooks/vertifile'</span>,
     <!-- ===== RESPONSE EXAMPLES ===== -->
     <section id="responses">
       <div class="container">
-        <div class="section-label">Responses</div>
-        <div class="section-title">Response Examples</div>
-        <div class="section-desc">Typical JSON responses from the API.</div>
+        <div class="section-label" data-i18n="integration.responsesLabel">Responses</div>
+        <div class="section-title" data-i18n="integration.responsesTitle">Response Examples</div>
+        <div class="section-desc" data-i18n="integration.responsesDesc">Typical JSON responses from the API.</div>
 
         <h3 class="sub-heading">Verification Success</h3>
         <div class="code-block">
@@ -1011,9 +1026,9 @@ app.<span class="fn">post</span>(<span class="str">'/webhooks/vertifile'</span>,
     <!-- ===== RATE LIMITS ===== -->
     <section id="rate-limits">
       <div class="container">
-        <div class="section-label">Rate Limits</div>
-        <div class="section-title">Rate Limits</div>
-        <div class="section-desc">Rate limits are applied per API key to ensure fair usage for all users.</div>
+        <div class="section-label" data-i18n="integration.rateLimitsLabel">Rate Limits</div>
+        <div class="section-title" data-i18n="integration.rateLimitsTitle">Rate Limits</div>
+        <div class="section-desc" data-i18n="integration.rateLimitsDesc">Rate limits are applied per API key to ensure fair usage for all users.</div>
 
         <div class="callout callout-info">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
@@ -1153,7 +1168,23 @@ app.<span class="fn">post</span>(<span class="str">'/webhooks/vertifile'</span>,
     });
   });
 
+  // Mobile menu toggle
+  window.toggleMobile = function(){
+    document.getElementById('mobileMenu').classList.toggle('show');
+  };
+  window.closeMobile = function(){
+    document.getElementById('mobileMenu').classList.remove('show');
+  };
+
+  // Navbar scroll effect
+  var navbar = document.getElementById('navbar');
+  if (navbar) {
+    window.addEventListener('scroll', function(){
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  }
 })();
 </script>
+<script src="/js/i18n.js"></script>
 </body>
 </html>

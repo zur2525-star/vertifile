@@ -16,15 +16,18 @@
     a{text-decoration:none;color:inherit}
 
     /* ===== NAVBAR ===== */
-    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.06)}
-    .nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:72px;display:flex;align-items:center;justify-content:space-between}
-    .nav-logo{display:flex;align-items:center}
-    .nav-logo img{height:36px;width:auto}
-    .nav-links{display:flex;align-items:center;gap:24px}
-    .nav-links a{font-size:14px;font-weight:500;color:#4b5563;transition:color .2s}
-    .nav-links a:hover{color:#111827}
-    .nav-cta{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff!important;border-radius:10px;font-weight:700;font-size:13px;transition:all .3s;border:none;cursor:pointer}
-    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 25px rgba(79,70,229,.4)}
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;transition:.3s}
+    .navbar.scrolled{background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:100%;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo img{height:28px}
+    .nav-center{display:flex;gap:28px;position:absolute;left:50%;transform:translateX(-50%)}
+    .nav-center a{font-size:14px;font-weight:500;color:#374151;text-decoration:none;transition:.2s}
+    .nav-center a:hover{color:#7c3aed}
+    [dir="rtl"] .nav-center{direction:rtl}
+    .nav-actions{display:flex;align-items:center;gap:12px}
+    .nav-verify{font-size:13px;font-weight:500;color:#4f46e5;text-decoration:none}
+    .nav-cta{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
+    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.3)}
     .lang-btn{display:flex;align-items:center;gap:5px;cursor:pointer;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#4b5563;border:1px solid rgba(0,0,0,.12);background:transparent;position:relative;transition:.2s}
     .lang-btn:hover{border-color:rgba(0,0,0,.3);color:#111827}
     .lang-btn svg{width:16px;height:16px}
@@ -34,12 +37,13 @@
     .lang-dropdown a{display:block;padding:9px 18px;font-size:13px;color:#4b5563;transition:.15s}
     .lang-dropdown a:hover{background:rgba(0,0,0,.04);color:#111827}
     .lang-dropdown a.active{color:#7c3aed;font-weight:700}
-    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
-    .hamburger span{width:22px;height:2px;background:#374151;border-radius:2px}
-    .mobile-menu{display:none;position:fixed;top:72px;left:0;right:0;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);padding:20px 32px;box-shadow:0 16px 50px rgba(0,0,0,.1);z-index:999;border-bottom:1px solid rgba(0,0,0,.06)}
-    .mobile-menu.show{display:block}
-    .mobile-menu a{display:block;padding:14px 0;font-size:16px;font-weight:500;color:#4b5563;border-bottom:1px solid rgba(0,0,0,.06)}
-    @media(max-width:768px){.nav-links{display:none}.hamburger{display:flex}.nav-inner{padding:0 20px}}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px}
+    .hamburger span{display:block;width:20px;height:2px;background:#111827;margin:4px 0;border-radius:2px}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;border-bottom:1px solid rgba(0,0,0,.06);padding:16px 24px;z-index:999;flex-direction:column;gap:12px}
+    .mobile-menu.show{display:flex}
+    .mobile-menu a{font-size:15px;color:#374151;text-decoration:none;padding:8px 0}
+    .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06)}
+    @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
 
     /* ===== VERIFY CARD ===== */
     .card{background:#ffffff;border:1px solid rgba(0,0,0,.06);border-radius:24px;max-width:560px;width:100%;overflow:hidden;margin-top:90px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
@@ -141,44 +145,50 @@
 <div class="bg-glow-2"></div>
 
 <!-- NAVBAR -->
-<nav class="navbar">
+<nav class="navbar" id="navbar">
   <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
-    </a>
-    <div class="nav-links">
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
+    <div class="nav-center">
       <a href="/" data-i18n="nav.home">Home</a>
-      <a href="/upload" data-i18n="nav.upload">Protect a Document</a>
-      <div style="position:relative">
-        <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
-          <span id="langLabel">EN</span>
-        </button>
-        <div class="lang-dropdown" id="langDropdown">
-          <a href="?lang=en" onclick="switchLang('en',event)">English</a>
-          <a href="?lang=he" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
-          <a href="?lang=ar" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
-          <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
-          <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
-          <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
-          <a href="?lang=ru" onclick="switchLang('ru',event)">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</a>
-          <a href="?lang=zh" onclick="switchLang('zh',event)">&#31616;&#20307;&#20013;&#25991;</a>
-          <a href="?lang=ja" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
-          <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
-        </div>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
+    </div>
+    <div class="nav-actions">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#31616;&#20307;&#20013;&#25991;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
       </div>
-      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect a Document</a>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
     </div>
-    <div class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('show')">
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
       <span></span><span></span><span></span>
-    </div>
-  </div>
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="/" data-i18n="nav.home">Home</a>
-    <a href="/upload" data-i18n="nav.upload">Protect a Document</a>
-    <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
+    </button>
   </div>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
 
 <!-- MAIN CARD -->
 <div class="card">
@@ -281,55 +291,11 @@
   <div class="f-copy" data-i18n="footer.copyright">&copy; 2024 Vertifile. All rights reserved.</div>
 </footer>
 
+<script src="/js/i18n.js"></script>
 <script>
-// ===== i18n Engine =====
-(function(){
-  var SUPPORTED=['en','he','ar','fr','es','de','ru','zh','ja','pt'];
-  var RTL_LANGS=['he','ar'];
-  var translations={};
-  function detectLang(){
-    var p=new URLSearchParams(location.search);
-    if(p.get('lang')&&SUPPORTED.indexOf(p.get('lang'))!==-1)return p.get('lang');
-    var s=localStorage.getItem('vf-lang');
-    if(s&&SUPPORTED.indexOf(s)!==-1)return s;
-    var n=(navigator.language||'').substring(0,2).toLowerCase();
-    if(SUPPORTED.indexOf(n)!==-1)return n;
-    return 'en';
-  }
-  function gv(obj,path){return path.split('.').reduce(function(o,k){return o&&o[k]},obj)}
-  function apply(){
-    document.querySelectorAll('[data-i18n]').forEach(function(el){
-      var v=gv(translations,el.getAttribute('data-i18n'));
-      if(v)el.textContent=v;
-    });
-    var t=gv(translations,'verify.pageTitle');
-    if(t)document.title='Vertifile \u2014 '+t;
-  }
-  function loadLang(lang){
-    fetch('/locales/'+lang+'.json').then(function(r){
-      if(!r.ok)throw 0;return r.json();
-    }).then(function(d){
-      translations=d;localStorage.setItem('vf-lang',lang);
-      var isRtl=RTL_LANGS.indexOf(lang)!==-1;
-      document.documentElement.setAttribute('dir',isRtl?'rtl':'ltr');
-      document.documentElement.setAttribute('lang',lang);
-      apply();
-      var el=document.getElementById('langLabel');
-      if(el)el.textContent=lang.toUpperCase();
-      document.querySelectorAll('.lang-dropdown a').forEach(function(a){
-        var m=(a.getAttribute('href')||'').match(/lang=(\w+)/);
-        a.classList.toggle('active',!!(m&&m[1]===lang));
-      });
-    }).catch(function(){if(lang!=='en')loadLang('en')});
-  }
-  window.switchLang=function(l,e){if(e)e.preventDefault();loadLang(l);closeLangDropdown()};
-  window.toggleLangDropdown=function(){document.getElementById('langDropdown').classList.toggle('show')};
-  window.closeLangDropdown=function(){document.getElementById('langDropdown').classList.remove('show')};
-  document.addEventListener('click',function(e){
-    if(!e.target.closest('.lang-btn')&&!e.target.closest('.lang-dropdown'))closeLangDropdown();
-  });
-  loadLang(detectLang());
-})();
+window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
+window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
+window.addEventListener('scroll',function(){document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>10)});
 
 // ===== Verify Logic =====
 var selectedFile=null;

@@ -19,38 +19,35 @@
     body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden}
     a{text-decoration:none;color:inherit}
 
+    [dir="rtl"] body { font-family: 'Heebo','Inter',sans-serif; }
+
     /* ===== NAVBAR ===== */
-    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:1px solid transparent;transition:background .35s,border-color .35s,box-shadow .35s,backdrop-filter .35s}
-    .navbar.scrolled{background:rgba(255,255,255,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,0,0,.04);box-shadow:0 1px 12px rgba(0,0,0,.06)}
-    .nav-inner{max-width:1200px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
-    .nav-logo{display:flex;align-items:center}
-    .nav-logo img{height:32px;width:auto}
-    .nav-center{display:flex;align-items:center;gap:28px}
-    .nav-center a{font-size:13.5px;font-weight:500;color:#6b7280;transition:color .2s;letter-spacing:0;position:relative;padding:4px 0}
-    .nav-center a:hover{color:#111827}
-    .nav-center a::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:1.5px;background:#7c3aed;transition:all .25s;transform:translateX(-50%)}
-    .nav-center a:hover::after{width:100%}
-    .nav-actions{display:flex;align-items:center;gap:10px}
-    .nav-verify{padding:7px 18px;background:transparent;color:#4b5563;border:1px solid rgba(0,0,0,.1);border-radius:8px;font-weight:500;font-size:13px;transition:all .25s;cursor:pointer;letter-spacing:0;text-decoration:none}
-    .nav-verify:hover{border-color:#7c3aed;color:#7c3aed;background:rgba(124,58,237,.03)}
-    .nav-cta{padding:7px 18px;background:#7c3aed;color:#fff!important;border-radius:8px;font-weight:600;font-size:13px;transition:all .25s;border:1px solid transparent;cursor:pointer;letter-spacing:0;text-decoration:none}
-    .nav-cta:hover{background:#6d28d9;box-shadow:0 4px 14px rgba(124,58,237,.25)}
-    .nav-sep{width:1px;height:20px;background:rgba(0,0,0,.08);margin:0 4px}
-    .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:6px}
-    .hamburger span{width:20px;height:1.5px;background:#374151;border-radius:2px;transition:.3s}
-    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(255,255,255,.98);backdrop-filter:blur(20px);padding:16px 24px;box-shadow:0 12px 40px rgba(0,0,0,.08);z-index:999;border-bottom:1px solid rgba(0,0,0,.04)}
-    .mobile-menu.show{display:block}
-    .mobile-menu a{display:block;padding:12px 0;font-size:15px;font-weight:500;color:#4b5563;border-bottom:1px solid rgba(0,0,0,.04)}
-    .mobile-menu a:last-child{border:none}
-    .mobile-menu .mob-actions{display:flex;gap:10px;padding-top:14px;margin-top:6px;border-top:1px solid rgba(0,0,0,.06)}
-    .mobile-menu .mob-actions a{border:none;padding:10px 0;text-align:center;flex:1;border-radius:8px;font-size:14px;font-weight:600}
-    .mobile-menu .mob-actions .mob-verify{background:rgba(0,0,0,.04);color:#4b5563}
-    .mobile-menu .mob-actions .mob-protect{background:#7c3aed;color:#fff}
-    @media(max-width:768px){
-      .nav-center,.nav-actions{display:none}
-      .hamburger{display:flex}
-      .nav-inner{padding:0 20px}
-    }
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 64px; transition: .3s; }
+    .navbar.scrolled { background: rgba(255,255,255,.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 32px; height: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo img { height: 28px; }
+    .nav-center { display: flex; gap: 28px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .nav-center a { font-size: 14px; font-weight: 500; color: #374151; text-decoration: none; transition: .2s; }
+    .nav-center a:hover { color: #7c3aed; }
+    [dir="rtl"] .nav-center { direction: rtl; }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .nav-verify { font-size: 13px; font-weight: 500; color: #4f46e5; text-decoration: none; }
+    .nav-cta { padding: 8px 20px; background: linear-gradient(135deg,#4f46e5,#7c3aed); color: #fff; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; transition: .2s; }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(124,58,237,.3); }
+    .lang-btn { position: relative; display: flex; align-items: center; gap: 4px; background: none; border: 1px solid rgba(0,0,0,.08); border-radius: 8px; padding: 6px 10px; cursor: pointer; color: #374151; font-size: 12px; font-weight: 500; font-family: inherit; }
+    .lang-dropdown { position: absolute; top: calc(100% + 8px); right: 0; display: none; min-width: 140px; background: #fff; border: 1px solid rgba(0,0,0,.08); border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.12); padding: 6px 0; z-index: 1001; }
+    [dir="rtl"] .lang-dropdown { right: auto; left: 0; }
+    .lang-dropdown.show { display: block; }
+    .lang-dropdown a { display: block; padding: 8px 16px; font-size: 13px; color: #374151; text-decoration: none; transition: .15s; }
+    .lang-dropdown a:hover { background: rgba(124,58,237,.06); color: #7c3aed; }
+    .lang-dropdown a.active { color: #7c3aed; font-weight: 600; }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 20px; height: 2px; background: #111827; margin: 4px 0; border-radius: 2px; }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: #fff; border-bottom: 1px solid rgba(0,0,0,.06); padding: 16px 24px; z-index: 999; flex-direction: column; gap: 12px; }
+    .mobile-menu.show { display: flex; }
+    .mobile-menu a { font-size: 15px; color: #374151; text-decoration: none; padding: 8px 0; }
+    .mob-actions { display: flex; gap: 12px; margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,.06); }
+    @media(max-width:768px) { .nav-center, .nav-actions { display: none; } .hamburger { display: block; } }
 
     /* ===== HERO ===== */
     .hero{padding:140px 60px 100px;position:relative;overflow:hidden;background:linear-gradient(180deg,#e8e0ff 0%,#ece9ff 25%,#f5f3ff 60%,#ffffff 100%)}
@@ -298,34 +295,48 @@
 <!-- ===== NAVBAR ===== -->
 <nav class="navbar" id="navbar">
   <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
-    </a>
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
     <div class="nav-center">
-      <a href="#usecases">Use Cases</a>
-      <a href="#benefits">Benefits</a>
-      <a href="#integration">Integration</a>
-      <a href="#contact">Contact</a>
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
     </div>
     <div class="nav-actions">
-      <a href="/" class="nav-verify">Main Site</a>
-      <a href="#contact" class="nav-cta">Request Demo</a>
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#x05E2;&#x05D1;&#x05E8;&#x05D9;&#x05EA;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#x0627;&#x0644;&#x0639;&#x0631;&#x0628;&#x064A;&#x0629;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#x0420;&#x0443;&#x0441;&#x0441;&#x043A;&#x0438;&#x0439;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#x7B80;&#x4F53;&#x4E2D;&#x6587;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#x65E5;&#x672C;&#x8A9E;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
     </div>
-    <div class="hamburger" onclick="toggleMobile()">
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
       <span></span><span></span><span></span>
-    </div>
-  </div>
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="#usecases" onclick="closeMobile()">Use Cases</a>
-    <a href="#benefits" onclick="closeMobile()">Benefits</a>
-    <a href="#integration" onclick="closeMobile()">Integration</a>
-    <a href="#contact" onclick="closeMobile()">Contact</a>
-    <div class="mob-actions">
-      <a href="/" class="mob-verify" onclick="closeMobile()">Main Site</a>
-      <a href="#contact" class="mob-protect" onclick="closeMobile()">Request Demo</a>
-    </div>
+    </button>
   </div>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
 
 <!-- ===== HERO ===== -->
 <section class="hero">
@@ -336,15 +347,15 @@
     <div class="glow-3"></div>
   </div>
   <div class="hero-content fade-up">
-    <div class="hero-badge"><div class="pulse"></div><span>Enterprise-Grade Security</span></div>
-    <h1>Secure Document Infrastructure<br><span class="gradient">for Organizations</span></h1>
-    <p class="sub">Protect diplomas, licenses, medical records, and compliance documents with tamper-proof .pvf files. HMAC-SHA256 integrity, Polygon blockchain anchoring, and complete blind processing.</p>
+    <div class="hero-badge"><div class="pulse"></div><span data-i18n="enterprise.badge">Enterprise-Grade Security</span></div>
+    <h1><span data-i18n="enterprise.heroTitle1">Secure Document Infrastructure</span><br><span class="gradient" data-i18n="enterprise.heroTitle2">for Organizations</span></h1>
+    <p class="sub" data-i18n="enterprise.heroSubtitle">Protect diplomas, licenses, medical records, and compliance documents with tamper-proof .pvf files. HMAC-SHA256 integrity, Polygon blockchain anchoring, and complete blind processing.</p>
     <div class="hero-buttons">
-      <a href="#contact" class="btn-primary">Request Demo</a>
-      <a href="#integration" class="btn-secondary">View API Docs</a>
+      <a href="#contact" class="btn-primary" data-i18n="enterprise.requestDemo">Request Demo</a>
+      <a href="#integration" class="btn-secondary" data-i18n="enterprise.viewApiDocs">View API Docs</a>
     </div>
     <div class="hero-trust">
-      <span>Trusted by organizations worldwide</span>
+      <span data-i18n="enterprise.trustedBy">Trusted by organizations worldwide</span>
     </div>
   </div>
 </section>
@@ -354,61 +365,61 @@
 <!-- ===== USE CASES ===== -->
 <section class="usecases-section" id="usecases">
   <div class="section-header fade-up">
-    <div class="label">Use Cases</div>
-    <h2>Built for Every Sector</h2>
-    <p>From universities to financial institutions, Vertifile protects the documents that matter most.</p>
+    <div class="label" data-i18n="enterprise.useCasesLabel">Use Cases</div>
+    <h2 data-i18n="enterprise.useCasesTitle">Built for Every Sector</h2>
+    <p data-i18n="enterprise.useCasesSubtitle">From universities to financial institutions, Vertifile protects the documents that matter most.</p>
   </div>
   <div class="usecases-grid">
     <div class="usecase-card fade-up">
       <div class="usecase-icon education">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
       </div>
-      <h3>Education</h3>
-      <p>Issue verifiable academic credentials that cannot be forged or altered.</p>
+      <h3 data-i18n="enterprise.educationTitle">Education</h3>
+      <p data-i18n="enterprise.educationDesc">Issue verifiable academic credentials that cannot be forged or altered.</p>
       <ul class="use-list">
-        <li>Diplomas &amp; Degrees</li>
-        <li>Official Transcripts</li>
-        <li>Professional Certifications</li>
-        <li>Research Publications</li>
+        <li data-i18n="enterprise.educationItem1">Diplomas &amp; Degrees</li>
+        <li data-i18n="enterprise.educationItem2">Official Transcripts</li>
+        <li data-i18n="enterprise.educationItem3">Professional Certifications</li>
+        <li data-i18n="enterprise.educationItem4">Research Publications</li>
       </ul>
     </div>
     <div class="usecase-card fade-up">
       <div class="usecase-icon government">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11"/><line x1="8" y1="14" x2="8" y2="17"/><line x1="12" y1="14" x2="12" y2="17"/><line x1="16" y1="14" x2="16" y2="17"/></svg>
       </div>
-      <h3>Government</h3>
-      <p>Digitize public records with cryptographic proof of authenticity.</p>
+      <h3 data-i18n="enterprise.governmentTitle">Government</h3>
+      <p data-i18n="enterprise.governmentDesc">Digitize public records with cryptographic proof of authenticity.</p>
       <ul class="use-list">
-        <li>Licenses &amp; Permits</li>
-        <li>Official Certificates</li>
-        <li>Identity Documents</li>
-        <li>Regulatory Filings</li>
+        <li data-i18n="enterprise.governmentItem1">Licenses &amp; Permits</li>
+        <li data-i18n="enterprise.governmentItem2">Official Certificates</li>
+        <li data-i18n="enterprise.governmentItem3">Identity Documents</li>
+        <li data-i18n="enterprise.governmentItem4">Regulatory Filings</li>
       </ul>
     </div>
     <div class="usecase-card fade-up">
       <div class="usecase-icon healthcare">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
       </div>
-      <h3>Healthcare</h3>
-      <p>Protect sensitive medical documents while maintaining full HIPAA compliance.</p>
+      <h3 data-i18n="enterprise.healthcareTitle">Healthcare</h3>
+      <p data-i18n="enterprise.healthcareDesc">Protect sensitive medical documents while maintaining full HIPAA compliance.</p>
       <ul class="use-list">
-        <li>Medical Records</li>
-        <li>Provider Certifications</li>
-        <li>Lab Reports</li>
-        <li>Insurance Documents</li>
+        <li data-i18n="enterprise.healthcareItem1">Medical Records</li>
+        <li data-i18n="enterprise.healthcareItem2">Provider Certifications</li>
+        <li data-i18n="enterprise.healthcareItem3">Lab Reports</li>
+        <li data-i18n="enterprise.healthcareItem4">Insurance Documents</li>
       </ul>
     </div>
     <div class="usecase-card fade-up">
       <div class="usecase-icon finance">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
       </div>
-      <h3>Finance</h3>
-      <p>Secure compliance and audit documents with immutable verification trails.</p>
+      <h3 data-i18n="enterprise.financeTitle">Finance</h3>
+      <p data-i18n="enterprise.financeDesc">Secure compliance and audit documents with immutable verification trails.</p>
       <ul class="use-list">
-        <li>Compliance Documents</li>
-        <li>Audit Reports</li>
-        <li>Regulatory Filings</li>
-        <li>Financial Statements</li>
+        <li data-i18n="enterprise.financeItem1">Compliance Documents</li>
+        <li data-i18n="enterprise.financeItem2">Audit Reports</li>
+        <li data-i18n="enterprise.financeItem3">Regulatory Filings</li>
+        <li data-i18n="enterprise.financeItem4">Financial Statements</li>
       </ul>
     </div>
   </div>
@@ -419,25 +430,25 @@
 <!-- ===== HOW INTEGRATION WORKS ===== -->
 <section class="integration-section" id="integration">
   <div class="section-header fade-up">
-    <div class="label">Integration</div>
-    <h2>Up and Running in Minutes</h2>
-    <p>Three simple steps to protect every document your organization produces.</p>
+    <div class="label" data-i18n="enterprise.integrationLabel">Integration</div>
+    <h2 data-i18n="enterprise.integrationTitle">Up and Running in Minutes</h2>
+    <p data-i18n="enterprise.integrationSubtitle">Three simple steps to protect every document your organization produces.</p>
   </div>
   <div class="steps-row">
     <div class="step-item fade-up">
       <div class="step-num">1</div>
-      <h3>Get Your API Key</h3>
-      <p>Sign up for an enterprise account and receive your organization's API credentials and dashboard access.</p>
+      <h3 data-i18n="enterprise.step1Title">Get Your API Key</h3>
+      <p data-i18n="enterprise.step1Desc">Sign up for an enterprise account and receive your organization's API credentials and dashboard access.</p>
     </div>
     <div class="step-item fade-up">
       <div class="step-num">2</div>
-      <h3>Integrate the SDK</h3>
-      <p>Drop our lightweight SDK into your existing workflow. Available for Node.js, Python, Java, Go, and REST.</p>
+      <h3 data-i18n="enterprise.step2Title">Integrate the SDK</h3>
+      <p data-i18n="enterprise.step2Desc">Drop our lightweight SDK into your existing workflow. Available for Node.js, Python, Java, Go, and REST.</p>
     </div>
     <div class="step-item fade-up">
       <div class="step-num">3</div>
-      <h3>Protect Documents</h3>
-      <p>Every document is automatically converted to a tamper-proof .pvf file with a live animated verification stamp.</p>
+      <h3 data-i18n="enterprise.step3Title">Protect Documents</h3>
+      <p data-i18n="enterprise.step3Desc">Every document is automatically converted to a tamper-proof .pvf file with a live animated verification stamp.</p>
     </div>
   </div>
 </section>
@@ -447,52 +458,52 @@
 <!-- ===== KEY BENEFITS ===== -->
 <section class="benefits-section" id="benefits">
   <div class="section-header fade-up">
-    <div class="label">Benefits</div>
-    <h2>Enterprise-Grade Protection</h2>
-    <p>Every layer of security designed for organizations that cannot afford compromised documents.</p>
+    <div class="label" data-i18n="enterprise.benefitsLabel">Benefits</div>
+    <h2 data-i18n="enterprise.benefitsTitle">Enterprise-Grade Protection</h2>
+    <p data-i18n="enterprise.benefitsSubtitle">Every layer of security designed for organizations that cannot afford compromised documents.</p>
   </div>
   <div class="benefits-grid">
     <div class="benefit-card fade-up">
       <div class="benefit-icon blind">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
       </div>
-      <h3>Blind Processing</h3>
-      <p>Vertifile never reads, stores, or accesses your document content. Hashing is performed entirely client-side before upload.</p>
+      <h3 data-i18n="enterprise.blindTitle">Blind Processing</h3>
+      <p data-i18n="enterprise.blindDesc">Vertifile never reads, stores, or accesses your document content. Hashing is performed entirely client-side before upload.</p>
     </div>
     <div class="benefit-card fade-up">
       <div class="benefit-icon blockchain">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="6" height="6" rx="1"/><rect x="9" y="4" width="6" height="6" rx="1"/><rect x="17" y="4" width="6" height="6" rx="1"/><rect x="1" y="14" width="6" height="6" rx="1"/><rect x="9" y="14" width="6" height="6" rx="1"/><rect x="17" y="14" width="6" height="6" rx="1"/></svg>
       </div>
-      <h3>Blockchain Verified</h3>
-      <p>Every document hash is anchored to the Polygon blockchain, creating an immutable, publicly auditable proof of authenticity.</p>
+      <h3 data-i18n="enterprise.blockchainTitle">Blockchain Verified</h3>
+      <p data-i18n="enterprise.blockchainDesc">Every document hash is anchored to the Polygon blockchain, creating an immutable, publicly auditable proof of authenticity.</p>
     </div>
     <div class="benefit-card fade-up">
       <div class="benefit-icon instant">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
       </div>
-      <h3>Instant Verification</h3>
-      <p>Recipients verify any .pvf document in under 100ms. No account required, no software to install. Just drag, drop, and verify.</p>
+      <h3 data-i18n="enterprise.instantTitle">Instant Verification</h3>
+      <p data-i18n="enterprise.instantDesc">Recipients verify any .pvf document in under 100ms. No account required, no software to install. Just drag, drop, and verify.</p>
     </div>
     <div class="benefit-card fade-up">
       <div class="benefit-icon antiforgery">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
       </div>
-      <h3>Anti-Forgery Stamps</h3>
-      <p>Live animated holographic stamps embedded in every .pvf file. Impossible to replicate with screenshots or copies.</p>
+      <h3 data-i18n="enterprise.antiForgeryTitle">Anti-Forgery Stamps</h3>
+      <p data-i18n="enterprise.antiForgeryDesc">Live animated holographic stamps embedded in every .pvf file. Impossible to replicate with screenshots or copies.</p>
     </div>
     <div class="benefit-card fade-up">
       <div class="benefit-icon api">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
       </div>
-      <h3>Gateway API</h3>
-      <p>RESTful API with webhook support for automated document protection workflows. Process thousands of documents per minute.</p>
+      <h3 data-i18n="enterprise.gatewayApiTitle">Gateway API</h3>
+      <p data-i18n="enterprise.gatewayApiDesc">RESTful API with webhook support for automated document protection workflows. Process thousands of documents per minute.</p>
     </div>
     <div class="benefit-card fade-up">
       <div class="benefit-icon whitelabel">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
       </div>
-      <h3>White-Label</h3>
-      <p>Customize stamps, verification pages, and emails with your organization's branding. Your identity, our infrastructure.</p>
+      <h3 data-i18n="enterprise.whiteLabelTitle">White-Label</h3>
+      <p data-i18n="enterprise.whiteLabelDesc">Customize stamps, verification pages, and emails with your organization's branding. Your identity, our infrastructure.</p>
     </div>
   </div>
 </section>
@@ -502,26 +513,26 @@
 <!-- ===== ROI / STATS ===== -->
 <section class="stats-section">
   <div class="section-header fade-up">
-    <div class="label">Performance</div>
-    <h2>Why Organizations Choose Vertifile</h2>
-    <p>Numbers that speak for themselves. Built for reliability at enterprise scale.</p>
+    <div class="label" data-i18n="enterprise.performanceLabel">Performance</div>
+    <h2 data-i18n="enterprise.performanceTitle">Why Organizations Choose Vertifile</h2>
+    <p data-i18n="enterprise.performanceSubtitle">Numbers that speak for themselves. Built for reliability at enterprise scale.</p>
   </div>
   <div class="stats-grid">
     <div class="stat-card fade-up">
       <div class="stat-num"><span class="accent">99.99%</span></div>
-      <div class="stat-label">Platform Uptime SLA</div>
+      <div class="stat-label" data-i18n="enterprise.statUptime">Platform Uptime SLA</div>
     </div>
     <div class="stat-card fade-up">
       <div class="stat-num"><span class="accent">&lt;100ms</span></div>
-      <div class="stat-label">Verification Speed</div>
+      <div class="stat-label" data-i18n="enterprise.statSpeed">Verification Speed</div>
     </div>
     <div class="stat-card fade-up">
       <div class="stat-num"><span class="accent">0</span></div>
-      <div class="stat-label">Data Breaches</div>
+      <div class="stat-label" data-i18n="enterprise.statBreaches">Data Breaches</div>
     </div>
     <div class="stat-card fade-up">
       <div class="stat-num"><span class="accent">500K+</span></div>
-      <div class="stat-label">Documents Protected</div>
+      <div class="stat-label" data-i18n="enterprise.statDocuments">Documents Protected</div>
     </div>
   </div>
 </section>
@@ -531,9 +542,9 @@
 <!-- ===== CODE PREVIEW ===== -->
 <section class="code-section" id="code">
   <div class="section-header fade-up">
-    <div class="label">Developer Experience</div>
-    <h2>Simple, Powerful API</h2>
-    <p>Integrate document protection into your existing systems with just a few lines of code.</p>
+    <div class="label" data-i18n="enterprise.devExperienceLabel">Developer Experience</div>
+    <h2 data-i18n="enterprise.devExperienceTitle">Simple, Powerful API</h2>
+    <p data-i18n="enterprise.devExperienceSubtitle">Integrate document protection into your existing systems with just a few lines of code.</p>
   </div>
   <div class="code-wrapper fade-up">
     <div class="code-browser">
@@ -580,41 +591,41 @@ console.<span class="fn">log</span>(<span class="str">`Blockchain TX: <span clas
 <!-- ===== VERIFICATION GATEWAY ===== -->
 <section class="gateway-section" id="gateway">
   <div class="section-header fade-up">
-    <div class="label">Gateway</div>
-    <h2>Verification at Scale</h2>
-    <p>Automated document intake and verification for organizations processing thousands of credentials.</p>
+    <div class="label" data-i18n="enterprise.gatewayLabel">Gateway</div>
+    <h2 data-i18n="enterprise.gatewayTitle">Verification at Scale</h2>
+    <p data-i18n="enterprise.gatewaySubtitle">Automated document intake and verification for organizations processing thousands of credentials.</p>
   </div>
   <div class="gateway-content">
     <div class="gateway-text fade-up">
-      <h3>Gateway Intake API</h3>
-      <p>Accept, verify, and route protected documents from external parties automatically. No manual review required for verified files.</p>
+      <h3 data-i18n="enterprise.gatewayIntakeTitle">Gateway Intake API</h3>
+      <p data-i18n="enterprise.gatewayIntakeDesc">Accept, verify, and route protected documents from external parties automatically. No manual review required for verified files.</p>
       <ul class="gateway-features">
         <li>
           <span class="gw-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg></span>
-          <span>Bulk document upload via API or SFTP with automatic verification on ingestion</span>
+          <span data-i18n="enterprise.gatewayFeature1">Bulk document upload via API or SFTP with automatic verification on ingestion</span>
         </li>
         <li>
           <span class="gw-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
-          <span>Instant pass/fail verification results with detailed integrity reports</span>
+          <span data-i18n="enterprise.gatewayFeature2">Instant pass/fail verification results with detailed integrity reports</span>
         </li>
         <li>
           <span class="gw-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
-          <span>Webhook callbacks for real-time integration with your ERP, SIS, or CRM systems</span>
+          <span data-i18n="enterprise.gatewayFeature3">Webhook callbacks for real-time integration with your ERP, SIS, or CRM systems</span>
         </li>
         <li>
           <span class="gw-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
-          <span>End-to-end encryption with zero-knowledge architecture for maximum data privacy</span>
+          <span data-i18n="enterprise.gatewayFeature4">End-to-end encryption with zero-knowledge architecture for maximum data privacy</span>
         </li>
       </ul>
     </div>
     <div class="gateway-visual fade-up">
       <div class="gateway-diagram">
         <div class="gw-flow">
-          <div class="gw-node source">External Documents (PDF, DOCX)</div>
+          <div class="gw-node source" data-i18n="enterprise.gatewayNodeSource">External Documents (PDF, DOCX)</div>
           <div class="gw-arrow"></div>
-          <div class="gw-node gateway">Vertifile Gateway API</div>
+          <div class="gw-node gateway" data-i18n="enterprise.gatewayNodeGateway">Vertifile Gateway API</div>
           <div class="gw-arrow"></div>
-          <div class="gw-node output">Verified .pvf Files + Reports</div>
+          <div class="gw-node output" data-i18n="enterprise.gatewayNodeOutput">Verified .pvf Files + Reports</div>
         </div>
       </div>
     </div>
@@ -626,14 +637,14 @@ console.<span class="fn">log</span>(<span class="str">`Blockchain TX: <span clas
 <!-- ===== CONTACT CTA ===== -->
 <section class="contact-cta-section" id="pricing" style="background:linear-gradient(180deg,#f8f7ff 0%,#f3f0ff 50%,#f8f7ff 100%);padding:100px 32px;text-align:center;position:relative;overflow:hidden">
   <div class="section-header fade-up">
-    <div class="label">Plans</div>
-    <h2>Custom Plans for Your Organization</h2>
-    <p>Contact us for a custom plan tailored to your organization's document protection needs.</p>
+    <div class="label" data-i18n="enterprise.plansLabel">Plans</div>
+    <h2 data-i18n="enterprise.plansTitle">Custom Plans for Your Organization</h2>
+    <p data-i18n="enterprise.plansSubtitle">Contact us for a custom plan tailored to your organization's document protection needs.</p>
   </div>
   <div class="fade-up" style="max-width:500px;margin:0 auto">
     <a href="mailto:zur2525@gmail.com" style="display:inline-flex;align-items:center;gap:10px;padding:16px 40px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:14px;font-weight:700;font-size:16px;transition:all .3s;border:none;cursor:pointer;font-family:inherit;letter-spacing:-.2px;box-shadow:0 4px 20px rgba(79,70,229,.3);text-decoration:none">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      Contact Us
+      <span data-i18n="enterprise.contactUs">Contact Us</span>
     </a>
     <p style="margin-top:16px;font-size:14px;color:#6b7280">Or email us directly at <a href="mailto:zur2525@gmail.com" style="color:#7c3aed;font-weight:600;text-decoration:none">zur2525@gmail.com</a></p>
   </div>
@@ -644,28 +655,28 @@ console.<span class="fn">log</span>(<span class="str">`Blockchain TX: <span clas
 <!-- ===== CONTACT FORM ===== -->
 <section class="contact-section" id="contact">
   <div class="section-header fade-up">
-    <div class="label">Get Started</div>
-    <h2>Request a Demo</h2>
-    <p>Tell us about your organization and a member of our team will reach out within 24 hours.</p>
+    <div class="label" data-i18n="enterprise.getStartedLabel">Get Started</div>
+    <h2 data-i18n="enterprise.contactTitle">Request a Demo</h2>
+    <p data-i18n="enterprise.contactSubtitle">Tell us about your organization and a member of our team will reach out within 24 hours.</p>
   </div>
   <div class="contact-wrapper fade-up">
     <form class="contact-form" onsubmit="event.preventDefault();">
       <div class="form-row">
         <div class="form-group" style="margin-bottom:0">
-          <label for="name">Full Name</label>
+          <label for="name" data-i18n="enterprise.fullName">Full Name</label>
           <input type="text" id="name" placeholder="Jane Smith" required>
         </div>
         <div class="form-group" style="margin-bottom:0">
-          <label for="email">Work Email</label>
+          <label for="email" data-i18n="enterprise.workEmail">Work Email</label>
           <input type="email" id="email" placeholder="jane@organization.edu" required>
         </div>
       </div>
       <div class="form-group">
-        <label for="org">Organization</label>
+        <label for="org" data-i18n="enterprise.organization">Organization</label>
         <input type="text" id="org" placeholder="University of Example" required>
       </div>
       <div class="form-group">
-        <label for="orgtype">Organization Type</label>
+        <label for="orgtype" data-i18n="enterprise.organizationType">Organization Type</label>
         <select id="orgtype">
           <option value="" disabled selected>Select your sector</option>
           <option value="education">Education</option>
@@ -677,10 +688,10 @@ console.<span class="fn">log</span>(<span class="str">`Blockchain TX: <span clas
         </select>
       </div>
       <div class="form-group">
-        <label for="message">Message</label>
+        <label for="message" data-i18n="enterprise.message">Message</label>
         <textarea id="message" placeholder="Tell us about your document protection needs, estimated volume, and any integration requirements..."></textarea>
       </div>
-      <button type="submit" class="form-submit">Request Demo</button>
+      <button type="submit" class="form-submit" data-i18n="enterprise.requestDemo">Request Demo</button>
     </form>
   </div>
 </section>
@@ -688,9 +699,9 @@ console.<span class="fn">log</span>(<span class="str">`Blockchain TX: <span clas
 <!-- ===== BOTTOM CTA ===== -->
 <div style="padding:0 32px;">
   <div class="bottom-cta fade-up">
-    <h2>Ready to Secure Your Documents?</h2>
-    <p>Join organizations worldwide that trust Vertifile to protect their most important records.</p>
-    <a href="#contact" class="btn-white">Schedule a Call</a>
+    <h2 data-i18n="enterprise.bottomCtaTitle">Ready to Secure Your Documents?</h2>
+    <p data-i18n="enterprise.bottomCtaSubtitle">Join organizations worldwide that trust Vertifile to protect their most important records.</p>
+    <a href="#contact" class="btn-white" data-i18n="enterprise.scheduleCall">Schedule a Call</a>
   </div>
 </div>
 
@@ -701,7 +712,7 @@ console.<span class="fn">log</span>(<span class="str">`Blockchain TX: <span clas
       <div class="f-logo">
         <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
       </div>
-      <p>Enterprise-grade document protection with tamper-proof .pvf files, blockchain verification, and complete blind processing.</p>
+      <p data-i18n="enterprise.footerDesc">Enterprise-grade document protection with tamper-proof .pvf files, blockchain verification, and complete blind processing.</p>
     </div>
     <div class="footer-col">
       <h4>Product</h4>
@@ -791,6 +802,6 @@ console.<span class="fn">log</span>(<span class="str">`Blockchain TX: <span clas
   });
 })();
 </script>
-
+<script src="/js/i18n.js"></script>
 </body>
 </html>

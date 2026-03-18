@@ -14,25 +14,38 @@
     body{font-family:'Inter','Heebo',sans-serif;background:#ffffff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px;color:#111827}
     a{text-decoration:none;color:inherit}
 
+    [dir="rtl"] body { font-family: 'Heebo','Inter',sans-serif; }
+
     /* ===== NAVBAR ===== */
-    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.06)}
-    .nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:72px;display:flex;align-items:center;justify-content:space-between}
-    .nav-logo{display:flex;align-items:center}
-    .nav-logo img{height:36px;width:auto}
-    .nav-links{display:flex;align-items:center;gap:24px}
-    .nav-links a{font-size:14px;font-weight:500;color:#4b5563;transition:color .2s}
-    .nav-links a:hover{color:#111827}
-    .nav-cta{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff!important;border-radius:10px;font-weight:700;font-size:13px;transition:all .3s;border:none;cursor:pointer}
-    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 25px rgba(79,70,229,.4)}
-    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
-    .hamburger span{width:22px;height:2px;background:#111827;border-radius:2px}
-    .mobile-menu{display:none;position:fixed;top:72px;left:0;right:0;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);padding:20px 32px;box-shadow:0 16px 50px rgba(0,0,0,.1);z-index:999;border-bottom:1px solid rgba(0,0,0,.06)}
-    .mobile-menu.show{display:block}
-    .mobile-menu a{display:block;padding:14px 0;font-size:16px;font-weight:500;color:#4b5563;border-bottom:1px solid rgba(0,0,0,.06)}
-    @media(max-width:768px){.nav-links{display:none}.hamburger{display:flex}.nav-inner{padding:0 20px}}
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 64px; transition: .3s; }
+    .navbar.scrolled { background: rgba(255,255,255,.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 32px; height: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo img { height: 28px; }
+    .nav-center { display: flex; gap: 28px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .nav-center a { font-size: 14px; font-weight: 500; color: #374151; text-decoration: none; transition: .2s; }
+    .nav-center a:hover { color: #7c3aed; }
+    [dir="rtl"] .nav-center { direction: rtl; }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .nav-verify { font-size: 13px; font-weight: 500; color: #4f46e5; text-decoration: none; }
+    .nav-cta { padding: 8px 20px; background: linear-gradient(135deg,#4f46e5,#7c3aed); color: #fff; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; transition: .2s; }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(124,58,237,.3); }
+    .lang-btn { position: relative; display: flex; align-items: center; gap: 4px; background: none; border: 1px solid rgba(0,0,0,.08); border-radius: 8px; padding: 6px 10px; cursor: pointer; color: #374151; font-size: 12px; font-weight: 500; font-family: inherit; }
+    .lang-dropdown { position: absolute; top: calc(100% + 8px); right: 0; display: none; min-width: 140px; background: #fff; border: 1px solid rgba(0,0,0,.08); border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.12); padding: 6px 0; z-index: 1001; }
+    [dir="rtl"] .lang-dropdown { right: auto; left: 0; }
+    .lang-dropdown.show { display: block; }
+    .lang-dropdown a { display: block; padding: 8px 16px; font-size: 13px; color: #374151; text-decoration: none; transition: .15s; }
+    .lang-dropdown a:hover { background: rgba(124,58,237,.06); color: #7c3aed; }
+    .lang-dropdown a.active { color: #7c3aed; font-weight: 600; }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 20px; height: 2px; background: #111827; margin: 4px 0; border-radius: 2px; }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: #fff; border-bottom: 1px solid rgba(0,0,0,.06); padding: 16px 24px; z-index: 999; flex-direction: column; gap: 12px; }
+    .mobile-menu.show { display: flex; }
+    .mobile-menu a { font-size: 15px; color: #374151; text-decoration: none; padding: 8px 0; }
+    .mob-actions { display: flex; gap: 12px; margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,.06); }
+    @media(max-width:768px) { .nav-center, .nav-actions { display: none; } .hamburger { display: block; } }
 
     /* ===== CARD ===== */
-    .card{background:#ffffff;border:1px solid rgba(0,0,0,.06);border-radius:24px;max-width:560px;width:100%;overflow:hidden;margin-top:90px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+    .card{background:#ffffff;border:1px solid rgba(0,0,0,.06);border-radius:24px;max-width:560px;width:100%;overflow:hidden;margin-top:84px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
     .card-header{background:linear-gradient(135deg,rgba(79,70,229,.05),rgba(124,58,237,.03));padding:28px 32px;border-bottom:1px solid rgba(0,0,0,.06)}
     .card-header h2{font-size:22px;font-weight:800;color:#111827;margin-bottom:6px;letter-spacing:-.3px}
     .card-header p{font-size:14px;color:#9ca3af;font-weight:400}
@@ -119,32 +132,56 @@
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar">
+<nav class="navbar" id="navbar">
   <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
-    </a>
-    <div class="nav-links">
-      <a href="/">Home</a>
-      <a href="/verify">Verify a Document</a>
-      <a href="/verify" class="nav-cta">Verify a Document</a>
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
+    <div class="nav-center">
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
     </div>
-    <div class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('show')">
+    <div class="nav-actions">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#x05E2;&#x05D1;&#x05E8;&#x05D9;&#x05EA;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#x0627;&#x0644;&#x0639;&#x0631;&#x0628;&#x064A;&#x0629;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#x0420;&#x0443;&#x0441;&#x0441;&#x043A;&#x0438;&#x0439;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#x7B80;&#x4F53;&#x4E2D;&#x6587;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#x65E5;&#x672C;&#x8A9E;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
+    </div>
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
       <span></span><span></span><span></span>
-    </div>
-  </div>
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="/">Home</a>
-    <a href="/verify">Verify a Document</a>
-    <a href="/upload">Protect a Document</a>
+    </button>
   </div>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
 
 <!-- SIGNUP FORM CARD -->
 <div class="card" id="signupCard">
   <div class="card-header">
-    <h2>Get Your API Key</h2>
-    <p>Start protecting documents in minutes. No credit card required.</p>
+    <h2 data-i18n="signup.pageTitle">Get Your API Key</h2>
+    <p data-i18n="signup.pageSubtitle">Start protecting documents in minutes. No credit card required.</p>
   </div>
 
   <div class="card-body">
@@ -157,22 +194,22 @@
     <form id="signupForm" novalidate>
 
       <div class="form-group">
-        <label class="form-label" for="orgName">Organization Name</label>
+        <label class="form-label" for="orgName" data-i18n="signup.orgNameLabel">Organization Name</label>
         <input class="form-input" type="text" id="orgName" name="orgName" placeholder="Acme University" required autocomplete="organization">
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="contactName">Your Name</label>
+        <label class="form-label" for="contactName" data-i18n="signup.contactNameLabel">Your Name</label>
         <input class="form-input" type="text" id="contactName" name="contactName" placeholder="Jane Smith" required autocomplete="name">
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="email">Email</label>
+        <label class="form-label" for="email" data-i18n="signup.emailLabel">Email</label>
         <input class="form-input" type="email" id="email" name="email" placeholder="jane@acme.edu" required autocomplete="email">
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="useCase">Use Case <span class="optional">(optional)</span></label>
+        <label class="form-label" for="useCase" data-i18n="signup.useCaseLabel">Use Case <span class="optional" data-i18n="signup.optional">(optional)</span></label>
         <select class="form-select" id="useCase" name="useCase">
           <option value="">Select a category...</option>
           <option value="education">Education</option>
@@ -186,12 +223,12 @@
 
       <button class="submit-btn" type="submit" id="submitBtn">
         <div class="spinner"></div>
-        <span class="btn-text">Create API Key</span>
+        <span class="btn-text" data-i18n="signup.submitBtn">Create API Key</span>
       </button>
 
       <div class="privacy-note">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-        We never share your information.
+        <span data-i18n="signup.privacyNote">We never share your information.</span>
       </div>
 
     </form>
@@ -201,11 +238,11 @@
       <div class="result-check">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/></svg>
       </div>
-      <h3>Your API Key is Ready!</h3>
-      <p class="result-subtitle">You're all set. Use this key to authenticate your API requests.</p>
+      <h3 data-i18n="signup.successTitle">Your API Key is Ready!</h3>
+      <p class="result-subtitle" data-i18n="signup.successSubtitle">You're all set. Use this key to authenticate your API requests.</p>
 
       <div class="key-box">
-        <div class="key-box-label">API Key</div>
+        <div class="key-box-label" data-i18n="signup.apiKeyLabel">API Key</div>
         <div class="key-box-value">
           <code id="apiKeyDisplay"></code>
           <button class="copy-btn" id="copyKeyBtn" onclick="copyApiKey()" title="Copy to clipboard">
@@ -215,7 +252,7 @@
       </div>
 
       <div class="key-box" id="orgIdBox" style="margin-bottom:16px">
-        <div class="key-box-label">Organization ID</div>
+        <div class="key-box-label" data-i18n="signup.orgIdLabel">Organization ID</div>
         <div class="key-box-value">
           <code id="orgIdDisplay"></code>
         </div>
@@ -223,11 +260,11 @@
 
       <div class="key-warning">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        <span>Save this key — it won't be shown again. Store it securely in your application's environment variables.</span>
+        <span data-i18n="signup.keyWarning">Save this key — it won't be shown again. Store it securely in your application's environment variables.</span>
       </div>
 
       <div class="quickstart">
-        <div class="quickstart-label">Quick Start</div>
+        <div class="quickstart-label" data-i18n="signup.quickStartLabel">Quick Start</div>
         <div class="code-block">
           <button class="copy-code" id="copyCodeBtn" onclick="copyCodeSnippet()" title="Copy code">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -249,11 +286,11 @@ form.<span class="fn">append</span>(<span class="str">'file'</span>, fileBuffer)
       <div class="result-links">
         <a href="/integration" class="link-primary">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-          Read Integration Guide
+          <span data-i18n="signup.readIntegrationGuide">Read Integration Guide</span>
         </a>
         <a href="/upload" class="link-secondary">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          Go to Upload
+          <span data-i18n="signup.goToUpload">Go to Upload</span>
         </a>
       </div>
     </div>
@@ -413,6 +450,23 @@ function showCopied(btn) {
     btn.innerHTML = origHTML;
   }, 2000);
 }
+
+// Mobile menu toggle
+function toggleMobile(){
+  document.getElementById('mobileMenu').classList.toggle('show');
+}
+function closeMobile(){
+  document.getElementById('mobileMenu').classList.remove('show');
+}
+
+// Navbar scroll effect
+var navbar = document.getElementById('navbar');
+if (navbar) {
+  window.addEventListener('scroll', function(){
+    navbar.classList.toggle('scrolled', window.scrollY > 20);
+  });
+}
 </script>
+<script src="/js/i18n.js"></script>
 </body>
 </html>
