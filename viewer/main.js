@@ -42,11 +42,21 @@ function loadPvfFile(filePath) {
       mainWindow.webContents.send('pvf-error', 'File not found: ' + filePath);
       return;
     }
+    const ext = path.extname(filePath).toLowerCase();
+    if (ext !== '.pvf') {
+      mainWindow.webContents.send('pvf-error', 'Only .pvf files can be opened.\n\nThis file has extension "' + ext + '"');
+      return;
+    }
     const content = fs.readFileSync(filePath, 'utf-8');
     const fileName = path.basename(filePath);
 
-    if (!content.includes('Vertifile') && !content.includes('<!--PVF:1.0-->')) {
-      mainWindow.webContents.send('pvf-error', 'Not a valid PVF file.');
+    // Strict PVF validation — must have magic bytes AND hash variable
+    var hasMagic = content.startsWith('<!--PVF:1.0-->');
+    var hasVertifile = content.includes('Vertifile');
+    var hasHash = content.includes('var HASH=') || content.includes('pvf:hash');
+    if (!hasMagic || !hasHash) {
+      var reason = !hasMagic ? 'Missing PVF header (<!--PVF:1.0-->)' : 'Missing verification data';
+      mainWindow.webContents.send('pvf-error', 'This is not a valid PVF file.\n\n' + reason + '\n\nOnly files created by Vertifile can be opened.');
       return;
     }
 
