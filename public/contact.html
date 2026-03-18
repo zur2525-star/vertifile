@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertifile — Contact Us</title>
+  <meta name="description" content="Get in touch with Vertifile — contact us for support, enterprise inquiries, or partnership opportunities.">
+  <meta name="keywords" content="document verification, tamper-proof, digital signature, PVF, blockchain verification">
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <meta property="og:title" content="Contact — Vertifile">
+  <meta property="og:description" content="Get in touch with Vertifile — contact us for support, enterprise inquiries, or partnership opportunities.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vertifile.com/contact">
+  <meta property="og:image" content="https://vertifile.com/images/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Contact — Vertifile">
+  <meta name="twitter:description" content="Get in touch with Vertifile — contact us for support, enterprise inquiries, or partnership opportunities.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden}
+    [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
+    a{text-decoration:none;color:inherit}
+
+    /* ===== NAVBAR ===== */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:100%;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo img{height:28px}
+    .nav-center{display:flex;gap:28px;position:absolute;left:50%;transform:translateX(-50%)}
+    .nav-center a{font-size:14px;font-weight:500;color:#374151;text-decoration:none;transition:.2s}
+    .nav-center a:hover{color:#7c3aed}
+    [dir="rtl"] .nav-center{direction:rtl}
+    .nav-actions{display:flex;align-items:center;gap:12px}
+    .nav-verify{font-size:13px;font-weight:500;color:#4f46e5;text-decoration:none}
+    .nav-cta{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
+    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.3)}
+    .lang-btn{display:flex;align-items:center;gap:5px;cursor:pointer;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#4b5563;border:1px solid rgba(0,0,0,.12);background:transparent;position:relative;transition:.2s}
+    .lang-btn:hover{border-color:rgba(0,0,0,.3);color:#111827}
+    .lang-btn svg{width:16px;height:16px}
+    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.1);min-width:160px;padding:4px 0;display:none;z-index:100}
+    [dir="rtl"] .lang-dropdown{right:auto;left:0}
+    .lang-dropdown.show{display:block}
+    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:#4b5563;transition:.15s}
+    .lang-dropdown a:hover{background:rgba(0,0,0,.03);color:#111827}
+    .lang-dropdown a.active{color:#7c3aed;font-weight:600}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px}
+    .hamburger span{display:block;width:20px;height:2px;background:#111827;margin:4px 0;border-radius:2px}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;border-bottom:1px solid rgba(0,0,0,.06);padding:16px 24px;z-index:999;flex-direction:column;gap:12px}
+    .mobile-menu.show{display:flex}
+    .mobile-menu a{font-size:15px;color:#374151;text-decoration:none;padding:8px 0}
+    .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06)}
+    @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
+
+    /* ===== HERO ===== */
+    .hero{padding:140px 60px 100px;position:relative;overflow:hidden;background:linear-gradient(180deg,#e8e0ff 0%,#ece9ff 25%,#f5f3ff 60%,#ffffff 100%)}
+    .hero-bg{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
+    .hero-bg .grid{position:absolute;top:0;left:50%;transform:translateX(-50%);width:1400px;height:100%;background-image:linear-gradient(rgba(139,92,246,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.07) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%)}
+    .hero-bg .glow-1{position:absolute;top:-15%;left:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(139,92,246,.14),transparent 70%);filter:blur(80px);animation:nebulaFloat1 20s ease-in-out infinite alternate}
+    .hero-bg .glow-2{position:absolute;bottom:-25%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(168,85,247,.10),transparent 70%);filter:blur(80px);animation:nebulaFloat2 25s ease-in-out infinite alternate}
+    .hero-bg .glow-3{position:absolute;top:20%;right:15%;width:400px;height:400px;background:radial-gradient(circle,rgba(6,182,212,.08),transparent 70%);filter:blur(60px);animation:nebulaFloat3 18s ease-in-out infinite alternate}
+    @keyframes nebulaFloat1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(40px,30px) scale(1.1)}}
+    @keyframes nebulaFloat2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-30px,-40px) scale(1.15)}}
+    @keyframes nebulaFloat3{0%{transform:translate(0,0) scale(1)}100%{transform:translate(25px,-20px) scale(1.08)}}
+    .hero-content{max-width:800px;margin:0 auto;text-align:center;position:relative;z-index:1}
+    .hero h1{font-size:54px;font-weight:900;color:#111827;line-height:1.1;margin-bottom:24px;letter-spacing:-2px}
+    .hero h1 .gradient{background:linear-gradient(135deg,#a78bfa,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p.sub{font-size:18px;color:#6b7280;line-height:1.8;max-width:600px;margin:0 auto 0;font-weight:400}
+    @media(max-width:900px){.hero{padding:120px 24px 80px}.hero h1{font-size:40px}}
+    @media(max-width:600px){.hero{padding:100px 20px 60px}.hero h1{font-size:32px;letter-spacing:-1px}.hero p.sub{font-size:15px}}
+
+    /* ===== SECTIONS COMMON ===== */
+    section{padding:100px 32px}
+    .section-header{text-align:center;max-width:600px;margin:0 auto 60px}
+    .section-header .label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7c3aed;margin-bottom:16px;background:rgba(124,58,237,.08);padding:6px 16px;border-radius:20px;border:1px solid rgba(124,58,237,.12)}
+    .section-header h2{font-size:40px;font-weight:800;color:#111827;margin-bottom:14px;letter-spacing:-1px}
+    .section-header p{font-size:17px;color:#6b7280;font-weight:400;line-height:1.7}
+
+    /* ===== SECTION DIVIDERS ===== */
+    .section-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(79,70,229,.12) 30%,rgba(124,58,237,.12) 50%,rgba(6,182,212,.08) 70%,transparent);position:relative;overflow:visible}
+    .section-divider::after{content:'';position:absolute;top:-2px;width:80px;height:5px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.4),transparent);border-radius:3px;animation:dividerGlow 4s ease-in-out infinite;filter:blur(1px)}
+    @keyframes dividerGlow{0%{left:-80px}100%{left:calc(100% + 80px)}}
+
+    /* ===== CONTACT SECTION ===== */
+    .contact-section{background:linear-gradient(180deg,#ffffff 0%,#f8f7ff 50%,#ffffff 100%);position:relative;overflow:hidden}
+    .contact-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 70%,rgba(124,58,237,.03),transparent 50%),radial-gradient(ellipse at 70% 30%,rgba(6,182,212,.02),transparent 50%);pointer-events:none}
+    .contact-grid{display:grid;grid-template-columns:1fr 340px;gap:48px;max-width:960px;margin:0 auto;position:relative;z-index:1}
+    [dir="rtl"] .contact-grid{direction:rtl}
+
+    /* Form */
+    .contact-form{background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.06);border-radius:20px;padding:40px;box-shadow:0 2px 8px rgba(124,58,237,.04)}
+    .form-group{margin-bottom:20px}
+    .form-group label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:8px}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1px solid rgba(0,0,0,.12);border-radius:10px;font-size:14px;font-family:'Inter','Heebo',sans-serif;color:#111827;background:#fff;transition:.2s;outline:none}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.08)}
+    .form-group textarea{resize:vertical;min-height:120px}
+    .form-group select{cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+    [dir="rtl"] .form-group select{background-position:left 14px center;padding-right:16px;padding-left:36px}
+    .form-submit{width:100%;padding:14px 28px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:.3s;box-shadow:0 4px 20px rgba(79,70,229,.3)}
+    .form-submit:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,70,229,.5)}
+    .form-success{display:none;text-align:center;padding:40px 20px}
+    .form-success .success-icon{width:64px;height:64px;border-radius:50%;background:rgba(52,211,153,.1);border:2px solid rgba(52,211,153,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+    .form-success .success-icon svg{width:32px;height:32px;color:#34d399}
+    .form-success h3{font-size:22px;font-weight:700;color:#111827;margin-bottom:10px}
+    .form-success p{font-size:15px;color:#6b7280;line-height:1.7}
+
+    /* Sidebar */
+    .contact-sidebar{display:flex;flex-direction:column;gap:24px}
+    .sidebar-card{background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.06);border-radius:20px;padding:28px;box-shadow:0 2px 8px rgba(124,58,237,.04)}
+    .sidebar-card .card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+    .sidebar-card .card-icon svg{width:22px;height:22px}
+    .sidebar-card .card-icon.email{background:rgba(79,70,229,.1);border:1px solid rgba(79,70,229,.15)}
+    .sidebar-card .card-icon.email svg{color:#818cf8}
+    .sidebar-card .card-icon.location{background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.15)}
+    .sidebar-card .card-icon.location svg{color:#06b6d4}
+    .sidebar-card h4{font-size:15px;font-weight:700;color:#111827;margin-bottom:6px}
+    .sidebar-card p{font-size:14px;color:#6b7280;line-height:1.7}
+    .sidebar-card a{color:#4f46e5;font-weight:500}
+    .sidebar-card a:hover{color:#7c3aed}
+    .enterprise-banner{background:linear-gradient(135deg,#4f46e5,#7c3aed);border:none;color:#fff;text-align:center}
+    .enterprise-banner h4{color:#fff;font-size:16px;margin-bottom:8px}
+    .enterprise-banner p{color:rgba(255,255,255,.8);font-size:13px;margin-bottom:16px}
+    .enterprise-banner a{display:inline-block;padding:10px 24px;background:rgba(255,255,255,.2);color:#fff;border-radius:10px;font-size:13px;font-weight:600;transition:.2s}
+    .enterprise-banner a:hover{background:rgba(255,255,255,.3);color:#fff}
+
+    @media(max-width:768px){
+      .contact-grid{grid-template-columns:1fr;gap:32px}
+      .contact-form{padding:28px 20px}
+    }
+
+    /* ===== FAQ ===== */
+    .faq-section{background:#ffffff;position:relative;overflow:hidden}
+    .faq-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.03),transparent 50%);pointer-events:none}
+    .faq-list{max-width:700px;margin:0 auto;position:relative;z-index:1}
+    .faq-item{border:1px solid rgba(124,58,237,.08);border-radius:14px;margin-bottom:12px;overflow:hidden;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);transition:all .3s}
+    .faq-item:hover{border-color:rgba(124,58,237,.18);box-shadow:0 4px 16px rgba(124,58,237,.06)}
+    .faq-q{padding:20px 24px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:15px;font-weight:600;color:#111827;user-select:none}
+    .faq-q svg{width:20px;height:20px;color:#9ca3af;flex-shrink:0;transition:transform .3s}
+    .faq-item.open .faq-q svg{transform:rotate(180deg)}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1)}
+    .faq-item.open .faq-a{max-height:300px}
+    .faq-a p{padding:0 24px 20px;font-size:14px;color:#6b7280;line-height:1.85}
+
+    /* ===== CTA ===== */
+    .cta-section{padding:100px 32px;text-align:center;background:linear-gradient(180deg,#ffffff,#f5f3ff)}
+    .cta-section h2{font-size:36px;font-weight:800;color:#111827;margin-bottom:16px;letter-spacing:-1px}
+    .cta-section p{font-size:17px;color:#6b7280;margin-bottom:36px;max-width:500px;margin-left:auto;margin-right:auto}
+    .btn-primary{padding:16px 36px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:14px;font-weight:700;font-size:16px;transition:all .3s;border:none;cursor:pointer;font-family:inherit;letter-spacing:-.2px;box-shadow:0 4px 20px rgba(79,70,229,.3);display:inline-block}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,70,229,.5)}
+
+    /* ===== FOOTER ===== */
+    footer{background:linear-gradient(180deg,#f8f7ff 0%,#1e1b4b 30%,#1e1b4b 100%);color:#e2e0f0;padding:100px 32px 30px;border-top:none;position:relative;overflow:hidden}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(180deg,#f8f7ff,transparent);pointer-events:none;z-index:1}
+    footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;background:radial-gradient(ellipse at 30% 80%,rgba(124,58,237,.15),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.08),transparent 50%);pointer-events:none}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;max-width:1000px;margin:0 auto;position:relative;z-index:2}
+    .footer-brand .f-logo{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:10px;letter-spacing:-.5px;color:#fff}
+    .footer-brand .f-logo img{height:28px;width:auto;filter:brightness(0) invert(1)}
+    .footer-brand p{font-size:13px;color:rgba(196,181,253,.6);line-height:1.8;max-width:280px}
+    .footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(167,139,250,.7);margin-bottom:16px}
+    .footer-col a{display:block;font-size:14px;color:rgba(196,181,253,.5);padding:5px 0;transition:.2s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{max-width:1000px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.4);position:relative;z-index:2}
+    .footer-lang{display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(196,181,253,.5);font-size:12px;transition:.2s}
+    .footer-lang:hover{color:#fff}
+    .footer-lang svg{stroke:rgba(196,181,253,.5)}
+    .footer-lang:hover svg{stroke:#fff}
+    @media(max-width:768px){
+      .footer-grid{grid-template-columns:1fr 1fr;gap:30px}
+      .footer-bottom{flex-direction:column;gap:10px;text-align:center}
+    }
+    @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
+    <div class="nav-center">
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
+    </div>
+    <div class="nav-actions">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#31616;&#20307;&#20013;&#25991;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
+    </div>
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-bg">
+    <div class="grid"></div>
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+    <div class="glow-3"></div>
+  </div>
+  <div class="hero-content">
+    <h1 data-i18n="contact.heroTitle">Get in <span class="gradient" data-i18n="contact.heroTitleGradient">Touch</span></h1>
+    <p class="sub" data-i18n="contact.heroSubtitle">Have a question, need support, or want to explore a partnership? We would love to hear from you.</p>
+  </div>
+</div>
+
+<!-- ===== CONTACT FORM + SIDEBAR ===== -->
+<section class="contact-section">
+  <div class="section-header">
+    <span class="label" data-i18n="contact.formLabel">Contact Us</span>
+    <h2 data-i18n="contact.formTitle">Send Us a Message</h2>
+    <p data-i18n="contact.formSubtitle">Fill out the form and our team will get back to you within 24 hours.</p>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-form" id="contactFormCard">
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="contactName" data-i18n="contact.nameLabel">Name</label>
+          <input type="text" id="contactName" name="name" required placeholder="Your full name" data-i18n-placeholder="contact.namePlaceholder">
+        </div>
+        <div class="form-group">
+          <label for="contactEmail" data-i18n="contact.emailLabel">Email</label>
+          <input type="email" id="contactEmail" name="email" required placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="contactSubject" data-i18n="contact.subjectLabel">Subject</label>
+          <select id="contactSubject" name="subject" required>
+            <option value="" disabled selected data-i18n="contact.subjectPlaceholder">Select a subject</option>
+            <option value="general" data-i18n="contact.subjectGeneral">General Inquiry</option>
+            <option value="support" data-i18n="contact.subjectSupport">Technical Support</option>
+            <option value="enterprise" data-i18n="contact.subjectEnterprise">Enterprise</option>
+            <option value="partnership" data-i18n="contact.subjectPartnership">Partnership</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="contactMessage" data-i18n="contact.messageLabel">Message</label>
+          <textarea id="contactMessage" name="message" required placeholder="How can we help you?" data-i18n-placeholder="contact.messagePlaceholder"></textarea>
+        </div>
+        <button type="submit" class="form-submit" data-i18n="contact.submitBtn">Send Message</button>
+      </form>
+      <div class="form-success" id="formSuccess">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3 data-i18n="contact.successTitle">Message Sent!</h3>
+        <p data-i18n="contact.successDesc">Thank you for reaching out. Our team will get back to you within 24 hours.</p>
+      </div>
+    </div>
+    <div class="contact-sidebar">
+      <div class="sidebar-card">
+        <div class="card-icon email">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <h4 data-i18n="contact.emailTitle">Email</h4>
+        <p><a href="mailto:info@vertifile.com">info@vertifile.com</a></p>
+      </div>
+      <div class="sidebar-card">
+        <div class="card-icon location">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h4 data-i18n="contact.locationTitle">Location</h4>
+        <p data-i18n="contact.locationDesc">Israel</p>
+      </div>
+      <div class="sidebar-card enterprise-banner">
+        <h4 data-i18n="contact.enterpriseBannerTitle">Enterprise Inquiry?</h4>
+        <p data-i18n="contact.enterpriseBannerDesc">Looking for custom plans, API access, or white-label solutions?</p>
+        <a href="/enterprise" data-i18n="contact.enterpriseBannerCta">View Enterprise Plans</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ===== FAQ ===== -->
+<section class="faq-section">
+  <div class="section-header">
+    <span class="label" data-i18n="contact.faqLabel">FAQ</span>
+    <h2 data-i18n="contact.faqTitle">Frequently Asked Questions</h2>
+    <p data-i18n="contact.faqSubtitle">Quick answers to common questions about Vertifile.</p>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span data-i18n="contact.faq1q">What is a PVF file?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="faq-a"><p data-i18n="contact.faq1a">A PVF (Protected Vertifile) is a tamper-proof document format that embeds a cryptographic signature and a live animated holographic stamp. It opens in any browser and can be verified by anyone without special software or an account.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span data-i18n="contact.faq2q">Is Vertifile free to use?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="faq-a"><p data-i18n="contact.faq2a">You can try Vertifile with our free demo that allows up to 5 documents per hour. For unlimited access, API integration, and enterprise features, contact us for custom pricing based on your organization's needs.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span data-i18n="contact.faq3q">Do you have an API?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="faq-a"><p data-i18n="contact.faq3a">Yes. Vertifile provides a RESTful API with SDKs for Node.js, Python, Java, and Go. You can protect and verify documents programmatically, set up webhooks, and integrate with your existing systems. Visit our developer documentation for details.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span data-i18n="contact.faq4q">Can you see the content of my documents?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="faq-a"><p data-i18n="contact.faq4a">No. Vertifile uses BLIND processing, which means we never read, access, or store the content of your documents. Only a cryptographic hash (fingerprint) is computed on your device and sent to our servers. It is mathematically impossible to reconstruct a document from its hash.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span data-i18n="contact.faq5q">How does blockchain verification work?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="faq-a"><p data-i18n="contact.faq5a">When a document is protected, its cryptographic hash is registered on the Polygon blockchain, creating an immutable, publicly auditable record. During verification, the hash is compared against the blockchain record. Any tampering is instantly detected because the hash will no longer match.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<div class="cta-section">
+  <h2 data-i18n="contact.ctaTitle">Looking for Enterprise Solutions?</h2>
+  <p data-i18n="contact.ctaSubtitle">Custom plans, API access, white-label solutions, and dedicated support for your organization.</p>
+  <a href="/enterprise" class="btn-primary" data-i18n="contact.ctaButton">Explore Enterprise</a>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="f-logo">
+        <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
+      </div>
+      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="#how" data-i18n="nav.howItWorks">How It Works</a>
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="/upload" data-i18n="nav.upload">Protect a Document</a>
+      <a href="/enterprise" data-i18n="footer.enterprise">Enterprise</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.developers">Developers</h4>
+      <a href="/integration" data-i18n="footer.integrationGuide">Integration Guide</a>
+      <a href="/api/docs" data-i18n="footer.apiDocumentation">API Documentation</a>
+      <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.company">Company</h4>
+      <a href="/about" data-i18n="footer.about">About</a>
+      <a href="/blog" data-i18n="footer.blog">Blog</a>
+      <a href="/careers" data-i18n="footer.careers">Careers</a>
+      <a href="/contact" data-i18n="footer.contact">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.legal">Legal</h4>
+      <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
+      <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
+    <div class="footer-lang" onclick="toggleLangDropdown()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+      <span id="footerLangLabel">English</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/i18n.js"></script>
+<script>
+(function(){
+  window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
+  window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
+
+  // FAQ toggle
+  window.toggleFaq=function(el){
+    var item=el.parentElement;
+    var wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(function(i){i.classList.remove('open')});
+    if(!wasOpen) item.classList.add('open');
+  };
+
+  // Contact form
+  var form=document.getElementById('contactForm');
+  if(form){
+    form.addEventListener('submit',function(e){
+      e.preventDefault();
+      // Hide form, show success
+      form.style.display='none';
+      document.getElementById('formSuccess').style.display='block';
+    });
+  }
+})();
+</script>
+</body>
+</html>
