@@ -6,7 +6,60 @@ const path = require('path');
 // Disable hardware acceleration for stability
 app.disableHardwareAcceleration();
 
+// Maximum PVF file size: 50 MB
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
+
+// Pending file from OS open-file event (before window is ready)
+let pendingFile = null;
 let mainWindow = null;
+
+// Single instance lock — prevent multiple windows on double-click
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (event, commandLine) => {
+    // Someone tried to open another instance — focus our window
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+      // Check if a .pvf file was passed
+      const pvfArg = commandLine.find(arg => arg.endsWith('.pvf') && !arg.startsWith('-'));
+      if (pvfArg) loadPvfFile(pvfArg);
+    }
+  });
+}
+
+/**
+ * Validate that a file path is safe to read:
+ * - Must have .pvf extension
+ * - Must resolve to a real path (no symlink tricks)
+ * - Must not be a directory
+ */
+function validatePvfPath(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  if (ext !== '.pvf') {
+    return { valid: false, error: 'Only .pvf files can be opened.' };
+  }
+
+  try {
+    const realPath = fs.realpathSync(filePath);
+    const realExt = path.extname(realPath).toLowerCase();
+    if (realExt !== '.pvf') {
+      return { valid: false, error: 'Resolved path is not a .pvf file.' };
+    }
+    const stat = fs.statSync(realPath);
+    if (stat.isDirectory()) {
+      return { valid: false, error: 'Path is a directory, not a file.' };
+    }
+    if (stat.size > MAX_FILE_SIZE) {
+      return { valid: false, error: `File too large (${(stat.size / 1024 / 1024).toFixed(1)} MB). Maximum is ${MAX_FILE_SIZE / 1024 / 1024} MB.` };
+    }
+    return { valid: true, realPath };
+  } catch (err) {
+    return { valid: false, error: 'Cannot access file: ' + err.message };
+  }
+}
 
 function createWindow(pvfPath) {
   mainWindow = new BrowserWindow({
@@ -22,7 +75,8 @@ function createWindow(pvfPath) {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      devTools: !app.isPackaged, // DevTools only in development
+      webSecurity: true,
+      devTools: !app.isPackaged,
       sandbox: true
     },
     show: false
@@ -48,18 +102,21 @@ function createWindow(pvfPath) {
   });
 }
 
-// Load a .pvf file into the viewer
-function loadPvfFile(filePath) {
+// Load a .pvf file into the viewer (async to avoid blocking main process)
+async function loadPvfFile(filePath) {
   if (!mainWindow) return;
 
   try {
-    if (!fs.existsSync(filePath)) {
-      mainWindow.webContents.send('pvf-error', 'File not found: ' + filePath);
+    // Validate path security
+    const validation = validatePvfPath(filePath);
+    if (!validation.valid) {
+      mainWindow.webContents.send('pvf-error', validation.error);
       return;
     }
 
-    const content = fs.readFileSync(filePath, 'utf-8');
-    const fileName = path.basename(filePath);
+    const safePath = validation.realPath;
+    const content = await fs.promises.readFile(safePath, 'utf-8');
+    const fileName = path.basename(safePath);
 
     // Validate it looks like a PVF file
     if (!content.includes('Vertifile') || !content.includes('var HASH=') || !content.includes('var SIG=')) {
@@ -69,8 +126,7 @@ function loadPvfFile(filePath) {
 
     mainWindow.webContents.send('pvf-loaded', {
       content,
-      fileName,
-      filePath
+      fileName
     });
 
     mainWindow.setTitle(`${fileName} — PVF Viewer`);
@@ -91,15 +147,16 @@ ipcMain.handle('open-file-dialog', async () => {
   });
 
   if (!result.canceled && result.filePaths.length > 0) {
-    loadPvfFile(result.filePaths[0]);
+    await loadPvfFile(result.filePaths[0]);
     return result.filePaths[0];
   }
   return null;
 });
 
-// IPC: Read file (for drag & drop)
+// IPC: Read file (for drag & drop) — with path validation
 ipcMain.handle('read-pvf-file', async (event, filePath) => {
-  loadPvfFile(filePath);
+  if (typeof filePath !== 'string') return;
+  await loadPvfFile(filePath);
 });
 
 // App menu
@@ -120,8 +177,7 @@ function buildMenu() {
           label: 'Open PVF...',
           accelerator: 'CmdOrCtrl+O',
           click: () => {
-            ipcMain.emit('open-file-dialog');
-            // Trigger via renderer
+            // Trigger open dialog via renderer
             if (mainWindow) mainWindow.webContents.send('trigger-open');
           }
         },
@@ -147,25 +203,33 @@ app.on('open-file', (event, filePath) => {
   if (mainWindow) {
     loadPvfFile(filePath);
   } else {
-    // Store for when window is ready
-    app._pendingFile = filePath;
+    pendingFile = filePath;
   }
 });
 
 // ===== Auto-update =====
 function setupAutoUpdate() {
-  if (!app.isPackaged) return; // Skip in development
+  if (!app.isPackaged) return;
 
-  autoUpdater.autoDownload = true;
+  // Don't auto-download — ask user first
+  autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = true;
 
   autoUpdater.on('update-available', (info) => {
     console.log('[UPDATE] New version available:', info.version);
+    dialog.showMessageBox(mainWindow, {
+      type: 'info',
+      title: 'Update Available',
+      message: `PVF Viewer ${info.version} is available.`,
+      detail: 'Would you like to download it now?',
+      buttons: ['Download', 'Later']
+    }).then(({ response }) => {
+      if (response === 0) autoUpdater.downloadUpdate();
+    });
   });
 
   autoUpdater.on('update-downloaded', (info) => {
     console.log('[UPDATE] Downloaded:', info.version);
-    // Notify user via dialog
     dialog.showMessageBox(mainWindow, {
       type: 'info',
       title: 'Update Ready',
@@ -191,13 +255,13 @@ app.whenReady().then(() => {
   buildMenu();
   setupAutoUpdate();
 
-  // Check for file path from CLI args (e.g., `pvf-viewer document.pvf`)
-  const filePath = process.argv.find(arg => arg.endsWith('.pvf') && !arg.startsWith('-'));
+  // Check for file path from CLI args
+  const filePath = process.argv.find(arg =>
+    arg.endsWith('.pvf') && !arg.startsWith('-') && process.argv.indexOf(arg) > 0
+  );
 
-  // Or from macOS open-file event
-  const pendingFile = app._pendingFile || filePath;
-
-  createWindow(pendingFile);
+  const startFile = pendingFile || filePath;
+  createWindow(startFile);
 });
 
 app.on('window-all-closed', () => {

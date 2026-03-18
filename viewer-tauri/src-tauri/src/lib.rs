@@ -4,11 +4,13 @@ use std::path::PathBuf;
 use tauri::Emitter;
 use tauri::Manager;
 
+/// Maximum PVF file size: 50 MB
+const MAX_FILE_SIZE: u64 = 50 * 1024 * 1024;
+
 #[derive(Debug, Serialize, Clone)]
 pub struct PvfData {
     pub content: String,
     pub file_name: String,
-    pub file_path: String,
 }
 
 /// Validate that the content looks like a PVF file
@@ -16,6 +18,26 @@ fn validate_pvf_content(content: &str) -> bool {
     content.contains("Vertifile")
         && content.contains("var HASH=")
         && content.contains("var SIG=")
+}
+
+/// Validate the file path is safe (ends with .pvf, no directory traversal)
+fn validate_pvf_path(path: &PathBuf) -> Result<(), String> {
+    // Must have .pvf extension
+    match path.extension() {
+        Some(ext) if ext == "pvf" => {}
+        _ => return Err("Only .pvf files can be opened.".to_string()),
+    }
+
+    // Canonicalize to resolve symlinks and .. traversal
+    let canonical = path
+        .canonicalize()
+        .map_err(|e| format!("Invalid file path: {}", e))?;
+
+    // Ensure the canonical path still has .pvf extension (prevent symlink tricks)
+    match canonical.extension() {
+        Some(ext) if ext == "pvf" => Ok(()),
+        _ => Err("Resolved path is not a .pvf file.".to_string()),
+    }
 }
 
 #[tauri::command]
@@ -41,6 +63,15 @@ fn open_file_dialog(app: tauri::AppHandle) {
 #[tauri::command]
 fn read_pvf_file(path: String, app: tauri::AppHandle) {
     let path_buf = PathBuf::from(&path);
+
+    // Validate path before loading
+    if let Err(msg) = validate_pvf_path(&path_buf) {
+        if let Some(window) = app.get_webview_window("main") {
+            let _ = window.emit("pvf-error", msg);
+        }
+        return;
+    }
+
     load_pvf_file(&app, &path_buf);
 }
 
@@ -53,8 +84,32 @@ fn load_pvf_file(app: &tauri::AppHandle, file_path: &PathBuf) {
 
     // Check file exists
     if !file_path.exists() {
-        let _ = window.emit("pvf-error", format!("File not found: {}", file_path.display()));
+        let _ = window.emit(
+            "pvf-error",
+            format!("File not found: {}", file_path.display()),
+        );
         return;
+    }
+
+    // Check file size before reading
+    match fs::metadata(file_path) {
+        Ok(meta) => {
+            if meta.len() > MAX_FILE_SIZE {
+                let _ = window.emit(
+                    "pvf-error",
+                    format!(
+                        "File too large ({:.1} MB). Maximum allowed size is {} MB.",
+                        meta.len() as f64 / (1024.0 * 1024.0),
+                        MAX_FILE_SIZE / (1024 * 1024)
+                    ),
+                );
+                return;
+            }
+        }
+        Err(err) => {
+            let _ = window.emit("pvf-error", format!("Cannot access file: {}", err));
+            return;
+        }
     }
 
     // Read file content
@@ -86,34 +141,40 @@ fn load_pvf_file(app: &tauri::AppHandle, file_path: &PathBuf) {
     let data = PvfData {
         content,
         file_name: file_name.clone(),
-        file_path: file_path.to_string_lossy().to_string(),
     };
 
-    let _ = window.emit("pvf-loaded", &data);
+    if let Err(e) = window.emit("pvf-loaded", &data) {
+        eprintln!("[PVF Viewer] Failed to emit pvf-loaded event: {}", e);
+    }
 
     // Update window title
-    let _ = window.set_title(&format!("{} \u{2014} PVF Viewer", file_name));
+    if let Err(e) = window.set_title(&format!("{} \u{2014} PVF Viewer", file_name)) {
+        eprintln!("[PVF Viewer] Failed to set window title: {}", e);
+    }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![open_file_dialog, read_pvf_file])
         .setup(|app| {
             // Handle CLI args: look for a .pvf file path
             let args: Vec<String> = std::env::args().collect();
-            let pvf_arg = args.iter().find(|a| a.ends_with(".pvf") && !a.starts_with('-'));
+            let pvf_arg = args
+                .iter()
+                .skip(1) // skip the binary name
+                .find(|a| a.ends_with(".pvf") && !a.starts_with('-'));
 
             if let Some(pvf_path) = pvf_arg {
                 let path = PathBuf::from(pvf_path);
                 let app_handle = app.handle().clone();
 
-                // Load file after window is ready (small delay to ensure webview is loaded)
+                // Load file after window is ready using a background thread
                 let path_clone = path.clone();
                 std::thread::spawn(move || {
-                    std::thread::sleep(std::time::Duration::from_millis(500));
+                    // Wait for webview to initialize
+                    std::thread::sleep(std::time::Duration::from_millis(800));
                     load_pvf_file(&app_handle, &path_clone);
                 });
             }

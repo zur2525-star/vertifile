@@ -237,9 +237,14 @@ function authenticateApiKey(req, res, next) {
 // ================================================================
 // PVF HTML TEMPLATE (with coin-drop animation)
 // ================================================================
+function escapeHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
 function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash) {
   const isImage = mimeType.startsWith('image/');
   const isPdf = mimeType === 'application/pdf';
+  const safeOriginalName = escapeHtml(originalName);
 
   const createdAt = new Date().toISOString();
 
@@ -252,11 +257,11 @@ function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature
 <meta name="pvf:version" content="1.0">
 <meta name="pvf:hash" content="${fileHash}">
 <meta name="pvf:signature" content="${signature}">
-<meta name="pvf:original-name" content="${originalName}">
+<meta name="pvf:original-name" content="${safeOriginalName}">
 <meta name="pvf:mime-type" content="${mimeType}">
 <meta name="pvf:created" content="${createdAt}">
 ${recipientHash ? `<meta name="pvf:recipient-hash" content="${recipientHash}">` : ''}
-<title>PVF — ${originalName}</title>
+<title>PVF — ${safeOriginalName}</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
@@ -914,7 +919,13 @@ function handleCreatePvf(req, res) {
     const isText = mimeType.startsWith('text/');
     let fileBase64;
     if (isText) {
-      fileBase64 = fileBuffer.toString('utf-8');
+      // HTML-escape text content to prevent XSS in the PVF document
+      fileBase64 = fileBuffer.toString('utf-8')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     } else {
       fileBase64 = fileBuffer.toString('base64');
     }
@@ -1107,7 +1118,7 @@ app.post('/api/token/refresh', verifyLimiter, (req, res) => {
 // Generate new API key
 app.post('/api/keys/create', (req, res) => {
   const adminSecret = req.headers['x-admin-secret'];
-  if (adminSecret !== (process.env.ADMIN_SECRET || 'vertifile-admin-2024')) {
+  if (!isValidAdminSecret(adminSecret)) {
     db.log('auth_failed', { reason: 'invalid_admin_secret', ip: getClientIP(req), path: '/api/keys/create' });
     return res.status(403).json({ success: false, error: 'Unauthorized' });
   }
@@ -1136,7 +1147,7 @@ app.post('/api/keys/create', (req, res) => {
 // List API keys (admin)
 app.get('/api/keys', (req, res) => {
   const adminSecret = req.headers['x-admin-secret'];
-  if (adminSecret !== (process.env.ADMIN_SECRET || 'vertifile-admin-2024')) {
+  if (!isValidAdminSecret(adminSecret)) {
     return res.status(403).json({ success: false, error: 'Unauthorized' });
   }
 
@@ -1291,9 +1302,22 @@ app.get('/api/org/documents', authenticateApiKey, (req, res) => {
 // ================================================================
 // API: ADMIN ENDPOINTS (require admin secret)
 // ================================================================
+// Timing-safe admin secret comparison to prevent timing attacks
+function isValidAdminSecret(provided) {
+  const expected = process.env.ADMIN_SECRET;
+  if (!expected || !provided) return false;
+  if (typeof provided !== 'string') return false;
+  try {
+    const a = Buffer.from(provided);
+    const b = Buffer.from(expected);
+    if (a.length !== b.length) return false;
+    return crypto.timingSafeEqual(a, b);
+  } catch { return false; }
+}
+
 function authenticateAdmin(req, res, next) {
   const adminSecret = req.headers['x-admin-secret'];
-  if (adminSecret !== (process.env.ADMIN_SECRET || 'vertifile-admin-2024')) {
+  if (!isValidAdminSecret(adminSecret)) {
     db.log('auth_failed', { reason: 'invalid_admin_secret', ip: getClientIP(req), path: req.path });
     return res.status(403).json({ success: false, error: 'Unauthorized' });
   }
@@ -1652,8 +1676,8 @@ app.get('/signup', (req, res) => {
 app.get('/d/:shareId', (req, res) => {
   const { shareId } = req.params;
 
-  // Validate share ID format
-  if (!shareId || shareId.length < 6 || shareId.length > 20) {
+  // Validate share ID format — alphanumeric + URL-safe base64 chars only (no path traversal)
+  if (!shareId || shareId.length < 6 || shareId.length > 20 || !/^[a-zA-Z0-9_-]+$/.test(shareId)) {
     return res.status(404).send(notFoundPage('Invalid document link'));
   }
 
@@ -1681,6 +1705,7 @@ app.get('/d/:shareId', (req, res) => {
 // Download route — /d/:shareId/download — downloads as .pvf file
 app.get('/d/:shareId/download', (req, res) => {
   const { shareId } = req.params;
+  if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).json({ success: false, error: 'Invalid link' });
 
   const doc = db.getDocumentByShareId(shareId);
   if (!doc) {
@@ -1701,6 +1726,7 @@ app.get('/d/:shareId/download', (req, res) => {
 // Document info API — /d/:shareId/info — returns metadata (no content)
 app.get('/d/:shareId/info', (req, res) => {
   const { shareId } = req.params;
+  if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).json({ success: false, error: 'Invalid link' });
 
   const doc = db.getDocumentByShareId(shareId);
   if (!doc) {
@@ -1735,7 +1761,7 @@ a{display:inline-block;padding:12px 28px;background:#7c3aed;color:#fff;border-ra
 a:hover{background:#6d28d9;transform:translateY(-1px)}
 </style></head><body><div class="c">
 <h1>404</h1>
-<p>${message}</p>
+<p>${escapeHtml(message)}</p>
 <a href="/">Back to Vertifile</a>
 </div></body></html>`;
 }

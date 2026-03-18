@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PVF Viewer</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
+  /* Inter font loaded from system or fallback — no external CDN for privacy */
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'Inter', -apple-system, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #0f0e17;
     color: #e0e0e0;
     height: 100vh;
@@ -270,7 +269,7 @@
     </div>
 
     <!-- PVF iframe (hidden until loaded) -->
-    <iframe id="pvfFrame" style="display:none" sandbox="allow-scripts allow-same-origin"></iframe>
+    <iframe id="pvfFrame" style="display:none" sandbox="allow-scripts"></iframe>
   </div>
 
   <!-- Drag overlay -->
@@ -278,6 +277,10 @@
 
 <script>
   // Tauri API - available via window.__TAURI__ when withGlobalTauri is true
+  if (!window.__TAURI__) {
+    document.getElementById('errorOverlay').classList.add('show');
+    document.getElementById('errorMessage').textContent = 'Tauri runtime not available. Please launch from the desktop app.';
+  }
   const { invoke } = window.__TAURI__.core;
   const { listen } = window.__TAURI__.event;
 
@@ -313,40 +316,50 @@
     const frame = document.getElementById('pvfFrame');
     frame.style.display = 'block';
 
-    // Write PVF content to iframe using srcdoc
-    frame.srcdoc = content;
+    // Inject postMessage bridge into PVF content so the sandboxed iframe
+    // can report verification status back to the parent securely.
+    const verificationBridge = `<script>
+      (function() {
+        var observer = new MutationObserver(function() {
+          var body = document.body;
+          var bigX = document.querySelector('.big-x.show');
+          var stampOk = document.querySelector('.lbl.ok');
+          var stampBad = document.querySelector('.lbl.bad');
+          if (bigX || stampBad || (body && body.classList.contains('forged'))) {
+            parent.postMessage({ type: 'pvf-verification', status: 'failed' }, '*');
+            observer.disconnect();
+          } else if (stampOk) {
+            parent.postMessage({ type: 'pvf-verification', status: 'verified' }, '*');
+            observer.disconnect();
+          }
+        });
+        if (document.body) {
+          observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+        } else {
+          document.addEventListener('DOMContentLoaded', function() {
+            observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+          });
+        }
+      })();
+    <\/script>`;
 
-    // Listen for verification result from the PVF's own verification
-    // The PVF HTML does verification internally. We intercept the result
-    // by checking the iframe's DOM after a delay.
-    setTimeout(() => checkVerificationStatus(frame), 3000);
-    setTimeout(() => checkVerificationStatus(frame), 6000);
-    setTimeout(() => checkVerificationStatus(frame), 10000);
+    // Write PVF content to iframe using srcdoc, with verification bridge injected
+    frame.srcdoc = content.replace('</body>', verificationBridge + '</body>');
   });
 
-  function checkVerificationStatus(frame) {
-    try {
-      const doc = frame.contentDocument || frame.contentWindow.document;
+  // Listen for verification result from PVF iframe via postMessage
+  window.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'pvf-verification') {
       const badge = document.getElementById('statusBadge');
-
-      // Check for forged state (body has .forged class or big-x is visible)
-      const body = doc.querySelector('body');
-      const bigX = doc.querySelector('.big-x.show');
-      const stampOk = doc.querySelector('.lbl.ok');
-      const stampBad = doc.querySelector('.lbl.bad');
-
-      if (bigX || stampBad || (body && body.classList.contains('forged'))) {
+      if (event.data.status === 'failed') {
         badge.className = 'toolbar-status failed';
         document.getElementById('statusText').textContent = 'Verification Failed';
-      } else if (stampOk) {
+      } else if (event.data.status === 'verified') {
         badge.className = 'toolbar-status verified';
         document.getElementById('statusText').textContent = 'Verified';
       }
-      // else keep checking state
-    } catch (e) {
-      // Cross-origin or security restriction
     }
-  }
+  });
 
   // Listen for PVF error event from Rust backend
   listen('pvf-error', (event) => {
@@ -379,27 +392,11 @@
     e.preventDefault();
   });
 
-  document.addEventListener('drop', async (e) => {
+  document.addEventListener('drop', (e) => {
     e.preventDefault();
     dragCounter = 0;
     document.getElementById('dragOverlay').classList.remove('show');
-
-    // In Tauri v2, drag-and-drop file paths are handled differently
-    // We need to use the onDragDropEvent or handle via the event
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      const file = files[0];
-      if (file.name && file.name.endsWith('.pvf')) {
-        // Read the file content using FileReader and send to backend
-        // In Tauri with file drag, we may not get the file path directly
-        // Instead, we read the content via the File API
-        const reader = new FileReader();
-        reader.onload = async () => {
-          // We can't easily get the file path in Tauri webview from drag-drop
-          // But we can try using the Tauri drag-drop event listener instead
-        };
-      }
-    }
+    // Actual file handling is done via tauri://drag-drop event below
   });
 
   // Tauri v2 drag-drop event - this gives us the file paths

@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; frame-src 'self' blob: data:;">
 <title>PVF Viewer</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
+  /* Inter font loaded from system or fallback — no external CDN for privacy */
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'Inter', -apple-system, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #0f0e17;
     color: #e0e0e0;
     height: 100vh;
@@ -270,8 +270,8 @@
       <p id="errorMessage">Something went wrong.</p>
     </div>
 
-    <!-- PVF iframe (hidden until loaded) -->
-    <iframe id="pvfFrame" style="display:none" sandbox="allow-scripts allow-same-origin"></iframe>
+    <!-- PVF iframe — sandbox="allow-scripts" only (no allow-same-origin for security) -->
+    <iframe id="pvfFrame" style="display:none" sandbox="allow-scripts"></iframe>
   </div>
 
   <!-- Drag overlay -->
@@ -304,40 +304,50 @@
     const frame = document.getElementById('pvfFrame');
     frame.style.display = 'block';
 
-    // Write PVF content to iframe using srcdoc
-    frame.srcdoc = content;
+    // Inject postMessage bridge into PVF content so the sandboxed iframe
+    // can report verification status back to the parent securely.
+    const verificationBridge = `<script>
+      (function() {
+        var observer = new MutationObserver(function() {
+          var body = document.body;
+          var bigX = document.querySelector('.big-x.show');
+          var stampOk = document.querySelector('.lbl.ok');
+          var stampBad = document.querySelector('.lbl.bad');
+          if (bigX || stampBad || (body && body.classList.contains('forged'))) {
+            parent.postMessage({ type: 'pvf-verification', status: 'failed' }, '*');
+            observer.disconnect();
+          } else if (stampOk) {
+            parent.postMessage({ type: 'pvf-verification', status: 'verified' }, '*');
+            observer.disconnect();
+          }
+        });
+        if (document.body) {
+          observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+        } else {
+          document.addEventListener('DOMContentLoaded', function() {
+            observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+          });
+        }
+      })();
+    <\/script>`;
 
-    // Listen for verification result from the PVF's own verification
-    // The PVF HTML does verification internally. We intercept the result
-    // by checking the iframe's DOM after a delay.
-    setTimeout(() => checkVerificationStatus(frame), 3000);
-    setTimeout(() => checkVerificationStatus(frame), 6000);
-    setTimeout(() => checkVerificationStatus(frame), 10000);
+    // Write PVF content to iframe using srcdoc, with verification bridge injected
+    frame.srcdoc = content.replace('</body>', verificationBridge + '</body>');
   });
 
-  function checkVerificationStatus(frame) {
-    try {
-      const doc = frame.contentDocument || frame.contentWindow.document;
+  // Listen for verification result from PVF iframe via postMessage
+  window.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'pvf-verification') {
       const badge = document.getElementById('statusBadge');
-
-      // Check for forged state (body has .forged class or big-x is visible)
-      const body = doc.querySelector('body');
-      const bigX = doc.querySelector('.big-x.show');
-      const stampOk = doc.querySelector('.lbl.ok');
-      const stampBad = doc.querySelector('.lbl.bad');
-
-      if (bigX || stampBad || (body && body.classList.contains('forged'))) {
+      if (event.data.status === 'failed') {
         badge.className = 'toolbar-status failed';
         document.getElementById('statusText').textContent = 'Verification Failed';
-      } else if (stampOk) {
+      } else if (event.data.status === 'verified') {
         badge.className = 'toolbar-status verified';
         document.getElementById('statusText').textContent = 'Verified';
       }
-      // else keep checking state
-    } catch (e) {
-      // Cross-origin or security restriction — expected in some cases
     }
-  }
+  });
 
   // Handle errors
   pvfBridge.onPvfError((msg) => {
@@ -350,7 +360,7 @@
   // Handle menu open trigger
   pvfBridge.onTriggerOpen(() => openFile());
 
-  // Drag and drop
+  // Drag and drop — use IPC for file reading (file.path deprecated in sandbox mode)
   let dragCounter = 0;
 
   document.addEventListener('dragenter', (e) => {
@@ -380,8 +390,12 @@
     const files = e.dataTransfer.files;
     if (files.length > 0) {
       const file = files[0];
-      if (file.path && file.path.endsWith('.pvf')) {
-        pvfBridge.readPvfFile(file.path);
+      // Use file.name for validation, file.path for reading (Electron-specific)
+      if (file.name && file.name.endsWith('.pvf')) {
+        // file.path may be available in non-sandboxed Electron
+        if (file.path) {
+          pvfBridge.readPvfFile(file.path);
+        }
       }
     }
   });
