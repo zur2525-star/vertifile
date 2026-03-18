@@ -469,18 +469,19 @@ var __securityFrozen = false;
     return;
   }
   // Check if embedded in a cross-origin iframe
-  try {
-    if (window.self !== window.top) {
-      // We are in an iframe — try accessing parent. If cross-origin, this throws.
-      try {
-        var parentDoc = window.top.location.href;
-      } catch (e) {
-        // Cross-origin iframe detected — freeze the stamp
-        __securityFrozen = true;
+  // Skip if desktop viewer injected the trusted marker
+  if (!window.__pvfDesktopViewer) {
+    try {
+      if (window.self !== window.top) {
+        try {
+          var parentDoc = window.top.location.href;
+        } catch (e) {
+          __securityFrozen = true;
+        }
       }
+    } catch (e) {
+      __securityFrozen = true;
     }
-  } catch (e) {
-    __securityFrozen = true;
   }
 })();
 

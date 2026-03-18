@@ -74,7 +74,7 @@
       <p id="errorMessage" style="white-space:pre-line">Something went wrong.</p>
       <button class="toolbar-btn" style="margin-top:24px;padding:10px 24px;font-size:14px;-webkit-app-region:no-drag" onclick="openFile()">Check Another Document</button>
     </div>
-    <iframe id="pvfFrame" style="display:none" sandbox="allow-scripts allow-same-origin"></iframe>
+    <iframe id="pvfFrame" style="display:none" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
   </div>
   <div class="drag-overlay" id="dragOverlay">Drop .pvf file to open</div>
 <script>
@@ -94,7 +94,10 @@
 
     var frame = document.getElementById('pvfFrame');
     frame.style.display = 'none';
-    frame.srcdoc = data.content;
+    // Inject trusted viewer marker before PVF scripts run
+    var markerScript = '<script>window.__pvfDesktopViewer=true;<\/script>';
+    var content = data.content.replace('<head>', '<head>' + markerScript);
+    frame.srcdoc = content;
 
     // Check frequently but don't show iframe until verified
     var checkInterval = setInterval(function() { checkStatus(frame, checkInterval); }, 500);
