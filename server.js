@@ -670,15 +670,17 @@ async function init(){
   // Determine the verification API URL
   var apiUrl=isLocal?VERIFY_URL:API;
 
-  // Step 1: Try server verification (works both online and local with internet)
+  // Step 1: Try server verification
   try{
     await new Promise(r=>setTimeout(r,500));
     var r=await fetch(apiUrl+"/api/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({hash:HASH,signature:SIG,recipientHash:RCPT||undefined})});
     var d=await r.json();
     if(d.verified){token=d.token;show(true);if(!isLocal)startRefresh();return}
-    else{show(false);return}
+    // Server says NOT verified — if online (not local), trust the server → FORGED
+    if(!isLocal){show(false);return}
+    // If local: server might not know this doc (different DB). Fall through to local check.
   }catch(e){
-    // Server unreachable — fall back to client-side hash verification
+    // Server unreachable — fall back to client-side verification
   }
 
   // Step 2: Offline fallback — verify content hash locally using Web Crypto API
