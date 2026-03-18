@@ -718,7 +718,7 @@ async function createKey() {
     document.getElementById('newKeyResult').innerHTML = `
       <div style="margin-top:16px">
         <label style="display:block;font-size:12px;font-weight:600;color:#16a34a;margin-bottom:4px">Key Created Successfully</label>
-        <div class="key-display">${escHtml(key)}<button class="copy" onclick="copyKey('${escHtml(key)}')">Copy</button></div>
+        <div class="key-display">${escHtml(key)}<button class="copy" data-key="${escHtml(key)}" onclick="copyKey(this.dataset.key)">Copy</button></div>
         <p style="font-size:11px;color:#ef4444;margin-top:8px;font-weight:500">Save this key now — it won't be shown again.</p>
       </div>
     `;

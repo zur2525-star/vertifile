@@ -765,10 +765,9 @@ if ('launchQueue' in window) {
             viewer.classList.add('show');
             document.getElementById('viewerFileName').textContent = file.name;
             document.getElementById('viewerFileSize').textContent = formatSize(file.size);
-            document.getElementById('viewerTime').textContent = new Date().toLocaleTimeString();
-            var frame = document.getElementById('pvfFrame');
+            document.getElementById('viewerFileTime').textContent = 'Loaded ' + new Date().toLocaleTimeString();
+            var frame = document.getElementById('viewerIframe');
             frame.srcdoc = content;
-            checkVerification(content);
           }
         };
         reader.readAsText(file);
