@@ -348,8 +348,14 @@
     /* ===== DEMO ===== */
     .demo-section{background:linear-gradient(180deg,#f8f7ff,#ede9fe 50%,#f8f7ff);position:relative;overflow:hidden}
     .demo-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 50%,rgba(124,58,237,.05),transparent 60%);pointer-events:none}
-    .demo-wrapper{max-width:880px;margin:0 auto;position:relative;z-index:1}
+    .demo-wrapper{max-width:1100px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    @media(max-width:768px){.demo-wrapper{grid-template-columns:1fr;gap:16px}}
+    .demo-label{text-align:center;margin-bottom:12px;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px}
+    .demo-label.verified{color:#059669}
+    .demo-label.forged{color:#dc2626}
+    .demo-label svg{width:18px;height:18px}
     .demo-browser{border-radius:16px;overflow:hidden;border:1px solid rgba(124,58,237,.12);background:#fff;box-shadow:0 8px 60px rgba(124,58,237,.12),0 2px 8px rgba(0,0,0,.04)}
+    .demo-browser.forged{border-color:rgba(220,38,38,.2);box-shadow:0 8px 60px rgba(220,38,38,.08),0 2px 8px rgba(0,0,0,.04)}
     .demo-topbar{height:40px;background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-bottom:1px solid rgba(124,58,237,.08);display:flex;align-items:center;padding:0 16px;gap:8px}
     .demo-dot{width:10px;height:10px;border-radius:50%;background:rgba(0,0,0,.1)}
     .demo-dot:nth-child(1){background:rgba(239,68,68,.6)}
@@ -357,8 +363,8 @@
     .demo-dot:nth-child(3){background:rgba(52,211,153,.6)}
     .demo-url{margin-left:16px;flex:1;height:26px;background:#fff;border-radius:6px;display:flex;align-items:center;padding:0 12px;font-size:11px;color:#9ca3af;font-family:'Inter',monospace;border:1px solid rgba(0,0,0,.06)}
     [dir="rtl"] .demo-url{margin-left:0;margin-right:16px}
-    .demo-iframe{width:100%;height:1200px;border:none;display:block;background:#fff}
-    @media(max-width:768px){.demo-iframe{height:900px}}
+    .demo-iframe{width:100%;height:700px;border:none;display:block;background:#fff}
+    @media(max-width:768px){.demo-iframe{height:500px}}
 
     /* ===== INDUSTRIES ===== */
     .industries-section{background:#ffffff;position:relative;overflow:hidden}
@@ -746,14 +752,35 @@
     <p data-i18n="demo.subtitle">A real university diploma protected by Vertifile</p>
   </div>
   <div class="demo-wrapper fade-up">
-    <div class="demo-browser">
-      <div class="demo-topbar">
-        <div class="demo-dot"></div>
-        <div class="demo-dot"></div>
-        <div class="demo-dot"></div>
-        <div class="demo-url">vertifile.com/demo</div>
+    <div>
+      <div class="demo-label verified">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        <span data-i18n="demo.labelVerified">Verified Document</span>
       </div>
-      <iframe src="/demo-pvf" class="demo-iframe" id="demoIframe" scrolling="no" loading="lazy"></iframe>
+      <div class="demo-browser">
+        <div class="demo-topbar">
+          <div class="demo-dot"></div>
+          <div class="demo-dot"></div>
+          <div class="demo-dot"></div>
+          <div class="demo-url">vertifile.com/demo</div>
+        </div>
+        <iframe src="/demo-pvf" class="demo-iframe" id="demoIframe" scrolling="no" loading="lazy"></iframe>
+      </div>
+    </div>
+    <div>
+      <div class="demo-label forged">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+        <span data-i18n="demo.labelForged">Forged Document</span>
+      </div>
+      <div class="demo-browser forged">
+        <div class="demo-topbar">
+          <div class="demo-dot"></div>
+          <div class="demo-dot"></div>
+          <div class="demo-dot"></div>
+          <div class="demo-url">vertifile.com/demo-forged</div>
+        </div>
+        <iframe src="/demo-forged-pvf" class="demo-iframe" scrolling="no" loading="lazy"></iframe>
+      </div>
     </div>
   </div>
 </section>

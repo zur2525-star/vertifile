@@ -2136,6 +2136,20 @@ app.get('/demo-pvf', (req, res) => {
   }
 });
 
+app.get('/demo-forged-pvf', (req, res) => {
+  const p = path.join(__dirname, 'demo.pvf');
+  if (fs.existsSync(p)) {
+    setPvfSecurityHeaders(res);
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    let content = fs.readFileSync(p, 'utf8');
+    // Corrupt the signature to make it fail verification
+    content = content.replace(/var SIG="([a-f0-9]+)"/, 'var SIG="0000000000000000000000000000000000000000000000000000000000000000"');
+    res.send(content);
+  } else {
+    res.status(404).send('demo.pvf not found');
+  }
+});
+
 // ================================================================
 // CONTACT FORM
 // ================================================================
