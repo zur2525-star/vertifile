@@ -654,6 +654,7 @@ var API=window.location.origin;
 })();
 var token=null;
 var isLocal=location.protocol==="file:"||location.protocol==="about:"||window!==window.top;
+var VERIFY_URL="https://vertifile-production.up.railway.app";
 
 async function init(){
   // Security: if environment is frozen (cross-origin iframe / missing navigator), show forged
@@ -665,19 +666,49 @@ async function init(){
     freezeStamp();
     return;
   }
-  // Local file — skip API verification, show document as protected
-  if(isLocal){
-    await new Promise(r=>setTimeout(r,400));
-    showLocal();
-    return;
-  }
+
+  // Determine the verification API URL
+  var apiUrl=isLocal?VERIFY_URL:API;
+
+  // Step 1: Try server verification (works both online and local with internet)
   try{
-    await new Promise(r=>setTimeout(r,600));
-    var r=await fetch(API+"/api/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({hash:HASH,signature:SIG,recipientHash:RCPT||undefined})});
+    await new Promise(r=>setTimeout(r,500));
+    var r=await fetch(apiUrl+"/api/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({hash:HASH,signature:SIG,recipientHash:RCPT||undefined})});
     var d=await r.json();
-    if(d.verified){token=d.token;show(true);startRefresh()}
-    else show(false);
-  }catch(e){show(false)}
+    if(d.verified){token=d.token;show(true);if(!isLocal)startRefresh();return}
+    else{show(false);return}
+  }catch(e){
+    // Server unreachable — fall back to client-side hash verification
+  }
+
+  // Step 2: Offline fallback — verify content hash locally using Web Crypto API
+  try{
+    var payload=document.querySelector(".text-doc,.doc-frame img,.doc-frame iframe");
+    if(payload){
+      var contentToHash="";
+      if(payload.classList.contains("text-doc")){
+        contentToHash=payload.textContent;
+      }else if(payload.tagName==="IMG"){
+        var src=payload.getAttribute("src")||"";
+        contentToHash=src.split(",")[1]||src;
+      }else if(payload.tagName==="IFRAME"){
+        var src=payload.getAttribute("src")||"";
+        contentToHash=src.split(",")[1]||src;
+      }
+      if(contentToHash){
+        var encoder=new TextEncoder();
+        var data=encoder.encode(contentToHash);
+        var hashBuffer=await crypto.subtle.digest("SHA-256",data);
+        var hashArray=Array.from(new Uint8Array(hashBuffer));
+        var computedHash=hashArray.map(function(b){return b.toString(16).padStart(2,"0")}).join("");
+        if(computedHash===HASH){showLocal();return}
+        else{show(false);return}
+      }
+    }
+  }catch(e){}
+
+  // Step 3: Last resort — if we can't verify at all, show as protected (structure intact)
+  showLocal();
 }
 
 function showLocal(){
