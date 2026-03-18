@@ -6,36 +6,34 @@
 const JavaScriptObfuscator = require('javascript-obfuscator');
 
 /**
- * Obfuscate JavaScript code with strong settings.
- * Preserves functionality while making reverse engineering very difficult.
+ * Obfuscate JavaScript code with settings safe for iframe/Electron contexts.
  */
 function obfuscateCode(code, seed) {
   const result = JavaScriptObfuscator.obfuscate(code, {
     // Core transforms
     compact: true,
     controlFlowFlattening: true,
-    controlFlowFlatteningThreshold: 0.6,
-    deadCodeInjection: true,
-    deadCodeInjectionThreshold: 0.3,
+    controlFlowFlatteningThreshold: 0.4,
+    deadCodeInjection: false,       // Disabled — can produce invalid code in some contexts
 
-    // String protection
+    // String protection — conservative settings to prevent corruption
     stringArray: true,
-    stringArrayThreshold: 0.75,
-    stringArrayEncoding: ['base64'],
+    stringArrayThreshold: 0.5,
+    stringArrayEncoding: [],         // No encoding — base64 encoding can corrupt strings
     stringArrayRotate: true,
     stringArrayShuffle: true,
-    stringArrayWrappersCount: 2,
-    stringArrayWrappersType: 'function',
-    splitStrings: true,
-    splitStringsChunkLength: 8,
+    stringArrayWrappersCount: 1,
+    stringArrayWrappersType: 'variable',
+    splitStrings: false,             // Disabled — splitting strings can break HTML/CSS content
+    transformObjectKeys: false,      // Disabled — prevents object key corruption
 
     // Identifier mangling
     identifierNamesGenerator: 'hexadecimal',
     renameGlobals: false,
 
-    // Anti-debug (supplements our own DevTools detection)
-    debugProtection: false,  // We have our own detection
-    selfDefending: true,     // Prevents code formatting/beautification
+    // Anti-debug
+    debugProtection: false,
+    selfDefending: false,            // Disabled — causes SyntaxError in iframe/Electron
 
     // Deterministic seed per document (same doc = same obfuscation)
     seed: seed || 0,
@@ -43,13 +41,25 @@ function obfuscateCode(code, seed) {
     // Target
     target: 'browser',
 
-    // Don't transform these (they interface with DOM)
+    // Reserved names — functions and variables used by the PVF viewer and verification
     reservedNames: [
-      'HASH', 'SIG', 'API', 'token', 'init',
+      'HASH', 'SIG', 'API', 'RCPT', 'token', 'init',
       'show', 'setOk', 'setFk', 'freezeStamp',
       'triggerFlip', 'showLocal', 'activateWaves',
       'startRefresh', '__securityFrozen', '__devToolsOpen',
-      'isLocal'
+      '__screenCaptured', 'blankForCapture', 'screenCaptureGuard',
+      'isLocal', 'hashFingerprint', 'environmentCheck',
+      'pvfBridge', '__TAURI__',
+      'postMessage', 'MutationObserver', 'querySelector',
+      'contentDocument', 'contentWindow'
+    ],
+
+    // Reserved strings — don't obfuscate these string values
+    reservedStrings: [
+      'Vertifile', 'pvf-verification', 'verified', 'failed',
+      'forged', 'big-x', 'lbl', 'stamp',
+      'pvf:hash', 'pvf:version', 'pvf:signature',
+      'PVF:1.0', 'screen-capture', 'display-capture'
     ]
   });
 
