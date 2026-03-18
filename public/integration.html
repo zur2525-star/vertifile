@@ -122,15 +122,6 @@
     .api-table tr:hover td{background:rgba(124,58,237,.02)}
     .api-table code{font-family:'SF Mono','Fira Code',monospace;font-size:12px;background:rgba(124,58,237,.06);color:#7c3aed;padding:2px 8px;border-radius:5px}
 
-    /* ===== PLANS TABLE ===== */
-    .plans-table{width:100%;border-collapse:separate;border-spacing:0;margin:24px 0;border-radius:14px;overflow:hidden;border:1px solid rgba(0,0,0,.06)}
-    .plans-table th{text-align:left;padding:14px 20px;font-weight:700;color:#374151;font-size:12px;text-transform:uppercase;letter-spacing:.5px;background:#f9fafb;border-bottom:2px solid rgba(0,0,0,.06)}
-    .plans-table td{padding:14px 20px;border-bottom:1px solid rgba(0,0,0,.04);color:#4b5563;font-size:14px}
-    .plans-table tr:last-child td{border-bottom:none}
-    .plans-table tr:hover td{background:rgba(124,58,237,.02)}
-    .plan-name{font-weight:700;color:#111827}
-    .plan-highlight{background:rgba(124,58,237,.03)}
-    .plan-highlight td{border-bottom-color:rgba(124,58,237,.08)}
 
     /* ===== CALLOUT ===== */
     .callout{padding:20px 24px;border-radius:12px;margin:24px 0;display:flex;gap:14px;align-items:flex-start;font-size:14px;line-height:1.7}
@@ -259,7 +250,7 @@
       <li><a href="#endpoints">Endpoints</a></li>
       <li><a href="#webhooks">Webhooks</a></li>
       <li><a href="#responses">Response Examples</a></li>
-      <li><a href="#rate-limits">Rate Limits & Plans</a></li>
+      <li><a href="#rate-limits">Rate Limits</a></li>
     </ul>
   </aside>
 
@@ -1017,69 +1008,24 @@ app.<span class="fn">post</span>(<span class="str">'/webhooks/vertifile'</span>,
       </div>
     </section>
 
-    <!-- ===== RATE LIMITS & PLANS ===== -->
+    <!-- ===== RATE LIMITS ===== -->
     <section id="rate-limits">
       <div class="container">
-        <div class="section-label">Plans</div>
-        <div class="section-title">Rate Limits & Plans</div>
-        <div class="section-desc">Choose the plan that fits your organization's needs. All plans include full API access.</div>
-
-        <table class="plans-table">
-          <thead>
-            <tr>
-              <th>Plan</th>
-              <th>Documents / mo</th>
-              <th>API Requests / min</th>
-              <th>Batch Size</th>
-              <th>Webhooks</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="plan-name">Free</td>
-              <td>50</td>
-              <td>10</td>
-              <td>5</td>
-              <td>1</td>
-              <td>$0</td>
-            </tr>
-            <tr>
-              <td class="plan-name">Starter</td>
-              <td>200</td>
-              <td>30</td>
-              <td>10</td>
-              <td>3</td>
-              <td>$29/mo</td>
-            </tr>
-            <tr class="plan-highlight">
-              <td class="plan-name" style="color:#7c3aed">Business</td>
-              <td>500</td>
-              <td>60</td>
-              <td>25</td>
-              <td>10</td>
-              <td>$99/mo</td>
-            </tr>
-            <tr>
-              <td class="plan-name">Enterprise</td>
-              <td>Unlimited</td>
-              <td>200</td>
-              <td>100</td>
-              <td>Unlimited</td>
-              <td>Custom</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="section-label">Rate Limits</div>
+        <div class="section-title">Rate Limits</div>
+        <div class="section-desc">Rate limits are applied per API key to ensure fair usage for all users.</div>
 
         <div class="callout callout-info">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-          <div>Rate limits are applied per API key. When you exceed a limit, the API returns a <code>429 Too Many Requests</code> response with a <code>Retry-After</code> header indicating when you can retry.</div>
+          <div>When you exceed a rate limit, the API returns a <code>429 Too Many Requests</code> response with a <code>Retry-After</code> header indicating when you can retry.</div>
         </div>
 
         <div class="callout callout-success" style="margin-top:12px">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
-          <div>Verifications (the <code>/api/verify</code> endpoint) are always free and unlimited across all plans. Only document creation counts toward your monthly quota.</div>
+          <div>Verifications (the <code>/api/verify</code> endpoint) are always free and unlimited. Only document creation counts toward your quota.</div>
         </div>
+
+        <p style="margin-top:24px;font-size:15px;color:#6b7280">For details about plans and limits, <a href="mailto:zur2525@gmail.com" style="color:#7c3aed;font-weight:600;text-decoration:none">contact us</a>.</p>
       </div>
     </section>
 
@@ -1099,7 +1045,6 @@ app.<span class="fn">post</span>(<span class="str">'/webhooks/vertifile'</span>,
       <h4>Product</h4>
       <a href="/#how">How It Works</a>
       <a href="/#features">Features</a>
-      <a href="/#pricing">Pricing</a>
       <a href="/upload">Protect a Document</a>
     </div>
     <div class="footer-col">
@@ -1107,7 +1052,7 @@ app.<span class="fn">post</span>(<span class="str">'/webhooks/vertifile'</span>,
       <a href="/integration">API Docs</a>
       <a href="/integration#examples">SDK Examples</a>
       <a href="/integration#webhooks">Webhooks</a>
-      <a href="/integration#rate-limits">Plans</a>
+      <a href="/integration#rate-limits">Rate Limits</a>
     </div>
     <div class="footer-col">
       <h4>Legal</h4>
