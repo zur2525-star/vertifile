@@ -110,6 +110,10 @@
       if (bigX || stampBad || (doc.body && doc.body.classList.contains('forged'))) {
         badge.className = 'toolbar-status failed';
         document.getElementById('statusText').textContent = 'Verification Failed';
+        // Hide document — don't show forged content
+        frame.style.display = 'none';
+        document.getElementById('errorOverlay').classList.add('show');
+        document.getElementById('errorMessage').textContent = 'This document failed verification.\n\nThe file may have been tampered with or is not authentic.\nDo not trust the content of this document.';
       } else if (stampOk) {
         badge.className = 'toolbar-status verified';
         document.getElementById('statusText').textContent = 'Verified';
