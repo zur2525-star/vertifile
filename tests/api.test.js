@@ -20,7 +20,7 @@ const http = require('node:http');
 // Configuration
 // ---------------------------------------------------------------------------
 const HMAC_SECRET = 'test-secret-for-automated-tests';
-const ADMIN_SECRET = 'vertifile-admin-2024';
+const ADMIN_SECRET = 'test-admin-secret-for-tests';
 
 // ---------------------------------------------------------------------------
 // Shared test state (populated during test runs)
