@@ -1741,6 +1741,10 @@ a:hover{background:#6d28d9;transform:translateY(-1px)}
 }
 
 app.get('/demo', (req, res) => {
+  res.sendFile('demo.html', { root: path.join(__dirname, 'public') });
+});
+
+app.get('/demo-pvf', (req, res) => {
   const p = path.join(__dirname, 'demo.pvf');
   if (fs.existsSync(p)) {
     setPvfSecurityHeaders(res);

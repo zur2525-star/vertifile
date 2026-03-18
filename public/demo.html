@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertifile — Try Document Protection Demo</title>
+  <meta name="description" content="Try PVF document protection instantly. Upload any document and get a tamper-proof .pvf file in seconds. No signup needed.">
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <meta property="og:title" content="Vertifile — Try Document Protection Demo">
+  <meta property="og:description" content="Protect any document in seconds. No signup needed.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0f0e17">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter','Heebo',sans-serif;color:#e2e0f0;background:#0f0e17;overflow-x:hidden;line-height:1.7;min-height:100vh}
+    [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
+    a{text-decoration:none;color:inherit}
+
+    /* ===== NAVBAR ===== */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(15,14,23,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(124,58,237,.1);transition:background .35s,box-shadow .35s}
+    .navbar.scrolled{background:rgba(15,14,23,.97);box-shadow:0 1px 20px rgba(0,0,0,.4)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{display:flex;align-items:center}
+    .nav-logo img{height:32px;width:auto;filter:brightness(0) invert(1)}
+    .nav-center{display:flex;align-items:center;gap:28px}
+    .nav-center a{font-size:13.5px;font-weight:500;color:rgba(196,181,253,.6);transition:color .2s;position:relative;padding:4px 0}
+    .nav-center a:hover{color:#fff}
+    .nav-center a::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:1.5px;background:#7c3aed;transition:all .25s;transform:translateX(-50%)}
+    .nav-center a:hover::after{width:100%}
+    .nav-center a.active{color:#a78bfa;font-weight:600}
+    .nav-center a.active::after{width:100%}
+    .nav-actions{display:flex;align-items:center;gap:10px}
+    .nav-sep{width:1px;height:20px;background:rgba(124,58,237,.2);margin:0 4px}
+    .nav-verify{padding:7px 18px;background:transparent;color:rgba(196,181,253,.7);border:1px solid rgba(124,58,237,.25);border-radius:8px;font-weight:500;font-size:13px;transition:all .25s;cursor:pointer;text-decoration:none}
+    .nav-verify:hover{border-color:#7c3aed;color:#c4b5fd;background:rgba(124,58,237,.08)}
+    .nav-cta{padding:7px 18px;background:#7c3aed;color:#fff!important;border-radius:8px;font-weight:600;font-size:13px;transition:all .25s;border:1px solid transparent;cursor:pointer;text-decoration:none}
+    .nav-cta:hover{background:#6d28d9;box-shadow:0 4px 14px rgba(124,58,237,.35)}
+    .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:6px}
+    .hamburger span{width:20px;height:1.5px;background:#c4b5fd;border-radius:2px;transition:.3s}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(15,14,23,.98);backdrop-filter:blur(20px);padding:16px 24px;box-shadow:0 12px 40px rgba(0,0,0,.4);z-index:999;border-bottom:1px solid rgba(124,58,237,.1)}
+    .mobile-menu.show{display:block}
+    .mobile-menu a{display:block;padding:12px 0;font-size:15px;font-weight:500;color:rgba(196,181,253,.6);border-bottom:1px solid rgba(124,58,237,.08)}
+    .mobile-menu a:last-child{border:none}
+    .mobile-menu .mob-actions{display:flex;gap:10px;padding-top:14px;margin-top:6px;border-top:1px solid rgba(124,58,237,.12)}
+    .mobile-menu .mob-actions a{border:none;padding:10px 0;text-align:center;flex:1;border-radius:8px;font-size:14px;font-weight:600}
+    .mobile-menu .mob-actions .mob-verify{background:rgba(124,58,237,.1);color:#c4b5fd}
+    .mobile-menu .mob-actions .mob-protect{background:#7c3aed;color:#fff}
+    @media(max-width:768px){
+      .nav-center,.nav-actions{display:none}
+      .hamburger{display:flex}
+      .nav-inner{padding:0 20px}
+    }
+
+    /* ===== BACKGROUND ===== */
+    .bg-glow{position:fixed;pointer-events:none;z-index:0}
+    .bg-glow-1{top:-200px;right:-150px;width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,.08),transparent 70%);filter:blur(60px)}
+    .bg-glow-2{bottom:-200px;left:-150px;width:500px;height:500px;background:radial-gradient(circle,rgba(167,139,250,.06),transparent 70%);filter:blur(60px)}
+    .bg-glow-3{top:40%;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse,rgba(79,70,229,.04),transparent 70%);filter:blur(80px)}
+
+    /* ===== HERO ===== */
+    .hero{padding:140px 40px 80px;text-align:center;position:relative;z-index:1}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);border-radius:100px;font-size:12px;font-weight:600;color:#a78bfa;text-transform:uppercase;letter-spacing:1px;margin-bottom:24px}
+    .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:#34d399;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+    .hero h1{font-size:52px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:20px;letter-spacing:-2px}
+    .hero h1 .gradient{background:linear-gradient(135deg,#a78bfa,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p.sub{font-size:18px;color:rgba(196,181,253,.5);line-height:1.8;max-width:560px;margin:0 auto;font-weight:400}
+
+    /* ===== FADE ANIMATIONS ===== */
+    .fade-up{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+    .fade-up.visible{opacity:1;transform:translateY(0)}
+    @keyframes fadeInDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ===== STEPS SECTION ===== */
+    .steps-section{position:relative;z-index:1;padding:80px 32px 60px}
+    .steps-section .section-label{text-align:center;margin-bottom:48px}
+    .steps-section .section-label span{display:inline-block;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#a78bfa;background:rgba(124,58,237,.1);padding:6px 16px;border-radius:20px;border:1px solid rgba(124,58,237,.15)}
+    .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:960px;margin:0 auto;position:relative}
+    .steps-grid::before{content:'';position:absolute;top:56px;left:16%;right:16%;height:2px;background:linear-gradient(90deg,rgba(79,70,229,.3),rgba(124,58,237,.3),rgba(52,211,153,.3));border-radius:2px}
+    [dir="rtl"] .steps-grid::before{background:linear-gradient(270deg,rgba(79,70,229,.3),rgba(124,58,237,.3),rgba(52,211,153,.3))}
+    .step-card{text-align:center;position:relative;z-index:1;padding:24px 20px;border-radius:20px;background:rgba(124,58,237,.04);border:1px solid rgba(124,58,237,.08);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:all .35s cubic-bezier(.16,1,.3,1)}
+    .step-card:hover{background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.2);transform:translateY(-4px)}
+    .step-num{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 4px 20px rgba(79,70,229,.35);transition:transform .3s,box-shadow .3s}
+    .step-card:hover .step-num{transform:scale(1.08);box-shadow:0 8px 30px rgba(79,70,229,.45)}
+    .step-icon{width:48px;height:48px;margin:0 auto 14px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+    .step-icon svg{width:24px;height:24px}
+    .step-icon.upload{background:rgba(79,70,229,.12);border:1px solid rgba(79,70,229,.2)}
+    .step-icon.upload svg{color:#818cf8}
+    .step-icon.protect{background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.2)}
+    .step-icon.protect svg{color:#a855f7}
+    .step-icon.verify{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.2)}
+    .step-icon.verify svg{color:#34d399}
+    .step-card h3{font-size:17px;font-weight:700;color:#fff;margin-bottom:8px}
+    .step-card p{font-size:13px;color:rgba(196,181,253,.45);line-height:1.7}
+    @media(max-width:768px){
+      .steps-grid{grid-template-columns:1fr;gap:16px;max-width:400px}
+      .steps-grid::before{display:none}
+    }
+
+    /* ===== INTERACTIVE DEMO AREA ===== */
+    .demo-area{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 20px 80px}
+
+    /* Drop zone */
+    .drop-zone{border:2px dashed rgba(124,58,237,.3);border-radius:24px;padding:52px 40px;text-align:center;cursor:pointer;transition:all .35s cubic-bezier(.4,0,.2,1);background:rgba(124,58,237,.03);position:relative;overflow:hidden}
+    .drop-zone::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(124,58,237,.06),transparent 70%);opacity:0;transition:opacity .35s}
+    .drop-zone:hover,.drop-zone.drag-over{border-color:#7c3aed;background:rgba(124,58,237,.06);transform:scale(1.01)}
+    .drop-zone:hover::before,.drop-zone.drag-over::before{opacity:1}
+    .drop-zone.drag-over{border-color:#a78bfa;box-shadow:0 0 40px rgba(124,58,237,.15);transform:scale(1.02)}
+    .drop-zone .dz-icon{margin-bottom:20px}
+    .drop-zone .dz-icon svg{width:56px;height:56px;color:rgba(167,139,250,.4);transition:color .3s,transform .3s}
+    .drop-zone:hover .dz-icon svg,.drop-zone.drag-over .dz-icon svg{color:#a78bfa;transform:translateY(-4px)}
+    .drop-zone .dz-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:8px}
+    .drop-zone .dz-sub{font-size:14px;color:rgba(196,181,253,.4);margin-bottom:20px}
+    .drop-zone .dz-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:12px;font-weight:600;font-size:14px;border:none;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(79,70,229,.3);font-family:inherit}
+    .drop-zone .dz-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,70,229,.5)}
+    .drop-zone .dz-btn svg{width:18px;height:18px}
+    .drop-zone input[type="file"]{display:none}
+
+    /* Rate limit note */
+    .rate-note{text-align:center;margin-top:14px;font-size:12px;color:rgba(196,181,253,.3);font-weight:400}
+
+    /* File info */
+    .file-info{display:none;align-items:center;gap:14px;padding:16px 20px;background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.12);border-radius:16px;margin-bottom:20px}
+    .file-info.show{display:flex}
+    .file-icon{width:44px;height:44px;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .file-icon svg{width:22px;height:22px;color:#a78bfa}
+    .file-details{flex:1;min-width:0}
+    .file-name{font-size:14px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .file-size{font-size:12px;color:rgba(196,181,253,.4)}
+    .file-remove{width:30px;height:30px;border-radius:8px;border:1px solid rgba(239,68,68,.25);background:rgba(239,68,68,.1);color:#f87171;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0}
+    .file-remove:hover{background:rgba(239,68,68,.2)}
+
+    /* Submit button */
+    .submit-btn{width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 20px rgba(79,70,229,.3);letter-spacing:-.1px}
+    .submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,70,229,.5)}
+    .submit-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+
+    /* Processing steps */
+    .proc-steps{display:none;margin-top:24px}
+    .proc-steps.show{display:block}
+    .proc-step{display:flex;align-items:center;gap:12px;padding:7px 0;font-size:13px;color:rgba(196,181,253,.2);transition:all .3s}
+    .proc-step.active{color:#a78bfa}
+    .proc-step.done{color:#34d399}
+    .proc-step .s-dot{width:20px;height:20px;border-radius:6px;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;transition:.3s}
+    .proc-step.done .s-dot{background:rgba(52,211,153,.12)}
+    .proc-step.done .s-dot::after{content:'\2713'}
+
+    /* Progress bar */
+    .progress{display:none;margin-top:20px}
+    .progress.show{display:block}
+    .progress-bar{width:100%;height:4px;background:rgba(124,58,237,.1);border-radius:2px;overflow:hidden;margin-bottom:10px}
+    .progress-fill{height:100%;background:linear-gradient(to right,#4f46e5,#a78bfa);border-radius:2px;width:0%;transition:width .5s}
+    .progress-text{font-size:13px;color:rgba(196,181,253,.5);text-align:center}
+
+    /* Result */
+    .result{display:none;text-align:center;padding:28px 0}
+    .result.show{display:block}
+    .result .check-icon{width:72px;height:72px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:resultPop .5s cubic-bezier(.16,1,.3,1)}
+    @keyframes resultPop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+    .result .check-icon svg{width:36px;height:36px;color:#34d399}
+    .result h3{font-size:22px;font-weight:800;color:#34d399;margin-bottom:10px}
+    .result p{font-size:14px;color:rgba(196,181,253,.5);margin-bottom:24px;line-height:1.7}
+
+    /* Result actions */
+    .result-actions{display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto}
+    .result-actions .download-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 32px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;border:none;border-radius:14px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:all .3s;box-shadow:0 4px 15px rgba(5,150,105,.3);text-decoration:none}
+    .result-actions .download-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(5,150,105,.4)}
+    .result-actions .download-btn svg{width:18px;height:18px}
+
+    .result-row{display:flex;gap:10px}
+    .result-row .r-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:12px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .3s;border:1px solid rgba(124,58,237,.2);background:rgba(124,58,237,.06);color:#c4b5fd;text-decoration:none}
+    .result-row .r-btn:hover{border-color:#7c3aed;background:rgba(124,58,237,.12);transform:translateY(-1px)}
+    .result-row .r-btn svg{width:16px;height:16px;flex-shrink:0}
+    @media(max-width:480px){.result-row{flex-direction:column}}
+
+    /* Share link box */
+    .share-box{padding:16px;background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.15);border-radius:14px;margin-bottom:16px}
+    .share-box .share-label{font-size:12px;font-weight:600;color:#a78bfa;margin-bottom:8px}
+    .share-box .share-row{display:flex;gap:8px;align-items:center}
+    .share-box input{flex:1;padding:10px 14px;border:1px solid rgba(124,58,237,.2);border-radius:10px;font-family:'Inter',monospace;font-size:13px;background:rgba(0,0,0,.3);color:#e2e0f0;outline:none;min-width:0}
+    .share-box input:focus{border-color:#7c3aed}
+    .share-box .copy-btn{padding:10px 18px;border:1px solid rgba(124,58,237,.3);border-radius:10px;background:rgba(124,58,237,.1);color:#a78bfa;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:.2s}
+    .share-box .copy-btn:hover{background:rgba(124,58,237,.2);border-color:#7c3aed}
+
+    .another-btn{display:block;margin:18px auto 0;font-size:13px;color:#a78bfa;cursor:pointer;border:none;background:none;font-family:inherit;font-weight:600;transition:.2s;padding:8px 16px}
+    .another-btn:hover{color:#c4b5fd}
+
+    /* ===== HOW IT WORKS SECTION ===== */
+    .how-section{position:relative;z-index:1;padding:80px 32px;border-top:1px solid rgba(124,58,237,.08)}
+    .how-section .section-header{text-align:center;max-width:600px;margin:0 auto 48px}
+    .how-section .section-header .label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#a78bfa;background:rgba(124,58,237,.1);padding:6px 16px;border-radius:20px;border:1px solid rgba(124,58,237,.15);margin-bottom:16px}
+    .how-section .section-header h2{font-size:36px;font-weight:800;color:#fff;margin-bottom:14px;letter-spacing:-1px}
+    .how-section .section-header p{font-size:16px;color:rgba(196,181,253,.45);font-weight:400;line-height:1.7}
+    .how-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:720px;margin:0 auto}
+    .how-card{display:flex;align-items:flex-start;gap:16px;padding:22px 24px;border-radius:16px;background:rgba(124,58,237,.04);border:1px solid rgba(124,58,237,.08);transition:all .35s cubic-bezier(.16,1,.3,1)}
+    .how-card:hover{background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.18);transform:translateY(-2px)}
+    .how-card .hc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .how-card .hc-icon svg{width:20px;height:20px}
+    .how-card .hc-icon.hash{background:rgba(79,70,229,.12);border:1px solid rgba(79,70,229,.2)}
+    .how-card .hc-icon.hash svg{color:#818cf8}
+    .how-card .hc-icon.sig{background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.2)}
+    .how-card .hc-icon.sig svg{color:#a855f7}
+    .how-card .hc-icon.offline{background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.2)}
+    .how-card .hc-icon.offline svg{color:#06b6d4}
+    .how-card .hc-icon.open{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.2)}
+    .how-card .hc-icon.open svg{color:#34d399}
+    .how-card p{font-size:14px;color:rgba(196,181,253,.55);line-height:1.7}
+    .how-card p strong{color:#fff;font-weight:600}
+    @media(max-width:600px){.how-grid{grid-template-columns:1fr}}
+
+    /* ===== CTA SECTION ===== */
+    .cta-section{position:relative;z-index:1;padding:80px 32px;text-align:center;border-top:1px solid rgba(124,58,237,.08)}
+    .cta-card{max-width:640px;margin:0 auto;padding:48px 40px;background:linear-gradient(135deg,rgba(79,70,229,.12),rgba(124,58,237,.08));border:1px solid rgba(124,58,237,.15);border-radius:24px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+    .cta-card h2{font-size:32px;font-weight:800;color:#fff;margin-bottom:12px;letter-spacing:-.5px}
+    .cta-card p{font-size:16px;color:rgba(196,181,253,.5);margin-bottom:32px;line-height:1.7}
+    .cta-buttons{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+    .cta-buttons .btn-primary{padding:14px 32px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:12px;font-weight:700;font-size:15px;transition:all .3s;border:none;cursor:pointer;font-family:inherit;box-shadow:0 4px 20px rgba(79,70,229,.3);text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+    .cta-buttons .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,70,229,.5)}
+    .cta-buttons .btn-secondary{padding:14px 32px;background:transparent;color:#c4b5fd;border-radius:12px;font-weight:600;font-size:14px;border:1px solid rgba(124,58,237,.25);transition:all .3s;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+    .cta-buttons .btn-secondary:hover{border-color:#7c3aed;background:rgba(124,58,237,.08);transform:translateY(-2px)}
+    .cta-links{display:flex;align-items:center;justify-content:center;gap:24px;margin-top:20px;flex-wrap:wrap}
+    .cta-links a{font-size:13px;color:rgba(196,181,253,.4);transition:.2s;font-weight:500}
+    .cta-links a:hover{color:#c4b5fd}
+
+    /* ===== FOOTER ===== */
+    .site-footer{position:relative;z-index:1;padding:32px;border-top:1px solid rgba(124,58,237,.08);text-align:center}
+    .site-footer .f-links{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:12px;flex-wrap:wrap}
+    .site-footer .f-links a{font-size:13px;color:rgba(196,181,253,.35);transition:.2s}
+    .site-footer .f-links a:hover{color:#c4b5fd}
+    .site-footer .f-copy{font-size:11px;color:rgba(196,181,253,.2)}
+  </style>
+</head>
+<body>
+
+<!-- Background Glows -->
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+<div class="bg-glow bg-glow-3"></div>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
+    </a>
+    <div class="nav-center">
+      <a href="/">Home</a>
+      <a href="/demo" class="active">Demo</a>
+      <a href="/verify">Verify</a>
+      <a href="/open">Open PVF</a>
+    </div>
+    <div class="nav-actions">
+      <div class="nav-sep"></div>
+      <a href="/verify" class="nav-verify">Verify a Document</a>
+      <a href="/upload" class="nav-cta">Protect</a>
+    </div>
+    <div class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('show')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/" onclick="closeMobile()">Home</a>
+    <a href="/demo" onclick="closeMobile()">Demo</a>
+    <a href="/verify" onclick="closeMobile()">Verify a Document</a>
+    <a href="/open" onclick="closeMobile()">Open PVF</a>
+    <div class="mob-actions">
+      <a href="/verify" class="mob-verify" onclick="closeMobile()">Verify</a>
+      <a href="/upload" class="mob-protect" onclick="closeMobile()">Protect</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span> Live Demo</div>
+  <h1>Try Vertifile — <span class="gradient">Protect a Document</span> in Seconds</h1>
+  <p class="sub">See how PVF document protection works. Upload any file and get a tamper-proof .pvf document instantly. No signup needed.</p>
+</section>
+
+<!-- ===== STEP-BY-STEP ===== -->
+<section class="steps-section">
+  <div class="section-label"><span>How it works</span></div>
+  <div class="steps-grid">
+    <div class="step-card fade-up">
+      <div class="step-num">1</div>
+      <div class="step-icon upload">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <h3>Upload</h3>
+      <p>Upload any document — PDF, image, or Word file</p>
+    </div>
+    <div class="step-card fade-up">
+      <div class="step-num">2</div>
+      <div class="step-icon protect">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <h3>Protect</h3>
+      <p>We create a tamper-proof PVF file with a cryptographic signature</p>
+    </div>
+    <div class="step-card fade-up">
+      <div class="step-num">3</div>
+      <div class="step-icon verify">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h3>Verify</h3>
+      <p>Anyone can verify the document is authentic — no account needed</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INTERACTIVE DEMO AREA ===== -->
+<section class="demo-area" id="demoArea">
+
+  <!-- State: Upload -->
+  <div id="uploadState">
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <div class="dz-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="dz-title">Drag a file here or click to browse</div>
+      <div class="dz-sub">PDF, image (JPG/PNG), Word (.doc/.docx) — up to 50 MB</div>
+      <button class="dz-btn" type="button" onclick="event.stopPropagation();document.getElementById('fileInput').click()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Choose File
+      </button>
+      <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.gif,.txt,.doc,.docx">
+    </div>
+    <div class="rate-note">5 documents per hour in demo mode</div>
+  </div>
+
+  <!-- State: File selected -->
+  <div class="file-info" id="fileInfo">
+    <div class="file-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    </div>
+    <div class="file-details">
+      <div class="file-name" id="fileName"></div>
+      <div class="file-size" id="fileSize"></div>
+    </div>
+    <button class="file-remove" onclick="removeFile()" aria-label="Remove file">&times;</button>
+  </div>
+
+  <button class="submit-btn" id="submitBtn" disabled onclick="createPvf()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span>Protect This Document</span>
+  </button>
+
+  <!-- Processing state -->
+  <div class="proc-steps" id="procSteps">
+    <div class="proc-step" id="ps1"><div class="s-dot"></div><span>Receiving file...</span></div>
+    <div class="proc-step" id="ps2"><div class="s-dot"></div><span>Computing fingerprint (hash)...</span></div>
+    <div class="proc-step" id="ps3"><div class="s-dot"></div><span>Registering on Blockchain...</span></div>
+    <div class="proc-step" id="ps4"><div class="s-dot"></div><span>Attaching live stamp...</span></div>
+    <div class="proc-step" id="ps5"><div class="s-dot"></div><span>Creating PVF file...</span></div>
+  </div>
+  <div class="progress" id="progress">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">Processing...</div>
+  </div>
+
+  <!-- Result state -->
+  <div class="result" id="result">
+    <div class="check-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/></svg>
+    </div>
+    <h3>PVF File Created!</h3>
+    <p>Your document is now protected with a cryptographic signature. Download it, share it, or open it in the viewer.</p>
+
+    <div class="result-actions">
+      <!-- Share link -->
+      <div class="share-box" id="shareBox" style="display:none">
+        <div class="share-label">Share Link (no installation needed)</div>
+        <div class="share-row">
+          <input id="shareUrl" readonly>
+          <button class="copy-btn" id="copyBtn" onclick="copyShare()">Copy</button>
+        </div>
+      </div>
+
+      <!-- Download -->
+      <a class="download-btn" id="downloadLink" href="#" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download .pvf File
+      </a>
+
+      <!-- Secondary buttons -->
+      <div class="result-row">
+        <a class="r-btn" id="viewerLink" href="/open" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Open in Viewer
+        </a>
+        <a class="r-btn" id="shareOpenLink" href="#" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          View Online
+        </a>
+      </div>
+    </div>
+
+    <button class="another-btn" onclick="resetDemo()">Upload another document</button>
+  </div>
+
+</section>
+
+<!-- ===== HOW IT WORKS (Technical) ===== -->
+<section class="how-section">
+  <div class="section-header fade-up">
+    <div class="label">Under the Hood</div>
+    <h2>How PVF Protection Works</h2>
+    <p>Every PVF file is a self-contained proof of authenticity that works anywhere, anytime.</p>
+  </div>
+  <div class="how-grid">
+    <div class="how-card fade-up">
+      <div class="hc-icon hash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+      </div>
+      <p><strong>Your document is hashed</strong> — we never see its content. Only a unique fingerprint is computed.</p>
+    </div>
+    <div class="how-card fade-up">
+      <div class="hc-icon sig">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <p><strong>A cryptographic signature</strong> proves authenticity. Any tampering is instantly detectable.</p>
+    </div>
+    <div class="how-card fade-up">
+      <div class="hc-icon offline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <p><strong>The PVF file is self-contained</strong> — it works offline. No internet needed to view or verify.</p>
+    </div>
+    <div class="how-card fade-up">
+      <div class="hc-icon open">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <p><strong>Anyone can verify</strong> without creating an account. Just open the file or use the share link.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA SECTION ===== -->
+<section class="cta-section">
+  <div class="cta-card fade-up">
+    <h2>Ready for Production?</h2>
+    <p>Get unlimited document protection, API access, team management, and enterprise features.</p>
+    <div class="cta-buttons">
+      <a href="/signup" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        Sign Up for Unlimited Access
+      </a>
+      <a href="/api/docs" class="btn-secondary">View API Docs</a>
+    </div>
+    <div class="cta-links">
+      <a href="/enterprise">Enterprise Plans</a>
+      <a href="/integration">Developer Integration</a>
+      <a href="/open">Desktop Viewer</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+  <div class="f-links">
+    <a href="/">Home</a>
+    <a href="/verify">Verify a Document</a>
+    <a href="/upload">Protect a Document</a>
+    <a href="/api/docs">API Documentation</a>
+  </div>
+  <div class="f-copy">&copy; 2024 Vertifile. All rights reserved.</div>
+</footer>
+
+<script>
+// ===== Navbar scroll =====
+(function(){
+  var nav = document.getElementById('navbar');
+  window.addEventListener('scroll', function(){
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+})();
+
+function closeMobile(){
+  document.getElementById('mobileMenu').classList.remove('show');
+}
+
+// ===== Intersection Observer for fade-up =====
+(function(){
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0.1, rootMargin: '0px 0px -40px 0px'});
+  document.querySelectorAll('.fade-up').forEach(function(el){
+    observer.observe(el);
+  });
+})();
+
+// ===== File Upload Logic =====
+var selectedFile = null;
+var dropZone = document.getElementById('dropZone');
+
+dropZone.addEventListener('dragover', function(e){
+  e.preventDefault();
+  dropZone.classList.add('drag-over');
+});
+dropZone.addEventListener('dragleave', function(){
+  dropZone.classList.remove('drag-over');
+});
+dropZone.addEventListener('drop', function(e){
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+document.getElementById('fileInput').addEventListener('change', function(e){
+  if(e.target.files.length) handleFile(e.target.files[0]);
+});
+
+function handleFile(file){
+  selectedFile = file;
+  document.getElementById('fileName').textContent = file.name;
+  document.getElementById('fileSize').textContent = formatSize(file.size);
+  document.getElementById('fileInfo').classList.add('show');
+  document.getElementById('dropZone').style.display = 'none';
+  document.querySelector('.rate-note').style.display = 'none';
+  document.getElementById('submitBtn').disabled = false;
+}
+
+function removeFile(){
+  selectedFile = null;
+  document.getElementById('fileInfo').classList.remove('show');
+  document.getElementById('dropZone').style.display = '';
+  document.querySelector('.rate-note').style.display = '';
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('fileInput').value = '';
+}
+
+function formatSize(bytes){
+  if(bytes < 1024) return bytes + ' B';
+  if(bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function sleep(ms){
+  return new Promise(function(r){ setTimeout(r, ms); });
+}
+
+async function createPvf(){
+  if(!selectedFile) return;
+
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  document.getElementById('procSteps').classList.add('show');
+  document.getElementById('progress').classList.add('show');
+
+  var steps = ['ps1','ps2','ps3','ps4','ps5'];
+  var pcts = [10, 30, 55, 80, 100];
+
+  for(var i = 0; i < steps.length; i++){
+    document.getElementById(steps[i]).classList.add('active');
+    document.getElementById('progressFill').style.width = pcts[i] + '%';
+    document.getElementById('progressText').textContent = document.getElementById(steps[i]).querySelector('span').textContent;
+    await sleep(600);
+    document.getElementById(steps[i]).classList.remove('active');
+    document.getElementById(steps[i]).classList.add('done');
+  }
+
+  try {
+    var formData = new FormData();
+    formData.append('file', selectedFile);
+
+    var response = await fetch('/api/demo/create-pvf?format=json', {
+      method: 'POST',
+      body: formData
+    });
+
+    if(!response.ok){
+      var err = await response.json().catch(function(){ return {}; });
+      throw new Error(err.error || 'Server error (' + response.status + ')');
+    }
+
+    var data = await response.json();
+
+    // Download the PVF file as blob
+    var pvfResponse = await fetch(data.downloadUrl || ('/d/' + data.shareId + '/download'));
+    var blob = await pvfResponse.blob();
+    var url = URL.createObjectURL(blob);
+    var pvfName = selectedFile.name.replace(/\.[^.]+$/, '') + '.pvf';
+
+    document.getElementById('downloadLink').href = url;
+    document.getElementById('downloadLink').download = pvfName;
+
+    // Show share URL
+    if(data.shareUrl){
+      document.getElementById('shareBox').style.display = 'block';
+      document.getElementById('shareUrl').value = data.shareUrl;
+      document.getElementById('shareOpenLink').href = data.shareUrl;
+    }
+
+    // Hide processing, show result
+    document.getElementById('procSteps').classList.remove('show');
+    document.getElementById('progress').classList.remove('show');
+    document.getElementById('fileInfo').classList.remove('show');
+    btn.style.display = 'none';
+    document.getElementById('result').classList.add('show');
+
+  } catch(error){
+    alert('Error: ' + error.message);
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> <span>Protect This Document</span>';
+    document.getElementById('procSteps').classList.remove('show');
+    document.getElementById('progress').classList.remove('show');
+    document.getElementById('progressFill').style.width = '0%';
+    ['ps1','ps2','ps3','ps4','ps5'].forEach(function(s){
+      document.getElementById(s).className = 'proc-step';
+    });
+  }
+}
+
+function copyShare(){
+  var input = document.getElementById('shareUrl');
+  input.select();
+  navigator.clipboard.writeText(input.value).then(function(){
+    document.getElementById('copyBtn').textContent = 'Copied!';
+    setTimeout(function(){ document.getElementById('copyBtn').textContent = 'Copy'; }, 2000);
+  });
+}
+
+function resetDemo(){
+  selectedFile = null;
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('shareBox').style.display = 'none';
+  var btn = document.getElementById('submitBtn');
+  btn.style.display = '';
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> <span>Protect This Document</span>';
+  document.getElementById('dropZone').style.display = '';
+  document.querySelector('.rate-note').style.display = '';
+  document.getElementById('fileInput').value = '';
+  document.getElementById('procSteps').classList.remove('show');
+  document.getElementById('progress').classList.remove('show');
+  document.getElementById('progressFill').style.width = '0%';
+  ['ps1','ps2','ps3','ps4','ps5'].forEach(function(s){
+    document.getElementById(s).className = 'proc-step';
+  });
+}
+</script>
+</body>
+</html>

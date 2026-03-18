@@ -24,21 +24,28 @@
         "name": "PVF Document",
         "description": "Protected Verified File",
         "role": "Viewer",
-        "mimeType": "text/html"
+        "mimeType": "application/vnd.vertifile.pvf"
       }
     ],
+    "afterSign": "scripts/notarize.js",
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "icons/icon.png",
       "target": [
         "dmg",
         "zip"
-      ]
+      ],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "entitlements.mac.plist",
+      "entitlementsInherit": "entitlements.mac.plist",
+      "identity": null
     },
     "win": {
       "icon": "icons/icon.png",
       "target": [
-        "nsis"
+        "portable",
+        "zip"
       ]
     },
     "dmg": {

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://raw.githubusercontent.com/tauri-apps/tauri/dev/crates/tauri-config-schema/schema.json",
+  "productName": "PVF Viewer",
+  "version": "1.0.0",
+  "identifier": "com.vertifile.viewer",
+  "build": {
+    "frontendDist": "../src",
+    "devUrl": "http://localhost:1420"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "PVF Viewer",
+        "width": 1000,
+        "height": 800,
+        "minWidth": 600,
+        "minHeight": 500,
+        "resizable": true,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "decorations": true,
+        "transparent": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["dmg", "app"],
+    "icon": [
+      "icons/icon.png"
+    ],
+    "fileAssociations": [
+      {
+        "ext": ["pvf"],
+        "mimeType": "application/x-pvf",
+        "description": "PVF Document",
+        "role": "Viewer"
+      }
+    ],
+    "macOS": {
+      "minimumSystemVersion": "10.15"
+    }
+  },
+  "plugins": {
+    "dialog": {},
+    "shell": {
+      "open": true
+    }
+  }
+}
