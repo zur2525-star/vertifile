@@ -50,29 +50,12 @@ const upload = multer({
 // DATABASE (SQLite via db.js)
 // ================================================================
 
-// Migrate existing JSON data to SQLite (one-time, idempotent)
-const migrated = db.migrateFromJson();
-
 // Helper to extract client IP from request
 function getClientIP(req) {
   return req.headers['x-forwarded-for']?.split(',')[0]?.trim()
     || req.headers['x-real-ip']
     || req.socket?.remoteAddress
     || 'unknown';
-}
-
-// Create a default API key if none exist
-const existingKeys = db.listApiKeys();
-if (existingKeys.length === 0) {
-  const defaultKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
-  db.createApiKey({
-    apiKey: defaultKey,
-    orgId: 'org_default',
-    orgName: 'Vertifile Demo',
-    plan: 'professional',
-    rateLimit: 100
-  });
-  console.log('\n🔑 Default API key created: ' + defaultKey + '\n');
 }
 
 // ================================================================
@@ -190,12 +173,12 @@ const verifyLimiter = rateLimit({
 // ================================================================
 // API KEY AUTHENTICATION MIDDLEWARE
 // ================================================================
-function authenticateApiKey(req, res, next) {
+async function authenticateApiKey(req, res, next) {
   const apiKey = req.headers['x-api-key'];
   const clientIP = getClientIP(req);
 
   if (!apiKey) {
-    db.log('auth_failed', { reason: 'missing_key', ip: clientIP, path: req.path });
+    await db.log('auth_failed', { reason: 'missing_key', ip: clientIP, path: req.path });
     return res.status(401).json({
       success: false,
       error: 'API key required. Add X-API-Key header.',
@@ -203,15 +186,15 @@ function authenticateApiKey(req, res, next) {
     });
   }
 
-  const keyData = db.getApiKey(apiKey);
+  const keyData = await db.getApiKey(apiKey);
 
   if (!keyData) {
-    db.log('auth_failed', { reason: 'invalid_key', ip: clientIP, path: req.path, keyPrefix: apiKey.substring(0, 12) });
+    await db.log('auth_failed', { reason: 'invalid_key', ip: clientIP, path: req.path, keyPrefix: apiKey.substring(0, 12) });
     return res.status(401).json({ success: false, error: 'Invalid API key' });
   }
 
   if (!keyData.active) {
-    db.log('auth_failed', { reason: 'disabled_key', ip: clientIP, orgId: keyData.orgId, path: req.path });
+    await db.log('auth_failed', { reason: 'disabled_key', ip: clientIP, orgId: keyData.orgId, path: req.path });
     return res.status(403).json({ success: false, error: 'API key is disabled' });
   }
 
@@ -223,7 +206,7 @@ function authenticateApiKey(req, res, next) {
       return normalizedClientIP === normalizedAllowed;
     });
     if (!isAllowed) {
-      db.log('auth_failed', { reason: 'ip_not_whitelisted', ip: clientIP, orgId: keyData.orgId, path: req.path });
+      await db.log('auth_failed', { reason: 'ip_not_whitelisted', ip: clientIP, orgId: keyData.orgId, path: req.path });
       return res.status(403).json({ success: false, error: 'Request from unauthorized IP address' });
     }
   }
@@ -819,7 +802,7 @@ const signupLimiter = rateLimit({
 // Daily signup tracking per IP
 const _dailySignups = new Map(); // IP -> { count, resetAt }
 
-app.post('/api/signup', signupLimiter, (req, res) => {
+app.post('/api/signup', signupLimiter, async (req, res) => {
   try {
     const { orgName, contactName, email, useCase } = req.body;
 
@@ -834,7 +817,7 @@ app.post('/api/signup', signupLimiter, (req, res) => {
     const ipEntry = _dailySignups.get(clientIP);
     if (ipEntry && ipEntry.resetAt > now) {
       if (ipEntry.count >= 3) {
-        db.log('signup_blocked', { reason: 'daily_ip_limit', ip: clientIP, email });
+        await db.log('signup_blocked', { reason: 'daily_ip_limit', ip: clientIP, email });
         return res.status(429).json({ success: false, error: 'Daily signup limit reached. Try again tomorrow.' });
       }
       ipEntry.count++;
@@ -856,7 +839,7 @@ app.post('/api/signup', signupLimiter, (req, res) => {
     const rateLimit = 5;
 
     // Create the API key
-    db.createApiKey({
+    await db.createApiKey({
       apiKey,
       orgId,
       orgName,
@@ -865,7 +848,7 @@ app.post('/api/signup', signupLimiter, (req, res) => {
     });
 
     // Audit log
-    db.log('signup', {
+    await db.log('signup', {
       orgId,
       orgName,
       contactName,
@@ -899,7 +882,7 @@ app.post('/api/signup', signupLimiter, (req, res) => {
 // ================================================================
 app.post('/api/create-pvf', createLimiter, authenticateApiKey, upload.single('file'), (req, res) => handleCreatePvf(req, res));
 
-function handleCreatePvf(req, res) {
+async function handleCreatePvf(req, res) {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, error: 'No file uploaded' });
@@ -913,7 +896,7 @@ function handleCreatePvf(req, res) {
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif', 'text/plain', 'text/html',
       'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
     if (!allowedTypes.some(t => mimeType.startsWith(t.split('/')[0] + '/') || mimeType === t)) {
-      db.log('create_rejected', { reason: 'invalid_file_type', mimeType, ip: getClientIP(req) });
+      await db.log('create_rejected', { reason: 'invalid_file_type', mimeType, ip: getClientIP(req) });
       return res.status(400).json({ success: false, error: 'Unsupported file type: ' + mimeType });
     }
 
@@ -940,7 +923,7 @@ function handleCreatePvf(req, res) {
     }
 
     // Step 4: Register document (persistent — SQLite)
-    db.createDocument({
+    await db.createDocument({
       hash: fileHash,
       signature,
       originalName,
@@ -956,7 +939,7 @@ function handleCreatePvf(req, res) {
     });
 
     // Step 5: Update org stats
-    db.incrementDocCount(req.apiKey);
+    await db.incrementDocCount(req.apiKey);
 
     // Step 6: Build .pvf file
     const isText = mimeType.startsWith('text/');
@@ -987,7 +970,7 @@ function handleCreatePvf(req, res) {
     console.log(`  Content:   NOT READ (blind processing)`);
 
     // Audit log: PVF creation
-    db.log('pvf_created', {
+    await db.log('pvf_created', {
       orgId: req.org.orgId,
       hash: fileHash,
       originalName,
@@ -998,7 +981,7 @@ function handleCreatePvf(req, res) {
 
     // Generate shareable link ID
     const shareId = crypto.randomBytes(8).toString('base64url'); // Short URL-safe ID
-    db.setShareId(fileHash, shareId);
+    await db.setShareId(fileHash, shareId);
 
     // Save PVF file for shareable link access
     const pvfDir = path.join(__dirname, 'data', 'pvf');
@@ -1007,13 +990,13 @@ function handleCreatePvf(req, res) {
 
     // Register on blockchain (non-blocking — doesn't fail PVF creation)
     if (chain.isConnected()) {
-      chain.register(fileHash, signature, req.org.orgName).then(result => {
+      chain.register(fileHash, signature, req.org.orgName).then(async result => {
         if (result.success && result.txHash) {
-          db.log('blockchain_registered', { hash: fileHash, txHash: result.txHash, blockNumber: result.blockNumber });
+          await db.log('blockchain_registered', { hash: fileHash, txHash: result.txHash, blockNumber: result.blockNumber });
         }
-      }).catch(err => {
+      }).catch(async err => {
         console.warn('[BLOCKCHAIN] Registration failed, queued for retry:', err.message);
-        db.log('blockchain_failed', { hash: fileHash, orgId: req.org.orgId, error: err.message });
+        await db.log('blockchain_failed', { hash: fileHash, orgId: req.org.orgId, error: err.message });
         // Store failed registration for retry
         if (!global._blockchainRetryQueue) global._blockchainRetryQueue = [];
         global._blockchainRetryQueue.push({ hash: fileHash, signature, orgName: req.org.orgName, failedAt: Date.now() });
@@ -1078,7 +1061,7 @@ app.post('/api/verify', verifyLimiter, async (req, res) => {
       return res.status(400).json({ success: false, verified: false, error: 'Invalid hash format' });
     }
 
-    const doc = db.getDocument(lookupHash);
+    const doc = await db.getDocument(lookupHash);
 
     if (doc) {
       // Double-check: verify HMAC signature if provided
@@ -1093,22 +1076,22 @@ app.post('/api/verify', verifyLimiter, async (req, res) => {
 
       if (!signatureValid) {
         console.log(`[VERIFY FAIL] Signature mismatch for ${lookupHash.substring(0, 16)}...`);
-        db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'invalid_signature' });
+        await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'invalid_signature' });
         return res.json({ success: true, verified: false, reason: 'invalid_signature' });
       }
 
       // Recipient binding check — if document has a bound recipient, verify it matches
       if (doc.recipientHash && recipientHash && doc.recipientHash !== recipientHash) {
         console.log(`[VERIFY FAIL] Recipient mismatch for ${lookupHash.substring(0, 16)}...`);
-        db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'recipient_mismatch' });
+        await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'recipient_mismatch' });
         return res.json({ success: true, verified: false, reason: 'recipient_mismatch' });
       }
 
       const newToken = generateToken();
-      db.updateDocumentToken(lookupHash, newToken);
+      await db.updateDocumentToken(lookupHash, newToken);
 
       console.log(`[VERIFY OK] ${lookupHash.substring(0, 16)}...`);
-      db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'verified' });
+      await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'verified' });
 
       // Include blockchain verification if connected
       let blockchainProof = null;
@@ -1129,7 +1112,7 @@ app.post('/api/verify', verifyLimiter, async (req, res) => {
       });
     } else {
       console.log(`[VERIFY FAIL] Not found: ${lookupHash.substring(0, 16)}...`);
-      db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'not_found' });
+      await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'not_found' });
       res.json({ success: true, verified: false, hash: lookupHash });
     }
   } catch (error) {
@@ -1138,7 +1121,7 @@ app.post('/api/verify', verifyLimiter, async (req, res) => {
 });
 
 // ===== API: Token Refresh (heartbeat) =====
-app.post('/api/token/refresh', verifyLimiter, (req, res) => {
+app.post('/api/token/refresh', verifyLimiter, async (req, res) => {
   try {
     const { hash } = req.body;
 
@@ -1147,7 +1130,7 @@ app.post('/api/token/refresh', verifyLimiter, (req, res) => {
       return res.status(400).json({ success: false, error: 'Invalid hash' });
     }
 
-    const doc = db.getDocument(hash);
+    const doc = await db.getDocument(hash);
     if (!doc) return res.json({ success: false, error: 'Not found' });
 
     // Don't refresh if token was created less than 60 seconds ago
@@ -1156,7 +1139,7 @@ app.post('/api/token/refresh', verifyLimiter, (req, res) => {
     }
 
     const newToken = generateToken();
-    db.updateDocumentToken(hash, newToken);
+    await db.updateDocumentToken(hash, newToken);
     res.json({ success: true, token: newToken, expiresIn: 30 });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Error' });
@@ -1168,7 +1151,7 @@ app.post('/api/token/refresh', verifyLimiter, (req, res) => {
 // ================================================================
 
 // Generate new API key
-app.post('/api/keys/create', authenticateAdmin, (req, res) => {
+app.post('/api/keys/create', authenticateAdmin, async (req, res) => {
   const { orgName, plan, allowedIPs } = req.body;
   if (!orgName) return res.status(400).json({ success: false, error: 'orgName required' });
 
@@ -1176,7 +1159,7 @@ app.post('/api/keys/create', authenticateAdmin, (req, res) => {
   const orgId = 'org_' + uuidv4().split('-')[0];
   const rateLimit = plan === 'enterprise' ? 10000 : plan === 'professional' ? 100 : 5;
 
-  db.createApiKey({
+  await db.createApiKey({
     apiKey,
     orgId,
     orgName,
@@ -1185,19 +1168,19 @@ app.post('/api/keys/create', authenticateAdmin, (req, res) => {
     allowedIPs: (allowedIPs && Array.isArray(allowedIPs) && allowedIPs.length > 0) ? allowedIPs : undefined
   });
 
-  db.log('api_key_created', { orgId, orgName, plan: plan || 'free', ip: getClientIP(req), hasIpWhitelist: !!(allowedIPs && allowedIPs.length) });
+  await db.log('api_key_created', { orgId, orgName, plan: plan || 'free', ip: getClientIP(req), hasIpWhitelist: !!(allowedIPs && allowedIPs.length) });
   console.log(`[API KEY] Created for ${orgName} (${plan || 'free'})`);
   res.json({ success: true, apiKey, orgId, orgName, plan: plan || 'free' });
 });
 
 // List API keys (admin)
-app.get('/api/keys', (req, res) => {
+app.get('/api/keys', async (req, res) => {
   const adminSecret = req.headers['x-admin-secret'];
   if (!isValidAdminSecret(adminSecret)) {
     return res.status(403).json({ success: false, error: 'Unauthorized' });
   }
 
-  const keys = db.listApiKeys().map(k => ({
+  const keys = (await db.listApiKeys()).map(k => ({
     ...k,
     apiKey: k.apiKey.substring(0, 12) + '...'
   }));
@@ -1206,8 +1189,8 @@ app.get('/api/keys', (req, res) => {
 });
 
 // ===== API: Health =====
-app.get('/api/health', (req, res) => {
-  const stats = db.getStats();
+app.get('/api/health', async (req, res) => {
+  const stats = await db.getStats();
   res.json({
     status: 'online',
     service: 'Vertifile',
@@ -1329,18 +1312,18 @@ app.get('/api/docs', (req, res) => {
 // ================================================================
 
 // Org stats — how many documents this org has created
-app.get('/api/org/stats', authenticateApiKey, (req, res) => {
-  const stats = db.getOrgStats(req.org.orgId);
+app.get('/api/org/stats', authenticateApiKey, async (req, res) => {
+  const stats = await db.getOrgStats(req.org.orgId);
   res.json({ success: true, orgId: req.org.orgId, orgName: req.org.orgName, ...stats });
 });
 
 // Org documents — list of documents issued by this org (paginated)
-app.get('/api/org/documents', authenticateApiKey, (req, res) => {
+app.get('/api/org/documents', authenticateApiKey, async (req, res) => {
   const limit = Math.min(parseInt(req.query.limit) || 50, 200);
   const offset = parseInt(req.query.offset) || 0;
 
-  const docs = db.getDocumentsByOrg(req.org.orgId, { limit, offset });
-  const total = db.getDocumentCount(req.org.orgId);
+  const docs = await db.getDocumentsByOrg(req.org.orgId, { limit, offset });
+  const total = await db.getDocumentCount(req.org.orgId);
 
   res.json({ success: true, documents: docs, total, limit, offset });
 });
@@ -1361,10 +1344,10 @@ function isValidAdminSecret(provided) {
   } catch { return false; }
 }
 
-function authenticateAdmin(req, res, next) {
+async function authenticateAdmin(req, res, next) {
   const adminSecret = req.headers['x-admin-secret'];
   if (!isValidAdminSecret(adminSecret)) {
-    db.log('auth_failed', { reason: 'invalid_admin_secret', ip: getClientIP(req), path: req.path });
+    await db.log('auth_failed', { reason: 'invalid_admin_secret', ip: getClientIP(req), path: req.path });
     return res.status(403).json({ success: false, error: 'Unauthorized' });
   }
   next();
@@ -1372,30 +1355,30 @@ function authenticateAdmin(req, res, next) {
 
 // Admin stats — global overview
 app.get('/api/admin/stats', authenticateAdmin, async (req, res) => {
-  const stats = db.getStats();
+  const stats = await db.getStats();
   const blockchainStats = await chain.getStats();
   res.json({ success: true, ...stats, blockchain: blockchainStats });
 });
 
 // Admin audit log — paginated, filterable
-app.get('/api/admin/audit', authenticateAdmin, (req, res) => {
+app.get('/api/admin/audit', authenticateAdmin, async (req, res) => {
   const limit = Math.min(parseInt(req.query.limit) || 50, 500);
   const offset = parseInt(req.query.offset) || 0;
   const event = req.query.event || undefined;
   const orgId = req.query.orgId || undefined;
 
-  const entries = db.getAuditLog({ limit, offset, event, orgId });
+  const entries = await db.getAuditLog({ limit, offset, event, orgId });
   res.json({ success: true, entries, limit, offset });
 });
 
 // Admin — list API keys
-app.get('/api/admin/keys', authenticateAdmin, (req, res) => {
-  const keys = db.listApiKeys();
+app.get('/api/admin/keys', authenticateAdmin, async (req, res) => {
+  const keys = await db.listApiKeys();
   res.json({ success: true, keys });
 });
 
 // Admin — create API key
-app.post('/api/admin/keys', authenticateAdmin, (req, res) => {
+app.post('/api/admin/keys', authenticateAdmin, async (req, res) => {
   const { orgName, plan } = req.body;
   if (!orgName) return res.status(400).json({ success: false, error: 'orgName required' });
 
@@ -1403,19 +1386,19 @@ app.post('/api/admin/keys', authenticateAdmin, (req, res) => {
   const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
   const rateLimit = plan === 'enterprise' ? 10000 : plan === 'professional' ? 100 : 5;
 
-  db.createApiKey({ apiKey, orgId, orgName, plan: plan || 'free', rateLimit });
-  db.log('api_key_created', { orgId, orgName, plan, ip: getClientIP(req) });
+  await db.createApiKey({ apiKey, orgId, orgName, plan: plan || 'free', rateLimit });
+  await db.log('api_key_created', { orgId, orgName, plan, ip: getClientIP(req) });
 
   res.json({ success: true, apiKey, orgId, orgName, plan: plan || 'free' });
 });
 
 // Admin — delete API key
-app.delete('/api/admin/keys/:key', authenticateAdmin, (req, res) => {
+app.delete('/api/admin/keys/:key', authenticateAdmin, async (req, res) => {
   try {
-    const key = db.getApiKey(req.params.key);
+    const key = await db.getApiKey(req.params.key);
     if (!key) return res.status(404).json({ success: false, error: 'API key not found' });
-    db.deactivateApiKey(req.params.key);
-    db.log('api_key_deleted', { apiKey: req.params.key.substring(0, 12) + '...', orgId: key.orgId, ip: getClientIP(req) });
+    await db.deactivateApiKey(req.params.key);
+    await db.log('api_key_deleted', { apiKey: req.params.key.substring(0, 12) + '...', orgId: key.orgId, ip: getClientIP(req) });
     res.json({ success: true });
   } catch (e) {
     res.status(500).json({ success: false, error: 'Failed to delete key' });
@@ -1423,13 +1406,13 @@ app.delete('/api/admin/keys/:key', authenticateAdmin, (req, res) => {
 });
 
 // Admin — list all documents (paginated, searchable)
-app.get('/api/admin/documents', authenticateAdmin, (req, res) => {
+app.get('/api/admin/documents', authenticateAdmin, async (req, res) => {
   const limit = Math.min(parseInt(req.query.limit) || 50, 200);
   const offset = parseInt(req.query.offset) || 0;
   const search = req.query.search || '';
 
   try {
-    const docs = db.getAllDocuments({ limit, offset, search });
+    const docs = await db.getAllDocuments({ limit, offset, search });
     res.json({ success: true, documents: docs, limit, offset });
   } catch (e) {
     res.json({ success: true, documents: [], limit, offset });
@@ -1437,9 +1420,9 @@ app.get('/api/admin/documents', authenticateAdmin, (req, res) => {
 });
 
 // Admin — list all webhooks
-app.get('/api/admin/webhooks', authenticateAdmin, (req, res) => {
+app.get('/api/admin/webhooks', authenticateAdmin, async (req, res) => {
   try {
-    const webhooks = db.getAllWebhooks ? db.getAllWebhooks() : [];
+    const webhooks = db.getAllWebhooks ? await db.getAllWebhooks() : [];
     res.json({ success: true, webhooks });
   } catch (e) {
     res.json({ success: true, webhooks: [] });
@@ -1451,7 +1434,7 @@ app.get('/api/admin/webhooks', authenticateAdmin, (req, res) => {
 // ================================================================
 
 // Gateway intake — receive a .pvf file, verify it, extract original doc
-app.post('/api/gateway/intake', authenticateApiKey, upload.single('file'), (req, res) => {
+app.post('/api/gateway/intake', authenticateApiKey, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, error: 'No file uploaded' });
@@ -1464,7 +1447,7 @@ app.post('/api/gateway/intake', authenticateApiKey, upload.single('file'), (req,
     const sigMatch = pvfContent.match(/var\s+SIG\s*=\s*"([a-f0-9]{64})"/);
 
     if (!hashMatch || !sigMatch) {
-      db.log('gateway_intake', { orgId: req.org.orgId, ip: getClientIP(req), result: 'invalid_pvf' });
+      await db.log('gateway_intake', { orgId: req.org.orgId, ip: getClientIP(req), result: 'invalid_pvf' });
       return res.status(400).json({ success: false, error: 'Invalid PVF file — could not extract hash/signature' });
     }
 
@@ -1472,9 +1455,9 @@ app.post('/api/gateway/intake', authenticateApiKey, upload.single('file'), (req,
     const signature = sigMatch[1];
 
     // Verify against database
-    const doc = db.getDocument(hash);
+    const doc = await db.getDocument(hash);
     if (!doc) {
-      db.log('gateway_intake', { orgId: req.org.orgId, hash, ip: getClientIP(req), result: 'not_found' });
+      await db.log('gateway_intake', { orgId: req.org.orgId, hash, ip: getClientIP(req), result: 'not_found' });
       return res.json({
         success: true,
         verified: false,
@@ -1491,7 +1474,7 @@ app.post('/api/gateway/intake', authenticateApiKey, upload.single('file'), (req,
     }
 
     if (!signatureValid) {
-      db.log('gateway_intake', { orgId: req.org.orgId, hash, ip: getClientIP(req), result: 'invalid_signature' });
+      await db.log('gateway_intake', { orgId: req.org.orgId, hash, ip: getClientIP(req), result: 'invalid_signature' });
       return res.json({
         success: true,
         verified: false,
@@ -1525,7 +1508,7 @@ app.post('/api/gateway/intake', authenticateApiKey, upload.single('file'), (req,
       extractedFile = Buffer.from(cleanText).toString('base64');
     }
 
-    db.log('gateway_intake', { orgId: req.org.orgId, hash, ip: getClientIP(req), result: 'verified', issuedBy: doc.orgName });
+    await db.log('gateway_intake', { orgId: req.org.orgId, hash, ip: getClientIP(req), result: 'verified', issuedBy: doc.orgName });
 
     // Fire webhooks for the receiving org
     fireWebhooks(req.org.orgId, 'verification.success', {
@@ -1558,13 +1541,13 @@ app.post('/api/gateway/intake', authenticateApiKey, upload.single('file'), (req,
 });
 
 // Gateway batch — verify multiple PVF files at once
-app.post('/api/gateway/batch', authenticateApiKey, upload.array('files', 50), (req, res) => {
+app.post('/api/gateway/batch', authenticateApiKey, upload.array('files', 50), async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ success: false, error: 'No files uploaded' });
     }
 
-    const results = req.files.map((file, index) => {
+    const results = await Promise.all(req.files.map(async (file, index) => {
       try {
         const pvfContent = file.buffer.toString('utf-8');
         const hashMatch = pvfContent.match(/var\s+HASH\s*=\s*"([a-f0-9]{64})"/);
@@ -1576,7 +1559,7 @@ app.post('/api/gateway/batch', authenticateApiKey, upload.array('files', 50), (r
 
         const hash = hashMatch[1];
         const signature = sigMatch[1];
-        const doc = db.getDocument(hash);
+        const doc = await db.getDocument(hash);
 
         if (!doc) {
           return { index, filename: file.originalname, verified: false, reason: 'not_found', hash };
@@ -1604,12 +1587,12 @@ app.post('/api/gateway/batch', authenticateApiKey, upload.array('files', 50), (r
       } catch (e) {
         return { index, filename: file.originalname, verified: false, reason: 'processing_error' };
       }
-    });
+    }));
 
     const verified = results.filter(r => r.verified).length;
     const failed = results.length - verified;
 
-    db.log('gateway_batch', {
+    await db.log('gateway_batch', {
       orgId: req.org.orgId,
       ip: getClientIP(req),
       total: results.length,
@@ -1632,7 +1615,7 @@ app.post('/api/gateway/batch', authenticateApiKey, upload.array('files', 50), (r
 // Webhook helper — fire webhooks for an org
 async function fireWebhooks(orgId, event, data) {
   try {
-    const webhooks = db.getWebhooksByOrg(orgId);
+    const webhooks = await db.getWebhooksByOrg(orgId);
     for (const wh of webhooks) {
       if (wh.events.includes(event)) {
         const payload = JSON.stringify({ event, data, timestamp: new Date().toISOString() });
@@ -1684,7 +1667,7 @@ function isValidWebhookUrl(urlStr) {
 }
 
 // Register a webhook
-app.post('/api/webhooks/register', authenticateApiKey, (req, res) => {
+app.post('/api/webhooks/register', authenticateApiKey, async (req, res) => {
   const { url, events } = req.body;
   if (!url || !events || !Array.isArray(events)) {
     return res.status(400).json({ success: false, error: 'url and events[] required' });
@@ -1702,23 +1685,23 @@ app.post('/api/webhooks/register', authenticateApiKey, (req, res) => {
   }
 
   const secret = crypto.randomBytes(32).toString('hex');
-  const id = db.registerWebhook(req.org.orgId, url, validEvents, secret);
+  const id = await db.registerWebhook(req.org.orgId, url, validEvents, secret);
 
-  db.log('webhook_registered', { orgId: req.org.orgId, url, events: validEvents, ip: getClientIP(req) });
+  await db.log('webhook_registered', { orgId: req.org.orgId, url, events: validEvents, ip: getClientIP(req) });
   res.json({ success: true, webhookId: id, secret, events: validEvents });
 });
 
 // List org webhooks
-app.get('/api/webhooks', authenticateApiKey, (req, res) => {
-  const webhooks = db.getWebhooksByOrg(req.org.orgId);
+app.get('/api/webhooks', authenticateApiKey, async (req, res) => {
+  const webhooks = await db.getWebhooksByOrg(req.org.orgId);
   res.json({ success: true, webhooks: webhooks.map(w => ({ id: w.id, url: w.url, events: w.events, createdAt: w.createdAt })) });
 });
 
 // Delete a webhook
-app.delete('/api/webhooks/:id', authenticateApiKey, (req, res) => {
+app.delete('/api/webhooks/:id', authenticateApiKey, async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id) || id <= 0) return res.status(400).json({ success: false, error: 'Invalid webhook ID' });
-  const removed = db.removeWebhook(id, req.org.orgId);
+  const removed = await db.removeWebhook(id, req.org.orgId);
   if (!removed) return res.status(404).json({ success: false, error: 'Webhook not found' });
   res.json({ success: true });
 });
@@ -1762,7 +1745,7 @@ app.get('/signup', (req, res) => {
 // SHAREABLE DOCUMENT LINKS — /d/:shareId
 // Anyone with the link can view the PVF document in-browser
 // ================================================================
-app.get('/d/:shareId', (req, res) => {
+app.get('/d/:shareId', async (req, res) => {
   const { shareId } = req.params;
 
   // Validate share ID format — alphanumeric + URL-safe base64 chars only (no path traversal)
@@ -1771,7 +1754,7 @@ app.get('/d/:shareId', (req, res) => {
   }
 
   // Look up document by share ID
-  const doc = db.getDocumentByShareId(shareId);
+  const doc = await db.getDocumentByShareId(shareId);
   if (!doc) {
     return res.status(404).send(notFoundPage('Document not found'));
   }
@@ -1783,7 +1766,7 @@ app.get('/d/:shareId', (req, res) => {
   }
 
   // Log the view
-  db.log('document_viewed', { shareId, hash: doc.hash, ip: getClientIP(req) });
+  await db.log('document_viewed', { shareId, hash: doc.hash, ip: getClientIP(req) });
 
   // Serve as HTML so browser renders it directly
   setPvfSecurityHeaders(res);
@@ -1792,11 +1775,11 @@ app.get('/d/:shareId', (req, res) => {
 });
 
 // Download route — /d/:shareId/download — downloads as .pvf file
-app.get('/d/:shareId/download', (req, res) => {
+app.get('/d/:shareId/download', async (req, res) => {
   const { shareId } = req.params;
   if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).json({ success: false, error: 'Invalid link' });
 
-  const doc = db.getDocumentByShareId(shareId);
+  const doc = await db.getDocumentByShareId(shareId);
   if (!doc) {
     return res.status(404).json({ success: false, error: 'Document not found' });
   }
@@ -1813,11 +1796,11 @@ app.get('/d/:shareId/download', (req, res) => {
 });
 
 // Document info API — /d/:shareId/info — returns metadata (no content)
-app.get('/d/:shareId/info', (req, res) => {
+app.get('/d/:shareId/info', async (req, res) => {
   const { shareId } = req.params;
   if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).json({ success: false, error: 'Invalid link' });
 
-  const doc = db.getDocumentByShareId(shareId);
+  const doc = await db.getDocumentByShareId(shareId);
   if (!doc) {
     return res.status(404).json({ success: false, error: 'Document not found' });
   }
@@ -1876,7 +1859,7 @@ app.get('/demo-pvf', (req, res) => {
 
 const contactLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 3, message: { error: 'Too many submissions' } });
 
-app.post('/api/contact', contactLimiter, (req, res) => {
+app.post('/api/contact', contactLimiter, async (req, res) => {
   const { name, email, organization, orgType, message } = req.body;
   if (!name || !email || !organization) {
     return res.status(400).json({ success: false, error: 'Name, email, and organization are required' });
@@ -1884,7 +1867,7 @@ app.post('/api/contact', contactLimiter, (req, res) => {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ success: false, error: 'Invalid email address' });
   }
-  db.log('contact_form', { name, email, organization, orgType: orgType || 'not specified', message: message || '', ip: getClientIP(req) });
+  await db.log('contact_form', { name, email, organization, orgType: orgType || 'not specified', message: message || '', ip: getClientIP(req) });
   res.json({ success: true });
 });
 
@@ -1902,9 +1885,9 @@ app.use((req, res, next) => {
 });
 
 // Global error handler
-app.use((err, req, res, next) => {
+app.use(async (err, req, res, next) => {
   console.error('[ERROR]', err.message);
-  db.log('server_error', { path: req.path, method: req.method, error: err.message, ip: getClientIP(req) });
+  await db.log('server_error', { path: req.path, method: req.method, error: err.message, ip: getClientIP(req) });
 
   if (err.message === 'Not allowed by CORS') {
     return res.status(403).json({ success: false, error: 'CORS: Origin not allowed' });
@@ -1914,33 +1897,6 @@ app.use((err, req, res, next) => {
 });
 
 // ================================================================
-// REGISTER DEMO DOCUMENT (so /demo works with verify)
-// ================================================================
-const demoContent = {
-  name: 'יוסי כהן',
-  degree: 'בוגר במדעי המחשב (B.Sc.)',
-  average: '92.4',
-  year: '2024',
-  docId: 'PVF-2024-00482',
-  issuer: 'אוניברסיטת תל אביב'
-};
-const demoHash = crypto.createHash('sha256').update(JSON.stringify(demoContent)).digest('hex');
-const demoSig = signHash(demoHash);
-if (!db.getDocument(demoHash)) {
-  db.createDocument({
-    hash: demoHash,
-    signature: demoSig,
-    originalName: 'demo',
-    mimeType: 'text/html',
-    fileSize: 0,
-    orgId: 'org_vertifile',
-    orgName: 'Vertifile',
-    token: generateToken(),
-    tokenCreatedAt: Date.now()
-  });
-}
-
-// ================================================================
 // 404 CATCH-ALL (must be after all other routes)
 // ================================================================
 app.use((req, res) => {
@@ -1948,44 +1904,96 @@ app.use((req, res) => {
 });
 
 // ================================================================
-// START SERVER
+// DATABASE READY — wait for async initialization, then bootstrap
 // ================================================================
-if (require.main === module) {
-  app.listen(PORT, () => {
-    const stats = db.getStats();
-    const keys = db.listApiKeys();
-    const defaultKey = keys.length > 0 ? keys[0].apiKey : null;
-    console.log('');
-    console.log('╔══════════════════════════════════════════════════╗');
-    console.log('║     Vertifile — Protected Verified File v4.1    ║');
-    console.log('╠══════════════════════════════════════════════════╣');
-    console.log(`║  Port:       ${PORT}                                ║`);
-    console.log(`║  Home:       http://localhost:${PORT}                  ║`);
-    console.log(`║  Demo:       http://localhost:${PORT}/demo             ║`);
-    console.log(`║  Dashboard:  http://localhost:${PORT}/dashboard         ║`);
-    console.log(`║  API Docs:   http://localhost:${PORT}/api/docs         ║`);
-    console.log('╠══════════════════════════════════════════════════╣');
-    console.log(`║  Database:   SQLite (WAL mode)                   ║`);
-    console.log(`║  Documents:  ${String(stats.totalDocuments).padEnd(5)} registered                   ║`);
-    console.log(`║  API Keys:   ${String(stats.totalOrganizations).padEnd(5)} active                       ║`);
-    console.log(`║  Security:   HMAC + CSP + CORS + Audit + Helmet  ║`);
-    console.log(`║  Privacy:    BLIND — never reads document content║`);
-    console.log('╠══════════════════════════════════════════════════╣');
-    console.log(`║  API Key:    ${defaultKey ? defaultKey.substring(0, 24) + '...' : 'none'}    ║`);
-    console.log('╚══════════════════════════════════════════════════╝');
-    console.log('');
+db._ready.then(async () => {
 
-    // Initialize blockchain (non-blocking — works without it)
-    chain.init().then(connected => {
-      if (connected) console.log('[BLOCKCHAIN] On-chain registration active');
-      else console.log('[BLOCKCHAIN] Off-chain mode (set POLYGON_PRIVATE_KEY + POLYGON_CONTRACT to enable)');
+  // Migrate existing JSON data to database (one-time, idempotent)
+  await db.migrateFromJson();
+
+  // Create a default API key if none exist
+  const existingKeys = await db.listApiKeys();
+  if (existingKeys.length === 0) {
+    const defaultKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
+    await db.createApiKey({
+      apiKey: defaultKey,
+      orgId: 'org_default',
+      orgName: 'Vertifile Demo',
+      plan: 'professional',
+      rateLimit: 100
     });
-  });
+    console.log('\n🔑 Default API key created: ' + defaultKey + '\n');
+  }
 
-  // Graceful shutdown
-  process.on('SIGINT', () => { db.close(); process.exit(0); });
-  process.on('SIGTERM', () => { db.close(); process.exit(0); });
-}
+  // Register demo document (so /demo works with verify)
+  const demoContent = {
+    name: 'יוסי כהן',
+    degree: 'בוגר במדעי המחשב (B.Sc.)',
+    average: '92.4',
+    year: '2024',
+    docId: 'PVF-2024-00482',
+    issuer: 'אוניברסיטת תל אביב'
+  };
+  const demoHash = crypto.createHash('sha256').update(JSON.stringify(demoContent)).digest('hex');
+  const demoSig = signHash(demoHash);
+  if (!(await db.getDocument(demoHash))) {
+    await db.createDocument({
+      hash: demoHash,
+      signature: demoSig,
+      originalName: 'demo',
+      mimeType: 'text/html',
+      fileSize: 0,
+      orgId: 'org_vertifile',
+      orgName: 'Vertifile',
+      token: generateToken(),
+      tokenCreatedAt: Date.now()
+    });
+  }
+
+  // ================================================================
+  // START SERVER
+  // ================================================================
+  if (require.main === module) {
+    app.listen(PORT, async () => {
+      const stats = await db.getStats();
+      const keys = await db.listApiKeys();
+      const defaultKey = keys.length > 0 ? keys[0].apiKey : null;
+      console.log('');
+      console.log('╔══════════════════════════════════════════════════╗');
+      console.log('║     Vertifile — Protected Verified File v4.1    ║');
+      console.log('╠══════════════════════════════════════════════════╣');
+      console.log(`║  Port:       ${PORT}                                ║`);
+      console.log(`║  Home:       http://localhost:${PORT}                  ║`);
+      console.log(`║  Demo:       http://localhost:${PORT}/demo             ║`);
+      console.log(`║  Dashboard:  http://localhost:${PORT}/dashboard         ║`);
+      console.log(`║  API Docs:   http://localhost:${PORT}/api/docs         ║`);
+      console.log('╠══════════════════════════════════════════════════╣');
+      console.log(`║  Database:   ${process.env.DATABASE_URL ? 'PostgreSQL' : 'SQLite (WAL mode)'}${''.padEnd(process.env.DATABASE_URL ? 20 : 3)}║`);
+      console.log(`║  Documents:  ${String(stats.totalDocuments).padEnd(5)} registered                   ║`);
+      console.log(`║  API Keys:   ${String(stats.totalOrganizations).padEnd(5)} active                       ║`);
+      console.log(`║  Security:   HMAC + CSP + CORS + Audit + Helmet  ║`);
+      console.log(`║  Privacy:    BLIND — never reads document content║`);
+      console.log('╠══════════════════════════════════════════════════╣');
+      console.log(`║  API Key:    ${defaultKey ? defaultKey.substring(0, 24) + '...' : 'none'}    ║`);
+      console.log('╚══════════════════════════════════════════════════╝');
+      console.log('');
+
+      // Initialize blockchain (non-blocking — works without it)
+      chain.init().then(connected => {
+        if (connected) console.log('[BLOCKCHAIN] On-chain registration active');
+        else console.log('[BLOCKCHAIN] Off-chain mode (set POLYGON_PRIVATE_KEY + POLYGON_CONTRACT to enable)');
+      });
+    });
+
+    // Graceful shutdown
+    process.on('SIGINT', () => { db.close(); process.exit(0); });
+    process.on('SIGTERM', () => { db.close(); process.exit(0); });
+  }
+
+}).catch(err => {
+  console.error('[FATAL] Database initialization failed:', err);
+  process.exit(1);
+});
 
 // Export for Vercel serverless
 module.exports = app;
