@@ -230,7 +230,7 @@ function escapeHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
-function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash) {
+function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, customIcon, brandColor, orgName) {
   const isImage = mimeType.startsWith('image/');
   const isPdf = mimeType === 'application/pdf';
   const safeOriginalName = escapeHtml(originalName);
@@ -307,8 +307,8 @@ body.forged{background:#2a0a0a}
 @keyframes wHueB{0%,100%{filter:hue-rotate(0deg)}50%{filter:hue-rotate(65deg)}}
 
 /* ===== VERTIFILE STAMP ===== */
-.stamp{position:absolute;bottom:6%;right:5%;width:120px;height:120px;z-index:30;pointer-events:none;opacity:0.7;perspective:800px}
-@media(max-width:600px){.stamp{width:80px;height:80px;bottom:4%;right:3%}}
+.stamp{position:absolute;bottom:6%;right:5%;width:96px;height:96px;z-index:30;pointer-events:none;opacity:0.7;perspective:800px}
+@media(max-width:600px){.stamp{width:64px;height:64px;bottom:4%;right:3%}}
 
 /* 3D Coin-flip animation */
 .stamp-coin{width:100%;height:100%;transform-style:preserve-3d;opacity:0}
@@ -434,7 +434,10 @@ body.forged{background:#2a0a0a}
         <div class="shim" id="sShim"></div>
         <div class="glow" id="sGlow"></div>
         <div class="inner-bg"></div>
-        <div class="center" id="sCtr"><svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="brand">VERTIFILE</div><div class="lbl ok">PROTECTED</div></div>
+        <div class="center" id="sCtr">${customIcon ?
+     (customIcon.startsWith('<svg') ? customIcon : `<img src="${customIcon}" style="width:28px;height:28px;object-fit:contain" alt="">`)
+     : `<svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+   }<div class="brand">${escapeHtml(orgName || 'VERTIFILE')}</div><div class="lbl ok">PROTECTED</div></div>
       </div>
       </div>
       <div class="stamp-shadow" id="sShadow"></div>
@@ -614,6 +617,9 @@ var HASH="${fileHash}";
 var SIG="${signature}";
 var RCPT="${recipientHash || ''}";
 var API=window.location.origin;
+var ORGNAME="${escapeHtml(orgName || 'VERTIFILE')}";
+var CUSTOMICON=${customIcon ? `"${customIcon.startsWith('<svg') ? 'svg' : 'img'}"` : 'null'};
+var CUSTOMICONDATA=${customIcon ? `\`${customIcon.replace(/`/g, '\\`')}\`` : 'null'};
 
 // ===== UNIQUE VISUAL FINGERPRINT (derived from hash) =====
 (function hashFingerprint(){
@@ -641,6 +647,14 @@ var API=window.location.origin;
     "@keyframes wHueA{0%,100%{filter:hue-rotate("+waveHue1+"deg) brightness(1)}50%{filter:hue-rotate("+(waveHue1+45)+"deg) brightness(1.15)}}"+
     "@keyframes wHueB{0%,100%{filter:hue-rotate("+waveHue2+"deg)}50%{filter:hue-rotate("+(waveHue2+65)+"deg)}}";
   document.head.appendChild(s);
+  ${brandColor ? `
+  var bc = "${brandColor}";
+  // Override wave colors with brand color
+  document.querySelectorAll('.wave path').forEach(function(p, i) {
+    p.setAttribute('stroke', bc);
+    p.style.opacity = (0.08 + i * 0.03);
+  });
+  ` : ''}
 })();
 var token=null;
 var isLocal=location.protocol==="file:"||location.protocol==="about:"||window!==window.top;
@@ -746,7 +760,8 @@ function setOk(){
   document.getElementById("sOut").classList.remove("frozen");
   document.getElementById("sShim").classList.remove("frozen");
   document.getElementById("sGlow").classList.remove("frozen");
-  document.getElementById("sCtr").innerHTML='<svg viewBox="0 0 50 50" fill="none"><path class="chk" d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="brand">VERTIFILE</div><div class="lbl ok">VERIFIED</div>';
+  var iconHtml = CUSTOMICON === 'svg' ? CUSTOMICONDATA : CUSTOMICON === 'img' ? '<img src="'+CUSTOMICONDATA+'" style="width:28px;height:28px;object-fit:contain" alt="">' : '<svg viewBox="0 0 50 50" fill="none"><path class="chk" d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  document.getElementById("sCtr").innerHTML=iconHtml+'<div class="brand">'+ORGNAME+'</div><div class="lbl ok">VERIFIED</div>';
 }
 
 function setFk(){
@@ -757,7 +772,7 @@ function setFk(){
   document.getElementById("sOut").classList.add("frozen");
   document.getElementById("sShim").classList.add("frozen");
   document.getElementById("sGlow").classList.add("frozen");
-  document.getElementById("sCtr").innerHTML='<svg viewBox="0 0 50 50" fill="none"><path class="xp" d="M15 15L35 35" stroke="rgba(198,40,40,.5)" stroke-width="3" stroke-linecap="round"/><path class="xp" d="M35 15L15 35" stroke="rgba(198,40,40,.5)" stroke-width="3" stroke-linecap="round"/></svg><div class="brand">VERTIFILE</div><div class="lbl bad">FORGED</div>';
+  document.getElementById("sCtr").innerHTML='<svg viewBox="0 0 50 50" fill="none"><path class="xp" d="M15 15L35 35" stroke="rgba(198,40,40,.5)" stroke-width="3" stroke-linecap="round"/><path class="xp" d="M35 15L15 35" stroke="rgba(198,40,40,.5)" stroke-width="3" stroke-linecap="round"/></svg><div class="brand">'+ORGNAME+'</div><div class="lbl bad">FORGED</div>';
 }
 
 function startRefresh(){
@@ -966,7 +981,8 @@ async function handleCreatePvf(req, res) {
       fileBase64 = fileBuffer.toString('base64');
     }
 
-    let pvfHtml = generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash);
+    const branding = await db.getBranding(req.org.orgId);
+    let pvfHtml = generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, branding.custom_icon, branding.brand_color, req.org.orgName);
 
     // Obfuscate the JavaScript inside the PVF (deterministic per document hash)
     const seed = parseInt(fileHash.substring(0, 8), 16);
@@ -1337,6 +1353,73 @@ app.get('/api/org/documents', authenticateApiKey, async (req, res) => {
   const total = await db.getDocumentCount(req.org.orgId);
 
   res.json({ success: true, documents: docs, total, limit, offset });
+});
+
+// GET org profile (full details)
+app.get('/api/org/profile', authenticateApiKey, async (req, res) => {
+  try {
+    const branding = await db.getBranding(req.org.orgId);
+    res.json({
+      success: true,
+      orgId: req.org.orgId,
+      orgName: req.org.orgName,
+      plan: req.org.plan,
+      documentsCreated: req.org.documentsCreated,
+      rateLimit: req.org.rateLimit,
+      created: req.org.created,
+      branding: {
+        customIcon: branding.custom_icon || null,
+        brandColor: branding.brand_color || null
+      }
+    });
+  } catch (e) {
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
+// POST update branding
+app.post('/api/org/branding', authenticateApiKey, async (req, res) => {
+  try {
+    const { customIcon, brandColor } = req.body;
+
+    // Validate brand color (hex)
+    if (brandColor && !/^#[0-9a-fA-F]{6}$/.test(brandColor)) {
+      return res.status(400).json({ success: false, error: 'Invalid color format. Use hex (#RRGGBB)' });
+    }
+
+    // Validate custom icon (base64, max 50KB)
+    if (customIcon) {
+      const iconSize = Buffer.byteLength(customIcon, 'utf8');
+      if (iconSize > 50 * 1024) {
+        return res.status(400).json({ success: false, error: 'Icon too large. Maximum 50KB.' });
+      }
+      // Must be data URI or SVG
+      if (!customIcon.startsWith('data:image/') && !customIcon.startsWith('<svg')) {
+        return res.status(400).json({ success: false, error: 'Icon must be SVG or image data URI' });
+      }
+    }
+
+    await db.updateBranding(req.org.orgId, { customIcon, brandColor });
+    await db.log('branding_updated', { orgId: req.org.orgId, hasIcon: !!customIcon, color: brandColor });
+
+    res.json({ success: true, message: 'Branding updated' });
+  } catch (e) {
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
+// GET current branding
+app.get('/api/org/branding', authenticateApiKey, async (req, res) => {
+  try {
+    const branding = await db.getBranding(req.org.orgId);
+    res.json({
+      success: true,
+      customIcon: branding.custom_icon || null,
+      brandColor: branding.brand_color || null
+    });
+  } catch (e) {
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
 });
 
 // ================================================================

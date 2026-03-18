@@ -51,6 +51,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://vertifile.com/portal</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://vertifile.com/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

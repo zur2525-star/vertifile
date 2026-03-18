@@ -92,6 +92,10 @@ const _ready = (async () => {
     console.error('[PG] Schema init error:', e.message);
     throw e;
   }
+
+  // Migrations — add columns if they don't exist yet
+  try { await pool.query('ALTER TABLE api_keys ADD COLUMN custom_icon TEXT'); } catch (_) { /* already exists */ }
+  try { await pool.query('ALTER TABLE api_keys ADD COLUMN brand_color TEXT'); } catch (_) { /* already exists */ }
 })();
 
 // ================================================================
@@ -407,6 +411,18 @@ async function migrateFromJson() {
 }
 
 // ================================================================
+// BRANDING
+// ================================================================
+async function updateBranding(orgId, { customIcon, brandColor }) {
+  await pool.query('UPDATE api_keys SET custom_icon = $1, brand_color = $2 WHERE org_id = $3', [customIcon || null, brandColor || null, orgId]);
+}
+
+async function getBranding(orgId) {
+  const { rows } = await pool.query('SELECT custom_icon, brand_color FROM api_keys WHERE org_id = $1', [orgId]);
+  return rows[0] || { custom_icon: null, brand_color: null };
+}
+
+// ================================================================
 // CLOSE
 // ================================================================
 async function close() {
@@ -439,6 +455,8 @@ module.exports = {
   getAllWebhooks,
   getStats,
   getOrgStats,
+  updateBranding,
+  getBranding,
   migrateFromJson,
   close,
   _db: pool,
