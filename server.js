@@ -131,8 +131,14 @@ app.use(cors({
   credentials: false,
   maxAge: 86400
 }));
-app.use(express.json({ limit: '1mb' })); // Limit JSON body size
+app.use((req, res, next) => {
+  express.json({ limit: '1mb' })(req, res, (err) => {
+    if (err) return res.status(400).json({ success: false, error: 'Invalid JSON body' });
+    next();
+  });
+});
 app.use(express.static(path.join(__dirname, 'public'), {
+  extensions: ['html'],
   setHeaders: (res, filepath) => {
     // Set security headers for static files
     if (filepath.endsWith('.html')) {
@@ -804,7 +810,7 @@ const _dailySignups = new Map(); // IP -> { count, resetAt }
 
 app.post('/api/signup', signupLimiter, async (req, res) => {
   try {
-    const { orgName, contactName, email, useCase } = req.body;
+    let { orgName, contactName, email, useCase } = req.body;
 
     if (!orgName || !contactName || !email) {
       return res.status(400).json({ success: false, error: 'orgName, contactName, and email are required' });
@@ -829,6 +835,10 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
     if (!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/.test(email)) {
       return res.status(400).json({ success: false, error: 'Invalid email format' });
     }
+
+    // Sanitize inputs — strip HTML/script tags
+    orgName = escapeHtml(orgName).substring(0, 100);
+    contactName = escapeHtml(contactName).substring(0, 100);
 
     // Generate org ID and API key
     const orgId = 'org_' + orgName.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 30) + '_' + crypto.randomBytes(4).toString('hex');
@@ -1152,8 +1162,9 @@ app.post('/api/token/refresh', verifyLimiter, async (req, res) => {
 
 // Generate new API key
 app.post('/api/keys/create', authenticateAdmin, async (req, res) => {
-  const { orgName, plan, allowedIPs } = req.body;
+  let { orgName, plan, allowedIPs } = req.body;
   if (!orgName) return res.status(400).json({ success: false, error: 'orgName required' });
+  orgName = escapeHtml(orgName).substring(0, 100);
 
   const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
   const orgId = 'org_' + uuidv4().split('-')[0];
