@@ -7,6 +7,13 @@ const multer = require('multer');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { v4: uuidv4 } = require('uuid');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt');
+const session = require('express-session');
+const PgSession = require('connect-pg-simple')(session);
+const { Pool } = require('pg');
 const db = require('./db');
 const chain = require('./blockchain');
 const { obfuscatePvf } = require('./obfuscate');
@@ -128,7 +135,7 @@ app.use(cors({
   },
   methods: ['GET', 'POST', 'DELETE'],
   allowedHeaders: ['Content-Type', 'X-API-Key', 'X-Admin-Secret'],
-  credentials: false,
+  credentials: true,
   maxAge: 86400
 }));
 app.use((req, res, next) => {
@@ -147,6 +154,60 @@ app.use(express.static(path.join(__dirname, 'public'), {
     }
   }
 }));
+
+// Session configuration
+const sessionPool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+app.use(session({
+  store: new PgSession({ pool: sessionPool, tableName: 'sessions' }),
+  secret: process.env.SESSION_SECRET || 'vf_session_' + require('crypto').randomBytes(16).toString('hex'),
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport serialization
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser(async (id, done) => {
+  try { const user = await db.getUserById(id); done(null, user); }
+  catch(e) { done(e); }
+});
+
+// Local strategy (email + password)
+passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
+  try {
+    const user = await db.getUserByEmail(email.toLowerCase().trim());
+    if (!user) return done(null, false, { message: 'Invalid email or password' });
+    if (!user.password_hash) return done(null, false, { message: 'Please use Google or Microsoft to sign in' });
+    const match = await bcrypt.compare(password, user.password_hash);
+    if (!match) return done(null, false, { message: 'Invalid email or password' });
+    done(null, user);
+  } catch(e) { done(e); }
+}));
+
+// Google strategy (only if env vars set)
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: '/auth/google/callback'
+  }, async (accessToken, refreshToken, profile, done) => {
+    try {
+      let user = await db.getUserByProviderId('google', profile.id);
+      if (!user) {
+        user = await db.createUser({
+          email: profile.emails[0].value,
+          name: profile.displayName,
+          provider: 'google',
+          providerId: profile.id,
+          avatarUrl: profile.photos?.[0]?.value || null
+        });
+      }
+      done(null, user);
+    } catch(e) { done(e); }
+  }));
+}
 
 // Rate limiter — general API
 const apiLimiter = rateLimit({
@@ -790,6 +851,134 @@ init();
 </body>
 </html>`;
 }
+
+// ================================================================
+// AUTH ROUTES
+// ================================================================
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/app' }), (req, res) => res.redirect('/app'));
+
+app.post('/auth/register', async (req, res) => {
+  try {
+    const { email, password, name } = req.body;
+    if (!email || !password) return res.status(400).json({ success: false, error: 'Email and password required' });
+    if (password.length < 8) return res.status(400).json({ success: false, error: 'Password must be at least 8 characters' });
+    const existing = await db.getUserByEmail(email.toLowerCase().trim());
+    if (existing) return res.status(400).json({ success: false, error: 'Email already registered' });
+    const hash = await bcrypt.hash(password, 12);
+    const user = await db.createUser({ email: email.toLowerCase().trim(), name: name || email.split('@')[0], passwordHash: hash, provider: 'email' });
+    req.login(user, (err) => {
+      if (err) return res.status(500).json({ success: false, error: 'Login failed' });
+      res.json({ success: true, user: { id: user.id, email: user.email, name: user.name, avatar: user.avatar_url } });
+    });
+  } catch(e) { res.status(500).json({ success: false, error: 'Registration failed' }); }
+});
+
+app.post('/auth/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) return res.status(500).json({ success: false, error: 'Server error' });
+    if (!user) return res.status(401).json({ success: false, error: info?.message || 'Invalid credentials' });
+    req.login(user, (err) => {
+      if (err) return res.status(500).json({ success: false, error: 'Login failed' });
+      res.json({ success: true, user: { id: user.id, email: user.email, name: user.name, avatar: user.avatar_url } });
+    });
+  })(req, res, next);
+});
+
+app.post('/auth/logout', (req, res) => { req.logout(() => res.json({ success: true })); });
+
+app.get('/api/user/me', (req, res) => {
+  if (!req.user) return res.status(401).json({ success: false, error: 'Not authenticated' });
+  res.json({ success: true, user: { id: req.user.id, email: req.user.email, name: req.user.name, avatar: req.user.avatar_url, plan: req.user.plan, documentsUsed: req.user.documents_used, documentsLimit: req.user.documents_limit } });
+});
+
+// ================================================================
+// USER DOCUMENT ENDPOINTS (require login)
+// ================================================================
+function requireLogin(req, res, next) {
+  if (!req.user) return res.status(401).json({ success: false, error: 'Please sign in' });
+  next();
+}
+
+app.get('/api/user/documents', requireLogin, async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+    const offset = parseInt(req.query.offset) || 0;
+    const search = req.query.search || '';
+    const starred = req.query.starred === 'true';
+    const docs = await db.getUserDocuments(req.user.id, { limit, offset, search, starred });
+    const total = await db.getUserDocumentCount(req.user.id);
+    res.json({ success: true, documents: docs, total, limit, offset });
+  } catch(e) { res.status(500).json({ success: false, error: 'Failed to load documents' }); }
+});
+
+app.post('/api/user/upload', requireLogin, upload.single('file'), async (req, res) => {
+  try {
+    // Check document limit
+    if (req.user.documents_used >= req.user.documents_limit) {
+      return res.status(403).json({ success: false, error: 'Document limit reached. Upgrade your plan for more.' });
+    }
+    // Reuse existing PVF creation logic - set req.org for handleCreatePvf
+    req.org = { orgId: 'user_' + req.user.id, orgName: req.user.name || req.user.email.split('@')[0] };
+    // Call the existing handleCreatePvf middleware/function logic inline
+    // (same as demo endpoint but with user context)
+    const file = req.file;
+    if (!file) return res.status(400).json({ success: false, error: 'No file uploaded' });
+
+    const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg', 'text/plain'];
+    if (!allowedTypes.includes(file.mimetype)) {
+      return res.status(400).json({ success: false, error: 'Unsupported file type' });
+    }
+
+    const fileHash = hashBytes(file.buffer);
+    const signature = signHash(fileHash);
+    const fileBase64 = file.buffer.toString('base64');
+
+    // Get user branding (reuse from api_keys if they have one, or defaults)
+    const branding = { custom_icon: null, brand_color: null };
+
+    await db.createDocument({
+      hash: fileHash,
+      signature,
+      orgId: req.org.orgId,
+      orgName: req.org.orgName,
+      originalName: file.originalname,
+      mimeType: file.mimetype,
+      fileSize: file.size
+    });
+
+    // Set user_id on document
+    await db.setDocumentUserId(fileHash, req.user.id);
+    await db.updateUserDocCount(req.user.id);
+
+    const pvfHtml = generatePvfHtml(fileBase64, file.originalname, fileHash, file.mimetype, signature, null, branding.custom_icon, branding.brand_color, req.org.orgName);
+
+    // Generate share ID
+    const shareId = require('crypto').randomBytes(8).toString('base64url');
+    await db.setShareId(fileHash, shareId);
+
+    res.json({
+      success: true,
+      hash: fileHash,
+      shareId,
+      fileName: file.originalname,
+      pvfContent: pvfHtml,
+      documentsUsed: req.user.documents_used + 1,
+      documentsLimit: req.user.documents_limit
+    });
+  } catch(e) {
+    console.error('[USER UPLOAD]', e.message);
+    res.status(500).json({ success: false, error: 'Upload failed' });
+  }
+});
+
+app.post('/api/user/documents/:hash/star', requireLogin, async (req, res) => {
+  try {
+    const { starred } = req.body;
+    await db.starDocument(req.params.hash, !!starred);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ success: false, error: 'Failed to update' }); }
+});
 
 // ================================================================
 // API: DEMO — public PVF creation (no API key, strict rate limit)

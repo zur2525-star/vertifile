@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertifile — Documents</title>
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#f5f5f5;color:#1e1b4b;min-height:100vh}
+
+    /* ===== LOGIN SCREEN ===== */
+    .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e1b4b 0%,#2e1065 50%,#4c1d95 100%)}
+    .login-card{background:#fff;border-radius:16px;padding:48px;box-shadow:0 8px 40px rgba(124,58,237,.2);max-width:420px;width:90%;text-align:center}
+    .login-card img{height:36px;margin-bottom:24px}
+    .login-card h2{font-size:20px;font-weight:700;margin-bottom:8px;color:#1e1b4b}
+    .login-card p{font-size:13px;color:#6b7280;margin-bottom:24px}
+    .login-card .login-error{color:#dc2626;font-size:13px;margin-top:12px;display:none}
+
+    .oauth-btn{width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#374151;transition:.2s;text-decoration:none;margin-bottom:10px}
+    .oauth-btn:hover{border-color:#7c3aed;background:#faf9ff}
+    .oauth-btn svg{width:20px;height:20px;flex-shrink:0}
+
+    .login-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:#9ca3af;font-size:12px}
+    .login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:#e5e7eb}
+
+    .login-input{width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:border .2s;margin-bottom:10px}
+    .login-input:focus{border-color:#7c3aed}
+
+    .login-submit{width:100%;padding:12px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:4px;transition:background .2s}
+    .login-submit:hover{background:#5b21b6}
+
+    .login-toggle{font-size:13px;color:#6b7280;margin-top:20px}
+    .login-toggle a{color:#7c3aed;font-weight:500;text-decoration:none;cursor:pointer}
+    .login-toggle a:hover{text-decoration:underline}
+
+    /* ===== APP LAYOUT ===== */
+    .app{display:none;height:100vh;flex-direction:column}
+
+    /* Top Bar */
+    .topbar{height:56px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;padding:0 16px;gap:12px;position:fixed;top:0;left:0;right:0;z-index:100}
+    .topbar-logo{display:flex;align-items:center;gap:8px;min-width:200px}
+    .topbar-logo img{height:24px}
+    .topbar-logo span{font-size:11px;color:#7c3aed;font-weight:600;background:rgba(124,58,237,.08);padding:2px 8px;border-radius:4px}
+    .hamburger{display:none;background:none;border:none;font-size:20px;cursor:pointer;color:#374151;padding:4px}
+
+    .search-bar{flex:1;max-width:560px;margin:0 auto}
+    .search-bar input{width:100%;padding:8px 16px 8px 40px;border:1px solid #e5e7eb;border-radius:8px;font-size:14px;font-family:inherit;outline:none;background:#f5f5f5 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239ca3af' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.414-1.414l-3.85-3.85zm-5.242.156a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E") no-repeat 12px center;transition:border .2s,background .2s}
+    .search-bar input:focus{border-color:#7c3aed;background-color:#fff}
+
+    .user-menu{position:relative;display:flex;align-items:center;gap:8px;cursor:pointer;min-width:140px;justify-content:flex-end}
+    .user-avatar{width:32px;height:32px;border-radius:50%;background:#7c3aed;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+    .user-name{font-size:13px;font-weight:500;color:#374151}
+    .user-dropdown{display:none;position:absolute;top:100%;right:0;margin-top:8px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.1);min-width:180px;z-index:110;overflow:hidden}
+    .user-dropdown.show{display:block}
+    .user-dropdown a{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:13px;color:#374151;text-decoration:none;transition:.15s;cursor:pointer}
+    .user-dropdown a:hover{background:#f5f3ff;color:#7c3aed}
+    .user-dropdown .divider{height:1px;background:#e5e7eb;margin:4px 0}
+
+    /* Main Content Area */
+    .app-body{display:flex;margin-top:56px;height:calc(100vh - 56px)}
+
+    /* Sidebar */
+    .sidebar{width:240px;background:#fff;border-right:1px solid #e5e7eb;display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;padding:16px 12px;transition:transform .3s}
+
+    .new-doc-btn{width:100%;padding:12px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s;margin-bottom:16px}
+    .new-doc-btn:hover{background:#5b21b6;box-shadow:0 4px 16px rgba(124,58,237,.3)}
+
+    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:13px;font-weight:500;color:#4b5563;cursor:pointer;transition:.15s;user-select:none}
+    .nav-item:hover{background:rgba(124,58,237,.05);color:#1e1b4b}
+    .nav-item.active{background:#f3f0ff;color:#7c3aed;font-weight:600}
+    .nav-item .nav-icon{font-size:16px;width:20px;text-align:center}
+    .nav-item .nav-badge{margin-left:auto;font-size:11px;font-weight:600;background:rgba(124,58,237,.1);color:#7c3aed;padding:2px 8px;border-radius:10px}
+
+    .nav-divider{height:1px;background:#e5e7eb;margin:8px 12px}
+
+    .plan-badge{margin-top:auto;padding:12px;background:#faf9ff;border-radius:10px;border:1px solid rgba(124,58,237,.08)}
+    .plan-badge .plan-label{font-size:11px;font-weight:600;color:#7c3aed;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+    .plan-badge .plan-usage{font-size:12px;color:#6b7280;margin-bottom:6px}
+    .plan-bar{height:4px;background:#e5e7eb;border-radius:2px;overflow:hidden}
+    .plan-bar-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:2px;transition:width .3s}
+
+    /* Document List */
+    .doc-list-panel{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0}
+    .doc-list-header{padding:12px 16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;gap:12px;background:#fff;font-size:12px;color:#9ca3af;font-weight:500}
+    .doc-list-header .select-all{margin-right:4px}
+
+    .doc-row{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #f3f4f6;background:#fff;cursor:pointer;transition:.15s;border-left:3px solid transparent;min-height:48px}
+    .doc-row:hover{background:#faf9ff}
+    .doc-row.selected{border-left-color:#7c3aed;background:#f3f0ff}
+    .doc-row .doc-check{flex-shrink:0}
+    .doc-row .doc-star{flex-shrink:0;background:none;border:none;font-size:16px;cursor:pointer;color:#d1d5db;transition:.15s;padding:0;line-height:1}
+    .doc-row .doc-star.starred{color:#f59e0b}
+    .doc-row .doc-star:hover{color:#f59e0b}
+    .doc-row .doc-type-icon{flex-shrink:0;width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px}
+    .doc-type-pdf{background:rgba(239,68,68,.1);color:#dc2626}
+    .doc-type-image{background:rgba(59,130,246,.1);color:#3b82f6}
+    .doc-type-text{background:rgba(34,197,94,.1);color:#16a34a}
+    .doc-type-other{background:rgba(107,114,128,.1);color:#6b7280}
+    .doc-row .doc-name{flex:1;font-size:13px;font-weight:600;color:#1e1b4b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+    .doc-row .doc-status{flex-shrink:0;font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px}
+    .doc-status.verified{color:#16a34a}
+    .doc-status.unverified{color:#dc2626}
+    .doc-row .doc-size{flex-shrink:0;font-size:12px;color:#9ca3af;width:60px;text-align:right}
+    .doc-row .doc-date{flex-shrink:0;font-size:12px;color:#9ca3af;width:80px;text-align:right}
+
+    .doc-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:48px;text-align:center;color:#9ca3af}
+    .doc-empty .empty-icon{font-size:56px;margin-bottom:16px;opacity:.5}
+    .doc-empty h3{font-size:18px;font-weight:600;color:#6b7280;margin-bottom:8px}
+    .doc-empty p{font-size:13px;margin-bottom:20px;max-width:300px}
+    .doc-empty button{padding:10px 24px;background:#7c3aed;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+
+    /* Document Preview Panel */
+    .doc-preview{width:0;overflow:hidden;background:#fff;border-left:1px solid #e5e7eb;display:flex;flex-direction:column;transition:width .2s}
+    .doc-preview.open{width:480px}
+    .doc-preview-toolbar{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid #e5e7eb;gap:8px;flex-shrink:0}
+    .doc-preview-toolbar .preview-title{flex:1;font-size:14px;font-weight:600;color:#1e1b4b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .doc-preview-toolbar button{background:none;border:1px solid #e5e7eb;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;color:#4b5563;transition:.15s;font-family:inherit;display:flex;align-items:center;gap:4px}
+    .doc-preview-toolbar button:hover{border-color:#7c3aed;color:#7c3aed}
+    .doc-preview-toolbar .close-preview{border:none;font-size:18px;padding:4px 8px;color:#9ca3af}
+    .doc-preview-toolbar .close-preview:hover{color:#1e1b4b}
+
+    .doc-preview-content{flex:1;overflow:auto;background:#f5f5f5}
+    .doc-preview-content iframe{width:100%;height:100%;border:none}
+
+    .doc-preview-info{padding:16px;border-top:1px solid #e5e7eb;flex-shrink:0;background:#fff}
+    .doc-preview-info .info-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+    .doc-preview-info .info-label{color:#9ca3af;font-weight:500}
+    .doc-preview-info .info-value{color:#374151;font-family:'SF Mono','Fira Code',monospace;font-size:11px}
+
+    /* ===== UPLOAD MODAL ===== */
+    .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}
+    .modal-overlay.show{display:flex}
+    .modal{background:#fff;border-radius:16px;padding:32px;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+    .modal h3{font-size:18px;font-weight:700;margin-bottom:4px}
+    .modal .modal-subtitle{font-size:13px;color:#6b7280;margin-bottom:20px}
+    .modal .modal-actions{display:flex;gap:10px;margin-top:24px}
+    .modal .modal-actions button{flex:1;padding:10px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:.2s}
+
+    .upload-zone{border:2px dashed #e5e7eb;border-radius:12px;padding:40px 24px;text-align:center;cursor:pointer;transition:.2s;background:#faf9ff}
+    .upload-zone:hover,.upload-zone.dragover{border-color:#7c3aed;background:rgba(124,58,237,.04)}
+    .upload-zone .uz-icon{font-size:40px;margin-bottom:8px;color:#9ca3af}
+    .upload-zone .uz-text{font-size:14px;font-weight:500;color:#374151}
+    .upload-zone .uz-hint{font-size:12px;color:#9ca3af;margin-top:4px}
+
+    .upload-progress{margin-top:16px;display:none}
+    .upload-progress .up-filename{font-size:13px;font-weight:500;color:#374151;margin-bottom:6px}
+    .upload-progress .up-bar{height:4px;background:#e5e7eb;border-radius:2px;overflow:hidden}
+    .upload-progress .up-bar-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:2px;width:0;transition:width .3s}
+    .upload-progress .up-status{font-size:12px;color:#6b7280;margin-top:4px}
+
+    .upload-limit{margin-top:16px;padding:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;display:none;text-align:center}
+    .upload-limit p{font-size:13px;color:#dc2626;margin-bottom:8px}
+    .upload-limit button{padding:8px 20px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+
+    /* ===== TOAST ===== */
+    .toast{position:fixed;bottom:24px;right:24px;background:#1e1b4b;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:.3s;z-index:300}
+    .toast.show{transform:translateY(0);opacity:1}
+
+    /* ===== RESPONSIVE ===== */
+    @media(max-width:768px){
+      .hamburger{display:block}
+      .topbar-logo span{display:none}
+      .user-name{display:none}
+      .sidebar{position:fixed;top:56px;left:0;bottom:0;z-index:90;transform:translateX(-100%);box-shadow:4px 0 24px rgba(0,0,0,.1)}
+      .sidebar.open{transform:translateX(0)}
+      .sidebar-overlay{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:rgba(0,0,0,.3);z-index:80}
+      .sidebar-overlay.show{display:block}
+      .doc-preview{position:fixed;top:56px;right:0;bottom:0;z-index:95;width:0;box-shadow:-4px 0 24px rgba(0,0,0,.1)}
+      .doc-preview.open{width:100%}
+      .doc-row .doc-size{display:none}
+    }
+
+    /* ===== RTL SUPPORT ===== */
+    [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
+    [dir="rtl"] .sidebar{border-right:none;border-left:1px solid #e5e7eb}
+    [dir="rtl"] .doc-preview{border-left:none;border-right:1px solid #e5e7eb}
+    [dir="rtl"] .doc-row{border-left:none;border-right:3px solid transparent}
+    [dir="rtl"] .doc-row.selected{border-right-color:#7c3aed;border-left-color:transparent}
+    [dir="rtl"] .nav-item .nav-badge{margin-left:0;margin-right:auto}
+    [dir="rtl"] .toast{right:auto;left:24px}
+    [dir="rtl"] .user-dropdown{right:auto;left:0}
+    [dir="rtl"] .doc-size,.doc-date{text-align:left!important}
+    [dir="rtl"] .search-bar input{padding:8px 40px 8px 16px;background-position:right 12px center}
+
+    @media(max-width:768px){
+      [dir="rtl"] .sidebar{left:auto;right:0;transform:translateX(100%);border-left:none;border-right:none;box-shadow:-4px 0 24px rgba(0,0,0,.1)}
+      [dir="rtl"] .sidebar.open{transform:translateX(0)}
+    }
+
+    /* Language selector */
+    .lang-switch{position:relative;display:inline-block}
+    .lang-switch button{padding:6px 10px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;font-size:12px;cursor:pointer;font-family:inherit;color:#4b5563;transition:.2s;display:flex;align-items:center;gap:4px}
+    .lang-switch button:hover{border-color:#7c3aed;color:#7c3aed}
+    .lang-switch .lang-menu{display:none;position:absolute;top:100%;right:0;margin-top:4px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);min-width:100px;z-index:110;overflow:hidden}
+    .lang-switch .lang-menu.show{display:block}
+    .lang-switch .lang-menu a{display:block;padding:8px 14px;font-size:12px;color:#374151;text-decoration:none;transition:.15s}
+    .lang-switch .lang-menu a:hover{background:#f5f3ff;color:#7c3aed}
+    [dir="rtl"] .lang-switch .lang-menu{right:auto;left:0}
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <img src="/images/logo-horizontal.png" alt="Vertifile">
+    <div id="loginForm">
+      <h2 data-i18n="app.signInTitle">Sign in to your account</h2>
+      <p data-i18n="app.signInSubtitle">Access your protected documents</p>
+
+      <a href="/auth/google" class="oauth-btn" data-i18n="app.continueGoogle">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.97 6.97 0 0 1 5.47 12c0-.72.13-1.43.37-2.09V7.07H2.18A11.96 11.96 0 0 0 0 12c0 1.94.46 3.77 1.28 5.4l3.56-2.77.01-.54z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </a>
+
+      <a href="/auth/microsoft" class="oauth-btn" data-i18n="app.continueMicrosoft">
+        <svg viewBox="0 0 24 24"><rect fill="#F25022" x="1" y="1" width="10" height="10"/><rect fill="#7FBA00" x="13" y="1" width="10" height="10"/><rect fill="#00A4EF" x="1" y="13" width="10" height="10"/><rect fill="#FFB900" x="13" y="13" width="10" height="10"/></svg>
+        Continue with Microsoft
+      </a>
+
+      <div class="login-divider" data-i18n="app.or">or</div>
+
+      <input type="email" class="login-input" id="loginEmail" placeholder="Email address" data-i18n-placeholder="app.emailPlaceholder">
+      <input type="password" class="login-input" id="loginPassword" placeholder="Password" data-i18n-placeholder="app.passwordPlaceholder">
+      <button class="login-submit" onclick="doLogin()" data-i18n="app.signIn">Sign In</button>
+
+      <div class="login-error" id="loginError" data-i18n="app.loginError">Invalid email or password</div>
+
+      <div class="login-toggle">
+        <span data-i18n="app.noAccount">Don't have an account?</span>
+        <a onclick="showRegister()" data-i18n="app.createOne">Create one</a>
+      </div>
+    </div>
+
+    <div id="registerForm" style="display:none">
+      <h2 data-i18n="app.createAccount">Create your account</h2>
+      <p data-i18n="app.createAccountSubtitle">Start protecting your documents</p>
+
+      <input type="text" class="login-input" id="regName" placeholder="Full name" data-i18n-placeholder="app.namePlaceholder">
+      <input type="email" class="login-input" id="regEmail" placeholder="Email address" data-i18n-placeholder="app.emailPlaceholder">
+      <input type="password" class="login-input" id="regPassword" placeholder="Password" data-i18n-placeholder="app.passwordPlaceholder">
+      <button class="login-submit" onclick="doRegister()" data-i18n="app.createAccountBtn">Create Account</button>
+
+      <div class="login-error" id="regError" data-i18n="app.regError">Registration failed</div>
+
+      <div class="login-toggle">
+        <span data-i18n="app.hasAccount">Already have an account?</span>
+        <a onclick="showLogin()" data-i18n="app.signInLink">Sign in</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div class="app" id="app">
+  <!-- Top Bar -->
+  <div class="topbar">
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+    <div class="topbar-logo">
+      <img src="/images/logo-horizontal.png" alt="Vertifile">
+    </div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search documents..." data-i18n-placeholder="app.searchPlaceholder" oninput="filterDocuments()">
+    </div>
+    <div class="user-menu" onclick="toggleUserMenu()">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <span class="user-name" id="userName" data-i18n="app.user">User</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="color:#9ca3af"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="user-dropdown" id="userDropdown">
+        <a onclick="switchView('settings')"><span>&#9881;</span> <span data-i18n="app.settings">Settings</span></a>
+        <a>
+          <span>&#127760;</span>
+          <div class="lang-switch" onclick="event.stopPropagation()">
+            <button onclick="toggleAppLang(event)" id="appLangBtn"><span id="appLangLabel">EN</span></button>
+            <div class="lang-menu" id="appLangMenu">
+              <a href="#" onclick="switchLang('en',event)">English</a>
+              <a href="#" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+            </div>
+          </div>
+        </a>
+        <div class="divider"></div>
+        <a onclick="doLogout()"><span>&#9211;</span> <span data-i18n="app.logout">Logout</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <!-- Sidebar Overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <button class="new-doc-btn" onclick="showUploadModal()" data-i18n="app.newDocument">
+        <span style="font-size:18px">+</span> New Document
+      </button>
+
+      <div class="nav-item active" onclick="switchView('all')" data-view="all">
+        <span class="nav-icon">&#128196;</span>
+        <span data-i18n="app.allDocuments">All Documents</span>
+        <span class="nav-badge" id="badgeAll">0</span>
+      </div>
+      <div class="nav-item" onclick="switchView('starred')" data-view="starred">
+        <span class="nav-icon">&#11088;</span>
+        <span data-i18n="app.starred">Starred</span>
+      </div>
+      <div class="nav-item" onclick="switchView('shared')" data-view="shared">
+        <span class="nav-icon">&#128279;</span>
+        <span data-i18n="app.shared">Shared</span>
+      </div>
+
+      <div class="nav-divider"></div>
+
+      <div class="nav-item" onclick="switchView('branding')" data-view="branding">
+        <span class="nav-icon">&#127912;</span>
+        <span data-i18n="app.branding">Branding</span>
+      </div>
+      <div class="nav-item" onclick="switchView('settings')" data-view="settings">
+        <span class="nav-icon">&#9881;</span>
+        <span data-i18n="app.settings">Settings</span>
+      </div>
+
+      <div class="plan-badge">
+        <div class="plan-label" id="planLabel" data-i18n="app.freePlan">Free Plan</div>
+        <div class="plan-usage" id="planUsage">0 / 5 <span data-i18n="app.documents">documents</span></div>
+        <div class="plan-bar"><div class="plan-bar-fill" id="planBarFill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- Document List -->
+    <div class="doc-list-panel" id="docListPanel">
+      <div class="doc-list-header" id="docListHeader">
+        <input type="checkbox" class="select-all" onchange="toggleSelectAll(this.checked)">
+        <span data-i18n="app.name">Name</span>
+      </div>
+      <div id="docList"></div>
+      <div class="doc-empty" id="docEmpty" style="display:none">
+        <div class="empty-icon">&#128195;</div>
+        <h3 data-i18n="app.noDocuments">No documents yet</h3>
+        <p data-i18n="app.noDocumentsHint">Upload your first document to get started with Vertifile protection.</p>
+        <button onclick="showUploadModal()" data-i18n="app.uploadFirst">Upload your first document</button>
+      </div>
+    </div>
+
+    <!-- Document Preview -->
+    <div class="doc-preview" id="docPreview">
+      <div class="doc-preview-toolbar">
+        <span class="preview-title" id="previewTitle">Document</span>
+        <button onclick="downloadDoc()" title="Download"><span>&#11015;</span> <span data-i18n="app.download">Download</span></button>
+        <button onclick="shareDoc()" title="Share"><span>&#128279;</span> <span data-i18n="app.share">Share</span></button>
+        <button onclick="printDoc()" title="Print"><span>&#128424;</span></button>
+        <button onclick="deleteDoc()" title="Delete" style="color:#dc2626"><span>&#128465;</span></button>
+        <button class="close-preview" onclick="closePreview()" title="Close">&times;</button>
+      </div>
+      <div class="doc-preview-content" id="previewContent"></div>
+      <div class="doc-preview-info" id="previewInfo">
+        <div class="info-row">
+          <span class="info-label" data-i18n="app.hash">Hash</span>
+          <span class="info-value" id="previewHash">--</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label" data-i18n="app.created">Created</span>
+          <span class="info-value" id="previewCreated">--</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label" data-i18n="app.status">Status</span>
+          <span class="info-value" id="previewStatus">--</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal">
+    <h3 data-i18n="app.uploadDocument">Upload Document</h3>
+    <p class="modal-subtitle" data-i18n="app.uploadHint">Drag and drop files or click to browse. PDF, images, and text files are supported.</p>
+
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <div class="uz-icon">&#128228;</div>
+      <div class="uz-text" data-i18n="app.dropFiles">Drop files here or click to browse</div>
+      <div class="uz-hint" data-i18n="app.fileTypes">PDF, PNG, JPG, TXT</div>
+    </div>
+    <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.txt,.doc,.docx" style="display:none" onchange="handleUploadFile(this.files[0])">
+
+    <div class="upload-progress" id="uploadProgress">
+      <div class="up-filename" id="upFilename"></div>
+      <div class="up-bar"><div class="up-bar-fill" id="upBarFill"></div></div>
+      <div class="up-status" id="upStatus" data-i18n="app.uploading">Uploading...</div>
+    </div>
+
+    <div class="upload-limit" id="uploadLimit">
+      <p data-i18n="app.limitReached">You've used all 5 free documents. Upgrade to Pro for unlimited.</p>
+      <button data-i18n="app.upgradePro">Upgrade to Pro</button>
+    </div>
+
+    <div class="modal-actions">
+      <button style="background:#f3f4f6;color:#4b5563" onclick="hideUploadModal()" data-i18n="app.cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== State =====
+let currentUser = null;
+let documents = [];
+let selectedDoc = null;
+let currentView = 'all';
+let starredIds = new Set(JSON.parse(localStorage.getItem('vf_starred') || '[]'));
+
+// ===== Auth =====
+async function checkAuth() {
+  try {
+    const r = await fetch('/api/user/me', { credentials: 'same-origin' });
+    if (r.ok) {
+      const data = await r.json();
+      currentUser = data.user;
+      showApp();
+    } else {
+      showLoginScreen();
+    }
+  } catch (e) {
+    showLoginScreen();
+  }
+}
+
+function showLoginScreen() {
+  document.getElementById('loginScreen').style.display = '';
+  document.getElementById('app').style.display = 'none';
+}
+
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  if (currentUser) {
+    const initials = getInitials(currentUser.name || currentUser.email || '?');
+    document.getElementById('userAvatar').textContent = initials;
+    document.getElementById('userName').textContent = currentUser.name || currentUser.email || 'User';
+  }
+  loadDocuments();
+}
+
+function showLogin() {
+  document.getElementById('loginForm').style.display = '';
+  document.getElementById('registerForm').style.display = 'none';
+}
+
+function showRegister() {
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('registerForm').style.display = '';
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  if (!email || !password) return;
+  try {
+    const r = await fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+      credentials: 'same-origin'
+    });
+    const data = await r.json();
+    if (r.ok && data.success !== false) {
+      currentUser = data.user;
+      showApp();
+    } else {
+      const err = document.getElementById('loginError');
+      err.textContent = data.error || 'Invalid email or password';
+      err.style.display = 'block';
+      setTimeout(() => err.style.display = 'none', 3000);
+    }
+  } catch (e) {
+    toast('Login failed: ' + e.message);
+  }
+}
+
+async function doRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  if (!name || !email || !password) return;
+  try {
+    const r = await fetch('/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password }),
+      credentials: 'same-origin'
+    });
+    const data = await r.json();
+    if (r.ok && data.success !== false) {
+      currentUser = data.user;
+      showApp();
+    } else {
+      const err = document.getElementById('regError');
+      err.textContent = data.error || 'Registration failed';
+      err.style.display = 'block';
+      setTimeout(() => err.style.display = 'none', 3000);
+    }
+  } catch (e) {
+    toast('Registration failed: ' + e.message);
+  }
+}
+
+async function doLogout() {
+  try { await fetch('/auth/logout', { method: 'POST', credentials: 'same-origin' }); } catch (e) {}
+  currentUser = null;
+  documents = [];
+  selectedDoc = null;
+  showLoginScreen();
+}
+
+document.getElementById('loginPassword').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ===== Documents =====
+async function loadDocuments() {
+  try {
+    const params = new URLSearchParams({ limit: 50 });
+    if (currentView === 'starred') params.set('starred', 'true');
+    if (currentView === 'shared') params.set('shared', 'true');
+    const r = await fetch('/api/user/documents?' + params, { credentials: 'same-origin' });
+    if (!r.ok) throw new Error('Failed to load');
+    const data = await r.json();
+    documents = data.documents || [];
+    renderDocumentList();
+    updatePlanUsage(data);
+  } catch (e) {
+    documents = [];
+    renderDocumentList();
+  }
+}
+
+function renderDocumentList() {
+  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  let filtered = documents;
+  if (search) {
+    filtered = documents.filter(d =>
+      (d.originalName || d.original_name || '').toLowerCase().includes(search) ||
+      (d.hash || '').toLowerCase().includes(search)
+    );
+  }
+  if (currentView === 'starred') {
+    filtered = filtered.filter(d => starredIds.has(d.id || d._id || d.hash));
+  }
+
+  const container = document.getElementById('docList');
+  const emptyEl = document.getElementById('docEmpty');
+
+  if (filtered.length === 0) {
+    container.innerHTML = '';
+    emptyEl.style.display = 'flex';
+    document.getElementById('badgeAll').textContent = documents.length;
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  document.getElementById('badgeAll').textContent = documents.length;
+
+  container.innerHTML = filtered.map((d, i) => {
+    const id = d.id || d._id || d.hash;
+    const name = d.originalName || d.original_name || 'Untitled';
+    const ext = name.split('.').pop().toLowerCase();
+    const typeClass = getTypeClass(ext);
+    const typeIcon = getTypeIcon(ext);
+    const size = formatSize(d.fileSize || d.file_size || 0);
+    const date = formatDate(d.createdAt || d.created_at || d.created);
+    const isStarred = starredIds.has(id);
+    const verified = d.verified !== false;
+    const isSelected = selectedDoc && (selectedDoc.id || selectedDoc._id || selectedDoc.hash) === id;
+
+    return `<div class="doc-row${isSelected ? ' selected' : ''}" onclick="selectDoc(${i})" data-idx="${i}">
+      <input type="checkbox" class="doc-check" onclick="event.stopPropagation()">
+      <button class="doc-star${isStarred ? ' starred' : ''}" onclick="event.stopPropagation();toggleStar('${escHtml(id)}')" title="Star">${isStarred ? '&#9733;' : '&#9734;'}</button>
+      <div class="doc-type-icon ${typeClass}">${typeIcon}</div>
+      <span class="doc-name">${escHtml(name)}</span>
+      <span class="doc-status ${verified ? 'verified' : 'unverified'}">${verified ? '&#10003; Verified' : '&#10007; Unverified'}</span>
+      <span class="doc-size">${size}</span>
+      <span class="doc-date">${date}</span>
+    </div>`;
+  }).join('');
+}
+
+function selectDoc(idx) {
+  const filtered = getFilteredDocs();
+  if (idx < 0 || idx >= filtered.length) return;
+  selectedDoc = filtered[idx];
+  renderDocumentList();
+  openPreview();
+}
+
+function getFilteredDocs() {
+  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  let filtered = documents;
+  if (search) {
+    filtered = documents.filter(d =>
+      (d.originalName || d.original_name || '').toLowerCase().includes(search) ||
+      (d.hash || '').toLowerCase().includes(search)
+    );
+  }
+  if (currentView === 'starred') {
+    filtered = filtered.filter(d => starredIds.has(d.id || d._id || d.hash));
+  }
+  return filtered;
+}
+
+function openPreview() {
+  if (!selectedDoc) return;
+  const panel = document.getElementById('docPreview');
+  panel.classList.add('open');
+
+  const name = selectedDoc.originalName || selectedDoc.original_name || 'Untitled';
+  document.getElementById('previewTitle').textContent = name;
+
+  const hash = selectedDoc.hash || '';
+  document.getElementById('previewHash').textContent = hash.length > 20 ? hash.substring(0, 10) + '...' + hash.slice(-6) : hash;
+  document.getElementById('previewCreated').textContent = selectedDoc.createdAt || selectedDoc.created_at || selectedDoc.created || '--';
+  document.getElementById('previewStatus').textContent = selectedDoc.verified !== false ? 'Verified' : 'Unverified';
+
+  const contentEl = document.getElementById('previewContent');
+  const shareId = selectedDoc.shareId || selectedDoc.share_id;
+  if (shareId) {
+    contentEl.innerHTML = `<iframe src="/d/${escHtml(shareId)}/raw" sandbox="allow-same-origin"></iframe>`;
+  } else {
+    contentEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#9ca3af;font-size:14px"><span data-i18n="app.previewUnavailable">Preview not available</span></div>';
+  }
+}
+
+function closePreview() {
+  document.getElementById('docPreview').classList.remove('open');
+  selectedDoc = null;
+  renderDocumentList();
+}
+
+function filterDocuments() {
+  renderDocumentList();
+}
+
+// ===== Star Toggle =====
+function toggleStar(id) {
+  if (starredIds.has(id)) {
+    starredIds.delete(id);
+  } else {
+    starredIds.add(id);
+  }
+  localStorage.setItem('vf_starred', JSON.stringify([...starredIds]));
+  renderDocumentList();
+}
+
+function toggleSelectAll(checked) {
+  document.querySelectorAll('.doc-check').forEach(cb => cb.checked = checked);
+}
+
+// ===== View Switching =====
+function switchView(view) {
+  currentView = view;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navItem = document.querySelector(`.nav-item[data-view="${view}"]`);
+  if (navItem) navItem.classList.add('active');
+
+  const docViews = ['all', 'starred', 'shared'];
+  if (docViews.includes(view)) {
+    document.getElementById('docListPanel').style.display = '';
+    closePreview();
+    if (view === 'starred') {
+      renderDocumentList();
+    } else {
+      loadDocuments();
+    }
+  }
+  // Close mobile sidebar
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+  // Close user dropdown
+  document.getElementById('userDropdown').classList.remove('show');
+}
+
+// ===== Document Actions =====
+async function downloadDoc() {
+  if (!selectedDoc) return;
+  const shareId = selectedDoc.shareId || selectedDoc.share_id;
+  if (shareId) {
+    window.open('/d/' + shareId + '/raw', '_blank');
+  }
+}
+
+function shareDoc() {
+  if (!selectedDoc) return;
+  const shareId = selectedDoc.shareId || selectedDoc.share_id;
+  if (shareId) {
+    const url = window.location.origin + '/d/' + shareId;
+    navigator.clipboard.writeText(url).then(() => toast('Share link copied to clipboard'));
+  }
+}
+
+function printDoc() {
+  if (!selectedDoc) return;
+  const iframe = document.querySelector('#previewContent iframe');
+  if (iframe) {
+    try { iframe.contentWindow.print(); } catch (e) { window.print(); }
+  }
+}
+
+async function deleteDoc() {
+  if (!selectedDoc) return;
+  if (!confirm('Are you sure you want to delete this document?')) return;
+  try {
+    const id = selectedDoc.id || selectedDoc._id || selectedDoc.hash;
+    const r = await fetch('/api/user/documents/' + id, { method: 'DELETE', credentials: 'same-origin' });
+    if (r.ok) {
+      toast('Document deleted');
+      closePreview();
+      loadDocuments();
+    } else {
+      toast('Failed to delete document');
+    }
+  } catch (e) {
+    toast('Error: ' + e.message);
+  }
+}
+
+// ===== Upload =====
+function showUploadModal() {
+  document.getElementById('uploadModal').classList.add('show');
+  document.getElementById('uploadProgress').style.display = 'none';
+  document.getElementById('uploadLimit').style.display = 'none';
+  document.getElementById('fileInput').value = '';
+}
+
+function hideUploadModal() {
+  document.getElementById('uploadModal').classList.remove('show');
+}
+
+async function handleUploadFile(file) {
+  if (!file) return;
+
+  // Check plan limit
+  const planLimit = currentUser?.planLimit || 5;
+  if (documents.length >= planLimit) {
+    document.getElementById('uploadLimit').style.display = 'block';
+    return;
+  }
+
+  const progress = document.getElementById('uploadProgress');
+  const barFill = document.getElementById('upBarFill');
+  const status = document.getElementById('upStatus');
+  document.getElementById('upFilename').textContent = file.name;
+  progress.style.display = 'block';
+  barFill.style.width = '0%';
+  status.textContent = 'Uploading...';
+
+  // Simulate progress
+  let pct = 0;
+  const interval = setInterval(() => {
+    pct = Math.min(pct + Math.random() * 20, 90);
+    barFill.style.width = pct + '%';
+  }, 200);
+
+  try {
+    await uploadFile(file);
+    clearInterval(interval);
+    barFill.style.width = '100%';
+    status.textContent = 'Protected!';
+    setTimeout(() => hideUploadModal(), 1200);
+  } catch (e) {
+    clearInterval(interval);
+    barFill.style.width = '0%';
+    status.textContent = 'Failed: ' + e.message;
+  }
+}
+
+async function uploadFile(file) {
+  const form = new FormData();
+  form.append('file', file);
+  const r = await fetch('/api/user/upload', { method: 'POST', body: form, credentials: 'same-origin' });
+  const data = await r.json();
+  if (!data.success && data.error) {
+    throw new Error(data.error);
+  }
+  loadDocuments();
+  toast('Document protected!');
+}
+
+// Upload zone drag/drop
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('dragover');
+  if (e.dataTransfer.files.length) handleUploadFile(e.dataTransfer.files[0]);
+});
+
+// ===== UI Helpers =====
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
+}
+
+function toggleUserMenu() {
+  document.getElementById('userDropdown').classList.toggle('show');
+}
+
+function toggleAppLang(e) {
+  e.stopPropagation();
+  document.getElementById('appLangMenu').classList.toggle('show');
+}
+
+// Close dropdowns on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.user-menu')) {
+    document.getElementById('userDropdown').classList.remove('show');
+  }
+  if (!e.target.closest('.lang-switch')) {
+    const m = document.getElementById('appLangMenu');
+    if (m) m.classList.remove('show');
+  }
+});
+
+// Close modal on backdrop click
+document.getElementById('uploadModal').addEventListener('click', function(e) {
+  if (e.target === this) hideUploadModal();
+});
+
+// ===== Plan Usage =====
+function updatePlanUsage(data) {
+  const used = documents.length;
+  const limit = data?.limit || currentUser?.planLimit || 5;
+  const plan = currentUser?.plan || 'free';
+  const planNames = { free: 'Free Plan', professional: 'Pro Plan', enterprise: 'Enterprise' };
+  document.getElementById('planLabel').textContent = planNames[plan] || 'Free Plan';
+  document.getElementById('planUsage').textContent = `${used} / ${limit} documents`;
+  const pct = Math.min((used / limit) * 100, 100);
+  document.getElementById('planBarFill').style.width = pct + '%';
+}
+
+// ===== Formatters =====
+function formatSize(bytes) {
+  if (!bytes || bytes === 0) return '0 B';
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(0) + ' KB';
+  return (bytes / 1048576).toFixed(1) + ' MB';
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '--';
+  const d = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now - d;
+  const diffMin = Math.floor(diffMs / 60000);
+  const diffHr = Math.floor(diffMs / 3600000);
+  const diffDay = Math.floor(diffMs / 86400000);
+
+  if (diffMin < 1) return 'just now';
+  if (diffMin < 60) return diffMin + 'm ago';
+  if (diffHr < 24) return diffHr + 'h ago';
+  if (diffDay === 1) return 'yesterday';
+  if (diffDay < 7) return diffDay + 'd ago';
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+
+function getInitials(name) {
+  if (!name) return '?';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.substring(0, 2).toUpperCase();
+}
+
+function getTypeClass(ext) {
+  if (ext === 'pdf') return 'doc-type-pdf';
+  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return 'doc-type-image';
+  if (['txt', 'doc', 'docx', 'rtf'].includes(ext)) return 'doc-type-text';
+  return 'doc-type-other';
+}
+
+function getTypeIcon(ext) {
+  if (ext === 'pdf') return '&#128459;';
+  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return '&#128444;';
+  if (['txt', 'doc', 'docx', 'rtf'].includes(ext)) return '&#128196;';
+  return '&#128195;';
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ===== Toast =====
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ===== i18n Patch =====
+var _origSwitchLang = null;
+function appI18nPatch() {
+  var label = document.getElementById('appLangLabel');
+  if (label && typeof vfGetLang === 'function') {
+    label.textContent = vfGetLang().toUpperCase();
+  }
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+    var val = typeof vfGetTranslation === 'function' ? vfGetTranslation(el.getAttribute('data-i18n-placeholder')) : null;
+    if (val) el.setAttribute('placeholder', val);
+  });
+}
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    if (typeof switchLang === 'function' && !_origSwitchLang) {
+      _origSwitchLang = switchLang;
+      window.switchLang = function(lang, e) {
+        _origSwitchLang(lang, e);
+        setTimeout(appI18nPatch, 100);
+      };
+    }
+    appI18nPatch();
+  }, 200);
+});
+
+// ===== Init =====
+checkAuth();
+</script>
+<script src="/js/i18n.js"></script>
+</body>
+</html>

@@ -75,6 +75,28 @@ const SCHEMA_SQL = `
     created_at TEXT DEFAULT (now() AT TIME ZONE 'UTC')
   );
 
+  CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    name TEXT,
+    password_hash TEXT,
+    provider TEXT DEFAULT 'email',
+    provider_id TEXT,
+    avatar_url TEXT,
+    documents_used INT DEFAULT 0,
+    documents_limit INT DEFAULT 5,
+    plan TEXT DEFAULT 'free',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  );
+
+  CREATE TABLE IF NOT EXISTS sessions (
+    sid VARCHAR NOT NULL COLLATE "default",
+    sess JSON NOT NULL,
+    expire TIMESTAMPTZ NOT NULL,
+    PRIMARY KEY (sid)
+  );
+  CREATE INDEX IF NOT EXISTS idx_sessions_expire ON sessions (expire);
+
   CREATE INDEX IF NOT EXISTS idx_docs_org ON documents(org_id);
   CREATE INDEX IF NOT EXISTS idx_docs_created ON documents(created_at);
   CREATE INDEX IF NOT EXISTS idx_audit_event ON audit_log(event);
@@ -96,6 +118,8 @@ const _ready = (async () => {
   // Migrations — add columns if they don't exist yet
   try { await pool.query('ALTER TABLE api_keys ADD COLUMN custom_icon TEXT'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE api_keys ADD COLUMN brand_color TEXT'); } catch (_) { /* already exists */ }
+  try { await pool.query('ALTER TABLE documents ADD COLUMN user_id INT'); } catch (_) { /* already exists */ }
+  try { await pool.query('ALTER TABLE documents ADD COLUMN starred BOOLEAN DEFAULT false'); } catch (_) { /* already exists */ }
 })();
 
 // ================================================================
@@ -423,6 +447,71 @@ async function getBranding(orgId) {
 }
 
 // ================================================================
+// USERS
+// ================================================================
+async function createUser({ email, name, passwordHash, provider, providerId, avatarUrl }) {
+  const { rows } = await pool.query(
+    `INSERT INTO users (email, name, password_hash, provider, provider_id, avatar_url)
+     VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
+    [email, name || null, passwordHash || null, provider || 'email', providerId || null, avatarUrl || null]
+  );
+  return rows[0];
+}
+
+async function getUserByEmail(email) {
+  const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+  return rows.length ? rows[0] : null;
+}
+
+async function getUserById(id) {
+  const { rows } = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+  return rows.length ? rows[0] : null;
+}
+
+async function getUserByProviderId(provider, providerId) {
+  const { rows } = await pool.query('SELECT * FROM users WHERE provider = $1 AND provider_id = $2', [provider, providerId]);
+  return rows.length ? rows[0] : null;
+}
+
+async function updateUserDocCount(userId) {
+  await pool.query('UPDATE users SET documents_used = documents_used + 1 WHERE id = $1', [userId]);
+}
+
+async function getUserDocuments(userId, { limit = 20, offset = 0, search = '', starred = false } = {}) {
+  let query = 'SELECT * FROM documents WHERE user_id = $1';
+  const params = [userId];
+  let idx = 2;
+  if (starred) {
+    query += ` AND starred = $${idx}`;
+    params.push(true);
+    idx++;
+  }
+  if (search) {
+    const pattern = '%' + search + '%';
+    query += ` AND (original_name ILIKE $${idx} OR hash ILIKE $${idx + 1})`;
+    params.push(pattern, pattern);
+    idx += 2;
+  }
+  query += ` ORDER BY created_at DESC LIMIT $${idx} OFFSET $${idx + 1}`;
+  params.push(limit, offset);
+  const { rows } = await pool.query(query, params);
+  return rows.map(mapDocRow);
+}
+
+async function getUserDocumentCount(userId) {
+  const { rows } = await pool.query('SELECT COUNT(*) as count FROM documents WHERE user_id = $1', [userId]);
+  return Number(rows[0].count);
+}
+
+async function starDocument(hash, starred) {
+  await pool.query('UPDATE documents SET starred = $1 WHERE hash = $2', [starred, hash]);
+}
+
+async function setDocumentUserId(hash, userId) {
+  await pool.query('UPDATE documents SET user_id = $1 WHERE hash = $2', [userId, hash]);
+}
+
+// ================================================================
 // CLOSE
 // ================================================================
 async function close() {
@@ -458,6 +547,15 @@ module.exports = {
   updateBranding,
   getBranding,
   migrateFromJson,
+  createUser,
+  getUserByEmail,
+  getUserById,
+  getUserByProviderId,
+  updateUserDocCount,
+  getUserDocuments,
+  getUserDocumentCount,
+  starDocument,
+  setDocumentUserId,
   close,
   _db: pool,
   _ready,
