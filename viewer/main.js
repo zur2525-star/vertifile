@@ -50,13 +50,12 @@ function loadPvfFile(filePath) {
     const content = fs.readFileSync(filePath, 'utf-8');
     const fileName = path.basename(filePath);
 
-    // Strict PVF validation — must have magic bytes AND hash variable
+    // PVF validation — must have Vertifile markers AND hash variable
     var hasMagic = content.startsWith('<!--PVF:1.0-->');
     var hasVertifile = content.includes('Vertifile');
     var hasHash = content.includes('var HASH=') || content.includes('pvf:hash');
-    if (!hasMagic || !hasHash) {
-      var reason = !hasMagic ? 'Missing PVF header (<!--PVF:1.0-->)' : 'Missing verification data';
-      mainWindow.webContents.send('pvf-error', 'This is not a valid PVF file.\n\n' + reason + '\n\nOnly files created by Vertifile can be opened.');
+    if ((!hasMagic && !hasVertifile) || !hasHash) {
+      mainWindow.webContents.send('pvf-error', 'This is not a valid PVF file.\n\nOnly files created by Vertifile can be opened.');
       return;
     }
 
