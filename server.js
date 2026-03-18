@@ -47,7 +47,7 @@ const upload = multer({
 });
 
 // ================================================================
-// DATABASE (SQLite via db.js)
+// DATABASE (PostgreSQL via db.js)
 // ================================================================
 
 // Helper to extract client IP from request
