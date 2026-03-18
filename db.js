@@ -360,7 +360,8 @@ function migrateFromJson() {
               org_id: doc.orgId || null,
               org_name: doc.orgName || null,
               recipient: doc.recipient || null,
-              recipient_hash: doc.recipientHash || null
+              recipient_hash: doc.recipientHash || null,
+              share_id: null
             });
             migrated.documents++;
           } catch (e) {

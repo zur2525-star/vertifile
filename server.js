@@ -757,10 +757,101 @@ init();
 }
 
 // ================================================================
+// API: DEMO — public PVF creation (no API key, strict rate limit)
+// ================================================================
+const demoLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5, // 5 per hour per IP
+  message: { success: false, error: 'Demo limit reached (5/hour). Sign up for unlimited access at /signup' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+app.post('/api/demo/create-pvf', demoLimiter, upload.single('file'), (req, res) => {
+  // Inject a demo org context so the rest of the logic works
+  req.org = { orgId: 'org_demo', orgName: 'Demo User' };
+  req.apiKey = 'demo';
+
+  // Fall through to the same handler logic
+  handleCreatePvf(req, res);
+});
+
+// ================================================================
+// API: SIGNUP — self-service API key registration
+// ================================================================
+const signupLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10, // 10 signups per hour per IP
+  message: { success: false, error: 'Too many signup attempts. Try again later.' }
+});
+
+app.post('/api/signup', signupLimiter, (req, res) => {
+  try {
+    const { orgName, contactName, email, useCase, plan } = req.body;
+
+    if (!orgName || !contactName || !email) {
+      return res.status(400).json({ success: false, error: 'orgName, contactName, and email are required' });
+    }
+
+    // Validate email format
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ success: false, error: 'Invalid email format' });
+    }
+
+    // Generate org ID and API key
+    const orgId = 'org_' + orgName.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 30) + '_' + crypto.randomBytes(4).toString('hex');
+    const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
+
+    // Set rate limit based on plan
+    const validPlans = ['free', 'professional', 'enterprise'];
+    const selectedPlan = validPlans.includes(plan) ? plan : 'free';
+    const rateLimit = selectedPlan === 'enterprise' ? 10000 : selectedPlan === 'professional' ? 100 : 5;
+
+    // Create the API key
+    db.createApiKey({
+      apiKey,
+      orgId,
+      orgName,
+      plan: selectedPlan,
+      rateLimit
+    });
+
+    // Audit log
+    db.log('signup', {
+      orgId,
+      orgName,
+      contactName,
+      email,
+      useCase: useCase || 'not specified',
+      plan: selectedPlan,
+      ip: getClientIP(req)
+    });
+
+    console.log(`[SIGNUP] New org: ${orgName} (${selectedPlan}) — ${email}`);
+
+    res.json({
+      success: true,
+      apiKey,
+      orgId,
+      orgName,
+      plan: selectedPlan,
+      rateLimit,
+      message: 'Save this API key — it will not be shown again.'
+    });
+
+  } catch (error) {
+    console.error('[ERROR] Signup failed:', error.message);
+    res.status(500).json({ success: false, error: 'Signup failed. Please try again.' });
+  }
+});
+
+// ================================================================
 // API: CREATE PVF — receives file, returns .pvf (BLIND TO CONTENT)
 // Requires API key authentication
 // ================================================================
-app.post('/api/create-pvf', createLimiter, authenticateApiKey, upload.single('file'), (req, res) => {
+app.post('/api/create-pvf', createLimiter, authenticateApiKey, upload.single('file'), (req, res) => handleCreatePvf(req, res));
+
+function handleCreatePvf(req, res) {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, error: 'No file uploaded' });
@@ -903,7 +994,7 @@ app.post('/api/create-pvf', createLimiter, authenticateApiKey, upload.single('fi
     console.error('[ERROR] Create PVF failed:', error.message);
     res.status(500).json({ success: false, error: 'Failed to create PVF' });
   }
-});
+}
 
 // ================================================================
 // API: VERIFY — checks if document hash is registered + signature valid
@@ -1548,6 +1639,10 @@ app.get('/integration', (req, res) => {
 
 app.get('/open', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'open.html'));
+});
+
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'signup.html'));
 });
 
 // ================================================================

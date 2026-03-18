@@ -214,6 +214,13 @@
       <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/></svg></div>
       <h3 data-i18n="upload.successTitle">PVF File Created Successfully!</h3>
       <p data-i18n="upload.successDesc">The document is protected and cryptographically signed. Send it to the recipient — only the .pvf file will be accepted.</p>
+      <div id="shareSection" style="display:none;margin-bottom:20px;padding:16px;background:rgba(79,70,229,.04);border:1px solid rgba(79,70,229,.15);border-radius:14px">
+        <div style="font-size:12px;font-weight:600;color:#7c3aed;margin-bottom:8px">📎 Share Link (no installation needed):</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="shareUrl" readonly style="flex:1;padding:10px 14px;border:1px solid rgba(0,0,0,.1);border-radius:10px;font-family:monospace;font-size:13px;background:#fff;color:#111827" />
+          <button onclick="copyShare()" style="padding:10px 18px;border:1px solid rgba(79,70,229,.3);border-radius:10px;background:rgba(79,70,229,.08);color:#7c3aed;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap" id="copyBtn">Copy</button>
+        </div>
+      </div>
       <a class="download-btn" id="downloadLink" href="#" download>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span data-i18n="upload.downloadBtn">Download .pvf file</span>
@@ -337,28 +344,55 @@ async function createPvf(){
   try{
     var formData=new FormData();
     formData.append('file',selectedFile);
-    var response=await fetch('/api/create-pvf',{method:'POST',headers:{'X-API-Key':'vf_live_e9cc3fdc9828fcc7be3701d8e1cb2fee9f14b5fc'},body:formData});
-    if(!response.ok)throw new Error('Server error');
-    var blob=await response.blob();
+    // Use demo endpoint (no API key needed) or authenticated endpoint
+    var apiKey=localStorage.getItem('vf-api-key');
+    var endpoint=apiKey?'/api/create-pvf':'/api/demo/create-pvf';
+    var headers={};
+    if(apiKey)headers['X-API-Key']=apiKey;
+    // Request JSON response to get share URL
+    var response=await fetch(endpoint+'?format=json',{method:'POST',headers:headers,body:formData});
+    if(!response.ok){
+      var err=await response.json().catch(function(){return{}});
+      throw new Error(err.error||'Server error');
+    }
+    var data=await response.json();
+    // Download the actual PVF file
+    var pvfResponse=await fetch(data.downloadUrl||('/d/'+data.shareId+'/download'));
+    var blob=await pvfResponse.blob();
     var url=URL.createObjectURL(blob);
     var pvfName=selectedFile.name.replace(/\.[^.]+$/,'')+'.pvf';
     document.getElementById('downloadLink').href=url;
     document.getElementById('downloadLink').download=pvfName;
+    // Show share URL
+    if(data.shareUrl){
+      document.getElementById('shareSection').style.display='block';
+      document.getElementById('shareUrl').value=data.shareUrl;
+    }
     document.getElementById('steps').classList.remove('show');
     document.getElementById('progress').classList.remove('show');
     document.getElementById('result').classList.add('show');
     btn.style.display='none';
     document.getElementById('fileInfo').classList.remove('show');
   }catch(error){
-    alert('Error creating PVF: '+error.message);
+    alert('Error: '+error.message);
     btn.disabled=false;
     btn.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> <span data-i18n="upload.submitBtn">Issue Secure PVF File</span>';
   }
 }
 
+function copyShare(){
+  var input=document.getElementById('shareUrl');
+  input.select();
+  navigator.clipboard.writeText(input.value).then(function(){
+    document.getElementById('copyBtn').textContent='Copied!';
+    setTimeout(function(){document.getElementById('copyBtn').textContent='Copy'},2000);
+  });
+}
+
 function reset(){
   selectedFile=null;
   document.getElementById('result').classList.remove('show');
+  document.getElementById('shareSection').style.display='none';
   var btn=document.getElementById('submitBtn');
   btn.style.display='';btn.disabled=true;
   btn.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> <span data-i18n="upload.submitBtn">Issue Secure PVF File</span>';
