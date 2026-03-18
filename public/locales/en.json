@@ -173,7 +173,9 @@
     "verifiedDesc": "This document has been verified against the blockchain registry. The stamp is live and valid.",
     "failed": "Verification Failed",
     "failedDesc": "This document could not be verified. It may have been tampered with or is not registered.",
-    "tryAnother": "Verify another document"
+    "tryAnother": "Verify another document",
+    "blockchainTitle": "Blockchain Verification",
+    "blockchainDesc": "Each document hash is compared against the immutable blockchain registry. The verification confirms the document has not been modified since it was originally protected."
   },
   "enterprise": {
     "badge": "Enterprise-Grade Security",
@@ -644,7 +646,17 @@
     "ipWhitelistDesc": "Allowed IP addresses for API access",
     "free": "Free",
     "professional": "Professional",
-    "enterprise": "Enterprise"
+    "enterprise": "Enterprise",
+    "totalProtected": "Total protected files",
+    "rateLimit": "Rate limit",
+    "createDocument": "Create Document",
+    "createDocSub": "Upload and protect a new file",
+    "verifyDocument": "Verify Document",
+    "verifyDocSub": "Check document authenticity",
+    "customLogo": "Custom Logo",
+    "logoHint": "Upload an SVG or PNG logo (max 50KB) for your verification stamp.",
+    "colorHint": "Choose a color for your verification stamp accent.",
+    "resetDefault": "Reset to Default"
   },
   "dashboard": {
     "title": "Admin Dashboard",
