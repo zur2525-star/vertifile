@@ -654,7 +654,7 @@ var API=window.location.origin;
 })();
 var token=null;
 var isLocal=location.protocol==="file:"||location.protocol==="about:"||window!==window.top;
-var VERIFY_URL="https://vertifile-production.up.railway.app";
+var VERIFY_URL="https://vertifile.com";
 
 async function init(){
   // Security: if environment is frozen (cross-origin iframe / missing navigator), show forged

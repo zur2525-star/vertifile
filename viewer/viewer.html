@@ -72,6 +72,7 @@
       <svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="1.5" fill="rgba(239,68,68,.1)"/><line x1="15" y1="9" x2="9" y2="15" stroke="#f87171" stroke-width="2" stroke-linecap="round"/><line x1="9" y1="9" x2="15" y2="15" stroke="#f87171" stroke-width="2" stroke-linecap="round"/></svg>
       <h3>Invalid File</h3>
       <p id="errorMessage" style="white-space:pre-line">Something went wrong.</p>
+      <button class="toolbar-btn" style="margin-top:24px;padding:10px 24px;font-size:14px;-webkit-app-region:no-drag" onclick="openFile()">Check Another Document</button>
     </div>
     <iframe id="pvfFrame" style="display:none" sandbox="allow-scripts allow-same-origin"></iframe>
   </div>
@@ -92,31 +93,58 @@
     document.getElementById('statusText').textContent = 'Verifying...';
 
     var frame = document.getElementById('pvfFrame');
-    frame.style.display = 'block';
+    frame.style.display = 'none';
     frame.srcdoc = data.content;
 
-    setTimeout(function() { checkStatus(frame); }, 3000);
-    setTimeout(function() { checkStatus(frame); }, 6000);
-    setTimeout(function() { checkStatus(frame); }, 10000);
+    // Check frequently but don't show iframe until verified
+    var checkInterval = setInterval(function() { checkStatus(frame, checkInterval); }, 500);
+    // Timeout after 15s — if still not determined, show error
+    setTimeout(function() {
+      clearInterval(checkInterval);
+      if (frame.style.display === 'none' && !document.getElementById('errorOverlay').classList.contains('show')) {
+        var badge = document.getElementById('statusBadge');
+        badge.className = 'toolbar-status failed';
+        document.getElementById('statusText').textContent = 'Verification Failed';
+        document.getElementById('errorOverlay').classList.add('show');
+        document.getElementById('errorMessage').textContent = 'This document failed verification.\n\nThe file may have been tampered with or is not authentic.\nDo not trust the content of this document.';
+      }
+    }, 15000);
   });
 
-  function checkStatus(frame) {
+  var okCount = 0;
+  var resolved = false;
+
+  function checkStatus(frame, interval) {
+    if (resolved) return;
     try {
       var doc = frame.contentDocument || frame.contentWindow.document;
       var badge = document.getElementById('statusBadge');
       var bigX = doc.querySelector('.big-x.show');
       var stampOk = doc.querySelector('.lbl.ok');
       var stampBad = doc.querySelector('.lbl.bad');
-      if (bigX || stampBad || (doc.body && doc.body.classList.contains('forged'))) {
+      var isForged = bigX || stampBad || (doc.body && doc.body.classList.contains('forged'));
+
+      if (isForged) {
+        // Forged detected — immediately block, never show content
+        resolved = true;
+        if (interval) clearInterval(interval);
         badge.className = 'toolbar-status failed';
         document.getElementById('statusText').textContent = 'Verification Failed';
-        // Hide document — don't show forged content
         frame.style.display = 'none';
         document.getElementById('errorOverlay').classList.add('show');
         document.getElementById('errorMessage').textContent = 'This document failed verification.\n\nThe file may have been tampered with or is not authentic.\nDo not trust the content of this document.';
       } else if (stampOk) {
-        badge.className = 'toolbar-status verified';
-        document.getElementById('statusText').textContent = 'Verified';
+        // Require OK to be stable for 5 consecutive checks (2.5s) before showing
+        okCount++;
+        if (okCount >= 5) {
+          resolved = true;
+          if (interval) clearInterval(interval);
+          badge.className = 'toolbar-status verified';
+          document.getElementById('statusText').textContent = 'Verified';
+          frame.style.display = 'block';
+        }
+      } else {
+        okCount = 0;
       }
     } catch(e) {}
   }
