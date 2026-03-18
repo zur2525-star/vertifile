@@ -45,7 +45,5 @@
       "minimumSystemVersion": "10.15"
     }
   },
-  "plugins": {
-    "dialog": {}
-  }
+  "plugins": {}
 }
