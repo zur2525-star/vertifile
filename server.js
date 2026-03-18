@@ -1601,11 +1601,32 @@ async function fireWebhooks(orgId, event, data) {
   }
 }
 
+// Validate webhook URL to prevent SSRF attacks
+function isValidWebhookUrl(urlStr) {
+  try {
+    const parsed = new URL(urlStr);
+    // Must be HTTPS
+    if (parsed.protocol !== 'https:') return false;
+    // Block private/internal IP ranges
+    const host = parsed.hostname.toLowerCase();
+    if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return false;
+    if (host.startsWith('10.') || host.startsWith('192.168.') || host.startsWith('172.')) return false;
+    if (host === '169.254.169.254') return false; // AWS metadata
+    if (host.endsWith('.internal') || host.endsWith('.local')) return false;
+    return true;
+  } catch { return false; }
+}
+
 // Register a webhook
 app.post('/api/webhooks/register', authenticateApiKey, (req, res) => {
   const { url, events } = req.body;
   if (!url || !events || !Array.isArray(events)) {
     return res.status(400).json({ success: false, error: 'url and events[] required' });
+  }
+
+  // Validate webhook URL (must be HTTPS, no internal IPs)
+  if (!isValidWebhookUrl(url)) {
+    return res.status(400).json({ success: false, error: 'Invalid webhook URL. Must be HTTPS and point to a public endpoint.' });
   }
 
   const allowedEvents = ['verification.success', 'verification.failed', 'document.created'];
@@ -1629,7 +1650,9 @@ app.get('/api/webhooks', authenticateApiKey, (req, res) => {
 
 // Delete a webhook
 app.delete('/api/webhooks/:id', authenticateApiKey, (req, res) => {
-  const removed = db.removeWebhook(parseInt(req.params.id), req.org.orgId);
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id) || id <= 0) return res.status(400).json({ success: false, error: 'Invalid webhook ID' });
+  const removed = db.removeWebhook(id, req.org.orgId);
   if (!removed) return res.status(404).json({ success: false, error: 'Webhook not found' });
   res.json({ success: true });
 });
