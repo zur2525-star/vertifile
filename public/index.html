@@ -348,14 +348,14 @@
     /* ===== DEMO ===== */
     .demo-section{background:linear-gradient(180deg,#f8f7ff,#ede9fe 50%,#f8f7ff);position:relative;overflow:hidden}
     .demo-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 50%,rgba(124,58,237,.05),transparent 60%);pointer-events:none}
-    .demo-wrapper{max-width:1100px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:24px}
-    @media(max-width:768px){.demo-wrapper{grid-template-columns:1fr;gap:16px}}
-    .demo-label{text-align:center;margin-bottom:12px;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px}
+    .demo-wrapper{max-width:1100px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:32px}
+    @media(max-width:768px){.demo-wrapper{grid-template-columns:1fr;gap:20px}}
+    .demo-label{text-align:center;margin-bottom:12px;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px}
     .demo-label.verified{color:#059669}
     .demo-label.forged{color:#dc2626}
     .demo-label svg{width:18px;height:18px}
-    .demo-browser{border-radius:16px;overflow:hidden;border:1px solid rgba(124,58,237,.12);background:#fff;box-shadow:0 8px 60px rgba(124,58,237,.12),0 2px 8px rgba(0,0,0,.04)}
-    .demo-browser.forged{border-color:rgba(220,38,38,.2);box-shadow:0 8px 60px rgba(220,38,38,.08),0 2px 8px rgba(0,0,0,.04)}
+    .demo-browser{border-radius:16px;overflow:hidden;border:1px solid rgba(124,58,237,.12);background:#1a1a2e;box-shadow:0 8px 60px rgba(124,58,237,.12),0 2px 8px rgba(0,0,0,.04)}
+    .demo-browser.forged{border-color:rgba(220,38,38,.25);box-shadow:0 8px 60px rgba(220,38,38,.1),0 2px 8px rgba(0,0,0,.04)}
     .demo-topbar{height:40px;background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-bottom:1px solid rgba(124,58,237,.08);display:flex;align-items:center;padding:0 16px;gap:8px}
     .demo-dot{width:10px;height:10px;border-radius:50%;background:rgba(0,0,0,.1)}
     .demo-dot:nth-child(1){background:rgba(239,68,68,.6)}
@@ -363,8 +363,51 @@
     .demo-dot:nth-child(3){background:rgba(52,211,153,.6)}
     .demo-url{margin-left:16px;flex:1;height:26px;background:#fff;border-radius:6px;display:flex;align-items:center;padding:0 12px;font-size:11px;color:#9ca3af;font-family:'Inter',monospace;border:1px solid rgba(0,0,0,.06)}
     [dir="rtl"] .demo-url{margin-left:0;margin-right:16px}
-    .demo-iframe{width:100%;height:700px;border:none;display:block;background:#fff}
-    @media(max-width:768px){.demo-iframe{height:500px}}
+    .demo-body{padding:24px;display:flex;justify-content:center;align-items:flex-start}
+    .demo-a4{background:#fff;width:100%;max-width:420px;aspect-ratio:210/297;border-radius:3px;position:relative;box-shadow:0 4px 30px rgba(0,0,0,.3);overflow:hidden;padding:12% 10% 10%}
+    .demo-a4.forged-page{box-shadow:0 0 0 3px #e53935,0 4px 30px rgba(255,0,0,.25)}
+    .demo-a4 .doc-line{height:2px;background:#333;margin:3% 15% 5%}
+    .demo-a4 .doc-title{text-align:center;font-size:clamp(11px,2.2vw,16px);font-weight:700;color:#222;letter-spacing:1px;margin-bottom:2%}
+    .demo-a4 .doc-subtitle{text-align:center;font-size:clamp(9px,1.6vw,12px);color:#555;margin-bottom:1%}
+    .demo-a4 .doc-heading{text-align:center;font-size:clamp(12px,2.5vw,18px);font-weight:700;color:#222;letter-spacing:2px;margin:5% 0 4%}
+    .demo-a4 .doc-text{font-size:clamp(8px,1.4vw,11px);color:#444;line-height:1.7;margin-bottom:2%}
+    .demo-a4 .doc-name{text-align:center;font-size:clamp(10px,2vw,14px);font-weight:700;color:#222;margin:3% 0}
+    .demo-a4 .doc-degree{text-align:center;font-size:clamp(9px,1.6vw,12px);font-weight:600;color:#222;margin:2% 0 1%}
+    .demo-a4 .doc-field{text-align:center;font-size:clamp(8px,1.4vw,11px);color:#555;margin-bottom:2%}
+    .demo-a4 .doc-avg{font-size:clamp(8px,1.4vw,11px);color:#444;margin-top:3%}
+    .demo-a4 .doc-date{font-size:clamp(7px,1.2vw,10px);color:#888;margin-top:5%}
+    .demo-a4 .doc-sig-area{display:flex;justify-content:space-between;margin-top:5%;padding-top:3%;border-top:1px solid #ddd}
+    .demo-a4 .doc-sig{text-align:center;font-size:clamp(7px,1.1vw,9px);color:#888}
+    .demo-a4 .doc-sig .sig-line{width:80px;height:1px;background:#aaa;margin:0 auto 4px}
+    /* Verified stamp */
+    .demo-stamp{position:absolute;bottom:8%;right:6%;width:80px;height:80px;z-index:10}
+    @media(min-width:768px){.demo-stamp{width:100px;height:100px}}
+    .demo-stamp .stamp-ring{width:100%;height:100%;border-radius:50%;border:2px solid rgba(5,150,105,.3);display:flex;align-items:center;justify-content:center;position:relative;animation:demoStampSpin 20s linear infinite}
+    .demo-stamp .stamp-inner{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .demo-stamp .stamp-check svg{width:28px;height:28px}
+    .demo-stamp .stamp-brand{font-size:7px;font-weight:800;color:#059669;letter-spacing:1px;margin-top:2px}
+    .demo-stamp .stamp-label{font-size:6px;font-weight:700;color:#fff;background:#059669;padding:1px 6px;border-radius:3px;margin-top:2px;letter-spacing:.5px}
+    @keyframes demoStampSpin{to{transform:rotate(360deg)}}
+    .demo-stamp .stamp-text{position:absolute;width:100%;height:100%}
+    .demo-stamp .stamp-text text{font-size:6.5px;fill:rgba(5,150,105,.35);font-weight:700;letter-spacing:2px}
+    /* Holo waves for verified */
+    .demo-holo{position:absolute;left:0;right:0;bottom:0;height:30%;pointer-events:none;overflow:hidden;border-radius:0 0 3px 3px;opacity:.6;
+      mask-image:linear-gradient(to bottom,transparent 0%,black 50%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 50%)}
+    .demo-holo svg{position:absolute;top:0;width:200%;height:100%;left:-50%;animation:demoHoloDrift 6s ease-in-out infinite}
+    .demo-holo svg path{fill:none;stroke-linecap:round}
+    @keyframes demoHoloDrift{0%,100%{transform:translateX(-3%)}50%{transform:translateX(3%)}}
+    /* Forged overlays */
+    .demo-forged-x{position:absolute;top:0;left:0;right:0;bottom:0;z-index:5;pointer-events:none}
+    .demo-forged-x svg{width:100%;height:100%}
+    .demo-forged-wm{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-size:clamp(28px,6vw,50px);font-weight:900;color:rgba(229,57,53,.08);white-space:nowrap;z-index:6;pointer-events:none;letter-spacing:6px}
+    /* Forged stamp */
+    .demo-stamp-forged{position:absolute;bottom:8%;right:6%;width:80px;height:80px;z-index:10}
+    @media(min-width:768px){.demo-stamp-forged{width:100px;height:100px}}
+    .demo-stamp-forged .stamp-ring{width:100%;height:100%;border-radius:50%;border:2px solid rgba(220,38,38,.3);display:flex;align-items:center;justify-content:center;position:relative}
+    .demo-stamp-forged .stamp-inner{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .demo-stamp-forged .stamp-x svg{width:28px;height:28px}
+    .demo-stamp-forged .stamp-brand{font-size:7px;font-weight:800;color:#dc2626;letter-spacing:1px;margin-top:2px}
+    .demo-stamp-forged .stamp-label{font-size:6px;font-weight:700;color:#fff;background:#dc2626;padding:1px 6px;border-radius:3px;margin-top:2px;letter-spacing:.5px}
 
     /* ===== INDUSTRIES ===== */
     .industries-section{background:#ffffff;position:relative;overflow:hidden}
@@ -752,6 +795,7 @@
     <p data-i18n="demo.subtitle">A real university diploma protected by Vertifile</p>
   </div>
   <div class="demo-wrapper fade-up">
+    <!-- VERIFIED DOCUMENT -->
     <div>
       <div class="demo-label verified">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
@@ -759,14 +803,53 @@
       </div>
       <div class="demo-browser">
         <div class="demo-topbar">
-          <div class="demo-dot"></div>
-          <div class="demo-dot"></div>
-          <div class="demo-dot"></div>
+          <div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div>
           <div class="demo-url">vertifile.com/demo</div>
         </div>
-        <iframe src="/demo-pvf" class="demo-iframe" id="demoIframe" scrolling="no" loading="lazy"></iframe>
+        <div class="demo-body">
+          <div class="demo-a4">
+            <div class="doc-line"></div>
+            <div class="doc-title">TEL AVIV UNIVERSITY</div>
+            <div class="doc-subtitle">Faculty of Engineering</div>
+            <div class="doc-line"></div>
+            <div class="doc-heading">CERTIFICATE OF DEGREE</div>
+            <div class="doc-text">This is to certify that</div>
+            <div class="doc-name">YOSSI COHEN</div>
+            <div class="doc-text">has successfully completed the requirements for the degree of</div>
+            <div class="doc-degree">Bachelor of Science (B.Sc.)</div>
+            <div class="doc-field">in Computer Science</div>
+            <div class="doc-avg">with a cumulative average of 92.4</div>
+            <div class="doc-date">Awarded on: June 15, 2025 &nbsp;|&nbsp; Certificate No: TAU-2025-CS-4821</div>
+            <div class="doc-sig-area">
+              <div class="doc-sig"><div class="sig-line"></div>Dean of Students</div>
+              <div class="doc-sig"><div class="sig-line"></div>Faculty Dean</div>
+              <div class="doc-sig"><div class="sig-line"></div>University President</div>
+            </div>
+            <!-- Holographic waves -->
+            <div class="demo-holo">
+              <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
+                <path d="M0 80 Q150 40 300 80 T600 80 T900 80 T1200 80" stroke="rgba(124,58,237,.15)" stroke-width="1.5"/>
+                <path d="M0 100 Q150 60 300 100 T600 100 T900 100 T1200 100" stroke="rgba(52,211,153,.12)" stroke-width="1.5"/>
+                <path d="M0 120 Q150 80 300 120 T600 120 T900 120 T1200 120" stroke="rgba(99,102,241,.1)" stroke-width="1.5"/>
+                <path d="M0 140 Q150 100 300 140 T600 140 T900 140 T1200 140" stroke="rgba(124,58,237,.08)" stroke-width="1"/>
+              </svg>
+            </div>
+            <!-- Verified stamp -->
+            <div class="demo-stamp">
+              <div class="stamp-ring">
+                <svg class="stamp-text" viewBox="0 0 200 200"><defs><path id="demoArc" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs><text><textPath href="#demoArc">VERTIFILE &#x2022; PROTECTED VERIFIED &#x2022; BLOCKCHAIN SECURED &#x2022;</textPath></text></svg>
+                <div class="stamp-inner">
+                  <div class="stamp-check"><svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                  <div class="stamp-brand">VERTIFILE</div>
+                  <div class="stamp-label">VERIFIED</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+    <!-- FORGED DOCUMENT -->
     <div>
       <div class="demo-label forged">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
@@ -774,12 +857,48 @@
       </div>
       <div class="demo-browser forged">
         <div class="demo-topbar">
-          <div class="demo-dot"></div>
-          <div class="demo-dot"></div>
-          <div class="demo-dot"></div>
+          <div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div>
           <div class="demo-url">vertifile.com/demo-forged</div>
         </div>
-        <iframe src="/demo-forged-pvf" class="demo-iframe" scrolling="no" loading="lazy"></iframe>
+        <div class="demo-body">
+          <div class="demo-a4 forged-page">
+            <div class="doc-line"></div>
+            <div class="doc-title">TEL AVIV UNIVERSITY</div>
+            <div class="doc-subtitle">Faculty of Engineering</div>
+            <div class="doc-line"></div>
+            <div class="doc-heading">CERTIFICATE OF DEGREE</div>
+            <div class="doc-text">This is to certify that</div>
+            <div class="doc-name">YOSSI COHEN</div>
+            <div class="doc-text">has successfully completed the requirements for the degree of</div>
+            <div class="doc-degree">Bachelor of Science (B.Sc.)</div>
+            <div class="doc-field">in Computer Science</div>
+            <div class="doc-avg">with a cumulative average of 92.4</div>
+            <div class="doc-date">Awarded on: June 15, 2025 &nbsp;|&nbsp; Certificate No: TAU-2025-CS-4821</div>
+            <div class="doc-sig-area">
+              <div class="doc-sig"><div class="sig-line"></div>Dean of Students</div>
+              <div class="doc-sig"><div class="sig-line"></div>Faculty Dean</div>
+              <div class="doc-sig"><div class="sig-line"></div>University President</div>
+            </div>
+            <!-- Red X overlay -->
+            <div class="demo-forged-x">
+              <svg viewBox="0 0 400 566" preserveAspectRatio="none">
+                <line x1="10%" y1="10%" x2="90%" y2="90%" stroke="rgba(229,57,53,.12)" stroke-width="40" stroke-linecap="round"/>
+                <line x1="90%" y1="10%" x2="10%" y2="90%" stroke="rgba(229,57,53,.12)" stroke-width="40" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="demo-forged-wm">FORGED</div>
+            <!-- Forged stamp -->
+            <div class="demo-stamp-forged">
+              <div class="stamp-ring">
+                <div class="stamp-inner">
+                  <div class="stamp-x"><svg viewBox="0 0 50 50" fill="none"><path d="M15 15L35 35" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/><path d="M35 15L15 35" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/></svg></div>
+                  <div class="stamp-brand">VERTIFILE</div>
+                  <div class="stamp-label">FORGED</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
