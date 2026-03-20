@@ -503,8 +503,10 @@ body.forged{background:#2a0a0a}
         <div class="shim" id="sShim"></div>
         <div class="glow" id="sGlow"></div>
         <div class="inner-bg"></div>
-        <div class="center" id="sCtr"><svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="brand">VERTIFILE</div><div class="lbl ok">VERIFIED</div></div>
-${customIcon ? `<div class="client-badge" style="position:absolute;bottom:2px;right:2px;width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.15)">${customIcon.startsWith('<svg') ? `<div style="width:14px;height:14px">${customIcon}</div>` : `<img src="${customIcon}" style="width:16px;height:16px;object-fit:contain" alt="">`}</div>` : ''}
+        <div class="center" id="sCtr">${customIcon ?
+     (customIcon.startsWith('<svg') ? customIcon : `<img src="${customIcon}" style="width:28px;height:28px;object-fit:contain" alt="">`)
+     : `<svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+   }<div class="brand">${escapeHtml(orgName || 'VERTIFILE')}</div><div class="lbl ok">VERIFIED</div></div>
       </div>
       </div>
       <div class="stamp-shadow" id="sShadow"></div>
