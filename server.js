@@ -781,7 +781,7 @@ async function init(){
     var d=await r.json();
     if(d.verified){token=d.token;show(true);if(!isLocal)startRefresh();return}
     // Server says NOT verified — if online (not local), trust the server → FORGED
-    if(!isLocal){show(false);return}
+    if(!isLocal){if(d.reason)document.body.setAttribute("data-fail-reason",d.reason);show(false);return}
     // If local: server might not know this doc (different DB). Fall through to local check.
   }catch(e){
     // Server unreachable — fall back to client-side verification

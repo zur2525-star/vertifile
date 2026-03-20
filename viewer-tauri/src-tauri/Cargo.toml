@@ -1,6 +1,6 @@
 [package]
 name = "pvf-viewer"
-version = "1.0.0"
+version = "1.1.0"
 description = "PVF Viewer - Lightweight document viewer for Vertifile PVF documents"
 authors = ["Vertifile"]
 edition = "2021"

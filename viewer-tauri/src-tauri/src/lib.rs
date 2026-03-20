@@ -13,9 +13,11 @@ pub struct PvfData {
 }
 
 fn validate_pvf_content(content: &str) -> bool {
-    let has_magic = content.contains("<!--PVF:1.0-->") || content.contains("Vertifile");
-    let has_hash = content.contains("var HASH=") || content.contains("pvf:hash");
-    has_magic && has_hash
+    let has_magic = content.contains("<!--PVF:1.0-->") || content.contains("Vertifile") || content.contains("vertifile");
+    // After obfuscation, variable names may change, so check for multiple indicators
+    let has_hash = content.contains("var HASH=") || content.contains("pvf:hash") || content.contains("api/verify");
+    let has_pvf_structure = content.contains("doc-frame") || content.contains("stamp") || content.contains("page-wrap");
+    has_magic && (has_hash || has_pvf_structure)
 }
 
 /// Save PVF content to temp file and return the path

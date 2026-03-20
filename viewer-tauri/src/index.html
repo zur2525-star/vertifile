@@ -166,8 +166,8 @@
     reader.onload = function(e) {
       const content = e.target.result;
 
-      // Validate PVF content
-      if (!content.includes('PVF') && !content.includes('Vertifile')) {
+      // Validate PVF content (after obfuscation, check multiple markers)
+      if (!content.includes('PVF') && !content.includes('Vertifile') && !content.includes('vertifile') && !content.includes('api/verify')) {
         showError('This does not appear to be a valid PVF file.');
         return;
       }

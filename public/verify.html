@@ -418,7 +418,29 @@ async function verifyFile(){
         +'<div class="row"><span class="label">Status</span><span class="val verified"><span class="dot"></span> Verified</span></div>';
       document.getElementById('resultOk').classList.add('show');
     }else{
-      document.getElementById('resultFail').classList.add('show');
+      var failEl=document.getElementById('resultFail');
+      // Show reason-specific message
+      var reasonMsg='';
+      if(data.reason==='code_tampered'){
+        reasonMsg='Code Integrity Violation — The JavaScript code inside this document has been modified. The verification logic itself was tampered with.';
+      }else if(data.reason==='chain_broken'){
+        reasonMsg='Security Chain Broken — The cryptographic chain of this document has been compromised. One or more security parameters have been altered.';
+      }else if(data.reason==='invalid_signature'){
+        reasonMsg='Invalid Signature — The digital signature does not match the document contents. The document may have been tampered with.';
+      }else if(data.reason==='recipient_mismatch'){
+        reasonMsg='Recipient Mismatch — This document was issued to a different recipient.';
+      }
+      if(reasonMsg){
+        var msgEl=failEl.querySelector('.fail-reason');
+        if(!msgEl){
+          msgEl=document.createElement('p');
+          msgEl.className='fail-reason';
+          msgEl.style.cssText='margin-top:12px;font-size:13px;color:#ef4444;background:rgba(239,68,68,.06);padding:12px 16px;border-radius:8px;border:1px solid rgba(239,68,68,.12);text-align:left';
+          failEl.appendChild(msgEl);
+        }
+        msgEl.textContent=reasonMsg;
+      }
+      failEl.classList.add('show');
     }
   }catch(e){
     document.getElementById('loading').classList.remove('show');

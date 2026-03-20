@@ -50,11 +50,13 @@ function loadPvfFile(filePath) {
     const content = fs.readFileSync(filePath, 'utf-8');
     const fileName = path.basename(filePath);
 
-    // PVF validation — must have Vertifile markers AND hash variable
+    // PVF validation — must have Vertifile markers
+    // After obfuscation, variable names may change, so check for multiple indicators
     var hasMagic = content.startsWith('<!--PVF:1.0-->');
-    var hasVertifile = content.includes('Vertifile');
-    var hasHash = content.includes('var HASH=') || content.includes('pvf:hash');
-    if ((!hasMagic && !hasVertifile) || !hasHash) {
+    var hasVertifile = content.includes('Vertifile') || content.includes('vertifile');
+    var hasHash = content.includes('var HASH=') || content.includes('pvf:hash') || content.includes('api/verify');
+    var hasPvfStructure = content.includes('doc-frame') || content.includes('stamp') || content.includes('page-wrap');
+    if ((!hasMagic && !hasVertifile) || (!hasHash && !hasPvfStructure)) {
       mainWindow.webContents.send('pvf-error', 'This is not a valid PVF file.\n\nOnly files created by Vertifile can be opened.');
       return;
     }

@@ -124,6 +124,16 @@
       title: 'Document Tampered',
       message: 'The content of this document has been modified after it was signed.\n\nThe digital signature does not match the file contents.\nDo not trust this document.'
     },
+    code_tampered: {
+      icon: '<svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="1.5" fill="rgba(239,68,68,.1)"/><path d="M8 10l-3 2 3 2M16 10l3 2-3 2M13 7l-2 10" stroke="#f87171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      title: 'Code Integrity Violation',
+      message: 'The JavaScript code inside this document has been modified.\n\nThis means someone tampered with the verification logic itself.\nThis document cannot be trusted.'
+    },
+    chain_broken: {
+      icon: '<svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="1.5" fill="rgba(239,68,68,.1)"/><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="#f87171" stroke-width="1.5" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="#f87171" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="4" x2="20" y2="20" stroke="#f87171" stroke-width="2" stroke-linecap="round"/></svg>',
+      title: 'Security Chain Broken',
+      message: 'The cryptographic chain of this document has been compromised.\n\nOne or more security parameters (hash, signature, code integrity, or origin) have been altered.\nThis document cannot be trusted.'
+    },
     invalid: {
       icon: '<svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="1.5" fill="rgba(239,68,68,.1)"/><path d="M12 8v5" stroke="#f87171" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#f87171"/></svg>',
       title: 'Invalid File',
@@ -170,15 +180,27 @@
       var stampBad = doc.querySelector('.lbl.bad');
       var isForged = bigX || stampBad || (doc.body && doc.body.classList.contains('forged'));
 
+      // Check for specific security failure reasons via data attribute on body
+      var failReason = doc.body ? doc.body.getAttribute('data-fail-reason') : null;
+
       if (isForged) {
         resolved = true;
         if (interval) clearInterval(interval);
         badge.className = 'toolbar-status failed';
-        document.getElementById('statusText').textContent = 'Verification Failed';
-        showError('forged');
+        // Determine specific error type
+        if (failReason === 'code_tampered') {
+          document.getElementById('statusText').textContent = 'Code Tampered';
+          showError('code_tampered');
+        } else if (failReason === 'chain_broken') {
+          document.getElementById('statusText').textContent = 'Chain Broken';
+          showError('chain_broken');
+        } else {
+          document.getElementById('statusText').textContent = 'Verification Failed';
+          showError('forged');
+        }
       } else if (stampOk) {
         okCount++;
-        if (okCount >= 5) {
+        if (okCount >= 3) {
           resolved = true;
           if (interval) clearInterval(interval);
           badge.className = 'toolbar-status verified';
