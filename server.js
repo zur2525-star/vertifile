@@ -498,15 +498,13 @@ body.forged{background:#2a0a0a}
           <line x1="2" y1="100" x2="8" y2="100" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
           <line x1="192" y1="100" x2="198" y2="100" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
           <defs><path id="tp" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-          <text font-size="7" fill="rgba(124,58,237,.25)" font-weight="700" letter-spacing="2.5"><textPath href="#tp">VERTIFILE \\u2022 PROTECTED VERIFIED FILE \\u2022 BLOCKCHAIN SECURED \\u2022</textPath></text>
+          <text font-size="7" fill="rgba(124,58,237,.25)" font-weight="700" letter-spacing="2.5"><textPath href="#tp">VERIFIED BY VERTIFILE \\u2022 DOCUMENT APPROVED \\u2022 BLOCKCHAIN SECURED \\u2022</textPath></text>
         </svg>
         <div class="shim" id="sShim"></div>
         <div class="glow" id="sGlow"></div>
         <div class="inner-bg"></div>
-        <div class="center" id="sCtr">${customIcon ?
-     (customIcon.startsWith('<svg') ? customIcon : `<img src="${customIcon}" style="width:28px;height:28px;object-fit:contain" alt="">`)
-     : `<svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-   }<div class="brand">${escapeHtml(orgName || 'VERTIFILE')}</div><div class="lbl ok">PROTECTED</div></div>
+        <div class="center" id="sCtr"><svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="brand">VERTIFILE</div><div class="lbl ok">VERIFIED</div></div>
+${customIcon ? `<div class="client-badge" style="position:absolute;bottom:2px;right:2px;width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.15)">${customIcon.startsWith('<svg') ? `<div style="width:14px;height:14px">${customIcon}</div>` : `<img src="${customIcon}" style="width:16px;height:16px;object-fit:contain" alt="">`}</div>` : ''}
       </div>
       </div>
       <div class="stamp-shadow" id="sShadow"></div>
