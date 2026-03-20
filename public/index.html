@@ -35,6 +35,9 @@
     .nav-center a:hover{color:#7c3aed}
     [dir="rtl"] .nav-center{direction:rtl}
     .nav-actions{display:flex;align-items:center;gap:12px}
+    .nav-user{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.25);background:transparent;cursor:pointer;transition:.2s;text-decoration:none;color:#6b7280}
+    .nav-user:hover{border-color:rgba(124,58,237,.5);color:#7c3aed;background:rgba(124,58,237,.05)}
+    .nav-user svg{width:18px;height:18px}
     .nav-verify{font-size:13px;font-weight:500;color:#4f46e5;text-decoration:none}
     .nav-cta{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
     .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.3)}
@@ -511,6 +514,9 @@
       </div>
       <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
       <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
+      <a href="/app" class="nav-user" title="My Account" data-i18n-title="nav.account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
     </div>
     <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -522,6 +528,7 @@
   <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
   <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
   <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <a href="/app" onclick="closeMobile()" data-i18n="nav.account">My Account</a>
   <div class="mob-actions">
     <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
     <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
