@@ -128,6 +128,24 @@
     .try-again{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:14px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:all .3s;box-shadow:0 4px 15px rgba(79,70,229,.3)}
     .try-again:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(79,70,229,.4)}
 
+    /* Open Document Button */
+    .open-doc-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;border:none;border-radius:14px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:all .3s;box-shadow:0 4px 15px rgba(5,150,105,.3);margin-bottom:12px}
+    .open-doc-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(5,150,105,.4)}
+
+    /* PVF Viewer Modal */
+    .pvf-viewer-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:2000;align-items:center;justify-content:center;padding:20px}
+    .pvf-viewer-overlay.show{display:flex}
+    .pvf-viewer{width:100%;max-width:900px;height:90vh;background:#fff;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+    .pvf-viewer-toolbar{display:flex;align-items:center;padding:12px 20px;background:#1e1b4b;color:#fff;gap:12px;flex-shrink:0}
+    .pvf-viewer-toolbar .pvt-title{flex:1;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pvf-viewer-toolbar .pvt-badge{font-size:11px;font-weight:600;background:rgba(52,211,153,.2);color:#34d399;padding:3px 10px;border-radius:6px}
+    .pvf-viewer-toolbar button{background:rgba(255,255,255,.1);border:none;color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;transition:.2s}
+    .pvf-viewer-toolbar button:hover{background:rgba(255,255,255,.2)}
+    .pvf-viewer-toolbar .pvt-close{font-size:18px;padding:4px 10px;background:none}
+    .pvf-viewer-toolbar .pvt-close:hover{color:#ef4444}
+    .pvf-viewer-content{flex:1;overflow:hidden}
+    .pvf-viewer-content iframe{width:100%;height:100%;border:none}
+
     /* Security info */
     .security-note{margin-top:28px;padding:18px 22px;background:rgba(0,0,0,.02);border:1px solid rgba(0,0,0,.04);border-radius:14px;display:flex;align-items:flex-start;gap:14px}
     .security-note .sec-icon{width:36px;height:36px;background:rgba(79,70,229,.05);border:1px solid rgba(79,70,229,.08);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -258,6 +276,10 @@
       <h3 class="ok" data-i18n="verify.verified">Document is Authentic</h3>
       <p data-i18n="verify.verifiedDesc">This document has been verified against the blockchain registry. The stamp is live and valid.</p>
       <div class="meta" id="metaOk"></div>
+      <button class="open-doc-btn" id="openDocBtn" onclick="openDocument()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span data-i18n="verify.openDocument">Open Document</span>
+      </button><br>
       <button class="try-again" onclick="resetPage()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
         <span data-i18n="verify.tryAnother">Verify another document</span>
@@ -300,12 +322,26 @@
   <div class="f-copy" data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</div>
 </footer>
 
+<!-- PVF Viewer Overlay -->
+<div class="pvf-viewer-overlay" id="pvfViewer" onclick="if(event.target===this)closePvfViewer()">
+  <div class="pvf-viewer">
+    <div class="pvf-viewer-toolbar">
+      <span class="pvt-title" id="pvtTitle">Document</span>
+      <span class="pvt-badge">&#10003; Verified</span>
+      <button onclick="downloadPvf()">&#11015; Download</button>
+      <button class="pvt-close" onclick="closePvfViewer()">&times;</button>
+    </div>
+    <div class="pvf-viewer-content" id="pvfViewerContent"></div>
+  </div>
+</div>
+
 <script src="/js/i18n.js"></script>
 <script>
 window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
 window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
 // ===== Verify Logic =====
 var selectedFile=null;
+var pvfBlobUrl=null;
 var dropZone=document.getElementById('dropZone');
 
 dropZone.addEventListener('dragover',function(e){e.preventDefault();dropZone.classList.add('drag-over')});
@@ -356,6 +392,9 @@ async function verifyFile(){
 
     var hash=hashMatch[1];
 
+    // Store PVF content for viewing
+    pvfBlobUrl = URL.createObjectURL(new Blob([text], {type:'text/html'}));
+
     var res=await fetch('/api/verify',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -382,8 +421,31 @@ async function verifyFile(){
   }
 }
 
+function openDocument(){
+  if(!pvfBlobUrl) return;
+  document.getElementById('pvtTitle').textContent = selectedFile ? selectedFile.name : 'Document';
+  document.getElementById('pvfViewerContent').innerHTML = '<iframe src="'+pvfBlobUrl+'" sandbox="allow-scripts allow-same-origin"></iframe>';
+  document.getElementById('pvfViewer').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+
+function closePvfViewer(){
+  document.getElementById('pvfViewer').classList.remove('show');
+  document.getElementById('pvfViewerContent').innerHTML = '';
+  document.body.style.overflow='';
+}
+
+function downloadPvf(){
+  if(!pvfBlobUrl || !selectedFile) return;
+  var a = document.createElement('a');
+  a.href = pvfBlobUrl;
+  a.download = selectedFile.name;
+  a.click();
+}
+
 function resetPage(){
   selectedFile=null;
+  if(pvfBlobUrl){ URL.revokeObjectURL(pvfBlobUrl); pvfBlobUrl=null; }
   document.getElementById('resultOk').classList.remove('show');
   document.getElementById('resultFail').classList.remove('show');
   document.getElementById('submitBtn').style.display='';
