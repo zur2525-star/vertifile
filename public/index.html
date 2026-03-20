@@ -386,23 +386,36 @@
     .demo-a4 .doc-sig-area{display:flex;justify-content:space-between;margin-top:5%;padding-top:3%;border-top:1px solid #ddd}
     .demo-a4 .doc-sig{text-align:center;font-size:clamp(7px,1.1vw,9px);color:#888}
     .demo-a4 .doc-sig .sig-line{width:80px;height:1px;background:#aaa;margin:0 auto 4px}
-    /* Verified stamp */
-    .demo-stamp{position:absolute;bottom:8%;right:6%;width:80px;height:80px;z-index:10}
-    @media(min-width:768px){.demo-stamp{width:100px;height:100px}}
-    .demo-stamp .stamp-ring{width:100%;height:100%;border-radius:50%;border:2px solid rgba(5,150,105,.3);display:flex;align-items:center;justify-content:center;position:relative;animation:demoStampSpin 20s linear infinite}
-    .demo-stamp .stamp-inner{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center}
-    .demo-stamp .stamp-check svg{width:28px;height:28px}
-    .demo-stamp .stamp-brand{font-size:7px;font-weight:800;color:#059669;letter-spacing:1px;margin-top:2px}
-    .demo-stamp .stamp-label{font-size:6px;font-weight:700;color:#fff;background:#059669;padding:1px 6px;border-radius:3px;margin-top:2px;letter-spacing:.5px}
+    /* ===== REAL VERTIFILE STAMP (matches PVF output) ===== */
+    .demo-stamp{position:absolute;bottom:6%;right:5%;width:80px;height:80px;z-index:30;pointer-events:none;perspective:800px}
+    @media(min-width:768px){.demo-stamp{width:96px;height:96px}}
+    .demo-stamp .stamp-coin{width:100%;height:100%;transform-style:preserve-3d;animation:demoStampBreathe 3s ease-in-out infinite}
+    @keyframes demoStampBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+    .demo-stamp .stamp-outer{position:absolute;top:0;left:0;width:100%;height:100%;animation:demoStampSpin 30s linear infinite}
     @keyframes demoStampSpin{to{transform:rotate(360deg)}}
-    .demo-stamp .stamp-text{position:absolute;width:100%;height:100%}
-    .demo-stamp .stamp-text text{font-size:6.5px;fill:rgba(5,150,105,.35);font-weight:700;letter-spacing:2px}
-    /* Holo waves for verified */
-    .demo-holo{position:absolute;left:0;right:0;bottom:0;height:30%;pointer-events:none;overflow:hidden;border-radius:0 0 3px 3px;opacity:.6;
-      mask-image:linear-gradient(to bottom,transparent 0%,black 50%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 50%)}
-    .demo-holo svg{position:absolute;top:0;width:200%;height:100%;left:-50%;animation:demoHoloDrift 6s ease-in-out infinite}
-    .demo-holo svg path{fill:none;stroke-linecap:round}
-    @keyframes demoHoloDrift{0%,100%{transform:translateX(-3%)}50%{transform:translateX(3%)}}
+    .demo-stamp .stamp-shim{position:absolute;top:5%;left:5%;width:90%;height:90%;border-radius:50%;
+      background:conic-gradient(from 0deg,rgba(124,58,237,.05),rgba(109,40,217,.1) 60deg,rgba(76,175,80,.07) 120deg,rgba(124,58,237,.05) 180deg,rgba(109,40,217,.1) 240deg,rgba(76,175,80,.07) 300deg,rgba(124,58,237,.05));
+      animation:demoShimRot 4s linear infinite}
+    @keyframes demoShimRot{to{transform:rotate(-360deg)}}
+    .demo-stamp .stamp-glow{position:absolute;top:15%;left:15%;width:70%;height:70%;border-radius:50%;background:radial-gradient(circle,rgba(76,175,80,.1),transparent 70%);animation:demoGlowP 3s ease-in-out infinite}
+    @keyframes demoGlowP{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
+    .demo-stamp .stamp-inner-bg{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(124,58,237,.12)}
+    .demo-stamp .stamp-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+    .demo-stamp .stamp-center svg{width:24px;height:24px}
+    .demo-stamp .stamp-brand{font-size:6px;font-weight:900;letter-spacing:1.5px;color:rgba(124,58,237,.45);margin-top:1px}
+    .demo-stamp .stamp-label{font-size:6px;font-weight:900;letter-spacing:1px;margin-top:1px;color:rgba(46,125,50,.6)}
+    .demo-stamp .stamp-outer text{font-size:7px;fill:rgba(124,58,237,.25);font-weight:700;letter-spacing:2.5px}
+    /* ===== REAL HOLOGRAPHIC WAVES (matches PVF output) ===== */
+    .demo-holo{position:absolute;left:0;right:0;bottom:0;height:35%;z-index:10;pointer-events:none;overflow:hidden;border-radius:0 0 3px 3px;opacity:.7;
+      mask-image:linear-gradient(to bottom,transparent 0%,black 40%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 40%)}
+    .demo-holo .hw-svg{position:absolute;top:0;width:200%;height:100%;left:-50%}
+    .demo-holo .hw-svg path{fill:none;stroke-linecap:round}
+    .demo-holo .hw-a{animation:wDriftA 8s ease-in-out infinite,wHueA 16s ease-in-out infinite}
+    .demo-holo .hw-b{animation:wDriftB 10s ease-in-out infinite,wHueB 20s ease-in-out infinite}
+    @keyframes wDriftA{0%,100%{transform:rotate(-5deg) translateX(-3%)}50%{transform:rotate(-5deg) translateX(3%)}}
+    @keyframes wDriftB{0%,100%{transform:rotate(-3deg) translateX(3%)}50%{transform:rotate(-3deg) translateX(-3%)}}
+    @keyframes wHueA{0%,100%{filter:hue-rotate(0deg) brightness(1)}33%{filter:hue-rotate(45deg) brightness(1.15)}66%{filter:hue-rotate(-25deg) brightness(.9)}}
+    @keyframes wHueB{0%,100%{filter:hue-rotate(0deg)}50%{filter:hue-rotate(65deg)}}
     /* Forged overlays */
     .demo-forged-x{position:absolute;top:0;left:0;right:0;bottom:0;z-index:5;pointer-events:none}
     .demo-forged-x svg{width:100%;height:100%}
@@ -840,21 +853,36 @@
               <div class="doc-sig"><div class="sig-line"></div>Faculty Dean</div>
               <div class="doc-sig"><div class="sig-line"></div>University President</div>
             </div>
-            <!-- Holographic waves -->
+            <!-- Real Holographic Waves (matches PVF) -->
             <div class="demo-holo">
-              <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
-                <path d="M0 80 Q150 40 300 80 T600 80 T900 80 T1200 80" stroke="rgba(124,58,237,.15)" stroke-width="1.5"/>
-                <path d="M0 100 Q150 60 300 100 T600 100 T900 100 T1200 100" stroke="rgba(52,211,153,.12)" stroke-width="1.5"/>
-                <path d="M0 120 Q150 80 300 120 T600 120 T900 120 T1200 120" stroke="rgba(99,102,241,.1)" stroke-width="1.5"/>
-                <path d="M0 140 Q150 100 300 140 T600 140 T900 140 T1200 140" stroke="rgba(124,58,237,.08)" stroke-width="1"/>
+              <svg class="hw-svg hw-a" viewBox="0 0 1400 200" preserveAspectRatio="none">
+                <path d="M-200,100 Q-60,40 80,100 Q220,160 360,100 Q500,40 640,100 Q780,160 920,100 Q1060,40 1200,100 Q1340,160 1480,100 Q1620,40 1760,100" stroke="rgba(124,58,237,.12)" stroke-width="2"/>
+                <path d="M-200,115 Q-40,160 120,115 Q280,70 440,115 Q600,160 760,115 Q920,70 1080,115 Q1240,160 1400,115 Q1560,70 1720,115" stroke="rgba(0,131,143,.10)" stroke-width="1.6"/>
+                <path d="M-200,140 Q-70,80 60,140 Q190,200 320,140 Q450,80 580,140 Q710,200 840,140 Q970,80 1100,140 Q1230,200 1360,140 Q1490,80 1620,140" stroke="rgba(46,125,50,.10)" stroke-width="1.8"/>
+              </svg>
+              <svg class="hw-svg hw-b" viewBox="0 0 1400 200" preserveAspectRatio="none">
+                <path d="M-200,80 Q-50,130 100,80 Q250,30 400,80 Q550,130 700,80 Q850,30 1000,80 Q1150,130 1300,80 Q1450,30 1600,80" stroke="rgba(106,27,154,.11)" stroke-width="1.8"/>
+                <path d="M-200,55 Q-30,95 170,55 Q370,15 570,55 Q770,95 970,55 Q1170,15 1370,55 Q1570,95 1770,55" stroke="rgba(109,40,217,.09)" stroke-width="1.5"/>
               </svg>
             </div>
-            <!-- Verified stamp -->
+            <!-- Real Vertifile Stamp (matches PVF) -->
             <div class="demo-stamp">
-              <div class="stamp-ring">
-                <svg class="stamp-text" viewBox="0 0 200 200"><defs><path id="demoArc" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs><text><textPath href="#demoArc">VERTIFILE &#x2022; PROTECTED VERIFIED &#x2022; BLOCKCHAIN SECURED &#x2022;</textPath></text></svg>
-                <div class="stamp-inner">
-                  <div class="stamp-check"><svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="stamp-coin">
+                <svg class="stamp-outer" viewBox="0 0 200 200">
+                  <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(124,58,237,.18)" stroke-width="1.2"/>
+                  <circle cx="100" cy="100" r="89" fill="none" stroke="rgba(124,58,237,.08)" stroke-width=".5" stroke-dasharray="3 3"/>
+                  <line x1="100" y1="2" x2="100" y2="8" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
+                  <line x1="100" y1="192" x2="100" y2="198" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
+                  <line x1="2" y1="100" x2="8" y2="100" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
+                  <line x1="192" y1="100" x2="198" y2="100" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
+                  <defs><path id="demoArc" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+                  <text font-size="7" fill="rgba(124,58,237,.25)" font-weight="700" letter-spacing="2.5"><textPath href="#demoArc">VERIFIED BY VERTIFILE &#x2022; DOCUMENT APPROVED &#x2022; BLOCKCHAIN SECURED &#x2022;</textPath></text>
+                </svg>
+                <div class="stamp-shim"></div>
+                <div class="stamp-glow"></div>
+                <div class="stamp-inner-bg"></div>
+                <div class="stamp-center">
+                  <svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   <div class="stamp-brand">VERTIFILE</div>
                   <div class="stamp-label">VERIFIED</div>
                 </div>
