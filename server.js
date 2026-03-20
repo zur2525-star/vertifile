@@ -253,6 +253,14 @@ async function authenticateApiKey(req, res, next) {
     });
   }
 
+  // Allow admin secret as API key — grants full access as admin org
+  const adminSecret = process.env.ADMIN_SECRET;
+  if (adminSecret && apiKey === adminSecret) {
+    req.org = { orgId: 'org_admin', orgName: 'Vertifile Admin', plan: 'enterprise', documentsCreated: 0, rateLimit: 999, created: new Date().toISOString(), active: true };
+    req.apiKey = apiKey;
+    return next();
+  }
+
   const keyData = await db.getApiKey(apiKey);
 
   if (!keyData) {
@@ -1559,19 +1567,8 @@ app.get('/api/org/documents', authenticateApiKey, async (req, res) => {
   res.json({ success: true, documents: docs, total, limit, offset });
 });
 
-// GET org profile — also allow admin secret as fallback
-app.get('/api/org/profile', async (req, res, next) => {
-  // If admin secret is provided instead of API key, create a virtual org context
-  const key = req.headers['x-api-key'];
-  const adminSecret = process.env.ADMIN_SECRET;
-  if (key && adminSecret && key === adminSecret) {
-    req.org = { orgId: 'org_admin', orgName: 'Vertifile Admin', plan: 'enterprise', documentsCreated: 0, rateLimit: 999, created: new Date().toISOString() };
-    req.apiKey = key;
-    return next();
-  }
-  // Otherwise use normal API key auth
-  authenticateApiKey(req, res, next);
-}, async (req, res) => {
+// GET org profile (full details)
+app.get('/api/org/profile', authenticateApiKey, async (req, res) => {
   try {
     const branding = await db.getBranding(req.org.orgId);
     res.json({
