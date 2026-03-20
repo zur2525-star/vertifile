@@ -734,7 +734,7 @@ async function loadDocuments() {
     const data = await r.json();
     documents = data.documents || [];
     renderDocumentList();
-    updatePlanUsage(data);
+    updatePlanUsage();
   } catch (e) {
     documents = [];
     renderDocumentList();
@@ -774,7 +774,7 @@ function renderDocumentList() {
     const typeClass = getTypeClass(ext);
     const typeIcon = getTypeIcon(ext);
     const size = formatSize(d.fileSize || d.file_size || 0);
-    const date = formatDate(d.createdAt || d.created_at || d.created);
+    const date = formatDate(d.timestamp || d.createdAt || d.created_at || d.created);
     const isStarred = starredIds.has(id);
     const verified = d.verified !== false;
     const isSelected = selectedDoc && (selectedDoc.id || selectedDoc._id || selectedDoc.hash) === id;
@@ -824,7 +824,7 @@ function openPreview() {
 
   const hash = selectedDoc.hash || '';
   document.getElementById('previewHash').textContent = hash.length > 20 ? hash.substring(0, 10) + '...' + hash.slice(-6) : hash;
-  document.getElementById('previewCreated').textContent = selectedDoc.createdAt || selectedDoc.created_at || selectedDoc.created || '--';
+  document.getElementById('previewCreated').textContent = formatDate(selectedDoc.timestamp || selectedDoc.createdAt || selectedDoc.created_at || selectedDoc.created);
   document.getElementById('previewStatus').textContent = selectedDoc.verified !== false ? 'Verified' : 'Unverified';
 
   const contentEl = document.getElementById('previewContent');
@@ -933,7 +933,7 @@ function loadSharedDocuments() {
       const name = d.originalName || d.original_name || 'Untitled';
       const shareId = d.shareId || d.share_id;
       const url = window.location.origin + '/d/' + shareId;
-      const date = formatDate(d.createdAt || d.created_at || d.created);
+      const date = formatDate(d.timestamp || d.createdAt || d.created_at || d.created);
       return `<tr>
         <td style="font-weight:500">${escHtml(name)}</td>
         <td><a href="${url}" target="_blank" class="shared-link">${url}</a></td>
@@ -1244,9 +1244,9 @@ document.getElementById('uploadModal').addEventListener('click', function(e) {
 });
 
 // ===== Plan Usage =====
-function updatePlanUsage(data) {
-  const used = documents.length;
-  const limit = data?.limit || currentUser?.documentsLimit || currentUser?.planLimit || 5;
+function updatePlanUsage() {
+  const used = currentUser?.documentsUsed ?? documents.length;
+  const limit = currentUser?.documentsLimit || 5;
   const plan = currentUser?.plan || 'free';
   const planNames = { free: 'Free Plan', professional: 'Pro Plan', enterprise: 'Enterprise' };
   document.getElementById('planLabel').textContent = planNames[plan] || 'Free Plan';
