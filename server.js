@@ -699,6 +699,8 @@ document.addEventListener("visibilitychange", function() {
 var HASH="${fileHash}";
 var SIG="${signature}";
 var RCPT="${recipientHash || ''}";
+var CREATED="${createdAt}";
+var ORGID="${orgName ? escapeHtml(orgName) : 'VERTIFILE'}";
 var API=window.location.origin;
 var ORGNAME="${escapeHtml(orgName || 'VERTIFILE')}";
 var CUSTOMICON=${customIcon ? `"${customIcon.startsWith('<svg') ? 'svg' : 'img'}"` : 'null'};
@@ -741,6 +743,20 @@ var CUSTOMICONDATA=${customIcon ? `\`${customIcon.replace(/`/g, '\\`')}\`` : 'nu
 })();
 var token=null;
 var isLocal=location.protocol==="file:"||location.protocol==="about:"||window!==window.top;
+
+// Code Integrity — hash the script content to detect tampering
+async function computeCodeIntegrity(){
+  try{
+    var scripts=document.querySelectorAll("script");
+    var allCode="";
+    for(var i=0;i<scripts.length;i++){if(scripts[i].textContent)allCode+=scripts[i].textContent}
+    var encoder=new TextEncoder();
+    var data=encoder.encode(allCode);
+    var hashBuf=await crypto.subtle.digest("SHA-256",data);
+    var hashArr=Array.from(new Uint8Array(hashBuf));
+    return hashArr.map(function(b){return b.toString(16).padStart(2,"0")}).join("");
+  }catch(e){return"unknown"}
+}
 var VERIFY_URL="https://vertifile.com";
 
 async function init(){
@@ -760,7 +776,8 @@ async function init(){
   // Step 1: Try server verification
   try{
     await new Promise(r=>setTimeout(r,500));
-    var r=await fetch(apiUrl+"/api/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({hash:HASH,signature:SIG,recipientHash:RCPT||undefined})});
+    var codeCheck=await computeCodeIntegrity();
+    var r=await fetch(apiUrl+"/api/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({hash:HASH,signature:SIG,recipientHash:RCPT||undefined,created:CREATED,orgId:ORGID,codeIntegrity:codeCheck})});
     var d=await r.json();
     if(d.verified){token=d.token;show(true);if(!isLocal)startRefresh();return}
     // Server says NOT verified — if online (not local), trust the server → FORGED
@@ -983,6 +1000,18 @@ app.post('/api/user/upload', requireLogin, upload.single('file'), async (req, re
     // Obfuscate PVF
     const seed = parseInt(fileHash.substring(0, 8), 16);
     pvfHtml = obfuscatePvf(pvfHtml, seed);
+
+    // Compute code integrity hash (hash of the script content after obfuscation)
+    const scriptMatch = pvfHtml.match(/<script>([\s\S]*?)<\/script>/);
+    const codeIntegrity = scriptMatch
+      ? crypto.createHash('sha256').update(scriptMatch[1]).digest('hex')
+      : null;
+
+    // Save chained token: hash + signature + orgId + timestamp + codeIntegrity
+    const chainedToken = crypto.createHmac('sha256', hmacSecret)
+      .update(fileHash + signature + req.org.orgId + codeIntegrity)
+      .digest('hex');
+    await db.saveCodeIntegrity(fileHash, codeIntegrity, chainedToken);
 
     // Generate share ID and save PVF to database
     const shareId = require('crypto').randomBytes(8).toString('base64url');
@@ -1306,6 +1335,16 @@ async function handleCreatePvf(req, res) {
     const seed = parseInt(fileHash.substring(0, 8), 16);
     pvfHtml = obfuscatePvf(pvfHtml, seed);
 
+    // Compute code integrity hash + chained token (after obfuscation)
+    const scriptMatch2 = pvfHtml.match(/<script>([\s\S]*?)<\/script>/);
+    const codeIntegrity = scriptMatch2
+      ? crypto.createHash('sha256').update(scriptMatch2[1]).digest('hex')
+      : null;
+    const chainedToken = crypto.createHmac('sha256', hmacSecret)
+      .update(fileHash + signature + req.org.orgId + codeIntegrity)
+      .digest('hex');
+    await db.saveCodeIntegrity(fileHash, codeIntegrity, chainedToken);
+
     console.log(`[CREATE PVF] ${originalName} (${mimeType})`);
     console.log(`  Hash:      ${fileHash.substring(0, 24)}...`);
     console.log(`  Signature: ${signature.substring(0, 16)}...`);
@@ -1386,7 +1425,7 @@ async function handleCreatePvf(req, res) {
 // ================================================================
 app.post('/api/verify', verifyLimiter, async (req, res) => {
   try {
-    const { hash, signature, content, recipientHash } = req.body;
+    const { hash, signature, content, recipientHash, created, orgId, codeIntegrity } = req.body;
 
     let lookupHash = hash;
 
@@ -1421,6 +1460,31 @@ app.post('/api/verify', verifyLimiter, async (req, res) => {
         console.log(`[VERIFY FAIL] Signature mismatch for ${lookupHash.substring(0, 16)}...`);
         await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'invalid_signature' });
         return res.json({ success: true, verified: false, reason: 'invalid_signature' });
+      }
+
+      // Code integrity check — verify the JavaScript hasn't been tampered with
+      if (codeIntegrity && doc.code_integrity) {
+        if (codeIntegrity !== doc.code_integrity) {
+          console.log(`[VERIFY FAIL] Code integrity mismatch for ${lookupHash.substring(0, 16)}...`);
+          await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'code_tampered' });
+          return res.json({ success: true, verified: false, reason: 'code_tampered' });
+        }
+
+        // Chained token verification — all parameters must match
+        if (doc.chained_token) {
+          const expectedChain = crypto.createHmac('sha256', hmacSecret)
+            .update(lookupHash + (signature || doc.signature) + doc.orgId + codeIntegrity)
+            .digest('hex');
+          const chainValid = crypto.timingSafeEqual(
+            Buffer.from(doc.chained_token, 'hex'),
+            Buffer.from(expectedChain, 'hex')
+          );
+          if (!chainValid) {
+            console.log(`[VERIFY FAIL] Chained token mismatch for ${lookupHash.substring(0, 16)}...`);
+            await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'chain_broken' });
+            return res.json({ success: true, verified: false, reason: 'chain_broken' });
+          }
+        }
       }
 
       // Recipient binding check — if document has a bound recipient, verify it matches

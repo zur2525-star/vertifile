@@ -121,6 +121,8 @@ const _ready = (async () => {
   try { await pool.query('ALTER TABLE documents ADD COLUMN user_id INT'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE documents ADD COLUMN starred BOOLEAN DEFAULT false'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE documents ADD COLUMN pvf_content TEXT'); } catch (_) { /* already exists */ }
+  try { await pool.query('ALTER TABLE documents ADD COLUMN code_integrity TEXT'); } catch (_) { /* already exists */ }
+  try { await pool.query('ALTER TABLE documents ADD COLUMN chained_token TEXT'); } catch (_) { /* already exists */ }
   // Update free plan limit from 5 to 1
   try { await pool.query("UPDATE users SET documents_limit = 1 WHERE plan = 'free' AND documents_limit = 5"); } catch (_) { /* ok */ }
 })();
@@ -519,6 +521,10 @@ async function setDocumentUserId(hash, userId) {
   await pool.query('UPDATE documents SET user_id = $1 WHERE hash = $2', [userId, hash]);
 }
 
+async function saveCodeIntegrity(hash, codeIntegrity, chainedToken) {
+  await pool.query('UPDATE documents SET code_integrity = $1, chained_token = $2 WHERE hash = $3', [codeIntegrity, chainedToken, hash]);
+}
+
 async function savePvfContent(hash, pvfHtml) {
   await pool.query('UPDATE documents SET pvf_content = $1 WHERE hash = $2', [pvfHtml, hash]);
 }
@@ -596,6 +602,7 @@ module.exports = {
   setDocumentUserId,
   getOrgByOrgId,
   deleteDocument,
+  saveCodeIntegrity,
   savePvfContent,
   getPvfContent,
   updateUserProfile,
