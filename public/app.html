@@ -277,11 +277,6 @@
         <span>Continue with Google</span>
       </a>
 
-      <a href="/auth/microsoft" class="oauth-btn">
-        <svg viewBox="0 0 24 24"><rect fill="#F25022" x="1" y="1" width="10" height="10"/><rect fill="#7FBA00" x="13" y="1" width="10" height="10"/><rect fill="#00A4EF" x="1" y="13" width="10" height="10"/><rect fill="#FFB900" x="13" y="13" width="10" height="10"/></svg>
-        <span>Continue with Microsoft</span>
-      </a>
-
       <div class="login-divider">or</div>
 
       <input type="email" class="login-input" id="loginEmail" placeholder="Email address">
@@ -302,7 +297,7 @@
 
       <input type="text" class="login-input" id="regName" placeholder="Full name">
       <input type="email" class="login-input" id="regEmail" placeholder="Email address">
-      <input type="password" class="login-input" id="regPassword" placeholder="Password">
+      <input type="password" class="login-input" id="regPassword" placeholder="Password (min 8 characters)" onkeydown="if(event.key==='Enter')doRegister()">
       <button class="login-submit" onclick="doRegister()">Create Account</button>
 
       <div class="login-error" id="regError">Registration failed</div>
@@ -852,14 +847,24 @@ function filterDocuments() {
 }
 
 // ===== Star Toggle =====
-function toggleStar(id) {
-  if (starredIds.has(id)) {
+async function toggleStar(id) {
+  const wasStarred = starredIds.has(id);
+  if (wasStarred) {
     starredIds.delete(id);
   } else {
     starredIds.add(id);
   }
   localStorage.setItem('vf_starred', JSON.stringify([...starredIds]));
   renderDocumentList();
+  // Sync with server
+  try {
+    await fetch('/api/user/documents/' + encodeURIComponent(id) + '/star', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ starred: !wasStarred }),
+      credentials: 'same-origin'
+    });
+  } catch(e) { /* best effort */ }
 }
 
 function toggleSelectAll(checked) {
@@ -957,8 +962,25 @@ function updateBrandPreview() {
   stamp.textContent = orgName.toUpperCase();
 }
 
-function saveBranding() {
-  toast('Branding saved successfully!');
+async function saveBranding() {
+  try {
+    const brandColor = document.getElementById('brandColor').value;
+    const customIcon = document.getElementById('brandIconUrl').value.trim();
+    const orgName = document.getElementById('brandOrgName').value.trim();
+    const stampText = document.getElementById('brandStampText').value.trim();
+    const r = await fetch('/api/user/branding', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ brandColor, customIcon, orgName, stampText }),
+      credentials: 'same-origin'
+    });
+    if (r.ok) {
+      toast('Branding saved successfully!');
+    } else {
+      const data = await r.json();
+      toast(data.error || 'Failed to save branding');
+    }
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 function resetBranding() {
@@ -971,13 +993,26 @@ function resetBranding() {
 }
 
 // ===== Settings Actions =====
-function saveProfile() {
+async function saveProfile() {
   const name = document.getElementById('settingsName').value.trim();
   if (!name) { toast('Name cannot be empty'); return; }
-  if (currentUser) currentUser.name = name;
-  document.getElementById('userName').textContent = name;
-  document.getElementById('userAvatar').textContent = getInitials(name);
-  toast('Profile saved!');
+  try {
+    const r = await fetch('/api/user/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name }),
+      credentials: 'same-origin'
+    });
+    if (r.ok) {
+      if (currentUser) currentUser.name = name;
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userAvatar').textContent = getInitials(name);
+      toast('Profile saved!');
+    } else {
+      const data = await r.json();
+      toast(data.error || 'Failed to save profile');
+    }
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 async function generateApiKey() {
@@ -1007,23 +1042,44 @@ function copyApiKey() {
   }
 }
 
-function changePassword() {
+async function changePassword() {
   const curr = document.getElementById('currentPassword').value;
   const newP = document.getElementById('newPassword').value;
   const conf = document.getElementById('confirmPassword').value;
   if (!curr || !newP) { toast('Please fill in all password fields'); return; }
   if (newP !== conf) { toast('New passwords do not match'); return; }
-  if (newP.length < 6) { toast('Password must be at least 6 characters'); return; }
-  document.getElementById('currentPassword').value = '';
-  document.getElementById('newPassword').value = '';
-  document.getElementById('confirmPassword').value = '';
-  toast('Password updated!');
+  if (newP.length < 8) { toast('Password must be at least 8 characters'); return; }
+  try {
+    const r = await fetch('/api/user/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword: curr, newPassword: newP }),
+      credentials: 'same-origin'
+    });
+    const data = await r.json();
+    if (r.ok) {
+      document.getElementById('currentPassword').value = '';
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmPassword').value = '';
+      toast('Password updated!');
+    } else {
+      toast(data.error || 'Failed to change password');
+    }
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
-function deleteAccount() {
+async function deleteAccount() {
   if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) return;
-  if (!confirm('This will permanently delete all your documents and data. Type DELETE to confirm.')) return;
-  toast('Account deletion requested. Contact support to complete.');
+  if (!confirm('This will permanently delete all your documents and data. Are you absolutely sure?')) return;
+  try {
+    const r = await fetch('/api/user/account', { method: 'DELETE', credentials: 'same-origin' });
+    if (r.ok) {
+      toast('Account deleted.');
+      setTimeout(() => { window.location.href = '/'; }, 1500);
+    } else {
+      toast('Failed to delete account');
+    }
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 // ===== Document Actions =====
@@ -1031,7 +1087,7 @@ async function downloadDoc() {
   if (!selectedDoc) return;
   const shareId = selectedDoc.shareId || selectedDoc.share_id;
   if (shareId) {
-    window.open('/d/' + shareId + '/raw', '_blank');
+    window.open('/d/' + shareId + '/download', '_blank');
   }
 }
 

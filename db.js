@@ -511,6 +511,27 @@ async function setDocumentUserId(hash, userId) {
   await pool.query('UPDATE documents SET user_id = $1 WHERE hash = $2', [userId, hash]);
 }
 
+async function deleteDocument(hash, userId) {
+  const { rowCount } = await pool.query('DELETE FROM documents WHERE hash = $1 AND user_id = $2', [hash, userId]);
+  if (rowCount > 0) {
+    await pool.query('UPDATE users SET documents_used = GREATEST(documents_used - 1, 0) WHERE id = $1', [userId]);
+  }
+  return rowCount > 0;
+}
+
+async function updateUserProfile(userId, { name }) {
+  await pool.query('UPDATE users SET name = $1 WHERE id = $2', [name, userId]);
+}
+
+async function changeUserPassword(userId, newPasswordHash) {
+  await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [newPasswordHash, userId]);
+}
+
+async function deleteUser(userId) {
+  await pool.query('DELETE FROM documents WHERE user_id = $1', [userId]);
+  await pool.query('DELETE FROM users WHERE id = $1', [userId]);
+}
+
 // ================================================================
 // CLOSE
 // ================================================================
@@ -556,6 +577,10 @@ module.exports = {
   getUserDocumentCount,
   starDocument,
   setDocumentUserId,
+  deleteDocument,
+  updateUserProfile,
+  changeUserPassword,
+  deleteUser,
   close,
   _db: pool,
   _ready,

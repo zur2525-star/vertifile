@@ -53,6 +53,16 @@ const upload = multer({
   limits: { fileSize: 50 * 1024 * 1024 } // 50MB max
 });
 
+// Fix multer Latin1 filename encoding — decode to UTF-8
+function fixFilename(file) {
+  if (file && file.originalname) {
+    try {
+      file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf8');
+    } catch(e) { /* keep original */ }
+  }
+  return file;
+}
+
 // ================================================================
 // DATABASE (PostgreSQL via db.js)
 // ================================================================
@@ -113,6 +123,9 @@ function setPvfSecurityHeaders(res) {
 // MIDDLEWARE
 // ================================================================
 
+// Trust reverse proxy (Render) for secure cookies and correct protocol detection
+app.set('trust proxy', 1);
+
 // Security headers
 app.use(helmet({
   contentSecurityPolicy: false, // Allow inline scripts in PVF files
@@ -162,7 +175,8 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'vf_session_' + require('crypto').randomBytes(16).toString('hex'),
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
+  cookie: { secure: !!(process.env.RENDER || process.env.NODE_ENV === 'production'), httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000, sameSite: 'lax' }, // 30 days
+  proxy: true // trust Render's reverse proxy for secure cookies
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -922,6 +936,7 @@ app.get('/api/user/documents', requireLogin, async (req, res) => {
 
 app.post('/api/user/upload', requireLogin, upload.single('file'), async (req, res) => {
   try {
+    if (req.file) fixFilename(req.file);
     // Check document limit
     if (req.user.documents_used >= req.user.documents_limit) {
       return res.status(403).json({ success: false, error: 'Document limit reached. Upgrade your plan for more.' });
@@ -998,6 +1013,70 @@ app.post('/api/user/documents/:hash/star', requireLogin, async (req, res) => {
     await db.starDocument(req.params.hash, !!starred);
     res.json({ success: true });
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to update' }); }
+});
+
+// DELETE user document
+app.delete('/api/user/documents/:hash', requireLogin, async (req, res) => {
+  try {
+    const deleted = await db.deleteDocument(req.params.hash, req.user.id);
+    if (!deleted) return res.status(404).json({ success: false, error: 'Document not found' });
+    // Also remove PVF file from disk if it exists
+    try {
+      const doc = await db.getDocument(req.params.hash);
+      if (doc && doc.shareId) {
+        const pvfPath = path.join(__dirname, 'data', 'pvf', doc.shareId + '.html');
+        if (fs.existsSync(pvfPath)) fs.unlinkSync(pvfPath);
+      }
+    } catch(e) { /* file cleanup is best-effort */ }
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ success: false, error: 'Failed to delete' }); }
+});
+
+// UPDATE user profile
+app.put('/api/user/profile', requireLogin, async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!name || !name.trim()) return res.status(400).json({ success: false, error: 'Name is required' });
+    await db.updateUserProfile(req.user.id, { name: name.trim() });
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ success: false, error: 'Failed to update profile' }); }
+});
+
+// CHANGE password
+app.post('/api/user/change-password', requireLogin, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) return res.status(400).json({ success: false, error: 'Both passwords required' });
+    if (newPassword.length < 8) return res.status(400).json({ success: false, error: 'Password must be at least 8 characters' });
+    // Verify current password
+    const user = await db.getUserById(req.user.id);
+    if (!user || !user.password_hash) return res.status(400).json({ success: false, error: 'Cannot change password for OAuth accounts' });
+    const valid = await bcrypt.compare(currentPassword, user.password_hash);
+    if (!valid) return res.status(401).json({ success: false, error: 'Current password is incorrect' });
+    const hash = await bcrypt.hash(newPassword, 12);
+    await db.changeUserPassword(req.user.id, hash);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ success: false, error: 'Failed to change password' }); }
+});
+
+// DELETE account
+app.delete('/api/user/account', requireLogin, async (req, res) => {
+  try {
+    await db.deleteUser(req.user.id);
+    req.logout(() => {
+      res.json({ success: true });
+    });
+  } catch(e) { res.status(500).json({ success: false, error: 'Failed to delete account' }); }
+});
+
+// Save user branding
+app.post('/api/user/branding', requireLogin, async (req, res) => {
+  try {
+    const orgId = 'user_' + req.user.id;
+    const { brandColor, customIcon, orgName, stampText } = req.body;
+    await db.updateBranding(orgId, { brand_color: brandColor || null, custom_icon: customIcon || null });
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ success: false, error: 'Failed to save branding' }); }
 });
 
 // ================================================================
@@ -1118,6 +1197,7 @@ app.post('/api/create-pvf', createLimiter, authenticateApiKey, upload.single('fi
 
 async function handleCreatePvf(req, res) {
   try {
+    if (req.file) fixFilename(req.file);
     if (!req.file) {
       return res.status(400).json({ success: false, error: 'No file uploaded' });
     }
@@ -2077,6 +2157,18 @@ app.get('/d/:shareId', async (req, res) => {
   // Serve as HTML so browser renders it directly
   setPvfSecurityHeaders(res);
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.sendFile(pvfPath);
+});
+
+// Raw route — /d/:shareId/raw — serves PVF HTML for iframe embedding (no X-Frame-Options)
+app.get('/d/:shareId/raw', async (req, res) => {
+  const { shareId } = req.params;
+  if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).send('Not found');
+  const pvfPath = path.join(__dirname, 'data', 'pvf', shareId + '.html');
+  if (!fs.existsSync(pvfPath)) return res.status(404).send('Not found');
+  // Serve without X-Frame-Options so it can be embedded in same-origin iframe
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-cache');
   res.sendFile(pvfPath);
 });
 
