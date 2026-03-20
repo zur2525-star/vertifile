@@ -984,14 +984,10 @@ app.post('/api/user/upload', requireLogin, upload.single('file'), async (req, re
     const seed = parseInt(fileHash.substring(0, 8), 16);
     pvfHtml = obfuscatePvf(pvfHtml, seed);
 
-    // Generate share ID and save PVF file
+    // Generate share ID and save PVF to database
     const shareId = require('crypto').randomBytes(8).toString('base64url');
     await db.setShareId(fileHash, shareId);
-
-    // Save PVF file for download/sharing
-    const pvfDir = path.join(__dirname, 'data', 'pvf');
-    if (!fs.existsSync(pvfDir)) fs.mkdirSync(pvfDir, { recursive: true });
-    fs.writeFileSync(path.join(pvfDir, shareId + '.html'), pvfHtml);
+    await db.savePvfContent(fileHash, pvfHtml);
 
     res.json({
       success: true,
@@ -1300,10 +1296,8 @@ async function handleCreatePvf(req, res) {
     const shareId = crypto.randomBytes(8).toString('base64url'); // Short URL-safe ID
     await db.setShareId(fileHash, shareId);
 
-    // Save PVF file for shareable link access
-    const pvfDir = path.join(__dirname, 'data', 'pvf');
-    if (!fs.existsSync(pvfDir)) fs.mkdirSync(pvfDir, { recursive: true });
-    fs.writeFileSync(path.join(pvfDir, shareId + '.html'), pvfHtml);
+    // Save PVF content to database (persists across deploys)
+    await db.savePvfContent(fileHash, pvfHtml);
 
     // Register on blockchain (non-blocking — doesn't fail PVF creation)
     if (chain.isConnected()) {
@@ -2134,7 +2128,7 @@ app.get('/signup', (req, res) => {
 app.get('/d/:shareId', async (req, res) => {
   const { shareId } = req.params;
 
-  // Validate share ID format — alphanumeric + URL-safe base64 chars only (no path traversal)
+  // Validate share ID format
   if (!shareId || shareId.length < 6 || shareId.length > 20 || !/^[a-zA-Z0-9_-]+$/.test(shareId)) {
     return res.status(404).send(notFoundPage('Invalid document link'));
   }
@@ -2145,9 +2139,9 @@ app.get('/d/:shareId', async (req, res) => {
     return res.status(404).send(notFoundPage('Document not found'));
   }
 
-  // Serve the stored PVF HTML directly in the browser
-  const pvfPath = path.join(__dirname, 'data', 'pvf', shareId + '.html');
-  if (!fs.existsSync(pvfPath)) {
+  // Get PVF content from database
+  const pvfContent = await db.getPvfContent(shareId);
+  if (!pvfContent) {
     return res.status(404).send(notFoundPage('Document file not available'));
   }
 
@@ -2157,19 +2151,21 @@ app.get('/d/:shareId', async (req, res) => {
   // Serve as HTML so browser renders it directly
   setPvfSecurityHeaders(res);
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(pvfPath);
+  res.send(pvfContent);
 });
 
 // Raw route — /d/:shareId/raw — serves PVF HTML for iframe embedding (no X-Frame-Options)
 app.get('/d/:shareId/raw', async (req, res) => {
   const { shareId } = req.params;
   if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).send('Not found');
-  const pvfPath = path.join(__dirname, 'data', 'pvf', shareId + '.html');
-  if (!fs.existsSync(pvfPath)) return res.status(404).send('Not found');
+
+  const pvfContent = await db.getPvfContent(shareId);
+  if (!pvfContent) return res.status(404).send('Not found');
+
   // Serve without X-Frame-Options so it can be embedded in same-origin iframe
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 'no-cache');
-  res.sendFile(pvfPath);
+  res.send(pvfContent);
 });
 
 // Download route — /d/:shareId/download — downloads as .pvf file
@@ -2182,15 +2178,15 @@ app.get('/d/:shareId/download', async (req, res) => {
     return res.status(404).json({ success: false, error: 'Document not found' });
   }
 
-  const pvfPath = path.join(__dirname, 'data', 'pvf', shareId + '.html');
-  if (!fs.existsSync(pvfPath)) {
+  const pvfContent = await db.getPvfContent(shareId);
+  if (!pvfContent) {
     return res.status(404).json({ success: false, error: 'Document file not available' });
   }
 
   const pvfFileName = (doc.originalName || 'document').replace(/\.[^.]+$/, '') + '.pvf';
   res.setHeader('Content-Type', 'application/vnd.vertifile.pvf; charset=utf-8');
   res.setHeader('Content-Disposition', `attachment; filename="${pvfFileName}"`);
-  res.sendFile(pvfPath);
+  res.send(pvfContent);
 });
 
 // Document info API — /d/:shareId/info — returns metadata (no content)

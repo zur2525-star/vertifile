@@ -120,6 +120,7 @@ const _ready = (async () => {
   try { await pool.query('ALTER TABLE api_keys ADD COLUMN brand_color TEXT'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE documents ADD COLUMN user_id INT'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE documents ADD COLUMN starred BOOLEAN DEFAULT false'); } catch (_) { /* already exists */ }
+  try { await pool.query('ALTER TABLE documents ADD COLUMN pvf_content TEXT'); } catch (_) { /* already exists */ }
 })();
 
 // ================================================================
@@ -511,6 +512,15 @@ async function setDocumentUserId(hash, userId) {
   await pool.query('UPDATE documents SET user_id = $1 WHERE hash = $2', [userId, hash]);
 }
 
+async function savePvfContent(hash, pvfHtml) {
+  await pool.query('UPDATE documents SET pvf_content = $1 WHERE hash = $2', [pvfHtml, hash]);
+}
+
+async function getPvfContent(shareId) {
+  const { rows } = await pool.query('SELECT pvf_content FROM documents WHERE share_id = $1', [shareId]);
+  return rows.length ? rows[0].pvf_content : null;
+}
+
 async function deleteDocument(hash, userId) {
   const { rowCount } = await pool.query('DELETE FROM documents WHERE hash = $1 AND user_id = $2', [hash, userId]);
   if (rowCount > 0) {
@@ -578,6 +588,8 @@ module.exports = {
   starDocument,
   setDocumentUserId,
   deleteDocument,
+  savePvfContent,
+  getPvfContent,
   updateUserProfile,
   changeUserPassword,
   deleteUser,
