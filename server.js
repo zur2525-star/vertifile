@@ -934,8 +934,12 @@ app.post('/api/user/upload', requireLogin, upload.single('file'), async (req, re
     const signature = signHash(fileHash);
     const fileBase64 = file.buffer.toString('base64');
 
-    // Get user branding (reuse from api_keys if they have one, or defaults)
-    const branding = { custom_icon: null, brand_color: null };
+    // Get user branding — check if user has an API key with branding, otherwise use defaults
+    let branding = { custom_icon: null, brand_color: null };
+    try {
+      const userBranding = await db.getBranding(req.org.orgId);
+      if (userBranding) branding = userBranding;
+    } catch(e) { /* use defaults */ }
 
     await db.createDocument({
       hash: fileHash,
