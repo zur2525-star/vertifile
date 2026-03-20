@@ -369,13 +369,17 @@
 
       <div class="nav-divider"></div>
 
+      <div class="nav-item" onclick="switchView('api')" data-view="api">
+        <span class="nav-icon">&#128268;</span>
+        <span data-i18n="app.api">API</span>
+      </div>
       <div class="nav-item" onclick="switchView('branding')" data-view="branding">
         <span class="nav-icon">&#127912;</span>
-        <span>Branding</span>
+        <span data-i18n="app.branding">Branding</span>
       </div>
       <div class="nav-item" onclick="switchView('settings')" data-view="settings">
         <span class="nav-icon">&#9881;</span>
-        <span>Settings</span>
+        <span data-i18n="app.settings">Settings</span>
       </div>
 
       <div class="plan-badge">
@@ -401,6 +405,64 @@
     </div>
 
     <!-- Shared Panel -->
+    <!-- API Panel -->
+    <div class="content-panel" id="apiPanel">
+      <h2 style="font-size:20px;font-weight:700;color:#1e1b4b;margin-bottom:20px">&#128268; API & Integration</h2>
+
+      <!-- API Key Section -->
+      <div class="panel-card" style="margin-bottom:20px">
+        <h3 data-i18n="app.apiKey">Your API Key</h3>
+        <p class="card-desc" data-i18n="app.apiKeyDesc">Use this key to integrate Vertifile into your systems via the API.</p>
+        <div id="apiKeySection">
+          <div id="apiKeyDisplay" style="display:none;margin-top:12px">
+            <div style="display:flex;align-items:center;gap:8px;background:#f5f3ff;border:1px solid rgba(124,58,237,.15);border-radius:8px;padding:10px 14px">
+              <code id="apiKeyValue" style="flex:1;font-size:13px;color:#4b5563;word-break:break-all">vf_live_****...****</code>
+              <button onclick="copyApiKeyApp()" style="padding:6px 12px;background:#7c3aed;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer" data-i18n="app.copy">Copy</button>
+            </div>
+          </div>
+          <div id="apiKeyEmpty" style="margin-top:12px">
+            <p style="font-size:13px;color:#6b7280;margin-bottom:12px" data-i18n="app.noApiKey">You don't have an API key yet. Generate one to start using the Vertifile API.</p>
+            <button onclick="generateApiKey()" style="padding:10px 20px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer" data-i18n="app.generateKey">Generate API Key</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Stats -->
+      <div class="panel-card" style="margin-bottom:20px">
+        <h3 data-i18n="app.apiStats">API Statistics</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:16px">
+          <div style="background:#f5f3ff;border-radius:10px;padding:16px;text-align:center">
+            <div style="font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px" data-i18n="app.docsCreated">Documents Created</div>
+            <div id="apiStatDocs" style="font-size:28px;font-weight:800;color:#7c3aed;margin-top:4px">--</div>
+          </div>
+          <div style="background:#f5f3ff;border-radius:10px;padding:16px;text-align:center">
+            <div style="font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px" data-i18n="app.planType">Plan</div>
+            <div id="apiStatPlan" style="font-size:28px;font-weight:800;color:#7c3aed;margin-top:4px">--</div>
+          </div>
+          <div style="background:#f5f3ff;border-radius:10px;padding:16px;text-align:center">
+            <div style="font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px" data-i18n="app.rateLimit">Rate Limit</div>
+            <div id="apiStatRate" style="font-size:28px;font-weight:800;color:#7c3aed;margin-top:4px">--</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="panel-card">
+        <h3 data-i18n="app.apiDocs">Documentation</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px">
+          <a href="/integration" style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;font-size:13px;font-weight:500;color:#374151;text-decoration:none;transition:.15s" onmouseover="this.style.borderColor='#7c3aed'" onmouseout="this.style.borderColor='#e5e7eb'">
+            &#128214; <span data-i18n="app.apiDocsLink">API Documentation</span>
+          </a>
+          <a href="/integration#webhooks" style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;font-size:13px;font-weight:500;color:#374151;text-decoration:none;transition:.15s" onmouseover="this.style.borderColor='#7c3aed'" onmouseout="this.style.borderColor='#e5e7eb'">
+            &#128276; <span data-i18n="app.webhooks">Webhooks</span>
+          </a>
+          <a href="/signup" style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;font-size:13px;font-weight:500;color:#374151;text-decoration:none;transition:.15s" onmouseover="this.style.borderColor='#7c3aed'" onmouseout="this.style.borderColor='#e5e7eb'">
+            &#128640; <span data-i18n="app.getStarted">Get Started Guide</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
     <div class="content-panel" id="sharedPanel">
       <h2 style="font-size:20px;font-weight:700;color:#1e1b4b;margin-bottom:20px">&#128279; Shared Documents</h2>
       <div class="panel-card">
@@ -648,6 +710,13 @@ function showApp() {
     }
   }
   loadDocuments();
+
+  // Check URL params for tab switching (e.g., /app?tab=api)
+  const urlParams = new URLSearchParams(window.location.search);
+  const tab = urlParams.get('tab');
+  if (tab && ['all', 'starred', 'shared', 'api', 'branding', 'settings'].includes(tab)) {
+    switchView(tab);
+  }
 }
 
 function showLogin() {
@@ -882,6 +951,7 @@ function switchView(view) {
 
   // Hide all panels
   document.getElementById('docListPanel').style.display = 'none';
+  document.getElementById('apiPanel').classList.remove('active');
   document.getElementById('sharedPanel').classList.remove('active');
   document.getElementById('brandingPanel').classList.remove('active');
   document.getElementById('settingsPanel').classList.remove('active');
@@ -896,6 +966,9 @@ function switchView(view) {
     } else {
       loadDocuments();
     }
+  } else if (view === 'api') {
+    document.getElementById('apiPanel').classList.add('active');
+    loadApiInfo();
   } else if (view === 'shared') {
     document.getElementById('sharedPanel').classList.add('active');
     loadSharedDocuments();
@@ -1253,6 +1326,65 @@ function updatePlanUsage() {
   document.getElementById('planUsage').textContent = `${used} / ${limit} documents`;
   const pct = Math.min((used / limit) * 100, 100);
   document.getElementById('planBarFill').style.width = pct + '%';
+}
+
+// ===== API Panel =====
+let userApiKey = '';
+
+async function loadApiInfo() {
+  // Show user's plan info
+  const used = currentUser?.documentsUsed ?? documents.length;
+  const plan = currentUser?.plan || 'free';
+  const limit = currentUser?.documentsLimit || 1;
+  document.getElementById('apiStatDocs').textContent = used;
+  document.getElementById('apiStatPlan').textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
+  document.getElementById('apiStatRate').textContent = { free: '5/day', professional: '100/day', enterprise: '10K/day' }[plan] || '5/day';
+
+  // Check if user has an API key stored
+  try {
+    const r = await fetch('/api/user/api-key', { credentials: 'same-origin' });
+    if (r.ok) {
+      const data = await r.json();
+      if (data.apiKey) {
+        userApiKey = data.apiKey;
+        document.getElementById('apiKeyValue').textContent = data.apiKey.substring(0, 12) + '...' + data.apiKey.slice(-6);
+        document.getElementById('apiKeyDisplay').style.display = 'block';
+        document.getElementById('apiKeyEmpty').style.display = 'none';
+        return;
+      }
+    }
+  } catch (_) {}
+  document.getElementById('apiKeyDisplay').style.display = 'none';
+  document.getElementById('apiKeyEmpty').style.display = 'block';
+}
+
+async function generateApiKey() {
+  if (!currentUser) return;
+  try {
+    const r = await fetch('/api/user/api-key', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin'
+    });
+    const data = await r.json();
+    if (data.success && data.apiKey) {
+      userApiKey = data.apiKey;
+      document.getElementById('apiKeyValue').textContent = data.apiKey;
+      document.getElementById('apiKeyDisplay').style.display = 'block';
+      document.getElementById('apiKeyEmpty').style.display = 'none';
+      showToast('API key generated! Copy it now — it won\'t be shown again in full.');
+    } else {
+      showToast(data.error || 'Failed to generate API key', true);
+    }
+  } catch (e) {
+    showToast('Error generating API key', true);
+  }
+}
+
+function copyApiKeyApp() {
+  const keyEl = document.getElementById('apiKeyValue');
+  const text = userApiKey || keyEl.textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('API key copied!')).catch(() => showToast('Copy failed', true));
 }
 
 // ===== Formatters =====

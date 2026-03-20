@@ -320,6 +320,11 @@ async function getApiKey(key) {
   return rows.length ? mapKeyRow(rows[0]) : null;
 }
 
+async function getOrgByOrgId(orgId) {
+  const { rows } = await pool.query('SELECT * FROM api_keys WHERE org_id = $1', [orgId]);
+  return rows.length ? rows[0] : null;
+}
+
 async function createApiKey({ apiKey, orgId, orgName, plan = 'free', rateLimit = 5, allowedIPs }) {
   await pool.query(
     `INSERT INTO api_keys (api_key, org_id, org_name, plan, created_at, documents_created, active, rate_limit, allowed_ips)
@@ -589,6 +594,7 @@ module.exports = {
   getUserDocumentCount,
   starDocument,
   setDocumentUserId,
+  getOrgByOrgId,
   deleteDocument,
   savePvfContent,
   getPvfContent,

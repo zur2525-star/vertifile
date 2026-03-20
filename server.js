@@ -1075,6 +1075,37 @@ app.post('/api/user/branding', requireLogin, async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to save branding' }); }
 });
 
+// Get user's API key
+app.get('/api/user/api-key', requireLogin, async (req, res) => {
+  try {
+    const orgId = 'user_' + req.user.id;
+    const org = await db.getOrgByOrgId(orgId);
+    if (org && org.api_key) {
+      res.json({ success: true, apiKey: org.api_key });
+    } else {
+      res.json({ success: true, apiKey: null });
+    }
+  } catch(e) { res.status(500).json({ success: false, error: 'Failed to get API key' }); }
+});
+
+// Generate API key for user
+app.post('/api/user/api-key', requireLogin, async (req, res) => {
+  try {
+    const orgId = 'user_' + req.user.id;
+    const orgName = req.user.name || req.user.email;
+    // Check if already has one
+    const existing = await db.getOrgByOrgId(orgId);
+    if (existing && existing.api_key) {
+      return res.json({ success: true, apiKey: existing.api_key });
+    }
+    // Generate new key
+    const crypto = require('crypto');
+    const apiKey = 'vf_live_' + crypto.randomBytes(24).toString('hex');
+    await db.createApiKey({ apiKey, orgId, orgName, plan: req.user.plan || 'free', rateLimit: 5 });
+    res.json({ success: true, apiKey });
+  } catch(e) { res.status(500).json({ success: false, error: 'Failed to generate API key' }); }
+});
+
 // ================================================================
 // API: DEMO — public PVF creation (no API key, strict rate limit)
 // ================================================================
