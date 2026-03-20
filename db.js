@@ -84,7 +84,7 @@ const SCHEMA_SQL = `
     provider_id TEXT,
     avatar_url TEXT,
     documents_used INT DEFAULT 0,
-    documents_limit INT DEFAULT 5,
+    documents_limit INT DEFAULT 1,
     plan TEXT DEFAULT 'free',
     created_at TIMESTAMPTZ DEFAULT NOW()
   );
@@ -121,6 +121,8 @@ const _ready = (async () => {
   try { await pool.query('ALTER TABLE documents ADD COLUMN user_id INT'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE documents ADD COLUMN starred BOOLEAN DEFAULT false'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE documents ADD COLUMN pvf_content TEXT'); } catch (_) { /* already exists */ }
+  // Update free plan limit from 5 to 1
+  try { await pool.query("UPDATE users SET documents_limit = 1 WHERE plan = 'free' AND documents_limit = 5"); } catch (_) { /* ok */ }
 })();
 
 // ================================================================

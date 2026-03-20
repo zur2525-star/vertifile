@@ -45,8 +45,10 @@ Tamper-proof document verification platform. Creates cryptographically signed .p
 
 ## Pages
 - `/` — homepage (landing)
-- `/upload` — protect a document
+- `/app` — Gmail-like document manager (logged-in users)
+- `/upload` — protect a document (public)
 - `/verify` — verify a document
+- `/portal` — API developer portal
 - `/demo` — interactive demo (dark theme)
 - `/open` — open PVF files online (dark theme)
 - `/enterprise` — enterprise plans
@@ -55,6 +57,7 @@ Tamper-proof document verification platform. Creates cryptographically signed .p
 - `/privacy` — privacy policy
 - `/terms` — terms of service
 - `/dashboard` — admin dashboard (requires ADMIN_SECRET)
+- `/d/:shareId` — shared document viewer with CTA banner
 
 ## API Endpoints
 - `POST /api/create-pvf` — create PVF (requires API key)
@@ -66,6 +69,20 @@ Tamper-proof document verification platform. Creates cryptographically signed .p
 - `GET /api/docs` — API documentation redirect
 - `GET /api/admin/*` — admin endpoints (requires ADMIN_SECRET)
 - `GET /d/:shareId` — shareable document links
+
+## User System (app.html)
+- Auth: Passport.js — local strategy (email+password) + Google OAuth
+- Sessions: express-session + connect-pg-simple (PostgreSQL)
+- Session cookies: secure=true in production, trust proxy enabled
+- Free plan: 5 documents per user
+- Stamp: rotating text = "VERIFIED BY VERTIFILE", center = customer logo
+- PVF files stored in PostgreSQL (pvf_content column), NOT filesystem (Render wipes disk)
+- Multer filenames need latin1→utf8 conversion for Hebrew
+- Hebrew UI is RTL (dir="rtl")
+
+## Environment Variables (Auth)
+- `SESSION_SECRET` — cookie signing
+- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` — Google OAuth
 
 ## Security
 - HMAC-SHA256 document signatures with timing-safe comparison
