@@ -15,7 +15,8 @@
     "mainSite": "Main Site",
     "requestDemo": "Request Demo",
     "apiDocs": "API Docs",
-    "portal": "Customer Portal"
+    "portal": "Customer Portal",
+    "account": "My Account"
   },
   "hero": {
     "headline": "Protect Any Document From Forgery",

@@ -5,7 +5,8 @@
     "features": "产品特性",
     "industries": "行业应用",
     "upload": "保护",
-    "verify": "验证"
+    "verify": "验证",
+    "account": "我的账户"
   },
   "hero": {
     "headline": "保护任何文档免受伪造",
