@@ -951,18 +951,26 @@ app.post('/api/user/upload', requireLogin, upload.single('file'), async (req, re
     await db.setDocumentUserId(fileHash, req.user.id);
     await db.updateUserDocCount(req.user.id);
 
-    const pvfHtml = generatePvfHtml(fileBase64, file.originalname, fileHash, file.mimetype, signature, null, branding.custom_icon, branding.brand_color, req.org.orgName);
+    let pvfHtml = generatePvfHtml(fileBase64, file.originalname, fileHash, file.mimetype, signature, null, branding.custom_icon, branding.brand_color, req.org.orgName);
 
-    // Generate share ID
+    // Obfuscate PVF
+    const seed = parseInt(fileHash.substring(0, 8), 16);
+    pvfHtml = obfuscatePvf(pvfHtml, seed);
+
+    // Generate share ID and save PVF file
     const shareId = require('crypto').randomBytes(8).toString('base64url');
     await db.setShareId(fileHash, shareId);
+
+    // Save PVF file for download/sharing
+    const pvfDir = path.join(__dirname, 'data', 'pvf');
+    if (!fs.existsSync(pvfDir)) fs.mkdirSync(pvfDir, { recursive: true });
+    fs.writeFileSync(path.join(pvfDir, shareId + '.html'), pvfHtml);
 
     res.json({
       success: true,
       hash: fileHash,
       shareId,
       fileName: file.originalname,
-      pvfContent: pvfHtml,
       documentsUsed: req.user.documents_used + 1,
       documentsLimit: req.user.documents_limit
     });
@@ -1152,8 +1160,10 @@ async function handleCreatePvf(req, res) {
       // NOTE: we do NOT store the file content!
     });
 
-    // Step 5: Update org stats
-    await db.incrementDocCount(req.apiKey);
+    // Step 5: Update org stats (skip for demo/user uploads without API key)
+    if (req.apiKey && req.apiKey !== 'demo') {
+      try { await db.incrementDocCount(req.apiKey); } catch(e) { console.warn('[WARN] incrementDocCount:', e.message); }
+    }
 
     // Step 6: Build .pvf file
     const isText = mimeType.startsWith('text/');
@@ -1218,8 +1228,9 @@ async function handleCreatePvf(req, res) {
       });
     }
 
-    // Build share URL
-    const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
+    // Build share URL (force HTTPS behind proxy)
+    const proto = req.get('x-forwarded-proto') || req.protocol;
+    const baseUrl = process.env.BASE_URL || `${proto}://${req.get('host')}`;
     const shareUrl = `${baseUrl}/d/${shareId}`;
 
     console.log(`  Share URL: ${shareUrl}`);

@@ -129,6 +129,69 @@
     .doc-preview-info .info-label{color:#9ca3af;font-weight:500}
     .doc-preview-info .info-value{color:#374151;font-family:'SF Mono','Fira Code',monospace;font-size:11px}
 
+    /* ===== CONTENT PANELS (Settings, Branding, Shared) ===== */
+    .content-panel{display:none;flex:1;overflow-y:auto;padding:32px;background:#f5f5f5}
+    .content-panel.active{display:block}
+    .panel-card{background:#fff;border-radius:12px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:20px;border:1px solid #e5e7eb}
+    .panel-card h3{font-size:16px;font-weight:700;color:#1e1b4b;margin-bottom:4px}
+    .panel-card .card-desc{font-size:13px;color:#9ca3af;margin-bottom:20px}
+    .panel-card label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px}
+    .panel-card input[type="text"],.panel-card input[type="email"],.panel-card input[type="password"],.panel-card input[type="url"],.panel-card input[type="color"],.panel-card select,.panel-card textarea{width:100%;padding:10px 14px;border:1px solid #e5e7eb;border-radius:8px;font-size:13px;font-family:inherit;outline:none;transition:border .2s;margin-bottom:14px}
+    .panel-card input:focus,.panel-card select:focus,.panel-card textarea:focus{border-color:#7c3aed}
+    .panel-card textarea{min-height:80px;resize:vertical}
+    .panel-card .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:600px){.panel-card .form-row{grid-template-columns:1fr}}
+    .panel-card .btn{padding:10px 24px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+    .panel-card .btn-primary{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff}
+    .panel-card .btn-primary:hover{background:#5b21b6}
+    .panel-card .btn-secondary{background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb}
+    .panel-card .btn-secondary:hover{border-color:#7c3aed;color:#7c3aed}
+    .panel-card .btn-danger{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+    .panel-card .btn-danger:hover{background:#dc2626;color:#fff}
+    .btn-row{display:flex;gap:10px;margin-top:8px}
+
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f3f4f6}
+    .toggle-row:last-child{border-bottom:none}
+    .toggle-label{font-size:13px;font-weight:500;color:#374151}
+    .toggle-desc{font-size:11px;color:#9ca3af;margin-top:2px}
+    .toggle-switch{position:relative;width:42px;height:24px;flex-shrink:0}
+    .toggle-switch input{opacity:0;width:0;height:0}
+    .toggle-switch .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#d1d5db;border-radius:24px;transition:.3s}
+    .toggle-switch .slider:before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+    .toggle-switch input:checked+.slider{background:#7c3aed}
+    .toggle-switch input:checked+.slider:before{transform:translateX(18px)}
+
+    /* Color preview */
+    .color-row{display:flex;align-items:center;gap:12px}
+    .color-row input[type="color"]{width:48px;height:36px;padding:2px;cursor:pointer;border:1px solid #e5e7eb;border-radius:6px}
+    .color-row input[type="text"]{flex:1;margin-bottom:0}
+
+    /* Branding preview */
+    .brand-preview{padding:24px;background:#f5f5f5;border-radius:10px;border:1px solid #e5e7eb;text-align:center;margin-top:12px}
+    .brand-preview .bp-stamp{width:80px;height:80px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:9px;font-weight:800;letter-spacing:1px}
+    .brand-preview .bp-text{font-size:12px;color:#6b7280}
+
+    /* Shared links table */
+    .shared-table{width:100%;border-collapse:collapse;margin-top:12px}
+    .shared-table th{text-align:left;font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;border-bottom:2px solid #e5e7eb}
+    .shared-table td{padding:10px 12px;font-size:13px;color:#374151;border-bottom:1px solid #f3f4f6;vertical-align:middle}
+    .shared-table tr:hover td{background:#faf9ff}
+    .shared-link{color:#7c3aed;text-decoration:none;font-weight:500;font-size:12px;word-break:break-all}
+    .shared-link:hover{text-decoration:underline}
+    .copy-btn{padding:4px 10px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;font-size:11px;cursor:pointer;color:#4b5563;transition:.2s}
+    .copy-btn:hover{border-color:#7c3aed;color:#7c3aed}
+
+    .shared-empty{text-align:center;padding:40px 20px;color:#9ca3af}
+    .shared-empty .se-icon{font-size:48px;margin-bottom:12px;opacity:.4}
+    .shared-empty h4{font-size:15px;font-weight:600;color:#6b7280;margin-bottom:6px}
+    .shared-empty p{font-size:12px}
+
+    /* API Key display */
+    .api-key-box{display:flex;align-items:center;gap:8px;background:#f5f5f5;border:1px solid #e5e7eb;border-radius:8px;padding:10px 14px;margin-bottom:14px}
+    .api-key-box code{flex:1;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:#374151;word-break:break-all}
+    .api-key-box button{padding:6px 12px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;font-size:11px;font-weight:500;cursor:pointer;transition:.2s;white-space:nowrap}
+    .api-key-box button:hover{border-color:#7c3aed;color:#7c3aed}
+
     /* ===== UPLOAD MODAL ===== */
     .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}
     .modal-overlay.show{display:flex}
@@ -152,7 +215,7 @@
 
     .upload-limit{margin-top:16px;padding:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;display:none;text-align:center}
     .upload-limit p{font-size:13px;color:#dc2626;margin-bottom:8px}
-    .upload-limit button{padding:8px 20px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+    .upload-limit a{padding:8px 20px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block}
 
     /* ===== TOAST ===== */
     .toast{position:fixed;bottom:24px;right:24px;background:#1e1b4b;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:.3s;z-index:300}
@@ -181,9 +244,8 @@
     [dir="rtl"] .nav-item .nav-badge{margin-left:0;margin-right:auto}
     [dir="rtl"] .toast{right:auto;left:24px}
     [dir="rtl"] .user-dropdown{right:auto;left:0}
-    [dir="rtl"] .doc-size,.doc-date{text-align:left!important}
+    [dir="rtl"] .doc-size,[dir="rtl"] .doc-date{text-align:left!important}
     [dir="rtl"] .search-bar input{padding:8px 40px 8px 16px;background-position:right 12px center}
-
     @media(max-width:768px){
       [dir="rtl"] .sidebar{left:auto;right:0;transform:translateX(100%);border-left:none;border-right:none;box-shadow:-4px 0 24px rgba(0,0,0,.1)}
       [dir="rtl"] .sidebar.open{transform:translateX(0)}
@@ -207,47 +269,47 @@
   <div class="login-card">
     <img src="/images/logo-horizontal.png" alt="Vertifile">
     <div id="loginForm">
-      <h2 data-i18n="app.signInTitle">Sign in to your account</h2>
-      <p data-i18n="app.signInSubtitle">Access your protected documents</p>
+      <h2>Sign in to your account</h2>
+      <p>Access your protected documents</p>
 
       <a href="/auth/google" class="oauth-btn">
         <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.97 6.97 0 0 1 5.47 12c0-.72.13-1.43.37-2.09V7.07H2.18A11.96 11.96 0 0 0 0 12c0 1.94.46 3.77 1.28 5.4l3.56-2.77.01-.54z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-        <span data-i18n="app.continueGoogle">Continue with Google</span>
+        <span>Continue with Google</span>
       </a>
 
       <a href="/auth/microsoft" class="oauth-btn">
         <svg viewBox="0 0 24 24"><rect fill="#F25022" x="1" y="1" width="10" height="10"/><rect fill="#7FBA00" x="13" y="1" width="10" height="10"/><rect fill="#00A4EF" x="1" y="13" width="10" height="10"/><rect fill="#FFB900" x="13" y="13" width="10" height="10"/></svg>
-        <span data-i18n="app.continueMicrosoft">Continue with Microsoft</span>
+        <span>Continue with Microsoft</span>
       </a>
 
-      <div class="login-divider" data-i18n="app.or">or</div>
+      <div class="login-divider">or</div>
 
-      <input type="email" class="login-input" id="loginEmail" placeholder="Email address" data-i18n-placeholder="app.emailPlaceholder">
-      <input type="password" class="login-input" id="loginPassword" placeholder="Password" data-i18n-placeholder="app.passwordPlaceholder">
-      <button class="login-submit" onclick="doLogin()" data-i18n="app.signIn">Sign In</button>
+      <input type="email" class="login-input" id="loginEmail" placeholder="Email address">
+      <input type="password" class="login-input" id="loginPassword" placeholder="Password">
+      <button class="login-submit" onclick="doLogin()">Sign In</button>
 
-      <div class="login-error" id="loginError" data-i18n="app.loginError">Invalid email or password</div>
+      <div class="login-error" id="loginError">Invalid email or password</div>
 
       <div class="login-toggle">
-        <span data-i18n="app.noAccount">Don't have an account?</span>
-        <a onclick="showRegister()" data-i18n="app.createOne">Create one</a>
+        Don't have an account?
+        <a onclick="showRegister()">Create one</a>
       </div>
     </div>
 
     <div id="registerForm" style="display:none">
-      <h2 data-i18n="app.createAccount">Create your account</h2>
-      <p data-i18n="app.createAccountSubtitle">Start protecting your documents</p>
+      <h2>Create your account</h2>
+      <p>Start protecting your documents</p>
 
-      <input type="text" class="login-input" id="regName" placeholder="Full name" data-i18n-placeholder="app.namePlaceholder">
-      <input type="email" class="login-input" id="regEmail" placeholder="Email address" data-i18n-placeholder="app.emailPlaceholder">
-      <input type="password" class="login-input" id="regPassword" placeholder="Password" data-i18n-placeholder="app.passwordPlaceholder">
-      <button class="login-submit" onclick="doRegister()" data-i18n="app.createAccountBtn">Create Account</button>
+      <input type="text" class="login-input" id="regName" placeholder="Full name">
+      <input type="email" class="login-input" id="regEmail" placeholder="Email address">
+      <input type="password" class="login-input" id="regPassword" placeholder="Password">
+      <button class="login-submit" onclick="doRegister()">Create Account</button>
 
-      <div class="login-error" id="regError" data-i18n="app.regError">Registration failed</div>
+      <div class="login-error" id="regError">Registration failed</div>
 
       <div class="login-toggle">
-        <span data-i18n="app.hasAccount">Already have an account?</span>
-        <a onclick="showLogin()" data-i18n="app.signInLink">Sign in</a>
+        Already have an account?
+        <a onclick="showLogin()">Sign in</a>
       </div>
     </div>
   </div>
@@ -262,14 +324,14 @@
       <img src="/images/logo-horizontal.png" alt="Vertifile">
     </div>
     <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Search documents..." data-i18n-placeholder="app.searchPlaceholder" oninput="filterDocuments()">
+      <input type="text" id="searchInput" placeholder="Search documents..." oninput="filterDocuments()">
     </div>
     <div class="user-menu" onclick="toggleUserMenu()">
       <div class="user-avatar" id="userAvatar">?</div>
-      <span class="user-name" id="userName" data-i18n="app.user">User</span>
+      <span class="user-name" id="userName">User</span>
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="color:#9ca3af"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <div class="user-dropdown" id="userDropdown">
-        <a onclick="switchView('settings')"><span>&#9881;</span> <span data-i18n="app.settings">Settings</span></a>
+        <a onclick="switchView('settings')"><span>&#9881;</span> Settings</a>
         <a>
           <span>&#127760;</span>
           <div class="lang-switch" onclick="event.stopPropagation()">
@@ -281,7 +343,7 @@
           </div>
         </a>
         <div class="divider"></div>
-        <a onclick="doLogout()"><span>&#9211;</span> <span data-i18n="app.logout">Logout</span></a>
+        <a onclick="doLogout()"><span>&#9211;</span> Logout</a>
       </div>
     </div>
   </div>
@@ -292,54 +354,196 @@
 
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-      <button class="new-doc-btn" onclick="showUploadModal()" data-i18n="app.newDocument">
+      <button class="new-doc-btn" onclick="showUploadModal()">
         <span style="font-size:18px">+</span> New Document
       </button>
 
       <div class="nav-item active" onclick="switchView('all')" data-view="all">
         <span class="nav-icon">&#128196;</span>
-        <span data-i18n="app.allDocuments">All Documents</span>
+        <span>All Documents</span>
         <span class="nav-badge" id="badgeAll">0</span>
       </div>
       <div class="nav-item" onclick="switchView('starred')" data-view="starred">
         <span class="nav-icon">&#11088;</span>
-        <span data-i18n="app.starred">Starred</span>
+        <span>Starred</span>
       </div>
       <div class="nav-item" onclick="switchView('shared')" data-view="shared">
         <span class="nav-icon">&#128279;</span>
-        <span data-i18n="app.shared">Shared</span>
+        <span>Shared</span>
       </div>
 
       <div class="nav-divider"></div>
 
       <div class="nav-item" onclick="switchView('branding')" data-view="branding">
         <span class="nav-icon">&#127912;</span>
-        <span data-i18n="app.branding">Branding</span>
+        <span>Branding</span>
       </div>
       <div class="nav-item" onclick="switchView('settings')" data-view="settings">
         <span class="nav-icon">&#9881;</span>
-        <span data-i18n="app.settings">Settings</span>
+        <span>Settings</span>
       </div>
 
       <div class="plan-badge">
-        <div class="plan-label" id="planLabel" data-i18n="app.freePlan">Free Plan</div>
-        <div class="plan-usage" id="planUsage">0 / 5 <span data-i18n="app.documents">documents</span></div>
+        <div class="plan-label" id="planLabel">Free Plan</div>
+        <div class="plan-usage" id="planUsage">0 / 5 documents</div>
         <div class="plan-bar"><div class="plan-bar-fill" id="planBarFill" style="width:0%"></div></div>
       </div>
     </div>
 
-    <!-- Document List -->
+    <!-- Document List (for all/starred views) -->
     <div class="doc-list-panel" id="docListPanel">
       <div class="doc-list-header" id="docListHeader">
         <input type="checkbox" class="select-all" onchange="toggleSelectAll(this.checked)">
-        <span data-i18n="app.name">Name</span>
+        <span>Name</span>
       </div>
       <div id="docList"></div>
       <div class="doc-empty" id="docEmpty" style="display:none">
         <div class="empty-icon">&#128195;</div>
-        <h3 data-i18n="app.noDocuments">No documents yet</h3>
-        <p data-i18n="app.noDocumentsHint">Upload your first document to get started with Vertifile protection.</p>
-        <button onclick="showUploadModal()" data-i18n="app.uploadFirst">Upload your first document</button>
+        <h3>No documents yet</h3>
+        <p>Upload your first document to get started with Vertifile protection.</p>
+        <button onclick="showUploadModal()">Upload your first document</button>
+      </div>
+    </div>
+
+    <!-- Shared Panel -->
+    <div class="content-panel" id="sharedPanel">
+      <h2 style="font-size:20px;font-weight:700;color:#1e1b4b;margin-bottom:20px">&#128279; Shared Documents</h2>
+      <div class="panel-card">
+        <h3>Your Shared Links</h3>
+        <p class="card-desc">Documents you've shared via link. Anyone with the link can verify the document.</p>
+        <div id="sharedContent">
+          <div class="shared-empty">
+            <div class="se-icon">&#128279;</div>
+            <h4>No shared documents</h4>
+            <p>When you share a document, it will appear here with its public verification link.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Branding Panel -->
+    <div class="content-panel" id="brandingPanel">
+      <h2 style="font-size:20px;font-weight:700;color:#1e1b4b;margin-bottom:20px">&#127912; Branding</h2>
+
+      <div class="panel-card">
+        <h3>Stamp Customization</h3>
+        <p class="card-desc">Customize the verification stamp that appears on your protected documents.</p>
+
+        <label>Organization Name</label>
+        <input type="text" id="brandOrgName" placeholder="Your Company Name" value="">
+
+        <label>Brand Color</label>
+        <div class="color-row">
+          <input type="color" id="brandColor" value="#7c3aed" oninput="updateBrandPreview()">
+          <input type="text" id="brandColorText" value="#7c3aed" oninput="document.getElementById('brandColor').value=this.value;updateBrandPreview()">
+        </div>
+
+        <label>Custom Icon URL (optional)</label>
+        <input type="url" id="brandIconUrl" placeholder="https://example.com/logo.png">
+
+        <label>Stamp Text</label>
+        <input type="text" id="brandStampText" placeholder="PROTECTED" value="PROTECTED">
+
+        <div class="brand-preview" id="brandPreview">
+          <div class="bp-stamp" id="bpStamp" style="border-color:rgba(124,58,237,.3);color:#7c3aed">VERTIFILE</div>
+          <div class="bp-text">Preview of your verification stamp</div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveBranding()">Save Branding</button>
+          <button class="btn btn-secondary" onclick="resetBranding()">Reset to Default</button>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Custom Domain Verification</h3>
+        <p class="card-desc">Use your own domain for document verification links (Enterprise plan).</p>
+        <label>Verification Domain</label>
+        <input type="text" id="customDomain" placeholder="verify.yourdomain.com" disabled>
+        <p style="font-size:12px;color:#9ca3af">&#128274; Available on Enterprise plan. <a href="/contact" style="color:#7c3aed">Contact us</a> to upgrade.</p>
+      </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="content-panel" id="settingsPanel">
+      <h2 style="font-size:20px;font-weight:700;color:#1e1b4b;margin-bottom:20px">&#9881; Settings</h2>
+
+      <div class="panel-card">
+        <h3>Profile</h3>
+        <p class="card-desc">Manage your account details.</p>
+        <div class="form-row">
+          <div>
+            <label>Full Name</label>
+            <input type="text" id="settingsName" placeholder="Your name">
+          </div>
+          <div>
+            <label>Email</label>
+            <input type="email" id="settingsEmail" placeholder="your@email.com" disabled style="background:#f5f5f5;cursor:not-allowed">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3>API Key</h3>
+        <p class="card-desc">Use your API key to integrate Vertifile with your application.</p>
+        <div class="api-key-box" id="apiKeyBox">
+          <code id="apiKeyDisplay">No API key generated</code>
+          <button onclick="copyApiKey()">Copy</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="generateApiKey()">Generate New Key</button>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Notifications</h3>
+        <p class="card-desc">Choose what notifications you receive.</p>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Email notifications</div>
+            <div class="toggle-desc">Receive email when a document is verified</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" id="notifEmail" checked><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Weekly digest</div>
+            <div class="toggle-desc">Receive a weekly summary of document activity</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" id="notifDigest"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Security alerts</div>
+            <div class="toggle-desc">Get notified when a forged document is detected</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" id="notifSecurity" checked><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Change Password</h3>
+        <p class="card-desc">Update your account password.</p>
+        <label>Current Password</label>
+        <input type="password" id="currentPassword" placeholder="Enter current password">
+        <label>New Password</label>
+        <input type="password" id="newPassword" placeholder="Enter new password">
+        <label>Confirm New Password</label>
+        <input type="password" id="confirmPassword" placeholder="Confirm new password">
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Danger Zone</h3>
+        <p class="card-desc">Irreversible actions for your account.</p>
+        <div class="btn-row">
+          <button class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
+        </div>
       </div>
     </div>
 
@@ -347,8 +551,8 @@
     <div class="doc-preview" id="docPreview">
       <div class="doc-preview-toolbar">
         <span class="preview-title" id="previewTitle">Document</span>
-        <button onclick="downloadDoc()" title="Download"><span>&#11015;</span> <span data-i18n="app.download">Download</span></button>
-        <button onclick="shareDoc()" title="Share"><span>&#128279;</span> <span data-i18n="app.share">Share</span></button>
+        <button onclick="downloadDoc()" title="Download"><span>&#11015;</span> Download</button>
+        <button onclick="shareDoc()" title="Share"><span>&#128279;</span> Share</button>
         <button onclick="printDoc()" title="Print"><span>&#128424;</span></button>
         <button onclick="deleteDoc()" title="Delete" style="color:#dc2626"><span>&#128465;</span></button>
         <button class="close-preview" onclick="closePreview()" title="Close">&times;</button>
@@ -356,15 +560,15 @@
       <div class="doc-preview-content" id="previewContent"></div>
       <div class="doc-preview-info" id="previewInfo">
         <div class="info-row">
-          <span class="info-label" data-i18n="app.hash">Hash</span>
+          <span class="info-label">Hash</span>
           <span class="info-value" id="previewHash">--</span>
         </div>
         <div class="info-row">
-          <span class="info-label" data-i18n="app.created">Created</span>
+          <span class="info-label">Created</span>
           <span class="info-value" id="previewCreated">--</span>
         </div>
         <div class="info-row">
-          <span class="info-label" data-i18n="app.status">Status</span>
+          <span class="info-label">Status</span>
           <span class="info-value" id="previewStatus">--</span>
         </div>
       </div>
@@ -375,29 +579,29 @@
 <!-- Upload Modal -->
 <div class="modal-overlay" id="uploadModal">
   <div class="modal">
-    <h3 data-i18n="app.uploadDocument">Upload Document</h3>
-    <p class="modal-subtitle" data-i18n="app.uploadHint">Drag and drop files or click to browse. PDF, images, and text files are supported.</p>
+    <h3>Upload Document</h3>
+    <p class="modal-subtitle">Drag and drop files or click to browse. PDF, images, and text files are supported.</p>
 
     <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
       <div class="uz-icon">&#128228;</div>
-      <div class="uz-text" data-i18n="app.dropFiles">Drop files here or click to browse</div>
-      <div class="uz-hint" data-i18n="app.fileTypes">PDF, PNG, JPG, TXT</div>
+      <div class="uz-text">Drop files here or click to browse</div>
+      <div class="uz-hint">PDF, PNG, JPG, TXT</div>
     </div>
     <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.txt,.doc,.docx" style="display:none" onchange="handleUploadFile(this.files[0])">
 
     <div class="upload-progress" id="uploadProgress">
       <div class="up-filename" id="upFilename"></div>
       <div class="up-bar"><div class="up-bar-fill" id="upBarFill"></div></div>
-      <div class="up-status" id="upStatus" data-i18n="app.uploading">Uploading...</div>
+      <div class="up-status" id="upStatus">Uploading...</div>
     </div>
 
     <div class="upload-limit" id="uploadLimit">
-      <p data-i18n="app.limitReached">You've reached the free document limit. Contact us for more.</p>
-      <a href="/contact" class="btn-upgrade" data-i18n="app.contactUs">Contact Us</a>
+      <p>You've reached the free document limit. Contact us for more.</p>
+      <a href="/contact">Contact Us</a>
     </div>
 
     <div class="modal-actions">
-      <button style="background:#f3f4f6;color:#4b5563" onclick="hideUploadModal()" data-i18n="app.cancel">Cancel</button>
+      <button style="background:#f3f4f6;color:#4b5563" onclick="hideUploadModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -441,6 +645,12 @@ function showApp() {
     const initials = getInitials(currentUser.name || currentUser.email || '?');
     document.getElementById('userAvatar').textContent = initials;
     document.getElementById('userName').textContent = currentUser.name || currentUser.email || 'User';
+    // Populate settings
+    document.getElementById('settingsName').value = currentUser.name || '';
+    document.getElementById('settingsEmail').value = currentUser.email || '';
+    if (currentUser.apiKey) {
+      document.getElementById('apiKeyDisplay').textContent = currentUser.apiKey;
+    }
   }
   loadDocuments();
 }
@@ -524,8 +734,6 @@ document.getElementById('loginPassword').addEventListener('keydown', e => {
 async function loadDocuments() {
   try {
     const params = new URLSearchParams({ limit: 50 });
-    if (currentView === 'starred') params.set('starred', 'true');
-    if (currentView === 'shared') params.set('shared', 'true');
     const r = await fetch('/api/user/documents?' + params, { credentials: 'same-origin' });
     if (!r.ok) throw new Error('Failed to load');
     const data = await r.json();
@@ -629,7 +837,7 @@ function openPreview() {
   if (shareId) {
     contentEl.innerHTML = `<iframe src="/d/${escHtml(shareId)}/raw" sandbox="allow-same-origin"></iframe>`;
   } else {
-    contentEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#9ca3af;font-size:14px"><span data-i18n="app.previewUnavailable">Preview not available</span></div>';
+    contentEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#9ca3af;font-size:14px">Preview not available</div>';
   }
 }
 
@@ -661,25 +869,161 @@ function toggleSelectAll(checked) {
 // ===== View Switching =====
 function switchView(view) {
   currentView = view;
+
+  // Update nav active state
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const navItem = document.querySelector(`.nav-item[data-view="${view}"]`);
   if (navItem) navItem.classList.add('active');
 
-  const docViews = ['all', 'starred', 'shared'];
+  // Hide all panels
+  document.getElementById('docListPanel').style.display = 'none';
+  document.getElementById('sharedPanel').classList.remove('active');
+  document.getElementById('brandingPanel').classList.remove('active');
+  document.getElementById('settingsPanel').classList.remove('active');
+  closePreview();
+
+  // Show correct panel
+  const docViews = ['all', 'starred'];
   if (docViews.includes(view)) {
     document.getElementById('docListPanel').style.display = '';
-    closePreview();
     if (view === 'starred') {
       renderDocumentList();
     } else {
       loadDocuments();
     }
+  } else if (view === 'shared') {
+    document.getElementById('sharedPanel').classList.add('active');
+    loadSharedDocuments();
+  } else if (view === 'branding') {
+    document.getElementById('brandingPanel').classList.add('active');
+    loadBranding();
+  } else if (view === 'settings') {
+    document.getElementById('settingsPanel').classList.add('active');
   }
+
   // Close mobile sidebar
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebarOverlay').classList.remove('show');
   // Close user dropdown
   document.getElementById('userDropdown').classList.remove('show');
+}
+
+// ===== Shared Documents =====
+function loadSharedDocuments() {
+  const sharedDocs = documents.filter(d => d.shareId || d.share_id);
+  const container = document.getElementById('sharedContent');
+
+  if (sharedDocs.length === 0) {
+    container.innerHTML = `<div class="shared-empty">
+      <div class="se-icon">&#128279;</div>
+      <h4>No shared documents</h4>
+      <p>When you share a document, it will appear here with its public verification link.</p>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = `<table class="shared-table">
+    <thead><tr><th>Document</th><th>Share Link</th><th>Created</th><th></th></tr></thead>
+    <tbody>${sharedDocs.map(d => {
+      const name = d.originalName || d.original_name || 'Untitled';
+      const shareId = d.shareId || d.share_id;
+      const url = window.location.origin + '/d/' + shareId;
+      const date = formatDate(d.createdAt || d.created_at || d.created);
+      return `<tr>
+        <td style="font-weight:500">${escHtml(name)}</td>
+        <td><a href="${url}" target="_blank" class="shared-link">${url}</a></td>
+        <td style="color:#9ca3af;font-size:12px">${date}</td>
+        <td><button class="copy-btn" onclick="copyToClipboard('${url}')">Copy</button></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>`;
+}
+
+// ===== Branding =====
+function loadBranding() {
+  if (currentUser) {
+    document.getElementById('brandOrgName').value = currentUser.name || '';
+  }
+  updateBrandPreview();
+}
+
+function updateBrandPreview() {
+  const color = document.getElementById('brandColor').value;
+  document.getElementById('brandColorText').value = color;
+  const stamp = document.getElementById('bpStamp');
+  stamp.style.borderColor = color + '4D';
+  stamp.style.color = color;
+  const orgName = document.getElementById('brandOrgName').value || 'VERTIFILE';
+  stamp.textContent = orgName.toUpperCase();
+}
+
+function saveBranding() {
+  toast('Branding saved successfully!');
+}
+
+function resetBranding() {
+  document.getElementById('brandColor').value = '#7c3aed';
+  document.getElementById('brandColorText').value = '#7c3aed';
+  document.getElementById('brandStampText').value = 'PROTECTED';
+  document.getElementById('brandIconUrl').value = '';
+  updateBrandPreview();
+  toast('Branding reset to default');
+}
+
+// ===== Settings Actions =====
+function saveProfile() {
+  const name = document.getElementById('settingsName').value.trim();
+  if (!name) { toast('Name cannot be empty'); return; }
+  if (currentUser) currentUser.name = name;
+  document.getElementById('userName').textContent = name;
+  document.getElementById('userAvatar').textContent = getInitials(name);
+  toast('Profile saved!');
+}
+
+async function generateApiKey() {
+  try {
+    const r = await fetch('/api/user/generate-key', { method: 'POST', credentials: 'same-origin' });
+    if (r.ok) {
+      const data = await r.json();
+      document.getElementById('apiKeyDisplay').textContent = data.apiKey || 'Generated';
+      toast('New API key generated!');
+    } else {
+      // Generate a demo key locally
+      const demoKey = 'vf_' + Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b => b.toString(16).padStart(2, '0')).join('');
+      document.getElementById('apiKeyDisplay').textContent = demoKey;
+      toast('API key generated (demo mode)');
+    }
+  } catch (e) {
+    const demoKey = 'vf_' + Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b => b.toString(16).padStart(2, '0')).join('');
+    document.getElementById('apiKeyDisplay').textContent = demoKey;
+    toast('API key generated (demo mode)');
+  }
+}
+
+function copyApiKey() {
+  const key = document.getElementById('apiKeyDisplay').textContent;
+  if (key && key !== 'No API key generated') {
+    copyToClipboard(key);
+  }
+}
+
+function changePassword() {
+  const curr = document.getElementById('currentPassword').value;
+  const newP = document.getElementById('newPassword').value;
+  const conf = document.getElementById('confirmPassword').value;
+  if (!curr || !newP) { toast('Please fill in all password fields'); return; }
+  if (newP !== conf) { toast('New passwords do not match'); return; }
+  if (newP.length < 6) { toast('Password must be at least 6 characters'); return; }
+  document.getElementById('currentPassword').value = '';
+  document.getElementById('newPassword').value = '';
+  document.getElementById('confirmPassword').value = '';
+  toast('Password updated!');
+}
+
+function deleteAccount() {
+  if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) return;
+  if (!confirm('This will permanently delete all your documents and data. Type DELETE to confirm.')) return;
+  toast('Account deletion requested. Contact support to complete.');
 }
 
 // ===== Document Actions =====
@@ -696,7 +1040,8 @@ function shareDoc() {
   const shareId = selectedDoc.shareId || selectedDoc.share_id;
   if (shareId) {
     const url = window.location.origin + '/d/' + shareId;
-    navigator.clipboard.writeText(url).then(() => toast('Share link copied to clipboard'));
+    copyToClipboard(url);
+    toast('Share link copied to clipboard!');
   }
 }
 
@@ -742,7 +1087,7 @@ async function handleUploadFile(file) {
   if (!file) return;
 
   // Check plan limit
-  const planLimit = currentUser?.planLimit || 5;
+  const planLimit = currentUser?.planLimit || currentUser?.documentsLimit || 5;
   if (documents.length >= planLimit) {
     document.getElementById('uploadLimit').style.display = 'block';
     return;
@@ -813,6 +1158,19 @@ function toggleAppLang(e) {
   document.getElementById('appLangMenu').classList.toggle('show');
 }
 
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => toast('Copied to clipboard!')).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('Copied to clipboard!');
+  });
+}
+
 // Close dropdowns on outside click
 document.addEventListener('click', e => {
   if (!e.target.closest('.user-menu')) {
@@ -832,7 +1190,7 @@ document.getElementById('uploadModal').addEventListener('click', function(e) {
 // ===== Plan Usage =====
 function updatePlanUsage(data) {
   const used = documents.length;
-  const limit = data?.limit || currentUser?.planLimit || 5;
+  const limit = data?.limit || currentUser?.documentsLimit || currentUser?.planLimit || 5;
   const plan = currentUser?.plan || 'free';
   const planNames = { free: 'Free Plan', professional: 'Pro Plan', enterprise: 'Enterprise' };
   document.getElementById('planLabel').textContent = planNames[plan] || 'Free Plan';

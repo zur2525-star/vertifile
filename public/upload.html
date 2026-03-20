@@ -54,6 +54,53 @@
     .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06)}
     @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
 
+    /* Account icon */
+    .account-btn{position:relative;width:36px;height:36px;border-radius:50%;background:#7c3aed;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;font-weight:700;border:none;transition:.2s}
+    .account-btn:hover{background:#6d28d9;box-shadow:0 2px 8px rgba(124,58,237,.3)}
+    .account-btn svg{width:18px;height:18px}
+    .account-dropdown{display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.12);min-width:280px;z-index:1100;overflow:hidden;padding:0}
+    .account-dropdown.show{display:block}
+    .account-dropdown .ad-header{padding:16px 20px;border-bottom:1px solid #f3f4f6;text-align:center}
+    .account-dropdown .ad-header .ad-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;margin:0 auto 8px}
+    .account-dropdown .ad-header .ad-name{font-size:14px;font-weight:600;color:#1e1b4b}
+    .account-dropdown .ad-header .ad-email{font-size:12px;color:#9ca3af}
+    .account-dropdown .ad-link{display:flex;align-items:center;gap:10px;padding:12px 20px;font-size:13px;color:#374151;cursor:pointer;transition:.15s;text-decoration:none;border:none;background:none;width:100%;font-family:inherit}
+    .account-dropdown .ad-link:hover{background:#f5f3ff;color:#7c3aed}
+    .account-dropdown .ad-divider{height:1px;background:#f3f4f6}
+    .account-dropdown .ad-link.danger{color:#dc2626}
+    .account-dropdown .ad-link.danger:hover{background:#fef2f2}
+
+    /* Login overlay */
+    .login-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+    .login-overlay.show{display:flex}
+    .login-modal{background:#fff;border-radius:20px;padding:36px;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2);text-align:center;position:relative}
+    .login-modal .lm-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:20px;color:#9ca3af;cursor:pointer}
+    .login-modal .lm-close:hover{color:#111}
+    .login-modal h3{font-size:20px;font-weight:800;color:#1e1b4b;margin-bottom:6px}
+    .login-modal p{font-size:13px;color:#9ca3af;margin-bottom:20px}
+    .login-modal .oauth-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;background:#fff;color:#374151;transition:.2s;text-decoration:none;margin-bottom:10px;font-family:inherit}
+    .login-modal .oauth-btn:hover{border-color:#7c3aed;background:#faf9ff}
+    .login-modal .oauth-btn svg{width:20px;height:20px;flex-shrink:0}
+    .login-modal .lm-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:#d1d5db;font-size:12px}
+    .login-modal .lm-divider::before,.login-modal .lm-divider::after{content:'';flex:1;height:1px;background:#e5e7eb}
+    .login-modal .lm-input{width:100%;padding:11px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:13px;font-family:inherit;outline:none;transition:border .2s;margin-bottom:8px}
+    .login-modal .lm-input:focus{border-color:#7c3aed}
+    .login-modal .lm-submit{width:100%;padding:12px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:4px;transition:.2s}
+    .login-modal .lm-submit:hover{background:#5b21b6}
+    .login-modal .lm-toggle{font-size:13px;color:#9ca3af;margin-top:16px}
+    .login-modal .lm-toggle a{color:#7c3aed;font-weight:500;cursor:pointer;text-decoration:none}
+    .login-modal .lm-error{color:#dc2626;font-size:12px;margin-top:8px;display:none}
+
+    /* Auth gate overlay on card */
+    .auth-gate{display:none;position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.85);backdrop-filter:blur(6px);z-index:10;border-radius:24px;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:40px}
+    .auth-gate.show{display:flex}
+    .auth-gate .ag-icon{font-size:48px;margin-bottom:16px;opacity:.6}
+    .auth-gate h3{font-size:18px;font-weight:700;color:#1e1b4b;margin-bottom:8px}
+    .auth-gate p{font-size:13px;color:#6b7280;margin-bottom:20px;max-width:280px}
+    .auth-gate button{padding:12px 32px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+    .auth-gate button:hover{background:#5b21b6}
+    .card{position:relative}
+
     /* ===== UPLOAD CARD ===== */
     .card{background:#ffffff;border:1px solid rgba(0,0,0,.06);border-radius:24px;max-width:560px;width:100%;overflow:hidden;margin-top:90px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
     .card-header{background:linear-gradient(135deg,rgba(79,70,229,.05),rgba(124,58,237,.03));padding:28px 32px;border-bottom:1px solid rgba(0,0,0,.06)}
@@ -161,6 +208,35 @@
       </div>
       <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
       <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
+      <div style="position:relative">
+        <button class="account-btn" id="accountBtn" onclick="toggleAccountMenu()" title="Account">
+          <svg id="accountIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span id="accountInitials" style="display:none"></span>
+        </button>
+        <div class="account-dropdown" id="accountDropdown">
+          <!-- Logged out state -->
+          <div id="adLoggedOut">
+            <div class="ad-header">
+              <div class="ad-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <div class="ad-name">Not signed in</div>
+            </div>
+            <button class="ad-link" onclick="showLoginModal('login')">&#128274; Sign In</button>
+            <button class="ad-link" onclick="showLoginModal('register')">&#9997; Create Account</button>
+          </div>
+          <!-- Logged in state -->
+          <div id="adLoggedIn" style="display:none">
+            <div class="ad-header">
+              <div class="ad-avatar" id="adAvatar">?</div>
+              <div class="ad-name" id="adName">User</div>
+              <div class="ad-email" id="adEmail"></div>
+            </div>
+            <a href="/app" class="ad-link">&#128196; My Documents</a>
+            <a href="/app" class="ad-link">&#9881; Settings</a>
+            <div class="ad-divider"></div>
+            <button class="ad-link danger" onclick="doLogout()">&#9211; Sign Out</button>
+          </div>
+        </div>
+      </div>
     </div>
     <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -247,6 +323,56 @@
       <button class="another" onclick="reset()" data-i18n="upload.another">Upload another document</button>
     </div>
 
+    <!-- Auth gate overlay -->
+    <div class="auth-gate" id="authGate">
+      <div class="ag-icon">&#128274;</div>
+      <h3>Sign in required</h3>
+      <p>You need to sign in or create an account to issue protected PVF documents.</p>
+      <button onclick="showLoginModal('login')">Sign In / Create Account</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div class="login-overlay" id="loginOverlay" onclick="if(event.target===this)hideLoginModal()">
+  <div class="login-modal">
+    <button class="lm-close" onclick="hideLoginModal()">&times;</button>
+    <!-- Sign In -->
+    <div id="lmLogin">
+      <h3>Sign In</h3>
+      <p>Sign in to issue protected PVF documents</p>
+      <a href="/auth/google" class="oauth-btn">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.97 6.97 0 0 1 5.47 12c0-.72.13-1.43.37-2.09V7.07H2.18A11.96 11.96 0 0 0 0 12c0 1.94.46 3.77 1.28 5.4l3.56-2.77.01-.54z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </a>
+      <a href="/auth/microsoft" class="oauth-btn">
+        <svg viewBox="0 0 24 24"><rect fill="#F25022" x="1" y="1" width="10" height="10"/><rect fill="#7FBA00" x="13" y="1" width="10" height="10"/><rect fill="#00A4EF" x="1" y="13" width="10" height="10"/><rect fill="#FFB900" x="13" y="13" width="10" height="10"/></svg>
+        Continue with Microsoft
+      </a>
+      <div class="lm-divider">or</div>
+      <input type="email" class="lm-input" id="lmEmail" placeholder="Email address">
+      <input type="password" class="lm-input" id="lmPassword" placeholder="Password" onkeydown="if(event.key==='Enter')doLmLogin()">
+      <button class="lm-submit" onclick="doLmLogin()">Sign In</button>
+      <div class="lm-error" id="lmError"></div>
+      <div class="lm-toggle">Don't have an account? <a onclick="showLoginModal('register')">Create one</a></div>
+    </div>
+    <!-- Register -->
+    <div id="lmRegister" style="display:none">
+      <h3>Create Account</h3>
+      <p>Create a free account to start protecting documents</p>
+      <a href="/auth/google" class="oauth-btn">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.97 6.97 0 0 1 5.47 12c0-.72.13-1.43.37-2.09V7.07H2.18A11.96 11.96 0 0 0 0 12c0 1.94.46 3.77 1.28 5.4l3.56-2.77.01-.54z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Sign up with Google
+      </a>
+      <div class="lm-divider">or</div>
+      <input type="text" class="lm-input" id="lmRegName" placeholder="Full name">
+      <input type="email" class="lm-input" id="lmRegEmail" placeholder="Email address">
+      <input type="password" class="lm-input" id="lmRegPassword" placeholder="Password (min 6 characters)" onkeydown="if(event.key==='Enter')doLmRegister()">
+      <button class="lm-submit" onclick="doLmRegister()">Create Account</button>
+      <div class="lm-error" id="lmRegError"></div>
+      <div class="lm-toggle">Already have an account? <a onclick="showLoginModal('login')">Sign in</a></div>
+    </div>
   </div>
 </div>
 
@@ -264,6 +390,164 @@
 <script>
 window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
 window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
+
+// ===== Auth State =====
+var currentUser = null;
+
+async function checkAuth() {
+  try {
+    var r = await fetch('/api/user/me', { credentials: 'same-origin' });
+    if (r.ok) {
+      var data = await r.json();
+      currentUser = data.user;
+      updateAccountUI();
+    } else {
+      currentUser = null;
+      updateAccountUI();
+    }
+  } catch(e) {
+    currentUser = null;
+    updateAccountUI();
+  }
+}
+
+function updateAccountUI() {
+  var btn = document.getElementById('accountBtn');
+  var iconSvg = document.getElementById('accountIcon');
+  var initSpan = document.getElementById('accountInitials');
+  var loggedOut = document.getElementById('adLoggedOut');
+  var loggedIn = document.getElementById('adLoggedIn');
+  var authGate = document.getElementById('authGate');
+
+  if (currentUser) {
+    // Logged in
+    var name = currentUser.name || currentUser.email || '?';
+    var initials = name.trim().split(/\s+/).length >= 2
+      ? (name.trim().split(/\s+/)[0][0] + name.trim().split(/\s+/)[1][0]).toUpperCase()
+      : name.substring(0, 2).toUpperCase();
+    iconSvg.style.display = 'none';
+    initSpan.style.display = '';
+    initSpan.textContent = initials;
+    loggedOut.style.display = 'none';
+    loggedIn.style.display = '';
+    document.getElementById('adAvatar').textContent = initials;
+    document.getElementById('adName').textContent = currentUser.name || 'User';
+    document.getElementById('adEmail').textContent = currentUser.email || '';
+    // Hide auth gate
+    authGate.classList.remove('show');
+  } else {
+    // Logged out
+    iconSvg.style.display = '';
+    initSpan.style.display = 'none';
+    loggedOut.style.display = '';
+    loggedIn.style.display = 'none';
+    // Show auth gate
+    authGate.classList.add('show');
+  }
+}
+
+function toggleAccountMenu() {
+  document.getElementById('accountDropdown').classList.toggle('show');
+}
+
+// Close account dropdown on outside click
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#accountBtn') && !e.target.closest('#accountDropdown')) {
+    document.getElementById('accountDropdown').classList.remove('show');
+  }
+});
+
+function showLoginModal(mode) {
+  document.getElementById('accountDropdown').classList.remove('show');
+  document.getElementById('loginOverlay').classList.add('show');
+  if (mode === 'register') {
+    document.getElementById('lmLogin').style.display = 'none';
+    document.getElementById('lmRegister').style.display = '';
+  } else {
+    document.getElementById('lmLogin').style.display = '';
+    document.getElementById('lmRegister').style.display = 'none';
+  }
+}
+
+function hideLoginModal() {
+  document.getElementById('loginOverlay').classList.remove('show');
+}
+
+async function doLmLogin() {
+  var email = document.getElementById('lmEmail').value.trim();
+  var password = document.getElementById('lmPassword').value;
+  if (!email || !password) return;
+  try {
+    var r = await fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, password: password }),
+      credentials: 'same-origin'
+    });
+    var data = await r.json();
+    if (r.ok && data.success !== false) {
+      currentUser = data.user;
+      updateAccountUI();
+      hideLoginModal();
+    } else {
+      var err = document.getElementById('lmError');
+      err.textContent = data.error || 'Invalid email or password';
+      err.style.display = 'block';
+      setTimeout(function() { err.style.display = 'none'; }, 3000);
+    }
+  } catch(e) {
+    var err = document.getElementById('lmError');
+    err.textContent = 'Connection error. Try again.';
+    err.style.display = 'block';
+  }
+}
+
+async function doLmRegister() {
+  var name = document.getElementById('lmRegName').value.trim();
+  var email = document.getElementById('lmRegEmail').value.trim();
+  var password = document.getElementById('lmRegPassword').value;
+  if (!name || !email || !password) return;
+  if (password.length < 6) {
+    var err = document.getElementById('lmRegError');
+    err.textContent = 'Password must be at least 6 characters';
+    err.style.display = 'block';
+    return;
+  }
+  try {
+    var r = await fetch('/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, password: password }),
+      credentials: 'same-origin'
+    });
+    var data = await r.json();
+    if (r.ok && data.success !== false) {
+      currentUser = data.user;
+      updateAccountUI();
+      hideLoginModal();
+    } else {
+      var err = document.getElementById('lmRegError');
+      err.textContent = data.error || 'Registration failed';
+      err.style.display = 'block';
+      setTimeout(function() { err.style.display = 'none'; }, 3000);
+    }
+  } catch(e) {
+    var err = document.getElementById('lmRegError');
+    err.textContent = 'Connection error. Try again.';
+    err.style.display = 'block';
+  }
+}
+
+async function doLogout() {
+  try { await fetch('/auth/logout', { method: 'POST', credentials: 'same-origin' }); } catch(e) {}
+  currentUser = null;
+  updateAccountUI();
+  document.getElementById('accountDropdown').classList.remove('show');
+}
+
+// Check auth on load
+checkAuth();
+
 var selectedFile=null;
 var dropZone=document.getElementById('dropZone');
 
@@ -299,6 +583,13 @@ function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
 
 async function createPvf(){
   if(!selectedFile)return;
+
+  // Require authentication
+  if(!currentUser){
+    showLoginModal('login');
+    return;
+  }
+
   var btn=document.getElementById('submitBtn');
   btn.disabled=true;btn.textContent='...';
   document.getElementById('steps').classList.add('show');
@@ -317,30 +608,26 @@ async function createPvf(){
   try{
     var formData=new FormData();
     formData.append('file',selectedFile);
-    // Use demo endpoint (no API key needed) or authenticated endpoint
-    var apiKey=localStorage.getItem('vf-api-key');
-    var endpoint=apiKey?'/api/create-pvf':'/api/demo/create-pvf';
-    var headers={};
-    if(apiKey)headers['X-API-Key']=apiKey;
-    // Request JSON response to get share URL
-    var response=await fetch(endpoint+'?format=json',{method:'POST',headers:headers,body:formData});
+    // Use authenticated user upload endpoint
+    var response=await fetch('/api/user/upload',{method:'POST',body:formData,credentials:'same-origin'});
     if(!response.ok){
       var err=await response.json().catch(function(){return{}});
       throw new Error(err.error||'Server error');
     }
     var data=await response.json();
-    // Download the actual PVF file
-    var pvfResponse=await fetch(data.downloadUrl||('/d/'+data.shareId+'/download'));
+    // Download the actual PVF file using share ID
+    var shareId=data.shareId;
+    var downloadPath='/d/'+shareId+'/download';
+    var pvfResponse=await fetch(downloadPath,{credentials:'same-origin'});
     var blob=await pvfResponse.blob();
     var url=URL.createObjectURL(blob);
     var pvfName=selectedFile.name.replace(/\.[^.]+$/,'')+'.pvf';
     document.getElementById('downloadLink').href=url;
     document.getElementById('downloadLink').download=pvfName;
     // Show share URL
-    if(data.shareUrl){
-      document.getElementById('shareSection').style.display='block';
-      document.getElementById('shareUrl').value=data.shareUrl;
-    }
+    var shareUrl=window.location.origin+'/d/'+shareId;
+    document.getElementById('shareSection').style.display='block';
+    document.getElementById('shareUrl').value=shareUrl;
     document.getElementById('steps').classList.remove('show');
     document.getElementById('progress').classList.remove('show');
     document.getElementById('result').classList.add('show');
