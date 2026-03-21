@@ -107,6 +107,18 @@ ipcMain.handle('save-as', async (event, fileName, content) => {
   return { success: false };
 });
 
+ipcMain.handle('copy-clipboard', async (event, text) => {
+  const { clipboard } = require('electron');
+  clipboard.writeText(text);
+  return { success: true };
+});
+
+ipcMain.handle('open-browser', async (event, url) => {
+  const { shell } = require('electron');
+  shell.openExternal(url);
+  return { success: true };
+});
+
 function buildMenu() {
   Menu.setApplicationMenu(Menu.buildFromTemplate([
     { label: app.name, submenu: [{ role: 'about' }, { type: 'separator' }, { role: 'quit' }] },

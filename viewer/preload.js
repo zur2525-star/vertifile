@@ -16,5 +16,9 @@ contextBridge.exposeInMainWorld('pvfBridge', {
   // Request reading a file (drag & drop)
   readPvfFile: (path) => ipcRenderer.invoke('read-pvf-file', path),
   // Save As
-  saveAs: (fileName, content) => ipcRenderer.invoke('save-as', fileName, content)
+  saveAs: (fileName, content) => ipcRenderer.invoke('save-as', fileName, content),
+  // Copy to clipboard
+  copyToClipboard: (text) => ipcRenderer.invoke('copy-clipboard', text),
+  // Open URL in browser
+  openInBrowser: (url) => ipcRenderer.invoke('open-browser', url)
 });
