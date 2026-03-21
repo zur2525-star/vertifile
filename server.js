@@ -970,6 +970,7 @@ function showLocal(){
   if(__isDesktopViewer || __isIframe){
     document.getElementById("toolbar").classList.add("viewer-mode");
     document.getElementById("wrap").style.marginTop="52px";
+    document.getElementById("tbDownload").style.display="none";
   }
   fitToPage();
   setOk();
@@ -1005,9 +1006,10 @@ function show(ok){
   document.getElementById("wrap").style.display="block";
   document.getElementById("toolbar").classList.remove("hide");
   if(__isDesktopViewer || __isIframe){
-    // In viewer: compact toolbar, less top margin
     document.getElementById("toolbar").classList.add("viewer-mode");
     document.getElementById("wrap").style.marginTop="52px";
+    // Hide download button — file is already local
+    document.getElementById("tbDownload").style.display="none";
   }
   if(ok){setOk();activateWaves()}else setFk();
   setTimeout(triggerFlip,400);
