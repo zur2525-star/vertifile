@@ -395,25 +395,31 @@ ${recipientHash ? `<meta name="pvf:recipient-hash" content="${recipientHash}">` 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Heebo',sans-serif;background:#525659;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0}
-body.forged{background:#3a1a1a}
+body{font-family:'Heebo',sans-serif;background:#1a1625;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0;
+  background-image:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.08) 0%,transparent 60%)}
+body.forged{background:#1a0a0f;background-image:radial-gradient(ellipse at 50% 0%,rgba(229,57,53,.06) 0%,transparent 60%)}
 
-/* ===== TOP TOOLBAR (Gmail-style) ===== */
-.pvf-toolbar{position:fixed;top:0;left:0;right:0;height:48px;background:#323639;display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:10000;box-shadow:0 2px 8px rgba(0,0,0,.4);user-select:none}
+/* ===== TOP TOOLBAR (Vertifile branded) ===== */
+.pvf-toolbar{position:fixed;top:0;left:0;right:0;height:52px;background:linear-gradient(135deg,#1e1b2e 0%,#2d2640 100%);display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:10000;border-bottom:1px solid rgba(124,58,237,.2);user-select:none;backdrop-filter:blur(12px)}
 .pvf-toolbar.hide{display:none}
-.tb-section{display:flex;align-items:center;gap:6px}
-.tb-btn{background:none;border:none;color:#c8c8c8;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s}
-.tb-btn:hover{background:rgba(255,255,255,.12);color:#fff}
-.tb-btn svg{width:20px;height:20px}
-.tb-filename{color:#e0e0e0;font-size:14px;font-weight:500;max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:8px}
-.tb-filename .vf-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(124,58,237,.25);color:#c4b5fd;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.5px}
-.tb-zoom-label{color:#9e9e9e;font-size:12px;min-width:40px;text-align:center}
-.tb-divider{width:1px;height:24px;background:rgba(255,255,255,.12);margin:0 4px}
-/* Toast for copy feedback */
-.tb-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#323639;color:#fff;padding:10px 24px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:10001}
+.tb-section{display:flex;align-items:center;gap:4px}
+.tb-btn{background:none;border:1px solid transparent;color:rgba(196,181,253,.6);cursor:pointer;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:all .25s}
+.tb-btn:hover{background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.3);color:#c4b5fd}
+.tb-btn:active{transform:scale(.93)}
+.tb-btn svg{width:18px;height:18px}
+.tb-filename{color:#e2dff0;font-size:13px;font-weight:500;max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:10px}
+.tb-filename .vf-badge{display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(109,40,217,.2));color:#c4b5fd;font-size:9px;font-weight:800;padding:3px 10px;border-radius:6px;letter-spacing:1.5px;border:1px solid rgba(124,58,237,.25);text-transform:uppercase}
+.tb-filename .vf-badge svg{filter:drop-shadow(0 0 3px rgba(124,58,237,.5))}
+.tb-zoom-label{color:rgba(196,181,253,.5);font-size:11px;min-width:38px;text-align:center;font-weight:600;letter-spacing:.3px}
+.tb-divider{width:1px;height:20px;background:linear-gradient(to bottom,transparent,rgba(124,58,237,.2),transparent);margin:0 8px}
+.tb-logo{display:flex;align-items:center;gap:6px;margin-right:8px}
+.tb-logo-icon{width:26px;height:26px;background:linear-gradient(135deg,#7c3aed,#6d28d9);border-radius:7px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(124,58,237,.3)}
+.tb-logo-icon svg{width:14px;height:14px}
+/* Toast */
+.tb-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#2d2640,#1e1b2e);color:#c4b5fd;padding:10px 24px;border-radius:10px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:10001;border:1px solid rgba(124,58,237,.2);box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .tb-toast.show{opacity:1}
 
-/* No-JS mode (Quick Look / Preview) — show document directly */
+/* No-JS mode */
 .no-js .loading{display:none!important}
 .no-js .page-wrap{display:block!important}
 .no-js .stamp-coin{opacity:1!important}
@@ -421,35 +427,38 @@ body.forged{background:#3a1a1a}
 .no-js .pvf-toolbar{display:none!important}
 
 /* Loading */
-.loading{position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s}
+.loading{position:fixed;top:0;left:0;right:0;bottom:0;background:#1a1625;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s}
 .loading.hide{opacity:0;pointer-events:none}
 .loading .logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
 .loading .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#7c3aed,#6d28d9);border-radius:11px;display:flex;align-items:center;justify-content:center}
 .loading .logo-icon svg{width:22px;height:22px}
-.loading .logo-text{font-size:24px;font-weight:900;color:#7c3aed}
-.loading .sp{width:36px;height:36px;border:3px solid #eee;border-top-color:#7c3aed;border-radius:50%;animation:spin .7s linear infinite;margin-bottom:12px}
+.loading .logo-text{font-size:24px;font-weight:900;color:#c4b5fd}
+.loading .sp{width:36px;height:36px;border:3px solid rgba(124,58,237,.15);border-top-color:#7c3aed;border-radius:50%;animation:spin .7s linear infinite;margin-bottom:12px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading p{color:#aaa;font-size:13px;letter-spacing:.5px}
+.loading p{color:rgba(196,181,253,.4);font-size:13px;letter-spacing:.5px}
 
-/* Page wrapper — fit A4 in viewport below toolbar */
-.page-wrap{position:relative;max-width:820px;width:100%;display:none;margin-top:60px;margin-bottom:40px;transform-origin:top center;transition:transform .3s ease}
-.page-bg{width:100%;background:#fff;box-shadow:0 4px 24px rgba(0,0,0,.35);border-radius:2px;position:relative;overflow:hidden;min-height:600px;transition:box-shadow .5s}
-.page-bg.forged{box-shadow:0 0 0 4px #e53935,0 8px 60px rgba(255,0,0,.3)}
+/* Page wrapper — A4 PORTRAIT, fit in viewport */
+.page-wrap{position:relative;width:595px;display:none;margin:68px auto 40px;transform-origin:top center;transition:transform .3s ease}
+.page-bg{width:100%;background:#fff;box-shadow:0 4px 40px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.05);border-radius:3px;position:relative;overflow:hidden;min-height:842px;aspect-ratio:210/297;transition:box-shadow .5s}
+.page-bg.forged{box-shadow:0 0 0 3px #e53935,0 8px 60px rgba(255,0,0,.25)}
 
 /* Document frame */
-.doc-frame{width:100%;min-height:600px}
-.doc-frame.pdf{height:calc(100vh - 100px);min-height:800px}
+.doc-frame{width:100%;min-height:842px}
+.doc-frame.pdf{height:calc(100vh - 120px);min-height:842px}
 .doc-frame img{width:100%;display:block}
 .doc-frame iframe{width:100%;height:100%;border:none}
-.doc-frame .text-doc{padding:50px 60px;font-size:15px;line-height:1.9;color:#333;white-space:pre-wrap}
+.doc-frame .text-doc{padding:50px 60px;font-size:14px;line-height:1.9;color:#333;white-space:pre-wrap;word-wrap:break-word}
 
-@media(max-width:600px){
-.pvf-toolbar{height:44px;padding:0 8px}
-.tb-filename{font-size:12px;max-width:180px}
-.tb-btn{width:32px;height:32px}
-.tb-btn svg{width:18px;height:18px}
+@media(max-width:660px){
+.page-wrap{width:calc(100vw - 24px)}
+.pvf-toolbar{height:46px;padding:0 10px}
+.tb-filename{font-size:11px;max-width:160px}
+.tb-btn{width:30px;height:30px;border-radius:6px}
+.tb-btn svg{width:16px;height:16px}
 .tb-zoom-label{display:none}
-.page-wrap{margin-top:52px}
+.tb-logo{display:none}
+.page-wrap{margin-top:56px}
+.doc-frame .text-doc{padding:24px 20px;font-size:13px}
 }
 
 /* Forged overlay */
@@ -556,24 +565,26 @@ body.forged{background:#3a1a1a}
 
 <!-- Top Toolbar (Gmail-style) -->
 <div class="pvf-toolbar hide" id="toolbar">
-  <!-- Left: Share + Download -->
+  <!-- Left: Logo + Share + Download -->
   <div class="tb-section">
+    <div class="tb-logo">
+      <div class="tb-logo-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="#fff" stroke-width="1.5"/></svg></div>
+    </div>
+    <div class="tb-divider"></div>
     <button class="tb-btn" id="tbShare" title="Share">
       <svg viewBox="0 0 24 24" fill="none"><path d="M18 8a3 3 0 100-6 3 3 0 000 6zM6 15a3 3 0 100-6 3 3 0 000 6zM18 22a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.5"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" stroke="currentColor" stroke-width="1.5"/></svg>
     </button>
     <button class="tb-btn" id="tbDownload" title="Download">
       <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
-    <div class="tb-divider"></div>
   </div>
   <!-- Center: Filename -->
   <div class="tb-filename" id="tbName">
-    <span class="vf-badge"><svg viewBox="0 0 24 24" fill="none" width="10" height="10"><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="currentColor" stroke-width="1.5"/></svg>PVF</span>
+    <span class="vf-badge">PVF</span>
     <span id="tbNameText">${safeOriginalName}</span>
   </div>
   <!-- Right: Zoom -->
   <div class="tb-section">
-    <div class="tb-divider"></div>
     <button class="tb-btn" id="tbZoomOut" title="Zoom out">
       <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M21 21l-4.35-4.35M8 11h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
     </button>
@@ -581,6 +592,7 @@ body.forged{background:#3a1a1a}
     <button class="tb-btn" id="tbZoomIn" title="Zoom in">
       <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
     </button>
+    <div class="tb-divider"></div>
     <button class="tb-btn" id="tbFit" title="Fit to page">
       <svg viewBox="0 0 24 24" fill="none"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
@@ -1157,7 +1169,18 @@ app.post('/api/user/upload', requireLogin, upload.single('file'), async (req, re
 
     const fileHash = hashBytes(file.buffer);
     const signature = signHash(fileHash);
-    const fileBase64 = file.buffer.toString('base64');
+    const isText = file.mimetype.startsWith('text/');
+    let fileBase64;
+    if (isText) {
+      fileBase64 = file.buffer.toString('utf-8')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    } else {
+      fileBase64 = file.buffer.toString('base64');
+    }
 
     // Get user branding — check if user has an API key with branding, otherwise use defaults
     let branding = { custom_icon: null, brand_color: null };
