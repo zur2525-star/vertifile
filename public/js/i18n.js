@@ -94,7 +94,23 @@
 
   // Public API
   window.switchLang = function(lang, e){ if(e) e.preventDefault(); loadLang(lang); closeLangDropdown(); };
-  window.toggleLangDropdown = function(){ document.getElementById('langDropdown').classList.toggle('show'); };
+  window.toggleLangDropdown = function(){
+    var dd = document.getElementById('langDropdown');
+    var btn = document.getElementById('langBtn');
+    if(dd && btn){
+      dd.classList.toggle('show');
+      if(dd.classList.contains('show')){
+        var r = btn.getBoundingClientRect();
+        dd.style.position = 'fixed';
+        dd.style.top = (r.bottom + 6) + 'px';
+        dd.style.left = '';
+        dd.style.right = '';
+        var isRtl = document.documentElement.getAttribute('dir') === 'rtl';
+        if(isRtl){ dd.style.left = r.left + 'px'; }
+        else { dd.style.right = (window.innerWidth - r.right) + 'px'; }
+      }
+    }
+  };
   window.closeLangDropdown = function(){ var el=document.getElementById('langDropdown'); if(el) el.classList.remove('show'); };
   window.toggleMobile = function(){ document.getElementById('mobileMenu').classList.toggle('show'); };
   window.closeMobile = function(){ document.getElementById('mobileMenu').classList.remove('show'); };
