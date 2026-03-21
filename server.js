@@ -847,6 +847,7 @@ var SIG="${signature}";
 var RCPT="${recipientHash || ''}";
 var CREATED="${createdAt}";
 var ORGID="${orgName ? escapeHtml(orgName) : 'VERTIFILE'}";
+var SHAREID="${shareId || ''}";
 var API=window.location.origin;
 var ORGNAME="${escapeHtml(orgName || 'VERTIFILE')}";
 var CUSTOMICON=${customIcon ? `"${customIcon.startsWith('<svg') ? 'svg' : 'img'}"` : 'null'};

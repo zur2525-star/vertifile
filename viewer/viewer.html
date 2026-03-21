@@ -221,8 +221,13 @@
     var hideToolbarCSS = '<style>#toolbar{display:none!important}#wrap{margin-top:20px!important}</style>';
     var content = data.content.replace('<head>', '<head>' + markerScript + hideToolbarCSS);
     // Extract shareId from PVF content for browser link
-    var shareMatch = content.match(/\/d\/([A-Za-z0-9_-]{6,20})/);
-    if (shareMatch) __pvfMeta.shareId = shareMatch[1];
+    var shareMatch = content.match(/var SHAREID="([A-Za-z0-9_-]+)"/);
+    if (shareMatch && shareMatch[1]) __pvfMeta.shareId = shareMatch[1];
+    // Fallback: try to find /d/ URL in content
+    if (!__pvfMeta.shareId) {
+      var dMatch = content.match(/\/d\/([A-Za-z0-9_-]{6,20})/);
+      if (dMatch) __pvfMeta.shareId = dMatch[1];
+    }
     frame.srcdoc = content;
 
     // Check frequently but don't show iframe until verified
