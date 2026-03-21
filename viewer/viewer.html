@@ -435,20 +435,30 @@
     document.getElementById('abZoom').textContent = Math.round(__viewerZoom * 100) + '%';
   }
 
+  function getDocUrl() {
+    var m = __pvfMeta;
+    if (!m.hash) return null;
+    // Try to find shareId from the PVF content
+    if (m.content) {
+      var shareMatch = m.content.match(/\/d\/([A-Za-z0-9_-]{8,15})/);
+      if (shareMatch) return 'https://vertifile.com/d/' + shareMatch[1];
+    }
+    // Fallback: use verify page with hash
+    return 'https://vertifile.com/verify?hash=' + m.hash;
+  }
+
   function viewerShare() {
     closeMenus();
-    var m = __pvfMeta;
-    if (!m.hash) return;
-    var url = 'https://vertifile.com/d/' + (m.shareId || m.hash.substring(0,8));
+    var url = getDocUrl();
+    if (!url) return;
     bridge.copyToClipboard(url);
     showToast('Link copied!');
   }
 
   function viewerOpenBrowser() {
     closeMenus();
-    var m = __pvfMeta;
-    if (!m.hash) return;
-    var url = 'https://vertifile.com/d/' + (m.shareId || m.hash.substring(0,8));
+    var url = getDocUrl();
+    if (!url) return;
     bridge.openInBrowser(url);
   }
 

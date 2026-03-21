@@ -966,14 +966,10 @@ async function init(){
 function showLocal(){
   document.getElementById("ld").classList.add("hide");
   document.getElementById("wrap").style.display="block";
-  document.getElementById("toolbar").classList.remove("hide");
   if(__isDesktopViewer || __isIframe){
-    document.getElementById("toolbar").classList.add("viewer-mode");
-    document.getElementById("wrap").style.marginTop="52px";
-    var dlBtn=document.getElementById("tbDownload");
-    dlBtn.title="Open in Browser";
-    dlBtn.innerHTML='<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="currentColor" stroke-width="1.5"/></svg>';
-    dlBtn.onclick=function(){window.open(VERIFY_URL+"/d/"+HASH.substring(0,8),"_blank")};
+    document.getElementById("wrap").style.marginTop="20px";
+  } else {
+    document.getElementById("toolbar").classList.remove("hide");
   }
   fitToPage();
   setOk();
@@ -1007,15 +1003,11 @@ var __isIframe = (window.self !== window.top);
 function show(ok){
   document.getElementById("ld").classList.add("hide");
   document.getElementById("wrap").style.display="block";
-  document.getElementById("toolbar").classList.remove("hide");
   if(__isDesktopViewer || __isIframe){
-    document.getElementById("toolbar").classList.add("viewer-mode");
-    document.getElementById("wrap").style.marginTop="52px";
-    // Replace download with "open in browser" button
-    var dlBtn=document.getElementById("tbDownload");
-    dlBtn.title="Open in Browser";
-    dlBtn.innerHTML='<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="currentColor" stroke-width="1.5"/></svg>';
-    dlBtn.onclick=function(){window.open(VERIFY_URL+"/d/"+HASH.substring(0,8),"_blank")};
+    // Hide PVF toolbar entirely — Viewer has its own native bar
+    document.getElementById("wrap").style.marginTop="20px";
+  } else {
+    document.getElementById("toolbar").classList.remove("hide");
   }
   if(ok){setOk();activateWaves()}else setFk();
   setTimeout(triggerFlip,400);
