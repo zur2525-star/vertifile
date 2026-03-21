@@ -7,11 +7,17 @@ app.disableHardwareAcceleration();
 let mainWindow = null;
 
 function createWindow(pvfPath) {
+  // Get screen size for smart default window
+  const { screen } = require('electron');
+  const { width: screenW, height: screenH } = screen.getPrimaryDisplay().workAreaSize;
+  const winW = Math.min(Math.round(screenW * 0.75), 1400);
+  const winH = Math.min(Math.round(screenH * 0.85), 1000);
+
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 800,
-    minWidth: 600,
-    minHeight: 500,
+    width: winW,
+    height: winH,
+    minWidth: 700,
+    minHeight: 550,
     title: 'PVF Viewer',
     titleBarStyle: 'hiddenInset',
     trafficLightPosition: { x: 16, y: 16 },
