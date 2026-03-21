@@ -199,6 +199,7 @@
     // Extract and store metadata
     __pvfMeta = extractMeta(data.content);
     __pvfMeta.fileName = data.fileName;
+    __pvfMeta.filePath = data.filePath;
     __pvfMeta.content = data.content;
     // Try to extract org name and shareId
     var orgMatch = data.content.match(/ORGNAME="([^"]+)"/);
@@ -447,11 +448,11 @@
 
   function getDocUrl() {
     var m = __pvfMeta;
-    if (!m.hash) return null;
     // Use shareId extracted during load
     if (m.shareId) return 'https://vertifile.com/d/' + m.shareId;
-    // Fallback: open the PVF file directly in browser
-    return 'https://vertifile.com/verify';
+    // Fallback: open the local PVF file directly in the browser
+    if (m.filePath) return 'file://' + m.filePath;
+    return null;
   }
 
   function viewerShare() {

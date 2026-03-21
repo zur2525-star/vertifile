@@ -67,7 +67,7 @@ function loadPvfFile(filePath) {
       return;
     }
 
-    mainWindow.webContents.send('pvf-loaded', { content, fileName });
+    mainWindow.webContents.send('pvf-loaded', { content, fileName, filePath });
     mainWindow.setTitle(fileName + ' — PVF Viewer');
   } catch (err) {
     mainWindow.webContents.send('pvf-error', 'Error: ' + err.message);
