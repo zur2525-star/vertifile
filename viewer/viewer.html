@@ -207,7 +207,9 @@
     if (orgMatch) __pvfMeta.orgName = orgMatch[1];
     // Show action bar and set filename
     document.getElementById('actionBar').style.display = 'flex';
-    document.getElementById('abFileName').textContent = data.fileName;
+    // Always show original name + .pvf extension
+    var displayName = (__pvfMeta.originalName || data.fileName || 'document').replace(/\.[^.]+$/, '') + '.pvf';
+    document.getElementById('abFileName').textContent = displayName;
 
     var badge = document.getElementById('statusBadge');
     badge.style.display = 'flex';
