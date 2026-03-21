@@ -949,7 +949,13 @@ async function init(){
 function showLocal(){
   document.getElementById("ld").classList.add("hide");
   document.getElementById("wrap").style.display="block";
-  document.getElementById("toolbar").classList.remove("hide");
+  if(!__isDesktopViewer && !__isIframe){
+    document.getElementById("toolbar").classList.remove("hide");
+    fitToPage();
+  } else {
+    document.getElementById("wrap").style.marginTop="20px";
+    document.body.style.padding="0";
+  }
   setOk();
   activateWaves();
   document.getElementById("sCtr").innerHTML='<svg viewBox="0 0 50 50" fill="none"><path class="chk" d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="brand">VERTIFILE</div><div class="lbl ok">PROTECTED</div>';
@@ -975,13 +981,23 @@ function triggerFlip(){
 // Repeat flip every 10 seconds
 setInterval(triggerFlip,10000);
 
+var __isDesktopViewer = !!window.__pvfDesktopViewer;
+var __isIframe = (window.self !== window.top);
+
 function show(ok){
   document.getElementById("ld").classList.add("hide");
   document.getElementById("wrap").style.display="block";
-  document.getElementById("toolbar").classList.remove("hide");
+  // Hide our toolbar when inside Electron/Tauri viewer or iframe (they have their own toolbar)
+  if(!__isDesktopViewer && !__isIframe){
+    document.getElementById("toolbar").classList.remove("hide");
+  } else {
+    // In viewer: remove top margin, let page fill the space
+    document.getElementById("wrap").style.marginTop="20px";
+    document.body.style.padding="0";
+  }
   if(ok){setOk();activateWaves()}else setFk();
   setTimeout(triggerFlip,400);
-  fitToPage();
+  if(!__isDesktopViewer && !__isIframe) fitToPage();
 }
 
 function setOk(){
