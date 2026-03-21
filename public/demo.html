@@ -10,6 +10,8 @@
   <meta property="og:description" content="Learn how Vertifile protects documents with cryptographic signatures, blockchain verification, and live animated stamps.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vertifile.com/demo">
+  <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
+  <link rel="canonical" href="https://vertifile.com/demo">
   <meta name="theme-color" content="#ffffff">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -32,11 +34,24 @@
     .nav-verify{font-size:13px;font-weight:500;color:#4f46e5}
     .nav-cta{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
     .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.3);text-decoration:none}
+    .lang-btn{display:flex;align-items:center;gap:5px;cursor:pointer;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#4b5563;border:1px solid rgba(0,0,0,.12);background:transparent;position:relative;transition:.2s;font-family:inherit}
+    .lang-btn:hover{border-color:rgba(0,0,0,.3);color:#111827}
+    .lang-btn svg{width:16px;height:16px}
+    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.1);min-width:160px;padding:4px 0;display:none;z-index:100}
+    [dir="rtl"] .lang-dropdown{right:auto;left:0}
+    .lang-dropdown.show{display:block}
+    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:#4b5563;transition:.15s;text-decoration:none}
+    .lang-dropdown a:hover{background:rgba(0,0,0,.03);color:#111827}
+    .lang-dropdown a.active{color:#7c3aed;font-weight:600}
+    .nav-user{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.25);background:transparent;cursor:pointer;transition:.2s;text-decoration:none;color:#6b7280}
+    .nav-user:hover{border-color:rgba(124,58,237,.5);color:#7c3aed;background:rgba(124,58,237,.05)}
+    .nav-user svg{width:18px;height:18px}
     .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px}
     .hamburger span{display:block;width:20px;height:2px;background:#111827;margin:4px 0;border-radius:2px}
     .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;border-bottom:1px solid rgba(0,0,0,.06);padding:16px 24px;z-index:999;flex-direction:column;gap:12px}
     .mobile-menu.show{display:flex}
     .mobile-menu a{font-size:15px;color:#374151;text-decoration:none;padding:8px 0}
+    .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06)}
     @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
 
     /* Hero */
@@ -142,29 +157,53 @@
   <div class="nav-inner">
     <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
     <div class="nav-center">
-      <a href="/">Home</a>
-      <a href="/enterprise">Enterprise</a>
-      <a href="/demo" style="color:#7c3aed;font-weight:600">How It Works</a>
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" style="color:#7c3aed;font-weight:600" data-i18n="nav.demo">How It Works</a>
     </div>
     <div class="nav-actions">
-      <a href="/verify" class="nav-verify">Verify</a>
-      <a href="/upload" class="nav-cta">Protect</a>
-      <a href="/app" class="nav-user" title="My Account" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.25);color:#6b7280;text-decoration:none;transition:.2s">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#31616;&#20307;&#20013;&#25991;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
+      <a href="/app" class="nav-user" title="My Account" data-i18n-title="nav.account" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.25);color:#6b7280;text-decoration:none;transition:.2s">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </a>
     </div>
-    <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('show')"><span></span><span></span><span></span></button>
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
-  <a href="/">Home</a><a href="/enterprise">Enterprise</a><a href="/demo">How It Works</a>
-  <a href="/verify">Verify</a><a href="/upload">Protect</a><a href="/app">My Account</a>
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">How It Works</a>
+  <a href="/app" onclick="closeMobile()" data-i18n="nav.account">My Account</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
 </div>
 
 <!-- Hero -->
 <section class="hero">
-  <h1>How Vertifile Protects Documents</h1>
-  <p>Understand how a document becomes tamper-proof, what makes a .pvf file unique, and how verification detects forgery in real time.</p>
+  <h1 data-i18n="demo.heroTitle">How Vertifile Protects Documents</h1>
+  <p data-i18n="demo.heroSubtitle">Understand how a document becomes tamper-proof, what makes a .pvf file unique, and how verification detects forgery in real time.</p>
   <div class="hero-badges">
     <div class="badge">&#128274; Cryptographic Hashing</div>
     <div class="badge">&#9939; Blockchain Registry</div>
@@ -176,8 +215,8 @@
 <!-- Article -->
 <div class="article">
 
-  <h2>Verified vs. Forged — The Visual Difference</h2>
-  <p>When a document is protected by Vertifile, it looks completely different from a forged copy. Here's a side-by-side comparison:</p>
+  <h2 data-i18n="demo.comparisonTitle">Verified vs. Forged — The Visual Difference</h2>
+  <p data-i18n="demo.comparisonSubtitle">When a document is protected by Vertifile, it looks completely different from a forged copy. Here's a side-by-side comparison:</p>
 
   <div class="compare">
     <!-- Verified -->
@@ -249,82 +288,82 @@
     </div>
   </div>
 
-  <h2>What Makes It Work — The 5-Layer Security</h2>
-  <p>Vertifile uses multiple layers of security to ensure documents cannot be forged or tampered with:</p>
+  <h2 data-i18n="demo.securityTitle">What Makes It Work — The 5-Layer Security</h2>
+  <p data-i18n="demo.securitySubtitle">Vertifile uses multiple layers of security to ensure documents cannot be forged or tampered with:</p>
 
   <div class="process-steps">
     <div class="process-step">
       <div class="ps-num">1</div>
       <div class="ps-content">
-        <h4>BLIND Hashing</h4>
-        <p>When you upload a document, the system <strong>never reads its content</strong>. It only computes a SHA-256 cryptographic hash — a unique 64-character fingerprint. Even a single pixel change produces a completely different hash.</p>
+        <h4 data-i18n="demo.step1Title">BLIND Hashing</h4>
+        <p data-i18n="demo.step1Desc">When you upload a document, the system <strong>never reads its content</strong>. It only computes a SHA-256 cryptographic hash — a unique 64-character fingerprint. Even a single pixel change produces a completely different hash.</p>
       </div>
     </div>
     <div class="process-step">
       <div class="ps-num">2</div>
       <div class="ps-content">
-        <h4>HMAC Signature</h4>
-        <p>The hash is signed with a server-side HMAC secret key. This signature proves the document was registered through Vertifile's servers and hasn't been self-signed or fabricated.</p>
+        <h4 data-i18n="demo.step2Title">HMAC Signature</h4>
+        <p data-i18n="demo.step2Desc">The hash is signed with a server-side HMAC secret key. This signature proves the document was registered through Vertifile's servers and hasn't been self-signed or fabricated.</p>
       </div>
     </div>
     <div class="process-step">
       <div class="ps-num">3</div>
       <div class="ps-content">
-        <h4>Blockchain Registration</h4>
-        <p>The hash and signature are anchored to the Polygon blockchain — an immutable, public, decentralized ledger. Once registered, the record cannot be altered or deleted by anyone.</p>
+        <h4 data-i18n="demo.step3Title">Blockchain Registration</h4>
+        <p data-i18n="demo.step3Desc">The hash and signature are anchored to the Polygon blockchain — an immutable, public, decentralized ledger. Once registered, the record cannot be altered or deleted by anyone.</p>
       </div>
     </div>
     <div class="process-step">
       <div class="ps-num">4</div>
       <div class="ps-content">
-        <h4>Live Animated Stamp</h4>
-        <p>A holographic verification stamp is embedded in the .pvf file. It continuously rotates and breathes — if the file is tampered with, the stamp freezes and turns red, showing "FORGED".</p>
+        <h4 data-i18n="demo.step4Title">Live Animated Stamp</h4>
+        <p data-i18n="demo.step4Desc">A holographic verification stamp is embedded in the .pvf file. It continuously rotates and breathes — if the file is tampered with, the stamp freezes and turns red, showing "FORGED".</p>
       </div>
     </div>
     <div class="process-step">
       <div class="ps-num">5</div>
       <div class="ps-content">
-        <h4>Anti-Tamper Protections</h4>
-        <p>The .pvf file includes DevTools detection, cross-origin iframe detection, right-click prevention, and console warnings. Any attempt to modify the file triggers security freezing.</p>
+        <h4 data-i18n="demo.step5Title">Anti-Tamper Protections</h4>
+        <p data-i18n="demo.step5Desc">The .pvf file includes DevTools detection, cross-origin iframe detection, right-click prevention, and console warnings. Any attempt to modify the file triggers security freezing.</p>
       </div>
     </div>
   </div>
 
-  <h2>What Triggers the Forged State?</h2>
-  <p>The stamp turns to "FORGED" automatically when any of these conditions are detected:</p>
+  <h2 data-i18n="demo.triggersTitle">What Triggers the Forged State?</h2>
+  <p data-i18n="demo.triggersSubtitle">The stamp turns to "FORGED" automatically when any of these conditions are detected:</p>
 
   <ul class="feature-list">
     <li>
       <div class="fl-icon red">&#128275;</div>
       <div class="fl-text">
-        <h4>Content Modification</h4>
-        <p>If even one byte of the original document is changed, the hash no longer matches the blockchain registry. Verification fails instantly.</p>
+        <h4 data-i18n="demo.trigger1Title">Content Modification</h4>
+        <p data-i18n="demo.trigger1Desc">If even one byte of the original document is changed, the hash no longer matches the blockchain registry. Verification fails instantly.</p>
       </div>
     </li>
     <li>
       <div class="fl-icon red">&#128187;</div>
       <div class="fl-text">
-        <h4>DevTools Open</h4>
-        <p>If browser developer tools are detected (via timing attacks and window size comparison), the stamp immediately freezes. This prevents inspect-and-edit attacks.</p>
+        <h4 data-i18n="demo.trigger2Title">DevTools Open</h4>
+        <p data-i18n="demo.trigger2Desc">If browser developer tools are detected (via timing attacks and window size comparison), the stamp immediately freezes. This prevents inspect-and-edit attacks.</p>
       </div>
     </li>
     <li>
       <div class="fl-icon red">&#128247;</div>
       <div class="fl-text">
-        <h4>Screenshot/Save Attempt</h4>
-        <p>Right-click, Ctrl+S, Ctrl+P, and drag attempts are blocked. The stamp cannot be captured in a static state — it only works as a live, running document.</p>
+        <h4 data-i18n="demo.trigger3Title">Screenshot/Save Attempt</h4>
+        <p data-i18n="demo.trigger3Desc">Right-click, Ctrl+S, Ctrl+P, and drag attempts are blocked. The stamp cannot be captured in a static state — it only works as a live, running document.</p>
       </div>
     </li>
     <li>
       <div class="fl-icon red">&#127760;</div>
       <div class="fl-text">
-        <h4>Cross-Origin Embedding</h4>
-        <p>If the .pvf file is embedded in an iframe on another website, it detects the cross-origin context and freezes the stamp to prevent unauthorized reuse.</p>
+        <h4 data-i18n="demo.trigger4Title">Cross-Origin Embedding</h4>
+        <p data-i18n="demo.trigger4Desc">If the .pvf file is embedded in an iframe on another website, it detects the cross-origin context and freezes the stamp to prevent unauthorized reuse.</p>
       </div>
     </li>
   </ul>
 
-  <h2>The .pvf File Format</h2>
+  <h2 data-i18n="demo.formatTitle">The .pvf File Format</h2>
   <p>PVF (Protected Verifiable File) is a new file format submitted to <strong>IANA</strong> for official MIME type registration (<code>application/pvf</code>). It's a self-contained HTML document that includes:</p>
 
   <ul class="feature-list">
@@ -360,11 +399,11 @@
 
   <!-- CTA -->
   <div class="cta-section">
-    <h2>Ready to Try It?</h2>
-    <p>Protect your first document for free. See the live verification stamp in action.</p>
+    <h2 data-i18n="demo.ctaTitle">Ready to Try It?</h2>
+    <p data-i18n="demo.ctaSubtitle">Protect your first document for free. See the live verification stamp in action.</p>
     <div class="cta-btns">
-      <a href="/upload" class="cta-btn primary">Protect a Document</a>
-      <a href="/verify" class="cta-btn secondary">Verify a Document</a>
+      <a href="/upload" class="cta-btn primary" data-i18n="demo.ctaProtect">Protect a Document</a>
+      <a href="/verify" class="cta-btn secondary" data-i18n="demo.ctaVerify">Verify a Document</a>
     </div>
   </div>
 
@@ -372,17 +411,23 @@
 
 <footer class="site-footer">
   <div class="f-links">
-    <a href="/">Home</a>
-    <a href="/verify">Verify</a>
-    <a href="/upload">Protect</a>
-    <a href="/privacy">Privacy</a>
-    <a href="/terms">Terms</a>
-    <a href="/contact">Contact</a>
+    <a href="/" data-i18n="nav.home">Home</a>
+    <a href="/verify" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" data-i18n="nav.upload">Protect</a>
+    <a href="/privacy" data-i18n="footer.privacy">Privacy</a>
+    <a href="/terms" data-i18n="footer.terms">Terms</a>
+    <a href="/contact" data-i18n="footer.contact">Contact</a>
   </div>
-  <div class="f-copy">&copy; 2026 Vertifile. All rights reserved.</div>
+  <div class="f-copy" data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</div>
 </footer>
 
 <script src="/js/i18n.js"></script>
 <script src="/js/nav-user.js"></script>
+<script>
+(function(){
+  window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
+  window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
+})();
+</script>
 </body>
 </html>

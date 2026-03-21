@@ -13,7 +13,6 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const PgSession = require('connect-pg-simple')(session);
-const { Pool } = require('pg');
 const db = require('./db');
 const chain = require('./blockchain');
 const { obfuscatePvf } = require('./obfuscate');
@@ -46,6 +45,29 @@ function loadOrCreateHmacSecret() {
   return secret;
 }
 const HMAC_SECRET = loadOrCreateHmacSecret();
+
+// ===== Session Secret — persistent (survives restarts) =====
+const SESSION_SECRET_FILE = path.join(__dirname, 'data', '.session_secret');
+function loadOrCreateSessionSecret() {
+  if (process.env.SESSION_SECRET) return process.env.SESSION_SECRET;
+  try {
+    if (fs.existsSync(SESSION_SECRET_FILE)) {
+      const secret = fs.readFileSync(SESSION_SECRET_FILE, 'utf8').trim();
+      if (secret.length >= 32) return secret;
+    }
+  } catch (e) { /* fall through */ }
+  const secret = 'vf_session_' + crypto.randomBytes(32).toString('hex');
+  try {
+    const dir = path.dirname(SESSION_SECRET_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(SESSION_SECRET_FILE, secret, { mode: 0o600 });
+    console.log('[SECURITY] New session secret generated and saved');
+  } catch (e) {
+    console.error('[SECURITY] Warning: Could not persist session secret:', e.message);
+  }
+  return secret;
+}
+const SESSION_SECRET = loadOrCreateSessionSecret();
 
 // ===== File upload config =====
 const upload = multer({
@@ -128,7 +150,17 @@ app.set('trust proxy', 1);
 
 // Security headers
 app.use(helmet({
-  contentSecurityPolicy: false, // Allow inline scripts in PVF files
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://api.vertifile.com"],
+      frameSrc: ["'none'"],
+    }
+  },
   crossOriginEmbedderPolicy: false
 }));
 
@@ -159,6 +191,7 @@ app.use((req, res, next) => {
 });
 app.use(express.static(path.join(__dirname, 'public'), {
   extensions: ['html'],
+  maxAge: '7d',
   setHeaders: (res, filepath) => {
     // Set security headers for static files
     if (filepath.endsWith('.html')) {
@@ -169,10 +202,9 @@ app.use(express.static(path.join(__dirname, 'public'), {
 }));
 
 // Session configuration
-const sessionPool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
 app.use(session({
-  store: new PgSession({ pool: sessionPool, tableName: 'sessions' }),
-  secret: process.env.SESSION_SECRET || 'vf_session_' + require('crypto').randomBytes(16).toString('hex'),
+  store: new PgSession({ pool: db._db, tableName: 'sessions' }),
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: { secure: !!(process.env.RENDER || process.env.NODE_ENV === 'production'), httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000, sameSite: 'lax' }, // 30 days
@@ -251,6 +283,15 @@ const verifyLimiter = rateLimit({
   legacyHeaders: false
 });
 
+// Rate limiter — auth routes (strict: 5 attempts per 15 min)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  message: { success: false, error: 'Too many attempts. Try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
 // ================================================================
 // API KEY AUTHENTICATION MIDDLEWARE
 // ================================================================
@@ -313,7 +354,24 @@ function escapeHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
+// Sanitize SVG to prevent XSS — strips event handlers, script tags, javascript: URLs
+function sanitizeSvg(svg) {
+  if (!svg || typeof svg !== 'string') return svg;
+  // Remove <script> tags and their content
+  let clean = svg.replace(/<script[\s\S]*?<\/script>/gi, '');
+  // Remove on* event handler attributes (onload, onclick, onerror, onmouseover, etc.)
+  clean = clean.replace(/\s+on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+  // Remove javascript: URLs from href and xlink:href
+  clean = clean.replace(/(href\s*=\s*(?:"|'))javascript:[^"']*("|')/gi, '$1#$2');
+  clean = clean.replace(/(xlink:href\s*=\s*(?:"|'))javascript:[^"']*("|')/gi, '$1#$2');
+  return clean;
+}
+
 function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, customIcon, brandColor, orgName) {
+  // Sanitize customIcon SVG if present
+  if (customIcon && customIcon.startsWith('<svg')) {
+    customIcon = sanitizeSvg(customIcon);
+  }
   const isImage = mimeType.startsWith('image/');
   const isPdf = mimeType === 'application/pdf';
   const safeOriginalName = escapeHtml(originalName);
@@ -882,7 +940,7 @@ function startRefresh(){
       var d=await r.json();
       if(d.success)token=d.token;
     }catch(e){setFk()}
-  },30000);
+  },300000);
 }
 
 init();
@@ -897,7 +955,7 @@ init();
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/app' }), (req, res) => res.redirect('/app'));
 
-app.post('/auth/register', async (req, res) => {
+app.post('/auth/register', authLimiter, async (req, res) => {
   try {
     const { email, password, name } = req.body;
     if (!email || !password) return res.status(400).json({ success: false, error: 'Email and password required' });
@@ -913,7 +971,7 @@ app.post('/auth/register', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: 'Registration failed' }); }
 });
 
-app.post('/auth/login', (req, res, next) => {
+app.post('/auth/login', authLimiter, (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) return res.status(500).json({ success: false, error: 'Server error' });
     if (!user) return res.status(401).json({ success: false, error: info?.message || 'Invalid credentials' });
@@ -1034,6 +1092,11 @@ app.post('/api/user/upload', requireLogin, upload.single('file'), async (req, re
 
 app.post('/api/user/documents/:hash/star', requireLogin, async (req, res) => {
   try {
+    // Verify document belongs to the authenticated user
+    const doc = await db.getDocument(req.params.hash);
+    if (!doc || doc.user_id !== req.user.id) {
+      return res.status(404).json({ success: false, error: 'Document not found' });
+    }
     const { starred } = req.body;
     await db.starDocument(req.params.hash, !!starred);
     res.json({ success: true });
@@ -1099,6 +1162,10 @@ app.post('/api/user/branding', requireLogin, async (req, res) => {
   try {
     const orgId = 'user_' + req.user.id;
     const { brandColor, customIcon, orgName, stampText } = req.body;
+    // Validate brand color (hex)
+    if (brandColor && !/^#[0-9a-fA-F]{6}$/.test(brandColor)) {
+      return res.status(400).json({ success: false, error: 'Invalid color format. Use hex (#RRGGBB)' });
+    }
     await db.updateBranding(orgId, { brand_color: brandColor || null, custom_icon: customIcon || null });
     res.json({ success: true });
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to save branding' }); }
@@ -1539,9 +1606,9 @@ app.post('/api/token/refresh', verifyLimiter, async (req, res) => {
     const doc = await db.getDocument(hash);
     if (!doc) return res.json({ success: false, error: 'Not found' });
 
-    // Don't refresh if token was created less than 60 seconds ago
-    if (doc.tokenCreatedAt && (Date.now() - doc.tokenCreatedAt) < 60000) {
-      return res.json({ success: true, token: doc.token, expiresIn: 30, cached: true });
+    // Don't refresh if token was created less than 240 seconds ago
+    if (doc.tokenCreatedAt && (Date.now() - doc.tokenCreatedAt) < 240000) {
+      return res.json({ success: true, token: doc.token, expiresIn: 300, cached: true });
     }
 
     const newToken = generateToken();
@@ -1596,12 +1663,24 @@ app.get('/api/keys', async (req, res) => {
 });
 
 // ===== API: Health =====
-app.get('/api/health', async (req, res) => {
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'online',
+    service: 'Vertifile',
+    version: '4.1.0',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/api/health/deep', async (req, res) => {
   const stats = await db.getStats();
   res.json({
     status: 'online',
     service: 'Vertifile',
     version: '4.1.0',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
     documents: stats.totalDocuments,
     organizations: stats.totalOrganizations,
     blockchain: chain.isConnected() ? 'connected' : 'off-chain'
@@ -2256,6 +2335,21 @@ app.get('/d/:shareId/raw', async (req, res) => {
   const pvfContent = await db.getPvfContent(shareId);
   if (!pvfContent) return res.status(404).send('Not found');
 
+  // Set CSP headers (same as PVF security headers, but allow same-origin framing)
+  res.setHeader('Content-Security-Policy', [
+    "default-src 'none'",
+    "script-src 'unsafe-inline'",
+    "style-src 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src https://fonts.gstatic.com",
+    "img-src data: blob:",
+    "connect-src 'self'",
+    "frame-src data:",
+    "base-uri 'none'",
+    "form-action 'none'",
+    "frame-ancestors 'self'"
+  ].join('; '));
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'no-referrer');
   // Serve without X-Frame-Options so it can be embedded in same-origin iframe
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 'no-cache');
