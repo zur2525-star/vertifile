@@ -2482,6 +2482,15 @@ app.get('/signup', (req, res) => {
 
 // ================================================================
 // SHAREABLE DOCUMENT LINKS — /d/:shareId
+// Redirect from hash to share link (used by PVF Viewer browser button)
+app.get('/view-by-hash/:hash', async (req, res) => {
+  try {
+    const doc = await db.getDocument(req.params.hash);
+    if (doc && doc.shareId) return res.redirect('/d/' + doc.shareId);
+    return res.status(404).send(notFoundPage('Document not found'));
+  } catch(e) { return res.status(500).send(notFoundPage('Server error')); }
+});
+
 // Anyone with the link can view the PVF document in-browser
 // ================================================================
 app.get('/d/:shareId', async (req, res) => {

@@ -450,7 +450,9 @@
     var m = __pvfMeta;
     // Use shareId extracted during load
     if (m.shareId) return 'https://vertifile.com/d/' + m.shareId;
-    // Fallback: open the local PVF file directly in the browser
+    // Fallback: use hash to redirect to document view
+    if (m.hash) return 'https://vertifile.com/view-by-hash/' + m.hash;
+    // Last resort: open the local file in browser
     if (m.filePath) return 'file://' + m.filePath;
     return null;
   }
