@@ -233,18 +233,21 @@
     }
     frame.srcdoc = content;
 
-    // Check frequently but don't show iframe until verified
+    // Show document immediately while verification happens in background
+    setTimeout(function() {
+      frame.style.display = 'block';
+    }, 1500);
+    // Check verification status in background
     var checkInterval = setInterval(function() { checkStatus(frame, checkInterval); }, 500);
-    // Timeout after 15s — if still not determined, show error
+    // Timeout after 30s — if still not determined, show as unverified (but keep document visible)
     setTimeout(function() {
       clearInterval(checkInterval);
-      if (frame.style.display === 'none' && !document.getElementById('errorOverlay').classList.contains('show')) {
+      if (!resolved) {
         var badge = document.getElementById('statusBadge');
-        badge.className = 'toolbar-status failed';
-        document.getElementById('statusText').textContent = 'Verification Failed';
-        showError('timeout');
+        badge.className = 'toolbar-status checking';
+        document.getElementById('statusText').textContent = 'Offline';
       }
-    }, 15000);
+    }, 30000);
   });
 
   var okCount = 0;

@@ -599,7 +599,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
   <!-- Center: Filename -->
   <div class="tb-filename" id="tbName">
     <span class="vf-badge">PVF</span>
-    <span id="tbNameText">${safeOriginalName}</span>
+    <span id="tbNameText">${safeOriginalName.replace(/\.[^.]+$/, '')}.pvf</span>
   </div>
   <!-- Right: Zoom -->
   <div class="tb-section">
