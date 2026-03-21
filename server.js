@@ -395,14 +395,30 @@ ${recipientHash ? `<meta name="pvf:recipient-hash" content="${recipientHash}">` 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Heebo',sans-serif;background:#121212;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px}
-body.forged{background:#2a0a0a}
+body{font-family:'Heebo',sans-serif;background:#525659;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0}
+body.forged{background:#3a1a1a}
+
+/* ===== TOP TOOLBAR (Gmail-style) ===== */
+.pvf-toolbar{position:fixed;top:0;left:0;right:0;height:48px;background:#323639;display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:10000;box-shadow:0 2px 8px rgba(0,0,0,.4);user-select:none}
+.pvf-toolbar.hide{display:none}
+.tb-section{display:flex;align-items:center;gap:6px}
+.tb-btn{background:none;border:none;color:#c8c8c8;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s}
+.tb-btn:hover{background:rgba(255,255,255,.12);color:#fff}
+.tb-btn svg{width:20px;height:20px}
+.tb-filename{color:#e0e0e0;font-size:14px;font-weight:500;max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.tb-filename .vf-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(124,58,237,.25);color:#c4b5fd;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.5px}
+.tb-zoom-label{color:#9e9e9e;font-size:12px;min-width:40px;text-align:center}
+.tb-divider{width:1px;height:24px;background:rgba(255,255,255,.12);margin:0 4px}
+/* Toast for copy feedback */
+.tb-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#323639;color:#fff;padding:10px 24px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:10001}
+.tb-toast.show{opacity:1}
 
 /* No-JS mode (Quick Look / Preview) — show document directly */
 .no-js .loading{display:none!important}
 .no-js .page-wrap{display:block!important}
 .no-js .stamp-coin{opacity:1!important}
 .no-js .stamp .center{visibility:visible}
+.no-js .pvf-toolbar{display:none!important}
 
 /* Loading */
 .loading{position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s}
@@ -415,17 +431,26 @@ body.forged{background:#2a0a0a}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading p{color:#aaa;font-size:13px;letter-spacing:.5px}
 
-/* Page wrapper */
-.page-wrap{position:relative;max-width:820px;width:100%;display:none}
-.page-bg{width:100%;background:#fff;box-shadow:0 8px 60px rgba(0,0,0,.5);border-radius:4px;position:relative;overflow:hidden;min-height:600px;transition:box-shadow .5s}
+/* Page wrapper — fit A4 in viewport below toolbar */
+.page-wrap{position:relative;max-width:820px;width:100%;display:none;margin-top:60px;margin-bottom:40px;transform-origin:top center;transition:transform .3s ease}
+.page-bg{width:100%;background:#fff;box-shadow:0 4px 24px rgba(0,0,0,.35);border-radius:2px;position:relative;overflow:hidden;min-height:600px;transition:box-shadow .5s}
 .page-bg.forged{box-shadow:0 0 0 4px #e53935,0 8px 60px rgba(255,0,0,.3)}
 
 /* Document frame */
 .doc-frame{width:100%;min-height:600px}
-.doc-frame.pdf{height:90vh;min-height:800px}
+.doc-frame.pdf{height:calc(100vh - 100px);min-height:800px}
 .doc-frame img{width:100%;display:block}
 .doc-frame iframe{width:100%;height:100%;border:none}
 .doc-frame .text-doc{padding:50px 60px;font-size:15px;line-height:1.9;color:#333;white-space:pre-wrap}
+
+@media(max-width:600px){
+.pvf-toolbar{height:44px;padding:0 8px}
+.tb-filename{font-size:12px;max-width:180px}
+.tb-btn{width:32px;height:32px}
+.tb-btn svg{width:18px;height:18px}
+.tb-zoom-label{display:none}
+.page-wrap{margin-top:52px}
+}
 
 /* Forged overlay */
 .big-x{display:none;position:absolute;top:0;left:0;right:0;bottom:0;z-index:20;pointer-events:none}
@@ -528,6 +553,40 @@ body.forged{background:#2a0a0a}
   <div class="sp"></div>
   <p>Verifying document...</p>
 </div>
+
+<!-- Top Toolbar (Gmail-style) -->
+<div class="pvf-toolbar hide" id="toolbar">
+  <!-- Left: Share + Download -->
+  <div class="tb-section">
+    <button class="tb-btn" id="tbShare" title="Share">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M18 8a3 3 0 100-6 3 3 0 000 6zM6 15a3 3 0 100-6 3 3 0 000 6zM18 22a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.5"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" stroke="currentColor" stroke-width="1.5"/></svg>
+    </button>
+    <button class="tb-btn" id="tbDownload" title="Download">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="tb-divider"></div>
+  </div>
+  <!-- Center: Filename -->
+  <div class="tb-filename" id="tbName">
+    <span class="vf-badge"><svg viewBox="0 0 24 24" fill="none" width="10" height="10"><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="currentColor" stroke-width="1.5"/></svg>PVF</span>
+    <span id="tbNameText">${safeOriginalName}</span>
+  </div>
+  <!-- Right: Zoom -->
+  <div class="tb-section">
+    <div class="tb-divider"></div>
+    <button class="tb-btn" id="tbZoomOut" title="Zoom out">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M21 21l-4.35-4.35M8 11h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <span class="tb-zoom-label" id="tbZoomLbl">100%</span>
+    <button class="tb-btn" id="tbZoomIn" title="Zoom in">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <button class="tb-btn" id="tbFit" title="Fit to page">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+<div class="tb-toast" id="tbToast"></div>
 
 <!-- Document -->
 <div class="page-wrap" id="wrap">
@@ -878,6 +937,7 @@ async function init(){
 function showLocal(){
   document.getElementById("ld").classList.add("hide");
   document.getElementById("wrap").style.display="block";
+  document.getElementById("toolbar").classList.remove("hide");
   setOk();
   activateWaves();
   document.getElementById("sCtr").innerHTML='<svg viewBox="0 0 50 50" fill="none"><path class="chk" d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="brand">VERTIFILE</div><div class="lbl ok">PROTECTED</div>';
@@ -906,8 +966,10 @@ setInterval(triggerFlip,10000);
 function show(ok){
   document.getElementById("ld").classList.add("hide");
   document.getElementById("wrap").style.display="block";
+  document.getElementById("toolbar").classList.remove("hide");
   if(ok){setOk();activateWaves()}else setFk();
   setTimeout(triggerFlip,400);
+  fitToPage();
 }
 
 function setOk(){
@@ -942,6 +1004,71 @@ function startRefresh(){
     }catch(e){setFk()}
   },300000);
 }
+
+// ===== TOOLBAR: Zoom =====
+var __zoom = 1;
+var __zoomSteps = [0.5, 0.67, 0.75, 0.9, 1, 1.1, 1.25, 1.5, 2];
+function setZoom(z) {
+  __zoom = Math.max(0.25, Math.min(3, z));
+  document.getElementById("wrap").style.transform = "scale(" + __zoom + ")";
+  document.getElementById("tbZoomLbl").textContent = Math.round(__zoom * 100) + "%";
+}
+function stepZoom(dir) {
+  var idx = 0;
+  for (var i = 0; i < __zoomSteps.length; i++) {
+    if (__zoomSteps[i] <= __zoom) idx = i;
+  }
+  var next = dir > 0 ? Math.min(idx + 1, __zoomSteps.length - 1) : Math.max(idx - 1, 0);
+  setZoom(__zoomSteps[next]);
+}
+function fitToPage() {
+  var wrap = document.getElementById("wrap");
+  if (!wrap) return;
+  var viewH = window.innerHeight - 108;
+  var viewW = window.innerWidth - 40;
+  var docH = wrap.scrollHeight || 800;
+  var docW = wrap.offsetWidth || 820;
+  var scale = Math.min(viewH / docH, viewW / docW, 1);
+  setZoom(Math.round(scale * 100) / 100);
+}
+document.getElementById("tbZoomIn").addEventListener("click", function() { stepZoom(1); });
+document.getElementById("tbZoomOut").addEventListener("click", function() { stepZoom(-1); });
+document.getElementById("tbFit").addEventListener("click", fitToPage);
+
+// ===== TOOLBAR: Download =====
+document.getElementById("tbDownload").addEventListener("click", function() {
+  var html = document.documentElement.outerHTML;
+  var blob = new Blob([html], { type: "text/html" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.getElementById("tbNameText").textContent || "document") + ".pvf";
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+// ===== TOOLBAR: Share =====
+document.getElementById("tbShare").addEventListener("click", function() {
+  var url = window.location.href;
+  if (navigator.share) {
+    navigator.share({ title: document.getElementById("tbNameText").textContent, url: url }).catch(function(){});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() {
+      var t = document.getElementById("tbToast");
+      t.textContent = "Link copied!";
+      t.classList.add("show");
+      setTimeout(function() { t.classList.remove("show"); }, 2000);
+    });
+  }
+});
+
+// ===== TOOLBAR: Keyboard shortcuts =====
+document.addEventListener("keydown", function(e) {
+  if (e.ctrlKey || e.metaKey) {
+    if (e.key === "=" || e.key === "+") { e.preventDefault(); stepZoom(1); }
+    if (e.key === "-") { e.preventDefault(); stepZoom(-1); }
+    if (e.key === "0") { e.preventDefault(); fitToPage(); }
+  }
+});
 
 init();
 </script>
