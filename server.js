@@ -1074,12 +1074,17 @@ function stepZoom(dir) {
 function fitToPage() {
   var wrap = document.getElementById("wrap");
   if (!wrap) return;
-  var viewW = window.innerWidth - 60;
-  var docW = 595; // A4 portrait width in px
-  var scale = Math.min(viewW / docW, 1);
-  // Minimum zoom 90%
-  scale = Math.max(scale, 0.9);
-  setZoom(Math.round(scale * 100) / 100);
+  if (__isDesktopViewer || __isIframe) {
+    // Desktop viewer: fixed 75% zoom
+    setZoom(0.75);
+  } else {
+    // Browser: fit width with minimum 90%
+    var viewW = window.innerWidth - 60;
+    var docW = 595;
+    var scale = Math.min(viewW / docW, 1);
+    scale = Math.max(scale, 0.9);
+    setZoom(Math.round(scale * 100) / 100);
+  }
 }
 document.getElementById("tbZoomIn").addEventListener("click", function() { stepZoom(1); });
 document.getElementById("tbZoomOut").addEventListener("click", function() { stepZoom(-1); });
