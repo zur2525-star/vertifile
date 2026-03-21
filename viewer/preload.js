@@ -11,6 +11,21 @@ contextBridge.exposeInMainWorld('pvfBridge', {
   onTriggerOpen: (callback) => {
     ipcRenderer.on('trigger-open', () => callback());
   },
+  onTriggerSaveAs: (callback) => {
+    ipcRenderer.on('trigger-save-as', () => callback());
+  },
+  onTriggerProperties: (callback) => {
+    ipcRenderer.on('trigger-properties', () => callback());
+  },
+  onTriggerZoomIn: (callback) => {
+    ipcRenderer.on('trigger-zoom-in', () => callback());
+  },
+  onTriggerZoomOut: (callback) => {
+    ipcRenderer.on('trigger-zoom-out', () => callback());
+  },
+  onTriggerFit: (callback) => {
+    ipcRenderer.on('trigger-fit', () => callback());
+  },
   // Request file open dialog
   openFileDialog: () => ipcRenderer.invoke('open-file-dialog'),
   // Request reading a file (drag & drop)

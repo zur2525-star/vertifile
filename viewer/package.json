@@ -77,7 +77,5 @@
     "electron": "^33.0.0",
     "electron-builder": "^25.0.0"
   },
-  "dependencies": {
-    "electron-updater": "^6.8.3"
-  }
+  "dependencies": {}
 }

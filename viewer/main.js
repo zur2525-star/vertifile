@@ -10,7 +10,7 @@ function createWindow(pvfPath) {
   // Get screen size for smart default window
   const { screen } = require('electron');
   const { width: screenW, height: screenH } = screen.getPrimaryDisplay().workAreaSize;
-  const winW = Math.min(Math.round(screenW * 0.75), 1400);
+  const winW = Math.min(Math.round(screenW * 0.85), 1400);
   const winH = Math.min(Math.round(screenH * 0.85), 1000);
 
   mainWindow = new BrowserWindow({
@@ -124,9 +124,19 @@ function buildMenu() {
     { label: app.name, submenu: [{ role: 'about' }, { type: 'separator' }, { role: 'quit' }] },
     { label: 'File', submenu: [
       { label: 'Open PVF...', accelerator: 'CmdOrCtrl+O', click: () => { if (mainWindow) mainWindow.webContents.send('trigger-open'); } },
-      { type: 'separator' }, { role: 'close' }
+      { label: 'Save As...', accelerator: 'CmdOrCtrl+Shift+S', click: () => { if (mainWindow) mainWindow.webContents.send('trigger-save-as'); } },
+      { type: 'separator' },
+      { label: 'Properties', accelerator: 'CmdOrCtrl+I', click: () => { if (mainWindow) mainWindow.webContents.send('trigger-properties'); } },
+      { type: 'separator' },
+      { role: 'close' }
     ]},
-    { label: 'View', submenu: [{ role: 'reload' }, { role: 'togglefullscreen' }] }
+    { label: 'View', submenu: [
+      { label: 'Zoom In', accelerator: 'CmdOrCtrl+=', click: () => { if (mainWindow) mainWindow.webContents.send('trigger-zoom-in'); } },
+      { label: 'Zoom Out', accelerator: 'CmdOrCtrl+-', click: () => { if (mainWindow) mainWindow.webContents.send('trigger-zoom-out'); } },
+      { label: 'Fit to Page', accelerator: 'CmdOrCtrl+0', click: () => { if (mainWindow) mainWindow.webContents.send('trigger-fit'); } },
+      { type: 'separator' },
+      { role: 'togglefullscreen' }
+    ] }
   ]));
 }
 

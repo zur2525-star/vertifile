@@ -288,6 +288,16 @@
       icon: '<svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="1.5" fill="rgba(239,68,68,.1)"/><path d="M12 8v5" stroke="#f87171" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#f87171"/></svg>',
       title: 'Read Error',
       message: 'Failed to read the file.\n\nThe file may be corrupted or inaccessible.'
+    },
+    invalid_signature: {
+      icon: '<svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="1.5" fill="rgba(239,68,68,.1)"/><path d="M7 13l3 3 7-7" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="4" y1="4" x2="20" y2="20" stroke="#f87171" stroke-width="2" stroke-linecap="round"/></svg>',
+      title: 'Invalid Signature',
+      message: 'The digital signature does not match the document contents.\n\nThis document may have been altered after signing.\nDo not trust this document.'
+    },
+    recipient_mismatch: {
+      icon: '<svg viewBox="0 0 24 24" fill="none" style="width:60px;height:60px;margin-bottom:16px"><circle cx="12" cy="12" r="10" stroke="#fbbf24" stroke-width="1.5" fill="rgba(251,191,36,.1)"/><path d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4-4" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="7" r="4" stroke="#fbbf24" stroke-width="1.5"/><line x1="18" y1="8" x2="18" y2="14" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/><circle cx="18" cy="17" r="1" fill="#fbbf24"/></svg>',
+      title: 'Recipient Mismatch',
+      message: 'This document was issued to a different recipient.\n\nThe recipient identity does not match the expected viewer.\nThis document may not be intended for you.'
     }
   };
 
@@ -324,6 +334,12 @@
         } else if (failReason === 'chain_broken') {
           document.getElementById('statusText').textContent = 'Chain Broken';
           showError('chain_broken');
+        } else if (failReason === 'invalid_signature') {
+          document.getElementById('statusText').textContent = 'Invalid Signature';
+          showError('invalid_signature');
+        } else if (failReason === 'recipient_mismatch') {
+          document.getElementById('statusText').textContent = 'Recipient Mismatch';
+          showError('recipient_mismatch');
         } else {
           document.getElementById('statusText').textContent = 'Verification Failed';
           showError('forged');
@@ -354,6 +370,11 @@
   });
 
   bridge.onTriggerOpen(function() { openFile(); });
+  bridge.onTriggerSaveAs(function() { saveAs(); });
+  bridge.onTriggerProperties(function() { showProperties(); });
+  bridge.onTriggerZoomIn(function() { viewerZoom(1); });
+  bridge.onTriggerZoomOut(function() { viewerZoom(-1); });
+  bridge.onTriggerFit(function() { viewerZoom(0); });
 
   // ===== MENU SYSTEM =====
   var activeMenu = null;
