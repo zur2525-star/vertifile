@@ -7,7 +7,7 @@
   var btn = document.querySelector('.nav-user');
   if (!btn) return;
 
-  fetch('/api/user/profile', { credentials: 'same-origin' })
+  fetch('/api/user/me', { credentials: 'same-origin' })
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(data){
       if (!data || !data.success || !data.user) return;

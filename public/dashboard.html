@@ -600,7 +600,7 @@ async function loadDocs() {
     document.getElementById('docNext').disabled = docs.length < DOC_LIMIT;
     document.getElementById('docInfo').textContent = `Page ${currentDocPage + 1}`;
   } catch (e) {
-    console.log('Documents endpoint not available:', e.message);
+    // Documents endpoint not available
     document.getElementById('docsBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:32px">Documents endpoint not available</td></tr>';
   }
 }
@@ -639,7 +639,7 @@ async function loadWebhooks() {
         '</tbody></table>';
     }
   } catch (e) {
-    console.log('Webhooks endpoint not available');
+    // Webhooks endpoint not available
   }
 }
 

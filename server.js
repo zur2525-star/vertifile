@@ -269,7 +269,7 @@ async function authenticateApiKey(req, res, next) {
 
   // Allow admin secret as API key — grants full access as admin org
   const adminSecret = process.env.ADMIN_SECRET;
-  if (adminSecret && apiKey === adminSecret) {
+  if (adminSecret && isValidAdminSecret(apiKey)) {
     req.org = { orgId: 'org_admin', orgName: 'Vertifile Admin', plan: 'enterprise', documentsCreated: 0, rateLimit: 999, created: new Date().toISOString(), active: true };
     req.apiKey = apiKey;
     return next();
@@ -1008,7 +1008,7 @@ app.post('/api/user/upload', requireLogin, upload.single('file'), async (req, re
       : null;
 
     // Save chained token: hash + signature + orgId + timestamp + codeIntegrity
-    const chainedToken = crypto.createHmac('sha256', hmacSecret)
+    const chainedToken = crypto.createHmac('sha256', HMAC_SECRET)
       .update(fileHash + signature + req.org.orgId + codeIntegrity)
       .digest('hex');
     await db.saveCodeIntegrity(fileHash, codeIntegrity, chainedToken);
@@ -1128,7 +1128,6 @@ app.post('/api/user/api-key', requireLogin, async (req, res) => {
       return res.json({ success: true, apiKey: existing.api_key });
     }
     // Generate new key
-    const crypto = require('crypto');
     const apiKey = 'vf_live_' + crypto.randomBytes(24).toString('hex');
     await db.createApiKey({ apiKey, orgId, orgName, plan: req.user.plan || 'free', rateLimit: 5 });
     res.json({ success: true, apiKey });
@@ -1292,7 +1291,7 @@ async function handleCreatePvf(req, res) {
       recipientHash = crypto.createHash('sha256').update(recipient.toLowerCase().trim()).digest('hex');
     }
 
-    // Step 4: Register document (persistent — SQLite)
+    // Step 4: Register document (persistent — PostgreSQL)
     await db.createDocument({
       hash: fileHash,
       signature,
@@ -1340,7 +1339,7 @@ async function handleCreatePvf(req, res) {
     const codeIntegrity = scriptMatch2
       ? crypto.createHash('sha256').update(scriptMatch2[1]).digest('hex')
       : null;
-    const chainedToken = crypto.createHmac('sha256', hmacSecret)
+    const chainedToken = crypto.createHmac('sha256', HMAC_SECRET)
       .update(fileHash + signature + req.org.orgId + codeIntegrity)
       .digest('hex');
     await db.saveCodeIntegrity(fileHash, codeIntegrity, chainedToken);
@@ -1472,7 +1471,7 @@ app.post('/api/verify', verifyLimiter, async (req, res) => {
 
         // Chained token verification — all parameters must match
         if (doc.chained_token) {
-          const expectedChain = crypto.createHmac('sha256', hmacSecret)
+          const expectedChain = crypto.createHmac('sha256', HMAC_SECRET)
             .update(lookupHash + (signature || doc.signature) + doc.orgId + codeIntegrity)
             .digest('hex');
           const chainValid = crypto.timingSafeEqual(
@@ -2383,8 +2382,8 @@ app.use((req, res, next) => {
   if (req.path.startsWith('/api/')) {
     return res.status(404).json({ success: false, error: 'Endpoint not found' });
   }
-  // For page routes, redirect to home
-  res.redirect('/');
+  // For page routes, show 404 page
+  res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
 });
 
 // Global error handler
@@ -2397,13 +2396,6 @@ app.use(async (err, req, res, next) => {
   }
 
   res.status(500).json({ success: false, error: 'Internal server error' });
-});
-
-// ================================================================
-// 404 CATCH-ALL (must be after all other routes)
-// ================================================================
-app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
 });
 
 // ================================================================
