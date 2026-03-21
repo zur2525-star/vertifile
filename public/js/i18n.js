@@ -9,6 +9,18 @@
   var currentLang = 'en';
   var translations = {};
 
+  // Country code → language mapping
+  var COUNTRY_LANG = {
+    'IL':'he','PS':'ar','SA':'ar','AE':'ar','EG':'ar','JO':'ar','LB':'ar','IQ':'ar','SY':'ar','KW':'ar','QA':'ar','BH':'ar','OM':'ar','YE':'ar','LY':'ar','TN':'ar','DZ':'ar','MA':'ar',
+    'FR':'fr','BE':'fr','CH':'fr','CA':'fr','SN':'fr','CI':'fr',
+    'ES':'es','MX':'es','AR':'es','CO':'es','CL':'es','PE':'es','VE':'es','EC':'es','GT':'es','CU':'es','BO':'es','DO':'es','HN':'es','PY':'es','SV':'es','NI':'es','CR':'es','PA':'es','UY':'es',
+    'DE':'de','AT':'de','LI':'de',
+    'RU':'ru','BY':'ru','KZ':'ru','KG':'ru','TJ':'ru','UA':'ru',
+    'CN':'zh','TW':'zh','HK':'zh','MO':'zh','SG':'zh',
+    'JP':'ja',
+    'BR':'pt','PT':'pt','AO':'pt','MZ':'pt'
+  };
+
   function detectLang(){
     var params = new URLSearchParams(window.location.search);
     if(params.get('lang') && SUPPORTED.indexOf(params.get('lang'))!==-1) return params.get('lang');
@@ -17,6 +29,18 @@
     var nav = (navigator.language||'').substring(0,2).toLowerCase();
     if(SUPPORTED.indexOf(nav)!==-1) return nav;
     return 'en';
+  }
+
+  // Async geo-detection: update language based on country if no preference set
+  function geoDetect(){
+    if(localStorage.getItem('vf-lang')) return; // user already chose
+    fetch('https://ipapi.co/json/',{signal:AbortSignal.timeout(3000)}).then(function(r){return r.json()}).then(function(d){
+      var cc = d.country_code;
+      var lang = COUNTRY_LANG[cc];
+      if(lang && lang !== currentLang && SUPPORTED.indexOf(lang)!==-1){
+        loadLang(lang);
+      }
+    }).catch(function(){});
   }
 
   function getVal(obj, path){
@@ -100,4 +124,6 @@
 
   // Init
   loadLang(detectLang());
+  // After initial load, try geo-detection for first-time visitors
+  setTimeout(geoDetect, 500);
 })();

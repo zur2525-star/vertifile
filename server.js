@@ -154,6 +154,7 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrcAttr: ["'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
@@ -367,7 +368,7 @@ function sanitizeSvg(svg) {
   return clean;
 }
 
-function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, customIcon, brandColor, orgName) {
+function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, customIcon, brandColor, orgName, orgId) {
   // Sanitize customIcon SVG if present
   if (customIcon && customIcon.startsWith('<svg')) {
     customIcon = sanitizeSvg(customIcon);
@@ -846,8 +847,8 @@ var HASH="${fileHash}";
 var SIG="${signature}";
 var RCPT="${recipientHash || ''}";
 var CREATED="${createdAt}";
-var ORGID="${orgName ? escapeHtml(orgName) : 'VERTIFILE'}";
-var SHAREID="${shareId || ''}";
+var ORGID="${orgId || ''}";
+var SHAREID="";
 var API=window.location.origin;
 var ORGNAME="${escapeHtml(orgName || 'VERTIFILE')}";
 var CUSTOMICON=${customIcon ? `"${customIcon.startsWith('<svg') ? 'svg' : 'img'}"` : 'null'};
@@ -934,33 +935,7 @@ async function init(){
     // Server unreachable — fall back to client-side verification
   }
 
-  // Step 2: Offline fallback — verify content hash locally using Web Crypto API
-  try{
-    var payload=document.querySelector(".text-doc,.doc-frame img,.doc-frame iframe");
-    if(payload){
-      var contentToHash="";
-      if(payload.classList.contains("text-doc")){
-        contentToHash=payload.textContent;
-      }else if(payload.tagName==="IMG"){
-        var src=payload.getAttribute("src")||"";
-        contentToHash=src.split(",")[1]||src;
-      }else if(payload.tagName==="IFRAME"){
-        var src=payload.getAttribute("src")||"";
-        contentToHash=src.split(",")[1]||src;
-      }
-      if(contentToHash){
-        var encoder=new TextEncoder();
-        var data=encoder.encode(contentToHash);
-        var hashBuffer=await crypto.subtle.digest("SHA-256",data);
-        var hashArray=Array.from(new Uint8Array(hashBuffer));
-        var computedHash=hashArray.map(function(b){return b.toString(16).padStart(2,"0")}).join("");
-        if(computedHash===HASH){showLocal();return}
-        else{show(false);return}
-      }
-    }
-  }catch(e){}
-
-  // Step 3: Last resort — if we can't verify at all, show as protected (structure intact)
+  // Step 2: Offline fallback — cannot verify server-side, show as protected
   showLocal();
 }
 
@@ -1239,7 +1214,7 @@ app.post('/api/user/upload', requireLogin, upload.single('file'), async (req, re
     await db.setDocumentUserId(fileHash, req.user.id);
     await db.updateUserDocCount(req.user.id);
 
-    let pvfHtml = generatePvfHtml(fileBase64, file.originalname, fileHash, file.mimetype, signature, null, branding.custom_icon, branding.brand_color, req.org.orgName);
+    let pvfHtml = generatePvfHtml(fileBase64, file.originalname, fileHash, file.mimetype, signature, null, branding.custom_icon, branding.brand_color, req.org.orgName, req.org.orgId);
 
     // Obfuscate PVF
     const seed = parseInt(fileHash.substring(0, 8), 16);
@@ -1260,6 +1235,10 @@ app.post('/api/user/upload', requireLogin, upload.single('file'), async (req, re
     // Generate share ID and save PVF to database
     const shareId = require('crypto').randomBytes(8).toString('base64url');
     await db.setShareId(fileHash, shareId);
+
+    // Inject shareId into the PVF HTML now that it's been generated
+    pvfHtml = pvfHtml.replace('var SHAREID=""', 'var SHAREID="' + shareId + '"');
+
     await db.savePvfContent(fileHash, pvfHtml);
 
     res.json({
@@ -1581,7 +1560,7 @@ async function handleCreatePvf(req, res) {
     }
 
     const branding = await db.getBranding(req.org.orgId);
-    let pvfHtml = generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, branding.custom_icon, branding.brand_color, req.org.orgName);
+    let pvfHtml = generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, branding.custom_icon, branding.brand_color, req.org.orgName, req.org.orgId);
 
     // Obfuscate the JavaScript inside the PVF (deterministic per document hash)
     const seed = parseInt(fileHash.substring(0, 8), 16);
@@ -1617,6 +1596,9 @@ async function handleCreatePvf(req, res) {
     // Generate shareable link ID
     const shareId = crypto.randomBytes(8).toString('base64url'); // Short URL-safe ID
     await db.setShareId(fileHash, shareId);
+
+    // Inject shareId into the PVF HTML now that it's been generated
+    pvfHtml = pvfHtml.replace('var SHAREID=""', 'var SHAREID="' + shareId + '"');
 
     // Save PVF content to database (persists across deploys)
     await db.savePvfContent(fileHash, pvfHtml);
@@ -2589,8 +2571,7 @@ app.get('/d/:shareId/info', async (req, res) => {
       mimeType: doc.mimeType,
       fileSize: doc.fileSize,
       issuedAt: doc.timestamp,
-      issuedBy: doc.orgName,
-      verified: true
+      issuedBy: doc.orgName
     }
   });
 });
