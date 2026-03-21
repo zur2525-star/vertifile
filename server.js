@@ -1066,11 +1066,11 @@ function stepZoom(dir) {
 function fitToPage() {
   var wrap = document.getElementById("wrap");
   if (!wrap) return;
-  var viewH = window.innerHeight - 108;
-  var viewW = window.innerWidth - 40;
-  var docH = wrap.scrollHeight || 800;
-  var docW = wrap.offsetWidth || 820;
-  var scale = Math.min(viewH / docH, viewW / docW, 1);
+  var viewW = window.innerWidth - 60;
+  var docW = 595; // A4 portrait width in px
+  var scale = Math.min(viewW / docW, 1);
+  // Minimum zoom 90%
+  scale = Math.max(scale, 0.9);
   setZoom(Math.round(scale * 100) / 100);
 }
 document.getElementById("tbZoomIn").addEventListener("click", function() { stepZoom(1); });
