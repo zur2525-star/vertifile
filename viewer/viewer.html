@@ -217,7 +217,12 @@
     frame.style.display = 'none';
     // Inject trusted viewer marker before PVF scripts run
     var markerScript = '<script>window.__pvfDesktopViewer=true;<\/script>';
-    var content = data.content.replace('<head>', '<head>' + markerScript);
+    // Hide the PVF internal toolbar — Viewer has its own
+    var hideToolbarCSS = '<style>#toolbar{display:none!important}#wrap{margin-top:20px!important}</style>';
+    var content = data.content.replace('<head>', '<head>' + markerScript + hideToolbarCSS);
+    // Extract shareId from PVF content for browser link
+    var shareMatch = content.match(/\/d\/([A-Za-z0-9_-]{6,20})/);
+    if (shareMatch) __pvfMeta.shareId = shareMatch[1];
     frame.srcdoc = content;
 
     // Check frequently but don't show iframe until verified
@@ -438,13 +443,10 @@
   function getDocUrl() {
     var m = __pvfMeta;
     if (!m.hash) return null;
-    // Try to find shareId from the PVF content
-    if (m.content) {
-      var shareMatch = m.content.match(/\/d\/([A-Za-z0-9_-]{8,15})/);
-      if (shareMatch) return 'https://vertifile.com/d/' + shareMatch[1];
-    }
-    // Fallback: use verify page with hash
-    return 'https://vertifile.com/verify?hash=' + m.hash;
+    // Use shareId extracted during load
+    if (m.shareId) return 'https://vertifile.com/d/' + m.shareId;
+    // Fallback: open the PVF file directly in browser
+    return 'https://vertifile.com/verify';
   }
 
   function viewerShare() {
