@@ -93,6 +93,20 @@ ipcMain.handle('read-pvf-file', async (event, filePath) => {
   if (typeof filePath === 'string') loadPvfFile(filePath);
 });
 
+ipcMain.handle('save-as', async (event, fileName, content) => {
+  const win = mainWindow || BrowserWindow.getFocusedWindow();
+  const result = await dialog.showSaveDialog(win, {
+    title: 'Save PVF As',
+    defaultPath: fileName,
+    filters: [{ name: 'PVF Documents', extensions: ['pvf'] }]
+  });
+  if (!result.canceled && result.filePath) {
+    fs.writeFileSync(result.filePath, content, 'utf-8');
+    return { success: true, path: result.filePath };
+  }
+  return { success: false };
+});
+
 function buildMenu() {
   Menu.setApplicationMenu(Menu.buildFromTemplate([
     { label: app.name, submenu: [{ role: 'about' }, { type: 'separator' }, { role: 'quit' }] },

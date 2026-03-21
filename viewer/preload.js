@@ -14,5 +14,7 @@ contextBridge.exposeInMainWorld('pvfBridge', {
   // Request file open dialog
   openFileDialog: () => ipcRenderer.invoke('open-file-dialog'),
   // Request reading a file (drag & drop)
-  readPvfFile: (path) => ipcRenderer.invoke('read-pvf-file', path)
+  readPvfFile: (path) => ipcRenderer.invoke('read-pvf-file', path),
+  // Save As
+  saveAs: (fileName, content) => ipcRenderer.invoke('save-as', fileName, content)
 });
