@@ -420,11 +420,11 @@ body.forged{background:#1a0a0f;background-image:radial-gradient(ellipse at 50% 0
 .tb-toast.show{opacity:1}
 
 /* Viewer mode — compact toolbar when inside desktop viewer */
-.pvf-toolbar.viewer-mode{height:40px;background:linear-gradient(135deg,#16142b 0%,#1e1b2e 100%);border-bottom:1px solid rgba(124,58,237,.1);padding-left:6px}
+.pvf-toolbar.viewer-mode{height:40px;background:linear-gradient(135deg,#16142b 0%,#1e1b2e 100%);border-bottom:1px solid rgba(124,58,237,.1);padding:0 12px 0 0;justify-content:flex-start;gap:8px}
 .pvf-toolbar.viewer-mode .tb-logo{display:none}
 .pvf-toolbar.viewer-mode .tb-btn{width:30px;height:30px;border-radius:6px}
 .pvf-toolbar.viewer-mode .tb-btn svg{width:16px;height:16px}
-.pvf-toolbar.viewer-mode .tb-filename{font-size:12px}
+.pvf-toolbar.viewer-mode .tb-filename{font-size:12px;flex:1;justify-content:center}
 .pvf-toolbar.viewer-mode .tb-filename .vf-badge{font-size:8px;padding:2px 6px}
 .pvf-toolbar.viewer-mode .tb-zoom-label{font-size:10px}
 
