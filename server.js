@@ -419,6 +419,23 @@ body.forged{background:#1a0a0f;background-image:radial-gradient(ellipse at 50% 0
 .tb-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#2d2640,#1e1b2e);color:#c4b5fd;padding:10px 24px;border-radius:10px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:10001;border:1px solid rgba(124,58,237,.2);box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .tb-toast.show{opacity:1}
 
+/* Viewer mode — compact toolbar when inside desktop viewer */
+.pvf-toolbar.viewer-mode{height:40px;background:linear-gradient(135deg,#16142b 0%,#1e1b2e 100%);border-bottom:1px solid rgba(124,58,237,.1)}
+.pvf-toolbar.viewer-mode .tb-logo{display:none}
+.pvf-toolbar.viewer-mode .tb-btn{width:30px;height:30px;border-radius:6px}
+.pvf-toolbar.viewer-mode .tb-btn svg{width:16px;height:16px}
+.pvf-toolbar.viewer-mode .tb-filename{font-size:12px}
+.pvf-toolbar.viewer-mode .tb-filename .vf-badge{font-size:8px;padding:2px 6px}
+.pvf-toolbar.viewer-mode .tb-zoom-label{font-size:10px}
+
+/* Custom scrollbar — matches dark theme */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:rgba(15,14,23,.5);border-radius:4px}
+::-webkit-scrollbar-thumb{background:rgba(124,58,237,.25);border-radius:4px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:rgba(124,58,237,.4)}
+::-webkit-scrollbar-corner{background:transparent}
+html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin}
+
 /* No-JS mode */
 .no-js .loading{display:none!important}
 .no-js .page-wrap{display:block!important}
@@ -949,13 +966,12 @@ async function init(){
 function showLocal(){
   document.getElementById("ld").classList.add("hide");
   document.getElementById("wrap").style.display="block";
-  if(!__isDesktopViewer && !__isIframe){
-    document.getElementById("toolbar").classList.remove("hide");
-    fitToPage();
-  } else {
-    document.getElementById("wrap").style.marginTop="20px";
-    document.body.style.padding="0";
+  document.getElementById("toolbar").classList.remove("hide");
+  if(__isDesktopViewer || __isIframe){
+    document.getElementById("toolbar").classList.add("viewer-mode");
+    document.getElementById("wrap").style.marginTop="52px";
   }
+  fitToPage();
   setOk();
   activateWaves();
   document.getElementById("sCtr").innerHTML='<svg viewBox="0 0 50 50" fill="none"><path class="chk" d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="brand">VERTIFILE</div><div class="lbl ok">PROTECTED</div>';
@@ -987,17 +1003,15 @@ var __isIframe = (window.self !== window.top);
 function show(ok){
   document.getElementById("ld").classList.add("hide");
   document.getElementById("wrap").style.display="block";
-  // Hide our toolbar when inside Electron/Tauri viewer or iframe (they have their own toolbar)
-  if(!__isDesktopViewer && !__isIframe){
-    document.getElementById("toolbar").classList.remove("hide");
-  } else {
-    // In viewer: remove top margin, let page fill the space
-    document.getElementById("wrap").style.marginTop="20px";
-    document.body.style.padding="0";
+  document.getElementById("toolbar").classList.remove("hide");
+  if(__isDesktopViewer || __isIframe){
+    // In viewer: compact toolbar, less top margin
+    document.getElementById("toolbar").classList.add("viewer-mode");
+    document.getElementById("wrap").style.marginTop="52px";
   }
   if(ok){setOk();activateWaves()}else setFk();
   setTimeout(triggerFlip,400);
-  if(!__isDesktopViewer && !__isIframe) fitToPage();
+  fitToPage();
 }
 
 function setOk(){
