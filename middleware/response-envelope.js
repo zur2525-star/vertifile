@@ -11,7 +11,8 @@ function responseEnvelope() {
     // Override json to add envelope
     res.json = function(data) {
       // Only wrap API responses (not static files)
-      if (req.path.startsWith('/api/') || req.path.startsWith('/auth/')) {
+      const url = req.originalUrl || req.path;
+      if (url.startsWith('/api/') || url.startsWith('/auth/')) {
         if (typeof data === 'object' && data !== null) {
           data.requestId = req.requestId;
           data.timestamp = new Date().toISOString();
