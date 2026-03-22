@@ -15,6 +15,7 @@ const PgSession = require('connect-pg-simple')(session);
 const db = require('./db');
 const chain = require('./blockchain');
 const { createAuthenticateApiKey, createAuthenticateAdmin } = require('./middleware/auth');
+const logger = require('./services/logger');
 const { signHash, generateToken } = require('./services/pvf-generator');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
@@ -42,7 +43,7 @@ function loadOrCreateSessionSecret() {
     const dir = path.dirname(SESSION_SECRET_FILE);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(SESSION_SECRET_FILE, s, { mode: 0o600 });
-  } catch (e) { console.error('[SECURITY] Could not persist session secret:', e.message); }
+  } catch (e) { logger.error('[SECURITY] Could not persist session secret:', e.message); }
   return s;
 }
 
@@ -127,7 +128,7 @@ app.use('/', pageRoutes);
 
 // Global error handler
 app.use(async (err, req, res, next) => {
-  console.error('[ERROR]', err.message);
+  logger.error('[ERROR]', err.message);
   await db.log('server_error', { path: req.path, method: req.method, error: err.message, ip: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown' });
   if (err.message === 'Not allowed by CORS') return res.status(403).json({ success: false, error: 'CORS: Origin not allowed' });
   res.status(500).json({ success: false, error: 'Internal server error' });
@@ -140,7 +141,7 @@ db._ready.then(async () => {
   if (existingKeys.length === 0) {
     const defaultKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
     await db.createApiKey({ apiKey: defaultKey, orgId: 'org_default', orgName: 'Vertifile Demo', plan: 'professional', rateLimit: 100 });
-    console.log('  Default API key created: ' + defaultKey);
+    logger.info('  Default API key created: ' + defaultKey);
   }
   // Register demo document
   const demoContent = { name: '\u05d9\u05d5\u05e1\u05d9 \u05db\u05d4\u05df', degree: '\u05d1\u05d5\u05d2\u05e8 \u05d1\u05de\u05d3\u05e2\u05d9 \u05d4\u05de\u05d7\u05e9\u05d1 (B.Sc.)', average: '92.4', year: '2024', docId: 'PVF-2024-00482', issuer: '\u05d0\u05d5\u05e0\u05d9\u05d1\u05e8\u05e1\u05d9\u05d8\u05ea \u05ea\u05dc \u05d0\u05d1\u05d9\u05d1' };
@@ -155,35 +156,29 @@ db._ready.then(async () => {
       const stats = await db.getStats();
       const keys = await db.listApiKeys();
       const dk = keys.length > 0 ? keys[0].apiKey : null;
-      console.log(`\n  Vertifile v4.1 | Port ${PORT} | ${stats.totalDocuments} docs | ${stats.totalOrganizations} keys`);
-      console.log(`  http://localhost:${PORT} | API: ${dk ? dk.substring(0, 24) + '...' : 'none'}\n`);
-      chain.init().then(c => console.log(c ? '[BLOCKCHAIN] On-chain active' : '[BLOCKCHAIN] Off-chain mode'));
+      logger.info({ port: PORT, docs: stats.totalDocuments, orgs: stats.totalOrganizations }, `Vertifile v4.1 | Port ${PORT}`);
+      chain.init().then(c => logger.info(c ? 'Blockchain on-chain active' : 'Blockchain off-chain mode'));
     });
 
     process.on('SIGTERM', gracefulShutdown);
     process.on('SIGINT', gracefulShutdown);
 
-    function gracefulShutdown() {
-      console.log('[SERVER] Shutting down gracefully...');
-      // Flush any pending blockchain registrations
-      chain.flushQueue().catch(e => console.error('[SERVER] Queue flush error:', e.message));
+    async function gracefulShutdown() {
+      logger.info('Shutting down gracefully...');
+      try { await chain.flushQueue(); } catch (e) { logger.error({ err: e }, 'Queue flush error'); }
       if (server) {
         server.close(async () => {
-          console.log('[SERVER] HTTP connections closed');
+          logger.info('HTTP connections closed');
           try { await db.close(); } catch(e) {}
-          console.log('[SERVER] Database pool closed');
+          logger.info('Database pool closed');
           process.exit(0);
         });
-        // Force close after 10 seconds
-        setTimeout(() => {
-          console.error('[SERVER] Forced shutdown after timeout');
-          process.exit(1);
-        }, 10000);
+        setTimeout(() => { logger.error('Forced shutdown after timeout'); process.exit(1); }, 10000);
       } else {
         process.exit(0);
       }
     }
   }
-}).catch(err => { console.error('[FATAL] Database initialization failed:', err); process.exit(1); });
+}).catch(err => { logger.error({ err }, 'Database initialization failed'); process.exit(1); });
 
 module.exports = app;

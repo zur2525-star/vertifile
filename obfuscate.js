@@ -1,4 +1,5 @@
 /**
+const logger = require("./services/logger");
  * Vertifile PVF Obfuscation Module
  * Obfuscates the JavaScript inside .pvf files to prevent tampering.
  * Uses worker threads to avoid blocking the event loop.
@@ -58,7 +59,7 @@ function obfuscateCode(code, seed) {
     });
 
     const timeout = setTimeout(() => {
-      console.error('[OBFUSCATION] Worker timed out after 30s, using original code');
+      logger.error('[OBFUSCATION] Worker timed out after 30s, using original code');
       worker.terminate();
       resolve(code);
     }, 30000);
@@ -68,14 +69,14 @@ function obfuscateCode(code, seed) {
       if (msg.success) {
         resolve(msg.code);
       } else {
-        console.error('[OBFUSCATION] Worker failed:', msg.error);
+        logger.error('[OBFUSCATION] Worker failed:', msg.error);
         resolve(code);
       }
     });
 
     worker.on('error', (err) => {
       clearTimeout(timeout);
-      console.error('[OBFUSCATION] Worker error:', err.message);
+      logger.error('[OBFUSCATION] Worker error:', err.message);
       resolve(code);
     });
 
@@ -105,7 +106,7 @@ async function obfuscatePvf(pvfHtml, seed) {
       `<script>${obfuscatedScript}</script>`
     );
   } catch (error) {
-    console.error('[OBFUSCATION] Failed, using original code:', error.message);
+    logger.error('[OBFUSCATION] Failed, using original code:', error.message);
     return pvfHtml;
   }
 }

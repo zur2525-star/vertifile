@@ -8,9 +8,10 @@
  */
 
 const { Pool } = require('pg');
+const logger = require('./services/logger');
 
 if (!process.env.DATABASE_URL) {
-  console.error('[DB] FATAL: DATABASE_URL environment variable is not set.');
+  logger.error('[DB] FATAL: DATABASE_URL environment variable is not set.');
   process.exit(1);
 }
 
@@ -23,7 +24,7 @@ const pool = new Pool({
 });
 
 pool.on('error', (err) => {
-  console.error('[PG] Unexpected pool error:', err.message);
+  logger.error('[PG] Unexpected pool error:', err.message);
 });
 
 // ================================================================
@@ -109,9 +110,9 @@ const SCHEMA_SQL = `
 const _ready = (async () => {
   try {
     await pool.query(SCHEMA_SQL);
-    console.log('[PG] Schema initialised');
+    logger.info('[PG] Schema initialised');
   } catch (e) {
-    console.error('[PG] Schema init error:', e.message);
+    logger.error('[PG] Schema init error:', e.message);
     throw e;
   }
 
@@ -376,7 +377,7 @@ async function log(event, details = {}) {
       [new Date().toISOString(), event, JSON.stringify(details)]
     );
   } catch (e) {
-    console.error('[AUDIT] Failed to write:', e.message);
+    logger.error('[AUDIT] Failed to write:', e.message);
   }
 }
 

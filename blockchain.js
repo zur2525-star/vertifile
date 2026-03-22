@@ -1,4 +1,5 @@
 /**
+const logger = require("./services/logger");
  * Vertifile Blockchain Integration
  * Connects to Polygon (Mumbai testnet / Mainnet) for on-chain document registration.
  *
@@ -80,7 +81,7 @@ function loadState() {
     if (fs.existsSync(STATE_FILE)) {
       const state = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
       if (state.contractAddress && typeof state.contractAddress !== 'string') {
-        console.warn('[BLOCKCHAIN] Invalid state file, resetting');
+        logger.warn('[BLOCKCHAIN] Invalid state file, resetting');
         return {};
       }
       return state;
@@ -113,18 +114,18 @@ async function init() {
   const network = process.env.POLYGON_NETWORK || 'amoy';
 
   if (!privateKey || !contractAddress) {
-    console.log('[BLOCKCHAIN] Skipped — POLYGON_PRIVATE_KEY and POLYGON_CONTRACT not set');
+    logger.info('[BLOCKCHAIN] Skipped — POLYGON_PRIVATE_KEY and POLYGON_CONTRACT not set');
     return false;
   }
 
   if (!/^(0x)?[0-9a-fA-F]{64}$/.test(privateKey)) {
-    console.log('[BLOCKCHAIN] Invalid private key format');
+    logger.info('[BLOCKCHAIN] Invalid private key format');
     return false;
   }
 
   networkConfig = NETWORKS[network];
   if (!networkConfig) {
-    console.error(`[BLOCKCHAIN] Unknown network: ${network}. Use: mumbai, amoy, polygon`);
+    logger.error(`[BLOCKCHAIN] Unknown network: ${network}. Use: mumbai, amoy, polygon`);
     return false;
   }
 
@@ -140,11 +141,11 @@ async function init() {
     const totalDocs = await Promise.race([contract.totalDocuments(), timeoutPromise]);
     const balance = await Promise.race([provider.getBalance(wallet.address), timeoutPromise]);
 
-    console.log(`[BLOCKCHAIN] Connected to ${networkConfig.name}`);
-    console.log(`  Wallet:   ${wallet.address}`);
-    console.log(`  Contract: ${contractAddress}`);
-    console.log(`  Balance:  ${ethers.formatEther(balance)} MATIC`);
-    console.log(`  On-chain: ${totalDocs} documents`);
+    logger.info(`[BLOCKCHAIN] Connected to ${networkConfig.name}`);
+    logger.info(`  Wallet:   ${wallet.address}`);
+    logger.info(`  Contract: ${contractAddress}`);
+    logger.info(`  Balance:  ${ethers.formatEther(balance)} MATIC`);
+    logger.info(`  On-chain: ${totalDocs} documents`);
 
     // Save state
     saveState({ network, contractAddress, walletAddress: wallet.address });
@@ -156,7 +157,7 @@ async function init() {
 
     return true;
   } catch (error) {
-    console.error('[BLOCKCHAIN] Connection failed:', error.message);
+    logger.error('[BLOCKCHAIN] Connection failed:', error.message);
     return false;
   }
 }
@@ -168,7 +169,7 @@ function startFlushTimer() {
   if (flushTimer) return;
   flushTimer = setInterval(() => {
     if (queue.length > 0) {
-      flushQueue().catch(e => console.error('[BLOCKCHAIN] Periodic flush error:', e.message));
+      flushQueue().catch(e => logger.error('[BLOCKCHAIN] Periodic flush error:', e.message));
     }
   }, FLUSH_INTERVAL_MS);
   // Don't prevent process exit
@@ -197,7 +198,7 @@ async function flushQueue() {
 
   // Drain the queue atomically
   const batch = queue.splice(0);
-  console.log(`[BLOCKCHAIN] Flushing queue: ${batch.length} items`);
+  logger.info(`[BLOCKCHAIN] Flushing queue: ${batch.length} items`);
 
   // Group by orgName for batch registration
   const byOrg = {};
@@ -219,13 +220,13 @@ async function flushQueue() {
         const sigHash = toBytes32(item.signature);
         const exists = await contract.isRegistered(docHash);
         if (exists) {
-          console.log(`[BLOCKCHAIN] Already registered: ${item.hash.substring(0, 16)}...`);
+          logger.info(`[BLOCKCHAIN] Already registered: ${item.hash.substring(0, 16)}...`);
           totalFlushed++;
           continue;
         }
         const tx = await contract.register(docHash, sigHash, orgName);
         const receipt = await tx.wait();
-        console.log(`[BLOCKCHAIN] Registered: ${item.hash.substring(0, 16)}... tx=${receipt.hash}`);
+        logger.info(`[BLOCKCHAIN] Registered: ${item.hash.substring(0, 16)}... tx=${receipt.hash}`);
         totalFlushed++;
       } else {
         // Multiple items — use batch register
@@ -234,11 +235,11 @@ async function flushQueue() {
         const sigHashes = documents.map(d => toBytes32(d.signature));
         const tx = await contract.registerBatch(docHashes, sigHashes, orgName);
         const receipt = await tx.wait();
-        console.log(`[BLOCKCHAIN] Batch registered: ${items.length} docs for ${orgName}, tx=${receipt.hash}`);
+        logger.info(`[BLOCKCHAIN] Batch registered: ${items.length} docs for ${orgName}, tx=${receipt.hash}`);
         totalFlushed += items.length;
       }
     } catch (error) {
-      console.error(`[BLOCKCHAIN] Flush failed for ${orgName} (${items.length} items):`, error.message);
+      logger.error(`[BLOCKCHAIN] Flush failed for ${orgName} (${items.length} items):`, error.message);
       totalFailed += items.length;
       // Log failed items for retry via audit_log
       for (const item of items) {
@@ -253,14 +254,14 @@ async function flushQueue() {
             queuedAt: item.queuedAt
           });
         } catch (logErr) {
-          console.error('[BLOCKCHAIN] Could not log failed item:', logErr.message);
+          logger.error('[BLOCKCHAIN] Could not log failed item:', logErr.message);
         }
       }
     }
   }
 
   flushing = false;
-  console.log(`[BLOCKCHAIN] Flush complete: ${totalFlushed} registered, ${totalFailed} failed`);
+  logger.info(`[BLOCKCHAIN] Flush complete: ${totalFlushed} registered, ${totalFailed} failed`);
   return { flushed: totalFlushed, failed: totalFailed };
 }
 
@@ -278,12 +279,12 @@ async function register(hash, signature, orgName) {
   }
 
   queue.push({ hash, signature, orgName, queuedAt: new Date().toISOString() });
-  console.log(`[BLOCKCHAIN] Queued: ${hash.substring(0, 16)}... (queue: ${queue.length}/${BATCH_SIZE})`);
+  logger.info(`[BLOCKCHAIN] Queued: ${hash.substring(0, 16)}... (queue: ${queue.length}/${BATCH_SIZE})`);
 
   // Auto-flush if batch size reached
   if (queue.length >= BATCH_SIZE) {
     // Fire and forget — caller doesn't wait for on-chain confirmation
-    flushQueue().catch(e => console.error('[BLOCKCHAIN] Auto-flush error:', e.message));
+    flushQueue().catch(e => logger.error('[BLOCKCHAIN] Auto-flush error:', e.message));
   }
 
   return { success: true, queued: true, queueSize: queue.length };
@@ -315,7 +316,7 @@ async function registerImmediate(hash, signature, orgName) {
     const tx = await contract.register(docHash, sigHash, orgName);
     const receipt = await tx.wait();
 
-    console.log(`[BLOCKCHAIN] Registered (immediate): ${hash.substring(0, 16)}... tx=${receipt.hash}`);
+    logger.info(`[BLOCKCHAIN] Registered (immediate): ${hash.substring(0, 16)}... tx=${receipt.hash}`);
 
     return {
       success: true,
@@ -325,7 +326,7 @@ async function registerImmediate(hash, signature, orgName) {
       explorer: `${networkConfig.explorer}/tx/${receipt.hash}`
     };
   } catch (error) {
-    console.error('[BLOCKCHAIN] Register failed:', error.message);
+    logger.error('[BLOCKCHAIN] Register failed:', error.message);
     return { success: false, error: error.message };
   }
 }
@@ -348,7 +349,7 @@ async function registerBatch(documents, orgName) {
     const tx = await contract.registerBatch(docHashes, sigHashes, orgName);
     const receipt = await tx.wait();
 
-    console.log(`[BLOCKCHAIN] Batch registered: ${documents.length} docs, tx=${receipt.hash}`);
+    logger.info(`[BLOCKCHAIN] Batch registered: ${documents.length} docs, tx=${receipt.hash}`);
 
     return {
       success: true,
@@ -359,7 +360,7 @@ async function registerBatch(documents, orgName) {
       explorer: `${networkConfig.explorer}/tx/${receipt.hash}`
     };
   } catch (error) {
-    console.error('[BLOCKCHAIN] Batch register failed:', error.message);
+    logger.error('[BLOCKCHAIN] Batch register failed:', error.message);
     return { success: false, error: error.message };
   }
 }
@@ -390,7 +391,7 @@ async function verify(hash, signature) {
       explorer: `${networkConfig.explorer}/address/${contract.target}`
     };
   } catch (error) {
-    console.error('[BLOCKCHAIN] Verify failed:', error.message);
+    logger.error('[BLOCKCHAIN] Verify failed:', error.message);
     return { onChain: false, error: error.message };
   }
 }

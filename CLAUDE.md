@@ -257,3 +257,7 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-03-22 09:00 | REFACTOR | services/logger.js + 6 files | pino logger, 16 console.log replaced, pre-commit blocks console.log | ✓
 
 2026-03-22 09:30 | FEAT | db.js + admin.js | Monitoring system: health_checks table, logHealthCheck, getUptimeStats, /admin/monitoring, /admin/uptime, /admin/self-check | ✓
+
+2026-03-22 10:00 | FIX | admin.js | Added missing getClientIP import (CRITICAL — would crash on key creation) | ✓
+2026-03-22 10:00 | REFACTOR | blockchain.js, server.js, db.js, obfuscate.js | Replaced all console.* with pino logger | ✓
+2026-03-22 10:00 | FIX | server.js | gracefulShutdown now awaits flushQueue before exit | ✓

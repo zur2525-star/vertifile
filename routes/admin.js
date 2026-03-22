@@ -2,6 +2,7 @@ const express = require('express');
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const logger = require('../services/logger');
+const { getClientIP } = require('../middleware/auth');
 const router = express.Router();
 
 // Use shared authenticateAdmin from middleware — set via app.set('authenticateAdmin') in server.js
