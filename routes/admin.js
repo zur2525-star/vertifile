@@ -143,6 +143,16 @@ router.get('/keys-legacy', authenticateAdmin, async (req, res) => {
 });
 
 // ================================================================
+// ERROR TRACKING
+// ================================================================
+
+// Admin — recent errors and stats
+router.get('/errors', authenticateAdmin, (req, res) => {
+  const { getRecentErrors, getErrorStats } = require('../middleware/error-alerter');
+  res.json({ success: true, errors: getRecentErrors(), stats: getErrorStats() });
+});
+
+// ================================================================
 // MONITORING ENDPOINTS
 // ================================================================
 

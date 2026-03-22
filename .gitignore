@@ -13,3 +13,4 @@ viewer/node_modules/
 data/pvf/
 data/.hmac_secret
 data/.session_secret
+data/backups/

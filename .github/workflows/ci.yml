@@ -1,0 +1,42 @@
+name: Vertifile CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Syntax check
+        run: |
+          for f in server.js db.js blockchain.js obfuscate.js routes/*.js services/*.js middleware/*.js; do
+            node --check "$f" || exit 1
+          done
+      - name: Security audit
+        run: npm audit --audit-level=high
+      - name: No console.log in production
+        run: |
+          if grep -rn "console\.\(log\|error\|warn\)" routes/ services/ middleware/ 2>/dev/null | grep -v node_modules; then
+            echo "ERROR: console.log found in production code"
+            exit 1
+          fi
+      - name: No secrets in code
+        run: |
+          if grep -rn "sk_live\|sk_test" routes/ services/ middleware/ server.js 2>/dev/null | grep -v node_modules; then
+            echo "ERROR: Possible hardcoded secrets"
+            exit 1
+          fi
+      - name: Validate JSON locales
+        run: |
+          for f in public/locales/*.json; do
+            node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" || exit 1
+          done

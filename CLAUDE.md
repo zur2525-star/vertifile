@@ -286,3 +286,8 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-03-22 13:00 | FIX | pricing.html | Added 'no credit card required' under Pro | ✓
 2026-03-22 13:00 | FIX | viewer.html | Contrast fix, drop zone visible, Cmd+O, copy hash/sig, error guidance | ✓
 2026-03-22 13:00 | TEST | UX audit — 5 sub-agents | avg score: 6.8/10 → fixing 11 issues | ✓
+
+2026-03-22 13:30 | FEAT | .github/workflows/ci.yml | CI/CD pipeline — syntax, audit, secrets, locales | ✓
+2026-03-22 13:30 | FEAT | scripts/backup-db.js | DB backup script with 7-day retention | ✓
+2026-03-22 13:30 | FEAT | middleware/error-alerter.js | Error tracking — recent errors + stats | ✓
+2026-03-22 13:30 | FEAT | routes/admin.js | GET /admin/errors endpoint | ✓

@@ -28,6 +28,7 @@ const webhookRoutes = require('./routes/webhooks');
 const pageRoutes = require('./routes/pages');
 const { requestLogger } = require('./middleware/request-logger');
 const { responseEnvelope } = require('./middleware/response-envelope');
+const { trackError } = require('./middleware/error-alerter');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -146,6 +147,7 @@ app.use('/', pageRoutes);
 
 // Global error handler
 app.use(async (err, req, res, next) => {
+  trackError(err, req);
   logger.error('[ERROR]', err.message);
   await db.log('server_error', { path: req.path, method: req.method, error: err.message, ip: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown' });
   if (err.message === 'Not allowed by CORS') return res.status(403).json({ success: false, error: 'CORS: Origin not allowed' });
