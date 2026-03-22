@@ -218,3 +218,6 @@ pvf-project/
 2026-03-22 08:15 | SCAN | Serena onboarding | 624 files, 28606 lines, 55 endpoints, 2 warnings fixed | ✓
 2026-03-22 08:16 | FIX | admin.js + server.js | Unified authenticateAdmin to middleware/auth.js, removed duplication | ✓
 2026-03-22 08:16 | FIX | .gitignore | Added data/pvf/ to prevent repo bloat | ✓
+
+2026-03-22 08:30 | FIX | admin.js | keys-legacy now uses authenticateAdmin middleware | ✓
+2026-03-22 08:30 | FIX | api.js | Added rate limit to 5 org endpoints | ✓

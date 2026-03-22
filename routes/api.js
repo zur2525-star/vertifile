@@ -421,7 +421,7 @@ router.get('/docs', (req, res) => {
 // ================================================================
 // API: ORG ENDPOINTS (require API key)
 // ================================================================
-router.get('/org/stats', (req, res, next) => {
+router.get('/org/stats', createLimiter, (req, res, next) => {
   req.app.get('authenticateApiKey')(req, res, next);
 }, async (req, res) => {
   const db = req.app.get('db');
@@ -429,7 +429,7 @@ router.get('/org/stats', (req, res, next) => {
   res.json({ success: true, orgId: req.org.orgId, orgName: req.org.orgName, ...stats });
 });
 
-router.get('/org/documents', (req, res, next) => {
+router.get('/org/documents', createLimiter, (req, res, next) => {
   req.app.get('authenticateApiKey')(req, res, next);
 }, async (req, res) => {
   const db = req.app.get('db');
@@ -440,7 +440,7 @@ router.get('/org/documents', (req, res, next) => {
   res.json({ success: true, documents: docs, total, limit, offset });
 });
 
-router.get('/org/profile', (req, res, next) => {
+router.get('/org/profile', createLimiter, (req, res, next) => {
   req.app.get('authenticateApiKey')(req, res, next);
 }, async (req, res) => {
   try {
@@ -464,7 +464,7 @@ router.get('/org/profile', (req, res, next) => {
   }
 });
 
-router.post('/org/branding', (req, res, next) => {
+router.post('/org/branding', createLimiter, (req, res, next) => {
   req.app.get('authenticateApiKey')(req, res, next);
 }, async (req, res) => {
   try {
@@ -494,7 +494,7 @@ router.post('/org/branding', (req, res, next) => {
   }
 });
 
-router.get('/org/branding', (req, res, next) => {
+router.get('/org/branding', createLimiter, (req, res, next) => {
   req.app.get('authenticateApiKey')(req, res, next);
 }, async (req, res) => {
   try {

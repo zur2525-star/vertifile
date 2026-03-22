@@ -123,12 +123,8 @@ router.post('/keys-legacy/create', authenticateAdmin, async (req, res) => {
 });
 
 // List API keys (legacy)
-router.get('/keys-legacy', async (req, res) => {
+router.get('/keys-legacy', authenticateAdmin, async (req, res) => {
   const db = req.app.get('db');
-  const adminSecret = req.headers['x-admin-secret'];
-  if (!isValidAdminSecret(adminSecret)) {
-    return res.status(403).json({ success: false, error: 'Unauthorized' });
-  }
   const keys = (await db.listApiKeys()).map(k => ({
     ...k,
     apiKey: k.apiKey.substring(0, 12) + '...'
