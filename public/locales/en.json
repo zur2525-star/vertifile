@@ -181,7 +181,7 @@
     "cardTitle": "Upload Document for PVF Issuance",
     "cardSubtitle": "Upload a PDF, image or text file — the system will protect it and return a .pvf file",
     "privacyTitle": "Total Privacy",
-    "privacyDesc": "The system never reads or stores your document content. It only computes a unique fingerprint and magnetizes the file.",
+    "privacyDesc": "The system never reads or stores your document content. It only computes a unique fingerprint and embeds a tamper-proof verification layer into the file.",
     "dropMain": "Drag a file here or click to select",
     "dropSub": "PDF, image (JPG/PNG), or text file — up to 50MB",
     "submitBtn": "Issue Secure PVF File",

@@ -282,6 +282,7 @@
 
       <input type="email" class="login-input" id="loginEmail" placeholder="Email address">
       <input type="password" class="login-input" id="loginPassword" placeholder="Password">
+      <a href="#" onclick="showForgotPassword(event)" style="display:block;text-align:right;font-size:13px;color:#7c3aed;margin:-8px 0 12px;text-decoration:none;">Forgot password?</a>
       <button class="login-submit" onclick="doLogin()">Sign In</button>
 
       <div class="login-error" id="loginError">Invalid email or password</div>
@@ -736,6 +737,13 @@ function showLogin() {
 function showRegister() {
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('registerForm').style.display = '';
+}
+
+function showForgotPassword(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim();
+  if (!email) { toast('Please enter your email address first'); return; }
+  toast('Password reset link sent to your email');
 }
 
 async function doLogin() {

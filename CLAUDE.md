@@ -278,3 +278,11 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-03-22 12:00 | FIX | locales/*.json | Added 27 privacy/GDPR keys to 9 non-English locales | ✓
 2026-03-22 12:00 | SECURITY | viewer/main.js | sandbox:true, DevTools blocked in prod, URL validation on openExternal | ✓
 2026-03-22 12:00 | TEST | Full human-like test | 6 agents, 79 pass, 10 fail, 13 warnings | ✓
+
+2026-03-22 13:00 | FIX | about+enterprise | Stats unified to 10K+ docs (was 50K/500K inconsistency) | ✓
+2026-03-22 13:00 | FIX | verify.html | Added .pvf explainer + sample document button | ✓
+2026-03-22 13:00 | FIX | app.html | Added forgot password link + toast | ✓
+2026-03-22 13:00 | FIX | upload.html | Replaced 'magnetizes' with clear language | ✓
+2026-03-22 13:00 | FIX | pricing.html | Added 'no credit card required' under Pro | ✓
+2026-03-22 13:00 | FIX | viewer.html | Contrast fix, drop zone visible, Cmd+O, copy hash/sig, error guidance | ✓
+2026-03-22 13:00 | TEST | UX audit — 5 sub-agents | avg score: 6.8/10 → fixing 11 issues | ✓

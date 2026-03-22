@@ -54,12 +54,12 @@
   .props-header { padding: 20px 24px 16px; border-bottom: 1px solid rgba(124,58,237,.1); display: flex; align-items: center; justify-content: space-between; }
   .props-header h3 { font-size: 15px; font-weight: 700; color: #e2dff0; display: flex; align-items: center; gap: 8px; }
   .props-header h3 svg { width: 18px; height: 18px; }
-  .props-close { background: none; border: none; color: rgba(196,181,253,.4); cursor: pointer; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: .2s; font-size: 18px; }
+  .props-close { background: none; border: none; color: rgba(196,181,253,.65); cursor: pointer; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: .2s; font-size: 18px; }
   .props-close:hover { background: rgba(124,58,237,.15); color: #c4b5fd; }
   .props-body { padding: 16px 24px 24px; }
   .props-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(124,58,237,.06); }
   .props-row:last-child { border-bottom: none; }
-  .props-label { font-size: 11px; font-weight: 600; color: rgba(196,181,253,.4); text-transform: uppercase; letter-spacing: .5px; min-width: 90px; }
+  .props-label { font-size: 11px; font-weight: 600; color: rgba(196,181,253,.65); text-transform: uppercase; letter-spacing: .5px; min-width: 90px; }
   .props-value { font-size: 12px; color: #e2dff0; text-align: right; word-break: break-all; max-width: 260px; font-family: 'SF Mono', Monaco, monospace; }
   .props-value.status-ok { color: #4ade80; font-weight: 600; }
   .props-value.status-fail { color: #f87171; font-weight: 600; }
@@ -79,19 +79,20 @@
   .ab-sep { width: 1px; height: 18px; background: rgba(124,58,237,.12); margin: 0 6px; }
   .ab-badge { background: linear-gradient(135deg,rgba(124,58,237,.3),rgba(109,40,217,.2)); color: #c4b5fd; font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 5px; letter-spacing: 1px; border: 1px solid rgba(124,58,237,.2); }
   .ab-name { font-size: 12px; color: #e2dff0; font-weight: 500; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .ab-zoom { font-size: 11px; color: rgba(196,181,253,.4); min-width: 34px; text-align: center; font-weight: 600; }
+  .ab-zoom { font-size: 11px; color: rgba(196,181,253,.65); min-width: 34px; text-align: center; font-weight: 600; }
   .ab-toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e1b2e; color: #c4b5fd; padding: 8px 20px; border-radius: 8px; font-size: 12px; border: 1px solid rgba(124,58,237,.2); box-shadow: 0 8px 24px rgba(0,0,0,.4); opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 300; }
   .ab-toast.show { opacity: 1; }
 
   .doc-area { flex: 1; position: relative; overflow: auto; -webkit-app-region: no-drag; background: #0f0e17; }
   .doc-area iframe { width: 100%; height: 100%; border: none; background: transparent; display: block; }
-  .welcome { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(ellipse at center, #1a1830 0%, #0f0e17 70%); -webkit-app-region: no-drag; }
+  .welcome { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(ellipse at center, #1a1830 0%, #0f0e17 70%); -webkit-app-region: no-drag; border: 2px dashed rgba(124,58,237,.2); transition: border-color .2s; }
+  .welcome:hover { border-color: rgba(124,58,237,.4); }
   .welcome svg { width: 80px; height: 80px; margin-bottom: 24px; opacity: .5; }
   .welcome h2 { font-size: 22px; font-weight: 700; color: #c4b5fd; margin-bottom: 8px; }
   .welcome p { font-size: 14px; color: #6b7280; margin-bottom: 32px; }
   .welcome .open-btn { padding: 12px 28px; background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: .2s; box-shadow: 0 4px 20px rgba(124,58,237,.3); }
   .welcome .open-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(124,58,237,.4); }
-  .welcome .drop-hint { margin-top: 16px; font-size: 12px; color: #4b5563; }
+  .welcome .drop-hint { margin-top: 16px; font-size: 12px; color: #9ca3af; }
   .error-overlay { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,14,23,.95); align-items: center; justify-content: center; flex-direction: column; z-index: 10; }
   .error-overlay.show { display: flex; }
   .error-overlay h3 { font-size: 18px; color: #f87171; margin-bottom: 8px; }
@@ -159,8 +160,8 @@
       <div class="props-body" id="propsBody">
         <div class="props-row"><span class="props-label">File Name</span><span class="props-value" id="propName">—</span></div>
         <div class="props-row"><span class="props-label">Status</span><span class="props-value" id="propStatus">—</span></div>
-        <div class="props-row"><span class="props-label">Hash (SHA-256)</span><span class="props-value" id="propHash">—</span></div>
-        <div class="props-row"><span class="props-label">Signature</span><span class="props-value" id="propSig">—</span></div>
+        <div class="props-row"><span class="props-label">Hash (SHA-256)</span><span class="props-value"><span id="propHash" style="cursor:pointer" onclick="copyPropValue('hash')" title="Click to copy">—</span> <span onclick="copyPropValue('hash')" style="cursor:pointer;font-size:11px;opacity:.6" title="Copy hash">&#x1F4CB;</span></span></div>
+        <div class="props-row"><span class="props-label">Signature</span><span class="props-value"><span id="propSig" style="cursor:pointer" onclick="copyPropValue('sig')" title="Click to copy">—</span> <span onclick="copyPropValue('sig')" style="cursor:pointer;font-size:11px;opacity:.6" title="Copy signature">&#x1F4CB;</span></span></div>
         <div class="props-row"><span class="props-label">Created</span><span class="props-value" id="propCreated">—</span></div>
         <div class="props-row"><span class="props-label">Organization</span><span class="props-value" id="propOrg">—</span></div>
         <div class="props-row"><span class="props-label">Format</span><span class="props-value" id="propFormat">—</span></div>
@@ -182,6 +183,7 @@
       <h3 id="errorTitle">Invalid File</h3>
       <p id="errorMessage" style="white-space:pre-line">Something went wrong.</p>
       <button class="toolbar-btn" style="margin-top:24px;padding:10px 24px;font-size:14px;-webkit-app-region:no-drag" onclick="openFile()">Check Another Document</button>
+      <a href="https://vertifile.com/verify" target="_blank" style="display:block;margin-top:12px;color:#9ca3af;font-size:13px;text-decoration:none;">Learn more about document verification →</a>
     </div>
     <iframe id="pvfFrame" style="display:none" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
   </div>
@@ -420,6 +422,15 @@
     return meta;
   }
 
+  function copyPropValue(field) {
+    var m = __pvfMeta;
+    var val = field === 'hash' ? m.hash : m.sig;
+    if (val) {
+      bridge.copyToClipboard(val);
+      showToast((field === 'hash' ? 'Hash' : 'Signature') + ' copied!');
+    }
+  }
+
   function showProperties() {
     closeMenus();
     var m = __pvfMeta;
@@ -526,6 +537,7 @@
     if ((e.metaKey || e.ctrlKey) && (e.key === '=' || e.key === '+')) { e.preventDefault(); viewerZoom(1); }
     if ((e.metaKey || e.ctrlKey) && e.key === '-') { e.preventDefault(); viewerZoom(-1); }
     if ((e.metaKey || e.ctrlKey) && e.key === '0') { e.preventDefault(); viewerZoom(0); }
+    if ((e.metaKey || e.ctrlKey) && e.key === 'o') { e.preventDefault(); openFile(); }
     if (e.key === 'Escape') { closeProps(); closeMenus(); }
   });
 
