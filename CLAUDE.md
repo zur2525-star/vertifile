@@ -212,6 +212,38 @@ pvf-project/
 
 ---
 
+## Pre-Commit / Pre-Push Rules
+
+**כל commit חייב לעבור את הצעדים הבאים לפני push:**
+
+```
+── pre-commit ──
+1. node --check [כל קובץ JS שהשתנה] → syntax error = עצור
+2. npm audit → CRITICAL/HIGH = עצור, תקן
+3. npm test → test נכשל = עצור, תקן
+4. grep -r "console.log" routes/ services/ middleware/ → הסר
+5. grep secrets (sk_, hardcoded password/SECRET) → עצור מיד
+
+── commit format ──
+type: תיאור קצר
+
+  fix:      תיקון באג
+  feat:     פיצ'ר חדש
+  security: תיקון אבטחה
+  refactor: שיפור קוד
+  test:     טסטים
+  chore:    תחזוקה
+
+── pre-push ──
+npm audit --audit-level=high → נכשל = חסום push
+
+── אחרי commit ──
+רשום ל-CLAUDE.md:
+[תאריך] | COMMIT | [קבצים] | [הודעה] | npm audit ✓ | tests ✓ | ✓
+```
+
+---
+
 ## Change Log
 2026-03-22 02:30 | SAVE | CLAUDE.md | Updated to master architecture prompt with full workflow | ✓
 
