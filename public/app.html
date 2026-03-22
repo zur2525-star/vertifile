@@ -363,31 +363,31 @@
       </button>
 
       <div class="nav-item active" onclick="switchView('all')" data-view="all">
-        <span class="nav-icon">&#128196;</span>
-        <span>All Documents</span>
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+        <span data-i18n="app.allDocs">All Documents</span>
         <span class="nav-badge" id="badgeAll">0</span>
       </div>
       <div class="nav-item" onclick="switchView('starred')" data-view="starred">
-        <span class="nav-icon">&#11088;</span>
-        <span>Starred</span>
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+        <span data-i18n="app.starred">Starred</span>
       </div>
       <div class="nav-item" onclick="switchView('shared')" data-view="shared">
-        <span class="nav-icon">&#128279;</span>
-        <span>Shared</span>
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+        <span data-i18n="app.shared">Shared</span>
       </div>
 
       <div class="nav-divider"></div>
 
       <div class="nav-item" onclick="switchView('api')" data-view="api">
-        <span class="nav-icon">&#128268;</span>
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
         <span data-i18n="app.api">API</span>
       </div>
       <div class="nav-item" onclick="switchView('branding')" data-view="branding">
-        <span class="nav-icon">&#127912;</span>
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="13.5" cy="6.5" r="2.5"/><path d="M17.5 10.5L19 12l-7.5 7.5L3 21l1.5-8.5L12 5l5.5 5.5z"/></svg></span>
         <span data-i18n="app.branding">Branding</span>
       </div>
       <div class="nav-item" onclick="switchView('settings')" data-view="settings">
-        <span class="nav-icon">&#9881;</span>
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
         <span data-i18n="app.settings">Settings</span>
       </div>
 
@@ -617,10 +617,10 @@
     <div class="doc-preview" id="docPreview">
       <div class="doc-preview-toolbar">
         <span class="preview-title" id="previewTitle">Document</span>
-        <button onclick="downloadDoc()" title="Download"><span>&#11015;</span> Download</button>
-        <button onclick="shareDoc()" title="Share"><span>&#128279;</span> Share</button>
-        <button onclick="printDoc()" title="Print"><span>&#128424;</span></button>
-        <button onclick="deleteDoc()" title="Delete" style="color:#dc2626"><span>&#128465;</span></button>
+        <button onclick="deleteDoc()" title="Delete" style="color:#dc2626"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+        <button onclick="printDoc()" title="Print"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
+        <button onclick="shareDoc()" title="Share"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</button>
+        <button onclick="downloadDoc()" title="Download"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download</button>
         <button class="close-preview" onclick="closePreview()" title="Close">&times;</button>
       </div>
       <div class="doc-preview-content" id="previewContent"></div>
@@ -847,10 +847,10 @@ function renderDocumentList() {
 
   container.innerHTML = filtered.map((d, i) => {
     const id = d.id || d._id || d.hash;
-    const name = d.originalName || d.original_name || 'Untitled';
-    const ext = name.split('.').pop().toLowerCase();
-    const typeClass = getTypeClass(ext);
-    const typeIcon = getTypeIcon(ext);
+    const rawName = d.originalName || d.original_name || 'Untitled';
+    const name = rawName.replace(/\.[^.]+$/, '') + '.pvf';
+    const typeClass = 'pvf';
+    const typeIcon = getTypeIcon('pvf');
     const size = formatSize(d.fileSize || d.file_size || 0);
     const date = formatDate(d.timestamp || d.createdAt || d.created_at || d.created);
     const isStarred = starredIds.has(id);
@@ -897,8 +897,10 @@ function openPreview() {
   const panel = document.getElementById('docPreview');
   panel.classList.add('open');
 
-  const name = selectedDoc.originalName || selectedDoc.original_name || 'Untitled';
-  document.getElementById('previewTitle').textContent = name;
+  const rawName = selectedDoc.originalName || selectedDoc.original_name || 'Untitled';
+  // Show as .pvf file name (replace original extension with .pvf)
+  const pvfName = rawName.replace(/\.[^.]+$/, '') + '.pvf';
+  document.getElementById('previewTitle').textContent = pvfName;
 
   const hash = selectedDoc.hash || '';
   document.getElementById('previewHash').textContent = hash.length > 20 ? hash.substring(0, 10) + '...' + hash.slice(-6) : hash;
@@ -1185,10 +1187,44 @@ function shareDoc() {
 
 function printDoc() {
   if (!selectedDoc) return;
-  const iframe = document.querySelector('#previewContent iframe');
-  if (iframe) {
-    try { iframe.contentWindow.print(); } catch (e) { window.print(); }
-  }
+  // Fetch the PVF content and extract the original document for printing
+  var shareId = selectedDoc.share_id || selectedDoc.shareId;
+  if (!shareId) { toast('Cannot print — no share link'); return; }
+  fetch('/d/' + shareId + '/raw', { credentials: 'same-origin' })
+    .then(function(r) { return r.text(); })
+    .then(function(html) {
+      // Extract the base64 payload (original file embedded in PVF)
+      var match = html.match(/src="data:([^;]+);base64,([^"]+)"/);
+      if (match) {
+        var mime = match[1];
+        var b64 = match[2];
+        var dataUrl = 'data:' + mime + ';base64,' + b64;
+        if (mime === 'application/pdf') {
+          // Open PDF in new window and print
+          var w = window.open('', '_blank');
+          w.document.write('<html><head><title>Print</title></head><body style="margin:0"><iframe src="' + dataUrl + '" style="width:100%;height:100vh;border:none"></iframe></body></html>');
+          w.document.close();
+          setTimeout(function() { w.print(); }, 1000);
+        } else if (mime.startsWith('image/')) {
+          var w = window.open('', '_blank');
+          w.document.write('<html><head><title>Print</title></head><body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh"><img src="' + dataUrl + '" style="max-width:100%;max-height:100vh"></body></html>');
+          w.document.close();
+          setTimeout(function() { w.print(); }, 500);
+        }
+      } else {
+        // Text document — extract text content
+        var textMatch = html.match(/<div class="text-doc"[^>]*>([\s\S]*?)<\/div>/);
+        if (textMatch) {
+          var w = window.open('', '_blank');
+          w.document.write('<html><head><title>Print</title><style>body{font-family:serif;padding:40px;max-width:800px;margin:0 auto;font-size:14px;line-height:1.6;white-space:pre-wrap}</style></head><body>' + textMatch[1] + '</body></html>');
+          w.document.close();
+          setTimeout(function() { w.print(); }, 300);
+        } else {
+          toast('Cannot extract document for printing');
+        }
+      }
+    })
+    .catch(function() { toast('Failed to load document for printing'); });
 }
 
 async function deleteDoc() {
@@ -1429,6 +1465,7 @@ function getInitials(name) {
 }
 
 function getTypeClass(ext) {
+  if (ext === 'pvf') return 'doc-type-pvf';
   if (ext === 'pdf') return 'doc-type-pdf';
   if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return 'doc-type-image';
   if (['txt', 'doc', 'docx', 'rtf'].includes(ext)) return 'doc-type-text';
@@ -1436,10 +1473,11 @@ function getTypeClass(ext) {
 }
 
 function getTypeIcon(ext) {
-  if (ext === 'pdf') return '&#128459;';
-  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return '&#128444;';
-  if (['txt', 'doc', 'docx', 'rtf'].includes(ext)) return '&#128196;';
-  return '&#128195;';
+  if (ext === 'pvf') return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4" stroke="#7c3aed" stroke-width="2"/></svg>';
+  if (ext === 'pdf') return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+  if (['txt', 'doc', 'docx', 'rtf'].includes(ext)) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>';
+  return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
 }
 
 function escHtml(s) {
