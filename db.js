@@ -128,6 +128,17 @@ const _ready = (async () => {
   // Performance indexes
   try { await pool.query('CREATE INDEX IF NOT EXISTS idx_docs_user_id ON documents(user_id)'); } catch (_) { /* already exists */ }
   try { await pool.query('CREATE INDEX IF NOT EXISTS idx_users_provider ON users(provider, provider_id)'); } catch (_) { /* already exists */ }
+  // Monitoring table
+  try {
+    await pool.query(`CREATE TABLE IF NOT EXISTS health_checks (
+      id SERIAL PRIMARY KEY,
+      checked_at TIMESTAMPTZ DEFAULT NOW(),
+      status TEXT NOT NULL,
+      response_ms INT,
+      details JSONB DEFAULT '{}'
+    )`);
+    await pool.query('CREATE INDEX IF NOT EXISTS idx_health_time ON health_checks(checked_at)');
+  } catch (_) { /* already exists */ }
 })();
 
 // ================================================================
@@ -566,6 +577,49 @@ async function close() {
 }
 
 // ================================================================
+// ================================================================
+// MONITORING
+// ================================================================
+async function logHealthCheck(status, responseMs, details = {}) {
+  await pool.query('INSERT INTO health_checks (status, response_ms, details) VALUES ($1, $2, $3)', [status, responseMs, JSON.stringify(details)]);
+  // Keep only last 30 days
+  await pool.query("DELETE FROM health_checks WHERE checked_at < NOW() - INTERVAL '30 days'");
+}
+
+async function getHealthHistory(hours = 24) {
+  const { rows } = await pool.query(
+    'SELECT * FROM health_checks WHERE checked_at > NOW() - ($1 || \' hours\')::INTERVAL ORDER BY checked_at DESC LIMIT 500',
+    [hours]
+  );
+  return rows;
+}
+
+async function getUptimeStats(days = 30) {
+  const { rows: total } = await pool.query(
+    "SELECT COUNT(*) as total, COUNT(*) FILTER (WHERE status = 'ok') as ok FROM health_checks WHERE checked_at > NOW() - ($1 || ' days')::INTERVAL",
+    [days]
+  );
+  const r = total[0];
+  const uptimePercent = r.total > 0 ? ((r.ok / r.total) * 100).toFixed(2) : '100.00';
+  const { rows: incidents } = await pool.query(
+    "SELECT checked_at, details FROM health_checks WHERE status != 'ok' AND checked_at > NOW() - ($1 || ' days')::INTERVAL ORDER BY checked_at DESC LIMIT 20",
+    [days]
+  );
+  const { rows: avgResp } = await pool.query(
+    "SELECT ROUND(AVG(response_ms)) as avg_ms FROM health_checks WHERE status = 'ok' AND checked_at > NOW() - ($1 || ' days')::INTERVAL",
+    [days]
+  );
+  return {
+    uptimePercent,
+    totalChecks: parseInt(r.total),
+    okChecks: parseInt(r.ok),
+    failedChecks: parseInt(r.total) - parseInt(r.ok),
+    avgResponseMs: avgResp[0]?.avg_ms || 0,
+    incidents
+  };
+}
+
+// ================================================================
 // EXPORTS
 // ================================================================
 module.exports = {
@@ -611,6 +665,9 @@ module.exports = {
   updateUserProfile,
   changeUserPassword,
   deleteUser,
+  logHealthCheck,
+  getHealthHistory,
+  getUptimeStats,
   close,
   _db: pool,
   _ready,

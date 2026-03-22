@@ -133,4 +133,48 @@ router.get('/keys-legacy', authenticateAdmin, async (req, res) => {
   res.json({ success: true, keys, total: keys.length });
 });
 
+// ================================================================
+// MONITORING ENDPOINTS
+// ================================================================
+
+// Log a health check result (called by monitoring system)
+router.post('/health-log', authenticateAdmin, async (req, res) => {
+  const db = req.app.get('db');
+  const { status, responseMs, details } = req.body;
+  await db.logHealthCheck(status || 'ok', responseMs || 0, details || {});
+  res.json({ success: true });
+});
+
+// Get health check history
+router.get('/monitoring', authenticateAdmin, async (req, res) => {
+  const db = req.app.get('db');
+  const hours = parseInt(req.query.hours) || 24;
+  const history = await db.getHealthHistory(hours);
+  res.json({ success: true, history });
+});
+
+// Get uptime stats
+router.get('/uptime', authenticateAdmin, async (req, res) => {
+  const db = req.app.get('db');
+  const days = parseInt(req.query.days) || 30;
+  const stats = await db.getUptimeStats(days);
+  res.json({ success: true, ...stats });
+});
+
+// Self-check endpoint — logs its own health
+router.get('/self-check', async (req, res) => {
+  const start = Date.now();
+  const db = req.app.get('db');
+  try {
+    const stats = await db.getStats();
+    const ms = Date.now() - start;
+    await db.logHealthCheck('ok', ms, { documents: stats.documents, organizations: stats.organizations });
+    res.json({ success: true, status: 'ok', responseMs: ms, ...stats });
+  } catch (e) {
+    const ms = Date.now() - start;
+    await db.logHealthCheck('error', ms, { error: e.message }).catch(() => {});
+    res.status(500).json({ success: false, status: 'error', responseMs: ms, error: e.message });
+  }
+});
+
 module.exports = router;
