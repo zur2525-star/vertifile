@@ -207,10 +207,10 @@
   <h1 data-i18n="demo.heroTitle">How Vertifile Protects Documents</h1>
   <p data-i18n="demo.heroSubtitle">Understand how a document becomes tamper-proof, what makes a .pvf file unique, and how verification detects forgery in real time.</p>
   <div class="hero-badges">
-    <div class="badge">&#128274; Cryptographic Hashing</div>
-    <div class="badge">&#9939; Blockchain Registry</div>
-    <div class="badge">&#10024; Live Animated Stamp</div>
-    <div class="badge">&#128737; BLIND Processing</div>
+    <div class="badge" data-i18n="demo.badgeHash">&#128274; Cryptographic Hashing</div>
+    <div class="badge" data-i18n="demo.badgeBlockchain">&#9939; Blockchain Registry</div>
+    <div class="badge" data-i18n="demo.badgeStamp">&#10024; Live Animated Stamp</div>
+    <div class="badge" data-i18n="demo.badgeBLIND">&#128737; BLIND Processing</div>
   </div>
 </section>
 
@@ -223,7 +223,7 @@
   <div class="compare">
     <!-- Verified -->
     <div class="compare-card good">
-      <div class="cc-header">&#10003; Verified Document</div>
+      <div class="cc-header" data-i18n="demo.verifiedHeader">&#10003; Verified Document</div>
       <div class="cc-body">
         <div class="doc-preview">
           <div class="dp-title">TEL AVIV UNIVERSITY</div>
@@ -246,17 +246,17 @@
           </div>
         </div>
         <ul style="margin-top:16px;font-size:12px;color:#059669;list-style:none;padding:0">
-          <li>&#10003; Live animated holographic waves</li>
-          <li>&#10003; Rotating verification stamp with green checkmark</li>
-          <li>&#10003; Stamp continuously spins (proves it's live)</li>
-          <li>&#10003; Hash matches blockchain registry</li>
-          <li>&#10003; White background — clean document</li>
+          <li data-i18n="demo.verified1">&#10003; Live animated holographic waves</li>
+          <li data-i18n="demo.verified2">&#10003; Rotating verification stamp with green checkmark</li>
+          <li data-i18n="demo.verified3">&#10003; Stamp continuously spins (proves it's live)</li>
+          <li data-i18n="demo.verified4">&#10003; Hash matches blockchain registry</li>
+          <li data-i18n="demo.verified5">&#10003; White background — clean document</li>
         </ul>
       </div>
     </div>
     <!-- Forged -->
     <div class="compare-card bad">
-      <div class="cc-header">&#10007; Forged Document</div>
+      <div class="cc-header" data-i18n="demo.forgedHeader">&#10007; Forged Document</div>
       <div class="cc-body">
         <div class="doc-preview">
           <div class="dp-title">TEL AVIV UNIVERSITY</div>
@@ -280,11 +280,11 @@
           </div>
         </div>
         <ul style="margin-top:16px;font-size:12px;color:#dc2626;list-style:none;padding:0">
-          <li>&#10007; No holographic waves</li>
-          <li>&#10007; Stamp is frozen — red X instead of checkmark</li>
-          <li>&#10007; Large red X overlays the document</li>
-          <li>&#10007; "FORGED" watermark appears</li>
-          <li>&#10007; Dark red background signals danger</li>
+          <li data-i18n="demo.forged1">&#10007; No holographic waves</li>
+          <li data-i18n="demo.forged2">&#10007; Stamp is frozen — red X instead of checkmark</li>
+          <li data-i18n="demo.forged3">&#10007; Large red X overlays the document</li>
+          <li data-i18n="demo.forged4">&#10007; "FORGED" watermark appears</li>
+          <li data-i18n="demo.forged5">&#10007; Dark red background signals danger</li>
         </ul>
       </div>
     </div>
@@ -366,28 +366,28 @@
   </ul>
 
   <h2 data-i18n="demo.formatTitle">The .pvf File Format</h2>
-  <p>PVF (Protected Verifiable File) is a new file format submitted to <strong>IANA</strong> for official MIME type registration (<code>application/pvf</code>). It's a self-contained HTML document that includes:</p>
+  <p data-i18n="demo.formatDesc">PVF (Protected Verifiable File) is a new file format submitted to <strong>IANA</strong> for official MIME type registration (<code>application/pvf</code>). It's a self-contained HTML document that includes:</p>
 
   <ul class="feature-list">
     <li>
       <div class="fl-icon purple">&#128196;</div>
       <div class="fl-text">
-        <h4>The Original Document</h4>
-        <p>Embedded as base64 (for images/PDFs) or escaped text. The content is displayed inside the file — no external dependencies needed.</p>
+        <h4 data-i18n="demo.format1Title">The Original Document</h4>
+        <p data-i18n="demo.format1Desc">Embedded as base64 (for images/PDFs) or escaped text. The content is displayed inside the file — no external dependencies needed.</p>
       </div>
     </li>
     <li>
       <div class="fl-icon green">&#128274;</div>
       <div class="fl-text">
-        <h4>Cryptographic Hash + Signature</h4>
-        <p>The SHA-256 hash and HMAC signature are embedded as JavaScript variables. These are verified against the server on every load.</p>
+        <h4 data-i18n="demo.format2Title">Cryptographic Hash + Signature</h4>
+        <p data-i18n="demo.format2Desc">The SHA-256 hash and HMAC signature are embedded as JavaScript variables. These are verified against the server on every load.</p>
       </div>
     </li>
     <li>
       <div class="fl-icon blue">&#10024;</div>
       <div class="fl-text">
-        <h4>Verification UI + Security Code</h4>
-        <p>The animated stamp, holographic waves, and all anti-tamper detection code are built into the file. It works offline too (with local verification).</p>
+        <h4 data-i18n="demo.format3Title">Verification UI + Security Code</h4>
+        <p data-i18n="demo.format3Desc">The animated stamp, holographic waves, and all anti-tamper detection code are built into the file. It works offline too (with local verification).</p>
       </div>
     </li>
   </ul>
@@ -395,7 +395,7 @@
   <div class="info-box green">
     <div class="ib-icon">&#128737;</div>
     <div class="ib-text">
-      <strong>Privacy by design:</strong> Vertifile uses BLIND processing. The server never reads, stores, or transmits your document content. Only the cryptographic hash (fingerprint) is stored and verified. Your document stays on your device.
+      <span data-i18n="demo.privacyNotice"><strong>Privacy by design:</strong> Vertifile uses BLIND processing. The server never reads, stores, or transmits your document content. Only the cryptographic hash (fingerprint) is stored and verified. Your document stays on your device.</span>
     </div>
   </div>
 

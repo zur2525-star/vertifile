@@ -50,7 +50,7 @@
   function applyTranslations(){
     document.querySelectorAll('[data-i18n]').forEach(function(el){
       var val = getVal(translations, el.getAttribute('data-i18n'));
-      if(val) el.textContent = val;
+      if(val){if(/<[a-z][\s\S]*>/i.test(val))el.innerHTML=val;else el.textContent=val;}
     });
     // Update page title if available
     var pageTitle = getVal(translations,'pageTitle');

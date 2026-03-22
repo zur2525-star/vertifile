@@ -291,3 +291,5 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-03-22 13:30 | FEAT | scripts/backup-db.js | DB backup script with 7-day retention | ✓
 2026-03-22 13:30 | FEAT | middleware/error-alerter.js | Error tracking — recent errors + stats | ✓
 2026-03-22 13:30 | FEAT | routes/admin.js | GET /admin/errors endpoint | ✓
+
+2026-03-22 14:00 | FIX | demo.html + locales/*.json | Full demo page i18n — badges, verified/forged lists, format section, privacy notice in all 10 languages | ✓
