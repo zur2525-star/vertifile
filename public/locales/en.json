@@ -80,8 +80,8 @@
     "s5desc": "Freezes stamp when browser developer tools are opened",
     "s6title": "Right-Click Block",
     "s6desc": "Blocks right-click context menu to prevent inspection of security elements",
-    "s7title": "Print Prevention",
-    "s7desc": "CSS and JS guards block printing and PDF export",
+    "s7title": "Secure Print",
+    "s7desc": "Prints document content only — security stamp and holographic waves are excluded",
     "s8title": "Audit Logging",
     "s8desc": "Every access attempt is logged with timestamp and IP"
   },

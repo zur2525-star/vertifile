@@ -80,8 +80,8 @@
     "s5desc": "Congela el sello cuando se abren las herramientas de desarrollo del navegador",
     "s6title": "Bloqueo de clic derecho",
     "s6desc": "Impide guardar, copiar e inspeccionar el sello",
-    "s7title": "Prevención de impresión",
-    "s7desc": "Protecciones CSS y JS bloquean la impresión y la exportación a PDF",
+    "s7title": "Impresión segura",
+    "s7desc": "Imprime solo el contenido del documento — el sello de seguridad y las ondas holográficas se excluyen",
     "s8title": "Registro de auditoría",
     "s8desc": "Cada intento de acceso se registra con marca de tiempo e IP"
   },

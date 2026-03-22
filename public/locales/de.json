@@ -80,8 +80,8 @@
     "s5desc": "Friert den Stempel ein, wenn Browser-Entwicklertools geöffnet werden",
     "s6title": "Rechtsklick-Sperre",
     "s6desc": "Verhindert das Speichern, Kopieren und Inspizieren des Stempels",
-    "s7title": "Druckschutz",
-    "s7desc": "CSS- und JS-Schutzmaßnahmen blockieren Drucken und PDF-Export",
+    "s7title": "Sicheres Drucken",
+    "s7desc": "Druckt nur den Dokumentinhalt — Sicherheitsstempel und holografische Wellen werden ausgeschlossen",
     "s8title": "Audit-Protokollierung",
     "s8desc": "Jeder Zugriffsversuch wird mit Zeitstempel und IP protokolliert"
   },

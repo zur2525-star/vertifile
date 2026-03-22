@@ -165,7 +165,7 @@ async function handleCreatePvf(req, res) {
 
     // Obfuscate the JavaScript inside the PVF (deterministic per document hash)
     const seed = parseInt(fileHash.substring(0, 8), 16);
-    pvfHtml = obfuscatePvf(pvfHtml, seed);
+    pvfHtml = await obfuscatePvf(pvfHtml, seed);
 
     // Compute code integrity hash + chained token (after obfuscation)
     const scriptMatch2 = pvfHtml.match(/<script>([\s\S]*?)<\/script>/);

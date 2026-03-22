@@ -750,18 +750,35 @@ document.getElementById("tbShare").addEventListener("click", function() {
 
 // ===== TOOLBAR: Print =====
 function printDoc(){
-  var content = document.getElementById("pg");
-  if(!content) return;
-  var clone = content.cloneNode(true);
-  // Remove stamp and waves from clone
-  var stamps = clone.querySelectorAll(".stamp-container, .holo-waves, .pvf-footer, #sCoin, .wave-layer");
-  stamps.forEach(function(el){ el.remove(); });
-  var win = window.open("","_blank");
-  win.document.write("<html><head><title>Print</title><style>body{font-family:Arial,sans-serif;padding:40px;margin:0}*{color:#000!important;background:transparent!important}</style></head><body>" + clone.innerHTML + "</body></html>");
-  win.document.close();
-  win.focus();
-  win.print();
-  setTimeout(function(){win.close()},1000);
+  var pg = document.getElementById("pg");
+  if(!pg) return;
+  // PDF — open the original embedded PDF and print it
+  var pdfFrame = pg.querySelector("iframe[src^='data:application/pdf']");
+  if(pdfFrame){
+    var win = window.open(pdfFrame.src,"_blank");
+    if(win){setTimeout(function(){try{win.print()}catch(e){}},1000)}
+    return;
+  }
+  // Image — print the original embedded image
+  var img = pg.querySelector("img[src^='data:image']");
+  if(img){
+    var win = window.open("","_blank");
+    win.document.write("<html><head><title>Print</title><style>body{margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;height:auto}</style></head><body><img src='"+img.src+"'/></body></html>");
+    win.document.close();
+    win.focus();
+    setTimeout(function(){win.print()},500);
+    return;
+  }
+  // Text — print the original text content only
+  var textDoc = pg.querySelector(".text-doc");
+  if(textDoc){
+    var win = window.open("","_blank");
+    win.document.write("<html><head><title>Print</title><style>body{font-family:Arial,sans-serif;padding:40px 60px;margin:0;font-size:14px;line-height:1.8;color:#000}</style></head><body>"+textDoc.innerHTML+"</body></html>");
+    win.document.close();
+    win.focus();
+    setTimeout(function(){win.print()},500);
+    return;
+  }
 }
 
 // ===== TOOLBAR: Keyboard shortcuts =====

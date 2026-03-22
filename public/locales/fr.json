@@ -80,8 +80,8 @@
     "s5desc": "Gèle le cachet lorsque les outils de développement du navigateur sont ouverts",
     "s6title": "Blocage du clic droit",
     "s6desc": "Empêche l'enregistrement, la copie et l'inspection du cachet",
-    "s7title": "Protection contre l'impression",
-    "s7desc": "Des protections CSS et JS bloquent l'impression et l'export PDF",
+    "s7title": "Impression sécurisée",
+    "s7desc": "Imprime uniquement le contenu du document — le cachet de sécurité et les ondes holographiques sont exclus",
     "s8title": "Journal d'audit",
     "s8desc": "Chaque tentative d'accès est enregistrée avec horodatage et adresse IP"
   },

@@ -93,7 +93,7 @@ router.post('/upload', requireLogin, (req, res, next) => {
 
     // Obfuscate PVF
     const seed = parseInt(fileHash.substring(0, 8), 16);
-    pvfHtml = obfuscatePvf(pvfHtml, seed);
+    pvfHtml = await obfuscatePvf(pvfHtml, seed);
 
     // Compute code integrity hash (hash of the script content after obfuscation)
     const scriptMatch = pvfHtml.match(/<script>([\s\S]*?)<\/script>/);
