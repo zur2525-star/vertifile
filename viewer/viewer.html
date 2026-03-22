@@ -120,6 +120,8 @@
           <div class="menu-sep"></div>
           <div class="menu-option" onclick="saveAs()"><svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Save As...<span class="shortcut">⌘⇧S</span></div>
           <div class="menu-sep"></div>
+          <div class="menu-option" onclick="viewerPrint()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print<span class="shortcut">⌘P</span></div>
+          <div class="menu-sep"></div>
           <div class="menu-option" onclick="showProperties()"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Properties<span class="shortcut">⌘I</span></div>
         </div>
       </div>
@@ -133,6 +135,7 @@
       <div class="ab-sep"></div>
       <button class="ab-btn" title="Share" onclick="viewerShare()"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a3 3 0 100-6 3 3 0 000 6zM6 15a3 3 0 100-6 3 3 0 000 6zM18 22a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.5"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" stroke="currentColor" stroke-width="1.5"/></svg></button>
       <button class="ab-btn" title="Open in Browser" onclick="viewerOpenBrowser()"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="currentColor" stroke-width="1.5"/></svg></button>
+      <button class="ab-btn" title="Print" onclick="viewerPrint()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
     </div>
     <div class="ab-center">
       <span class="ab-badge">PVF</span>
@@ -376,6 +379,7 @@
 
   bridge.onTriggerOpen(function() { openFile(); });
   bridge.onTriggerSaveAs(function() { saveAs(); });
+  bridge.onTriggerPrint(function() { viewerPrint(); });
   bridge.onTriggerProperties(function() { showProperties(); });
   bridge.onTriggerZoomIn(function() { viewerZoom(1); });
   bridge.onTriggerZoomOut(function() { viewerZoom(-1); });
@@ -498,6 +502,15 @@
     bridge.openInBrowser(url);
   }
 
+  function viewerPrint() {
+    closeMenus();
+    var frame = document.getElementById('pvfFrame');
+    if (!frame || !frame.contentWindow) return;
+    try {
+      frame.contentWindow.printDoc();
+    } catch(e) {}
+  }
+
   function showToast(msg) {
     var t = document.getElementById('abToast');
     t.textContent = msg;
@@ -507,6 +520,7 @@
 
   // Keyboard shortcuts
   document.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'p') { e.preventDefault(); viewerPrint(); }
     if ((e.metaKey || e.ctrlKey) && e.key === 'i') { e.preventDefault(); showProperties(); }
     if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 's') { e.preventDefault(); saveAs(); }
     if ((e.metaKey || e.ctrlKey) && (e.key === '=' || e.key === '+')) { e.preventDefault(); viewerZoom(1); }

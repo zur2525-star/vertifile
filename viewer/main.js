@@ -126,6 +126,8 @@ function buildMenu() {
       { label: 'Open PVF...', accelerator: 'CmdOrCtrl+O', click: () => { if (mainWindow) mainWindow.webContents.send('trigger-open'); } },
       { label: 'Save As...', accelerator: 'CmdOrCtrl+Shift+S', click: () => { if (mainWindow) mainWindow.webContents.send('trigger-save-as'); } },
       { type: 'separator' },
+      { label: 'Print...', accelerator: 'CmdOrCtrl+P', click: () => { if (mainWindow) mainWindow.webContents.send('trigger-print'); } },
+      { type: 'separator' },
       { label: 'Properties', accelerator: 'CmdOrCtrl+I', click: () => { if (mainWindow) mainWindow.webContents.send('trigger-properties'); } },
       { type: 'separator' },
       { role: 'close' }

@@ -215,7 +215,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 /* Security: prevent user selection of protected content */
 .stamp,.stamp *{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-user-drag:none;user-drag:none}
 .page-bg img{-webkit-user-drag:none;user-drag:none;pointer-events:none}
-@media print{body{display:none!important}body::after{content:"This document is protected by Vertifile and cannot be printed.";display:block;padding:60px;text-align:center;font-size:24px;color:#c62828;font-weight:bold}}
+@media print{.pvf-toolbar,.tb-toast,.stamp-container,.holo-waves,.pvf-footer,#sCoin,.wave-layer,.loading{display:none!important}body{background:#fff!important;padding:0!important}*{color:#000!important;background:transparent!important}.page-wrap{box-shadow:none!important;margin:0!important;padding:0!important}.page-bg{box-shadow:none!important}}
 /* Screen capture CSS protection — content-visibility hidden for captured contexts */
 @media (display-mode: picture-in-picture){.page-wrap{filter:blur(30px)!important}.stamp{display:none!important}}
 </style>
@@ -246,6 +246,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
     <button class="tb-btn" id="tbDownload" title="Download">
       <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
+    <button class="tb-btn" title="Print" onclick="printDoc()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
   </div>
   <!-- Center: Filename -->
   <div class="tb-filename" id="tbName">
@@ -746,6 +747,22 @@ document.getElementById("tbShare").addEventListener("click", function() {
     });
   }
 });
+
+// ===== TOOLBAR: Print =====
+function printDoc(){
+  var content = document.getElementById("pg");
+  if(!content) return;
+  var clone = content.cloneNode(true);
+  // Remove stamp and waves from clone
+  var stamps = clone.querySelectorAll(".stamp-container, .holo-waves, .pvf-footer, #sCoin, .wave-layer");
+  stamps.forEach(function(el){ el.remove(); });
+  var win = window.open("","_blank");
+  win.document.write("<html><head><title>Print</title><style>body{font-family:Arial,sans-serif;padding:40px;margin:0}*{color:#000!important;background:transparent!important}</style></head><body>" + clone.innerHTML + "</body></html>");
+  win.document.close();
+  win.focus();
+  win.print();
+  setTimeout(function(){win.close()},1000);
+}
 
 // ===== TOOLBAR: Keyboard shortcuts =====
 document.addEventListener("keydown", function(e) {

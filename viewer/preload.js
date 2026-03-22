@@ -14,6 +14,9 @@ contextBridge.exposeInMainWorld('pvfBridge', {
   onTriggerSaveAs: (callback) => {
     ipcRenderer.on('trigger-save-as', () => callback());
   },
+  onTriggerPrint: (callback) => {
+    ipcRenderer.on('trigger-print', () => callback());
+  },
   onTriggerProperties: (callback) => {
     ipcRenderer.on('trigger-properties', () => callback());
   },
