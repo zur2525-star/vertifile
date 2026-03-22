@@ -26,10 +26,17 @@ function createWindow(pvfPath) {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: false
+      sandbox: true
     },
     show: false
   });
+
+  // Disable DevTools in production
+  if (!process.argv.includes('--dev')) {
+    mainWindow.webContents.on('devtools-opened', () => {
+      mainWindow.webContents.closeDevTools();
+    });
+  }
 
   mainWindow.once('ready-to-show', () => mainWindow.show());
   mainWindow.loadFile('viewer.html');
@@ -114,9 +121,11 @@ ipcMain.handle('copy-clipboard', async (event, text) => {
 });
 
 ipcMain.handle('open-browser', async (event, url) => {
-  const { shell } = require('electron');
-  shell.openExternal(url);
-  return { success: true };
+  // Only allow http/https URLs to prevent arbitrary protocol execution
+  if (typeof url === 'string' && (url.startsWith('https://') || url.startsWith('http://'))) {
+    const { shell } = require('electron');
+    await shell.openExternal(url);
+  }
 });
 
 function buildMenu() {

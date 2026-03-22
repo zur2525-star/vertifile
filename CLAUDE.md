@@ -274,3 +274,7 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-03-22 11:00 | FEAT | server.js | Memory guard — warns at 90% heap usage | ✓
 2026-03-22 11:00 | FEAT | middleware/request-logger.js | Request logging with pino (skips health) | ✓
 2026-03-22 11:00 | FEAT | middleware/response-envelope.js | API responses with requestId + timestamp | ✓
+
+2026-03-22 12:00 | FIX | locales/*.json | Added 27 privacy/GDPR keys to 9 non-English locales | ✓
+2026-03-22 12:00 | SECURITY | viewer/main.js | sandbox:true, DevTools blocked in prod, URL validation on openExternal | ✓
+2026-03-22 12:00 | TEST | Full human-like test | 6 agents, 79 pass, 10 fail, 13 warnings | ✓
