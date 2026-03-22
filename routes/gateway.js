@@ -1,5 +1,6 @@
 const express = require('express');
 const { getClientIP } = require('../middleware/auth');
+const logger = require('../services/logger');
 const { verifySignature } = require('../services/pvf-generator');
 
 const router = express.Router();
@@ -112,7 +113,7 @@ router.post('/intake', (req, res, next) => {
     });
 
   } catch (error) {
-    console.error('[GATEWAY] Intake error:', error.message);
+    logger.error('[GATEWAY] Intake error:', error.message);
     res.status(500).json({ success: false, error: 'Gateway processing error' });
   }
 });
@@ -190,7 +191,7 @@ router.post('/batch', (req, res, next) => {
     res.json({ success: true, total: results.length, verified, failed, results });
 
   } catch (error) {
-    console.error('[GATEWAY] Batch error:', error.message);
+    logger.error('[GATEWAY] Batch error:', error.message);
     res.status(500).json({ success: false, error: 'Batch processing error' });
   }
 });

@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const db = require('../db');
 const chain = require('../blockchain');
+const logger = require('./logger');
 const { obfuscatePvf } = require('../obfuscate');
 const { generatePvfHtml } = require('../templates/pvf');
 const { getClientIP } = require('../middleware/auth');
@@ -25,9 +26,9 @@ function loadOrCreateHmacSecret() {
     const dir = path.dirname(HMAC_FILE);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(HMAC_FILE, secret, { mode: 0o600 }); // owner-only permissions
-    console.log('[SECURITY] New HMAC secret generated and saved');
+    logger.info({ event: 'hmac_secret_created' }, 'New HMAC secret generated and saved');
   } catch (e) {
-    console.error('[SECURITY] Warning: Could not persist HMAC secret:', e.message);
+    logger.error({ err: e, event: 'hmac_secret_error' }, 'Could not persist HMAC secret');
   }
   return secret;
 }
@@ -142,7 +143,7 @@ async function handleCreatePvf(req, res) {
 
     // Step 5: Update org stats (skip for demo/user uploads without API key)
     if (req.apiKey && req.apiKey !== 'demo') {
-      try { await db.incrementDocCount(req.apiKey); } catch(e) { console.warn('[WARN] incrementDocCount:', e.message); }
+      try { await db.incrementDocCount(req.apiKey); } catch(e) { logger.warn({ err: e }, 'incrementDocCount failed'); }
     }
 
     // Step 6: Build .pvf file
@@ -177,12 +178,7 @@ async function handleCreatePvf(req, res) {
       .digest('hex');
     await db.saveCodeIntegrity(fileHash, codeIntegrity, chainedToken);
 
-    console.log(`[CREATE PVF] ${originalName} (${mimeType})`);
-    console.log(`  Hash:      ${fileHash.substring(0, 24)}...`);
-    console.log(`  Signature: ${signature.substring(0, 16)}...`);
-    console.log(`  Org:       ${req.org.orgName}`);
-    console.log(`  Size:      ${(fileBuffer.length / 1024).toFixed(1)} KB`);
-    console.log(`  Content:   NOT READ (blind processing)`);
+    logger.info({ event: 'create_pvf', file: originalName, mimeType, hash: fileHash.substring(0, 24), org: req.org.orgName, sizeKB: (fileBuffer.length / 1024).toFixed(1) }, `PVF created: ${originalName}`);
 
     // Audit log: PVF creation
     await db.log('pvf_created', {
@@ -211,7 +207,7 @@ async function handleCreatePvf(req, res) {
           await db.log('blockchain_registered', { hash: fileHash, txHash: result.txHash, blockNumber: result.blockNumber });
         }
       }).catch(async err => {
-        console.warn('[BLOCKCHAIN] Registration failed, queued for retry:', err.message);
+        logger.warn({ err, event: 'blockchain_retry' }, 'Registration failed, queued for retry');
         await db.log('blockchain_failed', { hash: fileHash, orgId: req.org.orgId, error: err.message });
         // Store failed registration for retry
         if (!global._blockchainRetryQueue) global._blockchainRetryQueue = [];
@@ -224,7 +220,7 @@ async function handleCreatePvf(req, res) {
     const baseUrl = process.env.BASE_URL || `${proto}://${req.get('host')}`;
     const shareUrl = `${baseUrl}/d/${shareId}`;
 
-    console.log(`  Share URL: ${shareUrl}`);
+    logger.info({ event: 'pvf_shared', shareUrl }, `Share URL: ${shareUrl}`);
 
     // Check if client wants JSON response (for API integrations)
     if (req.query.format === 'json' || req.headers.accept === 'application/json') {
@@ -249,7 +245,7 @@ async function handleCreatePvf(req, res) {
     res.send(pvfHtml);
 
   } catch (error) {
-    console.error('[ERROR] Create PVF failed:', error.message);
+    logger.error({ err: error, event: 'create_pvf_error' }, 'Create PVF failed');
     res.status(500).json({ success: false, error: 'Failed to create PVF' });
   }
 }

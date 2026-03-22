@@ -1,6 +1,7 @@
 const express = require('express');
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
+const logger = require('../services/logger');
 const router = express.Router();
 
 // Use shared authenticateAdmin from middleware — set via app.set('authenticateAdmin') in server.js
@@ -118,7 +119,7 @@ router.post('/keys-legacy/create', authenticateAdmin, async (req, res) => {
   });
 
   await db.log('api_key_created', { orgId, orgName, plan: plan || 'free', ip: getClientIP(req), hasIpWhitelist: !!(allowedIPs && allowedIPs.length) });
-  console.log(`[API KEY] Created for ${orgName} (${plan || 'free'})`);
+  logger.info({ event: 'api_key_created', orgName, plan: plan || 'free' }, `API Key created for ${orgName}`);
   res.json({ success: true, apiKey, orgId, orgName, plan: plan || 'free' });
 });
 

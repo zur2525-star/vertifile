@@ -253,3 +253,5 @@ npm audit --audit-level=high → נכשל = חסום push
 
 2026-03-22 08:30 | FIX | admin.js | keys-legacy now uses authenticateAdmin middleware | ✓
 2026-03-22 08:30 | FIX | api.js | Added rate limit to 5 org endpoints | ✓
+
+2026-03-22 09:00 | REFACTOR | services/logger.js + 6 files | pino logger, 16 console.log replaced, pre-commit blocks console.log | ✓

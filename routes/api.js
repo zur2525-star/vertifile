@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
 const { signupLimiter, getClientIP } = require('../middleware/auth');
+const logger = require('../services/logger');
 const { escapeHtml } = require('../templates/pvf');
 const { handleCreatePvf, verifySignature, generateToken, HMAC_SECRET } = require('../services/pvf-generator');
 
@@ -104,7 +105,7 @@ router.post('/signup', signupLimiter, async (req, res) => {
       ip: getClientIP(req)
     });
 
-    console.log(`[SIGNUP] New org: ${orgName} (${selectedPlan}) — ${email}`);
+    logger.info({ event: 'signup', orgName, plan: selectedPlan, email }, `New org: ${orgName}`);
 
     res.json({
       success: true,
@@ -117,7 +118,7 @@ router.post('/signup', signupLimiter, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('[ERROR] Signup failed:', error.message);
+    logger.error({ err: error, event: 'signup_error' }, 'Signup failed');
     res.status(500).json({ success: false, error: 'Signup failed. Please try again.' });
   }
 });
@@ -190,7 +191,7 @@ router.post('/verify', verifyLimiter, async (req, res) => {
       }
 
       if (!signatureValid) {
-        console.log(`[VERIFY FAIL] Signature mismatch for ${lookupHash.substring(0, 16)}...`);
+        logger.warn({ event: 'verify_fail', reason: 'signature_mismatch', hash: lookupHash.substring(0, 16) }, 'Signature mismatch');
         await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'invalid_signature' });
         return res.json({ success: true, verified: false, reason: 'invalid_signature' });
       }
@@ -198,7 +199,7 @@ router.post('/verify', verifyLimiter, async (req, res) => {
       // Code integrity check
       if (codeIntegrity && doc.code_integrity) {
         if (codeIntegrity !== doc.code_integrity) {
-          console.log(`[VERIFY FAIL] Code integrity mismatch for ${lookupHash.substring(0, 16)}...`);
+          logger.warn({ event: 'verify_fail', reason: 'code_tampered', hash: lookupHash.substring(0, 16) }, 'Code integrity mismatch');
           await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'code_tampered' });
           return res.json({ success: true, verified: false, reason: 'code_tampered' });
         }
@@ -213,7 +214,7 @@ router.post('/verify', verifyLimiter, async (req, res) => {
             Buffer.from(expectedChain, 'hex')
           );
           if (!chainValid) {
-            console.log(`[VERIFY FAIL] Chained token mismatch for ${lookupHash.substring(0, 16)}...`);
+            logger.warn({ event: 'verify_fail', reason: 'chain_broken', hash: lookupHash.substring(0, 16) }, 'Chained token mismatch');
             await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'chain_broken' });
             return res.json({ success: true, verified: false, reason: 'chain_broken' });
           }
@@ -222,7 +223,7 @@ router.post('/verify', verifyLimiter, async (req, res) => {
 
       // Recipient binding check
       if (doc.recipientHash && recipientHash && doc.recipientHash !== recipientHash) {
-        console.log(`[VERIFY FAIL] Recipient mismatch for ${lookupHash.substring(0, 16)}...`);
+        logger.warn({ event: 'verify_fail', reason: 'recipient_mismatch', hash: lookupHash.substring(0, 16) }, 'Recipient mismatch');
         await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'recipient_mismatch' });
         return res.json({ success: true, verified: false, reason: 'recipient_mismatch' });
       }
@@ -230,7 +231,7 @@ router.post('/verify', verifyLimiter, async (req, res) => {
       const newToken = generateToken();
       await db.updateDocumentToken(lookupHash, newToken);
 
-      console.log(`[VERIFY OK] ${lookupHash.substring(0, 16)}...`);
+      logger.info({ event: 'verify_ok', hash: lookupHash.substring(0, 16) }, 'Document verified');
       await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'verified' });
 
       // Include blockchain verification if connected
@@ -251,7 +252,7 @@ router.post('/verify', verifyLimiter, async (req, res) => {
         blockchain: blockchainProof
       });
     } else {
-      console.log(`[VERIFY FAIL] Not found: ${lookupHash.substring(0, 16)}...`);
+      logger.warn({ event: 'verify_fail', reason: 'not_found', hash: lookupHash.substring(0, 16) }, 'Document not found');
       await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'not_found' });
       res.json({ success: true, verified: false, hash: lookupHash });
     }

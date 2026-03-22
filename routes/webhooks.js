@@ -1,6 +1,7 @@
 const express = require('express');
 const crypto = require('crypto');
 const { getClientIP } = require('../middleware/auth');
+const logger = require('../services/logger');
 
 const router = express.Router();
 
@@ -22,12 +23,12 @@ async function fireWebhooks(db, orgId, event, data) {
           },
           body: payload
         }).catch(err => {
-          console.error(`[WEBHOOK] Failed to deliver to ${wh.url}:`, err.message);
+          logger.error(`[WEBHOOK] Failed to deliver to ${wh.url}:`, err.message);
         });
       }
     }
   } catch (e) {
-    console.error('[WEBHOOK] Error:', e.message);
+    logger.error('[WEBHOOK] Error:', e.message);
   }
 }
 

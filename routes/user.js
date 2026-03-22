@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
+const logger = require('../services/logger');
 const { requireLogin } = require('../middleware/auth');
 const { hashBytes, signHash, fixFilename, HMAC_SECRET } = require('../services/pvf-generator');
 const { generatePvfHtml } = require('../templates/pvf');
@@ -125,7 +126,7 @@ router.post('/upload', requireLogin, (req, res, next) => {
       documentsLimit: req.user.documents_limit
     });
   } catch(e) {
-    console.error('[USER UPLOAD]', e.message);
+    logger.error('[USER UPLOAD]', e.message);
     res.status(500).json({ success: false, error: 'Upload failed' });
   }
 });
