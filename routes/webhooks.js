@@ -82,21 +82,25 @@ router.post('/register', (req, res, next) => {
 router.get('/', (req, res, next) => {
   req.app.get('authenticateApiKey')(req, res, next);
 }, async (req, res) => {
-  const db = req.app.get('db');
-  const webhooks = await db.getWebhooksByOrg(req.org.orgId);
-  res.json({ success: true, webhooks: webhooks.map(w => ({ id: w.id, url: w.url, events: w.events, createdAt: w.createdAt })) });
+  try {
+    const db = req.app.get('db');
+    const webhooks = await db.getWebhooksByOrg(req.org.orgId);
+    res.json({ success: true, webhooks: webhooks.map(w => ({ id: w.id, url: w.url, events: w.events, createdAt: w.createdAt })) });
+  } catch (e) { logger.error({ err: e }, 'List webhooks error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
 // Delete a webhook
 router.delete('/:id', (req, res, next) => {
   req.app.get('authenticateApiKey')(req, res, next);
 }, async (req, res) => {
-  const db = req.app.get('db');
-  const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) return res.status(400).json({ success: false, error: 'Invalid webhook ID' });
-  const removed = await db.removeWebhook(id, req.org.orgId);
-  if (!removed) return res.status(404).json({ success: false, error: 'Webhook not found' });
-  res.json({ success: true });
+  try {
+    const db = req.app.get('db');
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id) || id <= 0) return res.status(400).json({ success: false, error: 'Invalid webhook ID' });
+    const removed = await db.removeWebhook(id, req.org.orgId);
+    if (!removed) return res.status(404).json({ success: false, error: 'Webhook not found' });
+    res.json({ success: true });
+  } catch (e) { logger.error({ err: e }, 'Delete webhook error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
 module.exports = router;

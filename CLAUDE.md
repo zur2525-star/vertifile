@@ -261,3 +261,7 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-03-22 10:00 | FIX | admin.js | Added missing getClientIP import (CRITICAL — would crash on key creation) | ✓
 2026-03-22 10:00 | REFACTOR | blockchain.js, server.js, db.js, obfuscate.js | Replaced all console.* with pino logger | ✓
 2026-03-22 10:00 | FIX | server.js | gracefulShutdown now awaits flushQueue before exit | ✓
+
+2026-03-22 10:30 | FIX | admin.js | Added try/catch to 10 handlers, auth on self-check, no e.message leak | ✓
+2026-03-22 10:30 | FIX | webhooks.js | Added try/catch to list + delete handlers | ✓
+2026-03-22 10:30 | FIX | locales/*.json | Added verify.ctaText + ctaLink to all 10 locales | ✓

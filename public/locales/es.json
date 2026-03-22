@@ -211,7 +211,9 @@
     "failedDesc": "No se pudo verificar este documento. Puede haber sido alterado o no estar registrado.",
     "tryAnother": "Verificar otro documento",
     "blockchainTitle": "Verificación Blockchain",
-    "blockchainDesc": "Cada hash de documento se compara con el registro inmutable de blockchain. La verificación confirma que el documento no ha sido modificado desde que fue protegido originalmente."
+    "blockchainDesc": "Cada hash de documento se compara con el registro inmutable de blockchain. La verificación confirma que el documento no ha sido modificado desde que fue protegido originalmente.",
+    "ctaText": "¿Quieres proteger tus documentos?",
+    "ctaLink": "Comienza gratis"
   },
   "enterprise": {
     "badge": "Seguridad de nivel empresarial",

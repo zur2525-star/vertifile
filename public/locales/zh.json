@@ -211,7 +211,9 @@
     "failedDesc": "无法验证此文档。文档可能已被篡改或未注册。",
     "tryAnother": "验证其他文档",
     "blockchainTitle": "Blockchain 验证",
-    "blockchainDesc": "每个文档的 hash 均与不可篡改的 Blockchain 注册记录进行比对。验证将确认文档自最初受保护以来未被修改。"
+    "blockchainDesc": "每个文档的 hash 均与不可篡改的 Blockchain 注册记录进行比对。验证将确认文档自最初受保护以来未被修改。",
+    "ctaText": "想要保护您的文件吗？",
+    "ctaLink": "免费开始"
   },
   "enterprise": {
     "badge": "企业级安全",
@@ -521,7 +523,7 @@
     "apiTitle": "5. API 使用和速率限制",
     "ipTitle": "6. 知识产权",
     "warrantyTitle": "7. 免责声明",
-    "warrantyDesc": "本服务按\u201c现状\u201d和\u201c可用状态\u201d提供，不提供任何明示或暗示的保证，包括但不限于适销性、特定用途适用性和非侵权性的保证。",
+    "warrantyDesc": "本服务按“现状”和“可用状态”提供，不提供任何明示或暗示的保证，包括但不限于适销性、特定用途适用性和非侵权性的保证。",
     "liabilityTitle": "8. 责任限制",
     "indemnityTitle": "9. 赔偿",
     "terminationTitle": "10. 终止",

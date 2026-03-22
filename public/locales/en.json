@@ -211,7 +211,9 @@
     "failedDesc": "This document could not be verified. It may have been tampered with or is not registered.",
     "tryAnother": "Verify another document",
     "blockchainTitle": "Blockchain Verification",
-    "blockchainDesc": "Each document hash is compared against the immutable blockchain registry. The verification confirms the document has not been modified since it was originally protected."
+    "blockchainDesc": "Each document hash is compared against the immutable blockchain registry. The verification confirms the document has not been modified since it was originally protected.",
+    "ctaText": "Want to protect your own documents?",
+    "ctaLink": "Get started for free"
   },
   "enterprise": {
     "badge": "Enterprise-Grade Security",

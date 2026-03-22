@@ -211,7 +211,9 @@
     "failedDesc": "Dieses Dokument konnte nicht verifiziert werden. Es wurde möglicherweise manipuliert oder ist nicht registriert.",
     "tryAnother": "Weiteres Dokument verifizieren",
     "blockchainTitle": "Blockchain-Verifizierung",
-    "blockchainDesc": "Jeder Dokument-Hash wird mit dem unveränderlichen Blockchain-Register abgeglichen. Die Verifizierung bestätigt, dass das Dokument seit dem ursprünglichen Schutz nicht verändert wurde."
+    "blockchainDesc": "Jeder Dokument-Hash wird mit dem unveränderlichen Blockchain-Register abgeglichen. Die Verifizierung bestätigt, dass das Dokument seit dem ursprünglichen Schutz nicht verändert wurde.",
+    "ctaText": "Möchten Sie Ihre Dokumente schützen?",
+    "ctaLink": "Jetzt kostenlos starten"
   },
   "enterprise": {
     "badge": "Sicherheit auf Enterprise-Niveau",

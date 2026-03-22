@@ -14,45 +14,53 @@ function authenticateAdmin(req, res, next) {
 
 // Admin stats — global overview
 router.get('/stats', authenticateAdmin, async (req, res) => {
-  const db = req.app.get('db');
-  const chain = req.app.get('chain');
-  const stats = await db.getStats();
-  const blockchainStats = await chain.getStats();
-  res.json({ success: true, ...stats, blockchain: blockchainStats });
+  try {
+    const db = req.app.get('db');
+    const chain = req.app.get('chain');
+    const stats = await db.getStats();
+    const blockchainStats = await chain.getStats();
+    res.json({ success: true, ...stats, blockchain: blockchainStats });
+  } catch (e) { logger.error({ err: e }, 'Admin stats error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
 // Admin audit log — paginated, filterable
 router.get('/audit', authenticateAdmin, async (req, res) => {
-  const db = req.app.get('db');
-  const limit = Math.min(parseInt(req.query.limit) || 50, 500);
-  const offset = parseInt(req.query.offset) || 0;
-  const event = req.query.event || undefined;
-  const orgId = req.query.orgId || undefined;
-  const entries = await db.getAuditLog({ limit, offset, event, orgId });
-  res.json({ success: true, entries, limit, offset });
+  try {
+    const db = req.app.get('db');
+    const limit = Math.min(parseInt(req.query.limit) || 50, 500);
+    const offset = parseInt(req.query.offset) || 0;
+    const event = req.query.event || undefined;
+    const orgId = req.query.orgId || undefined;
+    const entries = await db.getAuditLog({ limit, offset, event, orgId });
+    res.json({ success: true, entries, limit, offset });
+  } catch (e) { logger.error({ err: e }, 'Admin audit error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
 // Admin — list API keys
 router.get('/keys', authenticateAdmin, async (req, res) => {
-  const db = req.app.get('db');
-  const keys = await db.listApiKeys();
-  res.json({ success: true, keys });
+  try {
+    const db = req.app.get('db');
+    const keys = await db.listApiKeys();
+    res.json({ success: true, keys });
+  } catch (e) { logger.error({ err: e }, 'Admin keys error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
 // Admin — create API key
 router.post('/keys', authenticateAdmin, async (req, res) => {
-  const db = req.app.get('db');
-  const { orgName, plan } = req.body;
-  if (!orgName) return res.status(400).json({ success: false, error: 'orgName required' });
+  try {
+    const db = req.app.get('db');
+    const { orgName, plan } = req.body;
+    if (!orgName) return res.status(400).json({ success: false, error: 'orgName required' });
 
-  const orgId = 'org_' + orgName.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 30) + '_' + crypto.randomBytes(4).toString('hex');
-  const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
-  const rateLimitVal = plan === 'enterprise' ? 10000 : plan === 'professional' ? 100 : 5;
+    const orgId = 'org_' + orgName.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 30) + '_' + crypto.randomBytes(4).toString('hex');
+    const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
+    const rateLimitVal = plan === 'enterprise' ? 10000 : plan === 'professional' ? 100 : 5;
 
-  await db.createApiKey({ apiKey, orgId, orgName, plan: plan || 'free', rateLimit: rateLimitVal });
-  await db.log('api_key_created', { orgId, orgName, plan, ip: getClientIP(req) });
+    await db.createApiKey({ apiKey, orgId, orgName, plan: plan || 'free', rateLimit: rateLimitVal });
+    await db.log('api_key_created', { orgId, orgName, plan, ip: getClientIP(req) });
 
-  res.json({ success: true, apiKey, orgId, orgName, plan: plan || 'free' });
+    res.json({ success: true, apiKey, orgId, orgName, plan: plan || 'free' });
+  } catch (e) { logger.error({ err: e }, 'Admin create key error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
 // Admin — delete API key
@@ -140,30 +148,36 @@ router.get('/keys-legacy', authenticateAdmin, async (req, res) => {
 
 // Log a health check result (called by monitoring system)
 router.post('/health-log', authenticateAdmin, async (req, res) => {
-  const db = req.app.get('db');
-  const { status, responseMs, details } = req.body;
-  await db.logHealthCheck(status || 'ok', responseMs || 0, details || {});
-  res.json({ success: true });
+  try {
+    const db = req.app.get('db');
+    const { status, responseMs, details } = req.body;
+    await db.logHealthCheck(status || 'ok', responseMs || 0, details || {});
+    res.json({ success: true });
+  } catch (e) { logger.error({ err: e }, 'Health log error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
 // Get health check history
 router.get('/monitoring', authenticateAdmin, async (req, res) => {
-  const db = req.app.get('db');
-  const hours = parseInt(req.query.hours) || 24;
-  const history = await db.getHealthHistory(hours);
-  res.json({ success: true, history });
+  try {
+    const db = req.app.get('db');
+    const hours = parseInt(req.query.hours) || 24;
+    const history = await db.getHealthHistory(hours);
+    res.json({ success: true, history });
+  } catch (e) { logger.error({ err: e }, 'Monitoring error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
 // Get uptime stats
 router.get('/uptime', authenticateAdmin, async (req, res) => {
-  const db = req.app.get('db');
-  const days = parseInt(req.query.days) || 30;
-  const stats = await db.getUptimeStats(days);
-  res.json({ success: true, ...stats });
+  try {
+    const db = req.app.get('db');
+    const days = parseInt(req.query.days) || 30;
+    const stats = await db.getUptimeStats(days);
+    res.json({ success: true, ...stats });
+  } catch (e) { logger.error({ err: e }, 'Uptime error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
-// Self-check endpoint — logs its own health
-router.get('/self-check', async (req, res) => {
+// Self-check endpoint — requires admin auth, logs its own health
+router.get('/self-check', authenticateAdmin, async (req, res) => {
   const start = Date.now();
   const db = req.app.get('db');
   try {
@@ -173,8 +187,9 @@ router.get('/self-check', async (req, res) => {
     res.json({ success: true, status: 'ok', responseMs: ms, ...stats });
   } catch (e) {
     const ms = Date.now() - start;
-    await db.logHealthCheck('error', ms, { error: e.message }).catch(() => {});
-    res.status(500).json({ success: false, status: 'error', responseMs: ms, error: e.message });
+    logger.error({ err: e }, 'Self-check failed');
+    await db.logHealthCheck('error', ms, {}).catch(() => {});
+    res.status(500).json({ success: false, status: 'error', responseMs: ms });
   }
 });
 
