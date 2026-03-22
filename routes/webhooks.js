@@ -1,0 +1,102 @@
+const express = require('express');
+const crypto = require('crypto');
+const { getClientIP } = require('../middleware/auth');
+
+const router = express.Router();
+
+// Webhook helper — fire webhooks for an org
+async function fireWebhooks(db, orgId, event, data) {
+  try {
+    const webhooks = await db.getWebhooksByOrg(orgId);
+    for (const wh of webhooks) {
+      if (wh.events.includes(event)) {
+        const payload = JSON.stringify({ event, data, timestamp: new Date().toISOString() });
+        const hmac = crypto.createHmac('sha256', wh.secret).update(payload).digest('hex');
+
+        // Fire and forget
+        fetch(wh.url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Vertifile-Signature': hmac
+          },
+          body: payload
+        }).catch(err => {
+          console.error(`[WEBHOOK] Failed to deliver to ${wh.url}:`, err.message);
+        });
+      }
+    }
+  } catch (e) {
+    console.error('[WEBHOOK] Error:', e.message);
+  }
+}
+
+// Validate webhook URL to prevent SSRF attacks
+function isValidWebhookUrl(urlStr) {
+  try {
+    const parsed = new URL(urlStr);
+    if (parsed.protocol !== 'https:') return false;
+    if (parsed.port && parsed.port !== '443') return false;
+    const host = parsed.hostname.toLowerCase();
+    if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return false;
+    if (/^10\./.test(host)) return false;
+    const m172 = host.match(/^172\.(\d+)\./);
+    if (m172 && parseInt(m172[1]) >= 16 && parseInt(m172[1]) <= 31) return false;
+    if (/^192\.168\./.test(host)) return false;
+    if (/^169\.254\./.test(host)) return false;
+    if (host.endsWith('.internal') || host.endsWith('.local')) return false;
+    if (/^0\./.test(host) || /^127\./.test(host)) return false;
+    return true;
+  } catch { return false; }
+}
+
+// Register a webhook
+router.post('/register', (req, res, next) => {
+  req.app.get('authenticateApiKey')(req, res, next);
+}, async (req, res) => {
+  const db = req.app.get('db');
+  const { url, events } = req.body;
+  if (!url || !events || !Array.isArray(events)) {
+    return res.status(400).json({ success: false, error: 'url and events[] required' });
+  }
+
+  if (!isValidWebhookUrl(url)) {
+    return res.status(400).json({ success: false, error: 'Invalid webhook URL. Must be HTTPS and point to a public endpoint.' });
+  }
+
+  const allowedEvents = ['verification.success', 'verification.failed', 'document.created'];
+  const validEvents = events.filter(e => allowedEvents.includes(e));
+  if (validEvents.length === 0) {
+    return res.status(400).json({ success: false, error: 'No valid events. Allowed: ' + allowedEvents.join(', ') });
+  }
+
+  const secret = crypto.randomBytes(32).toString('hex');
+  const id = await db.registerWebhook(req.org.orgId, url, validEvents, secret);
+
+  await db.log('webhook_registered', { orgId: req.org.orgId, url, events: validEvents, ip: getClientIP(req) });
+  res.json({ success: true, webhookId: id, secret, events: validEvents });
+});
+
+// List org webhooks
+router.get('/', (req, res, next) => {
+  req.app.get('authenticateApiKey')(req, res, next);
+}, async (req, res) => {
+  const db = req.app.get('db');
+  const webhooks = await db.getWebhooksByOrg(req.org.orgId);
+  res.json({ success: true, webhooks: webhooks.map(w => ({ id: w.id, url: w.url, events: w.events, createdAt: w.createdAt })) });
+});
+
+// Delete a webhook
+router.delete('/:id', (req, res, next) => {
+  req.app.get('authenticateApiKey')(req, res, next);
+}, async (req, res) => {
+  const db = req.app.get('db');
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id) || id <= 0) return res.status(400).json({ success: false, error: 'Invalid webhook ID' });
+  const removed = await db.removeWebhook(id, req.org.orgId);
+  if (!removed) return res.status(404).json({ success: false, error: 'Webhook not found' });
+  res.json({ success: true });
+});
+
+module.exports = router;
+module.exports.fireWebhooks = fireWebhooks;

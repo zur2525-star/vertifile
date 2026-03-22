@@ -109,6 +109,7 @@
     <div class="nav-center">
       <a href="/" data-i18n="nav.home">Home</a>
       <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/pricing" data-i18n="nav.pricing">Pricing</a>
       <a href="/integration" data-i18n="nav.developers">Developers</a>
       <a href="/demo" data-i18n="nav.demo">Demo</a>
     </div>
@@ -141,6 +142,7 @@
 <div class="mobile-menu" id="mobileMenu">
   <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
   <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/pricing" onclick="closeMobile()" data-i18n="nav.pricing">Pricing</a>
   <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
   <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
   <a href="/app" onclick="closeMobile()" data-i18n="nav.account">My Account</a>
@@ -153,7 +155,7 @@
 <!-- ===== PRIVACY POLICY ===== -->
 <div class="legal-page">
   <h1 data-i18n="privacy.title">Privacy Policy</h1>
-  <p class="legal-updated" data-i18n="privacy.updated">Last updated: March 18, 2026</p>
+  <p class="legal-updated" data-i18n="privacy.updated">Last updated: March 22, 2026</p>
 
   <div class="highlight-box">
     <p><strong data-i18n="privacy.blindLabel">BLIND Processing:</strong> <span data-i18n="privacy.blindSummary">Vertifile never reads, accesses, or stores the content of your documents. We only process cryptographic hashes (fingerprints) of your files. Your document content never leaves your device.</span></p>
@@ -209,6 +211,17 @@
     <li><strong>Communication:</strong> Sending service-related notifications and updates</li>
   </ul>
 
+  <h2 data-i18n="privacy.storageTitle">Data Storage Location</h2>
+  <p data-i18n="privacy.storageDesc">Your data is processed and stored on cloud infrastructure located in the United States and Europe. Cryptographic hashes of your documents may be anchored on the Polygon blockchain, a public, decentralized network. No document content is ever transmitted to or stored on any server or blockchain.</p>
+
+  <h2 data-i18n="privacy.legalBasisTitle">Legal Basis for Processing (GDPR Article 6)</h2>
+  <p data-i18n="privacy.legalBasisIntro">We process personal data under the following legal bases as defined in GDPR Article 6:</p>
+  <ul>
+    <li><strong data-i18n="privacy.legalBasisContractLabel">Contract performance:</strong> <span data-i18n="privacy.legalBasisContractDesc">Processing necessary to provide you with the Vertifile service, including document verification, hash generation, and blockchain registration.</span></li>
+    <li><strong data-i18n="privacy.legalBasisLegitLabel">Legitimate interest:</strong> <span data-i18n="privacy.legalBasisLegitDesc">Processing necessary for security monitoring, fraud prevention, abuse detection, and service improvement.</span></li>
+    <li><strong data-i18n="privacy.legalBasisConsentLabel">Consent:</strong> <span data-i18n="privacy.legalBasisConsentDesc">Where applicable, we obtain your consent for optional analytics and marketing communications. You may withdraw consent at any time.</span></li>
+  </ul>
+
   <h2 data-i18n="privacy.blockchainTitle">Blockchain Records</h2>
   <p>When a document is protected, its SHA-256 hash and HMAC signature are registered on the Polygon blockchain. These records are:</p>
   <ul>
@@ -220,12 +233,12 @@
   <p>Blockchain records contain only cryptographic hashes, timestamps, and transaction metadata. No personal information or document content is stored on the blockchain.</p>
 
   <h2 data-i18n="privacy.cookiesTitle">Cookies and Analytics</h2>
-  <p>We use minimal cookies for essential functionality:</p>
+  <p data-i18n="privacy.cookiesIntro">We use minimal cookies for essential functionality:</p>
   <ul>
-    <li><strong>Language preference:</strong> Stores your selected language</li>
-    <li><strong>Session management:</strong> Maintains your authenticated session (API users)</li>
+    <li><strong data-i18n="privacy.cookieSessionLabel">Session cookie:</strong> <span data-i18n="privacy.cookieSessionDesc">A secure, HTTP-only cookie used to maintain your authenticated session. This cookie is essential for the service to function and expires when you log out or after a period of inactivity.</span></li>
+    <li><strong data-i18n="privacy.cookieLangLabel">Language preference:</strong> <span data-i18n="privacy.cookieLangDesc">Stores your selected language so the site displays in your preferred language on subsequent visits.</span></li>
   </ul>
-  <p>We may use privacy-respecting analytics to understand how our service is used. We do not use third-party advertising trackers or sell data to advertisers.</p>
+  <p data-i18n="privacy.cookiesAnalytics">We may use privacy-respecting analytics to understand how our service is used. We do not use third-party advertising trackers or sell data to advertisers. No tracking cookies or marketing cookies are used.</p>
 
   <h2 data-i18n="privacy.retentionTitle">Data Retention</h2>
   <p>We retain data according to the following schedule:</p>
@@ -264,7 +277,22 @@
     <li><strong>Right to data portability:</strong> Request transfer of your data in a machine-readable format</li>
     <li><strong>Right to object:</strong> Object to processing of your personal data</li>
   </ul>
-  <p>To exercise any of these rights, contact us at <a href="mailto:info@vertifile.com">info@vertifile.com</a>.</p>
+  <p data-i18n="privacy.gdprExercise">To exercise any of these rights, contact us at <a href="mailto:privacy@vertifile.com">privacy@vertifile.com</a>.</p>
+
+  <h2 data-i18n="privacy.controllerTitle">Data Controller vs. Data Processor</h2>
+  <p data-i18n="privacy.controllerDesc">Vertifile acts as a Data Processor when processing documents on behalf of organizations using our API. For individual users, Vertifile acts as the Data Controller. Organizations using our Enterprise plan can request a Data Processing Agreement (DPA).</p>
+
+  <h2 data-i18n="privacy.blockchainErasureTitle">Blockchain &amp; Right to Erasure</h2>
+  <p data-i18n="privacy.blockchainErasureDesc">Document hashes anchored on the Polygon blockchain are cryptographic fingerprints that cannot be reversed to reconstruct document content. While blockchain records are immutable, the hash alone does not constitute personal data as it cannot be linked to an individual without additional information held separately by Vertifile. Upon account deletion, all linking information is permanently removed, rendering blockchain hashes anonymous.</p>
+
+  <h2 data-i18n="privacy.transfersTitle">International Data Transfers</h2>
+  <p data-i18n="privacy.transfersDesc">When your data is transferred outside the European Economic Area (EEA), we ensure appropriate safeguards are in place. International transfers are protected by Standard Contractual Clauses (SCCs) approved by the European Commission, where applicable. We evaluate the data protection laws of recipient countries and implement supplementary measures when necessary to ensure your data remains protected.</p>
+
+  <h2 data-i18n="privacy.breachTitle">Breach Notification</h2>
+  <p data-i18n="privacy.breachDesc">In the event of a data breach affecting personal data, we will notify affected users and relevant supervisory authorities within 72 hours of becoming aware of the breach, as required by GDPR Article 33. Notifications will include the nature of the breach, the likely consequences, and the measures taken to address and mitigate the breach.</p>
+
+  <h2 data-i18n="privacy.privacyContactTitle">Privacy Inquiries</h2>
+  <p data-i18n="privacy.privacyContactDesc">For privacy-related questions, concerns, or to exercise your data protection rights, please contact our dedicated privacy team at <a href="mailto:privacy@vertifile.com">privacy@vertifile.com</a>. We will respond to all privacy inquiries within 30 days.</p>
 
   <h2 data-i18n="privacy.childrenTitle">Children's Privacy</h2>
   <p>Vertifile is not directed at children under 16. We do not knowingly collect personal information from children. If you believe we have inadvertently collected data from a child, please contact us immediately.</p>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>סיכום רפואי — דוגמא</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.a4 {
+  width: 210mm;
+  min-height: 297mm;
+  background: #fff;
+  box-shadow: 0 4px 40px rgba(0,0,0,.15);
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #1565c0, #0d47a1);
+  color: #fff;
+  padding: 28px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.header-right {
+  text-align: right;
+}
+
+.hospital-name {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.hospital-dept {
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.85;
+  margin-top: 4px;
+}
+
+.header-left {
+  text-align: left;
+  direction: ltr;
+}
+
+.hospital-logo {
+  width: 64px;
+  height: 64px;
+  background: rgba(255,255,255,.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hospital-logo svg {
+  width: 36px;
+  height: 36px;
+}
+
+.doc-title {
+  background: #e3f2fd;
+  padding: 14px 40px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0d47a1;
+  border-bottom: 2px solid #bbdefb;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+/* Content */
+.content {
+  padding: 30px 40px;
+}
+
+/* Patient info grid */
+.patient-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.patient-field {
+  padding: 10px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.patient-field:nth-child(odd) {
+  border-left: 1px solid #e0e0e0;
+}
+
+.patient-field:nth-last-child(-n+2) {
+  border-bottom: none;
+}
+
+.field-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #757575;
+  min-width: 80px;
+  white-space: nowrap;
+}
+
+.field-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #212121;
+}
+
+/* Sections */
+.section {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1565c0;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #e3f2fd;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.section-body {
+  font-size: 13px;
+  line-height: 1.9;
+  color: #424242;
+}
+
+/* Vitals table */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.vitals-table th {
+  background: #f5f5f5;
+  padding: 8px 12px;
+  text-align: right;
+  font-weight: 700;
+  color: #616161;
+  border: 1px solid #e0e0e0;
+  font-size: 12px;
+}
+
+.vitals-table td {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  text-align: right;
+}
+
+.vitals-table .normal {
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+.vitals-table .high {
+  color: #c62828;
+  font-weight: 700;
+}
+
+/* Medications list */
+.med-list {
+  list-style: none;
+  padding: 0;
+}
+
+.med-list li {
+  padding: 6px 0;
+  border-bottom: 1px dashed #e0e0e0;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.med-list li:last-child {
+  border-bottom: none;
+}
+
+.med-name {
+  font-weight: 700;
+  color: #212121;
+}
+
+.med-dose {
+  color: #757575;
+  font-size: 12px;
+}
+
+/* Signature area */
+.signature-area {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.sig-block {
+  text-align: center;
+}
+
+.sig-line {
+  width: 200px;
+  border-bottom: 1px solid #424242;
+  margin-bottom: 6px;
+  height: 40px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  font-family: 'Segoe Script', 'Dancing Script', cursive;
+  font-size: 18px;
+  color: #1565c0;
+  padding-bottom: 4px;
+}
+
+.sig-label {
+  font-size: 11px;
+  color: #757575;
+  font-weight: 500;
+}
+
+/* Footer */
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #f5f5f5;
+  padding: 12px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e0e0e0;
+  font-size: 10px;
+  color: #9e9e9e;
+}
+
+.footer-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #7c3aed;
+  font-weight: 700;
+  font-size: 10px;
+}
+
+.footer-badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Confidential watermark */
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-35deg);
+  font-size: 80px;
+  font-weight: 900;
+  color: rgba(21, 101, 192, 0.03);
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: 15px;
+  z-index: 0;
+}
+
+@media print {
+  body { background: #fff; padding: 0; }
+  .a4 { box-shadow: none; width: 100%; }
+}
+
+@media (max-width: 800px) {
+  .a4 { width: 100%; min-height: auto; }
+  .patient-grid { grid-template-columns: 1fr; }
+  .patient-field:nth-child(odd) { border-left: none; }
+  .signature-area { flex-direction: column; gap: 24px; align-items: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="a4">
+  <div class="watermark">חסוי</div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-right">
+      <div class="hospital-name">המרכז הרפואי שיבא</div>
+      <div class="hospital-dept">מחלקה פנימית ב' — תל השומר</div>
+      <div class="hospital-dept" style="margin-top:8px;opacity:.6;font-size:11px">טל: 03-5302345 | פקס: 03-5302999</div>
+    </div>
+    <div class="header-left">
+      <div class="hospital-logo">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L2 7v10l10 5 10-5V7L12 2z" stroke="#fff" stroke-width="1.5" fill="none"/>
+          <path d="M12 8v8M8 12h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-title">סיכום מחלה — Discharge Summary</div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Patient Info -->
+    <div class="patient-grid">
+      <div class="patient-field">
+        <span class="field-label">שם המטופל:</span>
+        <span class="field-value">ישראל כהן</span>
+      </div>
+      <div class="patient-field">
+        <span class="field-label">ת.ז:</span>
+        <span class="field-value">012345678</span>
+      </div>
+      <div class="patient-field">
+        <span class="field-label">תאריך לידה:</span>
+        <span class="field-value">15/03/1978</span>
+      </div>
+      <div class="patient-field">
+        <span class="field-label">גיל:</span>
+        <span class="field-value">47</span>
+      </div>
+      <div class="patient-field">
+        <span class="field-label">תאריך אשפוז:</span>
+        <span class="field-value">12/03/2026</span>
+      </div>
+      <div class="patient-field">
+        <span class="field-label">תאריך שחרור:</span>
+        <span class="field-value">18/03/2026</span>
+      </div>
+      <div class="patient-field">
+        <span class="field-label">קופת חולים:</span>
+        <span class="field-value">כללית</span>
+      </div>
+      <div class="patient-field">
+        <span class="field-label">רופא מטפל:</span>
+        <span class="field-value">ד"ר מיכל אברהם</span>
+      </div>
+    </div>
+
+    <!-- Diagnosis -->
+    <div class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 12h6M12 9v6M12 3a9 9 0 100 18 9 9 0 000-18z" stroke="#1565c0" stroke-width="1.5" stroke-linecap="round"/></svg>
+        אבחנות
+      </div>
+      <div class="section-body">
+        1. דלקת ריאות (Pneumonia) — אונה ימנית תחתונה<br>
+        2. יתר לחץ דם — מטופל, מאוזן<br>
+        3. סוכרת סוג 2 — HbA1c 7.2%
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#1565c0" stroke-width="1.5"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="#1565c0" stroke-width="1.5" stroke-linecap="round"/></svg>
+        סיכום אשפוז
+      </div>
+      <div class="section-body">
+        המטופל התקבל עם חום 38.9°C, שיעול פרודוקטיבי וקוצר נשימה בן 3 ימים. בצילום חזה נמצא תסנין באונה ימנית תחתונה. החל טיפול אנטיביוטי תוך-ורידי (Ceftriaxone + Azithromycin). לאחר 48 שעות חלה הטבה משמעותית בחום ובפרמטרים הנשימתיים. הועבר לטיפול פומי ביום ה-4 לאשפוז. המטופל שוחרר במצב טוב עם המשך טיפול אנטיביוטי פומי.
+      </div>
+    </div>
+
+    <!-- Vitals at discharge -->
+    <div class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="#1565c0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        ממצאים בשחרור
+      </div>
+      <table class="vitals-table">
+        <tr>
+          <th>בדיקה</th>
+          <th>ערך</th>
+          <th>טווח תקין</th>
+          <th>סטטוס</th>
+        </tr>
+        <tr>
+          <td>חום</td>
+          <td>36.7°C</td>
+          <td>36.1–37.2</td>
+          <td class="normal">תקין</td>
+        </tr>
+        <tr>
+          <td>לחץ דם</td>
+          <td>132/84</td>
+          <td>&lt;140/90</td>
+          <td class="normal">תקין</td>
+        </tr>
+        <tr>
+          <td>דופק</td>
+          <td>78</td>
+          <td>60–100</td>
+          <td class="normal">תקין</td>
+        </tr>
+        <tr>
+          <td>סטורציה</td>
+          <td>97%</td>
+          <td>&gt;95%</td>
+          <td class="normal">תקין</td>
+        </tr>
+        <tr>
+          <td>CRP</td>
+          <td>18 mg/L</td>
+          <td>&lt;5</td>
+          <td class="high">גבוה (ירידה מ-145)</td>
+        </tr>
+        <tr>
+          <td>WBC</td>
+          <td>9.2 K/uL</td>
+          <td>4.5–11</td>
+          <td class="normal">תקין (ירידה מ-16.8)</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Medications -->
+    <div class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#1565c0" stroke-width="1.5"/><path d="M12 8v8M8 12h8" stroke="#1565c0" stroke-width="1.5" stroke-linecap="round"/></svg>
+        תרופות בשחרור
+      </div>
+      <ul class="med-list">
+        <li>
+          <span class="med-name">Augmentin 875/125mg</span>
+          <span class="med-dose">טבליה × 2 ביום — 7 ימים</span>
+        </li>
+        <li>
+          <span class="med-name">Amlodipine 5mg</span>
+          <span class="med-dose">טבליה × 1 ביום — קבוע</span>
+        </li>
+        <li>
+          <span class="med-name">Metformin 850mg</span>
+          <span class="med-dose">טבליה × 2 ביום — קבוע</span>
+        </li>
+        <li>
+          <span class="med-name">Omeprazole 20mg</span>
+          <span class="med-dose">טבליה × 1 ביום — קבוע</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Follow-up -->
+    <div class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#1565c0" stroke-width="1.5"/><path d="M16 2v4M8 2v4M3 10h18" stroke="#1565c0" stroke-width="1.5" stroke-linecap="round"/></svg>
+        המלצות מעקב
+      </div>
+      <div class="section-body">
+        1. ביקורת רופא משפחה תוך 5 ימים<br>
+        2. צילום חזה חוזר בעוד 4 שבועות<br>
+        3. בדיקת דם כללית + CRP בעוד שבוע<br>
+        4. ביקורת רופא ריאות תוך חודש<br>
+        5. פנייה למיון בהחמרת חום, קוצר נשימה או כאבי חזה
+      </div>
+    </div>
+
+    <!-- Signature -->
+    <div class="signature-area">
+      <div class="sig-block">
+        <div class="sig-line">ד"ר מיכל אברהם</div>
+        <div class="sig-label">רופאה מטפלת — מ.ר 48291</div>
+      </div>
+      <div class="sig-block">
+        <div class="sig-line">פרופ' דוד לוי</div>
+        <div class="sig-label">מנהל המחלקה — מ.ר 31056</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div>מסמך זה הופק ב-18/03/2026 | מס' אשפוז: 2026-03-00847</div>
+    <div class="footer-badge">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M9 12l2 2 4-4" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="#7c3aed" stroke-width="1.5"/>
+      </svg>
+      Protected by Vertifile
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

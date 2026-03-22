@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertifile Pricing — Simple, Transparent Plans</title>
+  <meta name="description" content="Choose the right Vertifile plan for your needs. Free, Pro, and Enterprise options for document verification and protection.">
+  <meta name="keywords" content="vertifile pricing, document verification plans, pvf pricing, document protection cost">
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <meta property="og:title" content="Pricing — Vertifile">
+  <meta property="og:description" content="Simple, transparent pricing. Start free. Scale as you grow.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vertifile.com/pricing">
+  <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
+  <link rel="canonical" href="https://vertifile.com/pricing">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pricing — Vertifile">
+  <meta name="twitter:description" content="Simple, transparent pricing. Start free. Scale as you grow.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;overflow-x:hidden}
+    body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}
+
+    [dir="rtl"] body { font-family: 'Heebo','Inter',sans-serif; }
+
+    /* ===== NAVBAR ===== */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 64px; transition: .3s; }
+    .navbar.scrolled { background: rgba(255,255,255,.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 32px; height: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo img { height: 28px; }
+    .nav-center { display: flex; gap: 28px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .nav-center a { font-size: 14px; font-weight: 500; color: #374151; text-decoration: none; transition: .2s; }
+    .nav-center a:hover { color: #7c3aed; }
+    [dir="rtl"] .nav-center { direction: rtl; }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .nav-verify { font-size: 13px; font-weight: 500; color: #4f46e5; text-decoration: none; }
+    .nav-cta { padding: 8px 20px; background: linear-gradient(135deg,#4f46e5,#7c3aed); color: #fff; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; transition: .2s; }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(124,58,237,.3); }
+    .lang-btn { position: relative; display: flex; align-items: center; gap: 4px; background: none; border: 1px solid rgba(0,0,0,.08); border-radius: 8px; padding: 6px 10px; cursor: pointer; color: #374151; font-size: 12px; font-weight: 500; font-family: inherit; }
+    .lang-dropdown { position: absolute; top: calc(100% + 8px); right: 0; display: none; min-width: 140px; background: #fff; border: 1px solid rgba(0,0,0,.08); border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.12); padding: 6px 0; z-index: 1001; }
+    [dir="rtl"] .lang-dropdown { right: auto; left: 0; }
+    .lang-dropdown.show { display: block; }
+    .lang-dropdown a { display: block; padding: 8px 16px; font-size: 13px; color: #374151; text-decoration: none; transition: .15s; }
+    .lang-dropdown a:hover { background: rgba(124,58,237,.06); color: #7c3aed; }
+    .lang-dropdown a.active { color: #7c3aed; font-weight: 600; }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 20px; height: 2px; background: #111827; margin: 4px 0; border-radius: 2px; }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: #fff; border-bottom: 1px solid rgba(0,0,0,.06); padding: 16px 24px; z-index: 999; flex-direction: column; gap: 12px; }
+    .mobile-menu.show { display: flex; }
+    .mobile-menu a { font-size: 15px; color: #374151; text-decoration: none; padding: 8px 0; }
+    .mob-actions { display: flex; gap: 12px; margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,.06); }
+    @media(max-width:768px) { .nav-center, .nav-actions { display: none; } .hamburger { display: block; } }
+
+    /* ===== HERO ===== */
+    .hero{padding:140px 60px 100px;position:relative;overflow:hidden;background:linear-gradient(180deg,#e8e0ff 0%,#ece9ff 25%,#f5f3ff 60%,#ffffff 100%)}
+    .hero-bg{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
+    .hero-bg .grid{position:absolute;top:0;left:50%;transform:translateX(-50%);width:1400px;height:100%;background-image:linear-gradient(rgba(139,92,246,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.07) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%)}
+    .hero-bg .glow-1{position:absolute;top:-15%;left:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(139,92,246,.14),transparent 70%);filter:blur(80px);animation:nebulaFloat1 20s ease-in-out infinite alternate}
+    .hero-bg .glow-2{position:absolute;bottom:-25%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(168,85,247,.10),transparent 70%);filter:blur(80px);animation:nebulaFloat2 25s ease-in-out infinite alternate}
+    .hero-bg .glow-3{position:absolute;top:20%;right:15%;width:400px;height:400px;background:radial-gradient(circle,rgba(6,182,212,.08),transparent 70%);filter:blur(60px);animation:nebulaFloat3 18s ease-in-out infinite alternate}
+    @keyframes nebulaFloat1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(40px,30px) scale(1.1)}}
+    @keyframes nebulaFloat2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-30px,-40px) scale(1.15)}}
+    @keyframes nebulaFloat3{0%{transform:translate(0,0) scale(1)}100%{transform:translate(25px,-20px) scale(1.08)}}
+
+    .hero-content{max-width:800px;margin:0 auto;text-align:center;position:relative;z-index:1}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:rgba(79,70,229,.08);border:1px solid rgba(79,70,229,.15);border-radius:24px;font-size:13px;font-weight:600;color:#4f46e5;margin-bottom:28px;letter-spacing:.3px}
+    .hero-badge .pulse{width:8px;height:8px;border-radius:50%;background:#34d399;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+    .hero h1{font-size:54px;font-weight:900;color:#111827;line-height:1.1;margin-bottom:24px;letter-spacing:-2px}
+    .hero h1 .gradient{background:linear-gradient(135deg,#a78bfa,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p.sub{font-size:18px;color:#6b7280;line-height:1.8;max-width:600px;margin:0 auto 40px;font-weight:400}
+
+    @media(max-width:900px){
+      .hero{padding:120px 24px 80px}
+      .hero h1{font-size:40px}
+    }
+    @media(max-width:600px){
+      .hero{padding:100px 20px 60px}
+      .hero h1{font-size:32px;letter-spacing:-1px}
+      .hero p.sub{font-size:15px}
+    }
+
+    /* ===== SECTIONS COMMON ===== */
+    section{padding:100px 32px}
+    .section-header{text-align:center;max-width:600px;margin:0 auto 60px}
+    .section-header .label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7c3aed;margin-bottom:16px;background:rgba(124,58,237,.08);padding:6px 16px;border-radius:20px;border:1px solid rgba(124,58,237,.12)}
+    .section-header h2{font-size:40px;font-weight:800;color:#111827;margin-bottom:14px;letter-spacing:-1px}
+    .section-header p{font-size:17px;color:#6b7280;font-weight:400;line-height:1.7}
+    .fade-up{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+    .fade-up.visible{opacity:1;transform:translateY(0)}
+    .fade-up:nth-child(2){transition-delay:.1s}
+    .fade-up:nth-child(3){transition-delay:.2s}
+
+    /* ===== SECTION DIVIDERS ===== */
+    .section-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(79,70,229,.12) 30%,rgba(124,58,237,.12) 50%,rgba(6,182,212,.08) 70%,transparent);position:relative;overflow:visible}
+    .section-divider::after{content:'';position:absolute;top:-2px;width:80px;height:5px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.4),transparent);border-radius:3px;animation:dividerGlow 4s ease-in-out infinite;filter:blur(1px)}
+    @keyframes dividerGlow{0%{left:-80px}100%{left:calc(100% + 80px)}}
+
+    /* ===== PRICING CARDS ===== */
+    .pricing-section{background:linear-gradient(180deg,#ffffff 0%,#f8f7ff 50%,#ffffff 100%);position:relative;overflow:hidden}
+    .pricing-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 70%,rgba(124,58,237,.03),transparent 50%),radial-gradient(ellipse at 70% 30%,rgba(6,182,212,.02),transparent 50%);pointer-events:none}
+    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1060px;margin:0 auto;position:relative;z-index:1;align-items:stretch}
+    .pricing-card{padding:40px 32px;border-radius:24px;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.06);transition:all .4s cubic-bezier(.16,1,.3,1);box-shadow:0 2px 8px rgba(124,58,237,.04);display:flex;flex-direction:column}
+    .pricing-card:hover{transform:translateY(-8px);background:rgba(255,255,255,.95);border-color:rgba(124,58,237,.18);box-shadow:0 12px 40px rgba(124,58,237,.12),0 0 0 1px rgba(124,58,237,.05)}
+    .pricing-card.recommended{border:2px solid #7c3aed;background:rgba(255,255,255,.95);box-shadow:0 8px 40px rgba(124,58,237,.15),0 0 0 1px rgba(124,58,237,.08);position:relative}
+    .pricing-card.recommended:hover{transform:translateY(-12px);box-shadow:0 16px 50px rgba(124,58,237,.2)}
+    .recommended-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-size:12px;font-weight:700;padding:6px 20px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
+    .pricing-card .plan-name{font-size:20px;font-weight:800;color:#111827;margin-bottom:8px}
+    .pricing-card .plan-price{font-size:48px;font-weight:900;color:#111827;letter-spacing:-2px;margin-bottom:4px}
+    .pricing-card .plan-price span{font-size:16px;font-weight:500;color:#6b7280;letter-spacing:0}
+    .pricing-card .plan-price-custom{font-size:32px;font-weight:800;color:#111827;letter-spacing:-1px;margin-bottom:4px}
+    .pricing-card .plan-desc{font-size:14px;color:#6b7280;margin-bottom:28px;line-height:1.6}
+    .pricing-card .plan-features{list-style:none;flex:1;margin-bottom:32px}
+    .pricing-card .plan-features li{padding:8px 0;font-size:14px;color:#4b5563;display:flex;align-items:center;gap:10px;line-height:1.5}
+    .pricing-card .plan-features li svg{width:18px;height:18px;color:#34d399;flex-shrink:0}
+    .plan-cta{display:block;width:100%;padding:16px;text-align:center;border-radius:14px;font-weight:700;font-size:16px;transition:all .3s;cursor:pointer;font-family:inherit;letter-spacing:-.2px;text-decoration:none;border:none}
+    .plan-cta.primary{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;box-shadow:0 4px 20px rgba(79,70,229,.3)}
+    .plan-cta.primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,70,229,.5)}
+    .plan-cta.secondary{background:transparent;color:#374151;border:1px solid rgba(0,0,0,.15)}
+    .plan-cta.secondary:hover{border-color:rgba(0,0,0,.3);background:rgba(0,0,0,.02);transform:translateY(-2px)}
+
+    @media(max-width:900px){.pricing-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}}
+
+    /* ===== FAQ ===== */
+    .faq-section{background:#ffffff;position:relative;overflow:hidden}
+    .faq-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.03),transparent 50%);pointer-events:none}
+    .faq-list{max-width:720px;margin:0 auto;position:relative;z-index:1}
+    .faq-item{border:1px solid rgba(124,58,237,.06);border-radius:16px;margin-bottom:12px;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);overflow:hidden;transition:all .3s}
+    .faq-item:hover{border-color:rgba(124,58,237,.15);box-shadow:0 4px 20px rgba(124,58,237,.06)}
+    .faq-question{width:100%;padding:20px 24px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:inherit;font-size:16px;font-weight:600;color:#111827;text-align:left}
+    [dir="rtl"] .faq-question{text-align:right}
+    .faq-question svg{width:20px;height:20px;color:#7c3aed;transition:transform .3s;flex-shrink:0}
+    .faq-item.open .faq-question svg{transform:rotate(180deg)}
+    .faq-answer{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1)}
+    .faq-item.open .faq-answer{max-height:300px}
+    .faq-answer p{padding:0 24px 20px;font-size:15px;color:#6b7280;line-height:1.8}
+
+    /* ===== BOTTOM CTA ===== */
+    .bottom-cta{background:linear-gradient(135deg,#4338ca 0%,#6d28d9 40%,#7c3aed 70%,#8b5cf6 100%);padding:100px 32px;text-align:center;position:relative;overflow:hidden;border-radius:32px;max-width:1100px;margin:0 auto 60px}
+    .bottom-cta::before{content:'';position:absolute;top:-50%;left:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(255,255,255,.1),transparent 60%);filter:blur(80px);animation:ctaGlow1 8s ease-in-out infinite alternate}
+    .bottom-cta::after{content:'';position:absolute;bottom:-40%;right:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(6,182,212,.15),transparent 60%);filter:blur(60px);animation:ctaGlow2 10s ease-in-out infinite alternate}
+    @keyframes ctaGlow1{0%{transform:translate(0,0)}100%{transform:translate(30px,20px)}}
+    @keyframes ctaGlow2{0%{transform:translate(0,0)}100%{transform:translate(-20px,-30px)}}
+    .bottom-cta>*{position:relative;z-index:1}
+    .bottom-cta h2{font-size:40px;font-weight:800;margin-bottom:16px;color:#fff;letter-spacing:-1px}
+    .bottom-cta p{font-size:17px;color:rgba(255,255,255,.75);margin-bottom:36px;max-width:500px;margin-left:auto;margin-right:auto;font-weight:400;line-height:1.7}
+    .bottom-cta .btn-white{padding:16px 40px;background:#fff;color:#6d28d9;border-radius:14px;font-weight:800;font-size:16px;border:none;cursor:pointer;transition:all .3s;font-family:inherit;letter-spacing:-.2px;box-shadow:0 4px 20px rgba(0,0,0,.2);text-decoration:none}
+    .bottom-cta .btn-white:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,.3);background:#f5f3ff;color:#4f46e5}
+    @media(max-width:768px){.bottom-cta{padding:60px 24px;border-radius:24px;margin:0 auto 40px}.bottom-cta h2{font-size:28px}}
+
+    /* ===== FOOTER ===== */
+    footer{background:linear-gradient(180deg,#f8f7ff 0%,#1e1b4b 30%,#1e1b4b 100%);color:#e2e0f0;padding:100px 32px 30px;border-top:none;position:relative;overflow:hidden}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(180deg,#f8f7ff,transparent);pointer-events:none;z-index:1}
+    footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;background:radial-gradient(ellipse at 30% 80%,rgba(124,58,237,.15),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.08),transparent 50%);pointer-events:none}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;max-width:1000px;margin:0 auto;position:relative;z-index:2}
+    .footer-brand .f-logo{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:10px;letter-spacing:-.5px;color:#fff}
+    .footer-brand .f-logo img{height:28px;width:auto;filter:brightness(0) invert(1)}
+    .footer-brand p{font-size:13px;color:rgba(196,181,253,.6);line-height:1.8;max-width:280px}
+    .footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(167,139,250,.7);margin-bottom:16px}
+    .footer-col a{display:block;font-size:14px;color:rgba(196,181,253,.5);padding:5px 0;transition:.2s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{max-width:1000px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.4);position:relative;z-index:2}
+    @media(max-width:768px){
+      .footer-grid{grid-template-columns:1fr 1fr;gap:30px}
+      .footer-bottom{flex-direction:column;gap:10px;text-align:center}
+    }
+    @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+
+    /* ===== GLOW CURSOR ===== */
+    .glow-cursor{position:fixed;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(79,70,229,.06) 0%,rgba(124,58,237,.02) 40%,transparent 70%);pointer-events:none;z-index:0;transition:transform .15s ease-out,opacity .3s;will-change:transform;mix-blend-mode:multiply}
+  </style>
+</head>
+<body>
+
+<!-- Mouse Glow -->
+<div class="glow-cursor" id="glowCursor"></div>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
+    <div class="nav-center">
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/pricing" data-i18n="nav.pricing">Pricing</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
+    </div>
+    <div class="nav-actions">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#x05E2;&#x05D1;&#x05E8;&#x05D9;&#x05EA;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#x0627;&#x0644;&#x0639;&#x0631;&#x0628;&#x064A;&#x0629;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#x0420;&#x0443;&#x0441;&#x0441;&#x043A;&#x0438;&#x0439;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#x7B80;&#x4F53;&#x4E2D;&#x6587;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#x65E5;&#x672C;&#x8A9E;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
+      <a href="/app" class="nav-user" title="My Account" data-i18n-title="nav.account" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.25);color:#6b7280;text-decoration:none;transition:.2s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+    </div>
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/pricing" onclick="closeMobile()" data-i18n="nav.pricing">Pricing</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <a href="/app" onclick="closeMobile()" data-i18n="nav.account">My Account</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="grid"></div>
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+    <div class="glow-3"></div>
+  </div>
+  <div class="hero-content fade-up">
+    <div class="hero-badge"><div class="pulse"></div><span data-i18n="pricing.badge">Flexible Plans</span></div>
+    <h1><span data-i18n="pricing.heroTitle1">Simple, Transparent</span><br><span class="gradient" data-i18n="pricing.heroTitle2">Pricing</span></h1>
+    <p class="sub" data-i18n="pricing.heroSubtitle">Start free. Scale as you grow. No hidden fees, no surprises.</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ===== PRICING CARDS ===== -->
+<section class="pricing-section" id="plans">
+  <div class="pricing-grid">
+
+    <!-- FREE -->
+    <div class="pricing-card fade-up">
+      <div class="plan-name" data-i18n="pricing.freeName">Free</div>
+      <div class="plan-price">$0<span> /</span><span data-i18n="pricing.perMonth">month</span></div>
+      <div class="plan-desc" data-i18n="pricing.freeDesc">Perfect for individuals getting started with document verification.</div>
+      <ul class="plan-features">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.freeF1">1 document per day</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.freeF2">Basic verification</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.freeF3">Browser-based viewing</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.freeF4">Community support</span></li>
+      </ul>
+      <a href="/app" class="plan-cta secondary" data-i18n="pricing.freeCta">Get Started</a>
+    </div>
+
+    <!-- PRO (RECOMMENDED) -->
+    <div class="pricing-card recommended fade-up">
+      <div class="recommended-badge" data-i18n="pricing.recommended">Recommended</div>
+      <div class="plan-name" data-i18n="pricing.proName">Pro</div>
+      <div class="plan-price">$49<span> /</span><span data-i18n="pricing.perMonth">month</span></div>
+      <div class="plan-desc" data-i18n="pricing.proDesc">For professionals and teams who need more power and customization.</div>
+      <ul class="plan-features">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF1">500 documents per month</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF2">Priority verification</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF3">Custom branding (logo, colors, stamp text)</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF4">API access</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF5">Email support</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF6">Share links with custom domain</span></li>
+      </ul>
+      <a href="/app" class="plan-cta primary" data-i18n="pricing.proCta">Start Pro Trial</a>
+    </div>
+
+    <!-- ENTERPRISE -->
+    <div class="pricing-card fade-up">
+      <div class="plan-name" data-i18n="pricing.enterpriseName">Enterprise</div>
+      <div class="plan-price-custom" data-i18n="pricing.enterprisePrice">Custom</div>
+      <div class="plan-desc" data-i18n="pricing.enterpriseDesc">For organizations that need unlimited scale, compliance, and dedicated support.</div>
+      <ul class="plan-features">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF1">Unlimited documents</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF2">White-label solution</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF3">Dedicated account manager</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF4">SLA 99.99% uptime</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF5">SSO/SAML integration</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF6">On-premise deployment option</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF7">Audit trail & compliance reports</span></li>
+      </ul>
+      <a href="/contact" class="plan-cta secondary" data-i18n="pricing.enterpriseCta">Contact Sales</a>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ===== FAQ ===== -->
+<section class="faq-section" id="faq">
+  <div class="section-header fade-up">
+    <div class="label" data-i18n="pricing.faqLabel">FAQ</div>
+    <h2 data-i18n="pricing.faqTitle">Frequently Asked Questions</h2>
+    <p data-i18n="pricing.faqSubtitle">Everything you need to know about Vertifile pricing and plans.</p>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item fade-up">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span data-i18n="pricing.faq1q">Can I try before I buy?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer"><p data-i18n="pricing.faq1a">Absolutely! Our Free plan lets you protect 1 document per day at no cost, forever. The Pro plan also includes a free trial so you can explore all premium features before committing.</p></div>
+    </div>
+    <div class="faq-item fade-up">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span data-i18n="pricing.faq2q">What file types are supported?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer"><p data-i18n="pricing.faq2a">Vertifile supports PDF, JPEG, PNG, and text files. Any document you upload is converted into a tamper-proof .pvf file that can be viewed in any modern browser.</p></div>
+    </div>
+    <div class="faq-item fade-up">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span data-i18n="pricing.faq3q">How does billing work?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer"><p data-i18n="pricing.faq3a">Pro plans are billed monthly. You can cancel at any time with no cancellation fees. Enterprise plans are billed annually with custom terms tailored to your organization.</p></div>
+    </div>
+    <div class="faq-item fade-up">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span data-i18n="pricing.faq4q">Can I upgrade or downgrade anytime?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer"><p data-i18n="pricing.faq4a">Yes! You can upgrade or downgrade your plan at any time from your account settings. Changes take effect at the start of your next billing cycle.</p></div>
+    </div>
+    <div class="faq-item fade-up">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span data-i18n="pricing.faq5q">Is my data secure?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer"><p data-i18n="pricing.faq5a">Security is our top priority. Vertifile uses blind processing, meaning we never read or store your document content. Every document is protected with HMAC-SHA256 and optionally anchored to the Polygon blockchain.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BOTTOM CTA ===== -->
+<div style="padding:0 32px;">
+  <div class="bottom-cta fade-up">
+    <h2 data-i18n="pricing.bottomCtaTitle">Ready to Protect Your Documents?</h2>
+    <p data-i18n="pricing.bottomCtaSubtitle">Join thousands of organizations that trust Vertifile for tamper-proof document security.</p>
+    <a href="/app" class="btn-white" data-i18n="pricing.bottomCtaBtn">Get Started Free</a>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="f-logo">
+        <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
+      </div>
+      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/pricing" data-i18n="nav.pricing">Pricing</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.company">Company</h4>
+      <a href="/about" data-i18n="footer.about">About</a>
+      <a href="/blog" data-i18n="footer.blog">Blog</a>
+      <a href="/careers" data-i18n="footer.careers">Careers</a>
+      <a href="/contact" data-i18n="footer.contact">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.legal">Legal</h4>
+      <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
+      <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
+      <a href="/privacy" data-i18n="footer.security">Security</a>
+      <a href="/terms" data-i18n="footer.compliance">Compliance</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
+    <span data-i18n="footer.enterpriseDocProtection">Enterprise Document Protection</span>
+  </div>
+</footer>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+(function(){
+  // Mobile menu
+  window.toggleMobile = function(){
+    var menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('show');
+  };
+  window.closeMobile = function(){
+    document.getElementById('mobileMenu').classList.remove('show');
+  };
+
+  // FAQ toggle
+  window.toggleFaq = function(btn){
+    var item = btn.closest('.faq-item');
+    item.classList.toggle('open');
+  };
+
+  // Fade-up on scroll (IntersectionObserver)
+  var fadeEls = document.querySelectorAll('.fade-up');
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    fadeEls.forEach(function(el){ observer.observe(el); });
+  } else {
+    fadeEls.forEach(function(el){ el.classList.add('visible'); });
+  }
+
+  // Glow cursor
+  var glow = document.getElementById('glowCursor');
+  var mouseX = 0, mouseY = 0, glowX = 0, glowY = 0;
+  document.addEventListener('mousemove', function(e){
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+  function animateGlow(){
+    glowX += (mouseX - glowX) * 0.08;
+    glowY += (mouseY - glowY) * 0.08;
+    glow.style.transform = 'translate(' + (glowX - 200) + 'px,' + (glowY - 200) + 'px)';
+    requestAnimationFrame(animateGlow);
+  }
+  animateGlow();
+
+  // Navbar scroll
+  window.addEventListener('scroll', function(){
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+  });
+})();
+</script>
+<script src="/js/i18n.js"></script>
+<script src="/js/nav-user.js"></script>
+</body>
+</html>
