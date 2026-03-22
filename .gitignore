@@ -10,3 +10,6 @@ data/
 viewer/dist/
 viewer/node_modules/
 *.log
+data/pvf/
+data/.hmac_secret
+data/.session_secret

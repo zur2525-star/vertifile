@@ -214,3 +214,7 @@ pvf-project/
 
 ## Change Log
 2026-03-22 02:30 | SAVE | CLAUDE.md | Updated to master architecture prompt with full workflow | ✓
+
+2026-03-22 08:15 | SCAN | Serena onboarding | 624 files, 28606 lines, 55 endpoints, 2 warnings fixed | ✓
+2026-03-22 08:16 | FIX | admin.js + server.js | Unified authenticateAdmin to middleware/auth.js, removed duplication | ✓
+2026-03-22 08:16 | FIX | .gitignore | Added data/pvf/ to prevent repo bloat | ✓

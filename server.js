@@ -14,7 +14,7 @@ const session = require('express-session');
 const PgSession = require('connect-pg-simple')(session);
 const db = require('./db');
 const chain = require('./blockchain');
-const { createAuthenticateApiKey } = require('./middleware/auth');
+const { createAuthenticateApiKey, createAuthenticateAdmin } = require('./middleware/auth');
 const { signHash, generateToken } = require('./services/pvf-generator');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
@@ -51,6 +51,7 @@ app.set('db', db);
 app.set('chain', chain);
 app.set('upload', upload);
 app.set('authenticateApiKey', createAuthenticateApiKey(db));
+app.set('authenticateAdmin', createAuthenticateAdmin(db));
 app.set('trust proxy', 1);
 
 app.use(helmet({

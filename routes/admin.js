@@ -1,18 +1,13 @@
 const express = require('express');
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
-const { isValidAdminSecret, getClientIP } = require('../middleware/auth');
-
 const router = express.Router();
 
+// Use shared authenticateAdmin from middleware — set via app.set('authenticateAdmin') in server.js
 function authenticateAdmin(req, res, next) {
-  const db = req.app.get('db');
-  const adminSecret = req.headers['x-admin-secret'];
-  if (!isValidAdminSecret(adminSecret)) {
-    db.log('auth_failed', { reason: 'invalid_admin_secret', ip: getClientIP(req), path: req.path });
-    return res.status(403).json({ success: false, error: 'Unauthorized' });
-  }
-  next();
+  const fn = req.app.get('authenticateAdmin');
+  if (fn) return fn(req, res, next);
+  return res.status(500).json({ success: false, error: 'Admin auth not configured' });
 }
 
 // Admin stats — global overview
