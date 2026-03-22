@@ -1,11 +1,17 @@
 const express = require('express');
 const crypto = require('crypto');
+const path = require('path');
 const rateLimit = require('express-rate-limit');
 const { signupLimiter, getClientIP } = require('../middleware/auth');
 const { escapeHtml } = require('../templates/pvf');
 const { handleCreatePvf, verifySignature, generateToken, HMAC_SECRET } = require('../services/pvf-generator');
 
 const router = express.Router();
+
+// ===== OpenAPI Spec =====
+router.get('/openapi.json', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/api/openapi.json'));
+});
 
 // Rate limiter — PVF creation (stricter)
 const createLimiter = rateLimit({

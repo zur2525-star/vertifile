@@ -1,84 +1,105 @@
 /**
  * Vertifile PVF Obfuscation Module
  * Obfuscates the JavaScript inside .pvf files to prevent tampering.
+ * Uses worker threads to avoid blocking the event loop.
  */
 
-const JavaScriptObfuscator = require('javascript-obfuscator');
+const { Worker } = require('worker_threads');
+const path = require('path');
+
+const OBFUSCATION_OPTIONS = {
+  compact: true,
+  controlFlowFlattening: true,
+  controlFlowFlatteningThreshold: 0.4,
+  deadCodeInjection: false,
+  stringArray: true,
+  stringArrayThreshold: 0.5,
+  stringArrayEncoding: [],
+  stringArrayRotate: true,
+  stringArrayShuffle: true,
+  stringArrayWrappersCount: 1,
+  stringArrayWrappersType: 'variable',
+  splitStrings: false,
+  transformObjectKeys: false,
+  identifierNamesGenerator: 'hexadecimal',
+  renameGlobals: false,
+  debugProtection: false,
+  selfDefending: false,
+  target: 'browser',
+  reservedNames: [
+    'HASH', 'SIG', 'API', 'RCPT', 'token', 'init',
+    'show', 'setOk', 'setFk', 'freezeStamp',
+    'triggerFlip', 'showLocal', 'activateWaves',
+    'startRefresh', '__securityFrozen', '__devToolsOpen',
+    '__screenCaptured', 'blankForCapture', 'screenCaptureGuard',
+    'isLocal', 'hashFingerprint', 'environmentCheck',
+    'pvfBridge', '__TAURI__',
+    'postMessage', 'MutationObserver', 'querySelector',
+    'contentDocument', 'contentWindow'
+  ],
+  reservedStrings: [
+    'Vertifile', 'pvf-verification', 'verified', 'failed',
+    'forged', 'big-x', 'lbl', 'stamp',
+    'pvf:hash', 'pvf:version', 'pvf:signature',
+    'PVF:1.0', 'screen-capture', 'display-capture'
+  ]
+};
 
 /**
- * Obfuscate JavaScript code with settings safe for iframe/Electron contexts.
+ * Obfuscate code in a worker thread (non-blocking).
+ * Returns a Promise that resolves with the obfuscated code.
+ * Falls back to original code on failure or timeout.
  */
 function obfuscateCode(code, seed) {
-  const result = JavaScriptObfuscator.obfuscate(code, {
-    // Core transforms
-    compact: true,
-    controlFlowFlattening: true,
-    controlFlowFlatteningThreshold: 0.4,
-    deadCodeInjection: false,       // Disabled — can produce invalid code in some contexts
+  return new Promise((resolve) => {
+    const options = { ...OBFUSCATION_OPTIONS, seed: seed || 0 };
+    const worker = new Worker(path.join(__dirname, 'workers', 'obfuscate-worker.js'), {
+      workerData: { code, options }
+    });
 
-    // String protection — conservative settings to prevent corruption
-    stringArray: true,
-    stringArrayThreshold: 0.5,
-    stringArrayEncoding: [],         // No encoding — base64 encoding can corrupt strings
-    stringArrayRotate: true,
-    stringArrayShuffle: true,
-    stringArrayWrappersCount: 1,
-    stringArrayWrappersType: 'variable',
-    splitStrings: false,             // Disabled — splitting strings can break HTML/CSS content
-    transformObjectKeys: false,      // Disabled — prevents object key corruption
+    const timeout = setTimeout(() => {
+      console.error('[OBFUSCATION] Worker timed out after 30s, using original code');
+      worker.terminate();
+      resolve(code);
+    }, 30000);
 
-    // Identifier mangling
-    identifierNamesGenerator: 'hexadecimal',
-    renameGlobals: false,
+    worker.on('message', (msg) => {
+      clearTimeout(timeout);
+      if (msg.success) {
+        resolve(msg.code);
+      } else {
+        console.error('[OBFUSCATION] Worker failed:', msg.error);
+        resolve(code);
+      }
+    });
 
-    // Anti-debug
-    debugProtection: false,
-    selfDefending: false,            // Disabled — causes SyntaxError in iframe/Electron
+    worker.on('error', (err) => {
+      clearTimeout(timeout);
+      console.error('[OBFUSCATION] Worker error:', err.message);
+      resolve(code);
+    });
 
-    // Deterministic seed per document (same doc = same obfuscation)
-    seed: seed || 0,
-
-    // Target
-    target: 'browser',
-
-    // Reserved names — functions and variables used by the PVF viewer and verification
-    reservedNames: [
-      'HASH', 'SIG', 'API', 'RCPT', 'token', 'init',
-      'show', 'setOk', 'setFk', 'freezeStamp',
-      'triggerFlip', 'showLocal', 'activateWaves',
-      'startRefresh', '__securityFrozen', '__devToolsOpen',
-      '__screenCaptured', 'blankForCapture', 'screenCaptureGuard',
-      'isLocal', 'hashFingerprint', 'environmentCheck',
-      'pvfBridge', '__TAURI__',
-      'postMessage', 'MutationObserver', 'querySelector',
-      'contentDocument', 'contentWindow'
-    ],
-
-    // Reserved strings — don't obfuscate these string values
-    reservedStrings: [
-      'Vertifile', 'pvf-verification', 'verified', 'failed',
-      'forged', 'big-x', 'lbl', 'stamp',
-      'pvf:hash', 'pvf:version', 'pvf:signature',
-      'PVF:1.0', 'screen-capture', 'display-capture'
-    ]
+    worker.on('exit', (exitCode) => {
+      if (exitCode !== 0) {
+        clearTimeout(timeout);
+        resolve(code);
+      }
+    });
   });
-
-  return result.getObfuscatedCode();
 }
 
 /**
  * Obfuscate the <script> section of a PVF HTML string.
- * Extracts the script, obfuscates it, and puts it back.
+ * Returns a Promise. Non-blocking.
  */
-function obfuscatePvf(pvfHtml, seed) {
-  // Extract the script content between <script> and </script>
+async function obfuscatePvf(pvfHtml, seed) {
   const scriptMatch = pvfHtml.match(/<script>([\s\S]*?)<\/script>/);
   if (!scriptMatch) return pvfHtml;
 
   const originalScript = scriptMatch[1];
 
   try {
-    const obfuscatedScript = obfuscateCode(originalScript, seed);
+    const obfuscatedScript = await obfuscateCode(originalScript, seed);
     return pvfHtml.replace(
       `<script>${originalScript}</script>`,
       `<script>${obfuscatedScript}</script>`

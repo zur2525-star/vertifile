@@ -148,8 +148,9 @@ db._ready.then(async () => {
   if (!(await db.getDocument(demoHash))) {
     await db.createDocument({ hash: demoHash, signature: demoSig, originalName: 'demo', mimeType: 'text/html', fileSize: 0, orgId: 'org_vertifile', orgName: 'Vertifile', token: generateToken(), tokenCreatedAt: Date.now() });
   }
+  let server;
   if (require.main === module) {
-    app.listen(PORT, async () => {
+    server = app.listen(PORT, async () => {
       const stats = await db.getStats();
       const keys = await db.listApiKeys();
       const dk = keys.length > 0 ? keys[0].apiKey : null;
@@ -157,8 +158,30 @@ db._ready.then(async () => {
       console.log(`  http://localhost:${PORT} | API: ${dk ? dk.substring(0, 24) + '...' : 'none'}\n`);
       chain.init().then(c => console.log(c ? '[BLOCKCHAIN] On-chain active' : '[BLOCKCHAIN] Off-chain mode'));
     });
-    process.on('SIGINT', () => { db.close(); process.exit(0); });
-    process.on('SIGTERM', () => { db.close(); process.exit(0); });
+
+    process.on('SIGTERM', gracefulShutdown);
+    process.on('SIGINT', gracefulShutdown);
+
+    function gracefulShutdown() {
+      console.log('[SERVER] Shutting down gracefully...');
+      // Flush any pending blockchain registrations
+      chain.flushQueue().catch(e => console.error('[SERVER] Queue flush error:', e.message));
+      if (server) {
+        server.close(async () => {
+          console.log('[SERVER] HTTP connections closed');
+          try { await db.close(); } catch(e) {}
+          console.log('[SERVER] Database pool closed');
+          process.exit(0);
+        });
+        // Force close after 10 seconds
+        setTimeout(() => {
+          console.error('[SERVER] Forced shutdown after timeout');
+          process.exit(1);
+        }, 10000);
+      } else {
+        process.exit(0);
+      }
+    }
   }
 }).catch(err => { console.error('[FATAL] Database initialization failed:', err); process.exit(1); });
 

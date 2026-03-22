@@ -1,0 +1,951 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Vertifile API",
+    "version": "4.1.0",
+    "description": "Document protection and verification platform. Vertifile creates tamper-proof PVF (Protected Verification File) documents with HMAC-SHA256 signatures, blind hashing, and optional blockchain anchoring on Polygon.",
+    "contact": {
+      "name": "Zur Halfon",
+      "email": "zur2525@gmail.com",
+      "url": "https://vertifile.com"
+    },
+    "license": {
+      "name": "Proprietary"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://vertifile.com",
+      "description": "Production"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "tags": [
+    { "name": "Documents", "description": "Create and verify PVF documents" },
+    { "name": "Gateway", "description": "Server-side PVF intake and batch verification" },
+    { "name": "Organization", "description": "Organization stats and document management" },
+    { "name": "Webhooks", "description": "Webhook registration and management" },
+    { "name": "System", "description": "Health checks, docs, and signup" }
+  ],
+  "paths": {
+    "/api/signup": {
+      "post": {
+        "tags": ["System"],
+        "summary": "Sign up for an API key",
+        "description": "Register a new organization and receive an API key. Free plan allows 5 requests per rate-limit window. Limited to 3 signups per IP per day.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signup successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignupResponse"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/create-pvf": {
+      "post": {
+        "tags": ["Documents"],
+        "summary": "Create a PVF file",
+        "description": "Upload a document and receive a tamper-proof PVF file. The server blind-hashes the content (never reads it), signs with HMAC-SHA256, and returns an obfuscated HTML file with live verification, screen capture detection, and DevTools detection. Rate limited to 50 requests per hour.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePvfRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PVF file created successfully",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "The .pvf file (obfuscated HTML with embedded verification)"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/verify": {
+      "post": {
+        "tags": ["Documents"],
+        "summary": "Verify a document hash",
+        "description": "Public endpoint. Verify a document by its SHA-256 hash. Optionally include the HMAC signature, recipient hash, and code integrity token for full verification. Returns a fresh session token on success. Rate limited to 500 requests per 15 minutes.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verification result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifyResponse"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/token/refresh": {
+      "post": {
+        "tags": ["Documents"],
+        "summary": "Refresh session token",
+        "description": "Heartbeat endpoint called every 30 seconds by PVF viewers to refresh the session token. If the token was created less than 4 minutes ago, the cached token is returned.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenRefreshRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token refreshed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenRefreshResponse"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/gateway/intake": {
+      "post": {
+        "tags": ["Gateway"],
+        "summary": "Verify and extract a PVF file",
+        "description": "Upload a .pvf file for server-side verification. Extracts the hash and signature, verifies against the database, and returns the original embedded document as base64. Fires webhooks on successful verification.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/GatewayIntakeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verification and extraction result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayIntakeResponse"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/gateway/batch": {
+      "post": {
+        "tags": ["Gateway"],
+        "summary": "Batch verify PVF files",
+        "description": "Upload up to 50 .pvf files for batch verification. Returns individual verification results and a summary count.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/GatewayBatchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Batch verification results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GatewayBatchResponse"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/org/stats": {
+      "get": {
+        "tags": ["Organization"],
+        "summary": "Get organization statistics",
+        "description": "Returns usage statistics for the authenticated organization, including document counts and verification metrics.",
+        "responses": {
+          "200": {
+            "description": "Organization statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrgStatsResponse"
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/org/documents": {
+      "get": {
+        "tags": ["Organization"],
+        "summary": "List organization documents",
+        "description": "Returns a paginated list of documents created by the authenticated organization.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of documents to return (max 200)",
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "minimum": 1,
+              "maximum": 200
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of documents to skip",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated document list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrgDocumentsResponse"
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/webhooks/register": {
+      "post": {
+        "tags": ["Webhooks"],
+        "summary": "Register a webhook",
+        "description": "Register a webhook URL to receive verification event notifications. The URL must be HTTPS and publicly accessible. A signing secret is returned for payload verification via the X-Vertifile-Signature header.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookRegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookRegisterResponse"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/webhooks": {
+      "get": {
+        "tags": ["Webhooks"],
+        "summary": "List registered webhooks",
+        "description": "Returns all webhooks registered for the authenticated organization.",
+        "responses": {
+          "200": {
+            "description": "List of webhooks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookListResponse"
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/webhooks/{id}": {
+      "delete": {
+        "tags": ["Webhooks"],
+        "summary": "Delete a webhook",
+        "description": "Remove a registered webhook by its ID. The webhook must belong to the authenticated organization.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Webhook ID",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhook deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": {
+            "description": "Webhook not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "tags": ["System"],
+        "summary": "Health check",
+        "description": "Lightweight health check returning service status, version, and uptime.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/health/deep": {
+      "get": {
+        "tags": ["System"],
+        "summary": "Deep health check",
+        "description": "Detailed health check including database statistics (document and organization counts) and blockchain connection status.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Detailed service health",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeepHealthResponse"
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/docs": {
+      "get": {
+        "tags": ["System"],
+        "summary": "API documentation",
+        "description": "Returns a JSON description of all API endpoints, authentication methods, and SDK usage.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "API documentation object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Full API documentation including endpoints, security info, and SDK examples"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "API key obtained from POST /api/signup. Prefix: vf_live_"
+      }
+    },
+    "schemas": {
+      "SignupRequest": {
+        "type": "object",
+        "required": ["orgName", "contactName", "email"],
+        "properties": {
+          "orgName": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Organization name",
+            "example": "Acme University"
+          },
+          "contactName": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Contact person name",
+            "example": "Jane Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Contact email address",
+            "example": "jane@acme-university.edu"
+          },
+          "useCase": {
+            "type": "string",
+            "description": "Brief description of intended use",
+            "example": "Issuing verifiable academic transcripts"
+          }
+        }
+      },
+      "SignupResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "apiKey": {
+            "type": "string",
+            "description": "API key (shown only once)",
+            "example": "vf_live_a1b2c3d4e5f6..."
+          },
+          "orgId": {
+            "type": "string",
+            "description": "Unique organization identifier",
+            "example": "org_acme_university_1a2b3c4d"
+          },
+          "orgName": { "type": "string", "example": "Acme University" },
+          "plan": {
+            "type": "string",
+            "enum": ["free", "professional"],
+            "example": "free"
+          },
+          "rateLimit": {
+            "type": "integer",
+            "description": "Requests per rate-limit window",
+            "example": 5
+          },
+          "message": { "type": "string", "example": "Save this API key — it will not be shown again." }
+        }
+      },
+      "CreatePvfRequest": {
+        "type": "object",
+        "required": ["file"],
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "Document file to protect (PDF, image, or text). Max 50 MB."
+          },
+          "recipient": {
+            "type": "string",
+            "format": "email",
+            "description": "Optional recipient email for binding. The PVF will be locked to this recipient."
+          }
+        }
+      },
+      "VerifyRequest": {
+        "type": "object",
+        "properties": {
+          "hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 hash of the document content",
+            "example": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "signature": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "HMAC-SHA256 signature"
+          },
+          "content": {
+            "type": "object",
+            "description": "Legacy: content object (hash will be computed server-side)"
+          },
+          "recipientHash": {
+            "type": "string",
+            "description": "SHA-256 hash of the recipient email for binding verification"
+          },
+          "codeIntegrity": {
+            "type": "string",
+            "description": "Code integrity token from the PVF viewer"
+          },
+          "created": {
+            "type": "string",
+            "description": "Creation timestamp"
+          },
+          "orgId": {
+            "type": "string",
+            "description": "Organization ID of the issuer"
+          }
+        }
+      },
+      "VerifyResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "verified": {
+            "type": "boolean",
+            "description": "Whether the document passed verification"
+          },
+          "hash": {
+            "type": "string",
+            "description": "The hash that was looked up"
+          },
+          "reason": {
+            "type": "string",
+            "enum": ["invalid_signature", "code_tampered", "chain_broken", "recipient_mismatch"],
+            "description": "Failure reason (only present when verified is false)"
+          },
+          "token": {
+            "type": "string",
+            "description": "Fresh session token (only present when verified is true)"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Document creation timestamp"
+          },
+          "orgName": {
+            "type": "string",
+            "description": "Issuing organization name"
+          },
+          "blockchain": {
+            "type": "object",
+            "nullable": true,
+            "description": "Blockchain proof (if on-chain mode is active)",
+            "properties": {
+              "verified": { "type": "boolean" },
+              "txHash": { "type": "string" },
+              "network": { "type": "string" }
+            }
+          }
+        }
+      },
+      "TokenRefreshRequest": {
+        "type": "object",
+        "required": ["hash"],
+        "properties": {
+          "hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Document hash for the active PVF session"
+          }
+        }
+      },
+      "TokenRefreshResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "token": { "type": "string", "description": "Session token" },
+          "expiresIn": {
+            "type": "integer",
+            "description": "Token expiry in seconds (30 for fresh, 300 for cached)",
+            "example": 30
+          },
+          "cached": {
+            "type": "boolean",
+            "description": "Whether a cached token was returned (present only when true)"
+          }
+        }
+      },
+      "GatewayIntakeRequest": {
+        "type": "object",
+        "required": ["file"],
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "A .pvf file to verify and extract"
+          }
+        }
+      },
+      "GatewayIntakeResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "verified": { "type": "boolean", "description": "Whether the PVF passed verification" },
+          "reason": {
+            "type": "string",
+            "description": "Failure reason (only present when verified is false)"
+          },
+          "document": {
+            "type": "object",
+            "description": "Original document metadata (only present when verified is true)",
+            "properties": {
+              "hash": { "type": "string" },
+              "originalName": { "type": "string" },
+              "mimeType": { "type": "string" },
+              "fileSize": { "type": "integer" },
+              "issuedAt": { "type": "string", "format": "date-time" },
+              "issuedBy": { "type": "string" },
+              "orgId": { "type": "string" }
+            }
+          },
+          "extractedFile": {
+            "type": "string",
+            "nullable": true,
+            "description": "Base64-encoded original document content"
+          },
+          "verifiedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "GatewayBatchRequest": {
+        "type": "object",
+        "required": ["files"],
+        "properties": {
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            },
+            "maxItems": 50,
+            "description": "Up to 50 .pvf files to verify"
+          }
+        }
+      },
+      "GatewayBatchResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "total": { "type": "integer", "description": "Total files processed" },
+          "verified": { "type": "integer", "description": "Number that passed verification" },
+          "failed": { "type": "integer", "description": "Number that failed verification" },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BatchResultItem"
+            }
+          }
+        }
+      },
+      "BatchResultItem": {
+        "type": "object",
+        "properties": {
+          "index": { "type": "integer" },
+          "filename": { "type": "string" },
+          "verified": { "type": "boolean" },
+          "reason": {
+            "type": "string",
+            "enum": ["invalid_pvf", "not_found", "invalid_signature", "processing_error"],
+            "description": "Failure reason (only present when verified is false)"
+          },
+          "hash": { "type": "string", "description": "Document hash (when extractable)" },
+          "document": {
+            "type": "object",
+            "description": "Document metadata (only present when verified is true)",
+            "properties": {
+              "hash": { "type": "string" },
+              "originalName": { "type": "string" },
+              "mimeType": { "type": "string" },
+              "issuedAt": { "type": "string", "format": "date-time" },
+              "issuedBy": { "type": "string" }
+            }
+          }
+        }
+      },
+      "OrgStatsResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "orgId": { "type": "string" },
+          "orgName": { "type": "string" },
+          "totalDocuments": { "type": "integer" },
+          "totalVerifications": { "type": "integer" },
+          "recentDocuments": { "type": "integer" }
+        }
+      },
+      "OrgDocumentsResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentSummary"
+            }
+          },
+          "total": { "type": "integer", "description": "Total document count for the organization" },
+          "limit": { "type": "integer" },
+          "offset": { "type": "integer" }
+        }
+      },
+      "DocumentSummary": {
+        "type": "object",
+        "properties": {
+          "hash": { "type": "string" },
+          "originalName": { "type": "string" },
+          "mimeType": { "type": "string" },
+          "fileSize": { "type": "integer" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "orgId": { "type": "string" },
+          "orgName": { "type": "string" }
+        }
+      },
+      "WebhookRegisterRequest": {
+        "type": "object",
+        "required": ["url", "events"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "HTTPS webhook endpoint URL (must be publicly accessible, no private/internal IPs)",
+            "example": "https://example.com/webhooks/vertifile"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["verification.success", "verification.failed", "document.created"]
+            },
+            "description": "Events to subscribe to",
+            "example": ["verification.success", "verification.failed"]
+          }
+        }
+      },
+      "WebhookRegisterResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "webhookId": { "type": "integer", "description": "Unique webhook identifier" },
+          "secret": {
+            "type": "string",
+            "description": "HMAC signing secret for verifying webhook payloads via X-Vertifile-Signature header"
+          },
+          "events": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Subscribed events"
+          }
+        }
+      },
+      "WebhookListResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "webhooks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookSummary"
+            }
+          }
+        }
+      },
+      "WebhookSummary": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "url": { "type": "string", "format": "uri" },
+          "events": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "HealthResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "online" },
+          "service": { "type": "string", "example": "Vertifile" },
+          "version": { "type": "string", "example": "4.1.0" },
+          "uptime": { "type": "number", "description": "Server uptime in seconds" },
+          "timestamp": { "type": "string", "format": "date-time" }
+        }
+      },
+      "DeepHealthResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "online" },
+          "service": { "type": "string", "example": "Vertifile" },
+          "version": { "type": "string", "example": "4.1.0" },
+          "uptime": { "type": "number", "description": "Server uptime in seconds" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "documents": { "type": "integer", "description": "Total documents in the system" },
+          "organizations": { "type": "integer", "description": "Total registered organizations" },
+          "blockchain": {
+            "type": "string",
+            "enum": ["connected", "off-chain"],
+            "description": "Blockchain connection status"
+          }
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "error": { "type": "string", "description": "Human-readable error message" }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid request parameters",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+            "example": { "success": false, "error": "Missing required field" }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Missing or invalid API key",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+            "example": { "success": false, "error": "Invalid API key" }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+            "example": { "success": false, "error": "Access denied" }
+          }
+        }
+      },
+      "RateLimited": {
+        "description": "Rate limit exceeded",
+        "headers": {
+          "RateLimit-Limit": {
+            "description": "Maximum requests allowed in the window",
+            "schema": { "type": "integer" }
+          },
+          "RateLimit-Remaining": {
+            "description": "Remaining requests in the current window",
+            "schema": { "type": "integer" }
+          },
+          "RateLimit-Reset": {
+            "description": "Seconds until the rate limit resets",
+            "schema": { "type": "integer" }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+            "example": { "success": false, "error": "Too many requests, try again later" }
+          }
+        }
+      },
+      "InternalError": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+            "example": { "success": false, "error": "Internal server error" }
+          }
+        }
+      }
+    }
+  }
+}

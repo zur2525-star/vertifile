@@ -5,7 +5,7 @@
  * Usage:
  *   const chain = require('./blockchain');
  *   await chain.init();                           // Connect to Polygon
- *   await chain.register(hash, signature, org);   // Register on-chain
+ *   await chain.register(hash, signature, org);   // Queue for on-chain registration
  *   const result = await chain.verify(hash, sig); // Verify on-chain
  */
 
@@ -54,6 +54,15 @@ let wallet = null;
 let contract = null;
 let networkConfig = null;
 let initialized = false;
+
+// ================================================================
+// BATCH QUEUE
+// ================================================================
+const BATCH_SIZE = 10;          // Flush when queue reaches this size
+const FLUSH_INTERVAL_MS = 60000; // Flush every 60 seconds
+let queue = [];                  // { hash, signature, orgName }
+let flushTimer = null;
+let flushing = false;
 
 /**
  * Convert a hex string (SHA-256 hash) to bytes32 by keccak256 hashing it.
@@ -141,6 +150,10 @@ async function init() {
     saveState({ network, contractAddress, walletAddress: wallet.address });
 
     initialized = true;
+
+    // Start periodic flush timer
+    startFlushTimer();
+
     return true;
   } catch (error) {
     console.error('[BLOCKCHAIN] Connection failed:', error.message);
@@ -149,13 +162,142 @@ async function init() {
 }
 
 /**
- * Register a document hash on-chain.
+ * Start the periodic flush timer.
+ */
+function startFlushTimer() {
+  if (flushTimer) return;
+  flushTimer = setInterval(() => {
+    if (queue.length > 0) {
+      flushQueue().catch(e => console.error('[BLOCKCHAIN] Periodic flush error:', e.message));
+    }
+  }, FLUSH_INTERVAL_MS);
+  // Don't prevent process exit
+  if (flushTimer.unref) flushTimer.unref();
+}
+
+/**
+ * Stop the periodic flush timer.
+ */
+function stopFlushTimer() {
+  if (flushTimer) {
+    clearInterval(flushTimer);
+    flushTimer = null;
+  }
+}
+
+/**
+ * Flush the queue — send all pending registrations to the blockchain.
+ * Groups items by orgName and uses registerBatch for efficiency.
+ * Failed items are logged to audit_log for retry.
+ */
+async function flushQueue() {
+  if (queue.length === 0) return { flushed: 0 };
+  if (flushing) return { flushed: 0, skipped: true };
+  flushing = true;
+
+  // Drain the queue atomically
+  const batch = queue.splice(0);
+  console.log(`[BLOCKCHAIN] Flushing queue: ${batch.length} items`);
+
+  // Group by orgName for batch registration
+  const byOrg = {};
+  for (const item of batch) {
+    const org = item.orgName || 'unknown';
+    if (!byOrg[org]) byOrg[org] = [];
+    byOrg[org].push(item);
+  }
+
+  let totalFlushed = 0;
+  let totalFailed = 0;
+
+  for (const [orgName, items] of Object.entries(byOrg)) {
+    try {
+      if (items.length === 1) {
+        // Single item — use individual register
+        const item = items[0];
+        const docHash = toBytes32(item.hash);
+        const sigHash = toBytes32(item.signature);
+        const exists = await contract.isRegistered(docHash);
+        if (exists) {
+          console.log(`[BLOCKCHAIN] Already registered: ${item.hash.substring(0, 16)}...`);
+          totalFlushed++;
+          continue;
+        }
+        const tx = await contract.register(docHash, sigHash, orgName);
+        const receipt = await tx.wait();
+        console.log(`[BLOCKCHAIN] Registered: ${item.hash.substring(0, 16)}... tx=${receipt.hash}`);
+        totalFlushed++;
+      } else {
+        // Multiple items — use batch register
+        const documents = items.map(i => ({ hash: i.hash, signature: i.signature }));
+        const docHashes = documents.map(d => toBytes32(d.hash));
+        const sigHashes = documents.map(d => toBytes32(d.signature));
+        const tx = await contract.registerBatch(docHashes, sigHashes, orgName);
+        const receipt = await tx.wait();
+        console.log(`[BLOCKCHAIN] Batch registered: ${items.length} docs for ${orgName}, tx=${receipt.hash}`);
+        totalFlushed += items.length;
+      }
+    } catch (error) {
+      console.error(`[BLOCKCHAIN] Flush failed for ${orgName} (${items.length} items):`, error.message);
+      totalFailed += items.length;
+      // Log failed items for retry via audit_log
+      for (const item of items) {
+        try {
+          // Try to access db for logging — use require to avoid circular dep at top level
+          const db = require('./db');
+          await db.log('blockchain_pending', {
+            hash: item.hash,
+            signature: item.signature,
+            orgName: item.orgName,
+            error: error.message,
+            queuedAt: item.queuedAt
+          });
+        } catch (logErr) {
+          console.error('[BLOCKCHAIN] Could not log failed item:', logErr.message);
+        }
+      }
+    }
+  }
+
+  flushing = false;
+  console.log(`[BLOCKCHAIN] Flush complete: ${totalFlushed} registered, ${totalFailed} failed`);
+  return { flushed: totalFlushed, failed: totalFailed };
+}
+
+/**
+ * Register a document hash on-chain (queued).
+ * Items are batched and sent periodically or when the queue is full.
+ * @param {string} hash     — SHA-256 hex hash (64 chars)
+ * @param {string} signature — HMAC signature hex (64 chars)
+ * @param {string} orgName  — Organization name
+ * @returns {object}  { success, queued }
+ */
+async function register(hash, signature, orgName) {
+  if (!initialized) {
+    return { success: false, error: 'Blockchain not initialized' };
+  }
+
+  queue.push({ hash, signature, orgName, queuedAt: new Date().toISOString() });
+  console.log(`[BLOCKCHAIN] Queued: ${hash.substring(0, 16)}... (queue: ${queue.length}/${BATCH_SIZE})`);
+
+  // Auto-flush if batch size reached
+  if (queue.length >= BATCH_SIZE) {
+    // Fire and forget — caller doesn't wait for on-chain confirmation
+    flushQueue().catch(e => console.error('[BLOCKCHAIN] Auto-flush error:', e.message));
+  }
+
+  return { success: true, queued: true, queueSize: queue.length };
+}
+
+/**
+ * Register a document hash on-chain immediately (bypasses queue).
+ * Use this when you need synchronous on-chain confirmation.
  * @param {string} hash     — SHA-256 hex hash (64 chars)
  * @param {string} signature — HMAC signature hex (64 chars)
  * @param {string} orgName  — Organization name
  * @returns {object}  { success, txHash, blockNumber, gasUsed }
  */
-async function register(hash, signature, orgName) {
+async function registerImmediate(hash, signature, orgName) {
   if (!initialized) {
     return { success: false, error: 'Blockchain not initialized' };
   }
@@ -173,7 +315,7 @@ async function register(hash, signature, orgName) {
     const tx = await contract.register(docHash, sigHash, orgName);
     const receipt = await tx.wait();
 
-    console.log(`[BLOCKCHAIN] Registered: ${hash.substring(0, 16)}... tx=${receipt.hash}`);
+    console.log(`[BLOCKCHAIN] Registered (immediate): ${hash.substring(0, 16)}... tx=${receipt.hash}`);
 
     return {
       success: true,
@@ -276,7 +418,8 @@ async function getStats() {
       totalDocuments: Number(totalDocs),
       organizations: Number(orgCount),
       balance: ethers.formatEther(balance) + ' MATIC',
-      explorer: networkConfig.explorer
+      explorer: networkConfig.explorer,
+      queueSize: queue.length
     };
   } catch (error) {
     return { connected: true, error: error.message };
@@ -290,12 +433,23 @@ function isConnected() {
   return initialized;
 }
 
+/**
+ * Get current queue size.
+ */
+function getQueueSize() {
+  return queue.length;
+}
+
 module.exports = {
   init,
   register,
+  registerImmediate,
   registerBatch,
   verify,
   getStats,
   isConnected,
-  toBytes32
+  toBytes32,
+  flushQueue,
+  getQueueSize,
+  stopFlushTimer
 };
