@@ -265,3 +265,12 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-03-22 10:30 | FIX | admin.js | Added try/catch to 10 handlers, auth on self-check, no e.message leak | ✓
 2026-03-22 10:30 | FIX | webhooks.js | Added try/catch to list + delete handlers | ✓
 2026-03-22 10:30 | FIX | locales/*.json | Added verify.ctaText + ctaLink to all 10 locales | ✓
+
+2026-03-22 11:00 | SECURITY | server.js | CORS tightened to vertifile.com only | ✓
+2026-03-22 11:00 | SECURITY | server.js | Added Permissions-Policy, DNS-Prefetch, Referrer headers | ✓
+2026-03-22 11:00 | SECURITY | middleware/sanitize.js | Input sanitization — XSS escape, null bytes, 10K limit | ✓
+2026-03-22 11:00 | FEAT | middleware/timeout.js | Request timeout 30s | ✓
+2026-03-22 11:00 | FEAT | db.js | DB retry with exponential backoff (3 attempts) | ✓
+2026-03-22 11:00 | FEAT | server.js | Memory guard — warns at 90% heap usage | ✓
+2026-03-22 11:00 | FEAT | middleware/request-logger.js | Request logging with pino (skips health) | ✓
+2026-03-22 11:00 | FEAT | middleware/response-envelope.js | API responses with requestId + timestamp | ✓

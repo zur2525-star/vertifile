@@ -15,6 +15,8 @@ const PgSession = require('connect-pg-simple')(session);
 const db = require('./db');
 const chain = require('./blockchain');
 const { createAuthenticateApiKey, createAuthenticateAdmin } = require('./middleware/auth');
+const { requestTimeout } = require('./middleware/timeout');
+const { sanitizeBody } = require('./middleware/sanitize');
 const logger = require('./services/logger');
 const { signHash, generateToken } = require('./services/pvf-generator');
 const authRoutes = require('./routes/auth');
@@ -24,6 +26,8 @@ const adminRoutes = require('./routes/admin');
 const gatewayRoutes = require('./routes/gateway');
 const webhookRoutes = require('./routes/webhooks');
 const pageRoutes = require('./routes/pages');
+const { requestLogger } = require('./middleware/request-logger');
+const { responseEnvelope } = require('./middleware/response-envelope');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -63,18 +67,27 @@ app.use(helmet({
       fontSrc: ["'self'", "https://fonts.gstatic.com"], imgSrc: ["'self'", "data:", "https:"],
       connectSrc: ["'self'", "https://api.vertifile.com"], frameSrc: ["'none'"],
     }
-  }, crossOriginEmbedderPolicy: false
+  },
+  crossOriginEmbedderPolicy: false,
+  permissionsPolicy: {
+    features: { camera: [], microphone: [], geolocation: [], payment: [] }
+  },
+  dnsPrefetchControl: { allow: false },
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
 }));
 
-const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
-  : [`http://localhost:${PORT}`, `https://localhost:${PORT}`, 'https://vertifile.com', 'https://www.vertifile.com', 'https://vertifile.onrender.com'];
+const ALLOWED_ORIGINS = [
+  'https://vertifile.com',
+  'https://www.vertifile.com',
+  ...(process.env.NODE_ENV !== 'production' ? ['http://localhost:3002'] : [])
+];
 
 app.use(cors({
   origin: (origin, cb) => { if (!origin || ALLOWED_ORIGINS.includes(origin)) cb(null, true); else cb(new Error('Not allowed by CORS')); },
   methods: ['GET', 'POST', 'DELETE'], allowedHeaders: ['Content-Type', 'X-API-Key', 'X-Admin-Secret'], credentials: true, maxAge: 86400
 }));
 app.use((req, res, next) => { express.json({ limit: '1mb' })(req, res, (err) => { if (err) return res.status(400).json({ success: false, error: 'Invalid JSON body' }); next(); }); });
+app.use(sanitizeBody);
 app.use(express.static(path.join(__dirname, 'public'), {
   extensions: ['html'], maxAge: '7d',
   setHeaders: (res, fp) => { if (fp.endsWith('.html')) { res.setHeader('X-Content-Type-Options', 'nosniff'); res.setHeader('X-Frame-Options', 'DENY'); } }
@@ -113,7 +126,12 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   }));
 }
 
+app.use(requestTimeout(30000));
+
 app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: { success: false, error: 'Too many requests, try again later' }, standardHeaders: true, legacyHeaders: false }));
+
+app.use(responseEnvelope());
+app.use(requestLogger());
 
 // Mount routes
 app.use('/auth', authRoutes);
@@ -158,6 +176,17 @@ db._ready.then(async () => {
       const dk = keys.length > 0 ? keys[0].apiKey : null;
       logger.info({ port: PORT, docs: stats.totalDocuments, orgs: stats.totalOrganizations }, `Vertifile v4.1 | Port ${PORT}`);
       chain.init().then(c => logger.info(c ? 'Blockchain on-chain active' : 'Blockchain off-chain mode'));
+
+      // Memory monitor — check every 60 seconds
+      setInterval(() => {
+        const mem = process.memoryUsage();
+        const usedMB = Math.round(mem.heapUsed / 1024 / 1024);
+        const totalMB = Math.round(mem.heapTotal / 1024 / 1024);
+        const pct = Math.round((mem.heapUsed / mem.heapTotal) * 100);
+        if (pct > 90) {
+          logger.warn({ usedMB, totalMB, pct }, 'Memory usage high');
+        }
+      }, 60000).unref();
     });
 
     process.on('SIGTERM', gracefulShutdown);

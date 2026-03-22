@@ -28,6 +28,22 @@ pool.on('error', (err) => {
 });
 
 // ================================================================
+// QUERY RETRY WITH BACKOFF
+// ================================================================
+async function queryWithRetry(text, params, retries = 3) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await pool.query(text, params);
+    } catch (e) {
+      if (attempt === retries) throw e;
+      const delay = attempt * 500; // 500ms, 1000ms, 1500ms
+      logger.warn({ attempt, delay, error: e.message }, 'DB query retry');
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+}
+
+// ================================================================
 // SCHEMA
 // ================================================================
 const SCHEMA_SQL = `
@@ -245,7 +261,7 @@ function mapAllDocRow(row) {
 // DOCUMENTS
 // ================================================================
 async function getDocument(hash) {
-  const { rows } = await pool.query('SELECT * FROM documents WHERE hash = $1', [hash]);
+  const { rows } = await queryWithRetry('SELECT * FROM documents WHERE hash = $1', [hash]);
   return rows.length ? mapDocRow(rows[0]) : null;
 }
 
@@ -269,7 +285,7 @@ async function getDocumentByShareId(shareId) {
 }
 
 async function createDocument({ hash, signature, originalName, mimeType, fileSize, orgId, orgName, token, tokenCreatedAt, recipient, recipientHash, shareId }) {
-  await pool.query(
+  await queryWithRetry(
     `INSERT INTO documents (hash, signature, original_name, mime_type, file_size, created_at, token, token_created_at, org_id, org_name, recipient, recipient_hash, share_id)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
     [hash, signature, originalName || null, mimeType || null, fileSize || null,
@@ -333,7 +349,7 @@ async function getAllDocuments({ limit = 50, offset = 0, search = '' } = {}) {
 // API KEYS
 // ================================================================
 async function getApiKey(key) {
-  const { rows } = await pool.query('SELECT * FROM api_keys WHERE api_key = $1', [key]);
+  const { rows } = await queryWithRetry('SELECT * FROM api_keys WHERE api_key = $1', [key]);
   return rows.length ? mapKeyRow(rows[0]) : null;
 }
 
@@ -372,7 +388,7 @@ const deleteApiKey = deactivateApiKey;
 // ================================================================
 async function log(event, details = {}) {
   try {
-    await pool.query(
+    await queryWithRetry(
       'INSERT INTO audit_log (timestamp, event, details) VALUES ($1, $2, $3)',
       [new Date().toISOString(), event, JSON.stringify(details)]
     );
