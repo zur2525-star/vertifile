@@ -1,110 +1,216 @@
-# Vertifile - PVF Project
+# Vertifile PVF — Master Architecture & Work Plan
 
 ## Overview
 Tamper-proof document verification platform. Creates cryptographically signed .pvf files with BLIND processing (never reads document content). Live at **vertifile.com**.
+Patent filed in Israel (March 2026). IANA MIME type pending: application/vnd.vertifile.pvf (#1446680).
 
 ## Domain & Hosting
-- **Domain:** vertifile.com (Namecheap, registered March 2026)
+- **Domain:** vertifile.com (Namecheap)
 - **Hosting:** Render (Frankfurt, free tier) — auto-deploys from GitHub
-- **Database:** PostgreSQL on Neon (Frankfurt, free tier) — persistent
-- **Email:** info@vertifile.com (Namecheap Private Email)
+- **Database:** PostgreSQL on Neon (Frankfurt, free tier, 0.5GB limit)
+- **Email:** info@vertifile.com, privacy@vertifile.com
 - **Repo:** github.com/zur2525-star/vertifile
 
 ## Tech Stack
-- **Backend:** Express.js 5, PostgreSQL (pg), ethers.js (Polygon blockchain)
-- **Frontend:** Vanilla HTML/JS in `/public/`, 10 languages (i18n)
-- **Viewers:** Electron (`/viewer/`) and Tauri (`/viewer-tauri/`)
+- **Backend:** Node.js + Express, PostgreSQL (pg), ethers.js (Polygon blockchain)
+- **Frontend:** Vanilla HTML/JS/CSS in `/public/`, 10 languages (i18n)
+- **Viewers:** Electron (`/viewer/`), Tauri (`/viewer-tauri/`)
 - **Port:** 3002
 
 ## Key Commands
 - `npm install` — install dependencies
 - `npm run dev` — start dev server
-- `npm test` — run tests (65 test cases)
 - `node server.js` — start production server
+- `cd viewer && npm run build` — build Electron DMG
 
 ## Environment Variables (Render)
 - `DATABASE_URL` — Neon PostgreSQL connection string
-- `HMAC_SECRET` — document signing secret (persistent)
+- `HMAC_SECRET` — persistent (auto-generated to data/.hmac_secret)
+- `SESSION_SECRET` — persistent (auto-generated to data/.session_secret)
 - `ADMIN_SECRET` — dashboard access token
 - `POLYGON_PRIVATE_KEY` — blockchain wallet (optional)
 - `POLYGON_CONTRACT` — smart contract address (optional)
-
-## Important Paths
-- `server.js` — main Express API (all endpoints)
-- `db.js` — PostgreSQL database layer (async, uses pg Pool)
-- `blockchain.js` — Polygon integration with timeout/retry
-- `sdk.js` — CLI/SDK for .pvf conversion
-- `obfuscate.js` — PVF JavaScript obfuscation
-- `public/` — all frontend HTML pages (8 pages + privacy + terms + 404 + dashboard)
-- `public/js/i18n.js` — shared i18n engine (10 languages)
-- `public/locales/` — translation files (en, he, ar, fr, es, de, ru, zh, ja, pt)
-- `viewer/` — Electron desktop app (PVF Viewer)
-- `viewer-tauri/` — Tauri desktop app
-- `contracts/VertifileRegistry.sol` — Polygon smart contract
-- `spec/` — PVF format specification and IANA registration
-
-## Pages
-- `/` — homepage (landing)
-- `/app` — Gmail-like document manager (logged-in users)
-- `/upload` — protect a document (public)
-- `/verify` — verify a document
-- `/portal` — API developer portal
-- `/demo` — interactive demo (dark theme)
-- `/open` — open PVF files online (dark theme)
-- `/enterprise` — enterprise plans
-- `/integration` — API documentation
-- `/signup` — developer signup
-- `/privacy` — privacy policy
-- `/terms` — terms of service
-- `/dashboard` — admin dashboard (requires ADMIN_SECRET)
-- `/d/:shareId` — shared document viewer with CTA banner
-
-## API Endpoints
-- `POST /api/create-pvf` — create PVF (requires API key)
-- `POST /api/verify` — verify document hash
-- `POST /api/token/refresh` — refresh verification token
-- `POST /api/signup` — developer signup (rate limited: 3/day per IP)
-- `POST /api/demo/create-pvf` — demo PVF creation (5/hour limit)
-- `GET /api/health` — server status
-- `GET /api/docs` — API documentation redirect
-- `GET /api/admin/*` — admin endpoints (requires ADMIN_SECRET)
-- `GET /d/:shareId` — shareable document links
-
-## User System (app.html)
-- Auth: Passport.js — local strategy (email+password) + Google OAuth
-- Sessions: express-session + connect-pg-simple (PostgreSQL)
-- Session cookies: secure=true in production, trust proxy enabled
-- Free plan: 5 documents per user
-- Stamp: rotating text = "VERIFIED BY VERTIFILE", center = customer logo
-- PVF files stored in PostgreSQL (pvf_content column), NOT filesystem (Render wipes disk)
-- Multer filenames need latin1→utf8 conversion for Hebrew
-- Hebrew UI is RTL (dir="rtl")
-
-## Environment Variables (Auth)
-- `SESSION_SECRET` — cookie signing
 - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` — Google OAuth
 
-## Security
-- HMAC-SHA256 document signatures with timing-safe comparison
-- Helmet security headers (HSTS, X-Frame-Options, CSP, etc.)
-- Rate limiting on all endpoints
-- Input sanitization (escapeHtml) on user inputs
-- PostgreSQL parameterized queries ($1, $2) — no SQL injection
-- CORS restricted to allowed origins
-- Cloudflare WAF protection via Render
-- Admin secret with timing-safe comparison
+---
 
-## i18n
-- Shared engine in `/public/js/i18n.js`
-- All pages use `data-i18n` attributes
-- RTL support for Hebrew and Arabic
-- Language selector in navbar (all pages)
-- Translation files in `/public/locales/*.json`
+## File Structure (After Split)
 
-## Architecture Notes
-- PVF files are self-contained HTML with embedded verification JS
-- BLIND processing: server hashes file bytes, never reads content
-- Offline fallback: PVF files can verify locally via embedded hash
-- Online verification calls `/api/verify` on vertifile.com
-- Token refresh every 30 seconds keeps verification alive
-- Blockchain anchoring (optional) on Polygon for immutable proof
+```
+pvf-project/
+├── server.js              ← 165 lines — bootstrap only
+├── db.js                  ← PostgreSQL layer
+├── blockchain.js          ← Polygon + batch queue
+├── obfuscate.js           ← Obfuscation config
+├── middleware/auth.js      ← authenticateApiKey, requireLogin, rate limiters
+├── services/pvf-generator.js ← HMAC secret, hash, sign, handleCreatePvf
+├── templates/pvf.js        ← generatePvfHtml (~730 lines)
+├── workers/obfuscate-worker.js ← Worker thread for non-blocking obfuscation
+├── routes/
+│   ├── auth.js            ← register, login, logout, Google OAuth
+│   ├── user.js            ← documents, branding, settings, upload
+│   ├── api.js             ← create-pvf, verify, health, signup, org/*
+│   ├── admin.js           ← dashboard, audit, keys management
+│   ├── gateway.js         ← intake, batch (enterprise)
+│   ├── webhooks.js        ← register, list, delete, fireWebhooks
+│   └── pages.js           ← static pages, /d/:shareId, 404
+├── public/
+│   ├── index.html, pricing.html, verify.html, upload.html
+│   ├── app.html, dashboard.html, enterprise.html, integration.html
+│   ├── demo.html, signup.html, about.html, contact.html
+│   ├── privacy.html, terms.html, 404.html
+│   ├── js/i18n.js, js/nav-user.js
+│   ├── locales/ (en, he, ar, fr, es, de, ru, zh, ja, pt)
+│   ├── images/
+│   └── api/openapi.json
+├── viewer/                ← Electron v1.1.0
+│   ├── main.js, preload.js, viewer.html, package.json
+└── viewer-tauri/          ← Tauri (less mature)
+```
+
+---
+
+## 9 Security Layers
+
+```
+1. SHA-256 Hash          — unique fingerprint per file
+2. HMAC Signature        — server secret signing
+3. Token Refresh (5min)  — session token rotation
+4. Code Integrity        — SHA-256 of JS after obfuscation
+5. Chained Token         — HMAC(hash + sig + orgId + codeIntegrity)
+6. Anti-DevTools         — F12 detection, right-click block
+7. Obfuscation           — JavaScript obfuscated in worker thread
+8. Holographic Stamp     — animated coin + waves, freezes if tampered
+9. Blockchain (Polygon)  — optional on-chain anchor with batch queue
+```
+
+---
+
+## משפך השליטה — כל שינוי עובר את זה
+
+```
+/brainstorming → Serena scan → /tdd → build (sub-agents) → /reviewer → /commit → health-check → customer-simulator
+```
+
+**חוק ברזל: אסור לאשר שינוי שלא עבר את כל השלבים.**
+
+## /reviewer — חובה אחרי כל פיצ'ר (8 נקודות)
+
+```
+1. האם הקוד עוקב אחרי הארכיטקטורה? (routes/, services/, templates/)
+2. האם יש error handling לכל מקרה קצה?
+3. האם יש tests?
+4. האם אין secrets בקוד?
+5. האם ה-endpoint מאובטח (auth + rate limit + validation)?
+6. האם ה-UI תואם את שאר המערכת (צבעים, פונטים, RTL)?
+7. האם יש תרגום לכל 10 שפות לכל string חדש?
+8. האם ה-commit message ברור?
+אם אחד נכשל → עצור. תקן. ואז /reviewer מחדש.
+```
+
+---
+
+## CLAUDE.md — יומן שינויים אוטומטי
+
+בכל commit ו-push — תוסיף שורה לסוף הקובץ הזה:
+
+```
+[תאריך שעה] | [פעולה] | [קובץ/מערכת] | [מה השתנה] | [סטטוס: ✓ / ✗]
+```
+
+---
+
+## Sub-Agents
+
+### QA (5 במקביל)
+- **agent-security-audit** — SQL injection, XSS, rate limiting, CSP
+- **agent-html-checker** — 16 דפים: SEO, נגישות, לינקים שבורים
+- **agent-i18n-validator** — 10 שפות, מפתחות חסרים, RTL
+- **agent-api-tester** — כל endpoint: health, verify, create-pvf, share
+- **agent-document-flow** — upload → PVF → verify → share end-to-end
+
+### לקוחות (4 במקביל)
+- **agent-hr-manager** — מאיה, HR, בודקת אימות תעודות
+- **agent-university** — ד"ר שרה, רשמת, בודקת integration
+- **agent-developer** — אלכס, backend dev, בודק API docs
+- **agent-lawyer** — עו"ד דוד, בודק privacy/terms/קבילות
+
+### בנייה (3 במקביל)
+- **agent-build-feature** — /brainstorming → Serena → /tdd → build → /reviewer
+- **agent-translate-all** — תרגום מפתחות חדשים ל-10 שפות
+- **agent-fix-bugs** — תיקון באגים מרובים במקביל
+
+---
+
+## Scheduled Tasks
+
+- `health-monitor` (כל שעה) — GET /api/health + /api/health/deep
+- `daily-security-scan` (08:00) — npm audit, secrets check
+- `weekly-db-check` (ראשון 09:00) — DB size, document count
+
+---
+
+## Skills
+
+- `/pptx` — pitch deck למכללות/משקיעים
+- `/docx` — one-pager, DPA, case study, הצעת מחיר
+- `/pdf` — מסמכי דמו (דיפלומה, חשבונית, תעודה רפואית)
+- `/xlsx` — tracking לקוחות, עלויות, הכנסות
+- `/commit` — commit + push
+- `/brainstorming` — חשיבה מובנית לפני בנייה
+- `/tdd` — test → fail → implement → pass → refactor
+- `/debug` — reproduce → investigate → fix → verify
+
+---
+
+## Plugins
+
+- **Serena** — semantic code navigation (find_symbol, find_referencing_symbols)
+- **Superpowers** — /brainstorming, /tdd, /debug, /execute-plan
+- **Claude Preview** — UI preview and inspection
+- **Claude in Chrome** — browser automation
+- **Scheduled Tasks** — automated recurring tasks
+
+---
+
+## Current Status
+
+| Area | % | Status |
+|------|---|--------|
+| Code + Security | 90% | ✅ 9 layers, split into modules |
+| Design + UX | 80% | ✅ All pages, responsive, animations |
+| i18n | 95% | ✅ 10 languages, ~800 keys each |
+| PVF Viewer | 90% | ✅ Mac app, menus, print, properties |
+| Infrastructure | 60% | ⚠️ Render free = sleeps |
+| Marketing | 30% | ⚠️ No video, blog, case study |
+| Legal | 25% | ⚠️ No SOC2, DPO, PCT |
+| Customers | 0% | 🔴 No paying customer |
+
+## Priorities
+
+### CRITICAL — before first customer
+- [ ] Upgrade Render to $7/month
+- [ ] About page with real name + photo
+- [ ] Document flow works end-to-end without errors
+
+### HIGH — before sales
+- [ ] Demo video (60 seconds)
+- [ ] Alert system (forgery → email)
+- [ ] Auto-update in Electron Viewer
+- [ ] Demo PDFs (diploma, medical cert, invoice)
+
+### MEDIUM — before scale
+- [ ] Windows build + Code Signing
+- [ ] Blog post
+- [ ] Client SDK (NPM package)
+- [ ] Stripe integration
+
+### LOW — later
+- [ ] SOC2 compliance
+- [ ] Polygon Mainnet
+- [ ] HSM hardware
+
+---
+
+## Change Log
+2026-03-22 02:30 | SAVE | CLAUDE.md | Updated to master architecture prompt with full workflow | ✓
