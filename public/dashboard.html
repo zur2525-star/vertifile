@@ -260,6 +260,58 @@
     .lang-menu a:hover{background:rgba(124,58,237,.1);color:#c4b5fd}
     .lang-menu a.active{color:#a78bfa;font-weight:600}
 
+    /* ===== LIGHT MODE ===== */
+    body.light-mode { background: #f8f7ff; color: #1e1b4b; }
+    body.light-mode .login-screen { background: #f5f3ff; }
+    body.light-mode .login-screen::before { background: radial-gradient(circle, rgba(79,70,229,.08), transparent 70%); }
+    body.light-mode .login-screen::after { background: radial-gradient(circle, rgba(124,58,237,.05), transparent 70%); }
+    body.light-mode .login-card { background: #fff; border-color: #e5e7eb; color: #1e1b4b; }
+    body.light-mode .login-card h2 { color: #1e1b4b; }
+    body.light-mode .login-card p { color: #6b7280; }
+    body.light-mode .login-card input { background: #f9fafb; border-color: #d1d5db; color: #1e1b4b; }
+    body.light-mode .login-card input::placeholder { color: #9ca3af; }
+    body.light-mode .sidebar { background: #fff; border-right-color: #e5e7eb; }
+    body.light-mode .nav-section { color: #9ca3af; }
+    body.light-mode .nav-item { color: #6b7280; }
+    body.light-mode .nav-item:hover { color: #4f46e5; background: rgba(79,70,229,.05); }
+    body.light-mode .nav-item.active { color: #4f46e5; background: rgba(79,70,229,.08); border-left-color: #4f46e5; }
+    body.light-mode .sidebar-footer { border-top-color: #e5e7eb; color: #9ca3af; }
+    body.light-mode .sidebar-footer button { background: rgba(79,70,229,.05); border-color: #e5e7eb; color: #6b7280; }
+    body.light-mode .top-bar { background: rgba(255,255,255,.9); border-bottom-color: #e5e7eb; }
+    body.light-mode .page-title { color: #1e1b4b; }
+    body.light-mode .top-bar-right button { background: #fff; border-color: #e5e7eb; color: #6b7280; }
+    body.light-mode .top-bar-right button:hover { border-color: #4f46e5; color: #4f46e5; }
+    body.light-mode .stat-card { background: #fff; border-color: #e5e7eb; }
+    body.light-mode .stat-card:hover { border-color: rgba(79,70,229,.3); }
+    body.light-mode .stat-card .stat-label { color: #9ca3af; }
+    body.light-mode .stat-card .stat-sub { color: #9ca3af; }
+    body.light-mode .glass-card { background: #fff; border-color: #e5e7eb; }
+    body.light-mode .glass-card h3 { color: #1e1b4b; }
+    body.light-mode .data-table th { background: #f9fafb; color: #6b7280; border-color: #e5e7eb; }
+    body.light-mode .data-table td { border-color: #f3f4f6; color: #374151; }
+    body.light-mode .data-table tr:hover td { background: #f9fafb; }
+    body.light-mode .search-input, body.light-mode .filter-select { background: #f9fafb; border-color: #d1d5db; color: #1e1b4b; }
+    body.light-mode .slide-panel { background: #fff; border-left-color: #e5e7eb; }
+    body.light-mode .slide-panel h3 { color: #1e1b4b; }
+    body.light-mode .prop-label { color: #9ca3af !important; }
+    body.light-mode .prop-value { color: #374151 !important; }
+    body.light-mode .modal-content { background: #fff; border-color: #e5e7eb; }
+    body.light-mode .modal-content h3 { color: #1e1b4b; }
+    body.light-mode .modal-content input, body.light-mode .modal-content select { background: #f9fafb; border-color: #d1d5db; color: #1e1b4b; }
+    body.light-mode .empty-state { color: #9ca3af; }
+    body.light-mode .badge { opacity: 0.9; }
+    body.light-mode .chart-bar { opacity: 0.85; }
+    body.light-mode .refresh-bar { background: rgba(79,70,229,.1); }
+    body.light-mode .sidebar-logo .badge-sm { background: rgba(79,70,229,.08); }
+    body.light-mode .hamburger { color: #1e1b4b; }
+    body.light-mode .lang-menu { background: #fff; border-color: #e5e7eb; }
+    body.light-mode .lang-menu a { color: #6b7280; }
+    body.light-mode .lang-menu a:hover, body.light-mode .lang-menu a.active { color: #4f46e5; background: rgba(79,70,229,.05); }
+    /* Light mode scrollbar */
+    body.light-mode, body.light-mode html { scrollbar-color: #d1d5db #f8f7ff; }
+    body.light-mode ::-webkit-scrollbar-track { background: #f8f7ff; }
+    body.light-mode ::-webkit-scrollbar-thumb { background: #d1d5db; }
+
     /* ===== MOBILE RESPONSIVE ===== */
     @media(max-width:1024px){
       .chart-row{grid-template-columns:1fr}
@@ -396,6 +448,7 @@
           <button class="hide-mobile" onclick="window.open('/','_blank')" data-i18n="dashboard.website">Website</button>
           <button class="hide-mobile" onclick="window.open('/api/docs','_blank')" data-i18n="dashboard.apiDocs">API Docs</button>
           <button onclick="refreshData()">&#8635; <span data-i18n="dashboard.refresh">Refresh</span></button>
+          <button onclick="toggleTheme()" id="themeBtn" title="Toggle light/dark mode">&#9728;&#65039;</button>
           <div class="lang-switch">
             <button onclick="toggleLangMenu()" id="langBtn">&#127760; <span id="langLabel">EN</span></button>
             <div class="lang-menu" id="langMenu">
@@ -1652,6 +1705,20 @@ document.addEventListener('keydown', e => {
     closeSlide();
   }
 });
+
+function toggleTheme() {
+  var isLight = document.body.classList.toggle('light-mode');
+  document.getElementById('themeBtn').textContent = isLight ? '\u{1F319}' : '\u2600\uFE0F';
+  localStorage.setItem('vf-dash-theme', isLight ? 'light' : 'dark');
+}
+// On page load, check saved theme
+(function(){
+  if (localStorage.getItem('vf-dash-theme') === 'light') {
+    document.body.classList.add('light-mode');
+    var btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = '\u{1F319}';
+  }
+})();
 </script>
 </body>
 </html>
