@@ -587,6 +587,59 @@ async function deleteUser(userId) {
 }
 
 // ================================================================
+// DASHBOARD HELPERS
+// ================================================================
+async function getRecentDocuments(limit = 10) {
+  const { rows } = await pool.query('SELECT hash, original_name, mime_type, file_size, created_at, org_id, verified FROM documents ORDER BY created_at DESC LIMIT $1', [limit]);
+  return rows;
+}
+
+async function getDailyStats(days = 30) {
+  const { rows } = await pool.query(`
+    SELECT DATE(created_at::timestamptz) as date, COUNT(*) as documents
+    FROM documents
+    WHERE created_at::timestamptz > NOW() - INTERVAL '1 day' * $1
+    GROUP BY DATE(created_at::timestamptz)
+    ORDER BY date
+  `, [days]);
+  return rows;
+}
+
+async function getSecurityAlerts(limit = 50) {
+  const { rows } = await pool.query(`
+    SELECT * FROM audit_log
+    WHERE event IN ('auth_failed', 'verify_failed', 'rate_limited', 'code_tampered', 'chain_broken', 'invalid_signature')
+    ORDER BY timestamp DESC LIMIT $1
+  `, [limit]);
+  return rows;
+}
+
+async function getApiKeyByOrgId(orgId) {
+  const { rows } = await pool.query('SELECT * FROM api_keys WHERE org_id = $1', [orgId]);
+  return rows[0] || null;
+}
+
+async function updateOrgPlan(orgId, plan) {
+  const limits = { free: 1, pro: 500, enterprise: 100000 };
+  await pool.query('UPDATE api_keys SET plan = $1, rate_limit = $2 WHERE org_id = $3', [plan, limits[plan], orgId]);
+}
+
+async function getAllDocumentsForExport() {
+  const { rows } = await pool.query('SELECT hash, original_name, mime_type, file_size, created_at, org_id, verified FROM documents ORDER BY created_at DESC');
+  return rows;
+}
+
+async function getAllKeysForExport() {
+  const { rows } = await pool.query('SELECT org_id, org_name, plan, rate_limit, documents_created, active, created_at FROM api_keys ORDER BY created_at DESC');
+  return rows;
+}
+
+async function getAllAuditForExport() {
+  const { rows } = await pool.query('SELECT event, details, timestamp FROM audit_log ORDER BY timestamp DESC LIMIT 10000');
+  return rows;
+}
+
+// ================================================================
 // CLOSE
 // ================================================================
 async function close() {
@@ -685,6 +738,14 @@ module.exports = {
   logHealthCheck,
   getHealthHistory,
   getUptimeStats,
+  getRecentDocuments,
+  getDailyStats,
+  getSecurityAlerts,
+  getApiKeyByOrgId,
+  updateOrgPlan,
+  getAllDocumentsForExport,
+  getAllKeysForExport,
+  getAllAuditForExport,
   close,
   _db: pool,
   _ready,

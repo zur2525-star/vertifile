@@ -8,179 +8,315 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    html,body{overflow-x:hidden}
-    body{font-family:'Inter',sans-serif;background:#f5f3ff;color:#1e1b4b;min-height:100vh}
+    html,body{overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#2d2a4a #0f0e17}
+    ::-webkit-scrollbar{width:6px;height:6px}
+    ::-webkit-scrollbar-track{background:#0f0e17}
+    ::-webkit-scrollbar-thumb{background:#2d2a4a;border-radius:3px}
+    ::-webkit-scrollbar-thumb:hover{background:#3d3a5a}
+    body{font-family:'Inter',sans-serif;background:#0f0e17;color:#e2e0f0;min-height:100vh}
 
-    /* Login Screen */
-    .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 50%,#ddd6fe 100%)}
-    .login-card{background:#fff;border-radius:16px;padding:48px;box-shadow:0 8px 40px rgba(124,58,237,.1);max-width:400px;width:90%;text-align:center}
-    .login-card img{height:36px;margin-bottom:24px}
-    .login-card h2{font-size:20px;font-weight:700;margin-bottom:8px;color:#1e1b4b}
-    .login-card p{font-size:13px;color:#6b7280;margin-bottom:24px}
-    .login-card input{width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:border .2s}
-    .login-card input:focus{border-color:#7c3aed}
-    .login-card button{width:100%;padding:12px;background:#7c3aed;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;transition:background .2s}
-    .login-card button:hover{background:#6d28d9}
-    .login-error{color:#dc2626;font-size:13px;margin-top:12px;display:none}
+    /* ===== LOGIN SCREEN ===== */
+    .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f0e17;position:relative;overflow:hidden}
+    .login-screen::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(79,70,229,.15),transparent 70%);top:-200px;right:-100px;pointer-events:none}
+    .login-screen::after{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(124,58,237,.1),transparent 70%);bottom:-100px;left:-50px;pointer-events:none}
+    .login-card{background:rgba(26,24,48,.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(124,58,237,.2);border-radius:20px;padding:48px;max-width:420px;width:90%;text-align:center;position:relative;z-index:1}
+    .login-card img{height:36px;margin-bottom:28px}
+    .login-card h2{font-size:22px;font-weight:700;margin-bottom:8px;color:#fff}
+    .login-card p{font-size:13px;color:#8b89a6;margin-bottom:28px;line-height:1.5}
+    .login-card input{width:100%;padding:14px 18px;border:1px solid rgba(124,58,237,.25);border-radius:12px;font-size:14px;font-family:inherit;outline:none;transition:all .3s;background:rgba(15,14,23,.6);color:#fff}
+    .login-card input::placeholder{color:#5a5880}
+    .login-card input:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+    .login-card button{width:100%;padding:14px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:14px;transition:all .3s;font-family:inherit}
+    .login-card button:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(124,58,237,.3)}
+    .login-error{color:#ef4444;font-size:13px;margin-top:14px;display:none}
 
-    /* Dashboard Layout */
+    /* ===== DASHBOARD LAYOUT ===== */
     .dashboard{display:none}
-    .dash-header{background:#fff;border-bottom:1px solid #e5e7eb;padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-    .dash-header .logo{display:flex;align-items:center;gap:12px}
-    .dash-header .logo img{height:28px}
-    .dash-header .logo span{font-size:13px;color:#7c3aed;font-weight:600;background:rgba(124,58,237,.08);padding:3px 10px;border-radius:6px}
-    .dash-header .actions{display:flex;align-items:center;gap:12px}
-    .dash-header .actions button{padding:6px 14px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;font-family:inherit;color:#4b5563;transition:.2s}
-    .dash-header .actions button:hover{border-color:#7c3aed;color:#7c3aed}
+    .dash-layout{display:flex;min-height:100vh}
 
-    .dash-body{max-width:1200px;margin:0 auto;padding:32px}
+    /* Sidebar */
+    .sidebar{width:240px;background:#1a1830;border-right:1px solid rgba(124,58,237,.12);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;transition:transform .3s}
+    .sidebar-logo{padding:20px 22px;border-bottom:1px solid rgba(124,58,237,.1);display:flex;align-items:center;gap:12px}
+    .sidebar-logo img{height:26px}
+    .sidebar-logo .badge-sm{font-size:10px;color:#7c3aed;font-weight:600;background:rgba(124,58,237,.12);padding:2px 8px;border-radius:5px}
+    .sidebar-nav{flex:1;padding:12px 0;overflow-y:auto}
+    .nav-section{padding:6px 22px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#4a4870;margin-top:12px;margin-bottom:4px}
+    .nav-item{display:flex;align-items:center;gap:12px;padding:10px 22px;font-size:13px;font-weight:500;color:#8b89a6;cursor:pointer;transition:all .2s;border-left:3px solid transparent;text-decoration:none}
+    .nav-item:hover{color:#c4b5fd;background:rgba(124,58,237,.05)}
+    .nav-item.active{color:#fff;background:rgba(124,58,237,.1);border-left-color:#7c3aed}
+    .nav-item .nav-icon{width:18px;text-align:center;font-size:15px;flex-shrink:0}
+    .nav-item .nav-badge{margin-left:auto;background:rgba(239,68,68,.15);color:#ef4444;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;min-width:18px;text-align:center}
+    .sidebar-footer{padding:16px 22px;border-top:1px solid rgba(124,58,237,.1);font-size:11px;color:#4a4870}
+    .sidebar-footer .refresh-info{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .sidebar-footer .refresh-bar{flex:1;height:3px;background:rgba(124,58,237,.15);border-radius:2px;overflow:hidden}
+    .sidebar-footer .refresh-bar-fill{height:100%;background:linear-gradient(90deg,#4f46e5,#7c3aed);border-radius:2px;transition:width .5s linear}
+    .sidebar-footer button{width:100%;padding:8px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);color:#c4b5fd;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s}
+    .sidebar-footer button:hover{background:rgba(124,58,237,.2);color:#fff}
 
-    /* Stats Cards */
-    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:32px}
-    .stat-card{background:#fff;border-radius:12px;padding:24px;border:1px solid rgba(124,58,237,.08)}
-    .stat-card .label{font-size:12px;font-weight:500;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
-    .stat-card .value{font-size:32px;font-weight:800;background:linear-gradient(135deg,#7c3aed,#6d28d9);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .stat-card .sub{font-size:12px;color:#6b7280;margin-top:4px}
+    /* Main Content */
+    .main-content{flex:1;margin-left:240px;min-height:100vh}
+    .top-bar{height:56px;background:rgba(15,14,23,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(124,58,237,.08);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:100}
+    .top-bar-left{display:flex;align-items:center;gap:12px}
+    .top-bar-left .page-title{font-size:15px;font-weight:600;color:#fff}
+    .hamburger{display:none;background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:4px 8px}
+    .top-bar-right{display:flex;align-items:center;gap:10px}
+    .top-bar-right button{padding:6px 14px;border:1px solid rgba(124,58,237,.2);border-radius:8px;background:rgba(26,24,48,.5);font-size:12px;cursor:pointer;font-family:inherit;color:#8b89a6;transition:all .2s}
+    .top-bar-right button:hover{border-color:#7c3aed;color:#c4b5fd}
+    .content-area{padding:28px}
 
-    /* Tabs */
-    .tabs{display:flex;gap:4px;margin-bottom:24px;background:#fff;border-radius:10px;padding:4px;border:1px solid #e5e7eb}
-    .tab{padding:8px 20px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;color:#6b7280;transition:.2s;border:none;background:none;font-family:inherit}
-    .tab.active{background:#7c3aed;color:#fff}
-    .tab:hover:not(.active){color:#1e1b4b;background:rgba(124,58,237,.05)}
+    /* ===== STAT CARDS ===== */
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+    .stat-card{background:rgba(26,24,48,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.1);border-radius:14px;padding:22px;transition:all .3s;position:relative;overflow:hidden}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#4f46e5,#7c3aed);opacity:0;transition:opacity .3s}
+    .stat-card:hover::before{opacity:1}
+    .stat-card:hover{border-color:rgba(124,58,237,.25);transform:translateY(-2px)}
+    .stat-card .stat-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:#6b69a0;margin-bottom:8px}
+    .stat-card .stat-value{font-size:32px;font-weight:800;background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1}
+    .stat-card .stat-value.green{background:linear-gradient(135deg,#4ade80,#16a34a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .stat-card .stat-value.yellow{background:linear-gradient(135deg,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .stat-card .stat-sub{font-size:11px;color:#5a5880;margin-top:6px}
 
-    /* Tables */
-    .panel{background:#fff;border-radius:12px;border:1px solid rgba(124,58,237,.08);overflow:hidden;display:none}
-    .panel.active{display:block}
-    .panel-header{padding:20px 24px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between}
-    .panel-header h3{font-size:15px;font-weight:600}
-    .panel-header .btn{padding:8px 16px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:.2s}
-    .panel-header .btn:hover{background:#6d28d9}
+    /* ===== CHARTS ===== */
+    .chart-row{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:28px}
+    .chart-card{background:rgba(26,24,48,.5);backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.1);border-radius:14px;padding:22px}
+    .chart-card h4{font-size:13px;font-weight:600;color:#c4b5fd;margin-bottom:16px}
+    /* Line chart via bars */
+    .line-chart{display:flex;align-items:flex-end;gap:4px;height:140px;padding-top:10px;position:relative}
+    .line-chart .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .line-chart .bar{width:100%;background:linear-gradient(to top,rgba(79,70,229,.3),rgba(124,58,237,.7));border-radius:4px 4px 0 0;transition:height .6s ease;min-height:2px;position:relative}
+    .line-chart .bar:hover{background:linear-gradient(to top,rgba(79,70,229,.5),rgba(167,139,250,.9))}
+    .line-chart .bar-label{font-size:9px;color:#5a5880;white-space:nowrap;margin-top:4px}
+    .line-chart .bar-val{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:9px;color:#a78bfa;opacity:0;transition:opacity .2s;white-space:nowrap}
+    .line-chart .bar:hover .bar-val{opacity:1}
+    /* Pie chart */
+    .pie-container{display:flex;align-items:center;justify-content:center;gap:24px;height:140px}
+    .pie-ring{width:120px;height:120px;border-radius:50%;position:relative}
+    .pie-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:#1a1830;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff}
+    .pie-legend{display:flex;flex-direction:column;gap:8px}
+    .pie-legend-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#8b89a6}
+    .pie-legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
+    /* ===== ACTIVITY FEED ===== */
+    .activity-feed{margin-bottom:28px}
+    .activity-card{background:rgba(26,24,48,.5);backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.1);border-radius:14px;padding:22px}
+    .activity-card h4{font-size:13px;font-weight:600;color:#c4b5fd;margin-bottom:14px}
+    .activity-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(124,58,237,.06)}
+    .activity-item:last-child{border-bottom:none}
+    .activity-dot-wrap{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+    .activity-dot-wrap.create{background:rgba(34,197,94,.12);color:#4ade80}
+    .activity-dot-wrap.verify{background:rgba(59,130,246,.12);color:#60a5fa}
+    .activity-dot-wrap.auth{background:rgba(239,68,68,.12);color:#f87171}
+    .activity-dot-wrap.key{background:rgba(245,158,11,.12);color:#fbbf24}
+    .activity-dot-wrap.blockchain{background:rgba(168,85,247,.12);color:#c084fc}
+    .activity-dot-wrap.other{background:rgba(107,114,128,.12);color:#9ca3af}
+    .activity-text{flex:1;font-size:13px;color:#c4b5fd;line-height:1.4}
+    .activity-text .muted{color:#5a5880;font-size:11px;display:block;margin-top:2px}
+    .activity-time{font-size:11px;color:#4a4870;white-space:nowrap}
+
+    /* ===== PANELS / TABLES ===== */
+    .panel-section{display:none}
+    .panel-section.active{display:block}
+    .panel-card{background:rgba(26,24,48,.5);backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.1);border-radius:14px;overflow:hidden;margin-bottom:20px}
+    .panel-header{padding:18px 24px;border-bottom:1px solid rgba(124,58,237,.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .panel-header h3{font-size:15px;font-weight:600;color:#fff}
+    .panel-header .actions-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .btn-primary{padding:8px 16px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+    .btn-primary:hover{box-shadow:0 4px 12px rgba(124,58,237,.3);transform:translateY(-1px)}
+    .btn-outline{padding:8px 16px;background:transparent;border:1px solid rgba(124,58,237,.25);color:#c4b5fd;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s}
+    .btn-outline:hover{border-color:#7c3aed;color:#fff;background:rgba(124,58,237,.1)}
+    .btn-danger{padding:6px 12px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#f87171;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s}
+    .btn-danger:hover{background:rgba(239,68,68,.2);color:#ef4444}
+    .btn-sm{padding:5px 10px;font-size:11px;border-radius:6px}
+
+    .search-input{padding:8px 14px;border:1px solid rgba(124,58,237,.2);border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:rgba(15,14,23,.5);color:#e2e0f0;transition:all .2s;width:220px}
+    .search-input::placeholder{color:#4a4870}
+    .search-input:focus{border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.1)}
+    .filter-select{padding:8px 12px;border:1px solid rgba(124,58,237,.2);border-radius:8px;font-size:12px;font-family:inherit;outline:none;background:rgba(15,14,23,.5);color:#e2e0f0;cursor:pointer}
+    .filter-select:focus{border-color:#7c3aed}
+    .date-input{padding:8px 12px;border:1px solid rgba(124,58,237,.2);border-radius:8px;font-size:12px;font-family:inherit;outline:none;background:rgba(15,14,23,.5);color:#e2e0f0;color-scheme:dark}
+
     table{width:100%;border-collapse:collapse}
-    th{text-align:left;padding:10px 24px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;background:#faf9ff;border-bottom:1px solid #f3f4f6}
-    td{padding:12px 24px;font-size:13px;border-bottom:1px solid #f9fafb;color:#374151}
-    tr:hover td{background:#faf9ff}
-    .badge{padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;display:inline-block}
-    .badge.pro{background:rgba(124,58,237,.1);color:#7c3aed}
-    .badge.free{background:rgba(34,197,94,.1);color:#16a34a}
-    .badge.ent{background:rgba(245,158,11,.1);color:#d97706}
-    .badge.active{background:rgba(34,197,94,.1);color:#16a34a}
-    .badge.inactive{background:rgba(239,68,68,.1);color:#dc2626}
-    .mono{font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:#7c3aed}
-    .text-muted{color:#9ca3af}
-    .pagination{padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #f3f4f6}
-    .pagination button{padding:6px 14px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;font-size:12px;cursor:pointer;font-family:inherit;transition:.2s}
-    .pagination button:hover{border-color:#7c3aed;color:#7c3aed}
-    .pagination button:disabled{opacity:.4;cursor:default}
-    .pagination span{font-size:12px;color:#9ca3af}
+    th{text-align:left;padding:10px 20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#5a5880;background:rgba(15,14,23,.4);border-bottom:1px solid rgba(124,58,237,.06)}
+    td{padding:12px 20px;font-size:13px;border-bottom:1px solid rgba(124,58,237,.04);color:#c4b5fd}
+    tr:hover td{background:rgba(124,58,237,.03)}
+    .clickable-row{cursor:pointer}
+    .clickable-row:hover td{background:rgba(124,58,237,.06)}
+    .mono{font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:#a78bfa}
+    .text-muted{color:#5a5880}
+    .badge{padding:3px 10px;border-radius:10px;font-size:10px;font-weight:700;display:inline-block;text-transform:uppercase;letter-spacing:.5px}
+    .badge.pro{background:rgba(124,58,237,.12);color:#a78bfa}
+    .badge.free{background:rgba(34,197,94,.12);color:#4ade80}
+    .badge.ent{background:rgba(245,158,11,.12);color:#fbbf24}
+    .badge.active{background:rgba(34,197,94,.12);color:#4ade80}
+    .badge.inactive{background:rgba(239,68,68,.12);color:#f87171}
+    .badge.verified{background:rgba(34,197,94,.12);color:#4ade80}
+    .badge.pending{background:rgba(245,158,11,.12);color:#fbbf24}
+    .badge.severity-high{background:rgba(239,68,68,.15);color:#f87171}
+    .badge.severity-medium{background:rgba(245,158,11,.15);color:#fbbf24}
+    .badge.severity-low{background:rgba(59,130,246,.15);color:#60a5fa}
 
-    /* Create Key Modal */
-    .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}
+    .pagination-bar{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(124,58,237,.06)}
+    .pagination-bar span{font-size:12px;color:#5a5880}
+    .pagination-bar button{padding:6px 14px;border:1px solid rgba(124,58,237,.2);border-radius:6px;background:transparent;font-size:12px;cursor:pointer;font-family:inherit;color:#8b89a6;transition:all .2s}
+    .pagination-bar button:hover:not(:disabled){border-color:#7c3aed;color:#c4b5fd}
+    .pagination-bar button:disabled{opacity:.3;cursor:default}
+
+    .empty-state{text-align:center;padding:48px 24px;color:#5a5880}
+    .empty-state .icon{font-size:36px;margin-bottom:12px;opacity:.5}
+    .empty-state h4{font-size:15px;font-weight:600;color:#8b89a6;margin-bottom:4px}
+    .empty-state p{font-size:12px;line-height:1.5}
+
+    /* ===== AUDIT DOT COLORS ===== */
+    .audit-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
+    .audit-dot.create{background:#4ade80}
+    .audit-dot.verify{background:#60a5fa}
+    .audit-dot.auth{background:#f87171}
+    .audit-dot.key{background:#fbbf24}
+    .audit-dot.gateway{background:#a78bfa}
+    .audit-dot.blockchain{background:#f97316}
+    .audit-dot.alert{background:#ef4444}
+    .audit-dot.other{background:#6b7280}
+    .audit-event{display:inline-flex;align-items:center;gap:6px}
+
+    /* ===== ALERTS ===== */
+    .alert-row{display:flex;align-items:flex-start;gap:14px;padding:14px 20px;border-bottom:1px solid rgba(124,58,237,.04)}
+    .alert-row:last-child{border-bottom:none}
+    .alert-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+    .alert-icon.red{background:rgba(239,68,68,.12);color:#f87171}
+    .alert-icon.yellow{background:rgba(245,158,11,.12);color:#fbbf24}
+    .alert-content{flex:1}
+    .alert-title{font-size:13px;font-weight:600;color:#e2e0f0;margin-bottom:2px}
+    .alert-detail{font-size:12px;color:#5a5880;line-height:1.4}
+    .alert-time{font-size:11px;color:#4a4870;white-space:nowrap}
+
+    /* ===== BLOCKCHAIN DETAIL ===== */
+    .chain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;padding:22px}
+    .chain-item .chain-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#5a5880;margin-bottom:4px}
+    .chain-item .chain-val{font-size:14px;font-weight:600;color:#e2e0f0;word-break:break-all}
+    .chain-item .chain-val.mono{font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:#a78bfa}
+    .chain-item .chain-val.big{font-size:28px;font-weight:800;background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+    /* ===== MONITORING ===== */
+    .monitor-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:20px}
+    .monitor-card{background:rgba(26,24,48,.5);backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.1);border-radius:14px;padding:22px}
+    .monitor-card h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#5a5880;margin-bottom:10px}
+    .monitor-val{font-size:28px;font-weight:800;color:#fff;margin-bottom:4px}
+    .monitor-sub{font-size:11px;color:#5a5880}
+    .monitor-bar{height:6px;background:rgba(124,58,237,.1);border-radius:3px;overflow:hidden;margin-top:10px}
+    .monitor-bar-fill{height:100%;border-radius:3px;transition:width .6s}
+    .monitor-bar-fill.green{background:linear-gradient(90deg,#4ade80,#16a34a)}
+    .monitor-bar-fill.yellow{background:linear-gradient(90deg,#fbbf24,#f59e0b)}
+    .monitor-bar-fill.red{background:linear-gradient(90deg,#f87171,#dc2626)}
+
+    /* ===== SLIDE PANEL ===== */
+    .slide-backdrop{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:300;opacity:0;transition:opacity .3s}
+    .slide-backdrop.show{display:block;opacity:1}
+    .slide-panel{position:fixed;top:0;right:-420px;width:400px;height:100vh;background:#1a1830;border-left:1px solid rgba(124,58,237,.15);z-index:310;transition:right .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;display:flex;flex-direction:column}
+    .slide-panel.show{right:0}
+    .slide-header{padding:20px 24px;border-bottom:1px solid rgba(124,58,237,.1);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    .slide-header h3{font-size:16px;font-weight:700;color:#fff}
+    .slide-close{background:none;border:none;color:#5a5880;font-size:22px;cursor:pointer;padding:4px;transition:color .2s}
+    .slide-close:hover{color:#fff}
+    .slide-body{padding:24px;flex:1;overflow-y:auto}
+    .slide-section{margin-bottom:20px}
+    .slide-section h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#5a5880;margin-bottom:10px}
+    .slide-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(124,58,237,.05)}
+    .slide-row .label{font-size:12px;color:#5a5880}
+    .slide-row .value{font-size:13px;font-weight:500;color:#e2e0f0;text-align:right;max-width:200px;word-break:break-all}
+    .slide-actions{padding:20px 24px;border-top:1px solid rgba(124,58,237,.1);flex-shrink:0;display:flex;gap:8px}
+
+    /* ===== MODAL ===== */
+    .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:400;align-items:center;justify-content:center}
     .modal-overlay.show{display:flex}
-    .modal{background:#fff;border-radius:16px;padding:32px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
-    .modal h3{font-size:18px;font-weight:700;margin-bottom:16px}
-    .modal label{display:block;font-size:12px;font-weight:600;color:#6b7280;margin-bottom:6px;margin-top:16px}
-    .modal input,.modal select{width:100%;padding:10px 14px;border:1px solid #e5e7eb;border-radius:8px;font-size:14px;font-family:inherit;outline:none}
+    .modal{background:#1a1830;border:1px solid rgba(124,58,237,.2);border-radius:16px;padding:32px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .modal h3{font-size:18px;font-weight:700;margin-bottom:4px;color:#fff}
+    .modal .modal-sub{font-size:12px;color:#5a5880;margin-bottom:20px}
+    .modal label{display:block;font-size:11px;font-weight:700;color:#5a5880;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;margin-top:16px}
+    .modal input,.modal select{width:100%;padding:10px 14px;border:1px solid rgba(124,58,237,.2);border-radius:8px;font-size:14px;font-family:inherit;outline:none;background:rgba(15,14,23,.5);color:#fff}
     .modal input:focus,.modal select:focus{border-color:#7c3aed}
     .modal .modal-actions{display:flex;gap:10px;margin-top:24px}
-    .modal .modal-actions button{flex:1;padding:10px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:.2s}
-    .modal .cancel{background:#f3f4f6;color:#4b5563}
-    .modal .cancel:hover{background:#e5e7eb}
-    .modal .submit{background:#7c3aed;color:#fff}
-    .modal .submit:hover{background:#6d28d9}
+    .modal .modal-actions button{flex:1;padding:10px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:all .2s}
+    .modal .cancel-btn{background:rgba(124,58,237,.1);color:#8b89a6}
+    .modal .cancel-btn:hover{background:rgba(124,58,237,.2);color:#c4b5fd}
+    .modal .submit-btn{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff}
+    .modal .submit-btn:hover{box-shadow:0 4px 12px rgba(124,58,237,.3)}
+    .key-display{background:rgba(15,14,23,.8);color:#a78bfa;padding:14px 16px;border-radius:8px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;word-break:break-all;margin-top:12px;position:relative;border:1px solid rgba(124,58,237,.15)}
+    .key-display .copy-btn{position:absolute;top:8px;right:8px;background:rgba(124,58,237,.15);border:none;color:#a78bfa;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;font-family:inherit}
+    .key-display .copy-btn:hover{background:rgba(124,58,237,.3)}
 
-    /* Key Display */
-    .key-display{background:#1e1b4b;color:#a5b4fc;padding:12px 16px;border-radius:8px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;word-break:break-all;margin-top:12px;position:relative}
-    .key-display .copy{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.1);border:none;color:#a5b4fc;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer}
-    .key-display .copy:hover{background:rgba(255,255,255,.2)}
+    /* ===== TOAST ===== */
+    .toast{position:fixed;bottom:24px;right:24px;background:rgba(26,24,48,.95);backdrop-filter:blur(10px);color:#fff;padding:12px 22px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.3);border:1px solid rgba(124,58,237,.2);transform:translateY(80px);opacity:0;transition:all .3s;z-index:500}
+    .toast.show{transform:translateY(0);opacity:1}
+    .toast.error{border-color:rgba(239,68,68,.3)}
+    .toast.success{border-color:rgba(34,197,94,.3)}
 
-    /* Audit Log */
-    .audit-event{display:inline-flex;align-items:center;gap:6px}
-    .audit-dot{width:6px;height:6px;border-radius:50%;display:inline-block}
-    .audit-dot.create{background:#22c55e}
-    .audit-dot.verify{background:#3b82f6}
-    .audit-dot.auth{background:#ef4444}
-    .audit-dot.key{background:#f59e0b}
-    .audit-dot.gateway{background:#8b5cf6}
-    .audit-dot.blockchain{background:#f97316}
-    .audit-dot.other{background:#9ca3af}
+    /* ===== LANGUAGE MENU ===== */
+    .lang-switch{position:relative}
+    .lang-switch button{padding:6px 10px;border:1px solid rgba(124,58,237,.2);border-radius:8px;background:transparent;font-size:12px;cursor:pointer;font-family:inherit;color:#8b89a6;transition:all .2s;display:flex;align-items:center;gap:4px}
+    .lang-switch button:hover{border-color:#7c3aed;color:#c4b5fd}
+    .lang-menu{display:none;position:absolute;top:100%;right:0;margin-top:4px;background:#1a1830;border:1px solid rgba(124,58,237,.2);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.3);min-width:140px;z-index:110;overflow:hidden;max-height:300px;overflow-y:auto}
+    .lang-menu.show{display:block}
+    .lang-menu a{display:block;padding:8px 14px;font-size:12px;color:#8b89a6;text-decoration:none;transition:all .15s}
+    .lang-menu a:hover{background:rgba(124,58,237,.1);color:#c4b5fd}
+    .lang-menu a.active{color:#a78bfa;font-weight:600}
 
-    /* Documents panel */
-    .doc-search{display:flex;gap:8px;align-items:center}
-    .doc-search input{padding:6px 14px;border:1px solid #e5e7eb;border-radius:6px;font-size:13px;font-family:inherit;outline:none;width:220px;transition:border .2s}
-    .doc-search input:focus{border-color:#7c3aed}
-    .doc-hash-cell{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .doc-actions{display:flex;gap:4px}
-    .doc-actions button{padding:4px 10px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;font-size:11px;cursor:pointer;font-family:inherit;transition:.2s;color:#4b5563}
-    .doc-actions button:hover{border-color:#7c3aed;color:#7c3aed}
-    .doc-recipient{font-size:11px;color:#7c3aed;display:block;margin-top:2px}
-
-    /* Quick stats mini-chart */
-    .mini-chart{display:flex;align-items:flex-end;gap:2px;height:40px;margin-top:8px}
-    .mini-bar{flex:1;background:linear-gradient(to top,rgba(124,58,237,.15),rgba(124,58,237,.4));border-radius:2px 2px 0 0;transition:height .5s;min-width:3px}
-
-    /* Responsive dashboard */
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media(max-width:1024px){
+      .chart-row{grid-template-columns:1fr}
+      .slide-panel{width:100%;right:-100%}
+    }
     @media(max-width:768px){
-      .dash-header{padding:0 16px}
-      .dash-body{padding:16px}
-      .stats-row{grid-template-columns:repeat(2,1fr);gap:10px}
-      .tabs{flex-wrap:wrap}
-      .tab{font-size:12px;padding:6px 14px}
+      .sidebar{transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0)}
+      .mobile-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:190}
+      .mobile-overlay.show{display:block}
+      .main-content{margin-left:0}
+      .hamburger{display:block}
+      .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+      .content-area{padding:16px}
+      .top-bar{padding:0 16px}
       table{font-size:12px}
       th,td{padding:8px 12px}
-      .panel-header{flex-direction:column;gap:12px;align-items:flex-start}
-      .doc-search{flex-wrap:wrap}
-      .doc-search input{width:100%}
-      .modal{max-width:95%;padding:24px}
+      .panel-header{flex-direction:column;align-items:flex-start}
+      .search-input{width:100%}
+      .monitor-grid{grid-template-columns:1fr}
     }
     @media(max-width:480px){
-      .stats-row{grid-template-columns:1fr}
-      .stat-card .value{font-size:24px}
+      .stats-grid{grid-template-columns:1fr}
+      .stat-card .stat-value{font-size:24px}
+      .chart-row{grid-template-columns:1fr}
+      .top-bar-right .hide-mobile{display:none}
     }
 
-    /* Toast */
-    .toast{position:fixed;bottom:24px;right:24px;background:#1e1b4b;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:.3s;z-index:300}
-    .toast.show{transform:translateY(0);opacity:1}
-
-    /* RTL Support */
+    /* ===== RTL SUPPORT ===== */
     [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
     [dir="rtl"] th{text-align:right}
-    [dir="rtl"] .dash-header .actions{flex-direction:row-reverse}
+    [dir="rtl"] .sidebar{left:auto;right:0;border-right:none;border-left:1px solid rgba(124,58,237,.12)}
+    [dir="rtl"] .main-content{margin-left:0;margin-right:240px}
+    [dir="rtl"] .nav-item{border-left:none;border-right:3px solid transparent}
+    [dir="rtl"] .nav-item.active{border-right-color:#7c3aed}
+    [dir="rtl"] .slide-panel{right:auto;left:-420px}
+    [dir="rtl"] .slide-panel.show{left:0}
     [dir="rtl"] .toast{right:auto;left:24px}
-    [dir="rtl"] .activity-dot{margin-right:0;margin-left:6px}
-    [dir="rtl"] .key-display .copy{right:auto;left:8px}
-    [dir="rtl"] .audit-event{flex-direction:row-reverse}
+    [dir="rtl"] .lang-menu{right:auto;left:0}
+    [dir="rtl"] .nav-item .nav-badge{margin-left:0;margin-right:auto}
+    @media(max-width:768px){
+      [dir="rtl"] .sidebar{transform:translateX(100%)}
+      [dir="rtl"] .sidebar.open{transform:translateX(0)}
+      [dir="rtl"] .main-content{margin-right:0}
+    }
 
-    /* Language selector */
-    .lang-switch{position:relative;display:inline-block}
-    .lang-switch button{padding:6px 10px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;font-size:12px;cursor:pointer;font-family:inherit;color:#4b5563;transition:.2s;display:flex;align-items:center;gap:4px}
-    .lang-switch button:hover{border-color:#7c3aed;color:#7c3aed}
-    .lang-switch .lang-menu{display:none;position:absolute;top:100%;right:0;margin-top:4px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);min-width:100px;z-index:110;overflow:hidden}
-    .lang-switch .lang-menu.show{display:block}
-    .lang-switch .lang-menu a{display:block;padding:8px 14px;font-size:12px;color:#374151;text-decoration:none;transition:.15s}
-    .lang-switch .lang-menu a:hover{background:#f5f3ff;color:#7c3aed}
-    .lang-switch .lang-menu a.active{color:#7c3aed;font-weight:600}
-    [dir="rtl"] .lang-switch .lang-menu{right:auto;left:0}
-
-    /* Empty state */
-    .empty-state{text-align:center;padding:48px 24px;color:#9ca3af}
-    .empty-state .icon{font-size:40px;margin-bottom:12px}
-    .empty-state h4{font-size:16px;font-weight:600;color:#6b7280;margin-bottom:4px}
-    .empty-state p{font-size:13px}
-
-    /* Activity indicator */
-    .activity-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;animation:actPulse 2s infinite;margin-right:6px;vertical-align:middle}
-    @keyframes actPulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{opacity:.7;box-shadow:0 0 0 4px rgba(34,197,94,0)}}
-
-    /* Webhook status */
-    .webhook-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #f3f4f6}
-    .webhook-url{font-family:monospace;font-size:12px;color:#7c3aed;word-break:break-all}
-    .webhook-events{display:flex;gap:4px;flex-wrap:wrap}
-    .webhook-event{padding:2px 8px;background:rgba(124,58,237,.08);border-radius:4px;font-size:10px;font-weight:600;color:#7c3aed}
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{animation:fadeIn .4s ease}
+    @keyframes countUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .status-pulse{animation:pulse 2s infinite}
   </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
+<!-- ==================== LOGIN SCREEN ==================== -->
 <div class="login-screen" id="loginScreen">
   <div class="login-card">
     <img src="/images/logo-horizontal.png" alt="Vertifile">
@@ -192,219 +328,396 @@
   </div>
 </div>
 
-<!-- DASHBOARD -->
+<!-- ==================== DASHBOARD ==================== -->
 <div class="dashboard" id="dashboard">
-  <!-- Header -->
-  <div class="dash-header">
-    <div class="logo">
-      <img src="/images/logo-horizontal.png" alt="Vertifile">
-      <span>Dashboard</span>
-    </div>
-    <div class="actions">
-      <button onclick="window.open('/','_blank')" title="Open website" data-i18n="dashboard.website">Website</button>
-      <button onclick="window.open('/api/docs','_blank')" title="API Documentation" data-i18n="dashboard.apiDocs">API Docs</button>
-      <button onclick="refreshData()"><span class="activity-dot"></span><span data-i18n="dashboard.refresh">Refresh</span></button>
-      <div class="lang-switch">
-        <button onclick="toggleDashLang()" id="dashLangBtn" title="Language">&#127760; <span id="dashLangLabel">EN</span></button>
-        <div class="lang-menu" id="dashLangMenu">
-          <a href="#" onclick="switchLang('en',event)">English</a>
-          <a href="#" onclick="switchLang('he',event)">עברית</a>
+  <div class="dash-layout">
+
+    <!-- Mobile overlay -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <img src="/images/logo-horizontal.png" alt="Vertifile">
+        <span class="badge-sm" data-i18n="dashboard.admin">Admin</span>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section" data-i18n="dashboard.navMain">Main</div>
+        <a class="nav-item active" data-tab="overview" onclick="switchTab('overview',this)">
+          <span class="nav-icon">&#9635;</span>
+          <span data-i18n="dashboard.navOverview">Overview</span>
+        </a>
+        <a class="nav-item" data-tab="keys" onclick="switchTab('keys',this)">
+          <span class="nav-icon">&#128273;</span>
+          <span data-i18n="dashboard.navKeys">API Keys</span>
+        </a>
+        <a class="nav-item" data-tab="documents" onclick="switchTab('documents',this)">
+          <span class="nav-icon">&#128196;</span>
+          <span data-i18n="dashboard.navDocs">Documents</span>
+        </a>
+        <div class="nav-section" data-i18n="dashboard.navSecurity">Security</div>
+        <a class="nav-item" data-tab="audit" onclick="switchTab('audit',this)">
+          <span class="nav-icon">&#128203;</span>
+          <span data-i18n="dashboard.navAudit">Audit Log</span>
+        </a>
+        <a class="nav-item" data-tab="alerts" onclick="switchTab('alerts',this)">
+          <span class="nav-icon">&#128680;</span>
+          <span data-i18n="dashboard.navAlerts">Alerts</span>
+          <span class="nav-badge" id="alertBadge" style="display:none">0</span>
+        </a>
+        <div class="nav-section" data-i18n="dashboard.navInfrastructure">Infrastructure</div>
+        <a class="nav-item" data-tab="blockchain" onclick="switchTab('blockchain',this)">
+          <span class="nav-icon">&#9939;</span>
+          <span data-i18n="dashboard.navBlockchain">Blockchain</span>
+        </a>
+        <a class="nav-item" data-tab="monitoring" onclick="switchTab('monitoring',this)">
+          <span class="nav-icon">&#128200;</span>
+          <span data-i18n="dashboard.navMonitoring">Monitoring</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="refresh-info">
+          <span data-i18n="dashboard.nextRefresh">Refresh</span>
+          <div class="refresh-bar"><div class="refresh-bar-fill" id="refreshBar" style="width:100%"></div></div>
+          <span id="refreshCountdown">30s</span>
+        </div>
+        <button onclick="doLogout()" data-i18n="dashboard.logout">Logout</button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="top-bar-left">
+          <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+          <span class="page-title" id="pageTitle" data-i18n="dashboard.navOverview">Overview</span>
+        </div>
+        <div class="top-bar-right">
+          <button class="hide-mobile" onclick="window.open('/','_blank')" data-i18n="dashboard.website">Website</button>
+          <button class="hide-mobile" onclick="window.open('/api/docs','_blank')" data-i18n="dashboard.apiDocs">API Docs</button>
+          <button onclick="refreshData()">&#8635; <span data-i18n="dashboard.refresh">Refresh</span></button>
+          <div class="lang-switch">
+            <button onclick="toggleLangMenu()" id="langBtn">&#127760; <span id="langLabel">EN</span></button>
+            <div class="lang-menu" id="langMenu">
+              <a href="#" onclick="switchLang('en',event)" class="active">English</a>
+              <a href="#" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+              <a href="#" onclick="switchLang('es',event)">Espa&#241;ol</a>
+              <a href="#" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+              <a href="#" onclick="switchLang('de',event)">Deutsch</a>
+              <a href="#" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+              <a href="#" onclick="switchLang('zh',event)">&#20013;&#25991;</a>
+              <a href="#" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
+              <a href="#" onclick="switchLang('ko',event)">&#54620;&#44397;&#50612;</a>
+              <a href="#" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+            </div>
+          </div>
         </div>
       </div>
-      <button onclick="doLogout()" data-i18n="dashboard.logout">Logout</button>
-    </div>
+
+      <div class="content-area">
+
+        <!-- ========== TAB: OVERVIEW ========== -->
+        <div class="panel-section active" id="section-overview">
+          <!-- Stats Row -->
+          <div class="stats-grid" id="statsGrid">
+            <div class="stat-card fade-in">
+              <div class="stat-label" data-i18n="dashboard.totalDocs">Total Documents</div>
+              <div class="stat-value" id="statDocs">0</div>
+              <div class="stat-sub" data-i18n="dashboard.protectedFiles">Protected files</div>
+            </div>
+            <div class="stat-card fade-in">
+              <div class="stat-label" data-i18n="dashboard.totalOrgs">Organizations</div>
+              <div class="stat-value" id="statOrgs">0</div>
+              <div class="stat-sub" data-i18n="dashboard.activeKeys">Active API keys</div>
+            </div>
+            <div class="stat-card fade-in">
+              <div class="stat-label" data-i18n="dashboard.auditEvents">Audit Events</div>
+              <div class="stat-value" id="statAudit">0</div>
+              <div class="stat-sub" data-i18n="dashboard.loggedActions">Logged actions</div>
+            </div>
+            <div class="stat-card fade-in">
+              <div class="stat-label" data-i18n="dashboard.serverStatus">Server Status</div>
+              <div class="stat-value green" id="statStatus" style="font-size:22px">&#8212;</div>
+              <div class="stat-sub" id="statVersion">&#8212;</div>
+            </div>
+            <div class="stat-card fade-in">
+              <div class="stat-label" data-i18n="dashboard.blockchain">Blockchain</div>
+              <div class="stat-value yellow" id="statChain" style="font-size:20px">&#8212;</div>
+              <div class="stat-sub" id="statChainSub" data-i18n="dashboard.polygonStatus">Polygon status</div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="chart-row">
+            <div class="chart-card fade-in">
+              <h4 data-i18n="dashboard.docsPerDay">Documents Per Day (Last 14 Days)</h4>
+              <div class="line-chart" id="docsChart"></div>
+            </div>
+            <div class="chart-card fade-in">
+              <h4 data-i18n="dashboard.planDistribution">Plan Distribution</h4>
+              <div class="pie-container" id="pieChart">
+                <div style="color:#5a5880;font-size:13px" data-i18n="dashboard.loading">Loading...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Feed -->
+          <div class="activity-feed">
+            <div class="activity-card fade-in">
+              <h4 data-i18n="dashboard.recentActivity">Recent Activity</h4>
+              <div id="activityFeed">
+                <div class="empty-state"><p data-i18n="dashboard.loading">Loading...</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== TAB: API KEYS ========== -->
+        <div class="panel-section" id="section-keys">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 data-i18n="dashboard.apiKeys">API Keys</h3>
+              <div class="actions-row">
+                <button class="btn-outline" onclick="exportCSV('keys')" data-i18n="dashboard.exportCSV">Export CSV</button>
+                <button class="btn-primary" onclick="showCreateModal()">+ <span data-i18n="dashboard.createKey">Create Key</span></button>
+              </div>
+            </div>
+            <div style="overflow-x:auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th data-i18n="dashboard.organization">Organization</th>
+                    <th data-i18n="dashboard.apiKey">API Key</th>
+                    <th data-i18n="dashboard.plan">Plan</th>
+                    <th data-i18n="dashboard.docsCreated">Docs Created</th>
+                    <th data-i18n="dashboard.status">Status</th>
+                    <th data-i18n="dashboard.created">Created</th>
+                    <th data-i18n="dashboard.actions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="keysBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== TAB: DOCUMENTS ========== -->
+        <div class="panel-section" id="section-documents">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 data-i18n="dashboard.documents">Documents</h3>
+              <div class="actions-row">
+                <input type="text" class="search-input" id="docSearch" placeholder="Search by hash or name..." data-i18n-placeholder="dashboard.searchDocs" onkeydown="if(event.key==='Enter')searchDocs()">
+                <button class="btn-outline btn-sm" onclick="searchDocs()" data-i18n="dashboard.search">Search</button>
+                <button class="btn-outline btn-sm" onclick="exportCSV('documents')" data-i18n="dashboard.exportCSV">Export CSV</button>
+              </div>
+            </div>
+            <div style="overflow-x:auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th data-i18n="dashboard.fileName">Name</th>
+                    <th data-i18n="dashboard.hash">Hash</th>
+                    <th data-i18n="dashboard.organization">Org</th>
+                    <th data-i18n="dashboard.size">Size</th>
+                    <th data-i18n="dashboard.created">Date</th>
+                    <th data-i18n="dashboard.verifiedStatus">Verified</th>
+                  </tr>
+                </thead>
+                <tbody id="docsBody"></tbody>
+              </table>
+            </div>
+            <div class="pagination-bar">
+              <button id="docPrev" onclick="docsPage(-1)" disabled data-i18n="dashboard.previous">Previous</button>
+              <span id="docInfo">Page 1</span>
+              <button id="docNext" onclick="docsPage(1)" data-i18n="dashboard.next">Next</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== TAB: AUDIT LOG ========== -->
+        <div class="panel-section" id="section-audit">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 data-i18n="dashboard.auditLog">Audit Log</h3>
+              <div class="actions-row">
+                <select class="filter-select" id="auditFilter" onchange="currentAuditPage=0;loadAudit()">
+                  <option value="" data-i18n="dashboard.allEvents">All Events</option>
+                  <option value="pvf_created">PVF Created</option>
+                  <option value="verify_attempt">Verification</option>
+                  <option value="auth_failed">Auth Failed</option>
+                  <option value="api_key_created">Key Created</option>
+                  <option value="gateway_intake">Gateway Intake</option>
+                  <option value="gateway_batch">Gateway Batch</option>
+                  <option value="blockchain_registered">Blockchain Registered</option>
+                </select>
+                <input type="date" class="date-input" id="auditDateFrom" onchange="currentAuditPage=0;loadAudit()" title="From date">
+                <input type="date" class="date-input" id="auditDateTo" onchange="currentAuditPage=0;loadAudit()" title="To date">
+                <button class="btn-outline btn-sm" onclick="exportCSV('audit')" data-i18n="dashboard.exportCSV">Export CSV</button>
+              </div>
+            </div>
+            <div style="overflow-x:auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th data-i18n="dashboard.timestamp">Timestamp</th>
+                    <th data-i18n="dashboard.event">Event</th>
+                    <th data-i18n="dashboard.details">Details</th>
+                  </tr>
+                </thead>
+                <tbody id="auditBody"></tbody>
+              </table>
+            </div>
+            <div class="pagination-bar">
+              <button id="auditPrev" onclick="auditPage(-1)" disabled data-i18n="dashboard.previous">Previous</button>
+              <span id="auditInfo">Page 1</span>
+              <button id="auditNext" onclick="auditPage(1)" data-i18n="dashboard.next">Next</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== TAB: ALERTS ========== -->
+        <div class="panel-section" id="section-alerts">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 data-i18n="dashboard.securityAlerts">Security Alerts</h3>
+              <div class="actions-row">
+                <select class="filter-select" id="alertSeverity" onchange="loadAlerts()">
+                  <option value="" data-i18n="dashboard.allSeverity">All Severity</option>
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+            </div>
+            <div id="alertsContent">
+              <div class="empty-state"><p data-i18n="dashboard.loading">Loading...</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== TAB: BLOCKCHAIN ========== -->
+        <div class="panel-section" id="section-blockchain">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 data-i18n="dashboard.blockchainPolygon">Blockchain &mdash; Polygon</h3>
+              <span class="badge" id="chainStatusBadge">Checking...</span>
+            </div>
+            <div id="chainOnline">
+              <div class="chain-grid">
+                <div class="chain-item">
+                  <div class="chain-label" data-i18n="dashboard.network">Network</div>
+                  <div class="chain-val" id="chainNetwork">&#8212;</div>
+                </div>
+                <div class="chain-item">
+                  <div class="chain-label" data-i18n="dashboard.contract">Contract Address</div>
+                  <div class="chain-val mono" id="chainContract">&#8212;</div>
+                </div>
+                <div class="chain-item">
+                  <div class="chain-label" data-i18n="dashboard.wallet">Wallet Address</div>
+                  <div class="chain-val mono" id="chainWallet">&#8212;</div>
+                </div>
+                <div class="chain-item">
+                  <div class="chain-label" data-i18n="dashboard.onChainDocs">On-Chain Documents</div>
+                  <div class="chain-val big" id="chainDocs">&#8212;</div>
+                </div>
+                <div class="chain-item">
+                  <div class="chain-label" data-i18n="dashboard.walletBalance">Wallet Balance</div>
+                  <div class="chain-val" id="chainBalance">&#8212;</div>
+                </div>
+                <div class="chain-item">
+                  <div class="chain-label" data-i18n="dashboard.pendingQueue">Pending Queue</div>
+                  <div class="chain-val" id="chainPending">0</div>
+                </div>
+                <div class="chain-item">
+                  <div class="chain-label" data-i18n="dashboard.explorer">Explorer</div>
+                  <a href="#" target="_blank" id="chainExplorer" style="font-size:13px;color:#a78bfa;text-decoration:none" data-i18n="dashboard.viewOnPolygonscan">View on Polygonscan</a>
+                </div>
+              </div>
+            </div>
+            <div id="chainOffline" style="display:none">
+              <div class="empty-state" style="padding:60px 24px">
+                <div class="icon">&#9939;</div>
+                <h4 data-i18n="dashboard.blockchainNotConnected">Blockchain Not Connected</h4>
+                <p data-i18n="dashboard.blockchainSetupHint">Set POLYGON_PRIVATE_KEY and POLYGON_CONTRACT environment variables to enable on-chain document registration.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== TAB: MONITORING ========== -->
+        <div class="panel-section" id="section-monitoring">
+          <div class="monitor-grid" id="monitorGrid">
+            <div class="monitor-card">
+              <h4 data-i18n="dashboard.serverUptime">Server Uptime</h4>
+              <div class="monitor-val" id="monUptime">&#8212;</div>
+              <div class="monitor-sub" id="monUptimeSub" data-i18n="dashboard.uptimePercentage">Uptime percentage</div>
+              <div class="monitor-bar"><div class="monitor-bar-fill green" id="monUptimeBar" style="width:0%"></div></div>
+            </div>
+            <div class="monitor-card">
+              <h4 data-i18n="dashboard.responseTime">Avg Response Time</h4>
+              <div class="monitor-val" id="monResponseTime">&#8212;</div>
+              <div class="monitor-sub" data-i18n="dashboard.milliseconds">milliseconds</div>
+              <div class="monitor-bar"><div class="monitor-bar-fill green" id="monResponseBar" style="width:0%"></div></div>
+            </div>
+            <div class="monitor-card">
+              <h4 data-i18n="dashboard.memoryUsage">Memory Usage</h4>
+              <div class="monitor-val" id="monMemory">&#8212;</div>
+              <div class="monitor-sub" id="monMemorySub">&#8212;</div>
+              <div class="monitor-bar"><div class="monitor-bar-fill green" id="monMemoryBar" style="width:0%"></div></div>
+            </div>
+            <div class="monitor-card">
+              <h4 data-i18n="dashboard.activeConnections">Active Connections</h4>
+              <div class="monitor-val" id="monConnections">&#8212;</div>
+              <div class="monitor-sub" data-i18n="dashboard.currentConnections">Current connections</div>
+            </div>
+          </div>
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 data-i18n="dashboard.healthHistory">Health Check History</h3>
+            </div>
+            <div style="overflow-x:auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th data-i18n="dashboard.timestamp">Timestamp</th>
+                    <th data-i18n="dashboard.status">Status</th>
+                    <th data-i18n="dashboard.responseTime">Response Time</th>
+                    <th data-i18n="dashboard.details">Details</th>
+                  </tr>
+                </thead>
+                <tbody id="healthBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /content-area -->
+    </div><!-- /main-content -->
+  </div><!-- /dash-layout -->
+</div><!-- /dashboard -->
+
+<!-- ==================== SLIDE PANEL ==================== -->
+<div class="slide-backdrop" id="slideBackdrop" onclick="closeSlide()"></div>
+<div class="slide-panel" id="slidePanel">
+  <div class="slide-header">
+    <h3 id="slideTitle" data-i18n="dashboard.orgDetails">Organization Details</h3>
+    <button class="slide-close" onclick="closeSlide()">&times;</button>
   </div>
-
-  <div class="dash-body">
-    <!-- Stats -->
-    <div class="stats-row" id="statsRow">
-      <div class="stat-card">
-        <div class="label" data-i18n="dashboard.totalDocs">Total Documents</div>
-        <div class="value" id="statDocs">—</div>
-        <div class="sub" data-i18n="dashboard.totalDocsSubtitle">Protected files</div>
-      </div>
-      <div class="stat-card">
-        <div class="label" data-i18n="dashboard.totalOrgs">Organizations</div>
-        <div class="value" id="statOrgs">—</div>
-        <div class="sub" data-i18n="dashboard.activeKeysSubtitle">Active API keys</div>
-      </div>
-      <div class="stat-card">
-        <div class="label" data-i18n="dashboard.auditEvents">Audit Events</div>
-        <div class="value" id="statAudit">—</div>
-        <div class="sub" data-i18n="dashboard.auditEventsSubtitle">Logged actions</div>
-      </div>
-      <div class="stat-card">
-        <div class="label" data-i18n="dashboard.serverHealth">Server Status</div>
-        <div class="value" style="font-size:24px" id="statStatus">—</div>
-        <div class="sub" id="statVersion">v4.0.0</div>
-      </div>
-      <div class="stat-card" id="blockchainCard">
-        <div class="label" data-i18n="dashboard.blockchain">Blockchain</div>
-        <div class="value" style="font-size:20px" id="statChain">—</div>
-        <div class="sub" id="statChainSub" data-i18n="dashboard.blockchainSubtitle">Polygon status</div>
-      </div>
-    </div>
-
-    <!-- Tabs -->
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('keys')" data-i18n="dashboard.tabKeys">API Keys</button>
-      <button class="tab" onclick="switchTab('documents')" data-i18n="dashboard.tabDocs">Documents</button>
-      <button class="tab" onclick="switchTab('webhooks')" data-i18n="dashboard.tabWebhooks">Webhooks</button>
-      <button class="tab" onclick="switchTab('audit')" data-i18n="dashboard.tabAudit">Audit Log</button>
-      <button class="tab" onclick="switchTab('blockchain')" data-i18n="dashboard.tabBlockchain">Blockchain</button>
-    </div>
-
-    <!-- API Keys Panel -->
-    <div class="panel active" id="panel-keys">
-      <div class="panel-header">
-        <h3 data-i18n="dashboard.tabKeys">API Keys</h3>
-        <button class="btn" onclick="showCreateModal()">+ <span data-i18n="dashboard.createKey">Create Key</span></button>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th data-i18n="dashboard.apiKey">API Key</th>
-            <th data-i18n="dashboard.organization">Organization</th>
-            <th data-i18n="dashboard.plan">Plan</th>
-            <th data-i18n="dashboard.documents">Documents</th>
-            <th data-i18n="dashboard.status">Status</th>
-            <th data-i18n="dashboard.created">Created</th>
-          </tr>
-        </thead>
-        <tbody id="keysBody"></tbody>
-      </table>
-    </div>
-
-    <!-- Audit Log Panel -->
-    <div class="panel" id="panel-audit">
-      <div class="panel-header">
-        <h3 data-i18n="dashboard.tabAudit">Audit Log</h3>
-        <div style="display:flex;gap:8px">
-          <select id="auditFilter" onchange="loadAudit()" style="padding:6px 12px;border:1px solid #e5e7eb;border-radius:6px;font-size:12px;font-family:inherit">
-            <option value="" data-i18n="dashboard.allEvents">All Events</option>
-            <option value="pvf_created">PVF Created</option>
-            <option value="verify_attempt">Verification</option>
-            <option value="auth_failed">Auth Failed</option>
-            <option value="api_key_created">Key Created</option>
-            <option value="gateway_intake">Gateway Intake</option>
-            <option value="gateway_batch">Gateway Batch</option>
-            <option value="blockchain_registered">Blockchain Registered</option>
-          </select>
-        </div>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th data-i18n="dashboard.timestamp">Time</th>
-            <th data-i18n="dashboard.event">Event</th>
-            <th data-i18n="dashboard.details">Details</th>
-          </tr>
-        </thead>
-        <tbody id="auditBody"></tbody>
-      </table>
-      <div class="pagination">
-        <button id="auditPrev" onclick="auditPage(-1)" disabled data-i18n="dashboard.previous">Previous</button>
-        <span id="auditInfo">Page 1</span>
-        <button id="auditNext" onclick="auditPage(1)" data-i18n="dashboard.next">Next</button>
-      </div>
-    </div>
-
-    <!-- Documents Panel -->
-    <div class="panel" id="panel-documents">
-      <div class="panel-header">
-        <h3 data-i18n="dashboard.recentDocs">Recent Documents</h3>
-        <div class="doc-search">
-          <input type="text" id="docSearch" placeholder="Search by hash or name..." data-i18n-placeholder="dashboard.searchDocs" onkeydown="if(event.key==='Enter')searchDocs()">
-          <button class="btn" onclick="searchDocs()" style="padding:6px 14px;font-size:12px" data-i18n="dashboard.search">Search</button>
-        </div>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th data-i18n="dashboard.hash">Hash</th>
-            <th data-i18n="dashboard.fileName">File Name</th>
-            <th data-i18n="dashboard.organization">Organization</th>
-            <th data-i18n="dashboard.size">Size</th>
-            <th data-i18n="dashboard.recipient">Recipient</th>
-            <th data-i18n="dashboard.created">Created</th>
-          </tr>
-        </thead>
-        <tbody id="docsBody"></tbody>
-      </table>
-      <div class="pagination">
-        <button id="docPrev" onclick="docsPage(-1)" disabled data-i18n="dashboard.previous">Previous</button>
-        <span id="docInfo">Page 1</span>
-        <button id="docNext" onclick="docsPage(1)" data-i18n="dashboard.next">Next</button>
-      </div>
-    </div>
-
-    <!-- Webhooks Panel -->
-    <div class="panel" id="panel-webhooks">
-      <div class="panel-header">
-        <h3 data-i18n="dashboard.registeredWebhooks">Registered Webhooks</h3>
-        <span class="text-muted" style="font-size:12px" data-i18n="dashboard.webhooksManaged">Managed by organizations via API</span>
-      </div>
-      <div id="webhooksContent">
-        <div class="empty-state">
-          <div class="icon">🔔</div>
-          <h4 data-i18n="dashboard.noWebhooks">No Webhooks Registered</h4>
-          <p data-i18n="dashboard.webhooksHint">Organizations can register webhooks via POST /api/webhooks/register</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Blockchain Panel -->
-    <div class="panel" id="panel-blockchain">
-      <div class="panel-header">
-        <h3 data-i18n="dashboard.blockchainPolygon">Blockchain — Polygon</h3>
-        <span class="badge" id="chainStatusBadge" style="font-size:12px">Checking...</span>
-      </div>
-      <div style="padding:24px" id="chainContent">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
-          <div>
-            <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px" data-i18n="dashboard.network">Network</div>
-            <div style="font-size:14px;font-weight:600" id="chainNetwork">—</div>
-          </div>
-          <div>
-            <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px" data-i18n="dashboard.contract">Contract</div>
-            <div style="font-size:12px;font-family:monospace;color:#7c3aed;word-break:break-all" id="chainContract">—</div>
-          </div>
-          <div>
-            <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px" data-i18n="dashboard.wallet">Wallet</div>
-            <div style="font-size:12px;font-family:monospace;color:#7c3aed;word-break:break-all" id="chainWallet">—</div>
-          </div>
-          <div>
-            <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px" data-i18n="dashboard.onChainDocs">On-Chain Docs</div>
-            <div style="font-size:24px;font-weight:800;color:#1e1b4b" id="chainDocs">—</div>
-          </div>
-          <div>
-            <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px" data-i18n="dashboard.balance">Balance</div>
-            <div style="font-size:14px;font-weight:600" id="chainBalance">—</div>
-          </div>
-          <div>
-            <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px" data-i18n="dashboard.explorer">Explorer</div>
-            <a href="#" target="_blank" id="chainExplorer" style="font-size:13px;color:#7c3aed;text-decoration:none" data-i18n="dashboard.viewOnPolygonscan">View on Polygonscan</a>
-          </div>
-        </div>
-        <div id="chainOffline" style="display:none;text-align:center;padding:40px 0">
-          <div style="font-size:40px;margin-bottom:12px">🔗</div>
-          <div style="font-size:16px;font-weight:600;color:#374151;margin-bottom:8px" data-i18n="dashboard.blockchainNotConnected">Blockchain Not Connected</div>
-          <div style="font-size:13px;color:#9ca3af;max-width:400px;margin:0 auto;line-height:1.6" data-i18n="dashboard.blockchainSetupHint">
-            Set POLYGON_PRIVATE_KEY and POLYGON_CONTRACT environment variables to enable on-chain document registration.
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="slide-body" id="slideBody">
+    <div class="empty-state"><p data-i18n="dashboard.loading">Loading...</p></div>
   </div>
+  <div class="slide-actions" id="slideActions"></div>
 </div>
 
-<!-- Create Key Modal -->
+<!-- ==================== CREATE KEY MODAL ==================== -->
 <div class="modal-overlay" id="createModal">
   <div class="modal">
     <h3 data-i18n="dashboard.createKeyTitle">Create API Key</h3>
+    <div class="modal-sub" data-i18n="dashboard.createKeySub">Generate a new API key for an organization.</div>
     <label data-i18n="dashboard.orgName">Organization Name</label>
-    <input type="text" id="newOrgName" placeholder="e.g. Tel Aviv University">
-    <label data-i18n="dashboard.plan">Plan</label>
+    <input type="text" id="newOrgName" placeholder="e.g. Tel Aviv University" data-i18n-placeholder="dashboard.orgNamePlaceholder">
+    <label data-i18n="dashboard.selectPlan">Plan</label>
     <select id="newPlan">
       <option value="free" data-i18n="dashboard.planFree">Free (5 docs/day)</option>
       <option value="professional" data-i18n="dashboard.planPro">Professional (100 docs/day)</option>
@@ -412,23 +725,231 @@
     </select>
     <div id="newKeyResult"></div>
     <div class="modal-actions">
-      <button class="cancel" onclick="hideCreateModal()" data-i18n="dashboard.cancel">Cancel</button>
-      <button class="submit" onclick="createKey()" data-i18n="dashboard.createKey">Create</button>
+      <button class="cancel-btn" onclick="hideCreateModal()" data-i18n="dashboard.cancel">Cancel</button>
+      <button class="submit-btn" onclick="createKey()" data-i18n="dashboard.createKey">Create</button>
     </div>
   </div>
 </div>
 
-<!-- Toast -->
+<!-- ==================== CHANGE PLAN MODAL ==================== -->
+<div class="modal-overlay" id="planModal">
+  <div class="modal">
+    <h3 data-i18n="dashboard.changePlan">Change Plan</h3>
+    <div class="modal-sub" id="planModalOrgName"></div>
+    <label data-i18n="dashboard.newPlan">New Plan</label>
+    <select id="changePlanSelect">
+      <option value="free" data-i18n="dashboard.planFree">Free (5 docs/day)</option>
+      <option value="professional" data-i18n="dashboard.planPro">Professional (100 docs/day)</option>
+      <option value="enterprise" data-i18n="dashboard.planEnterprise">Enterprise (10,000 docs/day)</option>
+    </select>
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="hidePlanModal()" data-i18n="dashboard.cancel">Cancel</button>
+      <button class="submit-btn" onclick="submitPlanChange()" data-i18n="dashboard.changePlan">Change Plan</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
+// ===== STATE =====
 let adminSecret = '';
 let currentAuditPage = 0;
 let currentDocPage = 0;
+let refreshTimer = null;
+let refreshSeconds = 30;
 const AUDIT_LIMIT = 25;
 const DOC_LIMIT = 20;
+let currentTab = 'overview';
+let changePlanOrgId = '';
 
-// ===== Login =====
+// ===== I18N =====
+const TRANSLATIONS = {
+  en: { dir: 'ltr', label: 'EN', strings: {} },
+  he: { dir: 'rtl', label: 'HE', strings: {
+    'dashboard.title': '\u05DC\u05D5\u05D7 \u05D1\u05E7\u05E8\u05D4',
+    'dashboard.subtitle': '\u05D4\u05D6\u05DF \u05D0\u05EA \u05E1\u05D5\u05D3 \u05D4\u05DE\u05E0\u05D4\u05DC \u05DC\u05D2\u05D9\u05E9\u05D4.',
+    'dashboard.signIn': '\u05DB\u05E0\u05D9\u05E1\u05D4',
+    'dashboard.invalidSecret': '\u05E1\u05D5\u05D3 \u05DE\u05E0\u05D4\u05DC \u05E9\u05D2\u05D5\u05D9',
+    'dashboard.logout': '\u05D9\u05E6\u05D9\u05D0\u05D4',
+    'dashboard.navOverview': '\u05E1\u05E7\u05D9\u05E8\u05D4',
+    'dashboard.navKeys': '\u05DE\u05E4\u05EA\u05D7\u05D5\u05EA API',
+    'dashboard.navDocs': '\u05DE\u05E1\u05DE\u05DB\u05D9\u05DD',
+    'dashboard.navAudit': '\u05D9\u05D5\u05DE\u05DF \u05D1\u05D9\u05E7\u05D5\u05E8\u05EA',
+    'dashboard.navAlerts': '\u05D4\u05EA\u05E8\u05D0\u05D5\u05EA',
+    'dashboard.navBlockchain': '\u05D1\u05DC\u05D5\u05E7\u05E6\u05F3\u05D9\u05D9\u05DF',
+    'dashboard.navMonitoring': '\u05E0\u05D9\u05D8\u05D5\u05E8',
+    'dashboard.refresh': '\u05E8\u05E2\u05E0\u05D5\u05DF',
+    'dashboard.totalDocs': '\u05E1\u05D4"\u05DB \u05DE\u05E1\u05DE\u05DB\u05D9\u05DD',
+    'dashboard.totalOrgs': '\u05D0\u05E8\u05D2\u05D5\u05E0\u05D9\u05DD',
+    'dashboard.auditEvents': '\u05D0\u05D9\u05E8\u05D5\u05E2\u05D9 \u05D1\u05D9\u05E7\u05D5\u05E8\u05EA',
+    'dashboard.previous': '\u05D4\u05E7\u05D5\u05D3\u05DD',
+    'dashboard.next': '\u05D4\u05D1\u05D0',
+    'dashboard.createKey': '\u05E6\u05D5\u05E8 \u05DE\u05E4\u05EA\u05D7',
+    'dashboard.cancel': '\u05D1\u05D9\u05D8\u05D5\u05DC',
+    'dashboard.search': '\u05D7\u05D9\u05E4\u05D5\u05E9',
+  }},
+  es: { dir: 'ltr', label: 'ES', strings: {
+    'dashboard.title': 'Panel de Control',
+    'dashboard.signIn': 'Iniciar Sesi\u00F3n',
+    'dashboard.logout': 'Cerrar Sesi\u00F3n',
+    'dashboard.navOverview': 'Vista General',
+    'dashboard.refresh': 'Actualizar',
+  }},
+  fr: { dir: 'ltr', label: 'FR', strings: {
+    'dashboard.title': 'Tableau de Bord',
+    'dashboard.signIn': 'Se Connecter',
+    'dashboard.logout': 'D\u00E9connexion',
+    'dashboard.navOverview': 'Vue d\'ensemble',
+    'dashboard.refresh': 'Actualiser',
+  }},
+  de: { dir: 'ltr', label: 'DE', strings: {
+    'dashboard.title': 'Admin-Dashboard',
+    'dashboard.signIn': 'Anmelden',
+    'dashboard.logout': 'Abmelden',
+    'dashboard.navOverview': '\u00DCbersicht',
+    'dashboard.refresh': 'Aktualisieren',
+  }},
+  pt: { dir: 'ltr', label: 'PT', strings: {
+    'dashboard.title': 'Painel de Controle',
+    'dashboard.signIn': 'Entrar',
+    'dashboard.logout': 'Sair',
+    'dashboard.navOverview': 'Vis\u00E3o Geral',
+  }},
+  zh: { dir: 'ltr', label: 'ZH', strings: {
+    'dashboard.title': '\u7BA1\u7406\u4EEA\u8868\u677F',
+    'dashboard.signIn': '\u767B\u5F55',
+    'dashboard.logout': '\u9000\u51FA',
+    'dashboard.navOverview': '\u6982\u89C8',
+  }},
+  ja: { dir: 'ltr', label: 'JA', strings: {
+    'dashboard.title': '\u7BA1\u7406\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9',
+    'dashboard.signIn': '\u30ED\u30B0\u30A4\u30F3',
+    'dashboard.logout': '\u30ED\u30B0\u30A2\u30A6\u30C8',
+    'dashboard.navOverview': '\u6982\u8981',
+  }},
+  ko: { dir: 'ltr', label: 'KO', strings: {
+    'dashboard.title': '\uAD00\uB9AC \uB300\uC2DC\uBCF4\uB4DC',
+    'dashboard.signIn': '\uB85C\uADF8\uC778',
+    'dashboard.logout': '\uB85C\uADF8\uC544\uC6C3',
+    'dashboard.navOverview': '\uAC1C\uC694',
+  }},
+  ar: { dir: 'rtl', label: 'AR', strings: {
+    'dashboard.title': '\u0644\u0648\u062D\u0629 \u0627\u0644\u0625\u062F\u0627\u0631\u0629',
+    'dashboard.signIn': '\u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u062F\u062E\u0648\u0644',
+    'dashboard.logout': '\u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u062E\u0631\u0648\u062C',
+    'dashboard.navOverview': '\u0646\u0638\u0631\u0629 \u0639\u0627\u0645\u0629',
+  }}
+};
+let currentLang = 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const t = TRANSLATIONS[lang];
+  if (!t) return;
+  document.documentElement.setAttribute('dir', t.dir);
+  document.documentElement.setAttribute('lang', lang);
+  document.getElementById('langLabel').textContent = t.label;
+  // Mark active
+  document.querySelectorAll('.lang-menu a').forEach(a => a.classList.remove('active'));
+  const menuLinks = document.querySelectorAll('.lang-menu a');
+  menuLinks.forEach(a => { if (a.getAttribute('onclick')?.includes("'" + lang + "'")) a.classList.add('active'); });
+  // Apply strings
+  if (Object.keys(t.strings).length === 0) return;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t.strings[key]) el.textContent = t.strings[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (t.strings[key]) el.placeholder = t.strings[key];
+  });
+}
+function switchLang(lang, e) { e?.preventDefault(); applyLang(lang); closeLangMenu(); }
+function toggleLangMenu() { document.getElementById('langMenu').classList.toggle('show'); }
+function closeLangMenu() { document.getElementById('langMenu').classList.remove('show'); }
+document.addEventListener('click', e => { if (!e.target.closest('.lang-switch')) closeLangMenu(); });
+
+// ===== HELPERS =====
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = String(s ?? '');
+  return d.innerHTML;
+}
+
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.className = 'toast', 3000);
+}
+
+function formatDate(d) {
+  if (!d) return '\u2014';
+  return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function formatTime(d) {
+  if (!d) return '\u2014';
+  return new Date(d).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+function formatSize(bytes) {
+  if (!bytes || bytes === 0) return '0 B';
+  if (bytes > 1048576) return (bytes / 1048576).toFixed(1) + ' MB';
+  if (bytes > 1024) return (bytes / 1024).toFixed(0) + ' KB';
+  return bytes + ' B';
+}
+
+function apiGet(path) {
+  return fetch(path, { headers: { 'X-Admin-Secret': adminSecret } }).then(r => {
+    if (!r.ok) throw new Error('API error: ' + r.status);
+    return r.json();
+  });
+}
+
+function apiPost(path, body) {
+  return fetch(path, {
+    method: 'POST',
+    headers: { 'X-Admin-Secret': adminSecret, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  }).then(r => {
+    if (!r.ok) throw new Error('API error: ' + r.status);
+    return r.json();
+  });
+}
+
+function apiDelete(path) {
+  return fetch(path, {
+    method: 'DELETE',
+    headers: { 'X-Admin-Secret': adminSecret }
+  }).then(r => {
+    if (!r.ok) throw new Error('API error: ' + r.status);
+    return r.json();
+  });
+}
+
+// ===== ANIMATED COUNTER =====
+function animateCounter(el, target) {
+  const duration = 800;
+  const start = parseInt(el.textContent.replace(/[^\d]/g, '')) || 0;
+  const diff = target - start;
+  if (diff === 0) { el.textContent = target.toLocaleString(); return; }
+  const startTime = performance.now();
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+    const current = Math.round(start + diff * eased);
+    el.textContent = current.toLocaleString();
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ===== LOGIN =====
 function doLogin() {
   adminSecret = document.getElementById('secretInput').value;
   fetch('/api/admin/stats', { headers: { 'X-Admin-Secret': adminSecret } })
@@ -440,6 +961,7 @@ function doLogin() {
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('dashboard').style.display = 'block';
       refreshData();
+      startAutoRefresh();
     })
     .catch(() => {
       document.getElementById('loginError').style.display = 'block';
@@ -449,6 +971,7 @@ function doLogin() {
 
 function doLogout() {
   adminSecret = '';
+  stopAutoRefresh();
   document.getElementById('loginScreen').style.display = '';
   document.getElementById('dashboard').style.display = 'none';
   document.getElementById('secretInput').value = '';
@@ -459,255 +982,267 @@ document.getElementById('secretInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') doLogin();
 });
 
-// ===== Data Loading =====
-async function refreshData() {
-  try {
-    await Promise.all([loadStats(), loadKeys(), loadAudit(), loadDocs(), loadWebhooks()]);
-    toast('Dashboard refreshed');
-  } catch (err) {
-    toast('Error refreshing: ' + err.message);
-  }
-}
-
-async function loadStats() {
-  const r = await fetch('/api/admin/stats', { headers: { 'X-Admin-Secret': adminSecret } });
-  const data = await r.json();
-  document.getElementById('statDocs').textContent = data.totalDocuments.toLocaleString();
-  document.getElementById('statOrgs').textContent = data.totalOrganizations.toLocaleString();
-  document.getElementById('statAudit').textContent = data.totalAuditEntries.toLocaleString();
-
-  const hr = await fetch('/api/health');
-  const health = await hr.json();
-  const isOnline = health.status === 'online';
-  document.getElementById('statStatus').textContent = isOnline ? 'Online' : 'Offline';
-  document.getElementById('statStatus').style.color = isOnline ? '#16a34a' : '#dc2626';
-  document.getElementById('statVersion').textContent = 'v' + health.version;
-
-  // Blockchain stats
-  const bc = data.blockchain || {};
-  if (bc.connected) {
-    document.getElementById('statChain').textContent = 'Connected';
-    document.getElementById('statChain').style = 'font-size:20px;color:#16a34a;-webkit-text-fill-color:#16a34a';
-    document.getElementById('statChainSub').textContent = bc.network || 'Polygon';
-    document.getElementById('chainStatusBadge').textContent = 'Connected';
-    document.getElementById('chainStatusBadge').className = 'badge active';
-    document.getElementById('chainNetwork').textContent = bc.network || '—';
-    document.getElementById('chainContract').textContent = bc.contract || '—';
-    document.getElementById('chainWallet').textContent = bc.wallet || '—';
-    document.getElementById('chainDocs').textContent = (bc.totalDocuments || 0).toLocaleString();
-    document.getElementById('chainBalance').textContent = bc.balance || '—';
-    if (bc.explorer) {
-      document.getElementById('chainExplorer').href = bc.explorer;
+// ===== AUTO REFRESH =====
+function startAutoRefresh() {
+  stopAutoRefresh();
+  refreshSeconds = 30;
+  updateRefreshBar();
+  refreshTimer = setInterval(() => {
+    refreshSeconds--;
+    updateRefreshBar();
+    if (refreshSeconds <= 0) {
+      refreshSeconds = 30;
+      refreshData();
     }
-    document.getElementById('chainOffline').style.display = 'none';
-  } else {
-    document.getElementById('statChain').textContent = 'Off-Chain';
-    document.getElementById('statChain').style = 'font-size:20px;color:#f59e0b;-webkit-text-fill-color:#f59e0b';
-    document.getElementById('statChainSub').textContent = 'Not configured';
-    document.getElementById('chainStatusBadge').textContent = 'Offline';
-    document.getElementById('chainStatusBadge').className = 'badge inactive';
-    document.getElementById('chainContent').querySelector('div').style.display = 'none';
-    document.getElementById('chainOffline').style.display = 'block';
+  }, 1000);
+}
+
+function stopAutoRefresh() {
+  if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+}
+
+function updateRefreshBar() {
+  const pct = (refreshSeconds / 30) * 100;
+  document.getElementById('refreshBar').style.width = pct + '%';
+  document.getElementById('refreshCountdown').textContent = refreshSeconds + 's';
+}
+
+// ===== SIDEBAR & TABS =====
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('mobileOverlay').classList.toggle('show');
+}
+
+function switchTab(tab, el) {
+  currentTab = tab;
+  // Update nav
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  else document.querySelector('.nav-item[data-tab="' + tab + '"]')?.classList.add('active');
+  // Update sections
+  document.querySelectorAll('.panel-section').forEach(s => s.classList.remove('active'));
+  const section = document.getElementById('section-' + tab);
+  if (section) section.classList.add('active');
+  // Update page title
+  const navItem = document.querySelector('.nav-item[data-tab="' + tab + '"]');
+  const titleEl = navItem?.querySelector('[data-i18n]');
+  if (titleEl) document.getElementById('pageTitle').textContent = titleEl.textContent;
+  // Close sidebar on mobile
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('mobileOverlay').classList.remove('show');
+  // Load tab data
+  loadTabData(tab);
+}
+
+function loadTabData(tab) {
+  switch(tab) {
+    case 'overview': loadOverview(); break;
+    case 'keys': loadKeys(); break;
+    case 'documents': loadDocs(); break;
+    case 'audit': loadAudit(); break;
+    case 'alerts': loadAlerts(); break;
+    case 'blockchain': loadBlockchain(); break;
+    case 'monitoring': loadMonitoring(); break;
   }
 }
 
+// ===== REFRESH ALL =====
+async function refreshData() {
+  refreshSeconds = 30;
+  try {
+    await loadOverview();
+    // Also reload current tab if not overview
+    if (currentTab !== 'overview') loadTabData(currentTab);
+    toast('Dashboard refreshed', 'success');
+  } catch (err) {
+    toast('Error refreshing: ' + err.message, 'error');
+  }
+}
+
+// ===== OVERVIEW TAB =====
+async function loadOverview() {
+  try {
+    // Try the dedicated overview endpoint first
+    let overviewData = null;
+    try {
+      overviewData = await apiGet('/api/admin/overview');
+    } catch(e) {
+      // Fall back to stats
+    }
+
+    // Always load stats
+    const stats = overviewData?.stats || await apiGet('/api/admin/stats');
+
+    // Animated counters
+    animateCounter(document.getElementById('statDocs'), stats.totalDocuments || 0);
+    animateCounter(document.getElementById('statOrgs'), stats.totalOrganizations || 0);
+    animateCounter(document.getElementById('statAudit'), stats.totalAuditEntries || 0);
+
+    // Server health
+    try {
+      const health = await fetch('/api/health').then(r => r.json());
+      const isOnline = health.status === 'online';
+      const statusEl = document.getElementById('statStatus');
+      statusEl.textContent = isOnline ? 'Online' : 'Offline';
+      statusEl.className = 'stat-value ' + (isOnline ? 'green' : '');
+      if (!isOnline) statusEl.style.cssText = 'font-size:22px;background:linear-gradient(135deg,#f87171,#dc2626);-webkit-background-clip:text;-webkit-text-fill-color:transparent';
+      document.getElementById('statVersion').textContent = 'v' + (health.version || '?');
+    } catch(e) {
+      document.getElementById('statStatus').textContent = 'Error';
+    }
+
+    // Blockchain stats
+    const bc = stats.blockchain || {};
+    const chainEl = document.getElementById('statChain');
+    if (bc.connected) {
+      chainEl.textContent = 'Connected';
+      chainEl.className = 'stat-value green';
+      chainEl.style.fontSize = '20px';
+      document.getElementById('statChainSub').textContent = bc.network || 'Polygon';
+    } else {
+      chainEl.textContent = 'Off-Chain';
+      chainEl.className = 'stat-value yellow';
+      chainEl.style.fontSize = '20px';
+      document.getElementById('statChainSub').textContent = 'Not configured';
+    }
+
+    // Charts
+    const dailyData = overviewData?.dailyChart || overviewData?.daily || [];
+    renderLineChart(dailyData);
+
+    // Plan distribution
+    const planData = overviewData?.planDistribution || stats.planDistribution || null;
+    renderPieChart(planData, stats);
+
+    // Recent activity
+    const recentDocs = overviewData?.recentDocuments || overviewData?.recent || [];
+    renderActivityFeed(recentDocs);
+
+  } catch (err) {
+    console.error('Overview load error:', err);
+  }
+}
+
+function renderLineChart(dailyData) {
+  const container = document.getElementById('docsChart');
+  if (!dailyData || dailyData.length === 0) {
+    // Generate placeholder
+    container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;width:100%;color:#5a5880;font-size:12px">No chart data available</div>';
+    return;
+  }
+  const maxVal = Math.max(...dailyData.map(d => d.count || d.value || 0), 1);
+  container.innerHTML = dailyData.map(d => {
+    const val = d.count || d.value || 0;
+    const pct = Math.max(2, (val / maxVal) * 100);
+    const label = d.date ? new Date(d.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : d.label || '';
+    return '<div class="bar-col"><div class="bar" style="height:' + pct + '%"><span class="bar-val">' + val + '</span></div><span class="bar-label">' + escHtml(label) + '</span></div>';
+  }).join('');
+}
+
+function renderPieChart(planData, stats) {
+  const container = document.getElementById('pieChart');
+  let free = 0, pro = 0, ent = 0;
+
+  if (planData) {
+    free = planData.free || 0;
+    pro = planData.professional || planData.pro || 0;
+    ent = planData.enterprise || planData.ent || 0;
+  } else {
+    // Fallback: just show total orgs
+    free = stats?.totalOrganizations || 1;
+  }
+
+  const total = free + pro + ent || 1;
+  const freePct = (free / total) * 100;
+  const proPct = (pro / total) * 100;
+  const entPct = (ent / total) * 100;
+
+  // Build conic gradient
+  let grad = 'conic-gradient(';
+  let offset = 0;
+  const segments = [];
+  if (free > 0) { segments.push('#4ade80 ' + offset + 'deg ' + (offset + freePct * 3.6) + 'deg'); offset += freePct * 3.6; }
+  if (pro > 0) { segments.push('#a78bfa ' + offset + 'deg ' + (offset + proPct * 3.6) + 'deg'); offset += proPct * 3.6; }
+  if (ent > 0) { segments.push('#fbbf24 ' + offset + 'deg ' + (offset + entPct * 3.6) + 'deg'); offset += entPct * 3.6; }
+  if (segments.length === 0) segments.push('#2d2a4a 0deg 360deg');
+  grad += segments.join(', ') + ')';
+
+  container.innerHTML = '<div class="pie-ring" style="background:' + grad + '"><div class="pie-center">' + total + '</div></div>' +
+    '<div class="pie-legend">' +
+    '<div class="pie-legend-item"><span class="pie-legend-dot" style="background:#4ade80"></span>Free: ' + free + '</div>' +
+    '<div class="pie-legend-item"><span class="pie-legend-dot" style="background:#a78bfa"></span>Pro: ' + pro + '</div>' +
+    '<div class="pie-legend-item"><span class="pie-legend-dot" style="background:#fbbf24"></span>Enterprise: ' + ent + '</div>' +
+    '</div>';
+}
+
+function renderActivityFeed(docs) {
+  const container = document.getElementById('activityFeed');
+  if (!docs || docs.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">&#128196;</div><h4>No recent activity</h4><p>Documents will appear here as they are created.</p></div>';
+    return;
+  }
+  container.innerHTML = docs.slice(0, 10).map(d => {
+    const name = d.originalName || d.original_name || d.name || 'Document';
+    const org = d.orgName || d.org_name || '';
+    const time = d.createdAt || d.created_at || d.created || '';
+    const timeStr = time ? new Date(time).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+    const eventType = d.event || 'create';
+    const dotClass = eventType.startsWith('verify') ? 'verify' : eventType.startsWith('auth') ? 'auth' : 'create';
+    const icon = dotClass === 'create' ? '&#43;' : dotClass === 'verify' ? '&#10003;' : '&#33;';
+    return '<div class="activity-item">' +
+      '<div class="activity-dot-wrap ' + dotClass + '">' + icon + '</div>' +
+      '<div class="activity-text">' + escHtml(name) + (org ? '<span class="muted">' + escHtml(org) + '</span>' : '') + '</div>' +
+      '<span class="activity-time">' + escHtml(timeStr) + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+// ===== API KEYS TAB =====
 async function loadKeys() {
   try {
-    const r = await fetch('/api/admin/keys', { headers: { 'X-Admin-Secret': adminSecret } });
-    const data = await r.json();
-    const keys = data.keys || data;
+    const r = await apiGet('/api/admin/keys');
+    const keys = r.keys || r;
     const tbody = document.getElementById('keysBody');
     if (!keys || keys.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><p>No API keys yet</p></td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="icon">&#128273;</div><h4>No API keys</h4><p>Create a key to get started.</p></div></td></tr>';
       return;
     }
     tbody.innerHTML = keys.map(k => {
-      const planClass = k.plan === 'enterprise' ? 'ent' : k.plan === 'professional' ? 'pro' : 'free';
-      const statusClass = k.active ? 'active' : 'inactive';
-      const date = new Date(k.created || k.createdAt || k.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      const orgName = k.orgName || k.org_name || '';
+      const orgId = k.orgId || k.org_id || '';
+      const apiKey = k.apiKey || k.api_key || '';
+      const masked = apiKey.length > 12 ? apiKey.substring(0, 8) + '****' + apiKey.slice(-4) : apiKey;
+      const plan = k.plan || 'free';
+      const planClass = plan === 'enterprise' ? 'ent' : plan === 'professional' ? 'pro' : 'free';
       const docCount = k.documentsCreated || k.documents_created || 0;
-      return `<tr>
-        <td><span class="mono">${escHtml(k.apiKey || k.api_key || '')}</span></td>
-        <td><strong>${escHtml(k.orgName || k.org_name || '')}</strong><br><span class="text-muted" style="font-size:11px">${escHtml(k.orgId || k.org_id || '')}</span></td>
-        <td><span class="badge ${planClass}">${k.plan}</span></td>
-        <td>${docCount}</td>
-        <td><span class="badge ${statusClass}">${k.active ? 'Active' : 'Inactive'}</span></td>
-        <td class="text-muted">${date}</td>
-      </tr>`;
+      const isActive = k.active !== false;
+      const date = formatDate(k.created || k.createdAt || k.created_at);
+      return '<tr class="clickable-row" onclick="openOrgSlide(\'' + escHtml(orgId) + '\')">' +
+        '<td><strong>' + escHtml(orgName) + '</strong><br><span class="text-muted" style="font-size:11px">' + escHtml(orgId) + '</span></td>' +
+        '<td><span class="mono" title="' + escHtml(apiKey) + '">' + escHtml(masked) + '</span></td>' +
+        '<td><span class="badge ' + planClass + '">' + escHtml(plan) + '</span></td>' +
+        '<td>' + docCount.toLocaleString() + '</td>' +
+        '<td><span class="badge ' + (isActive ? 'active' : 'inactive') + '">' + (isActive ? 'Active' : 'Revoked') + '</span></td>' +
+        '<td class="text-muted">' + date + '</td>' +
+        '<td onclick="event.stopPropagation()">' +
+          '<div style="display:flex;gap:4px">' +
+            '<button class="btn-outline btn-sm" onclick="showPlanModal(\'' + escHtml(orgId) + '\',\'' + escHtml(orgName) + '\',\'' + escHtml(plan) + '\')">Plan</button>' +
+            (isActive ? '<button class="btn-danger btn-sm" onclick="revokeKey(\'' + escHtml(apiKey) + '\')">Revoke</button>' : '') +
+          '</div>' +
+        '</td>' +
+      '</tr>';
     }).join('');
   } catch (e) {
-    // Try alternative endpoint
-    try {
-      const r = await fetch('/api/keys', { headers: { 'X-Admin-Secret': adminSecret } });
-      if (r.ok) {
-        const data = await r.json();
-        const keys = data.keys || data;
-        const tbody = document.getElementById('keysBody');
-        tbody.innerHTML = keys.map(k => {
-          const planClass = k.plan === 'enterprise' ? 'ent' : k.plan === 'professional' ? 'pro' : 'free';
-          const statusClass = k.active ? 'active' : 'inactive';
-          const date = new Date(k.created || k.createdAt || k.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-          return `<tr>
-            <td><span class="mono">${escHtml(k.apiKey || k.api_key || '')}</span></td>
-            <td><strong>${escHtml(k.orgName || k.org_name || '')}</strong><br><span class="text-muted" style="font-size:11px">${escHtml(k.orgId || k.org_id || '')}</span></td>
-            <td><span class="badge ${planClass}">${k.plan}</span></td>
-            <td>${k.documentsCreated || k.documents_created || 0}</td>
-            <td><span class="badge ${statusClass}">${k.active ? 'Active' : 'Inactive'}</span></td>
-            <td class="text-muted">${date}</td>
-          </tr>`;
-        }).join('');
-      }
-    } catch (e2) { console.error('Keys load error:', e2); }
+    document.getElementById('keysBody').innerHTML = '<tr><td colspan="7"><div class="empty-state"><p>Failed to load API keys</p></div></td></tr>';
   }
 }
 
-async function loadDocs() {
-  try {
-    const params = new URLSearchParams({ limit: DOC_LIMIT, offset: currentDocPage * DOC_LIMIT });
-    const search = document.getElementById('docSearch')?.value?.trim();
-    if (search) params.set('search', search);
-
-    const r = await fetch('/api/admin/documents?' + params, { headers: { 'X-Admin-Secret': adminSecret } });
-    if (!r.ok) return;
-    const data = await r.json();
-    const docs = data.documents || data.entries || [];
-    const tbody = document.getElementById('docsBody');
-
-    if (docs.length === 0 && currentDocPage === 0) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:32px">No documents found</td></tr>';
-    } else {
-      tbody.innerHTML = docs.map(d => {
-        const hash = d.hash || '';
-        const shortHash = hash.substring(0, 12) + '...';
-        const name = d.originalName || d.original_name || '—';
-        const org = d.orgName || d.org_name || '—';
-        const size = d.fileSize || d.file_size || 0;
-        const sizeStr = size > 1048576 ? (size / 1048576).toFixed(1) + ' MB' : size > 1024 ? (size / 1024).toFixed(0) + ' KB' : size + ' B';
-        const recipient = d.recipient || '';
-        const date = new Date(d.createdAt || d.created_at || d.created).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-        return `<tr>
-          <td><span class="mono doc-hash-cell" title="${escHtml(hash)}">${escHtml(shortHash)}</span></td>
-          <td><strong>${escHtml(name)}</strong></td>
-          <td>${escHtml(org)}</td>
-          <td class="text-muted">${sizeStr}</td>
-          <td>${recipient ? '<span class="doc-recipient">' + escHtml(recipient) + '</span>' : '<span class="text-muted">—</span>'}</td>
-          <td class="text-muted">${date}</td>
-        </tr>`;
-      }).join('');
-    }
-
-    document.getElementById('docPrev').disabled = currentDocPage === 0;
-    document.getElementById('docNext').disabled = docs.length < DOC_LIMIT;
-    document.getElementById('docInfo').textContent = `Page ${currentDocPage + 1}`;
-  } catch (e) {
-    // Documents endpoint not available
-    document.getElementById('docsBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:32px">Documents endpoint not available</td></tr>';
-  }
-}
-
-function docsPage(dir) {
-  currentDocPage = Math.max(0, currentDocPage + dir);
-  loadDocs();
-}
-
-function searchDocs() {
-  currentDocPage = 0;
-  loadDocs();
-}
-
-async function loadWebhooks() {
-  try {
-    const r = await fetch('/api/admin/webhooks', { headers: { 'X-Admin-Secret': adminSecret } });
-    if (!r.ok) return;
-    const data = await r.json();
-    const webhooks = data.webhooks || [];
-    const container = document.getElementById('webhooksContent');
-
-    if (webhooks.length === 0) {
-      container.innerHTML = '<div class="empty-state"><div class="icon">🔔</div><h4>No Webhooks Registered</h4><p>Organizations can register webhooks via POST /api/webhooks/register</p></div>';
-    } else {
-      container.innerHTML = '<table><thead><tr><th>URL</th><th>Events</th><th>Organization</th><th>Status</th></tr></thead><tbody>' +
-        webhooks.map(w => {
-          const events = (typeof w.events === 'string' ? JSON.parse(w.events) : w.events) || [];
-          return `<tr>
-            <td><span class="webhook-url">${escHtml(w.url)}</span></td>
-            <td><div class="webhook-events">${events.map(e => '<span class="webhook-event">' + escHtml(e) + '</span>').join('')}</div></td>
-            <td>${escHtml(w.orgId || w.org_id || '—')}</td>
-            <td><span class="badge ${w.active ? 'active' : 'inactive'}">${w.active ? 'Active' : 'Inactive'}</span></td>
-          </tr>`;
-        }).join('') +
-        '</tbody></table>';
-    }
-  } catch (e) {
-    // Webhooks endpoint not available
-  }
-}
-
-async function loadAudit() {
-  const event = document.getElementById('auditFilter').value;
-  const params = new URLSearchParams({ limit: AUDIT_LIMIT, offset: currentAuditPage * AUDIT_LIMIT });
-  if (event) params.set('event', event);
-
-  const r = await fetch('/api/admin/audit?' + params, { headers: { 'X-Admin-Secret': adminSecret } });
-  const data = await r.json();
-  const tbody = document.getElementById('auditBody');
-
-  if (data.entries.length === 0 && currentAuditPage === 0) {
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#9ca3af;padding:32px">No audit entries yet</td></tr>';
-  } else {
-    tbody.innerHTML = data.entries.map(e => {
-      const time = new Date(e.timestamp).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-      const dotClass = e.event.startsWith('pvf_') ? 'create' :
-                       e.event.startsWith('verify') ? 'verify' :
-                       e.event.startsWith('auth') ? 'auth' :
-                       e.event.startsWith('api_key') ? 'key' :
-                       e.event.startsWith('gateway') ? 'gateway' :
-                       e.event.startsWith('blockchain') ? 'blockchain' : 'other';
-      let details = '';
-      if (e.details && typeof e.details === 'object') {
-        details = Object.entries(e.details).map(([k,v]) => `<span class="text-muted">${escHtml(k)}:</span> ${escHtml(String(v).substring(0, 40))}`).join(' &middot; ');
-      } else if (typeof e.details === 'string') {
-        try {
-          const obj = JSON.parse(e.details);
-          details = Object.entries(obj).map(([k,v]) => `<span class="text-muted">${escHtml(k)}:</span> ${escHtml(String(v).substring(0, 40))}`).join(' &middot; ');
-        } catch(_) { details = escHtml(String(e.details).substring(0, 80)); }
-      }
-      return `<tr>
-        <td class="text-muted" style="white-space:nowrap">${time}</td>
-        <td><span class="audit-event"><span class="audit-dot ${dotClass}"></span>${escHtml(e.event)}</span></td>
-        <td style="font-size:12px">${details}</td>
-      </tr>`;
-    }).join('');
-  }
-
-  document.getElementById('auditPrev').disabled = currentAuditPage === 0;
-  document.getElementById('auditNext').disabled = data.entries.length < AUDIT_LIMIT;
-  document.getElementById('auditInfo').textContent = `Page ${currentAuditPage + 1}`;
-}
-
-function auditPage(dir) {
-  currentAuditPage = Math.max(0, currentAuditPage + dir);
-  loadAudit();
-}
-
-// ===== Tabs =====
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
-  document.getElementById('panel-' + tab).classList.add('active');
-  if (tab === 'audit') { currentAuditPage = 0; loadAudit(); }
-  if (tab === 'documents') { currentDocPage = 0; loadDocs(); }
-  if (tab === 'webhooks') { loadWebhooks(); }
-  if (tab === 'blockchain') { loadStats(); }
-}
-
-// ===== Create Key Modal =====
+// ===== KEY ACTIONS =====
 function showCreateModal() {
   document.getElementById('createModal').classList.add('show');
   document.getElementById('newOrgName').value = '';
+  document.getElementById('newPlan').value = 'free';
   document.getElementById('newKeyResult').innerHTML = '';
-  document.getElementById('newOrgName').focus();
 }
 
 function hideCreateModal() {
@@ -717,119 +1252,406 @@ function hideCreateModal() {
 async function createKey() {
   const orgName = document.getElementById('newOrgName').value.trim();
   const plan = document.getElementById('newPlan').value;
-  if (!orgName) { toast('Organization name is required'); return; }
-
-  // Try multiple endpoint patterns
-  let data;
+  if (!orgName) { toast('Organization name required', 'error'); return; }
   try {
-    let r = await fetch('/api/admin/keys', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': adminSecret },
-      body: JSON.stringify({ orgName, plan })
-    });
-    if (!r.ok) {
-      r = await fetch('/api/keys/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': adminSecret },
-        body: JSON.stringify({ orgName, plan })
-      });
-    }
-    data = await r.json();
-  } catch (e) {
-    toast('Failed to create key: ' + e.message);
-    return;
-  }
-
-  if (data.success) {
-    const key = data.apiKey || data.key;
-    document.getElementById('newKeyResult').innerHTML = `
-      <div style="margin-top:16px">
-        <label style="display:block;font-size:12px;font-weight:600;color:#16a34a;margin-bottom:4px">Key Created Successfully</label>
-        <div class="key-display">${escHtml(key)}<button class="copy" data-key="${escHtml(key)}" onclick="copyKey(this.dataset.key)">Copy</button></div>
-        <p style="font-size:11px;color:#ef4444;margin-top:8px;font-weight:500">Save this key now — it won't be shown again.</p>
-      </div>
-    `;
+    const result = await apiPost('/api/admin/keys', { orgName, plan });
+    const key = result.apiKey || result.api_key || result.key || '';
+    document.getElementById('newKeyResult').innerHTML =
+      '<div class="key-display">' + escHtml(key) +
+      '<button class="copy-btn" onclick="navigator.clipboard.writeText(\'' + escHtml(key) + '\');toast(\'Copied!\',\'success\')">Copy</button></div>';
+    toast('API key created', 'success');
     loadKeys();
-    loadStats();
-    toast('API key created');
-  } else {
-    toast('Error: ' + (data.error || 'Unknown error'));
+  } catch (e) {
+    toast('Failed to create key: ' + e.message, 'error');
   }
 }
 
-function copyKey(key) {
-  navigator.clipboard.writeText(key).then(() => toast('API key copied to clipboard'));
-}
-
-// ===== Toast =====
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-// ===== Helpers =====
-function escHtml(s) {
-  if (!s) return '';
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-
-// Close modal on backdrop click
-document.getElementById('createModal').addEventListener('click', function(e) {
-  if (e.target === this) hideCreateModal();
-});
-
-// Keyboard shortcut: R to refresh
-document.addEventListener('keydown', e => {
-  if (e.key === 'r' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
-    if (document.getElementById('dashboard').style.display === 'block') refreshData();
+async function revokeKey(key) {
+  if (!confirm('Revoke this API key? This cannot be undone.')) return;
+  try {
+    await apiDelete('/api/admin/keys/' + encodeURIComponent(key));
+    toast('Key revoked', 'success');
+    loadKeys();
+  } catch (e) {
+    toast('Failed to revoke key: ' + e.message, 'error');
   }
-});
-
-// ===== Dashboard Language Toggle =====
-function toggleDashLang() {
-  document.getElementById('dashLangMenu').classList.toggle('show');
 }
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.lang-switch')) {
-    var m = document.getElementById('dashLangMenu');
-    if (m) m.classList.remove('show');
-  }
-});
 
-// After i18n loads, update lang label and handle placeholders
-var _origApply = null;
-function dashI18nPatch() {
-  // Update dashboard lang label when language changes
-  var label = document.getElementById('dashLangLabel');
-  if (label && typeof vfGetLang === 'function') {
-    label.textContent = vfGetLang().toUpperCase();
-  }
-  // Handle data-i18n-placeholder attributes
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
-    var val = typeof vfGetTranslation === 'function' ? vfGetTranslation(el.getAttribute('data-i18n-placeholder')) : null;
-    if (val) el.setAttribute('placeholder', val);
-  });
+// ===== PLAN CHANGE =====
+function showPlanModal(orgId, orgName, currentPlan) {
+  changePlanOrgId = orgId;
+  document.getElementById('planModalOrgName').textContent = orgName;
+  document.getElementById('changePlanSelect').value = currentPlan;
+  document.getElementById('planModal').classList.add('show');
 }
-// Observe i18n changes by patching switchLang
-var _origSwitchLang = null;
-document.addEventListener('DOMContentLoaded', function() {
-  // Patch after i18n.js loads
-  setTimeout(function() {
-    if (typeof switchLang === 'function' && !_origSwitchLang) {
-      _origSwitchLang = switchLang;
-      window.switchLang = function(lang, e) {
-        _origSwitchLang(lang, e);
-        setTimeout(dashI18nPatch, 100);
-      };
+function hidePlanModal() { document.getElementById('planModal').classList.remove('show'); }
+
+async function submitPlanChange() {
+  const plan = document.getElementById('changePlanSelect').value;
+  try {
+    await apiPost('/api/admin/org/' + encodeURIComponent(changePlanOrgId) + '/plan', { plan });
+    toast('Plan updated', 'success');
+    hidePlanModal();
+    loadKeys();
+  } catch (e) {
+    toast('Failed to change plan: ' + e.message, 'error');
+  }
+}
+
+// ===== DOCUMENTS TAB =====
+async function loadDocs() {
+  try {
+    const params = new URLSearchParams({ limit: DOC_LIMIT, offset: currentDocPage * DOC_LIMIT });
+    const search = document.getElementById('docSearch')?.value?.trim();
+    if (search) params.set('search', search);
+
+    const data = await apiGet('/api/admin/documents?' + params);
+    const docs = data.documents || data.entries || [];
+    const tbody = document.getElementById('docsBody');
+
+    if (docs.length === 0 && currentDocPage === 0) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="icon">&#128196;</div><h4>No documents found</h4></div></td></tr>';
+    } else {
+      tbody.innerHTML = docs.map(d => {
+        const hash = d.hash || '';
+        const shortHash = hash.length > 12 ? hash.substring(0, 12) + '...' : hash;
+        const name = d.originalName || d.original_name || '\u2014';
+        const org = d.orgName || d.org_name || '\u2014';
+        const orgId = d.orgId || d.org_id || '';
+        const size = d.fileSize || d.file_size || 0;
+        const date = formatDate(d.createdAt || d.created_at || d.created);
+        const verified = d.blockchainTx || d.blockchain_tx ? 'verified' : 'pending';
+        return '<tr>' +
+          '<td><strong>' + escHtml(name) + '</strong></td>' +
+          '<td><span class="mono" title="' + escHtml(hash) + '">' + escHtml(shortHash) + '</span></td>' +
+          '<td>' + (orgId ? '<a href="#" onclick="event.preventDefault();openOrgSlide(\'' + escHtml(orgId) + '\')" style="color:#a78bfa;text-decoration:none">' + escHtml(org) + '</a>' : escHtml(org)) + '</td>' +
+          '<td class="text-muted">' + formatSize(size) + '</td>' +
+          '<td class="text-muted">' + date + '</td>' +
+          '<td><span class="badge ' + verified + '">' + (verified === 'verified' ? 'On-Chain' : 'Off-Chain') + '</span></td>' +
+        '</tr>';
+      }).join('');
     }
-    dashI18nPatch();
-  }, 200);
+
+    document.getElementById('docPrev').disabled = currentDocPage === 0;
+    document.getElementById('docNext').disabled = docs.length < DOC_LIMIT;
+    document.getElementById('docInfo').textContent = 'Page ' + (currentDocPage + 1);
+  } catch (e) {
+    document.getElementById('docsBody').innerHTML = '<tr><td colspan="6"><div class="empty-state"><p>Documents endpoint not available</p></div></td></tr>';
+  }
+}
+
+function docsPage(dir) { currentDocPage = Math.max(0, currentDocPage + dir); loadDocs(); }
+function searchDocs() { currentDocPage = 0; loadDocs(); }
+
+// ===== AUDIT LOG TAB =====
+async function loadAudit() {
+  try {
+    const event = document.getElementById('auditFilter').value;
+    const params = new URLSearchParams({ limit: AUDIT_LIMIT, offset: currentAuditPage * AUDIT_LIMIT });
+    if (event) params.set('event', event);
+    const dateFrom = document.getElementById('auditDateFrom')?.value;
+    const dateTo = document.getElementById('auditDateTo')?.value;
+    if (dateFrom) params.set('from', dateFrom);
+    if (dateTo) params.set('to', dateTo);
+
+    const data = await apiGet('/api/admin/audit?' + params);
+    const entries = data.entries || [];
+    const tbody = document.getElementById('auditBody');
+
+    if (entries.length === 0 && currentAuditPage === 0) {
+      tbody.innerHTML = '<tr><td colspan="3"><div class="empty-state"><div class="icon">&#128203;</div><h4>No audit entries</h4></div></td></tr>';
+    } else {
+      tbody.innerHTML = entries.map(e => {
+        const time = formatTime(e.timestamp);
+        const dotClass = e.event?.startsWith('pvf_') ? 'create' :
+                         e.event?.startsWith('verify') ? 'verify' :
+                         e.event?.startsWith('auth') ? 'auth' :
+                         e.event?.startsWith('api_key') ? 'key' :
+                         e.event?.startsWith('gateway') ? 'gateway' :
+                         e.event?.startsWith('blockchain') ? 'blockchain' : 'other';
+        let details = '';
+        if (e.details && typeof e.details === 'object') {
+          details = Object.entries(e.details).map(([k,v]) => '<span class="text-muted">' + escHtml(k) + ':</span> ' + escHtml(String(v).substring(0, 50))).join(' &middot; ');
+        } else if (typeof e.details === 'string') {
+          try {
+            const obj = JSON.parse(e.details);
+            details = Object.entries(obj).map(([k,v]) => '<span class="text-muted">' + escHtml(k) + ':</span> ' + escHtml(String(v).substring(0, 50))).join(' &middot; ');
+          } catch(_) { details = escHtml(String(e.details).substring(0, 100)); }
+        }
+        return '<tr>' +
+          '<td class="text-muted" style="white-space:nowrap">' + time + '</td>' +
+          '<td><span class="audit-event"><span class="audit-dot ' + dotClass + '"></span>' + escHtml(e.event || '') + '</span></td>' +
+          '<td style="font-size:12px">' + details + '</td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    document.getElementById('auditPrev').disabled = currentAuditPage === 0;
+    document.getElementById('auditNext').disabled = entries.length < AUDIT_LIMIT;
+    document.getElementById('auditInfo').textContent = 'Page ' + (currentAuditPage + 1);
+  } catch (e) {
+    document.getElementById('auditBody').innerHTML = '<tr><td colspan="3"><div class="empty-state"><p>Audit endpoint not available</p></div></td></tr>';
+  }
+}
+
+function auditPage(dir) { currentAuditPage = Math.max(0, currentAuditPage + dir); loadAudit(); }
+
+// ===== ALERTS TAB =====
+async function loadAlerts() {
+  try {
+    const severity = document.getElementById('alertSeverity')?.value || '';
+    const params = new URLSearchParams();
+    if (severity) params.set('severity', severity);
+    const data = await apiGet('/api/admin/alerts?' + params);
+    const alerts = data.alerts || data || [];
+    const container = document.getElementById('alertsContent');
+    const badge = document.getElementById('alertBadge');
+
+    // Count high-severity alerts
+    const highCount = Array.isArray(alerts) ? alerts.filter(a => a.severity === 'high' || a.severity === 'critical').length : 0;
+    if (highCount > 0) {
+      badge.textContent = highCount;
+      badge.style.display = '';
+    } else {
+      badge.style.display = 'none';
+    }
+
+    if (!Array.isArray(alerts) || alerts.length === 0) {
+      container.innerHTML = '<div class="empty-state" style="padding:48px"><div class="icon">&#128154;</div><h4>No Security Alerts</h4><p>All systems operating normally.</p></div>';
+      return;
+    }
+
+    container.innerHTML = alerts.map(a => {
+      const sev = a.severity || 'medium';
+      const isHigh = sev === 'high' || sev === 'critical';
+      const icon = isHigh ? '&#9888;' : '&#9432;';
+      const iconClass = isHigh ? 'red' : 'yellow';
+      const title = a.title || a.event || a.type || 'Alert';
+      const detail = a.message || a.details || a.description || '';
+      const time = formatTime(a.timestamp || a.createdAt || a.created_at);
+      const ip = a.ip || a.sourceIp || '';
+      return '<div class="alert-row">' +
+        '<div class="alert-icon ' + iconClass + '">' + icon + '</div>' +
+        '<div class="alert-content">' +
+          '<div class="alert-title">' + escHtml(title) + ' <span class="badge severity-' + sev + '">' + escHtml(sev) + '</span></div>' +
+          '<div class="alert-detail">' + escHtml(detail) + (ip ? ' &middot; IP: ' + escHtml(ip) : '') + '</div>' +
+        '</div>' +
+        '<span class="alert-time">' + time + '</span>' +
+      '</div>';
+    }).join('');
+  } catch (e) {
+    document.getElementById('alertsContent').innerHTML = '<div class="empty-state" style="padding:48px"><div class="icon">&#128154;</div><h4>No alerts available</h4><p>Alerts endpoint not configured.</p></div>';
+  }
+}
+
+// ===== BLOCKCHAIN TAB =====
+async function loadBlockchain() {
+  try {
+    const stats = await apiGet('/api/admin/stats');
+    const bc = stats.blockchain || {};
+    if (bc.connected) {
+      document.getElementById('chainStatusBadge').textContent = 'Connected';
+      document.getElementById('chainStatusBadge').className = 'badge active';
+      document.getElementById('chainNetwork').textContent = bc.network || '\u2014';
+      document.getElementById('chainContract').textContent = bc.contract || '\u2014';
+      document.getElementById('chainWallet').textContent = bc.wallet || '\u2014';
+      document.getElementById('chainDocs').textContent = (bc.totalDocuments || 0).toLocaleString();
+      document.getElementById('chainBalance').textContent = bc.balance || '\u2014';
+      document.getElementById('chainPending').textContent = (bc.pendingQueue || bc.pending || 0).toLocaleString();
+      if (bc.explorer) document.getElementById('chainExplorer').href = bc.explorer;
+      document.getElementById('chainOnline').style.display = '';
+      document.getElementById('chainOffline').style.display = 'none';
+    } else {
+      document.getElementById('chainStatusBadge').textContent = 'Offline';
+      document.getElementById('chainStatusBadge').className = 'badge inactive';
+      document.getElementById('chainOnline').style.display = 'none';
+      document.getElementById('chainOffline').style.display = '';
+    }
+  } catch (e) {
+    document.getElementById('chainOnline').style.display = 'none';
+    document.getElementById('chainOffline').style.display = '';
+  }
+}
+
+// ===== MONITORING TAB =====
+async function loadMonitoring() {
+  // Uptime
+  try {
+    const uptime = await apiGet('/api/admin/uptime');
+    const pct = uptime.percentage ?? uptime.uptime ?? 99.9;
+    document.getElementById('monUptime').textContent = pct.toFixed(2) + '%';
+    document.getElementById('monUptimeBar').style.width = pct + '%';
+    const barClass = pct >= 99 ? 'green' : pct >= 95 ? 'yellow' : 'red';
+    document.getElementById('monUptimeBar').className = 'monitor-bar-fill ' + barClass;
+  } catch(e) {
+    document.getElementById('monUptime').textContent = '\u2014';
+  }
+
+  // Health check for response time, memory
+  try {
+    const selfCheck = await apiGet('/api/admin/self-check');
+    // Response time
+    const rt = selfCheck.responseTime || selfCheck.avgResponseTime || selfCheck.latency || 0;
+    document.getElementById('monResponseTime').textContent = rt + 'ms';
+    const rtPct = Math.min(100, Math.max(5, 100 - (rt / 5)));
+    document.getElementById('monResponseBar').style.width = rtPct + '%';
+    document.getElementById('monResponseBar').className = 'monitor-bar-fill ' + (rt < 200 ? 'green' : rt < 500 ? 'yellow' : 'red');
+
+    // Memory
+    const mem = selfCheck.memory || selfCheck.memoryUsage || {};
+    const heapUsed = mem.heapUsed || mem.used || 0;
+    const heapTotal = mem.heapTotal || mem.total || 1;
+    const memPct = heapTotal > 0 ? (heapUsed / heapTotal * 100) : 0;
+    document.getElementById('monMemory').textContent = (heapUsed / 1048576).toFixed(0) + ' MB';
+    document.getElementById('monMemorySub').textContent = 'of ' + (heapTotal / 1048576).toFixed(0) + ' MB (' + memPct.toFixed(0) + '%)';
+    document.getElementById('monMemoryBar').style.width = memPct + '%';
+    document.getElementById('monMemoryBar').className = 'monitor-bar-fill ' + (memPct < 70 ? 'green' : memPct < 90 ? 'yellow' : 'red');
+
+    // Connections
+    document.getElementById('monConnections').textContent = selfCheck.activeConnections || selfCheck.connections || 0;
+  } catch(e) {
+    document.getElementById('monResponseTime').textContent = '\u2014';
+    document.getElementById('monMemory').textContent = '\u2014';
+    document.getElementById('monConnections').textContent = '\u2014';
+  }
+
+  // Health history
+  try {
+    const history = await apiGet('/api/admin/monitoring');
+    const checks = history.checks || history.history || history || [];
+    const tbody = document.getElementById('healthBody');
+    if (!Array.isArray(checks) || checks.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><p>No health history available</p></div></td></tr>';
+    } else {
+      tbody.innerHTML = checks.slice(0, 20).map(c => {
+        const ok = c.status === 'ok' || c.status === 'online' || c.healthy === true;
+        return '<tr>' +
+          '<td class="text-muted">' + formatTime(c.timestamp || c.checkedAt || c.time) + '</td>' +
+          '<td><span class="badge ' + (ok ? 'active' : 'inactive') + '">' + (ok ? 'Healthy' : 'Unhealthy') + '</span></td>' +
+          '<td>' + (c.responseTime || c.latency || '\u2014') + (c.responseTime || c.latency ? 'ms' : '') + '</td>' +
+          '<td class="text-muted" style="font-size:12px">' + escHtml(c.message || c.details || '') + '</td>' +
+        '</tr>';
+      }).join('');
+    }
+  } catch(e) {
+    document.getElementById('healthBody').innerHTML = '<tr><td colspan="4"><div class="empty-state"><p>Monitoring endpoint not available</p></div></td></tr>';
+  }
+}
+
+// ===== SLIDE PANEL =====
+async function openOrgSlide(orgId) {
+  if (!orgId) return;
+  document.getElementById('slideBackdrop').classList.add('show');
+  document.getElementById('slidePanel').classList.add('show');
+  document.getElementById('slideBody').innerHTML = '<div class="empty-state"><p>Loading...</p></div>';
+  document.getElementById('slideActions').innerHTML = '';
+
+  try {
+    const data = await apiGet('/api/admin/org/' + encodeURIComponent(orgId));
+    const org = data.organization || data.org || data;
+    const name = org.orgName || org.org_name || org.name || orgId;
+    document.getElementById('slideTitle').textContent = name;
+
+    let html = '';
+    // Info section
+    html += '<div class="slide-section"><h4>Organization Info</h4>';
+    html += '<div class="slide-row"><span class="label">Org ID</span><span class="value mono">' + escHtml(org.orgId || org.org_id || orgId) + '</span></div>';
+    html += '<div class="slide-row"><span class="label">Name</span><span class="value">' + escHtml(name) + '</span></div>';
+    html += '<div class="slide-row"><span class="label">Plan</span><span class="value"><span class="badge ' + (org.plan === 'enterprise' ? 'ent' : org.plan === 'professional' ? 'pro' : 'free') + '">' + escHtml(org.plan || 'free') + '</span></span></div>';
+    html += '<div class="slide-row"><span class="label">Status</span><span class="value"><span class="badge ' + (org.active !== false ? 'active' : 'inactive') + '">' + (org.active !== false ? 'Active' : 'Inactive') + '</span></span></div>';
+    html += '<div class="slide-row"><span class="label">Created</span><span class="value">' + formatDate(org.created || org.createdAt || org.created_at) + '</span></div>';
+    html += '<div class="slide-row"><span class="label">Documents</span><span class="value">' + ((org.documentsCreated || org.documents_created || org.totalDocuments || 0).toLocaleString()) + '</span></div>';
+    html += '</div>';
+
+    // API Key section
+    const apiKey = org.apiKey || org.api_key || '';
+    if (apiKey) {
+      html += '<div class="slide-section"><h4>API Key</h4>';
+      html += '<div class="key-display" style="margin-top:0">' + escHtml(apiKey) + '<button class="copy-btn" onclick="navigator.clipboard.writeText(\'' + escHtml(apiKey) + '\');toast(\'Copied!\',\'success\')">Copy</button></div>';
+      html += '</div>';
+    }
+
+    // Webhooks
+    const webhooks = org.webhooks || [];
+    if (webhooks.length > 0) {
+      html += '<div class="slide-section"><h4>Webhooks (' + webhooks.length + ')</h4>';
+      webhooks.forEach(w => {
+        html += '<div style="padding:8px 0;border-bottom:1px solid rgba(124,58,237,.05)">' +
+          '<div class="mono" style="font-size:11px;color:#a78bfa;word-break:break-all">' + escHtml(w.url) + '</div>' +
+          '</div>';
+      });
+      html += '</div>';
+    }
+
+    // Recent docs
+    const recentDocs = org.recentDocuments || org.recent_documents || [];
+    if (recentDocs.length > 0) {
+      html += '<div class="slide-section"><h4>Recent Documents</h4>';
+      recentDocs.slice(0, 5).forEach(d => {
+        html += '<div style="padding:6px 0;border-bottom:1px solid rgba(124,58,237,.05);font-size:12px">' +
+          '<strong>' + escHtml(d.originalName || d.original_name || d.name || 'doc') + '</strong>' +
+          '<span class="text-muted" style="float:right">' + formatDate(d.createdAt || d.created_at || d.created) + '</span>' +
+        '</div>';
+      });
+      html += '</div>';
+    }
+
+    document.getElementById('slideBody').innerHTML = html;
+
+    // Actions
+    const currentPlan = org.plan || 'free';
+    document.getElementById('slideActions').innerHTML =
+      '<button class="btn-outline" style="flex:1" onclick="showPlanModal(\'' + escHtml(org.orgId || org.org_id || orgId) + '\',\'' + escHtml(name) + '\',\'' + escHtml(currentPlan) + '\');closeSlide()">Change Plan</button>' +
+      (org.active !== false ? '<button class="btn-danger" style="flex:1" onclick="revokeKey(\'' + escHtml(apiKey) + '\');closeSlide()">Revoke Key</button>' : '');
+
+  } catch (e) {
+    document.getElementById('slideBody').innerHTML = '<div class="empty-state"><div class="icon">&#128533;</div><h4>Failed to load</h4><p>' + escHtml(e.message) + '</p></div>';
+  }
+}
+
+function closeSlide() {
+  document.getElementById('slideBackdrop').classList.remove('show');
+  document.getElementById('slidePanel').classList.remove('show');
+}
+
+// ===== EXPORT CSV =====
+function exportCSV(type) {
+  const url = '/api/admin/export/' + encodeURIComponent(type);
+  const a = document.createElement('a');
+  a.href = url + '?secret=' + encodeURIComponent(adminSecret);
+  a.download = type + '-export.csv';
+  // Also try with header
+  fetch(url, { headers: { 'X-Admin-Secret': adminSecret } })
+    .then(r => r.blob())
+    .then(blob => {
+      const u = URL.createObjectURL(blob);
+      a.href = u;
+      a.click();
+      URL.revokeObjectURL(u);
+      toast('Export downloaded', 'success');
+    })
+    .catch(() => {
+      // Fallback: direct link
+      a.click();
+    });
+}
+
+// ===== CLICK OUTSIDE MODAL =====
+document.getElementById('createModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('createModal')) hideCreateModal();
+});
+document.getElementById('planModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('planModal')) hidePlanModal();
+});
+
+// ===== KEYBOARD SHORTCUTS =====
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    hideCreateModal();
+    hidePlanModal();
+    closeSlide();
+  }
 });
 </script>
-<script src="/js/i18n.js"></script>
 </body>
 </html>

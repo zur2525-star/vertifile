@@ -203,4 +203,96 @@ router.get('/self-check', authenticateAdmin, async (req, res) => {
   }
 });
 
+// ================================================================
+// DASHBOARD ENDPOINTS
+// ================================================================
+
+// Dashboard overview — all stats in one call
+router.get('/overview', authenticateAdmin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const stats = await db.getStats();
+    const recentDocs = await db.getRecentDocuments(10);
+    const recentAudit = await db.getAuditLog({ limit: 10, offset: 0 });
+    const dailyStats = await db.getDailyStats(30);
+    res.json({ success: true, stats, recentDocs, recentAudit, dailyStats });
+  } catch (e) {
+    logger.error({ err: e }, 'Overview failed');
+    res.status(500).json({ success: false, error: 'Failed to load overview' });
+  }
+});
+
+// Full org details for slide panel
+router.get('/org/:orgId', authenticateAdmin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const org = await db.getApiKeyByOrgId(req.params.orgId);
+    if (!org) return res.status(404).json({ success: false, error: 'Organization not found' });
+    const docs = await db.getDocumentsByOrg(req.params.orgId);
+    const docCount = await db.getDocumentCount(req.params.orgId);
+    const auditEntries = await db.getAuditLog({ limit: 20, offset: 0, orgId: req.params.orgId });
+    res.json({ success: true, org, documents: docs, documentCount: docCount, audit: auditEntries });
+  } catch (e) {
+    logger.error({ err: e }, 'Org details failed');
+    res.status(500).json({ success: false, error: 'Failed to load organization' });
+  }
+});
+
+// Security alerts
+router.get('/alerts', authenticateAdmin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const alerts = await db.getSecurityAlerts(50);
+    res.json({ success: true, alerts });
+  } catch (e) {
+    logger.error({ err: e }, 'Alerts failed');
+    res.status(500).json({ success: false, error: 'Failed to load alerts' });
+  }
+});
+
+// Change org plan
+router.post('/org/:orgId/plan', authenticateAdmin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const { plan } = req.body;
+    if (!['free', 'pro', 'enterprise'].includes(plan)) return res.status(400).json({ success: false, error: 'Invalid plan' });
+    await db.updateOrgPlan(req.params.orgId, plan);
+    await db.log('plan_changed', { orgId: req.params.orgId, plan, ip: req.ip });
+    res.json({ success: true });
+  } catch (e) {
+    logger.error({ err: e }, 'Plan change failed');
+    res.status(500).json({ success: false, error: 'Failed to change plan' });
+  }
+});
+
+// Export data as CSV
+router.get('/export/:type', authenticateAdmin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const { type } = req.params;
+    let data, filename;
+    if (type === 'documents') {
+      data = await db.getAllDocumentsForExport();
+      filename = 'vertifile-documents.csv';
+    } else if (type === 'keys') {
+      data = await db.getAllKeysForExport();
+      filename = 'vertifile-api-keys.csv';
+    } else if (type === 'audit') {
+      data = await db.getAllAuditForExport();
+      filename = 'vertifile-audit-log.csv';
+    } else {
+      return res.status(400).json({ success: false, error: 'Invalid export type' });
+    }
+    if (!data.length) return res.status(404).json({ success: false, error: 'No data' });
+    const headers = Object.keys(data[0]).join(',');
+    const rows = data.map(r => Object.values(r).map(v => '"' + String(v || '').replace(/"/g, '""') + '"').join(',')).join('\n');
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(headers + '\n' + rows);
+  } catch (e) {
+    logger.error({ err: e }, 'Export failed');
+    res.status(500).json({ success: false, error: 'Export failed' });
+  }
+});
+
 module.exports = router;
