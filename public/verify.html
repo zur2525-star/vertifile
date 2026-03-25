@@ -250,8 +250,13 @@
     </div>
 
     <p data-i18n="verify.pvfExplainer" style="text-align:center;font-size:14px;color:#6b7280;margin:-8px 0 20px;line-height:1.6;">A .pvf (Protected Verified File) is a tamper-proof document created through Vertifile. If someone sent you a .pvf file, upload it here to verify it hasn't been altered.</p>
-    <div style="text-align:center;margin-bottom:24px;">
-      <a href="/d/27bgmkxlFwM" class="btn-secondary" data-i18n="verify.trySample" style="margin-top:16px;display:inline-block;padding:10px 24px;border-radius:8px;text-decoration:none;border:1px solid rgba(124,58,237,.3);color:#7c3aed;font-size:14px;">Try with a sample document</a>
+    <div class="sample-section" style="text-align:center;margin-top:24px;padding:20px;background:rgba(124,58,237,.05);border-radius:12px;border:1px dashed rgba(124,58,237,.15)">
+      <p style="font-size:14px;color:#6b7280;margin-bottom:12px" data-i18n="verify.sampleTitle">Don't have a .pvf file? Try with our sample:</p>
+      <a href="/d/27bgmkxlFwM" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;text-decoration:none;font-size:14px;font-weight:600;transition:all .3s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(124,58,237,.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <span>📄</span>
+        <span data-i18n="verify.sampleBtn">View Sample Protected Document</span>
+      </a>
+      <p style="font-size:12px;color:#9ca3af;margin-top:10px" data-i18n="verify.sampleDesc">This is a real .pvf file — see the live verification stamp in action</p>
     </div>
 
     <!-- Selected File Info -->

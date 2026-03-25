@@ -32,7 +32,9 @@
     "encryption": "SHA-256 Encryption",
     "documents": "Documents Protected",
     "tokenRefresh": "Token Refresh Cycle",
-    "securityLayers": "Security Layers"
+    "securityLayers": "Security Layers",
+    "patentPending": "Patent Pending",
+    "patentLabel": "Israeli Patent Office"
   },
   "howItWorks": {
     "title": "How It Works",
@@ -237,7 +239,10 @@
     "blockchainTitle": "Blockchain Verification",
     "blockchainDesc": "Each document hash is compared against the immutable blockchain registry. The verification confirms the document has not been modified since it was originally protected.",
     "ctaText": "Want to protect your own documents?",
-    "ctaLink": "Get started for free"
+    "ctaLink": "Get started for free",
+    "sampleTitle": "Don't have a .pvf file? Try with our sample:",
+    "sampleBtn": "View Sample Protected Document",
+    "sampleDesc": "This is a real .pvf file — see the live verification stamp in action"
   },
   "enterprise": {
     "badge": "Enterprise-Grade Security",
@@ -896,7 +901,34 @@
     "justNow": "just now",
     "minutesAgo": "m ago",
     "hoursAgo": "h ago",
-    "yesterday": "yesterday"
+    "yesterday": "yesterday",
+    "themeToggle": "Toggle theme",
+    "newDocument": "New Document",
+    "searchPlaceholder": "Search documents...",
+    "filterAll": "All",
+    "filterVerified": "Verified",
+    "filterPending": "Pending",
+    "docName": "Name",
+    "docStatus": "Status",
+    "docSize": "Size",
+    "docDate": "Date",
+    "docActions": "Actions",
+    "noDocuments": "No documents yet",
+    "noDocumentsDesc": "Upload your first document to get started",
+    "uploadFirst": "Upload First Document",
+    "planUsage": "documents",
+    "slideHash": "SHA-256 Hash",
+    "slideSignature": "Signature",
+    "slideCreated": "Created",
+    "slideOrg": "Organization",
+    "slideDownload": "Download PVF",
+    "slideShare": "Share Link",
+    "slideCopyLink": "Copy Link",
+    "slideLinkCopied": "Link copied!",
+    "slideVerified": "Verified",
+    "slideForged": "Forged",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode"
   },
   "pricing": {
     "badge": "Flexible Plans",
