@@ -1,5 +1,4 @@
 /**
-const logger = require("./services/logger");
  * Vertifile Blockchain Integration
  * Connects to Polygon (Mumbai testnet / Mainnet) for on-chain document registration.
  *
@@ -13,6 +12,7 @@ const logger = require("./services/logger");
 const { ethers } = require('ethers');
 const fs = require('fs');
 const path = require('path');
+const logger = require('./services/logger');
 
 // Contract ABI — only the functions we need
 const CONTRACT_ABI = [
