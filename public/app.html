@@ -934,7 +934,49 @@ function showForgotPassword(e) {
   e.preventDefault();
   const email = document.getElementById('loginEmail').value.trim();
   if (!email) { toast('Please enter your email address first'); return; }
-  toast('Password reset link sent to your email');
+  fetch('/auth/forgot-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+    credentials: 'same-origin'
+  }).then(r => r.json()).then(d => {
+    toast(d.message || 'If this email exists, a reset link has been sent');
+  }).catch(() => toast('Something went wrong'));
+}
+
+// Check for reset token in URL
+(function checkResetToken() {
+  var params = new URLSearchParams(window.location.search);
+  var token = params.get('reset');
+  if (!token) return;
+  var loginCard = document.querySelector('.login-card') || document.querySelector('.auth-card');
+  if (!loginCard) return;
+  loginCard.innerHTML = '<h2 style="margin-bottom:8px">Set New Password</h2>' +
+    '<p style="color:#8b89a6;margin-bottom:20px;font-size:13px">Enter your new password below</p>' +
+    '<input type="password" id="resetPassword" placeholder="New password (min 8 chars)" style="width:100%;padding:12px 16px;border:1px solid rgba(124,58,237,.2);border-radius:10px;font-size:14px;font-family:inherit;background:rgba(26,24,48,.5);color:#e2e0f0;outline:none;margin-bottom:12px">' +
+    '<input type="password" id="resetPasswordConfirm" placeholder="Confirm password" style="width:100%;padding:12px 16px;border:1px solid rgba(124,58,237,.2);border-radius:10px;font-size:14px;font-family:inherit;background:rgba(26,24,48,.5);color:#e2e0f0;outline:none;margin-bottom:16px">' +
+    '<button onclick="doResetPassword(\'' + token + '\')" style="width:100%;padding:14px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer">Update Password</button>';
+})();
+
+function doResetPassword(token) {
+  var pw = document.getElementById('resetPassword').value;
+  var pw2 = document.getElementById('resetPasswordConfirm').value;
+  if (pw.length < 8) { toast('Password must be at least 8 characters'); return; }
+  if (pw !== pw2) { toast('Passwords do not match'); return; }
+  fetch('/auth/reset-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: token, password: pw }),
+    credentials: 'same-origin'
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      toast('Password updated! You can now sign in.');
+      window.history.replaceState({}, '', '/app');
+      setTimeout(function() { location.reload(); }, 1500);
+    } else {
+      toast(d.error || 'Reset failed');
+    }
+  }).catch(function() { toast('Something went wrong'); });
 }
 
 async function doLogin() {

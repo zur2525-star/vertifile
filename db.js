@@ -156,6 +156,16 @@ const _ready = (async () => {
     )`);
     await pool.query('CREATE INDEX IF NOT EXISTS idx_health_time ON health_checks(checked_at)');
   } catch (_) { /* already exists */ }
+  // Password resets table
+  try {
+    await pool.query(`CREATE TABLE IF NOT EXISTS password_resets (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL,
+      token VARCHAR(255) UNIQUE NOT NULL,
+      expires_at TIMESTAMPTZ NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )`);
+  } catch (_) { /* already exists */ }
 })();
 
 // ================================================================
@@ -690,6 +700,27 @@ async function getUptimeStats(days = 30) {
 }
 
 // ================================================================
+// PASSWORD RESET
+// ================================================================
+async function saveResetToken(userId, token, expiresAt) {
+  await pool.query('DELETE FROM password_resets WHERE user_id = $1', [userId]);
+  await pool.query('INSERT INTO password_resets (user_id, token, expires_at) VALUES ($1, $2, $3)', [userId, token, expiresAt]);
+}
+
+async function getResetToken(token) {
+  const { rows } = await pool.query('SELECT * FROM password_resets WHERE token = $1', [token]);
+  return rows[0] || null;
+}
+
+async function deleteResetToken(token) {
+  await pool.query('DELETE FROM password_resets WHERE token = $1', [token]);
+}
+
+async function updateUserPassword(userId, passwordHash) {
+  await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [passwordHash, userId]);
+}
+
+// ================================================================
 // EXPORTS
 // ================================================================
 module.exports = {
@@ -746,6 +777,10 @@ module.exports = {
   getAllDocumentsForExport,
   getAllKeysForExport,
   getAllAuditForExport,
+  saveResetToken,
+  getResetToken,
+  deleteResetToken,
+  updateUserPassword,
   close,
   _db: pool,
   _ready,
