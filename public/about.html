@@ -4,25 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vertifile — About Us</title>
-  <meta name="description" content="About Vertifile — making document verification accessible, secure, and privacy-first.">
-  <meta name="keywords" content="document verification, tamper-proof, digital signature, PVF, blockchain verification">
+  <meta name="description" content="Meet the team behind Vertifile — making document verification accessible, secure, and privacy-first. Founded by Zur Halfon in Israel.">
+  <meta name="keywords" content="document verification, tamper-proof, digital signature, PVF, blockchain verification, Zur Halfon, Vertifile">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
   <meta property="og:title" content="About — Vertifile">
-  <meta property="og:description" content="About Vertifile — making document verification accessible, secure, and privacy-first.">
+  <meta property="og:description" content="Meet the team behind Vertifile — making document verification accessible, secure, and privacy-first. Founded by Zur Halfon in Israel.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vertifile.com/about">
   <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
   <link rel="canonical" href="https://vertifile.com/about">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="About — Vertifile">
-  <meta name="twitter:description" content="About Vertifile — making document verification accessible, secure, and privacy-first.">
+  <meta name="twitter:description" content="Meet the team behind Vertifile — making document verification accessible, secure, and privacy-first. Founded by Zur Halfon in Israel.">
   <meta name="theme-color" content="#ffffff">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    html{overflow-x:hidden}
+    html{scroll-behavior:smooth;overflow-x:hidden}
     body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden}
     [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
     a{text-decoration:none;color:inherit}
@@ -36,6 +35,9 @@
     .nav-center a:hover{color:#7c3aed}
     [dir="rtl"] .nav-center{direction:rtl}
     .nav-actions{display:flex;align-items:center;gap:12px}
+    .nav-user{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.25);background:transparent;cursor:pointer;transition:.2s;text-decoration:none;color:#6b7280}
+    .nav-user:hover{border-color:rgba(124,58,237,.5);color:#7c3aed;background:rgba(124,58,237,.05)}
+    .nav-user svg{width:18px;height:18px}
     .nav-verify{font-size:13px;font-weight:500;color:#4f46e5;text-decoration:none}
     .nav-cta{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
     .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.3)}
@@ -57,19 +59,21 @@
     @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
 
     /* ===== HERO ===== */
-    .hero{padding:140px 60px 100px;position:relative;overflow:hidden;background:linear-gradient(180deg,#e8e0ff 0%,#ece9ff 25%,#f5f3ff 60%,#ffffff 100%)}
+    .hero{padding:140px 60px 100px;position:relative;overflow:hidden;background:linear-gradient(180deg,#1e1b4b 0%,#312e81 30%,#4c1d95 60%,#5b21b6 80%,#6d28d9 100%)}
     .hero-bg{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
-    .hero-bg .grid{position:absolute;top:0;left:50%;transform:translateX(-50%);width:1400px;height:100%;background-image:linear-gradient(rgba(139,92,246,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.07) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%)}
-    .hero-bg .glow-1{position:absolute;top:-15%;left:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(139,92,246,.14),transparent 70%);filter:blur(80px);animation:nebulaFloat1 20s ease-in-out infinite alternate}
-    .hero-bg .glow-2{position:absolute;bottom:-25%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(168,85,247,.10),transparent 70%);filter:blur(80px);animation:nebulaFloat2 25s ease-in-out infinite alternate}
-    .hero-bg .glow-3{position:absolute;top:20%;right:15%;width:400px;height:400px;background:radial-gradient(circle,rgba(6,182,212,.08),transparent 70%);filter:blur(60px);animation:nebulaFloat3 18s ease-in-out infinite alternate}
+    .hero-bg .grid{position:absolute;top:0;left:50%;transform:translateX(-50%);width:1400px;height:100%;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%)}
+    .hero-bg .glow-1{position:absolute;top:-15%;left:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(139,92,246,.25),transparent 70%);filter:blur(80px);animation:nebulaFloat1 20s ease-in-out infinite alternate}
+    .hero-bg .glow-2{position:absolute;bottom:-25%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(168,85,247,.18),transparent 70%);filter:blur(80px);animation:nebulaFloat2 25s ease-in-out infinite alternate}
+    .hero-bg .glow-3{position:absolute;top:20%;right:15%;width:400px;height:400px;background:radial-gradient(circle,rgba(6,182,212,.12),transparent 70%);filter:blur(60px);animation:nebulaFloat3 18s ease-in-out infinite alternate}
     @keyframes nebulaFloat1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(40px,30px) scale(1.1)}}
     @keyframes nebulaFloat2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-30px,-40px) scale(1.15)}}
     @keyframes nebulaFloat3{0%{transform:translate(0,0) scale(1)}100%{transform:translate(25px,-20px) scale(1.08)}}
     .hero-content{max-width:800px;margin:0 auto;text-align:center;position:relative;z-index:1}
-    .hero h1{font-size:54px;font-weight:900;color:#111827;line-height:1.1;margin-bottom:24px;letter-spacing:-2px}
-    .hero h1 .gradient{background:linear-gradient(135deg,#a78bfa,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .hero p.sub{font-size:18px;color:#6b7280;line-height:1.8;max-width:600px;margin:0 auto 0;font-weight:400}
+    .hero h1{font-size:54px;font-weight:900;color:#ffffff;line-height:1.1;margin-bottom:24px;letter-spacing:-2px}
+    .hero h1 .gradient{background:linear-gradient(135deg,#c4b5fd,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p.sub{font-size:18px;color:rgba(196,181,253,.8);line-height:1.8;max-width:600px;margin:0 auto;font-weight:400}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);border-radius:40px;padding:8px 20px;font-size:13px;font-weight:500;color:rgba(196,181,253,.9);margin-bottom:24px}
+    .hero-badge svg{width:16px;height:16px;color:#34d399}
     @media(max-width:900px){.hero{padding:120px 24px 80px}.hero h1{font-size:40px}}
     @media(max-width:600px){.hero{padding:100px 20px 60px}.hero h1{font-size:32px;letter-spacing:-1px}.hero p.sub{font-size:15px}}
 
@@ -90,6 +94,29 @@
     .section-divider::after{content:'';position:absolute;top:-2px;width:80px;height:5px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.4),transparent);border-radius:3px;animation:dividerGlow 4s ease-in-out infinite;filter:blur(1px)}
     @keyframes dividerGlow{0%{left:-80px}100%{left:calc(100% + 80px)}}
 
+    /* ===== FOUNDER ===== */
+    .founder-section{background:linear-gradient(180deg,#ffffff 0%,#f8f7ff 50%,#ffffff 100%);position:relative;overflow:hidden}
+    .founder-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 50%,rgba(124,58,237,.04),transparent 50%),radial-gradient(ellipse at 70% 50%,rgba(6,182,212,.03),transparent 50%);pointer-events:none}
+    .founder-card{max-width:800px;margin:0 auto;position:relative;z-index:1;background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(124,58,237,.1);border-radius:28px;padding:60px;display:flex;gap:48px;align-items:center;box-shadow:0 8px 40px rgba(124,58,237,.06),0 0 0 1px rgba(124,58,237,.04)}
+    .founder-card:hover{border-color:rgba(124,58,237,.2);box-shadow:0 16px 60px rgba(124,58,237,.1),0 0 0 1px rgba(124,58,237,.08)}
+    .founder-photo{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:16px}
+    .founder-avatar{width:140px;height:140px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:800;color:#fff;letter-spacing:-1px;box-shadow:0 8px 32px rgba(124,58,237,.25);border:4px solid rgba(255,255,255,.9);position:relative}
+    .founder-avatar::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(124,58,237,.15);animation:avatarPulse 3s ease-in-out infinite}
+    @keyframes avatarPulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.6;transform:scale(1.03)}}
+    .founder-location{display:flex;align-items:center;gap:6px;font-size:13px;color:#6b7280;font-weight:500}
+    .founder-location svg{width:14px;height:14px;color:#7c3aed}
+    .founder-info{flex:1}
+    .founder-info h3{font-size:28px;font-weight:800;color:#111827;margin-bottom:2px;letter-spacing:-.5px}
+    .founder-info .founder-name-he{font-size:16px;color:#9ca3af;font-weight:400;margin-bottom:8px;font-family:'Heebo','Inter',sans-serif}
+    .founder-info .founder-title{font-size:15px;font-weight:600;color:#7c3aed;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+    .founder-info .founder-title svg{width:16px;height:16px}
+    .founder-info .founder-bio{font-size:15px;color:#4b5563;line-height:1.85;margin-bottom:24px}
+    .founder-links{display:flex;gap:12px;flex-wrap:wrap}
+    .founder-link{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:500;transition:.3s;border:1px solid rgba(124,58,237,.12);color:#4b5563;background:rgba(124,58,237,.03)}
+    .founder-link:hover{border-color:rgba(124,58,237,.3);color:#7c3aed;background:rgba(124,58,237,.06);transform:translateY(-2px);box-shadow:0 4px 16px rgba(124,58,237,.08)}
+    .founder-link svg{width:16px;height:16px}
+    @media(max-width:768px){.founder-card{flex-direction:column;text-align:center;padding:40px 28px;gap:28px}.founder-links{justify-content:center}}
+
     /* ===== MISSION ===== */
     .mission-section{background:linear-gradient(180deg,#ffffff 0%,#f8f7ff 50%,#ffffff 100%);position:relative;overflow:hidden}
     .mission-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 70%,rgba(124,58,237,.03),transparent 50%),radial-gradient(ellipse at 70% 30%,rgba(6,182,212,.02),transparent 50%);pointer-events:none}
@@ -99,42 +126,40 @@
     /* ===== HOW IT WORKS (BLIND) ===== */
     .blind-section{background:#ffffff;position:relative;overflow:hidden}
     .blind-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.03),transparent 50%);pointer-events:none}
-    .blind-content{max-width:800px;margin:0 auto;position:relative;z-index:1}
-    .blind-box{background:#f5f3ff;border:1px solid rgba(124,58,237,.12);border-radius:20px;padding:40px;text-align:center}
-    .blind-box .blind-icon{width:72px;height:72px;border-radius:20px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
-    .blind-box .blind-icon svg{width:36px;height:36px;color:#34d399}
-    .blind-box h3{font-size:22px;font-weight:700;color:#111827;margin-bottom:12px}
-    .blind-box p{font-size:15px;color:#4b5563;line-height:1.85;max-width:600px;margin:0 auto}
+    .blind-content{max-width:900px;margin:0 auto;position:relative;z-index:1}
+    .blind-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+    .blind-step{padding:32px 24px;border-radius:20px;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.06);text-align:center;transition:.4s;box-shadow:0 2px 8px rgba(124,58,237,.04)}
+    .blind-step:hover{transform:translateY(-8px);border-color:rgba(124,58,237,.18);box-shadow:0 12px 40px rgba(124,58,237,.12)}
+    .blind-step-icon{width:56px;height:56px;border-radius:16px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+    .blind-step-icon svg{width:28px;height:28px;color:#34d399}
+    .blind-step-icon.hash{background:rgba(79,70,229,.1);border-color:rgba(79,70,229,.15)}
+    .blind-step-icon.hash svg{color:#818cf8}
+    .blind-step-icon.lock{background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.15)}
+    .blind-step-icon.lock svg{color:#06b6d4}
+    .blind-step h4{font-size:16px;font-weight:700;color:#111827;margin-bottom:8px}
+    .blind-step p{font-size:14px;color:#6b7280;line-height:1.8}
+    @media(max-width:768px){.blind-steps{grid-template-columns:1fr}}
 
-    /* ===== VALUES ===== */
-    .values-section{background:linear-gradient(180deg,#f8f7ff 0%,#f5f3ff 50%,#f8f7ff 100%);position:relative;overflow:hidden}
-    .values-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 20% 80%,rgba(124,58,237,.04),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(6,182,212,.03),transparent 50%);pointer-events:none}
-    .values-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1060px;margin:0 auto;position:relative;z-index:1}
-    .value-card{padding:36px 28px;border-radius:20px;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.06);transition:all .4s cubic-bezier(.16,1,.3,1);box-shadow:0 2px 8px rgba(124,58,237,.04);text-align:center}
-    .value-card:hover{transform:translateY(-8px) scale(1.02);background:rgba(255,255,255,.95);border-color:rgba(124,58,237,.18);box-shadow:0 12px 40px rgba(124,58,237,.12),0 0 0 1px rgba(124,58,237,.05)}
-    .value-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
-    .value-icon svg{width:28px;height:28px}
-    .value-icon.privacy{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.15)}
-    .value-icon.privacy svg{color:#34d399}
-    .value-icon.security{background:rgba(79,70,229,.1);border:1px solid rgba(79,70,229,.15)}
-    .value-icon.security svg{color:#818cf8}
-    .value-icon.transparency{background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.15)}
-    .value-icon.transparency svg{color:#06b6d4}
-    .value-icon.accessibility{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.15)}
-    .value-icon.accessibility svg{color:#fbbf24}
-    .value-card h3{font-size:17px;font-weight:700;color:#111827;margin-bottom:10px}
-    .value-card p{font-size:14px;color:#6b7280;line-height:1.8}
-    @media(max-width:900px){.values-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:600px){.values-grid{grid-template-columns:1fr}}
-
-    /* ===== ORIGIN ===== */
-    .origin-section{background:#ffffff;position:relative;overflow:hidden}
-    .origin-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 50%,rgba(124,58,237,.03),transparent 50%);pointer-events:none}
-    .origin-content{max-width:700px;margin:0 auto;text-align:center;position:relative;z-index:1}
-    .origin-content p{font-size:16px;color:#4b5563;line-height:1.85;margin-bottom:16px}
+    /* ===== TECHNOLOGY ===== */
+    .tech-section{background:linear-gradient(180deg,#f8f7ff 0%,#ffffff 100%);position:relative;overflow:hidden}
+    .tech-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 50%,rgba(124,58,237,.04),transparent 60%);pointer-events:none}
+    .tech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:960px;margin:0 auto;position:relative;z-index:1}
+    .tech-card{padding:36px 28px;border-radius:20px;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.06);text-align:center;transition:.4s;box-shadow:0 2px 8px rgba(124,58,237,.04)}
+    .tech-card:hover{transform:translateY(-8px);border-color:rgba(124,58,237,.18);box-shadow:0 12px 40px rgba(124,58,237,.12)}
+    .tech-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+    .tech-icon.patent{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.15)}
+    .tech-icon.patent svg{color:#fbbf24}
+    .tech-icon.mime{background:rgba(79,70,229,.1);border:1px solid rgba(79,70,229,.15)}
+    .tech-icon.mime svg{color:#818cf8}
+    .tech-icon.blockchain{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.15)}
+    .tech-icon.blockchain svg{color:#34d399}
+    .tech-icon svg{width:28px;height:28px}
+    .tech-card h3{font-size:17px;font-weight:700;color:#111827;margin-bottom:10px}
+    .tech-card p{font-size:14px;color:#6b7280;line-height:1.8}
+    @media(max-width:768px){.tech-grid{grid-template-columns:1fr}}
 
     /* ===== STATS ===== */
-    .stats-section{background:linear-gradient(180deg,#f8f7ff 0%,#f5f3ff 50%,#f8f7ff 100%);position:relative;overflow:hidden}
+    .stats-section{background:linear-gradient(180deg,#ffffff 0%,#f8f7ff 50%,#ffffff 100%);position:relative;overflow:hidden}
     .stats-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 50%,rgba(124,58,237,.04),transparent 60%);pointer-events:none}
     .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:960px;margin:0 auto;text-align:center;position:relative;z-index:1}
     .stat-card{padding:40px 20px;border-radius:20px;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.06);transition:all .4s;box-shadow:0 2px 8px rgba(124,58,237,.04)}
@@ -144,6 +169,27 @@
     .stat-card .stat-label{font-size:14px;color:#6b7280;font-weight:500;line-height:1.5}
     @media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:480px){.stats-grid{grid-template-columns:1fr;max-width:300px}}
+
+    /* ===== VALUES ===== */
+    .values-section{background:linear-gradient(180deg,#f8f7ff 0%,#f5f3ff 50%,#f8f7ff 100%);position:relative;overflow:hidden}
+    .values-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 20% 80%,rgba(124,58,237,.04),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(6,182,212,.03),transparent 50%);pointer-events:none}
+    .values-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1060px;margin:0 auto;position:relative;z-index:1}
+    .value-card{padding:36px 28px;border-radius:20px;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.06);transition:all .4s cubic-bezier(.16,1,.3,1);box-shadow:0 2px 8px rgba(124,58,237,.04);text-align:center}
+    .value-card:hover{transform:translateY(-8px) scale(1.02);background:rgba(255,255,255,.95);border-color:rgba(124,58,237,.18);box-shadow:0 12px 40px rgba(124,58,237,.12),0 0 0 1px rgba(124,58,237,.05)}
+    .value-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+    .value-icon svg{width:28px;height:28px}
+    .value-icon.security{background:rgba(79,70,229,.1);border:1px solid rgba(79,70,229,.15)}
+    .value-icon.security svg{color:#818cf8}
+    .value-icon.privacy{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.15)}
+    .value-icon.privacy svg{color:#34d399}
+    .value-icon.transparency{background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.15)}
+    .value-icon.transparency svg{color:#06b6d4}
+    .value-icon.innovation{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.15)}
+    .value-icon.innovation svg{color:#fbbf24}
+    .value-card h3{font-size:17px;font-weight:700;color:#111827;margin-bottom:10px}
+    .value-card p{font-size:14px;color:#6b7280;line-height:1.8}
+    @media(max-width:900px){.values-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:600px){.values-grid{grid-template-columns:1fr}}
 
     /* ===== CTA ===== */
     .cta-section{padding:100px 32px;text-align:center;background:linear-gradient(180deg,#ffffff,#f5f3ff)}
@@ -174,7 +220,7 @@
     }
     @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
   </style>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","name":"About Vertifile","url":"https://vertifile.com/about","description":"Learn about Vertifile - document verification and anti-forgery platform founded in Israel","mainEntity":{"@type":"Organization","name":"Vertifile","foundingDate":"2026","foundingLocation":"Israel"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","name":"About Vertifile","url":"https://vertifile.com/about","description":"Meet the team behind Vertifile — document verification and anti-forgery platform founded in Israel.","mainEntity":{"@type":"Organization","name":"Vertifile","foundingDate":"2026","foundingLocation":"Israel","founder":{"@type":"Person","name":"Zur Halfon","jobTitle":"Founder & CEO","email":"zur2525@gmail.com"}}}</script>
 </head>
 <body>
 
@@ -236,21 +282,64 @@
     <div class="glow-3"></div>
   </div>
   <div class="hero-content">
-    <h1 data-i18n="about.heroTitle">About <span class="gradient" data-i18n="about.heroTitleGradient">Vertifile</span></h1>
-    <p class="sub" data-i18n="about.heroSubtitle">Making document verification accessible, secure, and privacy-first for everyone.</p>
+    <div class="hero-badge" data-i18n="about.heroBadge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      Founded in Israel, 2026
+    </div>
+    <h1 data-i18n="about.heroTitle">The Team Behind <span class="gradient" data-i18n="about.heroTitleGradient">Vertifile</span></h1>
+    <p class="sub" data-i18n="about.heroSubtitle">Real people, building real technology to make document forgery impossible. Transparency starts with knowing who we are.</p>
   </div>
 </div>
 
-<!-- ===== MISSION ===== -->
+<!-- ===== FOUNDER ===== -->
+<section class="founder-section">
+  <div class="section-header">
+    <span class="label" data-i18n="about.founderLabel">Leadership</span>
+    <h2 data-i18n="about.founderSectionTitle">Meet the Founder</h2>
+    <p data-i18n="about.founderSectionSubtitle">The person behind Vertifile's mission to end document forgery.</p>
+  </div>
+  <div class="founder-card fade-up">
+    <div class="founder-photo">
+      <div class="founder-avatar">ZH</div>
+      <div class="founder-location">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span data-i18n="about.founderLocation">Israel</span>
+      </div>
+    </div>
+    <div class="founder-info">
+      <h3 data-i18n="about.founderName">Zur Halfon</h3>
+      <div class="founder-name-he">&#1494;&#1493;&#1512; &#1495;&#1500;&#1508;&#1493;&#1503;</div>
+      <div class="founder-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span data-i18n="about.founderTitle">Founder &amp; CEO</span>
+      </div>
+      <p class="founder-bio" data-i18n="about.founderBio">Security researcher and entrepreneur passionate about making document forgery impossible. Built Vertifile after witnessing firsthand how easy it is to forge critical documents — diplomas, medical records, legal contracts. Filed a patent for the PVF format and submitted the first IANA MIME type registration for document verification.</p>
+      <div class="founder-links">
+        <a href="mailto:zur2525@gmail.com" class="founder-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span data-i18n="about.founderEmail">zur2525@gmail.com</span>
+        </a>
+        <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" class="founder-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          <span data-i18n="about.founderLinkedin">LinkedIn</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ===== MISSION — WHY WE BUILT VERTIFILE ===== -->
 <section class="mission-section">
   <div class="section-header">
     <span class="label" data-i18n="about.missionLabel">Our Mission</span>
-    <h2 data-i18n="about.missionTitle">Ending Document Forgery</h2>
-    <p data-i18n="about.missionSubtitle">We believe every document deserves to be trusted.</p>
+    <h2 data-i18n="about.missionTitle">Why We Built Vertifile</h2>
+    <p data-i18n="about.missionSubtitle">Document fraud is a global crisis hiding in plain sight.</p>
   </div>
   <div class="mission-content">
-    <p data-i18n="about.missionP1">Vertifile was created with a singular purpose: to make document verification accessible, secure, and privacy-first. In a world where digital documents can be easily manipulated, we provide a cryptographic proof of authenticity that anyone can verify instantly.</p>
-    <p data-i18n="about.missionP2">Our technology ensures that diplomas, medical records, legal contracts, and official documents can be trusted without question. We do this while maintaining absolute privacy through our BLIND processing architecture.</p>
+    <p data-i18n="about.missionP1">Every year, millions of forged documents circulate worldwide — fake university diplomas, altered medical records, fraudulent legal contracts. The damage is enormous: unqualified professionals in critical roles, insurance fraud costing billions, and individuals whose identities are stolen through forged paperwork.</p>
+    <p data-i18n="about.missionP2">Vertifile was born from a simple realization: if we can make currency nearly impossible to counterfeit, why can't we do the same for documents? We built a cryptographic verification system that makes any document tamper-proof while keeping your content completely private.</p>
   </div>
 </section>
 
@@ -259,74 +348,68 @@
 <!-- ===== BLIND PROCESSING ===== -->
 <section class="blind-section">
   <div class="section-header">
-    <span class="label" data-i18n="about.blindLabel">How It Works</span>
+    <span class="label" data-i18n="about.blindLabel">Privacy by Design</span>
     <h2 data-i18n="about.blindTitle">BLIND Processing</h2>
-    <p data-i18n="about.blindSubtitle">Your content stays yours. Always.</p>
+    <p data-i18n="about.blindSubtitle">Your content stays yours. Always. Our server never reads a single word.</p>
   </div>
   <div class="blind-content">
-    <div class="blind-box fade-up">
-      <div class="blind-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+    <div class="blind-steps">
+      <div class="blind-step fade-up">
+        <div class="blind-step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h4 data-i18n="about.blindStep1Title">Client-Side Hashing</h4>
+        <p data-i18n="about.blindStep1Desc">Your document is hashed locally in the browser using SHA-256. The file content never leaves your device.</p>
       </div>
-      <h3 data-i18n="about.blindBoxTitle">We Never See Your Content</h3>
-      <p data-i18n="about.blindBoxDesc">When you upload a document to Vertifile, our system computes a SHA-256 cryptographic hash entirely on your device. Only this one-way fingerprint is sent to our servers. It is mathematically impossible to reconstruct any document content from its hash. Your files, your data, your privacy.</p>
+      <div class="blind-step fade-up">
+        <div class="blind-step-icon hash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+        </div>
+        <h4 data-i18n="about.blindStep2Title">Fingerprint Only</h4>
+        <p data-i18n="about.blindStep2Desc">Only the one-way cryptographic fingerprint is sent to our servers. It is mathematically impossible to reverse.</p>
+      </div>
+      <div class="blind-step fade-up">
+        <div class="blind-step-icon lock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <h4 data-i18n="about.blindStep3Title">Blockchain Sealed</h4>
+        <p data-i18n="about.blindStep3Desc">The hash is registered on blockchain, creating an immutable proof of authenticity. Zero knowledge of your content.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <div class="section-divider"></div>
 
-<!-- ===== VALUES ===== -->
-<section class="values-section">
+<!-- ===== TECHNOLOGY ===== -->
+<section class="tech-section">
   <div class="section-header">
-    <span class="label" data-i18n="about.valuesLabel">Our Values</span>
-    <h2 data-i18n="about.valuesTitle">What We Stand For</h2>
-    <p data-i18n="about.valuesSubtitle">The principles that guide everything we build.</p>
+    <span class="label" data-i18n="about.techLabel">Technology</span>
+    <h2 data-i18n="about.techTitle">Built on Open Standards</h2>
+    <p data-i18n="about.techSubtitle">Vertifile is establishing a new standard for document verification.</p>
   </div>
-  <div class="values-grid">
-    <div class="value-card fade-up">
-      <div class="value-icon privacy">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+  <div class="tech-grid">
+    <div class="tech-card fade-up">
+      <div class="tech-icon patent">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
       </div>
-      <h3 data-i18n="about.value1Title">Privacy First</h3>
-      <p data-i18n="about.value1Desc">We architected our entire system so we never have access to your document content. Privacy is not a feature — it is the foundation.</p>
+      <h3 data-i18n="about.techPatentTitle">Patent Pending</h3>
+      <p data-i18n="about.techPatentDesc">The PVF format and verification process are patent-pending with the Israeli Patent Office, establishing a new standard for document protection.</p>
     </div>
-    <div class="value-card fade-up">
-      <div class="value-icon security">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <div class="tech-card fade-up">
+      <div class="tech-icon mime">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
       </div>
-      <h3 data-i18n="about.value2Title">Security</h3>
-      <p data-i18n="about.value2Desc">Eight layers of cryptographic protection, blockchain anchoring, and live anti-forgery stamps make document tampering impossible.</p>
+      <h3 data-i18n="about.techMimeTitle">IANA MIME Type</h3>
+      <p data-i18n="about.techMimeDesc">We submitted the first IANA MIME type registration for document verification (application/pvf), so .pvf files are recognized by browsers and operating systems worldwide.</p>
     </div>
-    <div class="value-card fade-up">
-      <div class="value-icon transparency">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    <div class="tech-card fade-up">
+      <div class="tech-icon blockchain">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="6" height="6" rx="1"/><rect x="9" y="4" width="6" height="6" rx="1"/><rect x="17" y="4" width="6" height="6" rx="1"/><rect x="1" y="14" width="6" height="6" rx="1"/><rect x="9" y="14" width="6" height="6" rx="1"/><rect x="17" y="14" width="6" height="6" rx="1"/><line x1="4" y1="10" x2="4" y2="14"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="20" y1="10" x2="20" y2="14"/></svg>
       </div>
-      <h3 data-i18n="about.value3Title">Transparency</h3>
-      <p data-i18n="about.value3Desc">Every verification is publicly auditable on the blockchain. Our process is open, our records are immutable, and our integrity is verifiable.</p>
+      <h3 data-i18n="about.techBlockchainTitle">Blockchain Anchoring</h3>
+      <p data-i18n="about.techBlockchainDesc">Every document hash is permanently recorded on Polygon blockchain, creating an immutable, publicly auditable trail that exists forever.</p>
     </div>
-    <div class="value-card fade-up">
-      <div class="value-icon accessibility">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-      </div>
-      <h3 data-i18n="about.value4Title">Accessibility</h3>
-      <p data-i18n="about.value4Desc">Anyone can verify a document — no account needed, no software to install. Just open a .pvf file in any browser, anywhere in the world.</p>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- ===== ORIGIN ===== -->
-<section class="origin-section">
-  <div class="section-header">
-    <span class="label" data-i18n="about.originLabel">Our Story</span>
-    <h2 data-i18n="about.originTitle">Built in Israel, for the World</h2>
-    <p data-i18n="about.originSubtitle">Founded in 2026 to solve document forgery at scale.</p>
-  </div>
-  <div class="origin-content">
-    <p data-i18n="about.originP1">Vertifile was founded in 2026 in Israel by a team of security and cryptography experts who saw first-hand the damage caused by document forgery — from fake diplomas to forged medical records and fraudulent contracts.</p>
-    <p data-i18n="about.originP2">We built a solution that combines cryptographic signing, blockchain immutability, and live holographic stamps to create a new standard for document trust. Our BLIND processing architecture ensures that privacy is never compromised.</p>
   </div>
 </section>
 
@@ -345,16 +428,57 @@
       <div class="stat-label" data-i18n="about.statDocs">Documents Protected</div>
     </div>
     <div class="stat-card fade-up">
-      <div class="stat-num"><span class="accent">200+</span></div>
-      <div class="stat-label" data-i18n="about.statOrgs">Organizations</div>
+      <div class="stat-num"><span class="accent" data-i18n="about.statPatentNum">Patent</span></div>
+      <div class="stat-label" data-i18n="about.statPatent">Pending (Israel)</div>
     </div>
     <div class="stat-card fade-up">
-      <div class="stat-num"><span class="accent">30+</span></div>
-      <div class="stat-label" data-i18n="about.statCountries">Countries</div>
+      <div class="stat-num"><span class="accent" data-i18n="about.statIanaNum">IANA</span></div>
+      <div class="stat-label" data-i18n="about.statIana">MIME Type Registered</div>
     </div>
     <div class="stat-card fade-up">
-      <div class="stat-num"><span class="accent">99.9%</span></div>
-      <div class="stat-label" data-i18n="about.statUptime">Uptime</div>
+      <div class="stat-num"><span class="accent">10</span></div>
+      <div class="stat-label" data-i18n="about.statLangs">Languages Supported</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ===== VALUES ===== -->
+<section class="values-section">
+  <div class="section-header">
+    <span class="label" data-i18n="about.valuesLabel">Our Values</span>
+    <h2 data-i18n="about.valuesTitle">What We Stand For</h2>
+    <p data-i18n="about.valuesSubtitle">The principles that guide everything we build.</p>
+  </div>
+  <div class="values-grid">
+    <div class="value-card fade-up">
+      <div class="value-icon security">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3 data-i18n="about.value1Title">Security First</h3>
+      <p data-i18n="about.value1Desc">Eight layers of cryptographic protection, blockchain anchoring, and live anti-forgery stamps make document tampering impossible.</p>
+    </div>
+    <div class="value-card fade-up">
+      <div class="value-icon privacy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+      </div>
+      <h3 data-i18n="about.value2Title">Privacy by Design</h3>
+      <p data-i18n="about.value2Desc">We architected our entire system so we never have access to your document content. Privacy is not a feature — it is the foundation.</p>
+    </div>
+    <div class="value-card fade-up">
+      <div class="value-icon transparency">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      </div>
+      <h3 data-i18n="about.value3Title">Transparency</h3>
+      <p data-i18n="about.value3Desc">Every verification is publicly auditable on the blockchain. Our process is open, our records are immutable, and our integrity is verifiable.</p>
+    </div>
+    <div class="value-card fade-up">
+      <div class="value-icon innovation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <h3 data-i18n="about.value4Title">Innovation</h3>
+      <p data-i18n="about.value4Desc">From patented file formats to IANA-registered MIME types, we push the boundaries of what document verification can be.</p>
     </div>
   </div>
 </section>

@@ -6,6 +6,7 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --mac",
+    "build:mac": "electron-builder --mac",
     "build:win": "electron-builder --win",
     "build:all": "electron-builder --mac --win"
   },
@@ -22,9 +23,10 @@
       {
         "ext": "pvf",
         "name": "PVF Document",
-        "description": "Protected Verified File",
+        "description": "Protected Verifiable File",
+        "mimeType": "application/vnd.vertifile.pvf",
         "role": "Viewer",
-        "mimeType": "application/vnd.vertifile.pvf"
+        "icon": "build/pvf-icon.ico"
       }
     ],
     "afterSign": "scripts/notarize.js",
@@ -42,11 +44,9 @@
       "identity": null
     },
     "win": {
-      "icon": "icons/icon.png",
-      "target": [
-        "portable",
-        "zip"
-      ]
+      "target": ["nsis"],
+      "icon": "build/icon.ico",
+      "artifactName": "PVF-Viewer-${version}-Setup.${ext}"
     },
     "dmg": {
       "title": "PVF Viewer",
@@ -65,7 +65,10 @@
     },
     "nsis": {
       "oneClick": true,
-      "allowToChangeInstallationDirectory": false
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PVF Viewer"
     },
     "publish": {
       "provider": "github",
