@@ -155,7 +155,7 @@
 <!-- ===== PRIVACY POLICY ===== -->
 <div class="legal-page">
   <h1 data-i18n="privacy.title">Privacy Policy</h1>
-  <p class="legal-updated" data-i18n="privacy.updated">Last updated: March 22, 2026</p>
+  <p class="legal-updated" data-i18n="privacy.updated">Last updated: March 25, 2026</p>
 
   <div class="highlight-box">
     <p><strong data-i18n="privacy.blindLabel">BLIND Processing:</strong> <span data-i18n="privacy.blindSummary">Vertifile never reads, accesses, or stores the content of your documents. We only process cryptographic hashes (fingerprints) of your files. Your document content never leaves your device.</span></p>
@@ -243,10 +243,12 @@
   <h2 data-i18n="privacy.retentionTitle">Data Retention</h2>
   <p>We retain data according to the following schedule:</p>
   <ul>
-    <li><strong>Document hashes:</strong> Retained indefinitely for verification purposes (also permanently stored on blockchain)</li>
-    <li><strong>Account data:</strong> Retained while your account is active, and for 30 days after deletion request</li>
-    <li><strong>Audit logs:</strong> Retained for 12 months</li>
-    <li><strong>Technical logs:</strong> Retained for 90 days</li>
+    <li><strong data-i18n="privacy.retentionHashLabel">Document hashes:</strong> <span data-i18n="privacy.retentionHashDesc">Retained indefinitely (required for verification)</span></li>
+    <li><strong data-i18n="privacy.retentionAccountLabel">Account data:</strong> <span data-i18n="privacy.retentionAccountDesc">Deleted within 30 days of account closure</span></li>
+    <li><strong data-i18n="privacy.retentionAuditLabel">Audit logs:</strong> <span data-i18n="privacy.retentionAuditDesc">Retained for 12 months</span></li>
+    <li><strong data-i18n="privacy.retentionTechLabel">Technical logs:</strong> <span data-i18n="privacy.retentionTechDesc">Retained for 90 days</span></li>
+    <li><strong data-i18n="privacy.retentionBlockchainLabel">Blockchain records:</strong> <span data-i18n="privacy.retentionBlockchainDesc">Permanent (immutable by design)</span></li>
+    <li><strong data-i18n="privacy.retentionTokenLabel">Password reset tokens:</strong> <span data-i18n="privacy.retentionTokenDesc">Deleted after use or 30-minute expiry</span></li>
   </ul>
 
   <h2 data-i18n="privacy.sharingTitle">Data Sharing</h2>
@@ -256,6 +258,16 @@
     <li><strong>Infrastructure providers:</strong> Cloud hosting and CDN providers who process data on our behalf under strict data processing agreements</li>
     <li><strong>Legal requirements:</strong> When required by law, court order, or governmental authority</li>
   </ul>
+
+  <h2 data-i18n="privacy.subprocessorsTitle">Sub-processors</h2>
+  <p data-i18n="privacy.subprocessorsDesc">Vertifile uses the following sub-processors:</p>
+  <ul>
+    <li><strong>Render.com</strong> — <span data-i18n="privacy.subprocessorRender">application hosting (US)</span></li>
+    <li><strong>Neon.tech</strong> — <span data-i18n="privacy.subprocessorNeon">PostgreSQL database (US/EU)</span></li>
+    <li><strong>Polygon Network</strong> — <span data-i18n="privacy.subprocessorPolygon">blockchain anchoring (decentralized)</span></li>
+    <li><strong>Google</strong> — <span data-i18n="privacy.subprocessorGoogle">OAuth authentication (US)</span></li>
+  </ul>
+  <p data-i18n="privacy.subprocessorsNotice">We will notify Enterprise customers 30 days before adding new sub-processors.</p>
 
   <h2 data-i18n="privacy.securityTitle">Security</h2>
   <p>We implement industry-standard security measures including:</p>
@@ -294,11 +306,17 @@
   <h2 data-i18n="privacy.privacyContactTitle">Privacy Inquiries</h2>
   <p data-i18n="privacy.privacyContactDesc">For privacy-related questions, concerns, or to exercise your data protection rights, please contact our dedicated privacy team at <a href="mailto:privacy@vertifile.com">privacy@vertifile.com</a>. We will respond to all privacy inquiries within 30 days.</p>
 
+  <h2 data-i18n="privacy.automatedTitle">Automated Decision-Making</h2>
+  <p data-i18n="privacy.automatedDesc">Vertifile does not use automated decision-making or profiling that produces legal effects on users. Document verification is based solely on cryptographic hash comparison, not on document content analysis.</p>
+
   <h2 data-i18n="privacy.childrenTitle">Children's Privacy</h2>
-  <p>Vertifile is not directed at children under 16. We do not knowingly collect personal information from children. If you believe we have inadvertently collected data from a child, please contact us immediately.</p>
+  <p data-i18n="privacy.childrenDesc">Vertifile does not knowingly collect personal information from children under the age of 16. If we learn that we have collected personal data from a child under 16, we will delete that information promptly. If you believe a child has provided us with personal data, please contact <a href="mailto:privacy@vertifile.com">privacy@vertifile.com</a>.</p>
+
+  <h2 data-i18n="privacy.thirdPartyTitle">Third-Party Links</h2>
+  <p data-i18n="privacy.thirdPartyDesc">Our service may contain links to third-party websites. We are not responsible for the privacy practices of these external sites. We encourage users to review the privacy policies of any third-party service they interact with.</p>
 
   <h2 data-i18n="privacy.changesTitle">Changes to This Policy</h2>
-  <p>We may update this Privacy Policy from time to time. We will notify registered users of material changes via email. Continued use of our service after changes constitutes acceptance of the updated policy.</p>
+  <p data-i18n="privacy.changesDesc">We may update this Privacy Policy periodically. Material changes will be communicated via email to registered users at least 30 days before taking effect. Continued use of the service after changes take effect constitutes acceptance. Previous versions of this policy are available upon request.</p>
 
   <h2 data-i18n="privacy.contactTitle">Contact Us</h2>
   <p>If you have questions about this Privacy Policy or our data practices, contact us at:</p>
