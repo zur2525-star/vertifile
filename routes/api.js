@@ -298,19 +298,21 @@ router.get('/health', (req, res) => {
 });
 
 router.get('/health/deep', async (req, res) => {
-  const db = req.app.get('db');
-  const chain = req.app.get('chain');
-  const stats = await db.getStats();
-  res.json({
-    status: 'online',
-    service: 'Vertifile',
-    version: '4.1.0',
-    uptime: process.uptime(),
-    timestamp: new Date().toISOString(),
-    documents: stats.totalDocuments,
-    organizations: stats.totalOrganizations,
-    blockchain: chain.isConnected() ? 'connected' : 'off-chain'
-  });
+  try {
+    const db = req.app.get('db');
+    const chain = req.app.get('chain');
+    const stats = await db.getStats();
+    res.json({
+      status: 'online',
+      service: 'Vertifile',
+      version: '4.1.0',
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+      documents: stats.totalDocuments,
+      organizations: stats.totalOrganizations,
+      blockchain: chain.isConnected() ? 'connected' : 'off-chain'
+    });
+  } catch(e) { res.status(500).json({ status: 'error', error: 'Health check failed' }); }
 });
 
 // ===== API: Docs =====
@@ -517,16 +519,18 @@ router.get('/org/branding', createLimiter, (req, res, next) => {
 const contactLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 3, message: { error: 'Too many submissions' } });
 
 router.post('/contact', contactLimiter, async (req, res) => {
-  const db = req.app.get('db');
-  const { name, email, organization, orgType, message } = req.body;
-  if (!name || !email || !organization) {
-    return res.status(400).json({ success: false, error: 'Name, email, and organization are required' });
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ success: false, error: 'Invalid email address' });
-  }
-  await db.log('contact_form', { name, email, organization, orgType: orgType || 'not specified', message: message || '', ip: getClientIP(req) });
-  res.json({ success: true });
+  try {
+    const db = req.app.get('db');
+    const { name, email, organization, orgType, message } = req.body;
+    if (!name || !email || !organization) {
+      return res.status(400).json({ success: false, error: 'Name, email, and organization are required' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ success: false, error: 'Invalid email address' });
+    }
+    await db.log('contact_form', { name, email, organization, orgType: orgType || 'not specified', message: message || '', ip: getClientIP(req) });
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ success: false, error: 'Failed to submit contact form' }); }
 });
 
 module.exports = router;

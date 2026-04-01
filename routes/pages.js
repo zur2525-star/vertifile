@@ -80,101 +80,109 @@ router.get('/view-by-hash/:hash', async (req, res) => {
 
 // View PVF document in-browser
 router.get('/d/:shareId', async (req, res) => {
-  const db = req.app.get('db');
-  const { shareId } = req.params;
+  try {
+    const db = req.app.get('db');
+    const { shareId } = req.params;
 
-  if (!shareId || shareId.length < 6 || shareId.length > 20 || !/^[a-zA-Z0-9_-]+$/.test(shareId)) {
-    return res.status(404).send(notFoundPage('Invalid document link'));
-  }
+    if (!shareId || shareId.length < 6 || shareId.length > 20 || !/^[a-zA-Z0-9_-]+$/.test(shareId)) {
+      return res.status(404).send(notFoundPage('Invalid document link'));
+    }
 
-  const doc = await db.getDocumentByShareId(shareId);
-  if (!doc) {
-    return res.status(404).send(notFoundPage('Document not found'));
-  }
+    const doc = await db.getDocumentByShareId(shareId);
+    if (!doc) {
+      return res.status(404).send(notFoundPage('Document not found'));
+    }
 
-  const pvfContent = await db.getPvfContent(shareId);
-  if (!pvfContent) {
-    return res.status(404).send(notFoundPage('Document file not available'));
-  }
+    const pvfContent = await db.getPvfContent(shareId);
+    if (!pvfContent) {
+      return res.status(404).send(notFoundPage('Document file not available'));
+    }
 
-  await db.log('document_viewed', { shareId, hash: doc.hash, ip: getClientIP(req) });
+    await db.log('document_viewed', { shareId, hash: doc.hash, ip: getClientIP(req) });
 
-  setPvfSecurityHeaders(res);
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.send(pvfContent);
+    setPvfSecurityHeaders(res);
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.send(pvfContent);
+  } catch(e) { return res.status(500).send(notFoundPage('Server error')); }
 });
 
 // Raw route — /d/:shareId/raw — serves PVF HTML for iframe embedding
 router.get('/d/:shareId/raw', async (req, res) => {
-  const db = req.app.get('db');
-  const { shareId } = req.params;
-  if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).send('Not found');
+  try {
+    const db = req.app.get('db');
+    const { shareId } = req.params;
+    if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).send('Not found');
 
-  const pvfContent = await db.getPvfContent(shareId);
-  if (!pvfContent) return res.status(404).send('Not found');
+    const pvfContent = await db.getPvfContent(shareId);
+    if (!pvfContent) return res.status(404).send('Not found');
 
-  res.setHeader('Content-Security-Policy', [
-    "default-src 'none'",
-    "script-src 'unsafe-inline'",
-    "style-src 'unsafe-inline' https://fonts.googleapis.com",
-    "font-src https://fonts.gstatic.com",
-    "img-src data: blob:",
-    "connect-src 'self'",
-    "frame-src data:",
-    "base-uri 'none'",
-    "form-action 'none'",
-    "frame-ancestors 'self'"
-  ].join('; '));
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('Referrer-Policy', 'no-referrer');
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.send(pvfContent);
+    res.setHeader('Content-Security-Policy', [
+      "default-src 'none'",
+      "script-src 'unsafe-inline'",
+      "style-src 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src https://fonts.gstatic.com",
+      "img-src data: blob:",
+      "connect-src 'self'",
+      "frame-src data:",
+      "base-uri 'none'",
+      "form-action 'none'",
+      "frame-ancestors 'self'"
+    ].join('; '));
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.send(pvfContent);
+  } catch(e) { return res.status(500).send('Server error'); }
 });
 
 // Download route — /d/:shareId/download
 router.get('/d/:shareId/download', async (req, res) => {
-  const db = req.app.get('db');
-  const { shareId } = req.params;
-  if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).json({ success: false, error: 'Invalid link' });
+  try {
+    const db = req.app.get('db');
+    const { shareId } = req.params;
+    if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).json({ success: false, error: 'Invalid link' });
 
-  const doc = await db.getDocumentByShareId(shareId);
-  if (!doc) {
-    return res.status(404).json({ success: false, error: 'Document not found' });
-  }
+    const doc = await db.getDocumentByShareId(shareId);
+    if (!doc) {
+      return res.status(404).json({ success: false, error: 'Document not found' });
+    }
 
-  const pvfContent = await db.getPvfContent(shareId);
-  if (!pvfContent) {
-    return res.status(404).json({ success: false, error: 'Document file not available' });
-  }
+    const pvfContent = await db.getPvfContent(shareId);
+    if (!pvfContent) {
+      return res.status(404).json({ success: false, error: 'Document file not available' });
+    }
 
-  const pvfFileName = (doc.originalName || 'document').replace(/\.[^.]+$/, '') + '.pvf';
-  res.setHeader('Content-Type', 'application/vnd.vertifile.pvf; charset=utf-8');
-  res.setHeader('Content-Disposition', `attachment; filename="${pvfFileName}"`);
-  res.send(pvfContent);
+    const pvfFileName = (doc.originalName || 'document').replace(/\.[^.]+$/, '') + '.pvf';
+    res.setHeader('Content-Type', 'application/vnd.vertifile.pvf; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${pvfFileName}"`);
+    res.send(pvfContent);
+  } catch(e) { return res.status(500).json({ success: false, error: 'Server error' }); }
 });
 
 // Document info API — /d/:shareId/info
 router.get('/d/:shareId/info', async (req, res) => {
-  const db = req.app.get('db');
-  const { shareId } = req.params;
-  if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).json({ success: false, error: 'Invalid link' });
+  try {
+    const db = req.app.get('db');
+    const { shareId } = req.params;
+    if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).json({ success: false, error: 'Invalid link' });
 
-  const doc = await db.getDocumentByShareId(shareId);
-  if (!doc) {
-    return res.status(404).json({ success: false, error: 'Document not found' });
-  }
-
-  res.json({
-    success: true,
-    document: {
-      originalName: doc.originalName,
-      mimeType: doc.mimeType,
-      fileSize: doc.fileSize,
-      issuedAt: doc.timestamp,
-      issuedBy: doc.orgName
+    const doc = await db.getDocumentByShareId(shareId);
+    if (!doc) {
+      return res.status(404).json({ success: false, error: 'Document not found' });
     }
-  });
+
+    res.json({
+      success: true,
+      document: {
+        originalName: doc.originalName,
+        mimeType: doc.mimeType,
+        fileSize: doc.fileSize,
+        issuedAt: doc.timestamp,
+        issuedBy: doc.orgName
+      }
+    });
+  } catch(e) { return res.status(500).json({ success: false, error: 'Server error' }); }
 });
 
 // Demo routes
