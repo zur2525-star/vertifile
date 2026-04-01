@@ -108,38 +108,42 @@ router.get('/webhooks', authenticateAdmin, async (req, res) => {
 
 // Generate new API key (legacy admin endpoint)
 router.post('/keys-legacy/create', authenticateAdmin, async (req, res) => {
-  const db = req.app.get('db');
-  const { escapeHtml } = require('../templates/pvf');
-  let { orgName, plan, allowedIPs } = req.body;
-  if (!orgName) return res.status(400).json({ success: false, error: 'orgName required' });
-  orgName = escapeHtml(orgName).substring(0, 100);
+  try {
+    const db = req.app.get('db');
+    const { escapeHtml } = require('../templates/pvf');
+    let { orgName, plan, allowedIPs } = req.body;
+    if (!orgName) return res.status(400).json({ success: false, error: 'orgName required' });
+    orgName = escapeHtml(orgName).substring(0, 100);
 
-  const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
-  const orgId = 'org_' + uuidv4().split('-')[0];
-  const rateLimitVal = plan === 'enterprise' ? 10000 : plan === 'professional' ? 100 : 5;
+    const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
+    const orgId = 'org_' + uuidv4().split('-')[0];
+    const rateLimitVal = plan === 'enterprise' ? 10000 : plan === 'professional' ? 100 : 5;
 
-  await db.createApiKey({
-    apiKey,
-    orgId,
-    orgName,
-    plan: plan || 'free',
-    rateLimit: rateLimitVal,
-    allowedIPs: (allowedIPs && Array.isArray(allowedIPs) && allowedIPs.length > 0) ? allowedIPs : undefined
-  });
+    await db.createApiKey({
+      apiKey,
+      orgId,
+      orgName,
+      plan: plan || 'free',
+      rateLimit: rateLimitVal,
+      allowedIPs: (allowedIPs && Array.isArray(allowedIPs) && allowedIPs.length > 0) ? allowedIPs : undefined
+    });
 
-  await db.log('api_key_created', { orgId, orgName, plan: plan || 'free', ip: getClientIP(req), hasIpWhitelist: !!(allowedIPs && allowedIPs.length) });
-  logger.info({ event: 'api_key_created', orgName, plan: plan || 'free' }, `API Key created for ${orgName}`);
-  res.json({ success: true, apiKey, orgId, orgName, plan: plan || 'free' });
+    await db.log('api_key_created', { orgId, orgName, plan: plan || 'free', ip: getClientIP(req), hasIpWhitelist: !!(allowedIPs && allowedIPs.length) });
+    logger.info({ event: 'api_key_created', orgName, plan: plan || 'free' }, `API Key created for ${orgName}`);
+    res.json({ success: true, apiKey, orgId, orgName, plan: plan || 'free' });
+  } catch (e) { logger.error({ err: e }, 'Legacy create key error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
 // List API keys (legacy)
 router.get('/keys-legacy', authenticateAdmin, async (req, res) => {
-  const db = req.app.get('db');
-  const keys = (await db.listApiKeys()).map(k => ({
-    ...k,
-    apiKey: k.apiKey.substring(0, 12) + '...'
-  }));
-  res.json({ success: true, keys, total: keys.length });
+  try {
+    const db = req.app.get('db');
+    const keys = (await db.listApiKeys()).map(k => ({
+      ...k,
+      apiKey: k.apiKey.substring(0, 12) + '...'
+    }));
+    res.json({ success: true, keys, total: keys.length });
+  } catch (e) { logger.error({ err: e }, 'Legacy list keys error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
 // ================================================================
