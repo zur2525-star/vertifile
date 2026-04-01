@@ -64,6 +64,10 @@ router.get('/pricing', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'pricing.html'));
 });
 
+router.get('/blog', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'blog.html'));
+});
+
 // ================================================================
 // SHAREABLE DOCUMENT LINKS — /d/:shareId
 // ================================================================
