@@ -125,32 +125,10 @@ async function handleCreatePvf(req, res) {
       recipientHash = crypto.createHash('sha256').update(recipient.toLowerCase().trim()).digest('hex');
     }
 
-    // Step 4: Register document (persistent — PostgreSQL)
-    await db.createDocument({
-      hash: fileHash,
-      signature,
-      originalName,
-      mimeType,
-      fileSize: fileBuffer.length,
-      orgId: req.org.orgId,
-      orgName: req.org.orgName,
-      token,
-      tokenCreatedAt: Date.now(),
-      recipient,
-      recipientHash
-      // NOTE: we do NOT store the file content!
-    });
-
-    // Step 5: Update org stats (skip for demo/user uploads without API key)
-    if (req.apiKey && req.apiKey !== 'demo') {
-      try { await db.incrementDocCount(req.apiKey); } catch(e) { logger.warn({ err: e }, 'incrementDocCount failed'); }
-    }
-
-    // Step 6: Build .pvf file
+    // Step 4+5: Register document + get branding + update stats (parallelized)
     const isText = mimeType.startsWith('text/');
     let fileBase64;
     if (isText) {
-      // HTML-escape text content to prevent XSS in the PVF document
       fileBase64 = fileBuffer.toString('utf-8')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -161,7 +139,23 @@ async function handleCreatePvf(req, res) {
       fileBase64 = fileBuffer.toString('base64');
     }
 
-    const branding = await db.getBranding(req.org.orgId);
+    const [, branding] = await Promise.all([
+      db.createDocument({
+        hash: fileHash,
+        signature,
+        originalName,
+        mimeType,
+        fileSize: fileBuffer.length,
+        orgId: req.org.orgId,
+        orgName: req.org.orgName,
+        token,
+        tokenCreatedAt: Date.now(),
+        recipient,
+        recipientHash
+      }),
+      db.getBranding(req.org.orgId),
+      (req.apiKey && req.apiKey !== 'demo') ? db.incrementDocCount(req.apiKey).catch(e => logger.warn({ err: e }, 'incrementDocCount failed')) : Promise.resolve()
+    ]);
     let pvfHtml = generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, branding.custom_icon, branding.brand_color, req.org.orgName, req.org.orgId);
 
     // Obfuscate the JavaScript inside the PVF (deterministic per document hash)
