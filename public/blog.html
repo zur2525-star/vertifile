@@ -15,6 +15,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Blog — Vertifile">
   <meta name="twitter:description" content="Stay up to date with the latest in document verification, tamper-proof technology, and digital security from the Vertifile team.">
+  <meta name="twitter:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
   <meta name="theme-color" content="#ffffff">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -113,6 +114,7 @@
       <a href="/pricing" data-i18n="nav.pricing">Pricing</a>
       <a href="/integration" data-i18n="nav.developers">Developers</a>
       <a href="/demo" data-i18n="nav.demo">Demo</a>
+      <a href="/blog" data-i18n="nav.blog">Blog</a>
     </div>
     <div class="nav-actions">
       <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
@@ -146,6 +148,7 @@
   <a href="/pricing" onclick="closeMobile()" data-i18n="nav.pricing">Pricing</a>
   <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
   <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <a href="/blog" onclick="closeMobile()" data-i18n="nav.blog">Blog</a>
   <a href="/app" onclick="closeMobile()" data-i18n="nav.account">My Account</a>
   <div class="mob-actions">
     <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
@@ -160,22 +163,32 @@
     <div class="glow-2"></div>
   </div>
   <div class="hero-content">
-    <h1>Vertifile <span class="gradient">Blog</span></h1>
-    <p class="sub">Insights on document security, verification technology, and the fight against forgery.</p>
+    <h1>Vertifile <span class="gradient" data-i18n="blog.heroTitle">Blog</span></h1>
+    <p class="sub" data-i18n="blog.heroSub">Insights on document security, verification technology, and the fight against forgery.</p>
   </div>
 </div>
 
 <!-- ===== BLOG LISTING ===== -->
 <div class="blog-section">
 
+  <a href="/blog/why-pdf-signatures-fail" class="blog-card">
+    <div class="blog-meta">
+      <span class="blog-tag" data-i18n="blog.tag.security">Document Security</span>
+      <span>April 1, 2026</span>
+    </div>
+    <h2 data-i18n="blog.post2.title">Why PDF Signatures Are Not Enough — And What Comes Next</h2>
+    <p data-i18n="blog.post2.excerpt">PDF signatures verify who signed a document, not whether it was changed after. Learn how tamper-proof .pvf files solve document fraud for good.</p>
+    <span class="read-more"><span data-i18n="blog.readMore">Read more</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+  </a>
+
   <a href="/blog/why-document-forgery-is-a-growing-crisis" class="blog-card">
     <div class="blog-meta">
       <span class="blog-tag">Document Security</span>
       <span>March 28, 2026</span>
     </div>
-    <h2>Why Document Forgery Is a Growing Crisis -- and What We Can Do About It</h2>
-    <p>Every year, millions of forged documents circulate worldwide. From fake university diplomas to altered medical records, document fraud undermines trust across every industry. Learn how cryptographic verification is changing the game.</p>
-    <span class="read-more">Read more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+    <h2 data-i18n="blog.post1.title">Why Document Forgery Is a Growing Crisis -- and What We Can Do About It</h2>
+    <p data-i18n="blog.post1.excerpt">Every year, millions of forged documents circulate worldwide. From fake university diplomas to altered medical records, document fraud undermines trust across every industry. Learn how cryptographic verification is changing the game.</p>
+    <span class="read-more"><span data-i18n="blog.readMore">Read more</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
   </a>
 
 </div>
@@ -204,7 +217,8 @@
     <div class="footer-col">
       <h4 data-i18n="footer.company">Company</h4>
       <a href="/about" data-i18n="footer.about">About</a>
-      <a href="/blog">Blog</a>
+      <a href="/blog" data-i18n="nav.blog">Blog</a>
+      <a href="/faq" data-i18n="nav.faq">FAQ</a>
       <a href="/contact" data-i18n="footer.contact">Contact</a>
     </div>
     <div class="footer-col">

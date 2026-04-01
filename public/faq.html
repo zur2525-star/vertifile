@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — Vertifile</title>
+  <meta name="description" content="Frequently asked questions about Vertifile — document verification, .pvf files, security, pricing, API integration, and legal compliance.">
+  <meta name="keywords" content="vertifile FAQ, document verification questions, pvf file format, vertifile pricing, vertifile security">
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <meta property="og:title" content="FAQ — Vertifile">
+  <meta property="og:description" content="Find answers to common questions about Vertifile document verification, .pvf files, pricing, and security.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vertifile.com/faq">
+  <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
+  <link rel="canonical" href="https://vertifile.com/faq">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FAQ — Vertifile">
+  <meta name="twitter:description" content="Find answers to common questions about Vertifile document verification, .pvf files, pricing, and security.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+  <!-- JSON-LD FAQPage Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Vertifile?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Vertifile is a document anti-forgery platform. It takes any document (PDF, image, text) and creates a tamper-proof .pvf file with a live holographic stamp that freezes red if the document is altered."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a .pvf file?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Protected Verified File — a self-contained HTML document that includes the original file, cryptographic signature, and animated verification stamp. Opens in any browser."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I protect a document?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Go to vertifile.com/upload, sign in or create an account, drag your file (PDF, image, or text), wait 10 seconds, and download your .pvf file."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I verify a document I received?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Go to vertifile.com/verify, drag the .pvf file to the upload zone. If the stamp spins green, it's authentic. If the stamp freezes red, it's been tampered with."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need to install anything?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. .pvf files open in any modern browser (Chrome, Firefox, Safari, Edge). For a better experience, download the free PVF Viewer desktop app."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Vertifile read my documents?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Vertifile uses BLIND Processing — the server never reads, accesses, or stores your document content. Only a cryptographic hash (fingerprint) is computed. Your document stays on your device."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are the 9 security layers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SHA-256 Hash, HMAC-SHA256 Signature, 5-Minute Token Refresh, Code Integrity Hash, Chained Token, Anti-DevTools Detection, JavaScript Obfuscation, Holographic Animated Stamp, and Polygon Blockchain Anchoring."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does it cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Free: $0/month for 1 document. Pro: $49/month for 500 documents. Enterprise: Custom pricing for unlimited documents, white-label, and SLA."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What file formats are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "PDF, PNG, JPG/JPEG, TXT. Up to 50MB per file."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is .pvf legally recognized?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The .pvf format has a patent pending with the Israeli Patent Office and an IANA MIME type registration pending. It provides strong cryptographic evidence of document authenticity."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are you GDPR compliant?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. We process data under GDPR Article 6 legal bases (contract performance, legitimate interest, consent). We offer DPA agreements for Enterprise customers."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;overflow-x:hidden}
+    body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden}
+    [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
+    a{text-decoration:none;color:inherit}
+
+    /* ===== NAVBAR ===== */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:100%;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo img{height:28px}
+    .nav-center{display:flex;gap:28px;position:absolute;left:50%;transform:translateX(-50%)}
+    .nav-center a{font-size:14px;font-weight:500;color:#374151;text-decoration:none;transition:.2s}
+    .nav-center a:hover{color:#7c3aed}
+    [dir="rtl"] .nav-center{direction:rtl}
+    .nav-actions{display:flex;align-items:center;gap:12px}
+    .nav-user{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.25);background:transparent;cursor:pointer;transition:.2s;text-decoration:none;color:#6b7280}
+    .nav-user:hover{border-color:rgba(124,58,237,.5);color:#7c3aed;background:rgba(124,58,237,.05)}
+    .nav-user svg{width:18px;height:18px}
+    .nav-verify{font-size:13px;font-weight:500;color:#4f46e5;text-decoration:none}
+    .nav-cta{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
+    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.3)}
+    .lang-btn{display:flex;align-items:center;gap:5px;cursor:pointer;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#4b5563;border:1px solid rgba(0,0,0,.12);background:transparent;position:relative;transition:.2s}
+    .lang-btn:hover{border-color:rgba(0,0,0,.3);color:#111827}
+    .lang-btn svg{width:16px;height:16px}
+    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.1);min-width:160px;padding:4px 0;display:none;z-index:100}
+    [dir="rtl"] .lang-dropdown{right:auto;left:0}
+    .lang-dropdown.show{display:block}
+    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:#4b5563;transition:.15s}
+    .lang-dropdown a:hover{background:rgba(0,0,0,.03);color:#111827}
+    .lang-dropdown a.active{color:#7c3aed;font-weight:600}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px}
+    .hamburger span{display:block;width:20px;height:2px;background:#111827;margin:4px 0;border-radius:2px}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;border-bottom:1px solid rgba(0,0,0,.06);padding:16px 24px;z-index:999;flex-direction:column;gap:12px}
+    .mobile-menu.show{display:flex}
+    .mobile-menu a{font-size:15px;color:#374151;text-decoration:none;padding:8px 0}
+    .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06)}
+    @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
+
+    /* ===== HERO ===== */
+    .hero{padding:140px 60px 80px;position:relative;overflow:hidden;background:linear-gradient(180deg,#1e1b4b 0%,#312e81 30%,#4c1d95 60%,#5b21b6 80%,#6d28d9 100%)}
+    .hero-bg{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
+    .hero-bg .glow-1{position:absolute;top:-15%;left:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(139,92,246,.25),transparent 70%);filter:blur(80px)}
+    .hero-bg .glow-2{position:absolute;bottom:-25%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(168,85,247,.18),transparent 70%);filter:blur(80px)}
+    .hero-content{max-width:800px;margin:0 auto;text-align:center;position:relative;z-index:1}
+    .hero h1{font-size:48px;font-weight:900;color:#ffffff;line-height:1.1;margin-bottom:20px;letter-spacing:-2px}
+    .hero h1 .gradient{background:linear-gradient(135deg,#c4b5fd,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p.sub{font-size:18px;color:rgba(196,181,253,.8);line-height:1.8;max-width:600px;margin:0 auto;font-weight:400}
+    @media(max-width:900px){.hero{padding:120px 24px 60px}.hero h1{font-size:36px}}
+    @media(max-width:600px){.hero{padding:100px 20px 50px}.hero h1{font-size:28px;letter-spacing:-1px}.hero p.sub{font-size:15px}}
+
+    /* ===== FAQ SECTION ===== */
+    .faq-section{padding:80px 32px;max-width:800px;margin:0 auto}
+    .faq-category{margin-bottom:48px}
+    .faq-category-title{font-size:22px;font-weight:800;color:#1e1b4b;margin-bottom:20px;letter-spacing:-.5px;padding-bottom:12px;border-bottom:2px solid rgba(124,58,237,.15)}
+    .faq-item{border:1px solid rgba(124,58,237,.08);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:.3s;background:rgba(255,255,255,.9)}
+    .faq-item:hover{border-color:rgba(124,58,237,.18)}
+    .faq-item.open{border-color:rgba(124,58,237,.2);box-shadow:0 4px 20px rgba(124,58,237,.06)}
+    .faq-question{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;cursor:pointer;font-size:15px;font-weight:600;color:#111827;line-height:1.5;gap:16px;user-select:none}
+    .faq-question:hover{color:#7c3aed}
+    .faq-icon{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:rgba(124,58,237,.08);display:flex;align-items:center;justify-content:center;transition:.3s}
+    .faq-item.open .faq-icon{background:rgba(124,58,237,.15);transform:rotate(180deg)}
+    .faq-icon svg{width:14px;height:14px;stroke:#7c3aed;stroke-width:2.5;fill:none}
+    .faq-answer{max-height:0;overflow:hidden;transition:max-height .35s ease}
+    .faq-item.open .faq-answer{max-height:500px}
+    .faq-answer-inner{padding:0 24px 20px;font-size:14px;color:#6b7280;line-height:1.9}
+    .faq-answer-inner a{color:#7c3aed;font-weight:500;text-decoration:underline}
+    .faq-answer-inner code{background:rgba(124,58,237,.06);padding:2px 6px;border-radius:4px;font-size:13px;font-family:'SF Mono','Fira Code',monospace}
+    .faq-answer-inner ol,.faq-answer-inner ul{margin:8px 0 8px 20px}
+    .faq-answer-inner li{margin-bottom:4px}
+
+    /* ===== FOOTER ===== */
+    footer{background:linear-gradient(180deg,#f8f7ff 0%,#1e1b4b 30%,#1e1b4b 100%);color:#e2e0f0;padding:100px 32px 30px;border-top:none;position:relative;overflow:hidden}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(180deg,#f8f7ff,transparent);pointer-events:none;z-index:1}
+    footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;background:radial-gradient(ellipse at 30% 80%,rgba(124,58,237,.15),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.08),transparent 50%);pointer-events:none}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;max-width:1000px;margin:0 auto;position:relative;z-index:2}
+    .footer-brand .f-logo{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:10px;letter-spacing:-.5px;color:#fff}
+    .footer-brand .f-logo img{height:28px;width:auto;filter:brightness(0) invert(1)}
+    .footer-brand p{font-size:13px;color:rgba(196,181,253,.6);line-height:1.8;max-width:280px}
+    .footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(167,139,250,.7);margin-bottom:16px}
+    .footer-col a{display:block;font-size:14px;color:rgba(196,181,253,.5);padding:5px 0;transition:.2s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{max-width:1000px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.4);position:relative;z-index:2}
+    .footer-lang{display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(196,181,253,.5);font-size:12px;transition:.2s}
+    .footer-lang:hover{color:#fff}
+    .footer-lang svg{stroke:rgba(196,181,253,.5)}
+    .footer-lang:hover svg{stroke:#fff}
+    @media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr;gap:30px}.footer-bottom{flex-direction:column;gap:10px;text-align:center}}
+    @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
+    <div class="nav-center">
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/pricing" data-i18n="nav.pricing">Pricing</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
+      <a href="/blog" data-i18n="nav.blog">Blog</a>
+    </div>
+    <div class="nav-actions">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#31616;&#20307;&#20013;&#25991;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
+      <a href="/app" class="nav-user" title="My Account" data-i18n-title="nav.account" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.25);color:#6b7280;text-decoration:none;transition:.2s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+    </div>
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/pricing" onclick="closeMobile()" data-i18n="nav.pricing">Pricing</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <a href="/blog" onclick="closeMobile()" data-i18n="nav.blog">Blog</a>
+  <a href="/faq" onclick="closeMobile()" data-i18n="nav.faq">FAQ</a>
+  <a href="/app" onclick="closeMobile()" data-i18n="nav.account">My Account</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<div class="hero" id="main">
+  <div class="hero-bg">
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+  </div>
+  <div class="hero-content">
+    <h1 data-i18n="faq.heroTitle">Frequently Asked <span class="gradient">Questions</span></h1>
+    <p class="sub" data-i18n="faq.heroSub">Everything you need to know about protecting and verifying your documents with Vertifile.</p>
+  </div>
+</div>
+
+<!-- ===== FAQ ===== -->
+<div class="faq-section">
+
+  <!-- Getting Started -->
+  <div class="faq-category">
+    <h2 class="faq-category-title" data-i18n="faq.cat.gettingStarted">Getting Started</h2>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.whatIsVertifile">
+        What is Vertifile?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.whatIsVertifile">
+        Vertifile is a document anti-forgery platform. It takes any document (PDF, image, text) and creates a tamper-proof .pvf file with a live holographic stamp that freezes red if the document is altered.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.whatIsPvf">
+        What is a .pvf file?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.whatIsPvf">
+        A Protected Verified File — a self-contained HTML document that includes the original file, cryptographic signature, and animated verification stamp. Opens in any browser.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.howProtect">
+        How do I protect a document?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.howProtect">
+        <ol>
+          <li>Go to <a href="/upload">vertifile.com/upload</a></li>
+          <li>Sign in or create an account</li>
+          <li>Drag your file (PDF, image, or text)</li>
+          <li>Wait 10 seconds</li>
+          <li>Download your .pvf file</li>
+        </ol>
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.howVerify">
+        How do I verify a document I received?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.howVerify">
+        <ol>
+          <li>Go to <a href="/verify">vertifile.com/verify</a></li>
+          <li>Drag the .pvf file to the upload zone</li>
+          <li>If the stamp spins green — it's authentic</li>
+          <li>If the stamp freezes red — it's been tampered with</li>
+        </ol>
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.install">
+        Do I need to install anything?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.install">
+        No. .pvf files open in any modern browser (Chrome, Firefox, Safari, Edge). For a better experience, download the free PVF Viewer desktop app.
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Security -->
+  <div class="faq-category">
+    <h2 class="faq-category-title" data-i18n="faq.cat.security">Security &amp; Privacy</h2>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.readDocs">
+        Does Vertifile read my documents?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.readDocs">
+        No. Vertifile uses BLIND Processing — the server never reads, accesses, or stores your document content. Only a cryptographic hash (fingerprint) is computed. Your document stays on your device.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.layers">
+        What are the 9 security layers?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.layers">
+        <ol>
+          <li>SHA-256 Hash (document fingerprint)</li>
+          <li>HMAC-SHA256 Signature (server-signed)</li>
+          <li>5-Minute Token Refresh</li>
+          <li>Code Integrity Hash</li>
+          <li>Chained Token (binds all parameters)</li>
+          <li>Anti-DevTools Detection</li>
+          <li>JavaScript Obfuscation</li>
+          <li>Holographic Animated Stamp</li>
+          <li>Polygon Blockchain Anchoring</li>
+        </ol>
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.dataStored">
+        Where is my data stored?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.dataStored">
+        Cryptographic hashes are stored on US/EU cloud infrastructure (Render + Neon PostgreSQL). Document content is never stored on our servers. Blockchain records are on Polygon (decentralized).
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.shutdown">
+        What happens if Vertifile shuts down?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.shutdown">
+        Your .pvf files remain functional — they're self-contained HTML documents. Blockchain records on Polygon remain permanently accessible. We commit to 90 days advance notice.
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <div class="faq-category">
+    <h2 class="faq-category-title" data-i18n="faq.cat.pricing">Pricing</h2>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.cost">
+        How much does it cost?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.cost">
+        <ul>
+          <li><strong>Free:</strong> $0/month — 1 document</li>
+          <li><strong>Pro:</strong> $49/month — 500 documents</li>
+          <li><strong>Enterprise:</strong> Custom pricing — unlimited documents, white-label, SLA</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.trial">
+        Is there a free trial?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.trial">
+        Yes! The Free plan lets you protect 1 document at no cost. Pro plan includes a 14-day free trial.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.cancel">
+        Can I cancel anytime?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.cancel">
+        Yes. No long-term contracts. Cancel anytime from your dashboard.
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Technical -->
+  <div class="faq-category">
+    <h2 class="faq-category-title" data-i18n="faq.cat.technical">Technical</h2>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.formats">
+        What file formats are supported?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.formats">
+        PDF, PNG, JPG/JPEG, TXT. Up to 50MB per file.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.api">
+        How do I integrate the API?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.api">
+        See our <a href="/integration">API documentation</a>. Quick start: send a POST request to <code>/api/create-pvf</code> with your API key and the file to protect.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.customize">
+        Can I customize the stamp?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.customize">
+        Yes! Pro and Enterprise users can add their organization logo, brand color, and custom stamp text through the Branding settings.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.offline">
+        Does it work offline?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.offline">
+        The .pvf file displays the document offline. Full verification requires an internet connection to check the server-side hash.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.maxSize">
+        What's the maximum file size?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.maxSize">
+        50MB per file.
+      </div></div>
+    </div>
+  </div>
+
+  <!-- Legal -->
+  <div class="faq-category">
+    <h2 class="faq-category-title" data-i18n="faq.cat.legal">Legal</h2>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.legalRecognition">
+        Is .pvf legally recognized?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.legalRecognition">
+        The .pvf format has a patent pending with the Israeli Patent Office and an IANA MIME type registration pending. While no Israeli court has ruled on .pvf specifically, it provides strong cryptographic evidence of document authenticity.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.gdpr">
+        Are you GDPR compliant?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.gdpr">
+        Yes. We process data under GDPR Article 6 legal bases (contract performance, legitimate interest, consent). We offer DPA agreements for Enterprise customers.
+      </div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)" data-i18n="faq.q.dpa">
+        Do you have a Data Processing Agreement (DPA)?
+        <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.dpa">
+        Yes. Enterprise customers can request a DPA at <a href="mailto:privacy@vertifile.com">privacy@vertifile.com</a>.
+      </div></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="f-logo">
+        <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
+      </div>
+      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="#how" data-i18n="nav.howItWorks">How It Works</a>
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="/upload" data-i18n="nav.upload">Protect a Document</a>
+      <a href="/enterprise" data-i18n="footer.enterprise">Enterprise</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.developers">Developers</h4>
+      <a href="/integration" data-i18n="footer.integrationGuide">Integration Guide</a>
+      <a href="/api/docs" data-i18n="footer.apiDocumentation">API Documentation</a>
+      <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.company">Company</h4>
+      <a href="/about" data-i18n="footer.about">About</a>
+      <a href="/blog" data-i18n="nav.blog">Blog</a>
+      <a href="/faq" data-i18n="nav.faq">FAQ</a>
+      <a href="/contact" data-i18n="footer.contact">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.legal">Legal</h4>
+      <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
+      <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
+    <div class="footer-lang" onclick="toggleLangDropdown()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+      <span id="footerLangLabel">English</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/i18n.js"></script>
+<script src="/js/nav-user.js"></script>
+<script>
+(function(){
+  window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
+  window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
+  window.toggleFaq=function(el){
+    var item=el.parentElement;
+    var wasOpen=item.classList.contains('open');
+    // Close all items in this category
+    var siblings=item.parentElement.querySelectorAll('.faq-item');
+    siblings.forEach(function(s){s.classList.remove('open')});
+    // Toggle clicked
+    if(!wasOpen) item.classList.add('open');
+  };
+})();
+</script>
+</body>
+</html>
