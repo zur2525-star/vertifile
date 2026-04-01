@@ -82,7 +82,7 @@ async function deployStandalone() {
   console.log(`\nSet these in your environment:`);
   console.log(`  export POLYGON_CONTRACT=${address}`);
   console.log(`  export POLYGON_NETWORK=${network}`);
-  console.log(`  export POLYGON_PRIVATE_KEY=${privateKey.substring(0, 10)}...`);
+  console.log(`  export POLYGON_PRIVATE_KEY=0x****...${privateKey.slice(-4)}`);
 
   // Save deployment info
   const deployInfo = {
