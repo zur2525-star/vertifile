@@ -242,7 +242,9 @@
     "ctaLink": "Get started for free",
     "sampleTitle": "Don't have a .pvf file? Try with our sample:",
     "sampleBtn": "View Sample Protected Document",
-    "sampleDesc": "This is a real .pvf file — see the live verification stamp in action"
+    "sampleDesc": "This is a real .pvf file — see the live verification stamp in action",
+    "pvfExplainer": "A .pvf file is a tamper-proof document created by Vertifile. Drop one here to check if it's authentic.",
+    "wrongFileType": "This doesn't appear to be a .pvf file. Only documents protected by Vertifile can be verified here."
   },
   "enterprise": {
     "badge": "Enterprise-Grade Security",

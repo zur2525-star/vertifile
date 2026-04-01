@@ -242,7 +242,9 @@
     "ctaLink": "Comece gratuitamente",
     "sampleTitle": "Não tem um arquivo .pvf? Experimente com nosso exemplo:",
     "sampleBtn": "Ver documento protegido de exemplo",
-    "sampleDesc": "Este é um arquivo .pvf real — veja o selo de verificação ao vivo"
+    "sampleDesc": "Este é um arquivo .pvf real — veja o selo de verificação ao vivo",
+    "pvfExplainer": "Um arquivo .pvf é um documento à prova de adulteração criado pelo Vertifile. Arraste um aqui para verificar sua autenticidade.",
+    "wrongFileType": "Este arquivo não parece ser um .pvf. Apenas documentos protegidos pelo Vertifile podem ser verificados aqui."
   },
   "enterprise": {
     "badge": "Segurança de nível empresarial",

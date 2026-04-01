@@ -242,7 +242,9 @@
     "ctaLink": "Jetzt kostenlos starten",
     "sampleTitle": "Keine .pvf-Datei? Probieren Sie unser Beispiel:",
     "sampleBtn": "Geschütztes Beispieldokument ansehen",
-    "sampleDesc": "Dies ist eine echte .pvf-Datei — sehen Sie den Live-Verifizierungsstempel in Aktion"
+    "sampleDesc": "Dies ist eine echte .pvf-Datei — sehen Sie den Live-Verifizierungsstempel in Aktion",
+    "pvfExplainer": "Eine .pvf-Datei ist ein manipulationssicheres Dokument, das von Vertifile erstellt wurde. Ziehen Sie eine hierher, um die Echtheit zu überprüfen.",
+    "wrongFileType": "Dies scheint keine .pvf-Datei zu sein. Nur von Vertifile geschützte Dokumente können hier verifiziert werden."
   },
   "enterprise": {
     "badge": "Sicherheit auf Enterprise-Niveau",
