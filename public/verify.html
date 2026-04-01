@@ -239,6 +239,9 @@
 
   <div class="card-body">
 
+    <!-- PVF Explainer -->
+    <p data-i18n="verify.pvfExplainer" style="text-align:center;font-size:14px;color:#6b7280;margin:0 0 20px;line-height:1.6;">A .pvf file is a tamper-proof document created by Vertifile. Drop one here to check if it's authentic.</p>
+
     <!-- Drop Zone -->
     <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
       <div class="icon">
@@ -249,14 +252,17 @@
       <input type="file" id="fileInput" accept=".pvf">
     </div>
 
-    <p data-i18n="verify.pvfExplainer" style="text-align:center;font-size:14px;color:#6b7280;margin:-8px 0 20px;line-height:1.6;">A .pvf (Protected Verified File) is a tamper-proof document created through Vertifile. If someone sent you a .pvf file, upload it here to verify it hasn't been altered.</p>
-    <div class="sample-section" style="text-align:center;margin-top:24px;padding:20px;background:rgba(124,58,237,.05);border-radius:12px;border:1px dashed rgba(124,58,237,.15)">
-      <p style="font-size:14px;color:#6b7280;margin-bottom:12px" data-i18n="verify.sampleTitle">Don't have a .pvf file? Try with our sample:</p>
-      <a href="/d/27bgmkxlFwM" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;text-decoration:none;font-size:14px;font-weight:600;transition:all .3s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(124,58,237,.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-        <span>📄</span>
+    <!-- Error message for wrong file type -->
+    <div class="file-error" id="fileError" style="display:none;text-align:center;padding:14px 20px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.12);border-radius:12px;margin-bottom:20px">
+      <p data-i18n="verify.wrongFileType" style="font-size:14px;color:#dc2626;margin:0;font-weight:500">This doesn't appear to be a .pvf file. Only documents protected by Vertifile can be verified here.</p>
+    </div>
+    <div class="sample-section" style="text-align:center;margin-top:24px;padding:24px;background:rgba(124,58,237,.06);border-radius:14px;border:1px solid rgba(124,58,237,.15)">
+      <p style="font-size:15px;color:#4b5563;margin-bottom:14px;font-weight:500" data-i18n="verify.sampleTitle">Don't have a .pvf file? Try with our sample:</p>
+      <a href="/d/27bgmkxlFwM" target="_blank" style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:12px;text-decoration:none;font-size:15px;font-weight:700;transition:all .3s;box-shadow:0 4px 16px rgba(124,58,237,.25)" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(124,58,237,.35)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(124,58,237,.25)'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         <span data-i18n="verify.sampleBtn">View Sample Protected Document</span>
       </a>
-      <p style="font-size:12px;color:#9ca3af;margin-top:10px" data-i18n="verify.sampleDesc">This is a real .pvf file — see the live verification stamp in action</p>
+      <p style="font-size:12px;color:#9ca3af;margin-top:12px" data-i18n="verify.sampleDesc">This is a real .pvf file — see the live verification stamp in action</p>
     </div>
 
     <!-- Selected File Info -->
@@ -378,6 +384,13 @@ document.getElementById('fileInput').addEventListener('change',function(e){
 });
 
 function handleFile(file){
+  // Validate file extension
+  if(!file.name.toLowerCase().endsWith('.pvf')){
+    document.getElementById('fileError').style.display='block';
+    document.getElementById('fileInput').value='';
+    return;
+  }
+  document.getElementById('fileError').style.display='none';
   selectedFile=file;
   document.getElementById('fileName').textContent=file.name;
   document.getElementById('fileSize').textContent=formatSize(file.size);
@@ -389,6 +402,7 @@ function handleFile(file){
 function removeFile(){
   selectedFile=null;
   document.getElementById('fileInfo').classList.remove('show');
+  document.getElementById('fileError').style.display='none';
   dropZone.style.display='';
   document.getElementById('submitBtn').disabled=true;
   document.getElementById('fileInput').value='';
@@ -495,6 +509,7 @@ function resetPage(){
   document.getElementById('resultFail').classList.remove('show');
   document.getElementById('submitBtn').style.display='';
   document.getElementById('submitBtn').disabled=true;
+  document.getElementById('fileError').style.display='none';
   dropZone.style.display='';
   document.getElementById('fileInput').value='';
 }
