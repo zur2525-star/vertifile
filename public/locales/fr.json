@@ -1079,5 +1079,60 @@
     "bottomCtaTitle": "Pret a proteger vos documents ?",
     "bottomCtaSubtitle": "Rejoignez des milliers d'organisations qui font confiance a Vertifile pour la securite de leurs documents.",
     "bottomCtaBtn": "Commencer gratuitement"
+  },
+  "faq": {
+    "heroTitle": "Questions fréquentes",
+    "heroSub": "Tout ce que vous devez savoir sur la protection et la vérification de vos documents avec Vertifile.",
+    "cat": {
+      "gettingStarted": "Pour commencer",
+      "security": "Sécurité et confidentialité",
+      "pricing": "Tarification",
+      "technical": "Technique",
+      "legal": "Juridique"
+    },
+    "q": {
+      "whatIsVertifile": "Qu'est-ce que Vertifile ?",
+      "whatIsPvf": "Qu'est-ce qu'un fichier .pvf ?",
+      "howProtect": "Comment protéger un document ?",
+      "howVerify": "Comment vérifier un document reçu ?",
+      "install": "Dois-je installer quelque chose ?",
+      "readDocs": "Vertifile lit-il mes documents ?",
+      "layers": "Quelles sont les 9 couches de sécurité ?",
+      "dataStored": "Où sont stockées mes données ?",
+      "shutdown": "Que se passe-t-il si Vertifile ferme ?",
+      "cost": "Combien ça coûte ?",
+      "trial": "Y a-t-il un essai gratuit ?",
+      "cancel": "Puis-je annuler à tout moment ?",
+      "formats": "Quels formats de fichiers sont pris en charge ?",
+      "api": "Comment intégrer l'API ?",
+      "customize": "Puis-je personnaliser le tampon ?",
+      "offline": "Ça fonctionne hors ligne ?",
+      "maxSize": "Quelle est la taille maximale de fichier ?",
+      "legalRecognition": "Le .pvf est-il reconnu juridiquement ?",
+      "gdpr": "Êtes-vous conforme au RGPD ?",
+      "dpa": "Avez-vous un accord de traitement des données (DPA) ?"
+    },
+    "a": {
+      "whatIsVertifile": "Vertifile est une plateforme anti-falsification de documents. Elle prend n'importe quel document (PDF, image, texte) et crée un fichier .pvf inviolable avec un tampon holographique animé qui se fige en rouge si le document est modifié.",
+      "whatIsPvf": "Un fichier vérifié protégé — un document HTML autonome qui inclut le fichier original, la signature cryptographique et le tampon de vérification animé. S'ouvre dans n'importe quel navigateur.",
+      "howProtect": "Allez sur vertifile.com/upload, connectez-vous ou créez un compte, glissez votre fichier (PDF, image ou texte), attendez 10 secondes et téléchargez votre fichier .pvf.",
+      "howVerify": "Allez sur vertifile.com/verify, glissez le fichier .pvf dans la zone de téléversement. Si le tampon tourne en vert — le document est authentique. Si le tampon se fige en rouge — il a été falsifié.",
+      "install": "Non. Les fichiers .pvf s'ouvrent dans tout navigateur moderne (Chrome, Firefox, Safari, Edge). Pour une meilleure expérience, téléchargez l'application gratuite PVF Viewer.",
+      "readDocs": "Non. Vertifile utilise le traitement AVEUGLE (BLIND) — le serveur ne lit, n'accède ni ne stocke jamais le contenu de votre document. Seule une empreinte cryptographique (hash) est calculée. Votre document reste sur votre appareil.",
+      "layers": "Hash SHA-256 (empreinte du document), signature HMAC-SHA256 (signée par le serveur), rafraîchissement de jeton toutes les 5 minutes, hash d'intégrité du code, jeton chaîné (lie tous les paramètres), détection des outils de développement, obfuscation JavaScript, tampon holographique animé, ancrage blockchain Polygon.",
+      "dataStored": "Les empreintes cryptographiques sont stockées sur une infrastructure cloud aux États-Unis/UE (Render + Neon PostgreSQL). Le contenu des documents n'est jamais stocké sur nos serveurs. Les enregistrements blockchain sont sur Polygon (décentralisé).",
+      "shutdown": "Vos fichiers .pvf restent fonctionnels — ce sont des documents HTML autonomes. Les enregistrements blockchain sur Polygon restent accessibles en permanence. Nous nous engageons à donner un préavis de 90 jours.",
+      "cost": "Gratuit : 0$/mois — 1 document. Pro : 49$/mois — 500 documents. Entreprise : tarification personnalisée — documents illimités, marque blanche, SLA.",
+      "trial": "Oui ! Le plan gratuit vous permet de protéger 1 document sans frais. Le plan Pro inclut un essai gratuit de 14 jours.",
+      "cancel": "Oui. Pas de contrats à long terme. Annulez à tout moment depuis votre tableau de bord.",
+      "formats": "PDF, PNG, JPG/JPEG, TXT. Jusqu'à 50 Mo par fichier.",
+      "api": "Consultez notre documentation API. Démarrage rapide : envoyez une requête POST à /api/create-pvf avec votre clé API et le fichier à protéger.",
+      "customize": "Oui ! Les utilisateurs Pro et Entreprise peuvent ajouter le logo de leur organisation, la couleur de marque et un texte de tampon personnalisé via les paramètres de marque.",
+      "offline": "Le fichier .pvf affiche le document hors ligne. La vérification complète nécessite une connexion Internet pour vérifier le hash côté serveur.",
+      "maxSize": "50 Mo par fichier.",
+      "legalRecognition": "Le format .pvf a un brevet en instance auprès de l'Office des brevets israélien et un enregistrement de type MIME IANA en attente. Bien qu'aucun tribunal israélien n'ait statué spécifiquement sur le .pvf, il fournit une preuve cryptographique solide de l'authenticité du document.",
+      "gdpr": "Oui. Nous traitons les données selon l'article 6 du RGPD (exécution du contrat, intérêt légitime, consentement). Nous proposons des accords DPA pour les clients Entreprise.",
+      "dpa": "Oui. Les clients Entreprise peuvent demander un DPA à privacy@vertifile.com."
+    }
   }
 }

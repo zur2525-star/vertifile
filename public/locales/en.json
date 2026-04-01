@@ -1079,5 +1079,60 @@
     "bottomCtaTitle": "Ready to Protect Your Documents?",
     "bottomCtaSubtitle": "Join thousands of organizations that trust Vertifile for tamper-proof document security.",
     "bottomCtaBtn": "Get Started Free"
+  },
+  "faq": {
+    "heroTitle": "Frequently Asked Questions",
+    "heroSub": "Everything you need to know about protecting and verifying your documents with Vertifile.",
+    "cat": {
+      "gettingStarted": "Getting Started",
+      "security": "Security & Privacy",
+      "pricing": "Pricing",
+      "technical": "Technical",
+      "legal": "Legal"
+    },
+    "q": {
+      "whatIsVertifile": "What is Vertifile?",
+      "whatIsPvf": "What is a .pvf file?",
+      "howProtect": "How do I protect a document?",
+      "howVerify": "How do I verify a document I received?",
+      "install": "Do I need to install anything?",
+      "readDocs": "Does Vertifile read my documents?",
+      "layers": "What are the 9 security layers?",
+      "dataStored": "Where is my data stored?",
+      "shutdown": "What happens if Vertifile shuts down?",
+      "cost": "How much does it cost?",
+      "trial": "Is there a free trial?",
+      "cancel": "Can I cancel anytime?",
+      "formats": "What file formats are supported?",
+      "api": "How do I integrate the API?",
+      "customize": "Can I customize the stamp?",
+      "offline": "Does it work offline?",
+      "maxSize": "What's the maximum file size?",
+      "legalRecognition": "Is .pvf legally recognized?",
+      "gdpr": "Are you GDPR compliant?",
+      "dpa": "Do you have a Data Processing Agreement (DPA)?"
+    },
+    "a": {
+      "whatIsVertifile": "Vertifile is a document anti-forgery platform. It takes any document (PDF, image, text) and creates a tamper-proof .pvf file with a live holographic stamp that freezes red if the document is altered.",
+      "whatIsPvf": "A Protected Verified File — a self-contained HTML document that includes the original file, cryptographic signature, and animated verification stamp. Opens in any browser.",
+      "howProtect": "Go to vertifile.com/upload, sign in or create an account, drag your file (PDF, image, or text), wait 10 seconds, and download your .pvf file.",
+      "howVerify": "Go to vertifile.com/verify, drag the .pvf file to the upload zone. If the stamp spins green, it's authentic. If the stamp freezes red, it's been tampered with.",
+      "install": "No. .pvf files open in any modern browser (Chrome, Firefox, Safari, Edge). For a better experience, download the free PVF Viewer desktop app.",
+      "readDocs": "No. Vertifile uses BLIND Processing — the server never reads, accesses, or stores your document content. Only a cryptographic hash (fingerprint) is computed. Your document stays on your device.",
+      "layers": "SHA-256 Hash (document fingerprint), HMAC-SHA256 Signature (server-signed), 5-Minute Token Refresh, Code Integrity Hash, Chained Token (binds all parameters), Anti-DevTools Detection, JavaScript Obfuscation, Holographic Animated Stamp, Polygon Blockchain Anchoring.",
+      "dataStored": "Cryptographic hashes are stored on US/EU cloud infrastructure (Render + Neon PostgreSQL). Document content is never stored on our servers. Blockchain records are on Polygon (decentralized).",
+      "shutdown": "Your .pvf files remain functional — they're self-contained HTML documents. Blockchain records on Polygon remain permanently accessible. We commit to 90 days advance notice.",
+      "cost": "Free: $0/month — 1 document. Pro: $49/month — 500 documents. Enterprise: Custom pricing — unlimited documents, white-label, SLA.",
+      "trial": "Yes! The Free plan lets you protect 1 document at no cost. Pro plan includes a 14-day free trial.",
+      "cancel": "Yes. No long-term contracts. Cancel anytime from your dashboard.",
+      "formats": "PDF, PNG, JPG/JPEG, TXT. Up to 50MB per file.",
+      "api": "See our API documentation. Quick start: send a POST request to /api/create-pvf with your API key and the file to protect.",
+      "customize": "Yes! Pro and Enterprise users can add their organization logo, brand color, and custom stamp text through the Branding settings.",
+      "offline": "The .pvf file displays the document offline. Full verification requires an internet connection to check the server-side hash.",
+      "maxSize": "50MB per file.",
+      "legalRecognition": "The .pvf format has a patent pending with the Israeli Patent Office and an IANA MIME type registration pending. While no Israeli court has ruled on .pvf specifically, it provides strong cryptographic evidence of document authenticity.",
+      "gdpr": "Yes. We process data under GDPR Article 6 legal bases (contract performance, legitimate interest, consent). We offer DPA agreements for Enterprise customers.",
+      "dpa": "Yes. Enterprise customers can request a DPA at privacy@vertifile.com."
+    }
   }
 }

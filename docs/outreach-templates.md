@@ -19,7 +19,7 @@
 
 זור חלפון
 Founder, Vertifile
-zur2525@gmail.com | vertifile.com
+info@vertifile.com | vertifile.com
 
 ---
 
@@ -46,7 +46,7 @@ Would you be open to a 20-minute demo? I'd love to show you how it works.
 Best,
 Zur Halfon
 Founder, Vertifile
-zur2525@gmail.com | vertifile.com
+info@vertifile.com | vertifile.com
 
 ---
 
@@ -66,7 +66,7 @@ Vertifile הופך כל חשבונית לקובץ .pvf מוגן עם חותמת 
 אשמח להציג את המערכת ב-20 דקות זום.
 
 זור חלפון
-zur2525@gmail.com | vertifile.com
+info@vertifile.com | vertifile.com
 
 ---
 

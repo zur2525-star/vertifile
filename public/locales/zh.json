@@ -1075,5 +1075,60 @@
     "bottomCtaTitle": "准备好保护您的文档了吗？",
     "bottomCtaSubtitle": "加入成千上万信任Vertifile进行文档安全保护的组织。",
     "bottomCtaBtn": "免费开始"
+  },
+  "faq": {
+    "heroTitle": "常见问题",
+    "heroSub": "关于使用Vertifile保护和验证文档，您需要了解的一切。",
+    "cat": {
+      "gettingStarted": "入门指南",
+      "security": "安全与隐私",
+      "pricing": "价格",
+      "technical": "技术问题",
+      "legal": "法律事务"
+    },
+    "q": {
+      "whatIsVertifile": "什么是Vertifile？",
+      "whatIsPvf": "什么是.pvf文件？",
+      "howProtect": "如何保护文档？",
+      "howVerify": "如何验证收到的文档？",
+      "install": "需要安装什么吗？",
+      "readDocs": "Vertifile会读取我的文档吗？",
+      "layers": "9层安全保护是什么？",
+      "dataStored": "我的数据存储在哪里？",
+      "shutdown": "如果Vertifile关闭会怎样？",
+      "cost": "费用是多少？",
+      "trial": "有免费试用吗？",
+      "cancel": "可以随时取消吗？",
+      "formats": "支持哪些文件格式？",
+      "api": "如何集成API？",
+      "customize": "可以自定义印章吗？",
+      "offline": "可以离线使用吗？",
+      "maxSize": "文件最大大小是多少？",
+      "legalRecognition": ".pvf在法律上被认可吗？",
+      "gdpr": "你们符合GDPR吗？",
+      "dpa": "你们有数据处理协议（DPA）吗？"
+    },
+    "a": {
+      "whatIsVertifile": "Vertifile是一个文档防伪平台。它可以处理任何文档（PDF、图片、文本），并创建一个防篡改的.pvf文件，带有实时全息印章，如果文档被修改，印章会变红冻结。",
+      "whatIsPvf": "受保护的验证文件——一个自包含的HTML文档，包含原始文件、加密签名和动画验证印章。可在任何浏览器中打开。",
+      "howProtect": "访问vertifile.com/upload，登录或创建账户，拖入您的文件（PDF、图片或文本），等待10秒，然后下载您的.pvf文件。",
+      "howVerify": "访问vertifile.com/verify，将.pvf文件拖到上传区域。如果印章旋转显示绿色——文档是真实的。如果印章冻结显示红色——文档已被篡改。",
+      "install": "不需要。.pvf文件可在任何现代浏览器（Chrome、Firefox、Safari、Edge）中打开。如需更好的体验，请下载免费的PVF Viewer桌面应用。",
+      "readDocs": "不会。Vertifile使用盲处理（BLIND Processing）——服务器从不读取、访问或存储您的文档内容。只计算加密哈希（指纹）。您的文档保留在您的设备上。",
+      "layers": "SHA-256哈希（文档指纹）、HMAC-SHA256签名（服务器签名）、5分钟令牌刷新、代码完整性哈希、链式令牌（绑定所有参数）、反开发工具检测、JavaScript混淆、全息动画印章、Polygon区块链锚定。",
+      "dataStored": "加密哈希存储在美国/欧盟的云基础设施上（Render + Neon PostgreSQL）。文档内容从不存储在我们的服务器上。区块链记录在Polygon上（去中心化）。",
+      "shutdown": "您的.pvf文件将继续正常工作——它们是自包含的HTML文档。Polygon上的区块链记录将永久可访问。我们承诺提前90天通知。",
+      "cost": "免费：$0/月——1个文档。Pro：$49/月——500个文档。Enterprise：定制价格——无限文档、白标、SLA。",
+      "trial": "是的！免费计划允许您免费保护1个文档。Pro计划包含14天免费试用。",
+      "cancel": "是的。没有长期合同。随时从控制面板取消。",
+      "formats": "PDF、PNG、JPG/JPEG、TXT。每个文件最大50MB。",
+      "api": "请参阅我们的API文档。快速入门：向/api/create-pvf发送POST请求，包含您的API密钥和要保护的文件。",
+      "customize": "是的！Pro和Enterprise用户可以通过品牌设置添加组织标志、品牌颜色和自定义印章文本。",
+      "offline": ".pvf文件可离线显示文档。完整验证需要互联网连接以检查服务器端的哈希。",
+      "maxSize": "每个文件50MB。",
+      "legalRecognition": ".pvf格式已在以色列专利局提交专利申请，IANA MIME类型注册也正在进行中。虽然以色列法院尚未对.pvf做出具体裁决，但它提供了文档真实性的强有力加密证据。",
+      "gdpr": "是的。我们根据GDPR第6条处理数据（合同履行、合法利益、同意）。我们为Enterprise客户提供DPA协议。",
+      "dpa": "是的。Enterprise客户可以在privacy@vertifile.com申请DPA。"
+    }
   }
 }
