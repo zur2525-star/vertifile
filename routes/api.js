@@ -459,7 +459,8 @@ router.get('/org/profile', createLimiter, (req, res, next) => {
       created: req.org.created,
       branding: {
         customIcon: branding.custom_icon || null,
-        brandColor: branding.brand_color || null
+        brandColor: branding.brand_color || null,
+        waveColor: branding.wave_color || null
       }
     });
   } catch (e) {
@@ -472,10 +473,13 @@ router.post('/org/branding', createLimiter, (req, res, next) => {
 }, async (req, res) => {
   try {
     const db = req.app.get('db');
-    const { customIcon, brandColor } = req.body;
+    const { customIcon, brandColor, waveColor } = req.body;
 
     if (brandColor && !/^#[0-9a-fA-F]{6}$/.test(brandColor)) {
       return res.status(400).json({ success: false, error: 'Invalid color format. Use hex (#RRGGBB)' });
+    }
+    if (waveColor && !/^#[0-9a-fA-F]{6}$/.test(waveColor)) {
+      return res.status(400).json({ success: false, error: 'Invalid wave color format. Use hex (#RRGGBB)' });
     }
 
     if (customIcon) {
@@ -488,8 +492,8 @@ router.post('/org/branding', createLimiter, (req, res, next) => {
       }
     }
 
-    await db.updateBranding(req.org.orgId, { customIcon, brandColor });
-    await db.log('branding_updated', { orgId: req.org.orgId, hasIcon: !!customIcon, color: brandColor });
+    await db.updateBranding(req.org.orgId, { customIcon, brandColor, waveColor });
+    await db.log('branding_updated', { orgId: req.org.orgId, hasIcon: !!customIcon, color: brandColor, waveColor });
 
     res.json({ success: true, message: 'Branding updated' });
   } catch (e) {
@@ -506,7 +510,8 @@ router.get('/org/branding', createLimiter, (req, res, next) => {
     res.json({
       success: true,
       customIcon: branding.custom_icon || null,
-      brandColor: branding.brand_color || null
+      brandColor: branding.brand_color || null,
+      waveColor: branding.wave_color || null
     });
   } catch (e) {
     res.status(500).json({ success: false, error: 'Internal server error' });

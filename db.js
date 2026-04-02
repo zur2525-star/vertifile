@@ -135,6 +135,7 @@ const _ready = (async () => {
   // Migrations — add columns if they don't exist yet
   try { await pool.query('ALTER TABLE api_keys ADD COLUMN custom_icon TEXT'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE api_keys ADD COLUMN brand_color TEXT'); } catch (_) { /* already exists */ }
+  try { await pool.query('ALTER TABLE api_keys ADD COLUMN wave_color TEXT'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE documents ADD COLUMN user_id INT'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE documents ADD COLUMN starred BOOLEAN DEFAULT false'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE documents ADD COLUMN pvf_content TEXT'); } catch (_) { /* already exists */ }
@@ -493,12 +494,13 @@ async function migrateFromJson() {
 async function updateBranding(orgId, data) {
   const icon = data.customIcon || data.custom_icon || null;
   const color = data.brandColor || data.brand_color || null;
-  await pool.query('UPDATE api_keys SET custom_icon = $1, brand_color = $2 WHERE org_id = $3', [icon, color, orgId]);
+  const waveCol = data.waveColor || data.wave_color || null;
+  await pool.query('UPDATE api_keys SET custom_icon = $1, brand_color = $2, wave_color = $3 WHERE org_id = $4', [icon, color, waveCol, orgId]);
 }
 
 async function getBranding(orgId) {
-  const { rows } = await pool.query('SELECT custom_icon, brand_color FROM api_keys WHERE org_id = $1', [orgId]);
-  return rows[0] || { custom_icon: null, brand_color: null };
+  const { rows } = await pool.query('SELECT custom_icon, brand_color, wave_color FROM api_keys WHERE org_id = $1', [orgId]);
+  return rows[0] || { custom_icon: null, brand_color: null, wave_color: null };
 }
 
 // ================================================================

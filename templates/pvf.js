@@ -19,7 +19,7 @@ function sanitizeSvg(svg) {
   return clean;
 }
 
-function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, customIcon, brandColor, orgName, orgId) {
+function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, customIcon, brandColor, orgName, orgId, waveColor) {
   // Sanitize customIcon SVG if present
   if (customIcon && customIcon.startsWith('<svg')) {
     customIcon = sanitizeSvg(customIcon);
@@ -137,18 +137,15 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 .wm{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-size:70px;font-weight:900;color:rgba(229,57,53,.1);white-space:nowrap;z-index:25;pointer-events:none;letter-spacing:8px}
 .wm.show{display:block}
 
-/* ===== HOLOGRAPHIC WAVES — flowing sine curves ===== */
-.holo-waves{position:absolute;left:0;right:0;bottom:0;height:35%;z-index:10;pointer-events:none;overflow:hidden;border-radius:0 0 4px 4px;opacity:0;transition:opacity 1.2s ease;
-  mask-image:linear-gradient(to bottom,transparent 0%,black 40%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 40%)}
-.holo-waves.active{opacity:1}
-.hw-svg{position:absolute;top:0;width:200%;height:100%;left:-50%}
-.hw-svg path{fill:none;stroke-linecap:round}
-.hw-a{animation:wDriftA 8s ease-in-out infinite,wHueA 16s ease-in-out infinite}
-.hw-b{animation:wDriftB 10s ease-in-out infinite,wHueB 20s ease-in-out infinite}
-@keyframes wDriftA{0%,100%{transform:rotate(-5deg) translateX(-3%)}50%{transform:rotate(-5deg) translateX(3%)}}
-@keyframes wDriftB{0%,100%{transform:rotate(-3deg) translateX(3%)}50%{transform:rotate(-3deg) translateX(-3%)}}
-@keyframes wHueA{0%,100%{filter:hue-rotate(0deg) brightness(1)}33%{filter:hue-rotate(45deg) brightness(1.15)}66%{filter:hue-rotate(-25deg) brightness(.9)}}
-@keyframes wHueB{0%,100%{filter:hue-rotate(0deg)}50%{filter:hue-rotate(65deg)}}
+/* ===== HOLOGRAPHIC WAVES — flowing mesh of parallel sine curves ===== */
+.holo-waves{position:absolute;left:0;right:0;bottom:0;height:200px;z-index:10;pointer-events:none;overflow:hidden;border-radius:0 0 4px 4px;opacity:0;transition:opacity 1.2s ease;
+  mask-image:linear-gradient(to bottom,transparent 0%,black 30%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 30%)}
+.holo-waves.active{opacity:.45}
+.wave-svg{position:absolute;top:0;left:0;width:200%;height:100%}
+.wave-svg path{fill:none;stroke-linecap:round;stroke-width:0.8}
+@keyframes waveFlow{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.wave-svg{animation:waveFlow 8s linear infinite}
+.holo-waves.frozen .wave-svg{animation-play-state:paused}
 
 /* ===== VERTIFILE STAMP ===== */
 .stamp{position:absolute;bottom:6%;right:5%;width:96px;height:96px;z-index:30;pointer-events:none;opacity:0.7;perspective:800px}
@@ -285,16 +282,25 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
     <div class="big-x" id="bx"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="8" y1="8" x2="92" y2="92" stroke="rgba(229,57,53,.07)" stroke-width="6" stroke-linecap="round"/><line x1="92" y1="8" x2="8" y2="92" stroke="rgba(229,57,53,.07)" stroke-width="6" stroke-linecap="round"/></svg></div>
     <div class="wm" id="wm">FORGED</div>
 
-    <!-- Holographic security waves -->
+    <!-- Holographic security waves — flowing mesh -->
     <div class="holo-waves" id="holoWaves">
-      <svg class="hw-svg hw-a" viewBox="0 0 1400 200" preserveAspectRatio="none">
-        <path d="M-200,100 Q-60,40 80,100 Q220,160 360,100 Q500,40 640,100 Q780,160 920,100 Q1060,40 1200,100 Q1340,160 1480,100 Q1620,40 1760,100" stroke="rgba(124,58,237,.12)" stroke-width="2"/>
-        <path d="M-200,115 Q-40,160 120,115 Q280,70 440,115 Q600,160 760,115 Q920,70 1080,115 Q1240,160 1400,115 Q1560,70 1720,115" stroke="rgba(0,131,143,.10)" stroke-width="1.6"/>
-        <path d="M-200,140 Q-70,80 60,140 Q190,200 320,140 Q450,80 580,140 Q710,200 840,140 Q970,80 1100,140 Q1230,200 1360,140 Q1490,80 1620,140" stroke="rgba(46,125,50,.10)" stroke-width="1.8"/>
-      </svg>
-      <svg class="hw-svg hw-b" viewBox="0 0 1400 200" preserveAspectRatio="none">
-        <path d="M-200,80 Q-50,130 100,80 Q250,30 400,80 Q550,130 700,80 Q850,30 1000,80 Q1150,130 1300,80 Q1450,30 1600,80" stroke="rgba(106,27,154,.11)" stroke-width="1.8"/>
-        <path d="M-200,55 Q-30,95 170,55 Q370,15 570,55 Q770,95 970,55 Q1170,15 1370,55 Q1570,95 1770,55" stroke="rgba(109,40,217,.09)" stroke-width="1.5"/>
+      <svg class="wave-svg" viewBox="0 0 2400 200" preserveAspectRatio="none">
+        ${(function(){
+          var wc = waveColor || brandColor || '#6496ff';
+          var paths = '';
+          for(var i=0;i<10;i++){
+            var y = 60 + i*14;
+            var amp = 14 + Math.sin(i*0.7)*8;
+            var phase = i * 35;
+            var d = 'M0,' + y;
+            for(var x=0;x<=2400;x+=8){
+              d += ' L' + x + ',' + (y + Math.sin((x+phase)*Math.PI/180)*amp);
+            }
+            var op = (0.25 + i*0.06).toFixed(2);
+            paths += '<path d="' + d + '" stroke="' + wc + '" opacity="' + op + '"/>';
+          }
+          return paths;
+        })()}
       </svg>
     </div>
 
@@ -428,7 +434,7 @@ function freezeStamp() {
   if (sCoin) { sCoin.classList.remove("animate","landed"); sCoin.style.animation="none"; sCoin.style.opacity="1"; }
   // Kill holographic waves on freeze
   var hw = document.getElementById("holoWaves");
-  if (hw) hw.classList.remove("active");
+  if (hw) { hw.classList.remove("active"); hw.classList.add("frozen"); }
 }
 
 // ===== SECURITY: Right-click prevention =====
@@ -530,13 +536,11 @@ var CUSTOMICONDATA=${customIcon ? `\`${customIcon.replace(/`/g, '\\`')}\`` : 'nu
   var hue1=parseInt(h.substring(0,2),16)%360;
   var hue2=parseInt(h.substring(2,4),16)%360;
   var rotSpeed=20+parseInt(h.substring(4,6),16)%30;  // 20-50s
-  var waveSpeed1=6+parseInt(h.substring(6,8),16)%8;  // 6-14s
-  var waveSpeed2=8+parseInt(h.substring(8,10),16)%10; // 8-18s
+  var waveSpeed=6+parseInt(h.substring(6,8),16)%8;  // 6-14s
   var glowSpeed=2+parseInt(h.substring(10,12),16)%4;  // 2-6s
   var shimSpeed=3+parseInt(h.substring(12,14),16)%5;  // 3-8s
   var breatheSpeed=2+parseInt(h.substring(14,16),16)%4; // 2-6s
-  var waveHue1=parseInt(h.substring(16,18),16)%90;
-  var waveHue2=parseInt(h.substring(18,20),16)%90;
+  var waveHue=parseInt(h.substring(16,18),16)%60;
   // Inject custom CSS based on hash
   var s=document.createElement("style");
   s.textContent=
@@ -544,19 +548,9 @@ var CUSTOMICONDATA=${customIcon ? `\`${customIcon.replace(/`/g, '\\`')}\`` : 'nu
     ".stamp .shim{animation-duration:"+shimSpeed+"s;background:conic-gradient(from 0deg,hsla("+hue1+",60%,50%,.05),hsla("+hue2+",50%,45%,.1) 60deg,hsla("+(hue1+120)+",40%,55%,.07) 120deg,hsla("+hue1+",60%,50%,.05) 180deg,hsla("+hue2+",50%,45%,.1) 240deg,hsla("+(hue1+120)+",40%,55%,.07) 300deg,hsla("+hue1+",60%,50%,.05))}"+
     ".stamp .glow{animation-duration:"+glowSpeed+"s}"+
     ".stamp-coin.landed{animation-duration:"+breatheSpeed+"s}"+
-    ".hw-a{animation:wDriftA "+waveSpeed1+"s ease-in-out infinite,wHueA "+(waveSpeed1*2)+"s ease-in-out infinite}"+
-    ".hw-b{animation:wDriftB "+waveSpeed2+"s ease-in-out infinite,wHueB "+(waveSpeed2*2)+"s ease-in-out infinite}"+
-    "@keyframes wHueA{0%,100%{filter:hue-rotate("+waveHue1+"deg) brightness(1)}50%{filter:hue-rotate("+(waveHue1+45)+"deg) brightness(1.15)}}"+
-    "@keyframes wHueB{0%,100%{filter:hue-rotate("+waveHue2+"deg)}50%{filter:hue-rotate("+(waveHue2+65)+"deg)}}";
+    ".wave-svg{animation:waveFlow "+waveSpeed+"s linear infinite}"+
+    ".holo-waves.active{filter:hue-rotate("+waveHue+"deg)}";
   document.head.appendChild(s);
-  ${brandColor ? `
-  var bc = "${brandColor}";
-  // Override wave colors with brand color
-  document.querySelectorAll('.wave path').forEach(function(p, i) {
-    p.setAttribute('stroke', bc);
-    p.style.opacity = (0.08 + i * 0.03);
-  });
-  ` : ''}
 })();
 
 var token=null;

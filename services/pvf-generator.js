@@ -156,7 +156,7 @@ async function handleCreatePvf(req, res) {
       db.getBranding(req.org.orgId),
       (req.apiKey && req.apiKey !== 'demo') ? db.incrementDocCount(req.apiKey).catch(e => logger.warn({ err: e }, 'incrementDocCount failed')) : Promise.resolve()
     ]);
-    let pvfHtml = generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, branding.custom_icon, branding.brand_color, req.org.orgName, req.org.orgId);
+    let pvfHtml = generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, branding.custom_icon, branding.brand_color, req.org.orgName, req.org.orgId, branding.wave_color);
 
     // Obfuscate the JavaScript inside the PVF (deterministic per document hash)
     const seed = parseInt(fileHash.substring(0, 8), 16);

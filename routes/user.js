@@ -70,7 +70,7 @@ router.post('/upload', requireLogin, (req, res, next) => {
     }
 
     // Get user branding
-    let branding = { custom_icon: null, brand_color: null };
+    let branding = { custom_icon: null, brand_color: null, wave_color: null };
     try {
       const userBranding = await db.getBranding(req.org.orgId);
       if (userBranding) branding = userBranding;
@@ -90,7 +90,7 @@ router.post('/upload', requireLogin, (req, res, next) => {
     await db.setDocumentUserId(fileHash, req.user.id);
     await db.updateUserDocCount(req.user.id);
 
-    let pvfHtml = generatePvfHtml(fileBase64, file.originalname, fileHash, file.mimetype, signature, null, branding.custom_icon, branding.brand_color, req.org.orgName, req.org.orgId);
+    let pvfHtml = generatePvfHtml(fileBase64, file.originalname, fileHash, file.mimetype, signature, null, branding.custom_icon, branding.brand_color, req.org.orgName, req.org.orgId, branding.wave_color);
 
     // Obfuscate PVF
     const seed = parseInt(fileHash.substring(0, 8), 16);
@@ -226,7 +226,7 @@ router.get('/branding', requireLogin, async (req, res) => {
     const db = req.app.get('db');
     const orgId = 'user_' + req.user.id;
     const branding = await db.getBranding(orgId);
-    res.json({ success: true, customIcon: branding.custom_icon || null, brandColor: branding.brand_color || null });
+    res.json({ success: true, customIcon: branding.custom_icon || null, brandColor: branding.brand_color || null, waveColor: branding.wave_color || null });
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to load branding' }); }
 });
 
@@ -235,9 +235,12 @@ router.post('/branding', requireLogin, async (req, res) => {
   try {
     const db = req.app.get('db');
     const orgId = 'user_' + req.user.id;
-    const { brandColor, customIcon, orgName, stampText } = req.body;
+    const { brandColor, customIcon, orgName, stampText, waveColor } = req.body;
     if (brandColor && !/^#[0-9a-fA-F]{6}$/.test(brandColor)) {
       return res.status(400).json({ success: false, error: 'Invalid color format. Use hex (#RRGGBB)' });
+    }
+    if (waveColor && !/^#[0-9a-fA-F]{6}$/.test(waveColor)) {
+      return res.status(400).json({ success: false, error: 'Invalid wave color format. Use hex (#RRGGBB)' });
     }
     if (customIcon) {
       const iconSize = Buffer.byteLength(customIcon, 'utf8');
@@ -248,7 +251,7 @@ router.post('/branding', requireLogin, async (req, res) => {
         return res.status(400).json({ success: false, error: 'Logo must be a PNG image or SVG' });
       }
     }
-    await db.updateBranding(orgId, { brand_color: brandColor || null, custom_icon: customIcon || null });
+    await db.updateBranding(orgId, { brand_color: brandColor || null, custom_icon: customIcon || null, wave_color: waveColor || null });
     res.json({ success: true });
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to save branding' }); }
 });

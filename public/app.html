@@ -203,6 +203,13 @@
     .color-row input[type="color"]{width:48px;height:36px;padding:2px;cursor:pointer;border:1px solid rgba(124,58,237,.15);border-radius:8px;background:transparent}
     .color-row input[type="text"]{flex:1;margin-bottom:0}
 
+    /* Wave preset buttons */
+    .wave-preset{transition:border-color .2s,transform .15s}
+    .wave-preset:hover{transform:scale(1.08)}
+    .wave-preset.active{border-color:#a78bfa!important;box-shadow:0 0 8px rgba(124,58,237,.3)}
+    #waveColor{width:36px;height:28px;padding:1px;cursor:pointer;border:1px solid rgba(124,58,237,.15);border-radius:6px;background:transparent}
+    @keyframes wavePreviewFlow{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
     /* Branding preview */
     .brand-preview{padding:24px;background:rgba(15,14,23,.5);border-radius:14px;border:1px solid rgba(124,58,237,.08);text-align:center;margin-top:12px}
     .brand-preview .bp-stamp{border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;letter-spacing:1px;overflow:hidden}
@@ -704,6 +711,37 @@
 
         <label data-i18n="app.stampText">Stamp Text</label>
         <input type="text" id="brandStampText" placeholder="PROTECTED" value="PROTECTED">
+
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(139,137,166,.15)">
+          <label>Wave Color</label>
+          <p class="card-desc" style="margin-top:0;margin-bottom:12px">Choose the color of the holographic waves on your documents.</p>
+
+          <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap" id="waveColorPresets">
+            <button type="button" class="wave-preset active" data-color="#7c3aed" onclick="selectWavePreset(this)" title="Purple (default Vertifile)" style="width:48px;height:36px;border-radius:8px;border:2px solid transparent;cursor:pointer;position:relative;overflow:hidden;background:#1a1a2e;padding:0">
+              <svg viewBox="0 0 48 36" style="width:100%;height:100%"><path d="M0,12 Q12,6 24,12 Q36,18 48,12" stroke="#7c3aed" fill="none" stroke-width="1" opacity=".6"/><path d="M0,18 Q12,12 24,18 Q36,24 48,18" stroke="#7c3aed" fill="none" stroke-width="1" opacity=".5"/><path d="M0,24 Q12,18 24,24 Q36,30 48,24" stroke="#7c3aed" fill="none" stroke-width="1" opacity=".4"/></svg>
+            </button>
+            <button type="button" class="wave-preset" data-color="#3b82f6" onclick="selectWavePreset(this)" title="Blue (corporate)" style="width:48px;height:36px;border-radius:8px;border:2px solid transparent;cursor:pointer;position:relative;overflow:hidden;background:#1a1a2e;padding:0">
+              <svg viewBox="0 0 48 36" style="width:100%;height:100%"><path d="M0,12 Q12,6 24,12 Q36,18 48,12" stroke="#3b82f6" fill="none" stroke-width="1" opacity=".6"/><path d="M0,18 Q12,12 24,18 Q36,24 48,18" stroke="#3b82f6" fill="none" stroke-width="1" opacity=".5"/><path d="M0,24 Q12,18 24,24 Q36,30 48,24" stroke="#3b82f6" fill="none" stroke-width="1" opacity=".4"/></svg>
+            </button>
+            <button type="button" class="wave-preset" data-color="#10b981" onclick="selectWavePreset(this)" title="Green (medical/eco)" style="width:48px;height:36px;border-radius:8px;border:2px solid transparent;cursor:pointer;position:relative;overflow:hidden;background:#1a1a2e;padding:0">
+              <svg viewBox="0 0 48 36" style="width:100%;height:100%"><path d="M0,12 Q12,6 24,12 Q36,18 48,12" stroke="#10b981" fill="none" stroke-width="1" opacity=".6"/><path d="M0,18 Q12,12 24,18 Q36,24 48,18" stroke="#10b981" fill="none" stroke-width="1" opacity=".5"/><path d="M0,24 Q12,18 24,24 Q36,30 48,24" stroke="#10b981" fill="none" stroke-width="1" opacity=".4"/></svg>
+            </button>
+            <button type="button" class="wave-preset" data-color="#f59e0b" onclick="selectWavePreset(this)" title="Orange (warm)" style="width:48px;height:36px;border-radius:8px;border:2px solid transparent;cursor:pointer;position:relative;overflow:hidden;background:#1a1a2e;padding:0">
+              <svg viewBox="0 0 48 36" style="width:100%;height:100%"><path d="M0,12 Q12,6 24,12 Q36,18 48,12" stroke="#f59e0b" fill="none" stroke-width="1" opacity=".6"/><path d="M0,18 Q12,12 24,18 Q36,24 48,18" stroke="#f59e0b" fill="none" stroke-width="1" opacity=".5"/><path d="M0,24 Q12,18 24,24 Q36,30 48,24" stroke="#f59e0b" fill="none" stroke-width="1" opacity=".4"/></svg>
+            </button>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:8px">
+            <label style="margin:0;font-size:12px;color:#8b89a6;white-space:nowrap">Custom:</label>
+            <input type="color" id="waveColor" value="#7c3aed" oninput="updateWaveColorFromPicker()">
+            <input type="text" id="waveColorText" value="#7c3aed" style="width:90px;font-size:13px" oninput="document.getElementById('waveColor').value=this.value;updateWaveColorFromPicker()">
+          </div>
+
+          <div id="wavePreviewBox" style="margin-top:12px;background:#1a1a2e;border-radius:8px;height:60px;overflow:hidden;position:relative">
+            <svg id="wavePreviewSvg" viewBox="0 0 400 60" preserveAspectRatio="none" style="width:200%;height:100%;position:absolute;left:0;top:0;animation:wavePreviewFlow 6s linear infinite">
+            </svg>
+          </div>
+        </div>
 
         <div class="brand-preview" id="brandPreview">
           <div class="bp-stamp-container" style="position:relative;width:80px;height:80px;margin:0 auto 12px">
@@ -1343,9 +1381,17 @@ async function loadBranding() {
           document.getElementById('bpStampLogo').innerHTML = '<img src="' + data.customIcon + '" style="width:44px;height:44px;border-radius:50%;object-fit:cover" alt="logo">';
         }
       }
+      if (data.waveColor) {
+        document.getElementById('waveColor').value = data.waveColor;
+        document.getElementById('waveColorText').value = data.waveColor;
+        document.querySelectorAll('.wave-preset').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-color') === data.waveColor);
+        });
+      }
     }
   } catch(e) { /* use defaults */ }
   updateBrandPreview();
+  renderWavePreview(document.getElementById('waveColor').value);
 }
 
 function updateBrandPreview() {
@@ -1354,6 +1400,42 @@ function updateBrandPreview() {
   const stamp = document.getElementById('bpStamp');
   stamp.style.borderColor = color + '4D';
   stamp.style.color = color;
+}
+
+function renderWavePreview(color) {
+  const svg = document.getElementById('wavePreviewSvg');
+  if (!svg) return;
+  let paths = '';
+  for (let i = 0; i < 8; i++) {
+    const y = 8 + i * 6;
+    const amp = 5 + Math.sin(i * 0.7) * 3;
+    const phase = i * 35;
+    let d = 'M0,' + y;
+    for (let x = 0; x <= 800; x += 6) {
+      d += ' L' + x + ',' + (y + Math.sin((x + phase) * Math.PI / 180) * amp);
+    }
+    const op = (0.25 + i * 0.07).toFixed(2);
+    paths += '<path d="' + d + '" stroke="' + color + '" fill="none" stroke-width="0.6" opacity="' + op + '"/>';
+  }
+  svg.innerHTML = paths;
+}
+
+function selectWavePreset(btn) {
+  document.querySelectorAll('.wave-preset').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const color = btn.getAttribute('data-color');
+  document.getElementById('waveColor').value = color;
+  document.getElementById('waveColorText').value = color;
+  renderWavePreview(color);
+}
+
+function updateWaveColorFromPicker() {
+  const color = document.getElementById('waveColor').value;
+  document.getElementById('waveColorText').value = color;
+  document.querySelectorAll('.wave-preset').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-color') === color);
+  });
+  renderWavePreview(color);
 }
 
 function handleLogoUpload(e) {
@@ -1391,13 +1473,14 @@ function removeLogo() {
 async function saveBranding() {
   try {
     const brandColor = document.getElementById('brandColor').value;
+    const waveColor = document.getElementById('waveColor').value;
     const customIcon = document.getElementById('brandIconUrl').value.trim();
     const orgName = document.getElementById('brandOrgName').value.trim();
     const stampText = document.getElementById('brandStampText').value.trim();
     const r = await fetch('/api/user/branding', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ brandColor, customIcon, orgName, stampText }),
+      body: JSON.stringify({ brandColor, waveColor, customIcon, orgName, stampText }),
       credentials: 'same-origin'
     });
     if (r.ok) {
@@ -1412,6 +1495,10 @@ async function saveBranding() {
 function resetBranding() {
   document.getElementById('brandColor').value = '#7c3aed';
   document.getElementById('brandColorText').value = '#7c3aed';
+  document.getElementById('waveColor').value = '#7c3aed';
+  document.getElementById('waveColorText').value = '#7c3aed';
+  document.querySelectorAll('.wave-preset').forEach((b, i) => b.classList.toggle('active', i === 0));
+  renderWavePreview('#7c3aed');
   document.getElementById('brandStampText').value = 'PROTECTED';
   document.getElementById('brandIconUrl').value = '';
   removeLogo();
