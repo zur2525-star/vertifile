@@ -117,6 +117,25 @@ router.post('/upload', requireLogin, (req, res, next) => {
 
     await db.savePvfContent(fileHash, pvfHtml);
 
+    const isPaidPlan = req.user.plan && req.user.plan !== 'free';
+
+    if (!isPaidPlan) {
+      // Free plan: create PVF but return preview-only response
+      await db.markDocumentPreviewOnly(fileHash, true);
+      return res.json({
+        success: true,
+        preview: true,
+        previewUrl: '/d/' + shareId,
+        shareId,
+        hash: fileHash,
+        fileName: file.originalname,
+        message: 'Document protected! Subscribe to download.',
+        upgradeUrl: '/pricing',
+        documentsUsed: req.user.documents_used + 1,
+        documentsLimit: req.user.documents_limit
+      });
+    }
+
     res.json({
       success: true,
       hash: fileHash,

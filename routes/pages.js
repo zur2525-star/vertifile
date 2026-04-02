@@ -152,6 +152,20 @@ router.get('/d/:shareId/download', async (req, res) => {
       return res.status(404).json({ success: false, error: 'Document not found' });
     }
 
+    // Check if document is preview-only (free plan) and user hasn't upgraded
+    if (doc.preview_only) {
+      // Check if the requesting user is on a paid plan
+      const isPaidUser = req.user && req.user.plan && req.user.plan !== 'free';
+      if (!isPaidUser) {
+        return res.status(403).json({
+          success: false,
+          error: 'Download requires a Pro or Enterprise plan.',
+          upgradeUrl: '/pricing',
+          preview: true
+        });
+      }
+    }
+
     const pvfContent = await db.getPvfContent(shareId);
     if (!pvfContent) {
       return res.status(404).json({ success: false, error: 'Document file not available' });

@@ -166,6 +166,8 @@ const _ready = (async () => {
       created_at TIMESTAMPTZ DEFAULT NOW()
     )`);
   } catch (_) { /* already exists */ }
+  // Preview-only column for freemium paywall
+  try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS preview_only BOOLEAN DEFAULT FALSE'); } catch (_) {}
 })();
 
 // ================================================================
@@ -700,6 +702,13 @@ async function getUptimeStats(days = 30) {
 }
 
 // ================================================================
+// FREEMIUM PAYWALL
+// ================================================================
+async function markDocumentPreviewOnly(hash, previewOnly) {
+  await pool.query('UPDATE documents SET preview_only = $1 WHERE hash = $2', [previewOnly, hash]);
+}
+
+// ================================================================
 // PASSWORD RESET
 // ================================================================
 async function saveResetToken(userId, token, expiresAt) {
@@ -777,6 +786,7 @@ module.exports = {
   getAllDocumentsForExport,
   getAllKeysForExport,
   getAllAuditForExport,
+  markDocumentPreviewOnly,
   saveResetToken,
   getResetToken,
   deleteResetToken,

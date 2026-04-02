@@ -420,6 +420,22 @@
     body.light-mode .doc-preview{border-left-color:#e5e7eb}
     button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
     input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+
+    /* ===== PAYWALL OVERLAY ===== */
+    .paywall-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:3000;align-items:center;justify-content:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+    .paywall-overlay.show{display:flex}
+    .paywall-card{background:rgba(255,255,255,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.4);border-radius:24px;padding:40px;max-width:480px;width:92%;box-shadow:0 24px 80px rgba(0,0,0,.2);text-align:center;position:relative}
+    .paywall-card h2{font-size:22px;font-weight:800;color:#111827;margin-bottom:8px}
+    .paywall-card>p{font-size:14px;color:#6b7280;margin-bottom:20px}
+    .paywall-cta{background:rgba(79,70,229,.04);border:1px solid rgba(79,70,229,.12);border-radius:16px;padding:24px;margin-top:4px}
+    .paywall-cta h3{font-size:18px;font-weight:700;color:#1e1b4b;margin-bottom:8px}
+    .paywall-cta>p{font-size:14px;color:#6b7280;margin-bottom:16px}
+    .paywall-cta .btn-primary{display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:14px;font-size:16px;font-weight:700;text-decoration:none;transition:all .3s;box-shadow:0 4px 20px rgba(79,70,229,.3)}
+    .paywall-cta .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,70,229,.5)}
+    .paywall-note{font-size:12px;color:#9ca3af;margin-top:12px}
+    .paywall-close{position:absolute;top:14px;right:18px;background:none;border:none;font-size:22px;color:#9ca3af;cursor:pointer;padding:4px}
+    .paywall-close:hover{color:#111}
+    body.light-mode .paywall-card{background:rgba(255,255,255,.95)}
   </style>
 </head>
 <body>
@@ -840,6 +856,21 @@
 
     <div class="modal-actions">
       <button style="background:rgba(124,58,237,.08);color:#8b89a6;border:1px solid rgba(124,58,237,.12)" onclick="hideUploadModal()" data-i18n="app.cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Paywall Overlay -->
+<div class="paywall-overlay" id="paywallOverlay" onclick="if(event.target===this)closePaywall()">
+  <div class="paywall-card">
+    <button class="paywall-close" onclick="closePaywall()">&times;</button>
+    <h2 data-i18n="paywall.dashboardTitle">Upgrade to Download & Share</h2>
+    <p data-i18n="paywall.dashboardSubtitle">Your document is protected, but downloading and sharing requires a Pro or Enterprise plan.</p>
+    <div class="paywall-cta">
+      <h3 data-i18n="paywall.ctaTitle">Ready to download and share?</h3>
+      <p data-i18n="paywall.ctaDesc">Subscribe to Pro to unlock downloading, sharing, and full verification.</p>
+      <a href="/pricing" class="btn-primary" data-i18n="paywall.ctaBtn">Upgrade to Pro — $49/mo</a>
+      <p class="paywall-note" data-i18n="paywall.ctaNote">Includes 500 documents/month, custom branding, API access</p>
     </div>
   </div>
 </div>
@@ -1427,9 +1458,23 @@ async function deleteAccount() {
   } catch(e) { toast('Error: ' + e.message); }
 }
 
+// ===== Paywall =====
+function isFreePlan() {
+  return currentUser && (!currentUser.plan || currentUser.plan === 'free');
+}
+
+function showPaywall() {
+  document.getElementById('paywallOverlay').classList.add('show');
+}
+
+function closePaywall() {
+  document.getElementById('paywallOverlay').classList.remove('show');
+}
+
 // ===== Document Actions =====
 async function downloadDoc() {
   if (!selectedDoc) return;
+  if (isFreePlan()) { showPaywall(); return; }
   const shareId = selectedDoc.shareId || selectedDoc.share_id;
   if (shareId) {
     window.open('/d/' + shareId + '/download', '_blank');
@@ -1438,6 +1483,7 @@ async function downloadDoc() {
 
 function shareDoc() {
   if (!selectedDoc) return;
+  if (isFreePlan()) { showPaywall(); return; }
   const shareId = selectedDoc.shareId || selectedDoc.share_id;
   if (shareId) {
     const url = window.location.origin + '/d/' + shareId;

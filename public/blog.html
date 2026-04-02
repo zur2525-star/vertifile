@@ -16,88 +16,223 @@
   <meta name="twitter:title" content="Blog — Vertifile">
   <meta name="twitter:description" content="Stay up to date with the latest in document verification, tamper-proof technology, and digital security from the Vertifile team.">
   <meta name="twitter:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#0f0e17">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html{scroll-behavior:smooth;overflow-x:hidden}
-    body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden}
+    body{font-family:'Inter','Heebo',sans-serif;color:#e2e0f0;background:#0f0e17;overflow-x:hidden}
     [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
     a{text-decoration:none;color:inherit}
 
     /* ===== NAVBAR ===== */
-    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;background:rgba(15,14,23,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 3px rgba(0,0,0,.2);border-bottom:1px solid rgba(124,58,237,.08)}
     .nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:100%;display:flex;align-items:center;justify-content:space-between}
-    .nav-logo img{height:28px}
+    .nav-logo img{height:28px;filter:brightness(0) invert(1)}
     .nav-center{display:flex;gap:28px;position:absolute;left:50%;transform:translateX(-50%)}
-    .nav-center a{font-size:14px;font-weight:500;color:#374151;text-decoration:none;transition:.2s}
-    .nav-center a:hover{color:#7c3aed}
+    .nav-center a{font-size:14px;font-weight:500;color:rgba(196,181,253,.7);text-decoration:none;transition:.2s}
+    .nav-center a:hover{color:#c4b5fd}
     [dir="rtl"] .nav-center{direction:rtl}
     .nav-actions{display:flex;align-items:center;gap:12px}
-    .nav-user{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.25);background:transparent;cursor:pointer;transition:.2s;text-decoration:none;color:#6b7280}
-    .nav-user:hover{border-color:rgba(124,58,237,.5);color:#7c3aed;background:rgba(124,58,237,.05)}
+    .nav-user{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.35);background:transparent;cursor:pointer;transition:.2s;text-decoration:none;color:rgba(196,181,253,.6)}
+    .nav-user:hover{border-color:rgba(124,58,237,.6);color:#c4b5fd;background:rgba(124,58,237,.1)}
     .nav-user svg{width:18px;height:18px}
-    .nav-verify{font-size:13px;font-weight:500;color:#4f46e5;text-decoration:none}
+    .nav-verify{font-size:13px;font-weight:500;color:#a78bfa;text-decoration:none}
     .nav-cta{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
-    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.3)}
-    .lang-btn{display:flex;align-items:center;gap:5px;cursor:pointer;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#4b5563;border:1px solid rgba(0,0,0,.12);background:transparent;position:relative;transition:.2s}
-    .lang-btn:hover{border-color:rgba(0,0,0,.3);color:#111827}
+    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.4)}
+    .lang-btn{display:flex;align-items:center;gap:5px;cursor:pointer;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:rgba(196,181,253,.6);border:1px solid rgba(124,58,237,.2);background:transparent;position:relative;transition:.2s}
+    .lang-btn:hover{border-color:rgba(124,58,237,.4);color:#c4b5fd}
     .lang-btn svg{width:16px;height:16px}
-    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.1);min-width:160px;padding:4px 0;display:none;z-index:100}
+    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#1a1929;border:1px solid rgba(124,58,237,.15);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.4);min-width:160px;padding:4px 0;display:none;z-index:100}
     [dir="rtl"] .lang-dropdown{right:auto;left:0}
     .lang-dropdown.show{display:block}
-    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:#4b5563;transition:.15s}
-    .lang-dropdown a:hover{background:rgba(0,0,0,.03);color:#111827}
-    .lang-dropdown a.active{color:#7c3aed;font-weight:600}
+    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:rgba(196,181,253,.6);transition:.15s}
+    .lang-dropdown a:hover{background:rgba(124,58,237,.08);color:#c4b5fd}
+    .lang-dropdown a.active{color:#a78bfa;font-weight:600}
     .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px}
-    .hamburger span{display:block;width:20px;height:2px;background:#111827;margin:4px 0;border-radius:2px}
-    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;border-bottom:1px solid rgba(0,0,0,.06);padding:16px 24px;z-index:999;flex-direction:column;gap:12px}
+    .hamburger span{display:block;width:20px;height:2px;background:#c4b5fd;margin:4px 0;border-radius:2px}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#1a1929;border-bottom:1px solid rgba(124,58,237,.1);padding:16px 24px;z-index:999;flex-direction:column;gap:12px}
     .mobile-menu.show{display:flex}
-    .mobile-menu a{font-size:15px;color:#374151;text-decoration:none;padding:8px 0}
-    .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06)}
+    .mobile-menu a{font-size:15px;color:rgba(196,181,253,.7);text-decoration:none;padding:8px 0}
+    .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(124,58,237,.1)}
     @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
 
-    /* ===== HERO ===== */
-    .hero{padding:140px 60px 80px;position:relative;overflow:hidden;background:linear-gradient(180deg,#1e1b4b 0%,#312e81 30%,#4c1d95 60%,#5b21b6 80%,#6d28d9 100%)}
-    .hero-bg{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
-    .hero-bg .glow-1{position:absolute;top:-15%;left:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(139,92,246,.25),transparent 70%);filter:blur(80px)}
-    .hero-bg .glow-2{position:absolute;bottom:-25%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(168,85,247,.18),transparent 70%);filter:blur(80px)}
-    .hero-content{max-width:800px;margin:0 auto;text-align:center;position:relative;z-index:1}
-    .hero h1{font-size:48px;font-weight:900;color:#ffffff;line-height:1.1;margin-bottom:20px;letter-spacing:-2px}
-    .hero h1 .gradient{background:linear-gradient(135deg,#c4b5fd,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .hero p.sub{font-size:18px;color:rgba(196,181,253,.8);line-height:1.8;max-width:600px;margin:0 auto;font-weight:400}
-    @media(max-width:900px){.hero{padding:120px 24px 60px}.hero h1{font-size:36px}}
-    @media(max-width:600px){.hero{padding:100px 20px 50px}.hero h1{font-size:28px;letter-spacing:-1px}.hero p.sub{font-size:15px}}
+    /* ===== BLOG HEADER ===== */
+    .blog-header{padding:130px 32px 60px;position:relative;overflow:hidden;text-align:center}
+    .blog-header::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.12),transparent 60%)}
+    .blog-header-inner{position:relative;z-index:1;max-width:700px;margin:0 auto}
+    .blog-header-label{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:#a78bfa;margin-bottom:20px}
+    .blog-header-label svg{width:18px;height:18px}
+    .blog-header h1{font-size:44px;font-weight:900;color:#fff;letter-spacing:-2px;line-height:1.1;margin-bottom:16px}
+    .blog-header p{font-size:17px;color:rgba(196,181,253,.5);line-height:1.7;font-weight:400}
+    .blog-header-divider{width:60px;height:3px;background:linear-gradient(90deg,#4f46e5,#7c3aed);margin:40px auto 0;border-radius:2px}
+    @media(max-width:768px){.blog-header{padding:110px 20px 40px}.blog-header h1{font-size:32px;letter-spacing:-1px}}
 
-    /* ===== BLOG LISTING ===== */
-    .blog-section{padding:80px 32px;max-width:900px;margin:0 auto}
-    .blog-card{display:block;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.08);border-radius:20px;padding:40px;margin-bottom:28px;transition:.4s;box-shadow:0 2px 8px rgba(124,58,237,.04)}
-    .blog-card:hover{transform:translateY(-4px);border-color:rgba(124,58,237,.2);box-shadow:0 12px 40px rgba(124,58,237,.1)}
-    .blog-card .blog-meta{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:13px;color:#6b7280}
-    .blog-card .blog-tag{background:rgba(124,58,237,.08);color:#7c3aed;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
-    .blog-card h2{font-size:24px;font-weight:800;color:#111827;margin-bottom:12px;letter-spacing:-.5px;line-height:1.3}
-    .blog-card p{font-size:15px;color:#6b7280;line-height:1.8;margin-bottom:16px}
-    .blog-card .read-more{font-size:14px;font-weight:600;color:#7c3aed;display:inline-flex;align-items:center;gap:6px;transition:.2s}
-    .blog-card .read-more:hover{gap:10px}
-    .blog-card .read-more svg{width:16px;height:16px}
-    .blog-empty{text-align:center;padding:60px 20px;color:#9ca3af;font-size:15px}
+    /* ===== FEATURED ARTICLE ===== */
+    .featured-wrap{max-width:900px;margin:0 auto;padding:0 32px 80px}
+    .featured-article{display:block;position:relative;border-radius:24px;overflow:hidden;background:rgba(26,25,41,.6);border:1px solid rgba(124,58,237,.1);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transition:.5s cubic-bezier(.23,1,.32,1)}
+    .featured-article:hover{transform:translateY(-6px);border-color:rgba(124,58,237,.25);box-shadow:0 30px 80px rgba(79,70,229,.12),0 0 0 1px rgba(124,58,237,.1)}
+
+    /* CSS art hero image */
+    .featured-image{position:relative;width:100%;height:420px;overflow:hidden;background:linear-gradient(135deg,#1e1b4b 0%,#312e81 25%,#4c1d95 50%,#5b21b6 75%,#1e1b4b 100%)}
+    .featured-image::before{content:'';position:absolute;inset:0;background:
+      radial-gradient(ellipse at 30% 40%,rgba(139,92,246,.3),transparent 50%),
+      radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.15),transparent 50%),
+      radial-gradient(ellipse at 50% 80%,rgba(168,85,247,.2),transparent 40%);z-index:1}
+    .featured-image::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(to top,rgba(26,25,41,.9),transparent);z-index:2}
+
+    /* Grid pattern overlay */
+    .fi-grid{position:absolute;inset:0;background-image:
+      linear-gradient(rgba(124,58,237,.06) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(124,58,237,.06) 1px,transparent 1px);
+      background-size:40px 40px;z-index:1}
+
+    /* Shield icon - CSS art */
+    .fi-shield{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;width:120px;height:140px;opacity:.25}
+    .fi-shield-body{width:120px;height:140px;background:linear-gradient(180deg,rgba(167,139,250,.4),rgba(79,70,229,.2));clip-path:polygon(50% 0%,100% 20%,100% 65%,50% 100%,0% 65%,0% 20%);position:relative}
+    .fi-shield-body::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;border:3px solid rgba(196,181,253,.5);border-radius:4px;background:rgba(124,58,237,.1)}
+
+    /* Floating doc icons */
+    .fi-doc{position:absolute;z-index:3;border-radius:6px;background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.15);backdrop-filter:blur(4px)}
+    .fi-doc-1{width:50px;height:64px;top:18%;left:15%;transform:rotate(-12deg);animation:float-1 6s ease-in-out infinite}
+    .fi-doc-2{width:40px;height:52px;top:25%;right:18%;transform:rotate(8deg);animation:float-2 7s ease-in-out infinite}
+    .fi-doc-3{width:44px;height:56px;bottom:22%;left:22%;transform:rotate(5deg);animation:float-3 8s ease-in-out infinite}
+    .fi-doc-4{width:36px;height:46px;bottom:28%;right:24%;transform:rotate(-6deg);animation:float-1 5s ease-in-out infinite .5s}
+    .fi-doc::before{content:'';position:absolute;top:8px;left:6px;right:6px;height:2px;background:rgba(196,181,253,.2);border-radius:1px;box-shadow:0 6px 0 rgba(196,181,253,.15),0 12px 0 rgba(196,181,253,.1),0 18px 0 rgba(196,181,253,.08)}
+    .fi-doc-check{position:absolute;bottom:6px;right:6px;width:12px;height:12px;border-radius:50%;background:rgba(52,211,153,.3);border:1px solid rgba(52,211,153,.4)}
+
+    /* Floating orbs */
+    .fi-orb{position:absolute;border-radius:50%;z-index:2;filter:blur(1px)}
+    .fi-orb-1{width:8px;height:8px;background:#a78bfa;top:30%;left:35%;animation:float-2 4s ease-in-out infinite}
+    .fi-orb-2{width:6px;height:6px;background:#67e8f9;top:55%;right:30%;animation:float-3 5s ease-in-out infinite}
+    .fi-orb-3{width:10px;height:10px;background:#818cf8;bottom:35%;left:40%;animation:float-1 6s ease-in-out infinite}
+    .fi-orb-4{width:5px;height:5px;background:#c4b5fd;top:40%;right:38%;animation:float-2 3.5s ease-in-out infinite}
+
+    /* Connection lines */
+    .fi-line{position:absolute;z-index:2;background:linear-gradient(90deg,transparent,rgba(124,58,237,.15),transparent);height:1px}
+    .fi-line-1{width:200px;top:35%;left:10%;transform:rotate(15deg)}
+    .fi-line-2{width:160px;top:60%;right:8%;transform:rotate(-10deg)}
+    .fi-line-3{width:120px;top:45%;left:30%;transform:rotate(-5deg)}
+
+    @keyframes float-1{0%,100%{transform:translateY(0) rotate(var(--rot,0deg))}50%{transform:translateY(-12px) rotate(var(--rot,0deg))}}
+    @keyframes float-2{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    @keyframes float-3{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+    .fi-doc-1{--rot:-12deg}
+    .fi-doc-2{--rot:8deg}
+    .fi-doc-3{--rot:5deg}
+    .fi-doc-4{--rot:-6deg}
+    @keyframes float-1{0%,100%{transform:translateY(0) rotate(var(--rot,0deg))}50%{transform:translateY(-12px) rotate(var(--rot,0deg))}}
+
+    /* Featured content */
+    .featured-content{padding:36px 44px 44px}
+    .featured-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,.12);color:#a78bfa;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:20px;border:1px solid rgba(124,58,237,.15)}
+    .featured-tag svg{width:14px;height:14px}
+    .featured-headline{font-size:36px;font-weight:900;color:#fff;line-height:1.2;letter-spacing:-1.5px;margin-bottom:16px}
+    .featured-excerpt{font-size:17px;color:rgba(196,181,253,.5);line-height:1.8;margin-bottom:24px;max-width:680px}
+    .featured-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+    .featured-author{display:flex;align-items:center;gap:10px}
+    .featured-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+    .featured-author-info{display:flex;flex-direction:column}
+    .featured-author-name{font-size:14px;font-weight:600;color:#e2e0f0}
+    .featured-author-role{font-size:12px;color:rgba(196,181,253,.4)}
+    .featured-meta-sep{width:4px;height:4px;border-radius:50%;background:rgba(196,181,253,.25);flex-shrink:0}
+    .featured-date,.featured-readtime{font-size:13px;color:rgba(196,181,253,.45);display:flex;align-items:center;gap:6px}
+    .featured-date svg,.featured-readtime svg{width:14px;height:14px;opacity:.6}
+    .featured-cta{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:12px;font-size:14px;font-weight:600;transition:.3s;border:none}
+    .featured-article:hover .featured-cta{box-shadow:0 8px 24px rgba(124,58,237,.3);transform:translateY(-1px)}
+    .featured-cta svg{width:18px;height:18px;transition:.2s}
+    .featured-article:hover .featured-cta svg{transform:translateX(3px)}
+
+    @media(max-width:768px){
+      .featured-wrap{padding:0 16px 60px}
+      .featured-image{height:280px}
+      .featured-content{padding:24px 24px 32px}
+      .featured-headline{font-size:26px;letter-spacing:-1px}
+      .featured-excerpt{font-size:15px}
+      .fi-doc-1,.fi-doc-4{display:none}
+    }
+    @media(max-width:480px){
+      .featured-image{height:220px}
+      .featured-content{padding:20px 20px 28px}
+      .featured-headline{font-size:22px}
+      .featured-meta{gap:10px}
+    }
+
+    /* ===== MORE ARTICLES GRID ===== */
+    .more-section{max-width:900px;margin:0 auto;padding:0 32px 80px}
+    .more-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}
+    .more-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(196,181,253,.4)}
+    .more-line{flex:1;height:1px;background:rgba(124,58,237,.1);margin-left:20px}
+    .articles-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+    .article-card{display:block;border-radius:18px;overflow:hidden;background:rgba(26,25,41,.5);border:1px solid rgba(124,58,237,.08);backdrop-filter:blur(12px);transition:.4s cubic-bezier(.23,1,.32,1)}
+    .article-card:hover{transform:translateY(-4px);border-color:rgba(124,58,237,.2);box-shadow:0 16px 48px rgba(79,70,229,.08)}
+    .article-card-image{height:180px;position:relative;overflow:hidden}
+    .article-card-image::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(to top,rgba(26,25,41,.8),transparent)}
+    .aci-gradient-1{background:linear-gradient(135deg,#1e1b4b,#312e81,#4c1d95)}
+    .aci-gradient-2{background:linear-gradient(135deg,#0f172a,#1e3a5f,#1e1b4b)}
+    .aci-gradient-3{background:linear-gradient(135deg,#1a1929,#2d1f4e,#1e1b4b)}
+    .article-card-image .aci-pattern{position:absolute;inset:0;background-image:
+      radial-gradient(circle at 30% 50%,rgba(139,92,246,.2),transparent 40%),
+      radial-gradient(circle at 70% 50%,rgba(6,182,212,.1),transparent 40%);
+      opacity:.8}
+    .article-card-image .aci-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:48px;opacity:.2;background:linear-gradient(180deg,rgba(167,139,250,.4),rgba(79,70,229,.2));clip-path:polygon(50% 0%,100% 20%,100% 65%,50% 100%,0% 65%,0% 20%)}
+    .article-card-body{padding:24px}
+    .article-card-tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#a78bfa;background:rgba(124,58,237,.1);padding:4px 10px;border-radius:12px;margin-bottom:12px}
+    .article-card h3{font-size:18px;font-weight:800;color:#fff;line-height:1.3;letter-spacing:-.3px;margin-bottom:10px}
+    .article-card p{font-size:13px;color:rgba(196,181,253,.4);line-height:1.7;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .article-card-footer{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.35)}
+    .article-card-read{color:#a78bfa;font-weight:600;display:flex;align-items:center;gap:4px;font-size:12px;transition:.2s}
+    .article-card:hover .article-card-read{gap:8px}
+    .article-card-read svg{width:14px;height:14px}
+
+    /* Coming soon placeholders */
+    .article-card.coming-soon{opacity:.5;pointer-events:none}
+    .article-card.coming-soon .article-card-image{display:flex;align-items:center;justify-content:center}
+    .article-card.coming-soon .coming-label{position:absolute;z-index:2;font-size:12px;font-weight:600;color:rgba(196,181,253,.4);text-transform:uppercase;letter-spacing:2px}
+
+    @media(max-width:768px){
+      .more-section{padding:0 16px 60px}
+      .articles-grid{grid-template-columns:1fr}
+    }
+
+    /* ===== NEWSLETTER ===== */
+    .newsletter-section{max-width:900px;margin:0 auto;padding:0 32px 100px}
+    .newsletter-card{background:rgba(26,25,41,.6);border:1px solid rgba(124,58,237,.1);border-radius:24px;padding:60px;text-align:center;position:relative;overflow:hidden;backdrop-filter:blur(20px)}
+    .newsletter-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.08),transparent 60%)}
+    .newsletter-inner{position:relative;z-index:1}
+    .newsletter-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,rgba(79,70,229,.2),rgba(124,58,237,.2));border:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+    .newsletter-icon svg{width:22px;height:22px;color:#a78bfa}
+    .newsletter-card h2{font-size:26px;font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-.5px}
+    .newsletter-card p{font-size:15px;color:rgba(196,181,253,.45);margin-bottom:28px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.7}
+    .newsletter-form{display:flex;gap:10px;max-width:460px;margin:0 auto}
+    .newsletter-form input{flex:1;padding:14px 18px;border-radius:12px;border:1px solid rgba(124,58,237,.15);background:rgba(15,14,23,.6);color:#e2e0f0;font-size:14px;font-family:inherit;outline:none;transition:.2s}
+    .newsletter-form input::placeholder{color:rgba(196,181,253,.3)}
+    .newsletter-form input:focus{border-color:rgba(124,58,237,.4);box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+    .newsletter-form button{padding:14px 28px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:.3s;white-space:nowrap}
+    .newsletter-form button:hover{box-shadow:0 8px 24px rgba(124,58,237,.3);transform:translateY(-1px)}
+    .newsletter-note{font-size:12px;color:rgba(196,181,253,.25);margin-top:14px}
+    @media(max-width:600px){
+      .newsletter-section{padding:0 16px 80px}
+      .newsletter-card{padding:36px 24px}
+      .newsletter-form{flex-direction:column}
+      .newsletter-card h2{font-size:22px}
+    }
 
     /* ===== FOOTER ===== */
-    footer{background:linear-gradient(180deg,#f8f7ff 0%,#1e1b4b 30%,#1e1b4b 100%);color:#e2e0f0;padding:100px 32px 30px;border-top:none;position:relative;overflow:hidden}
-    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(180deg,#f8f7ff,transparent);pointer-events:none;z-index:1}
-    footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;background:radial-gradient(ellipse at 30% 80%,rgba(124,58,237,.15),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.08),transparent 50%);pointer-events:none}
+    footer{background:linear-gradient(180deg,#0f0e17 0%,#1e1b4b 100%);color:#e2e0f0;padding:80px 32px 30px;border-top:1px solid rgba(124,58,237,.08);position:relative;overflow:hidden}
+    footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;background:radial-gradient(ellipse at 30% 80%,rgba(124,58,237,.1),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.05),transparent 50%);pointer-events:none}
     .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;max-width:1000px;margin:0 auto;position:relative;z-index:2}
     .footer-brand .f-logo{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:10px;letter-spacing:-.5px;color:#fff}
     .footer-brand .f-logo img{height:28px;width:auto;filter:brightness(0) invert(1)}
-    .footer-brand p{font-size:13px;color:rgba(196,181,253,.6);line-height:1.8;max-width:280px}
-    .footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(167,139,250,.7);margin-bottom:16px}
-    .footer-col a{display:block;font-size:14px;color:rgba(196,181,253,.5);padding:5px 0;transition:.2s}
+    .footer-brand p{font-size:13px;color:rgba(196,181,253,.4);line-height:1.8;max-width:280px}
+    .footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(167,139,250,.5);margin-bottom:16px}
+    .footer-col a{display:block;font-size:14px;color:rgba(196,181,253,.4);padding:5px 0;transition:.2s}
     .footer-col a:hover{color:#fff}
-    .footer-bottom{max-width:1000px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.4);position:relative;z-index:2}
-    .footer-lang{display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(196,181,253,.5);font-size:12px;transition:.2s}
+    .footer-bottom{max-width:1000px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(124,58,237,.1);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.3);position:relative;z-index:2}
+    .footer-lang{display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(196,181,253,.4);font-size:12px;transition:.2s}
     .footer-lang:hover{color:#fff}
-    .footer-lang svg{stroke:rgba(196,181,253,.5)}
+    .footer-lang svg{stroke:rgba(196,181,253,.4)}
     .footer-lang:hover svg{stroke:#fff}
     @media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr;gap:30px}.footer-bottom{flex-direction:column;gap:10px;text-align:center}}
     @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
@@ -137,7 +272,7 @@
       </div>
       <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
       <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
-      <a href="/app" class="nav-user" title="My Account" data-i18n-title="nav.account" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.25);color:#6b7280;text-decoration:none;transition:.2s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+      <a href="/app" class="nav-user" title="My Account" data-i18n-title="nav.account" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.35);color:rgba(196,181,253,.6);text-decoration:none;transition:.2s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
     </div>
     <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -158,41 +293,141 @@
   </div>
 </div>
 
-<!-- ===== HERO ===== -->
-<div class="hero" id="main">
-  <div class="hero-bg">
-    <div class="glow-1"></div>
-    <div class="glow-2"></div>
-  </div>
-  <div class="hero-content">
-    <h1>Vertifile <span class="gradient" data-i18n="blog.heroTitle">Blog</span></h1>
-    <p class="sub" data-i18n="blog.heroSub">Insights on document security, verification technology, and the fight against forgery.</p>
+<!-- ===== BLOG HEADER ===== -->
+<div class="blog-header" id="main">
+  <div class="blog-header-inner">
+    <div class="blog-header-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      <span data-i18n="blog.headerLabel">The Vertifile Blog</span>
+    </div>
+    <h1 data-i18n="blog.heroTitle">Insights on Document Security</h1>
+    <p data-i18n="blog.heroSub">Deep dives into verification technology, the fight against forgery, and the future of trusted documents.</p>
+    <div class="blog-header-divider"></div>
   </div>
 </div>
 
-<!-- ===== BLOG LISTING ===== -->
-<div class="blog-section">
-
-  <a href="/blog/why-pdf-signatures-fail" class="blog-card">
-    <div class="blog-meta">
-      <span class="blog-tag" data-i18n="blog.tag.security">Document Security</span>
-      <span>April 1, 2026</span>
+<!-- ===== FEATURED ARTICLE ===== -->
+<div class="featured-wrap">
+  <a href="/blog/why-pdf-signatures-fail" class="featured-article">
+    <!-- CSS Art Hero Image -->
+    <div class="featured-image">
+      <div class="fi-grid"></div>
+      <div class="fi-shield"><div class="fi-shield-body"></div></div>
+      <div class="fi-doc fi-doc-1"><div class="fi-doc-check"></div></div>
+      <div class="fi-doc fi-doc-2"><div class="fi-doc-check"></div></div>
+      <div class="fi-doc fi-doc-3"><div class="fi-doc-check"></div></div>
+      <div class="fi-doc fi-doc-4"><div class="fi-doc-check"></div></div>
+      <div class="fi-orb fi-orb-1"></div>
+      <div class="fi-orb fi-orb-2"></div>
+      <div class="fi-orb fi-orb-3"></div>
+      <div class="fi-orb fi-orb-4"></div>
+      <div class="fi-line fi-line-1"></div>
+      <div class="fi-line fi-line-2"></div>
+      <div class="fi-line fi-line-3"></div>
     </div>
-    <h2 data-i18n="blog.post2.title">Why PDF Signatures Are Not Enough — And What Comes Next</h2>
-    <p data-i18n="blog.post2.excerpt">PDF signatures verify who signed a document, not whether it was changed after. Learn how tamper-proof .pvf files solve document fraud for good.</p>
-    <span class="read-more"><span data-i18n="blog.readMore">Read more</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-  </a>
 
-  <a href="/blog/why-document-forgery-is-a-growing-crisis" class="blog-card">
-    <div class="blog-meta">
-      <span class="blog-tag">Document Security</span>
-      <span>March 28, 2026</span>
+    <!-- Article Content -->
+    <div class="featured-content">
+      <span class="featured-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <span data-i18n="blog.tag.security">Document Security</span>
+      </span>
+
+      <h2 class="featured-headline" data-i18n="blog.post2.title">Why PDF Signatures Are Not Enough &mdash; And What Comes Next</h2>
+
+      <p class="featured-excerpt" data-i18n="blog.post2.excerpt">The documents you trust most might be the easiest to forge. PDF signatures verify who signed a document, not whether it was changed after. Learn how tamper-proof .pvf files solve document fraud for good.</p>
+
+      <div class="featured-meta">
+        <div class="featured-author">
+          <div class="featured-avatar">ZH</div>
+          <div class="featured-author-info">
+            <span class="featured-author-name" data-i18n="blog.post2.author">Zur Halfon</span>
+            <span class="featured-author-role" data-i18n="blog.post2.authorRole">Founder, Vertifile</span>
+          </div>
+        </div>
+        <span class="featured-meta-sep"></span>
+        <span class="featured-date">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span data-i18n="blog.post2.date">Apr 1, 2026</span>
+        </span>
+        <span class="featured-meta-sep"></span>
+        <span class="featured-readtime">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span data-i18n="blog.post2.readTime">5 min read</span>
+        </span>
+      </div>
+
+      <span class="featured-cta">
+        <span data-i18n="blog.readArticle">Read Article</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </span>
     </div>
-    <h2 data-i18n="blog.post1.title">Why Document Forgery Is a Growing Crisis -- and What We Can Do About It</h2>
-    <p data-i18n="blog.post1.excerpt">Every year, millions of forged documents circulate worldwide. From fake university diplomas to altered medical records, document fraud undermines trust across every industry. Learn how cryptographic verification is changing the game.</p>
-    <span class="read-more"><span data-i18n="blog.readMore">Read more</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
   </a>
+</div>
 
+<!-- ===== MORE ARTICLES ===== -->
+<div class="more-section">
+  <div class="more-header">
+    <span class="more-title" data-i18n="blog.moreArticles">More Articles</span>
+    <div class="more-line"></div>
+  </div>
+  <div class="articles-grid">
+
+    <!-- Article 2 (real) -->
+    <a href="/blog/why-document-forgery-is-a-growing-crisis" class="article-card">
+      <div class="article-card-image aci-gradient-2">
+        <div class="aci-pattern"></div>
+        <div class="aci-icon"></div>
+      </div>
+      <div class="article-card-body">
+        <span class="article-card-tag" data-i18n="blog.tag.security">Document Security</span>
+        <h3 data-i18n="blog.post1.title">Why Document Forgery Is a Growing Crisis &mdash; and What We Can Do About It</h3>
+        <p data-i18n="blog.post1.excerpt">Every year, millions of forged documents circulate worldwide. From fake diplomas to altered medical records, document fraud undermines trust across every industry.</p>
+        <div class="article-card-footer">
+          <span data-i18n="blog.post1.date">Mar 28, 2026</span>
+          <span class="article-card-read">
+            <span data-i18n="blog.readMore">Read more</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Coming soon placeholder -->
+    <div class="article-card coming-soon">
+      <div class="article-card-image aci-gradient-3">
+        <div class="aci-pattern"></div>
+        <span class="coming-label" data-i18n="blog.comingSoon">Coming Soon</span>
+      </div>
+      <div class="article-card-body">
+        <span class="article-card-tag" data-i18n="blog.tag.technology">Technology</span>
+        <h3 data-i18n="blog.upcoming1.title">How Cryptographic Hashing Protects Your Documents</h3>
+        <p data-i18n="blog.upcoming1.excerpt">A technical deep-dive into the verification mechanisms that make tamper-proof documents possible.</p>
+        <div class="article-card-footer">
+          <span data-i18n="blog.comingSoon">Coming Soon</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== NEWSLETTER ===== -->
+<div class="newsletter-section">
+  <div class="newsletter-card">
+    <div class="newsletter-inner">
+      <div class="newsletter-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <h2 data-i18n="blog.newsletter.title">Get Document Security Insights</h2>
+      <p data-i18n="blog.newsletter.sub">Join our newsletter for expert analysis on document verification, fraud prevention, and industry updates.</p>
+      <form class="newsletter-form" onsubmit="event.preventDefault()">
+        <input type="email" placeholder="your@email.com" data-i18n-placeholder="blog.newsletter.placeholder" required>
+        <button type="submit" data-i18n="blog.newsletter.cta">Subscribe</button>
+      </form>
+      <p class="newsletter-note" data-i18n="blog.newsletter.note">No spam. Unsubscribe anytime.</p>
+    </div>
+  </div>
 </div>
 
 <footer>

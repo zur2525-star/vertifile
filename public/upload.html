@@ -179,6 +179,27 @@
     .site-footer .f-copy{font-size:11px;color:#d1d5db}
     button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
     input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+
+    /* ===== PAYWALL OVERLAY ===== */
+    .paywall-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:3000;align-items:center;justify-content:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+    .paywall-overlay.show{display:flex}
+    .paywall-card{background:rgba(255,255,255,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.4);border-radius:24px;padding:40px;max-width:560px;width:92%;box-shadow:0 24px 80px rgba(0,0,0,.2);text-align:center;position:relative;max-height:90vh;overflow-y:auto}
+    .paywall-card h2{font-size:24px;font-weight:800;color:#111827;margin-bottom:8px;letter-spacing:-.3px}
+    .paywall-card>p{font-size:14px;color:#6b7280;margin-bottom:20px}
+    .pvf-preview{position:relative;width:100%;height:260px;border-radius:16px;overflow:hidden;margin-bottom:24px;border:1px solid rgba(0,0,0,.08);background:#f9fafb}
+    .pvf-preview iframe{width:100%;height:100%;border:none;pointer-events:none}
+    .pvf-preview-watermark{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.7);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:1}
+    .pvf-preview-watermark span{font-size:18px;font-weight:800;color:rgba(124,58,237,.35);text-transform:uppercase;letter-spacing:3px;transform:rotate(-15deg);text-align:center;line-height:1.6}
+    .paywall-cta{background:rgba(79,70,229,.04);border:1px solid rgba(79,70,229,.12);border-radius:16px;padding:24px;margin-top:4px}
+    .paywall-cta h3{font-size:18px;font-weight:700;color:#1e1b4b;margin-bottom:8px}
+    .paywall-cta>p{font-size:14px;color:#6b7280;margin-bottom:16px}
+    .paywall-cta .btn-primary{display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:14px;font-size:16px;font-weight:700;text-decoration:none;transition:all .3s;box-shadow:0 4px 20px rgba(79,70,229,.3)}
+    .paywall-cta .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,70,229,.5)}
+    .paywall-note{font-size:12px;color:#9ca3af;margin-top:12px}
+    .paywall-close{position:absolute;top:14px;right:18px;background:none;border:none;font-size:22px;color:#9ca3af;cursor:pointer;padding:4px}
+    .paywall-close:hover{color:#111}
+    .paywall-another{display:block;margin-top:16px;font-size:13px;color:#a78bfa;cursor:pointer;border:none;background:none;font-family:inherit;font-weight:600;transition:.2s}
+    .paywall-another:hover{color:#7c3aed}
   </style>
 </head>
 <body>
@@ -375,6 +396,28 @@
       <div class="lm-error" id="lmRegError"></div>
       <div class="lm-toggle">Already have an account? <a onclick="showLoginModal('login')">Sign in</a></div>
     </div>
+  </div>
+</div>
+
+<!-- Paywall Overlay -->
+<div class="paywall-overlay" id="paywallOverlay" onclick="if(event.target===this)closePaywall()">
+  <div class="paywall-card">
+    <button class="paywall-close" onclick="closePaywall()">&times;</button>
+    <h2 data-i18n="paywall.title">Your document is protected!</h2>
+    <p data-i18n="paywall.subtitle">See how your document looks with Vertifile's tamper-proof stamp.</p>
+    <div class="pvf-preview" id="pvfPreviewFrame">
+      <!-- iframe loaded dynamically -->
+      <div class="pvf-preview-watermark">
+        <span data-i18n="paywall.watermark">PREVIEW<br>Subscribe to unlock</span>
+      </div>
+    </div>
+    <div class="paywall-cta">
+      <h3 data-i18n="paywall.ctaTitle">Ready to download and share?</h3>
+      <p data-i18n="paywall.ctaDesc">Subscribe to Pro to unlock downloading, sharing, and full verification.</p>
+      <a href="/pricing" class="btn-primary" data-i18n="paywall.ctaBtn">Upgrade to Pro — $49/mo</a>
+      <p class="paywall-note" data-i18n="paywall.ctaNote">Includes 500 documents/month, custom branding, API access</p>
+    </div>
+    <button class="paywall-another" onclick="closePaywallAndReset()" data-i18n="paywall.uploadAnother">Upload another document</button>
   </div>
 </div>
 
@@ -618,8 +661,27 @@ async function createPvf(){
       throw new Error(err.error||'Server error');
     }
     var data=await response.json();
-    // Download the actual PVF file using share ID
     var shareId=data.shareId;
+
+    // Check if this is a preview-only (free plan) response
+    if(data.preview){
+      // Free plan — show paywall with preview
+      document.getElementById('steps').classList.remove('show');
+      document.getElementById('progress').classList.remove('show');
+      btn.style.display='none';
+      document.getElementById('fileInfo').classList.remove('show');
+      // Load preview iframe
+      var previewFrame=document.getElementById('pvfPreviewFrame');
+      var iframe=document.createElement('iframe');
+      iframe.src='/d/'+shareId+'/raw';
+      iframe.setAttribute('sandbox','allow-same-origin');
+      previewFrame.insertBefore(iframe,previewFrame.firstChild);
+      // Show paywall overlay
+      document.getElementById('paywallOverlay').classList.add('show');
+      return;
+    }
+
+    // Paid plan — full access
     var downloadPath='/d/'+shareId+'/download';
     var pvfResponse=await fetch(downloadPath,{credentials:'same-origin'});
     var blob=await pvfResponse.blob();
@@ -665,6 +727,15 @@ function reset(){
   document.getElementById('progress').classList.remove('show');
   document.getElementById('progressFill').style.width='0%';
   ['s1','s2','s3','s4','s5'].forEach(function(s){document.getElementById(s).className='step'});
+}
+
+function closePaywall(){
+  document.getElementById('paywallOverlay').classList.remove('show');
+}
+
+function closePaywallAndReset(){
+  closePaywall();
+  reset();
 }
 </script>
 </body>
