@@ -286,18 +286,30 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
     <div class="holo-waves" id="holoWaves">
       <svg class="wave-svg" viewBox="0 0 2400 200" preserveAspectRatio="none">
         ${(function(){
-          var wc = waveColor || brandColor || '#6496ff';
+          var waveColors;
+          try { waveColors = JSON.parse('${waveColor || "null"}'); } catch(e) { waveColors = null; }
+          if (typeof waveColors === 'string') {
+            // Single hex color — generate gradient
+            var base = waveColors;
+            waveColors = [];
+            for(var gi=0;gi<5;gi++) waveColors.push(base);
+          }
+          if (!waveColors || !Array.isArray(waveColors) || waveColors.length === 0) {
+            // Default purple gradient
+            waveColors = ["#2e1065","#4c1d95","#6d28d9","#7c3aed","#a78bfa"];
+          }
+          var WAVE_COUNT = waveColors.length;
           var paths = '';
-          for(var i=0;i<10;i++){
-            var y = 60 + i*14;
+          for(var i=0;i<WAVE_COUNT;i++){
+            var y = 60 + i*(140/WAVE_COUNT);
             var amp = 14 + Math.sin(i*0.7)*8;
             var phase = i * 35;
             var d = 'M0,' + y;
             for(var x=0;x<=2400;x+=8){
               d += ' L' + x + ',' + (y + Math.sin((x+phase)*Math.PI/180)*amp);
             }
-            var op = (0.25 + i*0.06).toFixed(2);
-            paths += '<path d="' + d + '" stroke="' + wc + '" opacity="' + op + '"/>';
+            var op = (0.25 + i*(0.55/WAVE_COUNT)).toFixed(2);
+            paths += '<path d="' + d + '" stroke="' + waveColors[i] + '" opacity="' + op + '"/>';
           }
           return paths;
         })()}

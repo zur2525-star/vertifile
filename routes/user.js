@@ -239,8 +239,32 @@ router.post('/branding', requireLogin, async (req, res) => {
     if (brandColor && !/^#[0-9a-fA-F]{6}$/.test(brandColor)) {
       return res.status(400).json({ success: false, error: 'Invalid color format. Use hex (#RRGGBB)' });
     }
-    if (waveColor && !/^#[0-9a-fA-F]{6}$/.test(waveColor)) {
-      return res.status(400).json({ success: false, error: 'Invalid wave color format. Use hex (#RRGGBB)' });
+    // waveColor can be an array of hex colors or a single hex string
+    let waveColorValue = waveColor;
+    if (Array.isArray(waveColor)) {
+      // Validate each color in the array
+      const validColors = waveColor.every(c => typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c));
+      if (!validColors || waveColor.length < 3 || waveColor.length > 10) {
+        return res.status(400).json({ success: false, error: 'Invalid wave colors. Provide 3-10 hex colors (#RRGGBB).' });
+      }
+      waveColorValue = JSON.stringify(waveColor);
+    } else if (waveColor && typeof waveColor === 'string') {
+      // Could be a JSON string already or a single hex
+      if (waveColor.startsWith('[')) {
+        try {
+          const parsed = JSON.parse(waveColor);
+          if (!Array.isArray(parsed) || parsed.length < 3 || parsed.length > 10) {
+            return res.status(400).json({ success: false, error: 'Invalid wave color array. Provide 3-10 colors.' });
+          }
+          waveColorValue = waveColor; // Already a JSON string
+        } catch(e) {
+          return res.status(400).json({ success: false, error: 'Invalid wave color JSON format.' });
+        }
+      } else if (!/^#[0-9a-fA-F]{6}$/.test(waveColor)) {
+        return res.status(400).json({ success: false, error: 'Invalid wave color format. Use hex (#RRGGBB) or array of hex colors.' });
+      } else {
+        waveColorValue = waveColor;
+      }
     }
     if (customIcon) {
       const iconSize = Buffer.byteLength(customIcon, 'utf8');
@@ -251,7 +275,7 @@ router.post('/branding', requireLogin, async (req, res) => {
         return res.status(400).json({ success: false, error: 'Logo must be a PNG image or SVG' });
       }
     }
-    await db.updateBranding(orgId, { brand_color: brandColor || null, custom_icon: customIcon || null, wave_color: waveColor || null });
+    await db.updateBranding(orgId, { brand_color: brandColor || null, custom_icon: customIcon || null, wave_color: waveColorValue || null });
     res.json({ success: true });
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to save branding' }); }
 });
