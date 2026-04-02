@@ -197,7 +197,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 /* Center content — logo + label */
 .stamp .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
 .stamp .center svg.stamp-logo{width:32px;height:32px}
-.stamp .center img.stamp-logo{width:32px;height:32px;border-radius:50%;object-fit:cover}
+.stamp .center img.stamp-logo{width:32px;height:32px;border-radius:50%;object-fit:contain;background:#fff;padding:2px}
 .stamp .brand{font-size:7px;font-weight:900;letter-spacing:1.5px;color:rgba(124,58,237,.45);margin-top:1px}
 .stamp .lbl{font-size:8px;font-weight:900;letter-spacing:1px;margin-top:2px}
 .stamp .lbl.ok{color:rgba(46,125,50,.6)}
