@@ -234,35 +234,9 @@
       </div>
       <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
       <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
-      <div style="position:relative">
-        <button class="account-btn" id="accountBtn" onclick="toggleAccountMenu()" title="Account">
-          <svg id="accountIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span id="accountInitials" style="display:none"></span>
-        </button>
-        <div class="account-dropdown" id="accountDropdown">
-          <!-- Logged out state -->
-          <div id="adLoggedOut">
-            <div class="ad-header">
-              <div class="ad-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-              <div class="ad-name">Not signed in</div>
-            </div>
-            <button class="ad-link" onclick="showLoginModal('login')">&#128274; Sign In</button>
-            <button class="ad-link" onclick="showLoginModal('register')">&#9997; Create Account</button>
-          </div>
-          <!-- Logged in state -->
-          <div id="adLoggedIn" style="display:none">
-            <div class="ad-header">
-              <div class="ad-avatar" id="adAvatar">?</div>
-              <div class="ad-name" id="adName">User</div>
-              <div class="ad-email" id="adEmail"></div>
-            </div>
-            <a href="/app" class="ad-link">&#128196; My Documents</a>
-            <a href="/app" class="ad-link">&#9881; Settings</a>
-            <div class="ad-divider"></div>
-            <button class="ad-link danger" onclick="doLogout()">&#9211; Sign Out</button>
-          </div>
-        </div>
-      </div>
+      <a href="/app" class="nav-user" title="My Account" data-i18n-title="nav.account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
     </div>
     <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -275,6 +249,7 @@
   <a href="/pricing" onclick="closeMobile()" data-i18n="nav.pricing">Pricing</a>
   <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
   <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <a href="/app" onclick="closeMobile()" data-i18n="nav.account">My Account</a>
   <div class="mob-actions">
     <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
     <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
