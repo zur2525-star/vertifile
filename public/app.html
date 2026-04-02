@@ -198,34 +198,64 @@
     .toggle-switch input:checked+.slider{background:#7c3aed}
     .toggle-switch input:checked+.slider:before{transform:translateX(18px)}
 
-    /* Color preview */
-    .color-row{display:flex;align-items:center;gap:12px}
-    .color-row input[type="color"]{width:48px;height:36px;padding:2px;cursor:pointer;border:1px solid rgba(124,58,237,.15);border-radius:8px;background:transparent}
-    .color-row input[type="text"]{flex:1;margin-bottom:0}
-
-    /* Wave preset buttons */
-    .wave-preset{transition:border-color .2s,transform .15s}
-    .wave-preset:hover{transform:scale(1.08)}
-    .wave-preset.active{border-color:#a78bfa!important;box-shadow:0 0 8px rgba(124,58,237,.3)}
-    #waveColor{width:36px;height:28px;padding:1px;cursor:pointer;border:1px solid rgba(124,58,237,.15);border-radius:6px;background:transparent}
+    /* ===== Branding Visual Editor ===== */
     @keyframes wavePreviewFlow{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    @keyframes stampRotateText{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 
-    /* Advanced wave color controls */
-    .wave-count-slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:rgba(124,58,237,.2);outline:none;margin:8px 0 16px}
+    .brand-live-preview{background:rgba(10,9,20,.7);border-radius:16px;border:1px solid rgba(124,58,237,.12);padding:32px 24px 20px;text-align:center;margin-bottom:24px;position:relative;overflow:hidden}
+    .brand-live-preview .blp-label{position:absolute;top:10px;left:14px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#8b89a6;font-weight:600}
+
+    /* Circular stamp preview */
+    .blp-stamp-wrap{position:relative;width:160px;height:160px;margin:12px auto 20px}
+    .blp-stamp-circle{width:160px;height:160px;border-radius:50%;border:3px solid rgba(124,58,237,.3);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:rgba(15,14,23,.6)}
+    .blp-rotating-text{position:absolute;inset:0;animation:stampRotateText 20s linear infinite}
+    .blp-rotating-text svg{width:100%;height:100%}
+    .blp-rotating-text text{fill:#a78bfa;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+    .blp-logo-center{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;background:rgba(15,14,23,.4)}
+    .blp-logo-center img{width:56px;height:56px;border-radius:50%;object-fit:cover}
+    .blp-badge{position:absolute;bottom:4px;right:4px;width:28px;height:28px;border-radius:50%;background:rgba(15,14,23,.9);border:2px solid rgba(46,125,50,.6);display:flex;align-items:center;justify-content:center;z-index:3}
+    .blp-org-name{font-size:14px;font-weight:700;color:#e2e0f0;margin-bottom:2px}
+    .blp-verified{font-size:11px;color:#a78bfa;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+
+    /* Wave preview inside live preview */
+    .blp-wave-strip{margin-top:16px;background:rgba(15,14,23,.5);border-radius:10px;height:48px;overflow:hidden;position:relative}
+    .blp-wave-strip svg{width:200%;height:100%;position:absolute;left:0;top:0;animation:wavePreviewFlow 6s linear infinite}
+
+    /* Branding sections */
+    .brand-section{margin-bottom:20px}
+    .brand-section-title{font-size:12px;font-weight:700;color:#8b89a6;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(124,58,237,.1);display:flex;align-items:center;gap:6px}
+
+    /* Logo section */
+    .brand-logo-current{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:10px 14px;background:rgba(15,14,23,.4);border-radius:10px;border:1px solid rgba(124,58,237,.08)}
+    .brand-logo-thumb{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(124,58,237,.08);flex-shrink:0;overflow:hidden}
+    .brand-logo-thumb img{width:36px;height:36px;border-radius:50%;object-fit:cover}
+    .brand-logo-info{flex:1;text-align:left}
+    .brand-logo-info .logo-label{font-size:12px;color:#e2e0f0;font-weight:500}
+    .brand-logo-info .logo-hint{font-size:11px;color:#8b89a6}
+    .brand-logo-actions{display:flex;gap:8px;align-items:center}
+    .brand-logo-actions .btn{font-size:12px;padding:6px 14px}
+
+    /* Wave controls */
+    .wave-count-slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:rgba(124,58,237,.2);outline:none;margin:8px 0 12px}
     .wave-count-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:#7c3aed;cursor:pointer;border:2px solid #a78bfa;box-shadow:0 0 6px rgba(124,58,237,.4)}
     .wave-count-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#7c3aed;cursor:pointer;border:2px solid #a78bfa}
+
+    .gradient-presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+    .gradient-preset-btn{padding:5px 14px;font-size:12px;border-radius:8px;border:1px solid rgba(124,58,237,.2);background:rgba(15,14,23,.6);color:#c4b5fd;cursor:pointer;transition:all .2s;font-family:inherit}
+    .gradient-preset-btn:hover{border-color:#a78bfa;background:rgba(124,58,237,.12);transform:scale(1.04)}
+
     .wave-color-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
     .wave-color-row span{font-size:12px;color:#8b89a6;min-width:56px}
     .wave-color-row input[type="color"]{width:32px;height:24px;padding:1px;cursor:pointer;border:1px solid rgba(124,58,237,.15);border-radius:4px;background:transparent}
-    .gradient-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-    .gradient-preset-btn{padding:4px 10px;font-size:11px;border-radius:6px;border:1px solid rgba(124,58,237,.2);background:rgba(15,14,23,.6);color:#c4b5fd;cursor:pointer;transition:all .2s}
-    .gradient-preset-btn:hover{border-color:#a78bfa;background:rgba(124,58,237,.1);transform:scale(1.04)}
-    .auto-gradient-row{display:flex;align-items:center;gap:8px;margin-top:10px}
 
-    /* Branding preview */
-    .brand-preview{padding:24px;background:rgba(15,14,23,.5);border-radius:14px;border:1px solid rgba(124,58,237,.08);text-align:center;margin-top:12px}
-    .brand-preview .bp-stamp{border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;letter-spacing:1px;overflow:hidden}
-    .brand-preview .bp-text{font-size:12px;color:#8b89a6}
+    .auto-gradient-row{display:flex;align-items:center;gap:8px;margin-top:8px;margin-bottom:4px}
+
+    /* Bottom wave preview */
+    .brand-wave-preview-box{background:rgba(15,14,23,.5);border-radius:10px;height:60px;overflow:hidden;position:relative;margin-top:12px}
+    .brand-wave-preview-box svg{width:200%;height:100%;position:absolute;left:0;top:0;animation:wavePreviewFlow 6s linear infinite}
+
+    /* Action row */
+    .brand-action-row{display:flex;gap:12px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid rgba(124,58,237,.1)}
 
     /* Shared links table */
     .shared-table{width:100%;border-collapse:collapse;margin-top:12px}
@@ -417,9 +447,22 @@
     body.light-mode .shared-link{color:#7c3aed}
     body.light-mode .copy-btn{border-color:#e5e7eb;color:#4b5563}
     body.light-mode .shared-empty h4{color:#6b7280}
-    body.light-mode .brand-preview{background:#f5f5f5;border-color:#e5e7eb}
-    body.light-mode .brand-preview .bp-text{color:#6b7280}
-    body.light-mode .color-row input[type="color"]{border-color:#e5e7eb}
+    body.light-mode .brand-live-preview{background:#f5f5f5;border-color:#e5e7eb}
+    body.light-mode .brand-live-preview .blp-label{color:#9ca3af}
+    body.light-mode .blp-stamp-circle{border-color:rgba(124,58,237,.2);background:#f9fafb}
+    body.light-mode .blp-rotating-text text{fill:#7c3aed}
+    body.light-mode .blp-org-name{color:#1e1b4b}
+    body.light-mode .blp-verified{color:#7c3aed}
+    body.light-mode .blp-badge{background:#fff}
+    body.light-mode .blp-wave-strip{background:#f0f0f0}
+    body.light-mode .brand-logo-current{background:#f9fafb;border-color:#e5e7eb}
+    body.light-mode .brand-logo-thumb{background:rgba(124,58,237,.06)}
+    body.light-mode .brand-logo-info .logo-label{color:#374151}
+    body.light-mode .brand-logo-info .logo-hint{color:#9ca3af}
+    body.light-mode .brand-section-title{color:#6b7280;border-color:#e5e7eb}
+    body.light-mode .brand-wave-preview-box{background:#f0f0f0}
+    body.light-mode .wave-color-row span{color:#6b7280}
+    body.light-mode .gradient-preset-btn{background:#f5f5f5;border-color:#d1d5db;color:#7c3aed}
 
     body.light-mode .modal{background:#fff;border-color:#e5e7eb;box-shadow:0 20px 60px rgba(0,0,0,.15)}
     body.light-mode .modal h3{color:#1e1b4b}
@@ -696,88 +739,111 @@
 
     <!-- Branding Panel -->
     <div class="content-panel" id="brandingPanel">
-      <h2>&#127912; <span data-i18n="app.branding">Branding</span></h2>
+      <h2>&#127912; <span data-i18n="app.branding">Branding</span> &mdash; <span data-i18n="app.stampCustomization">Stamp Customization</span></h2>
 
       <div class="panel-card">
-        <h3 data-i18n="app.stampCustomization">Stamp Customization</h3>
-        <p class="card-desc" data-i18n="app.stampDesc">Customize the verification stamp that appears on your protected documents.</p>
+        <!-- ====== LIVE STAMP PREVIEW ====== -->
+        <div class="brand-live-preview" id="brandPreview">
+          <span class="blp-label" data-i18n="app.livePreview">LIVE PREVIEW</span>
 
-        <label data-i18n="app.orgName">Organization Name</label>
-        <input type="text" id="brandOrgName" placeholder="Your Company Name" value="" data-i18n-placeholder="app.orgNamePlaceholder">
+          <div class="blp-stamp-wrap">
+            <div class="blp-stamp-circle" id="bpStamp">
+              <!-- Rotating text ring -->
+              <svg class="blp-rotating-text" id="bpRotatingText" viewBox="0 0 160 160">
+                <defs>
+                  <path id="stampTextPath" d="M80,80 m-60,0 a60,60 0 1,1 120,0 a60,60 0 1,1 -120,0"/>
+                </defs>
+                <text><textPath href="#stampTextPath" id="bpRotatingLabel">VERIFIED BY VERTIFILE &bull; VERIFIED BY VERTIFILE &bull; </textPath></text>
+              </svg>
+              <!-- Center logo -->
+              <div class="blp-logo-center" id="bpStampLogo">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <!-- Verified badge -->
+            <div class="blp-badge" id="bpBadge">
+              <svg width="14" height="14" viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.8)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
 
-        <label data-i18n="app.brandColor">Brand Color</label>
-        <div class="color-row">
-          <input type="color" id="brandColor" value="#7c3aed" oninput="updateBrandPreview()">
-          <input type="text" id="brandColorText" value="#7c3aed" oninput="document.getElementById('brandColor').value=this.value;updateBrandPreview()">
+          <div class="blp-org-name" id="bpOrgLabel">Vertifile</div>
+          <div class="blp-verified" data-i18n="app.verified">VERIFIED</div>
+
+          <!-- Wave strip inside preview -->
+          <div class="blp-wave-strip">
+            <svg id="bpWaveStripSvg" viewBox="0 0 400 48" preserveAspectRatio="none"></svg>
+          </div>
         </div>
 
-        <label data-i18n="app.stampLogo">Stamp Logo</label>
-        <p class="card-desc" style="margin-top:0;margin-bottom:8px">Appears inside your document's verification stamp. PNG with transparent background recommended. Will be displayed as a circle.</p>
+        <!-- Hidden file input -->
         <input type="file" id="brandLogoFile" accept="image/png" style="display:none" onchange="handleLogoUpload(event)">
         <input type="hidden" id="brandIconUrl" value="">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-          <button class="btn btn-secondary" onclick="document.getElementById('brandLogoFile').click()" style="white-space:nowrap">Upload Logo</button>
-          <span id="brandLogoFileName" style="font-size:12px;color:#8b89a6">No custom logo</span>
-          <button class="btn btn-secondary" id="brandLogoRemoveBtn" onclick="removeLogo()" style="display:none;font-size:11px;padding:4px 10px">Remove</button>
+
+        <!-- ====== LOGO SECTION ====== -->
+        <div class="brand-section">
+          <div class="brand-section-title" data-i18n="app.logoSection">Logo</div>
+          <div class="brand-logo-current" id="brandLogoCurrentRow">
+            <div class="brand-logo-thumb" id="brandLogoThumb">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5"/></svg>
+            </div>
+            <div class="brand-logo-info">
+              <div class="logo-label" id="brandLogoFileName" data-i18n="app.defaultShield">Vertifile Shield (default)</div>
+              <div class="logo-hint" data-i18n="app.logoHint">PNG, transparent background recommended</div>
+            </div>
+            <div class="brand-logo-actions">
+              <button class="btn btn-secondary" onclick="document.getElementById('brandLogoFile').click()" data-i18n="app.uploadLogo">Upload Logo</button>
+              <button class="btn btn-secondary" id="brandLogoRemoveBtn" onclick="removeLogo()" style="display:none" data-i18n="app.removeLogo">Remove</button>
+            </div>
+          </div>
         </div>
 
-        <label data-i18n="app.stampText">Stamp Text</label>
-        <input type="text" id="brandStampText" placeholder="PROTECTED" value="PROTECTED">
+        <!-- ====== ORGANIZATION NAME ====== -->
+        <div class="brand-section">
+          <div class="brand-section-title" data-i18n="app.orgNameSection">Organization Name</div>
+          <input type="text" id="brandOrgName" placeholder="Your Company Name" value="" data-i18n-placeholder="app.orgNamePlaceholder" oninput="updateBrandPreview()">
+        </div>
 
-        <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(139,137,166,.15)">
-          <label>Wave Colors</label>
-          <p class="card-desc" style="margin-top:0;margin-bottom:12px">Customize each wave line with its own color for a unique holographic effect.</p>
+        <!-- ====== WAVE COLORS ====== -->
+        <div class="brand-section">
+          <div class="brand-section-title" data-i18n="app.waveColorsSection">Wave Colors</div>
 
-          <!-- Wave count slider -->
-          <div style="margin-bottom:8px">
-            <label style="font-size:12px;color:#8b89a6;margin:0">Number of waves: <span id="waveCountLabel" style="color:#c4b5fd;font-weight:600">5</span></label>
+          <!-- Wave count -->
+          <div style="margin-bottom:4px">
+            <label style="font-size:12px;color:#8b89a6;margin:0" data-i18n="app.waveCount">Waves: <span id="waveCountLabel" style="color:#c4b5fd;font-weight:600">5</span></label>
             <input type="range" id="waveCount" class="wave-count-slider" min="3" max="10" value="5" oninput="updateWaveCount(this.value)">
           </div>
 
-          <!-- Individual wave color pickers -->
-          <div id="waveColorList" style="max-height:220px;overflow-y:auto;padding-right:4px;margin-bottom:12px">
+          <!-- Presets -->
+          <div class="gradient-presets">
+            <button type="button" class="gradient-preset-btn" onclick="applyGradientPreset('purple')" data-i18n="app.presetPurple">Purple</button>
+            <button type="button" class="gradient-preset-btn" onclick="applyGradientPreset('blue')" data-i18n="app.presetBlue">Blue</button>
+            <button type="button" class="gradient-preset-btn" onclick="applyGradientPreset('green')" data-i18n="app.presetGreen">Green</button>
+            <button type="button" class="gradient-preset-btn" onclick="applyGradientPreset('orange')" data-i18n="app.presetOrange">Orange</button>
+          </div>
+
+          <!-- Individual pickers -->
+          <div id="waveColorList" style="max-height:220px;overflow-y:auto;padding-right:4px;margin-bottom:8px">
             <!-- Generated dynamically by updateWaveCount() -->
           </div>
 
           <!-- Auto Gradient -->
           <div class="auto-gradient-row">
-            <button type="button" class="btn btn-secondary" onclick="autoGradient()" style="font-size:12px;padding:5px 12px">Auto Gradient</button>
+            <button type="button" class="btn btn-secondary" onclick="autoGradient()" style="font-size:12px;padding:5px 12px" data-i18n="app.autoGradient">Auto Gradient</button>
+            <span style="font-size:11px;color:#8b89a6" data-i18n="app.fromColor">from:</span>
             <input type="color" id="gradientBase" value="#3b82f6" style="width:32px;height:24px;padding:1px;cursor:pointer;border:1px solid rgba(124,58,237,.15);border-radius:4px;background:transparent">
-            <span style="font-size:11px;color:#8b89a6">Pick base color</span>
           </div>
 
-          <!-- Preset gradients -->
-          <div class="gradient-presets" style="margin-top:10px">
-            <button type="button" class="gradient-preset-btn" onclick="applyGradientPreset('purple')" title="Purple gradient">Purple</button>
-            <button type="button" class="gradient-preset-btn" onclick="applyGradientPreset('blue')" title="Blue gradient">Blue</button>
-            <button type="button" class="gradient-preset-btn" onclick="applyGradientPreset('green')" title="Green gradient">Green</button>
-            <button type="button" class="gradient-preset-btn" onclick="applyGradientPreset('orange')" title="Orange gradient">Orange</button>
-          </div>
-
-          <!-- Live preview -->
-          <div id="wavePreviewBox" style="margin-top:12px;background:#1a1a2e;border-radius:8px;height:60px;overflow:hidden;position:relative">
-            <svg id="wavePreviewSvg" viewBox="0 0 400 60" preserveAspectRatio="none" style="width:200%;height:100%;position:absolute;left:0;top:0;animation:wavePreviewFlow 6s linear infinite">
-            </svg>
+          <!-- Live Wave Preview -->
+          <div class="brand-section-title" style="margin-top:16px" data-i18n="app.wavePreviewLabel">Live Wave Preview</div>
+          <div class="brand-wave-preview-box" id="wavePreviewBox">
+            <svg id="wavePreviewSvg" viewBox="0 0 400 60" preserveAspectRatio="none"></svg>
           </div>
         </div>
 
-        <div class="brand-preview" id="brandPreview">
-          <div class="bp-stamp-container" style="position:relative;width:80px;height:80px;margin:0 auto 12px">
-            <div class="bp-stamp" id="bpStamp" style="border-color:rgba(124,58,237,.3);color:#7c3aed;width:80px;height:80px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;letter-spacing:1px;overflow:hidden">
-              <div id="bpStampLogo" style="display:flex;align-items:center;justify-content:center">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-            </div>
-            <div id="bpBadge" style="position:absolute;bottom:0;right:0;width:20px;height:20px;border-radius:50%;background:#fff;border:1.5px solid rgba(46,125,50,.5);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.15)">
-              <svg width="10" height="10" viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.8)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-          <div class="bp-text" data-i18n="app.stampPreview">Preview of your verification stamp</div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-primary" onclick="saveBranding()" data-i18n="app.saveBranding">Save Branding</button>
+        <!-- ====== ACTION BUTTONS ====== -->
+        <div class="brand-action-row">
           <button class="btn btn-secondary" onclick="resetBranding()" data-i18n="app.resetDefault">Reset to Default</button>
+          <button class="btn btn-primary" onclick="saveBranding()" data-i18n="app.saveBranding">Save Branding</button>
         </div>
       </div>
 
@@ -1387,16 +1453,16 @@ async function loadBranding() {
     const r = await fetch('/api/user/branding', { credentials: 'same-origin' });
     if (r.ok) {
       const data = await r.json();
-      if (data.brandColor) {
-        document.getElementById('brandColor').value = data.brandColor;
-        document.getElementById('brandColorText').value = data.brandColor;
+      if (data.orgName) {
+        document.getElementById('brandOrgName').value = data.orgName;
       }
       if (data.customIcon) {
         document.getElementById('brandIconUrl').value = data.customIcon;
         if (data.customIcon.startsWith('data:image/')) {
           document.getElementById('brandLogoFileName').textContent = 'Custom logo (saved)';
           document.getElementById('brandLogoRemoveBtn').style.display = 'inline-block';
-          document.getElementById('bpStampLogo').innerHTML = '<img src="' + data.customIcon + '" style="width:44px;height:44px;border-radius:50%;object-fit:cover" alt="logo">';
+          document.getElementById('bpStampLogo').innerHTML = '<img src="' + data.customIcon + '" style="width:56px;height:56px;border-radius:50%;object-fit:cover" alt="logo">';
+          document.getElementById('brandLogoThumb').innerHTML = '<img src="' + data.customIcon + '" style="width:36px;height:36px;border-radius:50%;object-fit:cover" alt="logo">';
         }
       }
       if (data.waveColor) {
@@ -1434,11 +1500,38 @@ async function loadBranding() {
 }
 
 function updateBrandPreview() {
-  const color = document.getElementById('brandColor').value;
-  document.getElementById('brandColorText').value = color;
-  const stamp = document.getElementById('bpStamp');
-  stamp.style.borderColor = color + '4D';
-  stamp.style.color = color;
+  // Update org name label
+  const orgName = document.getElementById('brandOrgName').value.trim() || 'Vertifile';
+  document.getElementById('bpOrgLabel').textContent = orgName;
+  // Update rotating text
+  const rotLabel = 'VERIFIED BY ' + orgName.toUpperCase() + ' \u2022 ';
+  const repeatCount = Math.max(2, Math.ceil(60 / rotLabel.length));
+  document.getElementById('bpRotatingLabel').textContent = rotLabel.repeat(repeatCount);
+  // Update stamp border color from first wave color
+  const waveColors = getWaveColors();
+  const primary = waveColors.length ? waveColors[0] : '#7c3aed';
+  document.getElementById('bpStamp').style.borderColor = primary + '4D';
+  // Update inline wave strip in preview
+  renderWaveStripPreview(waveColors);
+}
+
+function renderWaveStripPreview(colors) {
+  const svg = document.getElementById('bpWaveStripSvg');
+  if (!svg) return;
+  const count = colors.length;
+  let paths = '';
+  for (let i = 0; i < count; i++) {
+    const y = 4 + i * (40 / count);
+    const amp = 3 + Math.sin(i * 0.7) * 2;
+    const phase = i * 35;
+    let d = 'M0,' + y;
+    for (let x = 0; x <= 800; x += 6) {
+      d += ' L' + x + ',' + (y + Math.sin((x + phase) * Math.PI / 180) * amp);
+    }
+    const op = (0.3 + (i / count) * 0.5).toFixed(2);
+    paths += '<path d="' + d + '" stroke="' + colors[i] + '" fill="none" stroke-width="0.6" opacity="' + op + '"/>';
+  }
+  svg.innerHTML = paths;
 }
 
 // ===== Advanced Wave Color Controls =====
@@ -1474,6 +1567,7 @@ function updateWaveCount(count) {
 function updateWavePreview() {
   const colors = getWaveColors();
   renderWavePreviewMulti(colors);
+  renderWaveStripPreview(colors);
 }
 
 function renderWavePreviewMulti(colors) {
@@ -1584,8 +1678,10 @@ function handleLogoUpload(e) {
     document.getElementById('brandIconUrl').value = dataUrl;
     document.getElementById('brandLogoFileName').textContent = file.name;
     document.getElementById('brandLogoRemoveBtn').style.display = 'inline-block';
-    // Update preview
-    document.getElementById('bpStampLogo').innerHTML = '<img src="' + dataUrl + '" style="width:44px;height:44px;border-radius:50%;object-fit:cover" alt="logo">';
+    // Update large stamp preview
+    document.getElementById('bpStampLogo').innerHTML = '<img src="' + dataUrl + '" style="width:56px;height:56px;border-radius:50%;object-fit:cover" alt="logo">';
+    // Update thumbnail
+    document.getElementById('brandLogoThumb').innerHTML = '<img src="' + dataUrl + '" style="width:36px;height:36px;border-radius:50%;object-fit:cover" alt="logo">';
   };
   reader.readAsDataURL(file);
 }
@@ -1593,19 +1689,20 @@ function handleLogoUpload(e) {
 function removeLogo() {
   document.getElementById('brandIconUrl').value = '';
   document.getElementById('brandLogoFile').value = '';
-  document.getElementById('brandLogoFileName').textContent = 'No custom logo';
+  document.getElementById('brandLogoFileName').textContent = 'Vertifile Shield (default)';
   document.getElementById('brandLogoRemoveBtn').style.display = 'none';
-  // Reset preview to default shield
-  document.getElementById('bpStampLogo').innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const defaultShield = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  document.getElementById('bpStampLogo').innerHTML = defaultShield;
+  document.getElementById('brandLogoThumb').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5"/></svg>';
 }
 
 async function saveBranding() {
   try {
-    const brandColor = document.getElementById('brandColor').value;
     const waveColor = getWaveColors(); // Send as array
+    const brandColor = waveColor.length ? waveColor[0] : '#7c3aed'; // Primary = first wave
     const customIcon = document.getElementById('brandIconUrl').value.trim();
     const orgName = document.getElementById('brandOrgName').value.trim();
-    const stampText = document.getElementById('brandStampText').value.trim();
+    const stampText = ''; // Removed from UI
     const r = await fetch('/api/user/branding', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1622,12 +1719,10 @@ async function saveBranding() {
 }
 
 function resetBranding() {
-  document.getElementById('brandColor').value = '#7c3aed';
-  document.getElementById('brandColorText').value = '#7c3aed';
   document.getElementById('waveCount').value = 5;
   updateWaveCount(5);
   applyGradientPreset('purple');
-  document.getElementById('brandStampText').value = 'PROTECTED';
+  document.getElementById('brandOrgName').value = '';
   document.getElementById('brandIconUrl').value = '';
   removeLogo();
   updateBrandPreview();
