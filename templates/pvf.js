@@ -140,7 +140,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 /* ===== HOLOGRAPHIC WAVES — flowing mesh of parallel sine curves ===== */
 .holo-waves{position:absolute;left:0;right:0;bottom:0;height:200px;z-index:10;pointer-events:none;overflow:hidden;border-radius:0 0 4px 4px;opacity:0;transition:opacity 1.2s ease;
   mask-image:linear-gradient(to bottom,transparent 0%,black 30%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 30%)}
-.holo-waves.active{opacity:.45}
+.holo-waves.active{opacity:.4}
 .wave-svg{position:absolute;top:0;left:0;width:200%;height:100%}
 .wave-svg path{fill:none;stroke-linecap:round;stroke-width:0.8}
 @keyframes waveFlow{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
@@ -148,8 +148,8 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 .holo-waves.frozen .wave-svg{animation-play-state:paused}
 
 /* ===== VERTIFILE STAMP ===== */
-.stamp{position:absolute;bottom:6%;right:5%;width:96px;height:96px;z-index:30;pointer-events:none;opacity:0.7;perspective:800px}
-@media(max-width:600px){.stamp{width:64px;height:64px;bottom:4%;right:3%}}
+.stamp{position:absolute;bottom:6%;right:5%;width:72px;height:72px;z-index:30;pointer-events:none;opacity:0.4;perspective:800px}
+@media(max-width:600px){.stamp{width:48px;height:48px;bottom:4%;right:3%}}
 
 /* 3D Coin-flip animation */
 .stamp-coin{width:100%;height:100%;transform-style:preserve-3d;opacity:0}
@@ -198,7 +198,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 .stamp .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
 .stamp .center svg.stamp-logo{width:32px;height:32px}
 .stamp .center img.stamp-logo{width:32px;height:32px;border-radius:50%;object-fit:contain;background:#fff;padding:2px}
-.stamp .brand{font-size:7px;font-weight:900;letter-spacing:1.5px;color:rgba(124,58,237,.45);margin-top:1px}
+.stamp .brand{font-size:7px;font-weight:900;letter-spacing:1.5px;color:rgba(124,58,237,.4);margin-top:1px}
 .stamp .lbl{font-size:8px;font-weight:900;letter-spacing:1px;margin-top:2px}
 .stamp .lbl.ok{color:rgba(46,125,50,.6)}
 .stamp .lbl.bad{color:rgba(198,40,40,.6)}
