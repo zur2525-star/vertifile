@@ -205,7 +205,7 @@
 
     /* Branding preview */
     .brand-preview{padding:24px;background:rgba(15,14,23,.5);border-radius:14px;border:1px solid rgba(124,58,237,.08);text-align:center;margin-top:12px}
-    .brand-preview .bp-stamp{width:80px;height:80px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:9px;font-weight:800;letter-spacing:1px}
+    .brand-preview .bp-stamp{border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;letter-spacing:1px;overflow:hidden}
     .brand-preview .bp-text{font-size:12px;color:#8b89a6}
 
     /* Shared links table */
@@ -692,14 +692,30 @@
           <input type="text" id="brandColorText" value="#7c3aed" oninput="document.getElementById('brandColor').value=this.value;updateBrandPreview()">
         </div>
 
-        <label data-i18n="app.customIconUrl">Custom Icon URL (optional)</label>
-        <input type="url" id="brandIconUrl" placeholder="https://example.com/logo.png">
+        <label data-i18n="app.stampLogo">Stamp Logo</label>
+        <p class="card-desc" style="margin-top:0;margin-bottom:8px">Appears inside your document's verification stamp. PNG with transparent background recommended. Will be displayed as a circle.</p>
+        <input type="file" id="brandLogoFile" accept="image/png" style="display:none" onchange="handleLogoUpload(event)">
+        <input type="hidden" id="brandIconUrl" value="">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <button class="btn btn-secondary" onclick="document.getElementById('brandLogoFile').click()" style="white-space:nowrap">Upload Logo</button>
+          <span id="brandLogoFileName" style="font-size:12px;color:#8b89a6">No custom logo</span>
+          <button class="btn btn-secondary" id="brandLogoRemoveBtn" onclick="removeLogo()" style="display:none;font-size:11px;padding:4px 10px">Remove</button>
+        </div>
 
         <label data-i18n="app.stampText">Stamp Text</label>
         <input type="text" id="brandStampText" placeholder="PROTECTED" value="PROTECTED">
 
         <div class="brand-preview" id="brandPreview">
-          <div class="bp-stamp" id="bpStamp" style="border-color:rgba(124,58,237,.3);color:#7c3aed">VERTIFILE</div>
+          <div class="bp-stamp-container" style="position:relative;width:80px;height:80px;margin:0 auto 12px">
+            <div class="bp-stamp" id="bpStamp" style="border-color:rgba(124,58,237,.3);color:#7c3aed;width:80px;height:80px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;letter-spacing:1px;overflow:hidden">
+              <div id="bpStampLogo" style="display:flex;align-items:center;justify-content:center">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <div id="bpBadge" style="position:absolute;bottom:0;right:0;width:20px;height:20px;border-radius:50%;background:#fff;border:1.5px solid rgba(46,125,50,.5);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.15)">
+              <svg width="10" height="10" viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.8)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
           <div class="bp-text" data-i18n="app.stampPreview">Preview of your verification stamp</div>
         </div>
 
@@ -1307,10 +1323,28 @@ function loadSharedDocuments() {
 }
 
 // ===== Branding =====
-function loadBranding() {
+async function loadBranding() {
   if (currentUser) {
     document.getElementById('brandOrgName').value = currentUser.name || '';
   }
+  try {
+    const r = await fetch('/api/user/branding', { credentials: 'same-origin' });
+    if (r.ok) {
+      const data = await r.json();
+      if (data.brandColor) {
+        document.getElementById('brandColor').value = data.brandColor;
+        document.getElementById('brandColorText').value = data.brandColor;
+      }
+      if (data.customIcon) {
+        document.getElementById('brandIconUrl').value = data.customIcon;
+        if (data.customIcon.startsWith('data:image/')) {
+          document.getElementById('brandLogoFileName').textContent = 'Custom logo (saved)';
+          document.getElementById('brandLogoRemoveBtn').style.display = 'inline-block';
+          document.getElementById('bpStampLogo').innerHTML = '<img src="' + data.customIcon + '" style="width:44px;height:44px;border-radius:50%;object-fit:cover" alt="logo">';
+        }
+      }
+    }
+  } catch(e) { /* use defaults */ }
   updateBrandPreview();
 }
 
@@ -1320,8 +1354,38 @@ function updateBrandPreview() {
   const stamp = document.getElementById('bpStamp');
   stamp.style.borderColor = color + '4D';
   stamp.style.color = color;
-  const orgName = document.getElementById('brandOrgName').value || 'VERTIFILE';
-  stamp.textContent = orgName.toUpperCase();
+}
+
+function handleLogoUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/png')) {
+    toast('Please upload a PNG file with transparent background');
+    return;
+  }
+  if (file.size > 512 * 1024) {
+    toast('Logo must be under 512KB');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const dataUrl = ev.target.result;
+    document.getElementById('brandIconUrl').value = dataUrl;
+    document.getElementById('brandLogoFileName').textContent = file.name;
+    document.getElementById('brandLogoRemoveBtn').style.display = 'inline-block';
+    // Update preview
+    document.getElementById('bpStampLogo').innerHTML = '<img src="' + dataUrl + '" style="width:44px;height:44px;border-radius:50%;object-fit:cover" alt="logo">';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeLogo() {
+  document.getElementById('brandIconUrl').value = '';
+  document.getElementById('brandLogoFile').value = '';
+  document.getElementById('brandLogoFileName').textContent = 'No custom logo';
+  document.getElementById('brandLogoRemoveBtn').style.display = 'none';
+  // Reset preview to default shield
+  document.getElementById('bpStampLogo').innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 }
 
 async function saveBranding() {
@@ -1350,6 +1414,7 @@ function resetBranding() {
   document.getElementById('brandColorText').value = '#7c3aed';
   document.getElementById('brandStampText').value = 'PROTECTED';
   document.getElementById('brandIconUrl').value = '';
+  removeLogo();
   updateBrandPreview();
   toast('Branding reset to default');
 }

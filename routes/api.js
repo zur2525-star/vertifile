@@ -480,8 +480,8 @@ router.post('/org/branding', createLimiter, (req, res, next) => {
 
     if (customIcon) {
       const iconSize = Buffer.byteLength(customIcon, 'utf8');
-      if (iconSize > 50 * 1024) {
-        return res.status(400).json({ success: false, error: 'Icon too large. Maximum 50KB.' });
+      if (iconSize > 700 * 1024) {
+        return res.status(400).json({ success: false, error: 'Icon too large. Maximum 512KB image file.' });
       }
       if (!customIcon.startsWith('data:image/') && !customIcon.startsWith('<svg')) {
         return res.status(400).json({ success: false, error: 'Icon must be SVG or image data URI' });

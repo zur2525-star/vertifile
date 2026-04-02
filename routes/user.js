@@ -220,6 +220,16 @@ router.delete('/account', requireLogin, async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to delete account' }); }
 });
 
+// Get user branding
+router.get('/branding', requireLogin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const orgId = 'user_' + req.user.id;
+    const branding = await db.getBranding(orgId);
+    res.json({ success: true, customIcon: branding.custom_icon || null, brandColor: branding.brand_color || null });
+  } catch(e) { res.status(500).json({ success: false, error: 'Failed to load branding' }); }
+});
+
 // Save user branding
 router.post('/branding', requireLogin, async (req, res) => {
   try {
@@ -228,6 +238,15 @@ router.post('/branding', requireLogin, async (req, res) => {
     const { brandColor, customIcon, orgName, stampText } = req.body;
     if (brandColor && !/^#[0-9a-fA-F]{6}$/.test(brandColor)) {
       return res.status(400).json({ success: false, error: 'Invalid color format. Use hex (#RRGGBB)' });
+    }
+    if (customIcon) {
+      const iconSize = Buffer.byteLength(customIcon, 'utf8');
+      if (iconSize > 700 * 1024) {
+        return res.status(400).json({ success: false, error: 'Logo too large. Maximum 512KB image file.' });
+      }
+      if (!customIcon.startsWith('data:image/') && !customIcon.startsWith('<svg')) {
+        return res.status(400).json({ success: false, error: 'Logo must be a PNG image or SVG' });
+      }
     }
     await db.updateBranding(orgId, { brand_color: brandColor || null, custom_icon: customIcon || null });
     res.json({ success: true });

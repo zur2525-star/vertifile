@@ -197,13 +197,21 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 /* Inner circle */
 .stamp .inner-bg{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(124,58,237,.12)}
 
-/* Center content */
+/* Center content — logo + label */
 .stamp .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-.stamp .center svg{width:28px;height:28px}
+.stamp .center svg.stamp-logo{width:32px;height:32px}
+.stamp .center img.stamp-logo{width:32px;height:32px;border-radius:50%;object-fit:cover}
 .stamp .brand{font-size:7px;font-weight:900;letter-spacing:1.5px;color:rgba(124,58,237,.45);margin-top:1px}
 .stamp .lbl{font-size:8px;font-weight:900;letter-spacing:1px;margin-top:2px}
 .stamp .lbl.ok{color:rgba(46,125,50,.6)}
 .stamp .lbl.bad{color:rgba(198,40,40,.6)}
+
+/* Verified badge overlay */
+.stamp .verified-badge{position:absolute;bottom:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#fff;border:1.5px solid rgba(46,125,50,.5);display:flex;align-items:center;justify-content:center;z-index:31;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.stamp .verified-badge svg{width:10px;height:10px}
+.stamp .forged-badge{position:absolute;bottom:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#fff;border:1.5px solid rgba(198,40,40,.5);display:flex;align-items:center;justify-content:center;z-index:31;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.stamp .forged-badge svg{width:10px;height:10px}
+@media(max-width:600px){.stamp .verified-badge,.stamp .forged-badge{width:14px;height:14px;bottom:1px;right:1px}.stamp .verified-badge svg,.stamp .forged-badge svg{width:8px;height:8px}}
 
 /* Check & X animations */
 .chk{stroke-dasharray:60;stroke-dashoffset:60;animation:dChk 1s ease forwards .8s}
@@ -311,15 +319,16 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
           <line x1="2" y1="100" x2="8" y2="100" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
           <line x1="192" y1="100" x2="198" y2="100" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
           <defs><path id="tp" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-          <text font-size="7" fill="rgba(124,58,237,.25)" font-weight="700" letter-spacing="2.5"><textPath href="#tp">VERIFIED BY VERTIFILE \\u2022 DOCUMENT APPROVED \\u2022 BLOCKCHAIN SECURED \\u2022</textPath></text>
+          <text font-size="7" fill="rgba(124,58,237,.25)" font-weight="700" letter-spacing="2.5"><textPath href="#tp">VERIFIED BY ${escapeHtml((orgName || 'VERTIFILE').toUpperCase())} \\u2022 DOCUMENT APPROVED \\u2022 BLOCKCHAIN SECURED \\u2022</textPath></text>
         </svg>
         <div class="shim" id="sShim"></div>
         <div class="glow" id="sGlow"></div>
         <div class="inner-bg"></div>
         <div class="center" id="sCtr">${customIcon ?
-     (customIcon.startsWith('<svg') ? customIcon : `<img src="${customIcon}" style="width:28px;height:28px;object-fit:contain" alt="">`)
-     : `<svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+     (customIcon.startsWith('<svg') ? customIcon.replace(/<svg/, '<svg class="stamp-logo"') : `<img class="stamp-logo" src="${customIcon}" alt="">`)
+     : `<svg class="stamp-logo" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
    }<div class="brand">${escapeHtml(orgName || 'VERTIFILE')}</div><div class="lbl ok">VERIFIED</div></div>
+        <div class="verified-badge" id="sBadge"><svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.8)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </div>
       </div>
       <div class="stamp-shadow" id="sShadow"></div>
@@ -611,7 +620,8 @@ function showLocal(){
   fitToPage();
   setOk();
   activateWaves();
-  document.getElementById("sCtr").innerHTML='<svg viewBox="0 0 50 50" fill="none"><path class="chk" d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="brand">VERTIFILE</div><div class="lbl ok">PROTECTED</div>';
+  var initLogo = CUSTOMICON === 'svg' ? CUSTOMICONDATA.replace(/<svg/, '<svg class="stamp-logo"') : CUSTOMICON === 'img' ? '<img class="stamp-logo" src="'+CUSTOMICONDATA+'" alt="">' : '<svg class="stamp-logo" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  document.getElementById("sCtr").innerHTML=initLogo+'<div class="brand">VERTIFILE</div><div class="lbl ok">PROTECTED</div>';
   triggerFlip();
 }
 
@@ -662,8 +672,10 @@ function setOk(){
   document.getElementById("sOut").classList.remove("frozen");
   document.getElementById("sShim").classList.remove("frozen");
   document.getElementById("sGlow").classList.remove("frozen");
-  var iconHtml = CUSTOMICON === 'svg' ? CUSTOMICONDATA : CUSTOMICON === 'img' ? '<img src="'+CUSTOMICONDATA+'" style="width:28px;height:28px;object-fit:contain" alt="">' : '<svg viewBox="0 0 50 50" fill="none"><path class="chk" d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  document.getElementById("sCtr").innerHTML=iconHtml+'<div class="brand">'+ORGNAME+'</div><div class="lbl ok">VERIFIED</div>';
+  var logoHtml = CUSTOMICON === 'svg' ? CUSTOMICONDATA.replace(/<svg/, '<svg class="stamp-logo"') : CUSTOMICON === 'img' ? '<img class="stamp-logo" src="'+CUSTOMICONDATA+'" alt="">' : '<svg class="stamp-logo" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  document.getElementById("sCtr").innerHTML=logoHtml+'<div class="brand">'+ORGNAME+'</div><div class="lbl ok">VERIFIED</div>';
+  document.getElementById("sBadge").className='verified-badge';
+  document.getElementById("sBadge").innerHTML='<svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.8)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 }
 
 function setFk(){
@@ -674,7 +686,10 @@ function setFk(){
   document.getElementById("sOut").classList.add("frozen");
   document.getElementById("sShim").classList.add("frozen");
   document.getElementById("sGlow").classList.add("frozen");
-  document.getElementById("sCtr").innerHTML='<svg viewBox="0 0 50 50" fill="none"><path class="xp" d="M15 15L35 35" stroke="rgba(198,40,40,.5)" stroke-width="3" stroke-linecap="round"/><path class="xp" d="M35 15L15 35" stroke="rgba(198,40,40,.5)" stroke-width="3" stroke-linecap="round"/></svg><div class="brand">'+ORGNAME+'</div><div class="lbl bad">FORGED</div>';
+  var forgedLogo = CUSTOMICON === 'svg' ? CUSTOMICONDATA.replace(/<svg/, '<svg class="stamp-logo"') : CUSTOMICON === 'img' ? '<img class="stamp-logo" src="'+CUSTOMICONDATA+'" alt="" style="opacity:.5;filter:grayscale(1)">' : '<svg class="stamp-logo" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(198,40,40,.1)" stroke="rgba(198,40,40,.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  document.getElementById("sCtr").innerHTML=forgedLogo+'<div class="brand">'+ORGNAME+'</div><div class="lbl bad">FORGED</div>';
+  document.getElementById("sBadge").className='forged-badge';
+  document.getElementById("sBadge").innerHTML='<svg viewBox="0 0 50 50" fill="none"><path class="xp" d="M15 15L35 35" stroke="rgba(198,40,40,.8)" stroke-width="4" stroke-linecap="round"/><path class="xp" d="M35 15L15 35" stroke="rgba(198,40,40,.8)" stroke-width="4" stroke-linecap="round"/></svg>';
 }
 
 function startRefresh(){

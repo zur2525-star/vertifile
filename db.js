@@ -490,8 +490,10 @@ async function migrateFromJson() {
 // ================================================================
 // BRANDING
 // ================================================================
-async function updateBranding(orgId, { customIcon, brandColor }) {
-  await pool.query('UPDATE api_keys SET custom_icon = $1, brand_color = $2 WHERE org_id = $3', [customIcon || null, brandColor || null, orgId]);
+async function updateBranding(orgId, data) {
+  const icon = data.customIcon || data.custom_icon || null;
+  const color = data.brandColor || data.brand_color || null;
+  await pool.query('UPDATE api_keys SET custom_icon = $1, brand_color = $2 WHERE org_id = $3', [icon, color, orgId]);
 }
 
 async function getBranding(orgId) {
