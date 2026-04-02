@@ -167,18 +167,19 @@
     }
     .doc-stamp-coin.breathe{opacity:1;animation:stampBreathe2 3s ease-in-out infinite}
     @keyframes stampBreathe2{0%,100%{transform:rotateY(1800deg) scale(1)}50%{transform:rotateY(1800deg) scale(1.06)}}
-    .doc-stamp .s-ring{width:100%;height:100%;position:relative}
-    .doc-stamp .s-outer{position:absolute;top:0;left:0;width:100%;height:100%;animation:rotStamp2 25s linear infinite}
+    .doc-stamp .s-ring,.doc-stamp .vfs-ring{width:100%;height:100%;position:relative}
+    .doc-stamp .s-outer,.doc-stamp .vfs-outer{position:absolute;top:0;left:0;width:100%;height:100%;animation:rotStamp2 25s linear infinite}
     @keyframes rotStamp2{to{transform:rotate(360deg)}}
-    .doc-stamp .s-shim{position:absolute;top:5%;left:5%;width:90%;height:90%;border-radius:50%;background:conic-gradient(from 0deg,rgba(124,58,237,.05),rgba(109,40,217,.1) 60deg,rgba(76,175,80,.07) 120deg,rgba(124,58,237,.05) 180deg,rgba(109,40,217,.1) 240deg,rgba(76,175,80,.07) 300deg,rgba(124,58,237,.05));animation:shimRot2 4s linear infinite}
+    .doc-stamp .s-shim,.doc-stamp .vfs-shim{position:absolute;top:5%;left:5%;width:90%;height:90%;border-radius:50%;background:conic-gradient(from 0deg,rgba(124,58,237,.05),rgba(109,40,217,.1) 60deg,rgba(76,175,80,.07) 120deg,rgba(124,58,237,.05) 180deg,rgba(109,40,217,.1) 240deg,rgba(76,175,80,.07) 300deg,rgba(124,58,237,.05));animation:shimRot2 4s linear infinite}
     @keyframes shimRot2{to{transform:rotate(-360deg)}}
-    .doc-stamp .s-glow{position:absolute;top:15%;left:15%;width:70%;height:70%;border-radius:50%;background:radial-gradient(circle,rgba(76,175,80,.12),transparent 70%);animation:glowP2 3s ease-in-out infinite}
+    .doc-stamp .s-glow,.doc-stamp .vfs-glow{position:absolute;top:15%;left:15%;width:70%;height:70%;border-radius:50%;background:radial-gradient(circle,rgba(76,175,80,.12),transparent 70%);animation:glowP2 3s ease-in-out infinite}
     @keyframes glowP2{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
-    .doc-stamp .s-inner{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.8);border:1px solid rgba(124,58,237,.12)}
-    .doc-stamp .s-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-    .doc-stamp .s-center svg{width:22px;height:22px}
-    .doc-stamp .s-brand{font-size:5px;font-weight:900;letter-spacing:1px;color:rgba(124,58,237,.4);margin-top:1px}
-    .doc-stamp .s-lbl{font-size:6px;font-weight:900;letter-spacing:.5px;color:rgba(46,125,50,.5);margin-top:1px}
+    .doc-stamp .s-inner,.doc-stamp .vfs-inner-bg{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.8);border:1px solid rgba(124,58,237,.12)}
+    .doc-stamp .s-center,.doc-stamp .vfs-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+    .doc-stamp .s-center svg,.doc-stamp .vfs-center svg{width:22px;height:22px}
+    .doc-stamp .s-brand,.doc-stamp .vfs-brand{font-size:5px;font-weight:900;letter-spacing:1px;color:rgba(124,58,237,.4);margin-top:1px}
+    .doc-stamp .s-lbl,.doc-stamp .vfs-lbl,.doc-stamp .vfs-lbl-ok{font-size:6px;font-weight:900;letter-spacing:.5px;color:rgba(46,125,50,.5);margin-top:1px}
+    .doc-stamp .vfs-stamp-coin{width:100%;height:100%}
 
     /* Holo waves on document */
     .doc-waves{position:absolute;left:0;right:0;bottom:0;height:30%;z-index:6;pointer-events:none;overflow:hidden;border-radius:0 0 8px 8px;opacity:0;transition:opacity 1s;mask-image:linear-gradient(to bottom,transparent 0%,black 50%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 50%)}
@@ -392,22 +393,23 @@
     /* ===== REAL VERTIFILE STAMP (matches PVF output) ===== */
     .demo-stamp{position:absolute;bottom:6%;right:5%;width:80px;height:80px;z-index:30;pointer-events:none;perspective:800px}
     @media(min-width:768px){.demo-stamp{width:96px;height:96px}}
-    .demo-stamp .stamp-coin{width:100%;height:100%;transform-style:preserve-3d;animation:demoStampBreathe 3s ease-in-out infinite}
+    .demo-stamp .stamp-coin,.demo-stamp .vfs-stamp-coin{width:100%;height:100%;transform-style:preserve-3d;animation:demoStampBreathe 3s ease-in-out infinite}
     @keyframes demoStampBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-    .demo-stamp .stamp-outer{position:absolute;top:0;left:0;width:100%;height:100%;animation:demoStampSpin 30s linear infinite}
+    .demo-stamp .stamp-outer,.demo-stamp .vfs-outer{position:absolute;top:0;left:0;width:100%;height:100%;animation:demoStampSpin 30s linear infinite}
     @keyframes demoStampSpin{to{transform:rotate(360deg)}}
-    .demo-stamp .stamp-shim{position:absolute;top:5%;left:5%;width:90%;height:90%;border-radius:50%;
+    .demo-stamp .stamp-shim,.demo-stamp .vfs-shim{position:absolute;top:5%;left:5%;width:90%;height:90%;border-radius:50%;
       background:conic-gradient(from 0deg,rgba(124,58,237,.05),rgba(109,40,217,.1) 60deg,rgba(76,175,80,.07) 120deg,rgba(124,58,237,.05) 180deg,rgba(109,40,217,.1) 240deg,rgba(76,175,80,.07) 300deg,rgba(124,58,237,.05));
       animation:demoShimRot 4s linear infinite}
     @keyframes demoShimRot{to{transform:rotate(-360deg)}}
-    .demo-stamp .stamp-glow{position:absolute;top:15%;left:15%;width:70%;height:70%;border-radius:50%;background:radial-gradient(circle,rgba(76,175,80,.1),transparent 70%);animation:demoGlowP 3s ease-in-out infinite}
+    .demo-stamp .stamp-glow,.demo-stamp .vfs-glow{position:absolute;top:15%;left:15%;width:70%;height:70%;border-radius:50%;background:radial-gradient(circle,rgba(76,175,80,.1),transparent 70%);animation:demoGlowP 3s ease-in-out infinite}
     @keyframes demoGlowP{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
-    .demo-stamp .stamp-inner-bg{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(124,58,237,.12)}
-    .demo-stamp .stamp-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-    .demo-stamp .stamp-center svg{width:24px;height:24px}
-    .demo-stamp .stamp-brand{font-size:6px;font-weight:900;letter-spacing:1.5px;color:rgba(124,58,237,.45);margin-top:1px}
-    .demo-stamp .stamp-label{font-size:6px;font-weight:900;letter-spacing:1px;margin-top:1px;color:rgba(46,125,50,.6)}
-    .demo-stamp .stamp-outer text{font-size:7px;fill:rgba(124,58,237,.25);font-weight:700;letter-spacing:2.5px}
+    .demo-stamp .stamp-inner-bg,.demo-stamp .vfs-inner-bg{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(124,58,237,.12)}
+    .demo-stamp .stamp-center,.demo-stamp .vfs-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+    .demo-stamp .stamp-center svg,.demo-stamp .vfs-center svg{width:24px;height:24px}
+    .demo-stamp .stamp-brand,.demo-stamp .vfs-brand{font-size:6px;font-weight:900;letter-spacing:1.5px;color:rgba(124,58,237,.45);margin-top:1px}
+    .demo-stamp .stamp-label,.demo-stamp .vfs-lbl{font-size:6px;font-weight:900;letter-spacing:1px;margin-top:1px;color:rgba(46,125,50,.6)}
+    .demo-stamp .stamp-outer text,.demo-stamp .vfs-outer text{font-size:7px;fill:rgba(124,58,237,.25);font-weight:700;letter-spacing:2.5px}
+    .demo-stamp .vfs-ring{width:100%;height:100%;position:relative}
     /* ===== REAL HOLOGRAPHIC WAVES (matches PVF output) ===== */
     .demo-holo{position:absolute;left:0;right:0;bottom:0;height:35%;z-index:10;pointer-events:none;overflow:hidden;border-radius:0 0 3px 3px;opacity:.7;
       mask-image:linear-gradient(to bottom,transparent 0%,black 40%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 40%)}
@@ -426,11 +428,11 @@
     /* Forged stamp */
     .demo-stamp-forged{position:absolute;bottom:8%;right:6%;width:80px;height:80px;z-index:10}
     @media(min-width:768px){.demo-stamp-forged{width:100px;height:100px}}
-    .demo-stamp-forged .stamp-ring{width:100%;height:100%;border-radius:50%;border:2px solid rgba(220,38,38,.3);display:flex;align-items:center;justify-content:center;position:relative}
-    .demo-stamp-forged .stamp-inner{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center}
-    .demo-stamp-forged .stamp-x svg{width:28px;height:28px}
-    .demo-stamp-forged .stamp-brand{font-size:7px;font-weight:800;color:#dc2626;letter-spacing:1px;margin-top:2px}
-    .demo-stamp-forged .stamp-label{font-size:6px;font-weight:700;color:#fff;background:#dc2626;padding:1px 6px;border-radius:3px;margin-top:2px;letter-spacing:.5px}
+    .demo-stamp-forged .stamp-ring,.demo-stamp-forged .vfs-forged-ring{width:100%;height:100%;border-radius:50%;border:2px solid rgba(220,38,38,.3);display:flex;align-items:center;justify-content:center;position:relative}
+    .demo-stamp-forged .stamp-inner,.demo-stamp-forged .vfs-forged-inner{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .demo-stamp-forged .stamp-x svg,.demo-stamp-forged .vfs-forged-x svg{width:28px;height:28px}
+    .demo-stamp-forged .stamp-brand,.demo-stamp-forged .vfs-forged-brand{font-size:7px;font-weight:800;color:#dc2626;letter-spacing:1px;margin-top:2px}
+    .demo-stamp-forged .stamp-label,.demo-stamp-forged .vfs-forged-label{font-size:6px;font-weight:700;color:#fff;background:#dc2626;padding:1px 6px;border-radius:3px;margin-top:2px;letter-spacing:.5px}
 
     /* ===== INDUSTRIES ===== */
     .industries-section{background:#ffffff;position:relative;overflow:hidden}
@@ -561,14 +563,7 @@
 <!-- ===== HERO ===== -->
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 <section class="hero" id="main">
-  <div class="decorative-stamp" style="width:48px;height:48px;opacity:0.3;position:absolute;top:32px;right:40px;pointer-events:none;z-index:2">
-    <svg viewBox="0 0 200 200" style="animation:spin 20s linear infinite;width:100%;height:100%">
-      <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(124,58,237,.3)" stroke-width="1"/>
-      <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(124,58,237,.2)" stroke-width=".5"/>
-      <path d="M100,100 m-70,0 a70,70 0 1,1 140,0 a70,70 0 1,1 -140,0" id="dtp-hero" fill="none"/>
-      <text font-size="6" fill="rgba(124,58,237,.2)" font-weight="700" letter-spacing="2"><textPath href="#dtp-hero">VERTIFILE · VERIFIED · SECURE ·</textPath></text>
-    </svg>
-  </div>
+  <div id="heroDecorativeStamp" style="position:absolute;top:32px;right:40px"></div>
   <div class="scan-line"></div>
   <div class="hero-bg">
     <div class="grid"></div>
@@ -644,22 +639,7 @@
           <!-- Stamp -->
           <div class="doc-stamp" id="docStamp">
             <div class="doc-stamp-coin" id="docStampCoin">
-              <div class="s-ring">
-                <svg class="s-outer" viewBox="0 0 200 200">
-                  <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(124,58,237,.18)" stroke-width="1.2"/>
-                  <circle cx="100" cy="100" r="89" fill="none" stroke="rgba(124,58,237,.08)" stroke-width=".5" stroke-dasharray="3 3"/>
-                  <defs><path id="hsa" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-                  <text font-size="7" fill="rgba(124,58,237,.25)" font-weight="700" letter-spacing="2.5"><textPath href="#hsa">VERTIFILE &#x2022; PROTECTED VERIFIED FILE &#x2022; SECURED &#x2022;</textPath></text>
-                </svg>
-                <div class="s-shim"></div>
-                <div class="s-glow"></div>
-                <div class="s-inner"></div>
-                <div class="s-center">
-                  <svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  <div class="s-brand">VERTIFILE</div>
-                  <div class="s-lbl">VERIFIED</div>
-                </div>
-              </div>
+              <div id="heroStampContent"></div>
             </div>
           </div>
         </div>
@@ -883,41 +863,13 @@
               <div class="doc-sig"><div class="sig-line"></div>Faculty Dean</div>
               <div class="doc-sig"><div class="sig-line"></div>University President</div>
             </div>
-            <!-- Real Holographic Waves (matches PVF) -->
+            <!-- Real Holographic Waves (matches PVF — colors from stamp-component.js) -->
             <div class="demo-holo">
-              <svg class="hw-svg hw-a" viewBox="0 0 1400 200" preserveAspectRatio="none">
-                <path d="M-200,100 Q-60,40 80,100 Q220,160 360,100 Q500,40 640,100 Q780,160 920,100 Q1060,40 1200,100 Q1340,160 1480,100 Q1620,40 1760,100" stroke="rgba(124,58,237,.12)" stroke-width="2"/>
-                <path d="M-200,115 Q-40,160 120,115 Q280,70 440,115 Q600,160 760,115 Q920,70 1080,115 Q1240,160 1400,115 Q1560,70 1720,115" stroke="rgba(0,131,143,.10)" stroke-width="1.6"/>
-                <path d="M-200,140 Q-70,80 60,140 Q190,200 320,140 Q450,80 580,140 Q710,200 840,140 Q970,80 1100,140 Q1230,200 1360,140 Q1490,80 1620,140" stroke="rgba(46,125,50,.10)" stroke-width="1.8"/>
-              </svg>
-              <svg class="hw-svg hw-b" viewBox="0 0 1400 200" preserveAspectRatio="none">
-                <path d="M-200,80 Q-50,130 100,80 Q250,30 400,80 Q550,130 700,80 Q850,30 1000,80 Q1150,130 1300,80 Q1450,30 1600,80" stroke="rgba(106,27,154,.11)" stroke-width="1.8"/>
-                <path d="M-200,55 Q-30,95 170,55 Q370,15 570,55 Q770,95 970,55 Q1170,15 1370,55 Q1570,95 1770,55" stroke="rgba(109,40,217,.09)" stroke-width="1.5"/>
-              </svg>
+              <svg class="hw-svg hw-a" viewBox="0 0 1400 200" preserveAspectRatio="none" id="demoHoloA"></svg>
+              <svg class="hw-svg hw-b" viewBox="0 0 1400 200" preserveAspectRatio="none" id="demoHoloB"></svg>
             </div>
             <!-- Real Vertifile Stamp (matches PVF) -->
-            <div class="demo-stamp">
-              <div class="stamp-coin">
-                <svg class="stamp-outer" viewBox="0 0 200 200">
-                  <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(124,58,237,.18)" stroke-width="1.2"/>
-                  <circle cx="100" cy="100" r="89" fill="none" stroke="rgba(124,58,237,.08)" stroke-width=".5" stroke-dasharray="3 3"/>
-                  <line x1="100" y1="2" x2="100" y2="8" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
-                  <line x1="100" y1="192" x2="100" y2="198" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
-                  <line x1="2" y1="100" x2="8" y2="100" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
-                  <line x1="192" y1="100" x2="198" y2="100" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
-                  <defs><path id="demoArc" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-                  <text font-size="7" fill="rgba(124,58,237,.25)" font-weight="700" letter-spacing="2.5"><textPath href="#demoArc">VERIFIED BY VERTIFILE &#x2022; DOCUMENT APPROVED &#x2022; BLOCKCHAIN SECURED &#x2022;</textPath></text>
-                </svg>
-                <div class="stamp-shim"></div>
-                <div class="stamp-glow"></div>
-                <div class="stamp-inner-bg"></div>
-                <div class="stamp-center">
-                  <svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  <div class="stamp-brand">VERTIFILE</div>
-                  <div class="stamp-label">VERIFIED</div>
-                </div>
-              </div>
-            </div>
+            <div class="demo-stamp" id="demoVerifiedStamp"></div>
           </div>
         </div>
       </div>
@@ -965,15 +917,7 @@
             </div>
             <div class="demo-forged-wm">FORGED</div>
             <!-- Forged stamp -->
-            <div class="demo-stamp-forged">
-              <div class="stamp-ring">
-                <div class="stamp-inner">
-                  <div class="stamp-x"><svg viewBox="0 0 50 50" fill="none"><path d="M15 15L35 35" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/><path d="M35 15L15 35" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/></svg></div>
-                  <div class="stamp-brand">VERTIFILE</div>
-                  <div class="stamp-label">FORGED</div>
-                </div>
-              </div>
-            </div>
+            <div class="demo-stamp-forged" id="demoForgedStamp"></div>
           </div>
         </div>
       </div>
@@ -1070,9 +1014,36 @@
 </footer>
 
 <!-- ===== SCRIPTS ===== -->
+<script src="/js/stamp-component.js"></script>
 <script src="/js/i18n.js"></script>
 <script src="/js/nav-user.js"></script>
 <script>
+/* ===== STAMP COMPONENT INJECTION (single source of truth) ===== */
+(function(){
+  if(!window.VertifileStamp) return;
+  var S = VertifileStamp;
+  // Hero decorative stamp
+  S.inject('heroDecorativeStamp', 'decorative', { size: 48, opacity: 0.3 });
+  // Hero document stamp (inside the coin-flip container)
+  var heroStamp = document.getElementById('heroStampContent');
+  if(heroStamp) heroStamp.innerHTML = S.renderStamp();
+  // Demo verified waves (use component default colors, keep page-specific CSS animations)
+  var wc = S.defaults.waveColors;
+  var holoA = document.getElementById('demoHoloA');
+  var holoB = document.getElementById('demoHoloB');
+  if(holoA) holoA.innerHTML = ''
+    + '<path d="M-200,100 Q-60,40 80,100 Q220,160 360,100 Q500,40 640,100 Q780,160 920,100 Q1060,40 1200,100 Q1340,160 1480,100 Q1620,40 1760,100" stroke="' + (wc[3]||'#7c3aed') + '" stroke-width="2" opacity="0.12"/>'
+    + '<path d="M-200,115 Q-40,160 120,115 Q280,70 440,115 Q600,160 760,115 Q920,70 1080,115 Q1240,160 1400,115 Q1560,70 1720,115" stroke="' + (wc[2]||'#6d28d9') + '" stroke-width="1.6" opacity="0.10"/>'
+    + '<path d="M-200,140 Q-70,80 60,140 Q190,200 320,140 Q450,80 580,140 Q710,200 840,140 Q970,80 1100,140 Q1230,200 1360,140 Q1490,80 1620,140" stroke="' + (wc[1]||'#4c1d95') + '" stroke-width="1.8" opacity="0.10"/>';
+  if(holoB) holoB.innerHTML = ''
+    + '<path d="M-200,80 Q-50,130 100,80 Q250,30 400,80 Q550,130 700,80 Q850,30 1000,80 Q1150,130 1300,80 Q1450,30 1600,80" stroke="' + (wc[0]||'#2e1065') + '" stroke-width="1.8" opacity="0.11"/>'
+    + '<path d="M-200,55 Q-30,95 170,55 Q370,15 570,55 Q770,95 970,55 Q1170,15 1370,55 Q1570,95 1770,55" stroke="' + (wc[2]||'#6d28d9') + '" stroke-width="1.5" opacity="0.09"/>';
+  // Demo verified stamp
+  S.inject('demoVerifiedStamp', 'stamp');
+  // Demo forged stamp
+  S.inject('demoForgedStamp', 'forged');
+})();
+
 (function(){
   window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
   window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};

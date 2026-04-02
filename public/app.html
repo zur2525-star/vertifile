@@ -2181,6 +2181,21 @@ document.addEventListener('DOMContentLoaded', function() {
 // ===== Init =====
 checkAuth();
 </script>
+<script src="/js/stamp-component.js"></script>
+<script>
+/* Sync app.html branding defaults from stamp component single source of truth */
+(function(){
+  if(!window.VertifileStamp) return;
+  var d = VertifileStamp.defaults;
+  // Update the initial rotating text to match component defaults
+  var rotLabel = document.getElementById('bpRotatingLabel');
+  if(rotLabel) {
+    var text = 'VERIFIED BY ' + d.orgName + ' \u2022 ';
+    var repeatCount = Math.max(2, Math.ceil(60 / text.length));
+    rotLabel.textContent = text.repeat(repeatCount);
+  }
+})();
+</script>
 <script src="/js/i18n.js"></script>
 </body>
 </html>

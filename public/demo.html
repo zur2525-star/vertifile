@@ -236,18 +236,9 @@
           <div class="dp-heading">CERTIFICATE OF DEGREE</div>
           <div class="dp-text">This is to certify that<br><strong>YOSSI COHEN</strong><br>has completed the requirements for<br><strong>B.Sc. in Computer Science</strong></div>
           <!-- Holo waves -->
-          <div class="mini-holo">
-            <svg viewBox="0 0 1200 100" preserveAspectRatio="none">
-              <path d="M0 40 Q150 20 300 40 T600 40 T900 40 T1200 40" stroke="rgba(124,58,237,.15)" stroke-width="1.5" fill="none"/>
-              <path d="M0 60 Q150 40 300 60 T600 60 T900 60 T1200 60" stroke="rgba(52,211,153,.12)" stroke-width="1.5" fill="none"/>
-            </svg>
-          </div>
+          <div class="mini-holo" id="demoMiniWaves"></div>
           <!-- Stamp -->
-          <div class="mini-stamp verified">
-            <div class="ms-icon">&#10003;</div>
-            VERTIFILE
-            <div class="ms-label">VERIFIED</div>
-          </div>
+          <div id="demoMiniVerified"></div>
         </div>
         <ul style="margin-top:16px;font-size:12px;color:#059669;list-style:none;padding:0">
           <li data-i18n="demo.verified1">&#10003; Live animated holographic waves</li>
@@ -277,11 +268,7 @@
           </div>
           <div class="forged-wm">FORGED</div>
           <!-- Forged stamp -->
-          <div class="mini-stamp forged">
-            <div class="ms-icon">&#10007;</div>
-            VERTIFILE
-            <div class="ms-label">FORGED</div>
-          </div>
+          <div id="demoMiniForged"></div>
         </div>
         <ul style="margin-top:16px;font-size:12px;color:#dc2626;list-style:none;padding:0">
           <li data-i18n="demo.forged1">&#10007; No holographic waves</li>
@@ -427,6 +414,20 @@
   <div class="f-copy" data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</div>
 </footer>
 
+<script src="/js/stamp-component.js"></script>
+<script>
+(function(){
+  if(!window.VertifileStamp) return;
+  var S = VertifileStamp;
+  // Mini waves
+  var mw = document.getElementById('demoMiniWaves');
+  if(mw) mw.innerHTML = S.renderMiniWaves();
+  // Mini verified stamp
+  S.inject('demoMiniVerified', 'mini');
+  // Mini forged stamp
+  S.inject('demoMiniForged', 'mini', { forged: true });
+})();
+</script>
 <script src="/js/i18n.js"></script>
 <script src="/js/nav-user.js"></script>
 <script>
