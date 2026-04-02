@@ -45,11 +45,9 @@ window.VertifileStamp = {
     var forged = cfg.forged || false;
     var size = cfg.size || this.defaults.size;
 
-    var checkSvg = forged
-      ? '<svg class="vfs-stamp-logo" viewBox="0 0 50 50" fill="none"><path d="M15 15L35 35" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/><path d="M35 15L15 35" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/></svg>'
-      : '<svg class="vfs-stamp-logo" viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="' + cfg.checkColor + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    var forgedX = '<svg class="vfs-stamp-logo" viewBox="0 0 50 50" fill="none"><path d="M15 15L35 35" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/><path d="M35 15L15 35" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/></svg>';
 
-    var logo = cfg.customIcon || checkSvg;
+    var logo = forged ? forgedX : (cfg.customIcon || cfg.defaultLogo);
     var labelClass = forged ? 'vfs-lbl-bad' : 'vfs-lbl-ok';
     var labelText = forged ? 'FORGED' : cfg.stampText;
     var brandName = cfg.orgName;
@@ -183,7 +181,9 @@ window.VertifileStamp = {
     var opts = options || {};
     var cfg = this._merge(opts);
     var forged = opts.forged || false;
-    var icon = forged ? '\u2717' : '\u2713';
+    var icon = forged
+      ? '<svg viewBox="0 0 50 50" fill="none" style="width:16px;height:16px"><path d="M15 15L35 35" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/><path d="M35 15L15 35" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" style="width:16px;height:16px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(5,150,105,.15)" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     var cls = forged ? 'vfs-mini-stamp forged' : 'vfs-mini-stamp verified';
     var label = forged ? 'FORGED' : cfg.stampText;
 
