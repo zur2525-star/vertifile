@@ -1835,7 +1835,10 @@ async function deleteAccount() {
 
 // ===== Paywall =====
 function isFreePlan() {
-  return currentUser && (!currentUser.plan || currentUser.plan === 'free');
+  if (!currentUser) return false;
+  // Admin/owner always has full access
+  if (currentUser.email === 'zur2525@gmail.com' || currentUser.email === 'info@vertifile.com') return false;
+  return !currentUser.plan || currentUser.plan === 'free';
 }
 
 function showPaywall() {

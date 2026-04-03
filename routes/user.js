@@ -117,7 +117,9 @@ router.post('/upload', requireLogin, (req, res, next) => {
 
     await db.savePvfContent(fileHash, pvfHtml);
 
-    const isPaidPlan = req.user.plan && req.user.plan !== 'free';
+    // Admin/owner bypass — zur2525@gmail.com always has full access
+    const isAdmin = req.user.email === 'zur2525@gmail.com' || req.user.email === 'info@vertifile.com';
+    const isPaidPlan = isAdmin || (req.user.plan && req.user.plan !== 'free');
 
     if (!isPaidPlan) {
       // Free plan: create PVF but return preview-only response
