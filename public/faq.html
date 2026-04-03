@@ -209,6 +209,21 @@
     @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
     button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
     input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+
+    /* ===== MOBILE FIXES ===== */
+    @media(max-width:768px){
+      .faq-section{padding:48px 16px}
+      .faq-category-title{font-size:18px}
+      .faq-question{padding:14px 16px;font-size:14px;min-height:48px}
+      .faq-answer-inner{padding:0 16px 16px;font-size:13px}
+      .faq-icon{width:28px;height:28px;min-width:28px}
+      footer{padding:80px 20px 24px}
+    }
+    @media(max-width:480px){
+      .faq-section{padding:36px 12px}
+      .faq-category-title{font-size:16px}
+      .faq-question{font-size:13px;padding:12px 14px}
+    }
   </style>
 </head>
 <body>

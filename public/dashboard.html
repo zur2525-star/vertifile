@@ -370,6 +370,30 @@
     .status-pulse{animation:pulse 2s infinite}
     button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
     input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+
+    /* ===== ADDITIONAL MOBILE FIXES ===== */
+    @media(max-width:768px){
+      .top-bar{height:52px;padding:0 12px}
+      .nav-item{padding:8px 12px;font-size:12px;min-height:40px}
+      .stat-card{padding:16px 14px}
+      .stat-card .stat-label{font-size:11px}
+      .stat-card .stat-value{font-size:22px}
+      .panel{border-radius:12px}
+      .panel-header{padding:14px 16px}
+      .panel-header h3{font-size:14px}
+      .slide-panel{width:100%;right:-100%}
+      .slide-panel .slide-header{padding:16px}
+      .slide-panel .slide-body{padding:16px}
+      table{font-size:11px}
+      th,td{padding:6px 10px}
+      .search-input{width:100%;font-size:16px}
+    }
+    @media(max-width:480px){
+      .content-area{padding:12px}
+      .top-bar .logo-text{font-size:14px}
+      .stat-card .stat-value{font-size:20px}
+      .chart-row .panel{min-height:180px}
+    }
   </style>
 </head>
 <body>

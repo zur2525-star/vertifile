@@ -221,6 +221,24 @@
     @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
     button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
     input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+
+    /* ===== MOBILE FIXES ===== */
+    @media(max-width:768px){
+      section{padding:60px 20px}
+      .section-header{margin-bottom:36px}
+      .section-header h2{font-size:28px}
+      .section-header p{font-size:15px}
+      .founder-card{padding:28px 20px;gap:20px;border-radius:18px}
+      .founder-photo img,.founder-photo .photo-placeholder{width:100px;height:100px}
+    }
+    @media(max-width:480px){
+      section{padding:48px 16px}
+      .section-header h2{font-size:24px}
+      .hero h1{font-size:28px}
+      .hero p.sub{font-size:14px}
+      .stat-card .stat-value,.stat-item .stat-num{font-size:28px}
+      footer{padding:80px 20px 24px}
+    }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","name":"About Vertifile","url":"https://vertifile.com/about","description":"Meet the team behind Vertifile — document verification and anti-forgery platform founded in Israel.","mainEntity":{"@type":"Organization","name":"Vertifile","foundingDate":"2026","foundingLocation":"Israel","founder":{"@type":"Person","name":"Zur Halfon","jobTitle":"Founder & CEO","email":"info@vertifile.com"}}}</script>
 </head>

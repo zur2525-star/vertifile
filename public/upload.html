@@ -200,6 +200,39 @@
     .paywall-close:hover{color:#111}
     .paywall-another{display:block;margin-top:16px;font-size:13px;color:#a78bfa;cursor:pointer;border:none;background:none;font-family:inherit;font-weight:600;transition:.2s}
     .paywall-another:hover{color:#7c3aed}
+
+    /* ===== MOBILE FIXES ===== */
+    @media(max-width:768px){
+      body{padding:20px 12px}
+      .card{margin-top:72px;border-radius:18px}
+      .card-header{padding:22px 20px}
+      .card-header h2{font-size:18px}
+      .card-header p{font-size:13px}
+      .card-body{padding:22px 18px}
+      .drop-zone{padding:32px 18px}
+      .drop-zone .icon svg{width:38px;height:38px}
+      .drop-zone .main-text{font-size:14px}
+      .privacy-badge{padding:12px 14px;gap:10px}
+      .submit-btn{min-height:48px}
+      .result .download-btn{padding:12px 24px;font-size:14px;min-height:44px}
+      .result .check{width:52px;height:52px;border-radius:14px}
+      .result .check svg{width:26px;height:26px}
+      .result h3{font-size:18px}
+      .result p{font-size:13px}
+      .auth-gate{padding:28px 20px}
+      .auth-gate h3{font-size:16px}
+      .auth-gate button{min-height:44px}
+      .login-modal{padding:28px 22px;width:95%}
+      .login-modal .oauth-btn{min-height:44px}
+      .login-modal .lm-submit{min-height:44px}
+      .paywall-card{padding:28px 20px}
+      .paywall-card h2{font-size:20px}
+    }
+    @media(max-width:480px){
+      .card-body{padding:18px 14px}
+      .card-header{padding:18px 16px}
+      .card-header h2{font-size:16px}
+    }
   </style>
 </head>
 <body>

@@ -140,6 +140,30 @@
     .site-footer .f-copy{font-size:11px;color:#d1d5db}
     button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
     input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+
+    /* ===== MOBILE FIXES ===== */
+    @media(max-width:768px){
+      body{padding:20px 12px}
+      .card{margin-top:72px;border-radius:18px}
+      .card-header{padding:22px 20px}
+      .card-header h2{font-size:18px}
+      .card-header p{font-size:13px}
+      .card-body{padding:22px 18px}
+      .form-input,.form-select{font-size:16px;min-height:44px}
+      .submit-btn{min-height:48px}
+      .oauth-btn{min-height:44px}
+      .code-block{padding:14px 16px}
+      .code-block pre{font-size:11px}
+      .result-links a{padding:10px 18px;font-size:13px;min-height:44px}
+      .key-warning{padding:12px 14px;gap:8px;font-size:12px}
+    }
+    @media(max-width:480px){
+      .card-body{padding:18px 14px}
+      .card-header{padding:18px 16px}
+      .card-header h2{font-size:16px}
+      .result-links{flex-direction:column}
+      .result-links a{width:100%;justify-content:center}
+    }
   </style>
 </head>
 <body>

@@ -167,6 +167,35 @@
     .bg-glow-2{position:fixed;bottom:-200px;left:-200px;width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,.02),transparent 70%);pointer-events:none;z-index:0}
     button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
     input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+
+    /* ===== MOBILE FIXES ===== */
+    @media(max-width:768px){
+      body{padding:20px 12px}
+      .card{margin-top:72px;border-radius:18px}
+      .card-header{padding:22px 20px}
+      .card-header .header-icon{width:40px;height:40px}
+      .card-header .header-text h2{font-size:18px}
+      .card-header .header-text p{font-size:13px}
+      .card-body{padding:22px 18px}
+      .drop-zone{padding:36px 20px}
+      .drop-zone .icon svg{width:40px;height:40px}
+      .drop-zone .main-text{font-size:14px}
+      .meta .row{flex-direction:column;gap:4px;align-items:flex-start}
+      .meta .row .val{font-size:12px;word-break:break-all}
+      .pvf-viewer{width:100%;height:85vh;border-radius:12px}
+      .pvf-viewer-toolbar{padding:10px 14px;gap:8px;flex-wrap:wrap}
+      .pvf-viewer-toolbar .pvt-title{font-size:12px}
+      .security-note{padding:14px 16px;gap:10px}
+      .result h3{font-size:18px}
+      .result p{font-size:13px}
+      .try-again,.open-doc-btn{padding:12px 24px;font-size:14px;min-height:44px}
+      .submit-btn{min-height:48px}
+    }
+    @media(max-width:480px){
+      .card-body{padding:18px 14px}
+      .card-header{padding:18px 16px}
+      .card-header .header-text h2{font-size:16px}
+    }
   </style>
 </head>
 <body>

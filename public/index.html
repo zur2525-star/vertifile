@@ -153,7 +153,7 @@
     .doc-hash .hash-label{color:#4f46e5;font-weight:700;font-size:11px}
 
     /* Stamp on document */
-    .doc-stamp{position:absolute;bottom:50px;right:20px;width:90px;height:90px;z-index:10;pointer-events:none;opacity:0;perspective:800px}
+    .doc-stamp{position:absolute;bottom:30px;right:14px;width:56px;height:56px;z-index:10;pointer-events:none;opacity:0;perspective:800px}
     .doc-stamp.active{opacity:1}
     .doc-stamp-coin{width:100%;height:100%;transform-style:preserve-3d;opacity:0}
     .doc-stamp-coin.animate{animation:heroStampFlip 1.8s ease-out forwards}
@@ -176,9 +176,9 @@
     @keyframes glowP2{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
     .doc-stamp .s-inner,.doc-stamp .vfs-inner-bg{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.8);border:1px solid rgba(124,58,237,.12)}
     .doc-stamp .s-center,.doc-stamp .vfs-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-    .doc-stamp .s-center svg,.doc-stamp .vfs-center svg{width:22px;height:22px}
-    .doc-stamp .s-brand,.doc-stamp .vfs-brand{font-size:5px;font-weight:900;letter-spacing:1px;color:rgba(124,58,237,.4);margin-top:1px}
-    .doc-stamp .s-lbl,.doc-stamp .vfs-lbl,.doc-stamp .vfs-lbl-ok{font-size:6px;font-weight:900;letter-spacing:.5px;color:rgba(46,125,50,.5);margin-top:1px}
+    .doc-stamp .s-center svg,.doc-stamp .vfs-center svg{width:14px;height:14px}
+    .doc-stamp .s-brand,.doc-stamp .vfs-brand{font-size:3.5px;font-weight:900;letter-spacing:.5px;color:rgba(124,58,237,.4);margin-top:0}
+    .doc-stamp .s-lbl,.doc-stamp .vfs-lbl,.doc-stamp .vfs-lbl-ok{font-size:4px;font-weight:900;letter-spacing:.3px;color:rgba(46,125,50,.5);margin-top:0}
     .doc-stamp .vfs-stamp-coin{width:100%;height:100%}
 
     /* Holo waves on document */
@@ -495,6 +495,49 @@
     @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
     button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
     input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+
+    /* ===== COMPREHENSIVE MOBILE FIXES ===== */
+    @media(max-width:768px){
+      section{padding:60px 20px}
+      .section-header{margin-bottom:36px}
+      .section-header h2{font-size:28px}
+      .section-header p{font-size:15px}
+      .demo-stamp{width:48px;height:48px}
+      .demo-stamp .stamp-center svg,.demo-stamp .vfs-center svg{width:16px;height:16px}
+      .demo-stamp .stamp-brand,.demo-stamp .vfs-brand{font-size:4px;letter-spacing:.8px}
+      .demo-stamp .stamp-label,.demo-stamp .vfs-lbl{font-size:4px}
+      .demo-stamp .stamp-outer text,.demo-stamp .vfs-outer text{font-size:5px;letter-spacing:1.5px}
+      .demo-stamp-forged{width:52px;height:52px}
+      .demo-stamp-forged .stamp-x svg,.demo-stamp-forged .vfs-forged-x svg{width:20px;height:20px}
+      .demo-stamp-forged .stamp-brand,.demo-stamp-forged .vfs-forged-brand{font-size:5px}
+      .demo-stamp-forged .stamp-label,.demo-stamp-forged .vfs-forged-label{font-size:5px}
+      .demo-a4{padding:6% 6% 4%}
+      .demo-a4 .doc-sig .sig-line{width:50px}
+      .demo-topbar{height:32px;padding:0 10px;gap:6px}
+      .demo-dot{width:7px;height:7px}
+      .demo-url{font-size:9px;height:20px;padding:0 8px}
+      .ind-card{padding:16px 18px;gap:12px}
+      .ind-card h3{font-size:14px}
+      .doc-stamp{width:40px;height:40px;bottom:20px;right:10px}
+      .doc-stamp .s-center svg,.doc-stamp .vfs-center svg{width:10px;height:10px}
+      .doc-stamp .s-brand,.doc-stamp .vfs-brand{font-size:2.5px}
+      .doc-stamp .s-lbl,.doc-stamp .vfs-lbl,.doc-stamp .vfs-lbl-ok{font-size:3px}
+    }
+    @media(max-width:480px){
+      section{padding:48px 16px}
+      .section-header h2{font-size:24px}
+      .section-header p{font-size:14px}
+      .hero p.sub{font-size:14px}
+      .bottom-cta h2{font-size:24px}
+      .bottom-cta p{font-size:14px}
+      .bottom-cta .btn-white{padding:14px 28px;font-size:14px;width:100%}
+      .feat-card{padding:24px 20px}
+      .feat-card h3{font-size:15px}
+      .feat-card p{font-size:13px}
+      .sec-layer{padding:18px 14px}
+      .demo-body{padding:12px}
+      footer{padding:80px 20px 24px}
+    }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Vertifile","url":"https://vertifile.com","logo":"https://vertifile.com/images/logo-icon.png","description":"Document verification and anti-forgery platform","foundingDate":"2026","foundingLocation":"Israel","contactPoint":{"@type":"ContactPoint","email":"info@vertifile.com","contactType":"customer service"}}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Vertifile","applicationCategory":"SecurityApplication","operatingSystem":"Web, macOS, Windows","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Protect any document from forgery with cryptographic verification"}</script>

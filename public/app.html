@@ -498,6 +498,29 @@
     .paywall-close{position:absolute;top:14px;right:18px;background:none;border:none;font-size:22px;color:#9ca3af;cursor:pointer;padding:4px}
     .paywall-close:hover{color:#111}
     body.light-mode .paywall-card{background:rgba(255,255,255,.95)}
+
+    /* ===== ADDITIONAL MOBILE FIXES ===== */
+    @media(max-width:768px){
+      .login-card{padding:32px 24px;width:95%}
+      .login-card h2{font-size:18px}
+      .login-input{font-size:16px;min-height:44px}
+      .login-submit{min-height:48px}
+      .oauth-btn{min-height:44px}
+      .topbar{padding:0 12px}
+      .search-bar{max-width:none}
+      .search-bar input{font-size:16px;padding:10px 16px 10px 38px}
+      .new-doc-topbar{padding:0 12px}
+      .content-panel{padding:16px 12px}
+      .panel-card .form-row{grid-template-columns:1fr}
+      .modal{padding:24px 18px;width:95%}
+      .modal-actions button{min-height:44px}
+    }
+    @media(max-width:480px){
+      .topbar-logo{min-width:auto}
+      .topbar-logo img{height:20px}
+      .doc-row{padding:10px 12px}
+      .nav-item{padding:8px 12px;font-size:12px}
+    }
   </style>
 </head>
 <body>

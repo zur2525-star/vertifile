@@ -238,6 +238,21 @@
     @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
     button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
     input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+
+    /* ===== ADDITIONAL MOBILE FIXES ===== */
+    @media(max-width:768px){
+      .blog-header p{font-size:15px}
+      .article-card-content{padding:18px 16px}
+      .article-card-title{font-size:16px}
+      .newsletter-form input,.newsletter-form button{min-height:44px}
+      .featured-cta{min-height:44px}
+      footer{padding:60px 20px 24px}
+    }
+    @media(max-width:480px){
+      .blog-header h1{font-size:28px}
+      .article-card-content{padding:16px 14px}
+      .featured-cta{width:100%;justify-content:center}
+    }
   </style>
 </head>
 <body>
