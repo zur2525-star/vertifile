@@ -1130,5 +1130,17 @@
       "gdpr": "是的。我们根据GDPR第6条处理数据（合同履行、合法利益、同意）。我们为Enterprise客户提供DPA协议。",
       "dpa": "是的。Enterprise客户可以在privacy@vertifile.com申请DPA。"
     }
+  },
+  "paywall": {
+    "title": "您的文档已受保护！",
+    "subtitle": "查看您的文档使用Vertifile防篡改印章后的样子。",
+    "watermark": "预览\n订阅解锁",
+    "ctaTitle": "准备下载和分享了吗？",
+    "ctaDesc": "订阅Pro以解锁下载、分享和完整验证功能。",
+    "ctaBtn": "升级到Pro — $49/月",
+    "ctaNote": "包含每月500份文档、自定义品牌、API访问",
+    "uploadAnother": "上传另一个文档",
+    "dashboardTitle": "升级以下载和分享",
+    "dashboardSubtitle": "您的文档已受保护，但下载和分享需要Pro或Enterprise计划。"
   }
 }
