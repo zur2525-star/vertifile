@@ -63,7 +63,7 @@ router.post('/forgot-password', authLimiter, async (req, res) => {
 });
 
 // Password reset - set new password
-router.post('/reset-password', async (req, res) => {
+router.post('/reset-password', authLimiter, async (req, res) => {
   try {
     const { token, password } = req.body;
     if (!token || !password) return res.status(400).json({ success: false, error: 'Token and password required' });

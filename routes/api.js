@@ -427,20 +427,24 @@ router.get('/docs', (req, res) => {
 router.get('/org/stats', createLimiter, (req, res, next) => {
   req.app.get('authenticateApiKey')(req, res, next);
 }, async (req, res) => {
-  const db = req.app.get('db');
-  const stats = await db.getOrgStats(req.org.orgId);
-  res.json({ success: true, orgId: req.org.orgId, orgName: req.org.orgName, ...stats });
+  try {
+    const db = req.app.get('db');
+    const stats = await db.getOrgStats(req.org.orgId);
+    res.json({ success: true, orgId: req.org.orgId, orgName: req.org.orgName, ...stats });
+  } catch (e) { res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
 router.get('/org/documents', createLimiter, (req, res, next) => {
   req.app.get('authenticateApiKey')(req, res, next);
 }, async (req, res) => {
-  const db = req.app.get('db');
-  const limit = Math.min(parseInt(req.query.limit) || 50, 200);
-  const offset = parseInt(req.query.offset) || 0;
-  const docs = await db.getDocumentsByOrg(req.org.orgId, { limit, offset });
-  const total = await db.getDocumentCount(req.org.orgId);
-  res.json({ success: true, documents: docs, total, limit, offset });
+  try {
+    const db = req.app.get('db');
+    const limit = Math.min(parseInt(req.query.limit) || 50, 200);
+    const offset = parseInt(req.query.offset) || 0;
+    const docs = await db.getDocumentsByOrg(req.org.orgId, { limit, offset });
+    const total = await db.getDocumentCount(req.org.orgId);
+    res.json({ success: true, documents: docs, total, limit, offset });
+  } catch (e) { res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
 router.get('/org/profile', createLimiter, (req, res, next) => {

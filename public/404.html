@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>404 — Page Not Found | Vertifile</title>
-  <meta name="description" content="The page you're looking for doesn't exist or has been moved.">
+  <meta name="description" content="Page not found on Vertifile. Navigate back to explore tamper-proof document verification, blockchain-backed digital signatures, and secure document protection for individuals and enterprises.">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
   <meta property="og:title" content="404 — Page Not Found | Vertifile">
   <meta property="og:description" content="The page you're looking for doesn't exist or has been moved.">
@@ -52,16 +52,29 @@
 
     /* ===== 404 CONTENT ===== */
     .error-section{flex:1;display:flex;align-items:center;justify-content:center;padding:140px 32px 80px;text-align:center;background:linear-gradient(180deg,#f5f3ff 0%,#ffffff 100%)}
-    .error-content{max-width:500px}
+    .error-content{max-width:600px}
     .error-code{font-size:140px;font-weight:900;line-height:1;background:linear-gradient(135deg,#4f46e5,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;letter-spacing:-4px}
     .error-title{font-size:28px;font-weight:700;color:#111827;margin-bottom:12px}
-    .error-message{font-size:16px;color:#6b7280;line-height:1.6;margin-bottom:32px}
+    .error-message{font-size:16px;color:#6b7280;line-height:1.6;margin-bottom:28px}
+    .error-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
     .error-btn{display:inline-block;padding:12px 32px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:12px;font-size:15px;font-weight:600;text-decoration:none;transition:.2s}
     .error-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,.3)}
+    .error-btn-secondary{display:inline-block;padding:12px 32px;background:#fff;color:#4f46e5;border:1.5px solid rgba(79,70,229,.2);border-radius:12px;font-size:15px;font-weight:600;text-decoration:none;transition:.2s}
+    .error-btn-secondary:hover{border-color:rgba(79,70,229,.5);background:rgba(79,70,229,.04);transform:translateY(-2px)}
+    .suggestions{margin-top:8px}
+    .suggestions h3{font-size:14px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+    .suggestion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .suggestion-card{padding:16px;background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:12px;text-decoration:none;transition:.2s;text-align:left}
+    .suggestion-card:hover{border-color:rgba(124,58,237,.25);box-shadow:0 4px 16px rgba(124,58,237,.08);transform:translateY(-2px)}
+    .suggestion-card .sc-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;background:linear-gradient(135deg,rgba(79,70,229,.08),rgba(124,58,237,.08))}
+    .suggestion-card .sc-icon svg{width:16px;height:16px;stroke:#7c3aed}
+    .suggestion-card .sc-title{font-size:14px;font-weight:600;color:#111827;margin-bottom:4px}
+    .suggestion-card .sc-desc{font-size:12px;color:#9ca3af;line-height:1.5}
     @media(max-width:768px){
       .error-code{font-size:100px}
       .error-title{font-size:22px}
       .error-section{padding:120px 24px 60px}
+      .suggestion-grid{grid-template-columns:1fr}
     }
 
     /* ===== FOOTER ===== */
@@ -154,7 +167,30 @@
     <div class="error-code">404</div>
     <h1 class="error-title" data-i18n="notFound.title">Page Not Found</h1>
     <p class="error-message" data-i18n="notFound.message">The page you're looking for doesn't exist or has been moved.</p>
-    <a href="/" class="error-btn" data-i18n="notFound.backHome">Back to Home</a>
+    <div class="error-actions">
+      <a href="/" class="error-btn" data-i18n="notFound.backHome">Back to Home</a>
+      <a href="/upload" class="error-btn-secondary">Protect a Document</a>
+    </div>
+    <div class="suggestions">
+      <h3>Maybe you were looking for</h3>
+      <div class="suggestion-grid">
+        <a href="/verify" class="suggestion-card">
+          <div class="sc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <div class="sc-title">Verify a Document</div>
+          <div class="sc-desc">Check if a .pvf file is authentic or tampered with</div>
+        </a>
+        <a href="/demo" class="suggestion-card">
+          <div class="sc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+          <div class="sc-title">See the Demo</div>
+          <div class="sc-desc">Watch how tamper-proof verification works in action</div>
+        </a>
+        <a href="/pricing" class="suggestion-card">
+          <div class="sc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+          <div class="sc-title">View Pricing</div>
+          <div class="sc-desc">Free, Pro, and Enterprise plans for every need</div>
+        </a>
+      </div>
+    </div>
   </div>
 </section>
 
