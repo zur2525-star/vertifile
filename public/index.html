@@ -199,7 +199,7 @@
 
     /* Green glow flash */
     .doc-glow-flash{position:absolute;top:0;left:0;right:0;bottom:0;border-radius:8px;box-shadow:0 0 0 0 rgba(52,211,153,0);pointer-events:none;z-index:8;transition:box-shadow .3s}
-    .doc-glow-flash.active{box-shadow:0 0 40px rgba(52,211,153,.3),0 0 80px rgba(52,211,153,.15);transition:box-shadow .6s}
+    .doc-glow-flash.active{box-shadow:0 0 20px rgba(124,58,237,.15),0 0 40px rgba(124,58,237,.08);transition:box-shadow .6s}
 
     @media(max-width:900px){
       .hero{padding:120px 24px 60px}
@@ -727,11 +727,9 @@
             </svg>
           </div>
           <div class="doc-glow-flash" id="docGlow"></div>
-          <!-- Stamp -->
-          <div class="doc-stamp" id="docStamp">
-            <div class="doc-stamp-coin" id="docStampCoin">
-              <div id="heroStampContent"></div>
-            </div>
+          <!-- Stamp — uses demo-stamp class for identical look -->
+          <div class="demo-stamp" id="docStamp" style="opacity:.4;bottom:3%;right:4%">
+            <div id="heroStampContent"></div>
           </div>
         </div>
         <!-- Hash output -->
@@ -1106,23 +1104,23 @@
       <div class="blog-featured-body">
         <span class="blog-featured-tag">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-          Document Security
+          <span data-i18n="blog.tag.security">Document Security</span>
         </span>
         <h3 data-i18n="blog.post2.title">Why PDF Signatures Are Not Enough &mdash; And What Comes Next</h3>
         <p data-i18n="blog.post2.excerpt">PDF signatures verify who signed a document, not whether it was changed after. Learn how tamper-proof .pvf files solve document fraud for good.</p>
         <div class="blog-featured-meta">
           <div class="bf-avatar">ZH</div>
-          <span>Zur Halfon</span>
+          <span data-i18n="blog.post2.author">Zur Halfon</span>
           <span>&middot;</span>
-          <span>Apr 1, 2026</span>
+          <span data-i18n="blog.post2.date">Apr 1, 2026</span>
         </div>
         <div class="blog-featured-cta">
-          Read Article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span data-i18n="blog.readArticle">Read Article</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </div>
     </a>
     <div class="blog-more fade-up">
-      <a href="/blog">View all articles &rarr;</a>
+      <a href="/blog"><span data-i18n="blog.viewAll">View all articles</span> &rarr;</a>
     </div>
   </div>
 </section>

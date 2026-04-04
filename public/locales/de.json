@@ -17,7 +17,9 @@
     "apiDocs": "API-Dokumentation",
     "portal": "Kundenportal",
     "account": "Mein Konto",
-    "pricing": "Preise"
+    "pricing": "Preise",
+    "blog": "Blog",
+    "contact": "Kontakt"
   },
   "hero": {
     "headline": "Schützen Sie jedes Dokument vor Fälschung",
@@ -1143,5 +1145,58 @@
     "uploadAnother": "Ein weiteres Dokument hochladen",
     "dashboardTitle": "Upgraden Sie zum Herunterladen und Teilen",
     "dashboardSubtitle": "Ihr Dokument ist geschutzt, aber zum Herunterladen und Teilen ist ein Pro- oder Enterprise-Plan erforderlich."
+  },
+  "blog": {
+    "label": "Aus unserem Blog",
+    "sectionTitle": "Neueste Einblicke",
+    "headerLabel": "Der Vertifile Blog",
+    "heroTitle": "Einblicke in Dokumentensicherheit, Verifizierung und Betrugspravention",
+    "heroSub": "Tiefgehende Analysen zu Verifizierungstechnologie, dem Kampf gegen Falschungen und der Zukunft vertrauenswurdiger Dokumente.",
+    "readArticle": "Artikel lesen",
+    "readMore": "Weiterlesen",
+    "moreArticles": "Weitere Artikel",
+    "viewAll": "Alle Artikel ansehen",
+    "comingSoon": "Demnachst",
+    "tag": {
+      "security": "Dokumentensicherheit",
+      "technology": "Technologie"
+    },
+    "post1": {
+      "title": "Warum Dokumentenfalschung eine wachsende Krise ist — und was wir dagegen tun konnen",
+      "excerpt": "Jedes Jahr zirkulieren Millionen gefalschter Dokumente weltweit. Von gefalschten Diplomen bis zu manipulierten Krankenakten — Dokumentenbetrug unterhohlt das Vertrauen in jeder Branche.",
+      "date": "28. Marz 2026"
+    },
+    "post2": {
+      "title": "Warum PDF-Signaturen nicht ausreichen — und was als Nachstes kommt",
+      "excerpt": "Die Dokumente, denen Sie am meisten vertrauen, lassen sich moglicherweise am leichtesten falschen. PDF-Signaturen verifizieren, wer ein Dokument unterzeichnet hat, nicht ob es danach verandert wurde. Erfahren Sie, wie falschungssichere .pvf-Dateien Dokumentenbetrug endgultig losen.",
+      "author": "Zur Halfon",
+      "authorRole": "Grunder, Vertifile",
+      "date": "1. Apr. 2026",
+      "readTime": "5 Min. Lesezeit"
+    },
+    "post": {
+      "blind": {
+        "title": "Was ist BLIND-Verarbeitung?",
+        "excerpt": "Vertifile sieht Ihre Inhalte nie. BLIND-Verarbeitung bedeutet, dass Dokumente lokal gehasht und versiegelt werden, bevor Daten Ihr Gerat verlassen — echte datenschutzorientierte Verifizierung ohne Kenntnis dessen, was Sie schutzen.",
+        "date": "2. Apr. 2026"
+      },
+      "fraud": {
+        "title": "Das 21-Milliarden-Dollar-Problem: Dokumentenbetrug 2026",
+        "excerpt": "Dokumentenbetrug kostet Unternehmen und Regierungen uber 21 Milliarden Dollar jahrlich. KI-generierte Falschungen werden fur das menschliche Auge nicht mehr erkennbar. Hier erfahren Sie, warum die alten Abwehrmechanismen nicht mehr funktionieren.",
+        "date": "30. Marz 2026"
+      },
+      "sigs": {
+        "title": "Warum digitale Signaturen nicht ausreichen",
+        "excerpt": "Digitale Signaturen beweisen, wer ein Dokument unterzeichnet hat — aber nicht, ob es danach verandert wurde. Verifizierung und Signierung sind zwei grundlegend verschiedene Probleme, und die meisten Losungen adressieren nur eines davon.",
+        "date": "25. Marz 2026"
+      }
+    },
+    "newsletter": {
+      "title": "Einblicke in Dokumentensicherheit erhalten",
+      "sub": "Abonnieren Sie unseren Newsletter fur Expertenanalysen zur Dokumentenverifizierung, Betrugspravention und Branchenneuigkeiten.",
+      "placeholder": "ihre@email.com",
+      "cta": "Abonnieren",
+      "note": "Kein Spam. Jederzeit abmeldbar."
+    }
   }
 }

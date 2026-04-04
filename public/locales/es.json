@@ -17,7 +17,9 @@
     "apiDocs": "Documentación API",
     "portal": "Portal de cliente",
     "account": "Mi Cuenta",
-    "pricing": "Precios"
+    "pricing": "Precios",
+    "blog": "Blog",
+    "contact": "Contacto"
   },
   "hero": {
     "headline": "Protege cualquier documento contra la falsificación",
@@ -1143,5 +1145,58 @@
     "uploadAnother": "Subir otro documento",
     "dashboardTitle": "Actualiza para descargar y compartir",
     "dashboardSubtitle": "Tu documento esta protegido, pero la descarga y el uso compartido requieren un plan Pro o Enterprise."
+  },
+  "blog": {
+    "label": "Desde nuestro blog",
+    "sectionTitle": "Ultimos articulos",
+    "headerLabel": "El blog de Vertifile",
+    "heroTitle": "Perspectivas sobre seguridad documental, verificacion y antifraude",
+    "heroSub": "Analisis profundos sobre tecnologia de verificacion, la lucha contra la falsificacion y el futuro de los documentos confiables.",
+    "readArticle": "Leer articulo",
+    "readMore": "Leer mas",
+    "moreArticles": "Mas articulos",
+    "viewAll": "Ver todos los articulos",
+    "comingSoon": "Proximamente",
+    "tag": {
+      "security": "Seguridad documental",
+      "technology": "Tecnologia"
+    },
+    "post1": {
+      "title": "Por que la falsificacion de documentos es una crisis creciente — y que podemos hacer al respecto",
+      "excerpt": "Cada ano, millones de documentos falsificados circulan por todo el mundo. Desde diplomas falsos hasta historiales medicos alterados, el fraude documental socava la confianza en todas las industrias.",
+      "date": "28 mar 2026"
+    },
+    "post2": {
+      "title": "Por que las firmas PDF no son suficientes — y cual es el siguiente paso",
+      "excerpt": "Los documentos en los que mas confias pueden ser los mas faciles de falsificar. Las firmas PDF verifican quien firmo un documento, no si fue modificado despues. Descubre como los archivos .pvf a prueba de manipulacion resuelven el fraude documental de forma definitiva.",
+      "author": "Zur Halfon",
+      "authorRole": "Fundador, Vertifile",
+      "date": "1 abr 2026",
+      "readTime": "5 min de lectura"
+    },
+    "post": {
+      "blind": {
+        "title": "Que es el procesamiento BLIND?",
+        "excerpt": "Vertifile nunca ve tu contenido. El procesamiento BLIND significa que los documentos se procesan y sellan localmente antes de que cualquier dato salga de tu dispositivo — verificacion real con privacidad primero y cero conocimiento de lo que proteges.",
+        "date": "2 abr 2026"
+      },
+      "fraud": {
+        "title": "El problema de 21 mil millones de dolares: fraude documental en 2026",
+        "excerpt": "El fraude documental cuesta a empresas y gobiernos mas de 21 mil millones de dolares al ano. Las falsificaciones generadas por IA se estan volviendo indetectables a simple vista. Aqui explicamos por que las defensas antiguas ya no funcionan.",
+        "date": "30 mar 2026"
+      },
+      "sigs": {
+        "title": "Por que las firmas digitales no son suficientes",
+        "excerpt": "Las firmas digitales demuestran quien firmo un documento — pero no si fue alterado despues. La verificacion y la firma son dos problemas fundamentalmente diferentes, y la mayoria de las soluciones solo resuelven uno.",
+        "date": "25 mar 2026"
+      }
+    },
+    "newsletter": {
+      "title": "Recibe informacion sobre seguridad documental",
+      "sub": "Unete a nuestro boletin para recibir analisis de expertos sobre verificacion de documentos, prevencion de fraude y novedades del sector.",
+      "placeholder": "tu@correo.com",
+      "cta": "Suscribirse",
+      "note": "Sin spam. Cancela en cualquier momento."
+    }
   }
 }

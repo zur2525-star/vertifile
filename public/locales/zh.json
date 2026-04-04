@@ -17,7 +17,9 @@
     "apiDocs": "API 文档",
     "portal": "客户门户",
     "account": "我的账户",
-    "pricing": "价格"
+    "pricing": "价格",
+    "blog": "博客",
+    "contact": "联系我们"
   },
   "hero": {
     "headline": "保护任何文档免受伪造",
@@ -1143,5 +1145,58 @@
     "uploadAnother": "上传另一个文档",
     "dashboardTitle": "升级以下载和分享",
     "dashboardSubtitle": "您的文档已受保护，但下载和分享需要Pro或Enterprise计划。"
+  },
+  "blog": {
+    "label": "博客精选",
+    "sectionTitle": "最新洞察",
+    "headerLabel": "Vertifile 博客",
+    "heroTitle": "文档安全、验证与防伪洞察",
+    "heroSub": "深入探讨验证技术、打击伪造以及可信文档的未来。",
+    "readArticle": "阅读文章",
+    "readMore": "阅读更多",
+    "moreArticles": "更多文章",
+    "viewAll": "查看全部文章",
+    "comingSoon": "即将推出",
+    "tag": {
+      "security": "文档安全",
+      "technology": "技术"
+    },
+    "post1": {
+      "title": "为什么文档伪造正在成为日益严重的危机——我们能做些什么",
+      "excerpt": "每年有数百万份伪造文件在全球流通。从假文凭到篡改的病历，文件欺诈破坏了各行各业的信任基础。",
+      "date": "2026年3月28日"
+    },
+    "post2": {
+      "title": "为什么 PDF 签名远远不够——下一步是什么",
+      "excerpt": "您最信赖的文档可能最容易被伪造。PDF 签名验证的是谁签署了文档，而非文档是否在签署后被篡改。了解防篡改的 .pvf 文件如何从根本上解决文档欺诈问题。",
+      "author": "Zur Halfon",
+      "authorRole": "创始人，Vertifile",
+      "date": "2026年4月1日",
+      "readTime": "5 分钟阅读"
+    },
+    "post": {
+      "blind": {
+        "title": "什么是 BLIND 处理？",
+        "excerpt": "Vertifile 绝不查看您的内容。BLIND 处理意味着文档在任何数据离开您的设备之前就已在本地完成哈希和封装——真正的隐私优先验证，对您保护的内容零知情。",
+        "date": "2026年4月2日"
+      },
+      "fraud": {
+        "title": "210 亿美元的难题：2026 年的文档欺诈",
+        "excerpt": "文档欺诈每年给企业和政府造成超过 210 亿美元的损失。AI 生成的伪造文件正变得肉眼无法分辨。这就是为什么旧的防御手段不再有效。",
+        "date": "2026年3月30日"
+      },
+      "sigs": {
+        "title": "为什么数字签名还不够",
+        "excerpt": "数字签名证明了谁签署了文档——但无法证明文档是否在签署后被篡改。验证和签名是两个本质不同的问题，而大多数解决方案只解决了其中一个。",
+        "date": "2026年3月25日"
+      }
+    },
+    "newsletter": {
+      "title": "获取文档安全洞察",
+      "sub": "订阅我们的新闻通讯，获取关于文档验证、防欺诈和行业动态的专家分析。",
+      "placeholder": "您的邮箱地址",
+      "cta": "订阅",
+      "note": "无垃圾邮件，随时退订。"
+    }
   }
 }

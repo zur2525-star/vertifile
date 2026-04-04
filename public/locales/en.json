@@ -17,7 +17,9 @@
     "apiDocs": "API Docs",
     "portal": "Customer Portal",
     "account": "My Account",
-    "pricing": "Pricing"
+    "pricing": "Pricing",
+    "blog": "Blog",
+    "contact": "Contact"
   },
   "hero": {
     "headline": "Protect Any Document From Forgery",
@@ -121,26 +123,26 @@
     "trigger3Desc": "Right-click, Ctrl+S, Ctrl+P, and drag attempts are blocked. The stamp cannot be captured in a static state — it only works as a live, running document.",
     "trigger4Title": "Cross-Origin Embedding",
     "trigger4Desc": "If the .pvf file is embedded in an iframe on another website, it detects the cross-origin context and freezes the stamp to prevent unauthorized reuse.",
-    "badgeHash": "\ud83d\udd12 Cryptographic Hashing",
-    "badgeBlockchain": "\u26d3 Blockchain Registry",
-    "badgeStamp": "\u2728 Live Animated Stamp",
-    "badgeBLIND": "\ud83d\udee1 BLIND Processing",
-    "verifiedHeader": "\u2713 Verified Document",
-    "verified1": "\u2713 Live animated holographic waves",
-    "verified2": "\u2713 Rotating verification stamp with green checkmark",
-    "verified3": "\u2713 Stamp continuously spins (proves it's live)",
-    "verified4": "\u2713 Hash matches blockchain registry",
-    "verified5": "\u2713 White background \u2014 clean document",
-    "forgedHeader": "\u2717 Forged Document",
-    "forged1": "\u2717 No holographic waves",
-    "forged2": "\u2717 Stamp is frozen \u2014 red X instead of checkmark",
-    "forged3": "\u2717 Large red X overlays the document",
-    "forged4": "\u2717 \"FORGED\" watermark appears",
-    "forged5": "\u2717 Dark red background signals danger",
+    "badgeHash": "🔒 Cryptographic Hashing",
+    "badgeBlockchain": "⛓ Blockchain Registry",
+    "badgeStamp": "✨ Live Animated Stamp",
+    "badgeBLIND": "🛡 BLIND Processing",
+    "verifiedHeader": "✓ Verified Document",
+    "verified1": "✓ Live animated holographic waves",
+    "verified2": "✓ Rotating verification stamp with green checkmark",
+    "verified3": "✓ Stamp continuously spins (proves it's live)",
+    "verified4": "✓ Hash matches blockchain registry",
+    "verified5": "✓ White background — clean document",
+    "forgedHeader": "✗ Forged Document",
+    "forged1": "✗ No holographic waves",
+    "forged2": "✗ Stamp is frozen — red X instead of checkmark",
+    "forged3": "✗ Large red X overlays the document",
+    "forged4": "✗ \"FORGED\" watermark appears",
+    "forged5": "✗ Dark red background signals danger",
     "formatTitle": "The .pvf File Format",
     "formatDesc": "PVF (Protected Verifiable File) is a new file format submitted to <strong>IANA</strong> for official MIME type registration (<code>application/pvf</code>). It's a self-contained HTML document that includes:",
     "format1Title": "The Original Document",
-    "format1Desc": "Embedded as base64 (for images/PDFs) or escaped text. The content is displayed inside the file \u2014 no external dependencies needed.",
+    "format1Desc": "Embedded as base64 (for images/PDFs) or escaped text. The content is displayed inside the file — no external dependencies needed.",
     "format2Title": "Cryptographic Hash + Signature",
     "format2Desc": "The SHA-256 hash and HMAC signature are embedded as JavaScript variables. These are verified against the server on every load.",
     "format3Title": "Verification UI + Security Code",
@@ -955,7 +957,7 @@
     "register": "Create Account",
     "name": "Full Name",
     "invalidCredentials": "Invalid email or password",
-    "newDocument": "+ New Document",
+    "newDocument": "New Document",
     "allDocuments": "All Documents",
     "starred": "Starred",
     "shared": "Shared",
@@ -965,8 +967,8 @@
     "search": "Search documents...",
     "noDocuments": "No documents yet",
     "noDocsDesc": "Upload your first document to get started",
-    "uploadFirst": "Upload Document",
-    "docName": "Document",
+    "uploadFirst": "Upload First Document",
+    "docName": "Name",
     "status": "Status",
     "size": "Size",
     "date": "Date",
@@ -1002,19 +1004,15 @@
     "hoursAgo": "h ago",
     "yesterday": "yesterday",
     "themeToggle": "Toggle theme",
-    "newDocument": "New Document",
     "searchPlaceholder": "Search documents...",
     "filterAll": "All",
     "filterVerified": "Verified",
     "filterPending": "Pending",
-    "docName": "Name",
     "docStatus": "Status",
     "docSize": "Size",
     "docDate": "Date",
     "docActions": "Actions",
-    "noDocuments": "No documents yet",
     "noDocumentsDesc": "Upload your first document to get started",
-    "uploadFirst": "Upload First Document",
     "planUsage": "documents",
     "slideHash": "SHA-256 Hash",
     "slideSignature": "Signature",
@@ -1146,6 +1144,59 @@
       "legalRecognition": "The .pvf format has a patent pending with the Israeli Patent Office and an IANA MIME type registration pending. While no Israeli court has ruled on .pvf specifically, it provides strong cryptographic evidence of document authenticity.",
       "gdpr": "Yes. We process data under GDPR Article 6 legal bases (contract performance, legitimate interest, consent). We offer DPA agreements for Enterprise customers.",
       "dpa": "Yes. Enterprise customers can request a DPA at privacy@vertifile.com."
+    }
+  },
+  "blog": {
+    "label": "From Our Blog",
+    "sectionTitle": "Latest Insights",
+    "headerLabel": "The Vertifile Blog",
+    "heroTitle": "Insights on Document Security, Verification & Anti-Fraud",
+    "heroSub": "Deep dives into verification technology, the fight against forgery, and the future of trusted documents.",
+    "readArticle": "Read Article",
+    "readMore": "Read more",
+    "moreArticles": "More Articles",
+    "viewAll": "View all articles",
+    "comingSoon": "Coming Soon",
+    "tag": {
+      "security": "Document Security",
+      "technology": "Technology"
+    },
+    "post1": {
+      "title": "Why Document Forgery Is a Growing Crisis — and What We Can Do About It",
+      "excerpt": "Every year, millions of forged documents circulate worldwide. From fake diplomas to altered medical records, document fraud undermines trust across every industry.",
+      "date": "Mar 28, 2026"
+    },
+    "post2": {
+      "title": "Why PDF Signatures Are Not Enough — And What Comes Next",
+      "excerpt": "The documents you trust most might be the easiest to forge. PDF signatures verify who signed a document, not whether it was changed after. Learn how tamper-proof .pvf files solve document fraud for good.",
+      "author": "Zur Halfon",
+      "authorRole": "Founder, Vertifile",
+      "date": "Apr 1, 2026",
+      "readTime": "5 min read"
+    },
+    "post": {
+      "blind": {
+        "title": "What Is BLIND Processing?",
+        "excerpt": "Vertifile never sees your content. BLIND processing means documents are hashed and sealed locally before any data leaves your device — true privacy-first verification with zero knowledge of what you protect.",
+        "date": "Apr 2, 2026"
+      },
+      "fraud": {
+        "title": "The $21 Billion Problem: Document Fraud in 2026",
+        "excerpt": "Document fraud costs businesses and governments over $21 billion annually. AI-generated forgeries are becoming undetectable to the human eye. Here is why the old defenses no longer work.",
+        "date": "Mar 30, 2026"
+      },
+      "sigs": {
+        "title": "Why Digital Signatures Aren't Enough",
+        "excerpt": "Digital signatures prove who signed a document — but not whether it was altered after. Verification and signing are two fundamentally different problems, and most solutions only solve one.",
+        "date": "Mar 25, 2026"
+      }
+    },
+    "newsletter": {
+      "title": "Get Document Security Insights",
+      "sub": "Join our newsletter for expert analysis on document verification, fraud prevention, and industry updates.",
+      "placeholder": "your@email.com",
+      "cta": "Subscribe",
+      "note": "No spam. Unsubscribe anytime."
     }
   }
 }

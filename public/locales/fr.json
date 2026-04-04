@@ -17,7 +17,9 @@
     "apiDocs": "Documentation API",
     "portal": "Portail client",
     "account": "Mon Compte",
-    "pricing": "Tarifs"
+    "pricing": "Tarifs",
+    "blog": "Blog",
+    "contact": "Contact"
   },
   "hero": {
     "headline": "Protégez tout document contre la falsification",
@@ -1143,5 +1145,58 @@
     "uploadAnother": "Telecharger un autre document",
     "dashboardTitle": "Passez a la version superieure pour telecharger et partager",
     "dashboardSubtitle": "Votre document est protege, mais le telechargement et le partage necessitent un plan Pro ou Enterprise."
+  },
+  "blog": {
+    "label": "Notre blog",
+    "sectionTitle": "Derniers articles",
+    "headerLabel": "Le blog Vertifile",
+    "heroTitle": "Perspectives sur la securite documentaire, la verification et la lutte contre la fraude",
+    "heroSub": "Analyses approfondies sur la technologie de verification, la lutte contre la falsification et l'avenir des documents de confiance.",
+    "readArticle": "Lire l'article",
+    "readMore": "Lire la suite",
+    "moreArticles": "Plus d'articles",
+    "viewAll": "Voir tous les articles",
+    "comingSoon": "Bientot",
+    "tag": {
+      "security": "Securite documentaire",
+      "technology": "Technologie"
+    },
+    "post1": {
+      "title": "Pourquoi la falsification de documents est une crise croissante — et ce que nous pouvons faire",
+      "excerpt": "Chaque annee, des millions de documents falsifies circulent dans le monde. Des faux diplomes aux dossiers medicaux modifies, la fraude documentaire sape la confiance dans tous les secteurs.",
+      "date": "28 mars 2026"
+    },
+    "post2": {
+      "title": "Pourquoi les signatures PDF ne suffisent pas — et quelle est la prochaine etape",
+      "excerpt": "Les documents auxquels vous faites le plus confiance sont peut-etre les plus faciles a falsifier. Les signatures PDF verifient qui a signe un document, pas s'il a ete modifie apres. Decouvrez comment les fichiers .pvf infalsifiables resolvent definitivement la fraude documentaire.",
+      "author": "Zur Halfon",
+      "authorRole": "Fondateur, Vertifile",
+      "date": "1 avr. 2026",
+      "readTime": "5 min de lecture"
+    },
+    "post": {
+      "blind": {
+        "title": "Qu'est-ce que le traitement BLIND ?",
+        "excerpt": "Vertifile ne voit jamais votre contenu. Le traitement BLIND signifie que les documents sont haches et scelles localement avant que toute donnee ne quitte votre appareil — une verification veritablement axee sur la confidentialite, sans aucune connaissance de ce que vous protegez.",
+        "date": "2 avr. 2026"
+      },
+      "fraud": {
+        "title": "Le probleme a 21 milliards de dollars : la fraude documentaire en 2026",
+        "excerpt": "La fraude documentaire coute aux entreprises et aux gouvernements plus de 21 milliards de dollars par an. Les falsifications generees par l'IA deviennent indetectables a l'oeil nu. Voici pourquoi les anciennes defenses ne fonctionnent plus.",
+        "date": "30 mars 2026"
+      },
+      "sigs": {
+        "title": "Pourquoi les signatures numeriques ne suffisent pas",
+        "excerpt": "Les signatures numeriques prouvent qui a signe un document — mais pas s'il a ete modifie apres. La verification et la signature sont deux problemes fondamentalement differents, et la plupart des solutions n'en resolvent qu'un seul.",
+        "date": "25 mars 2026"
+      }
+    },
+    "newsletter": {
+      "title": "Recevez des analyses sur la securite documentaire",
+      "sub": "Rejoignez notre newsletter pour des analyses d'experts sur la verification de documents, la prevention de la fraude et les actualites du secteur.",
+      "placeholder": "votre@email.com",
+      "cta": "S'abonner",
+      "note": "Pas de spam. Desabonnement a tout moment."
+    }
   }
 }
