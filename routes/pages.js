@@ -74,6 +74,16 @@ router.get('/blog', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'blog.html'));
 });
 
+// Blog post routes
+router.get('/blog/:slug', (req, res) => {
+  const slugFile = path.join(__dirname, '..', 'public', 'blog', req.params.slug + '.html');
+  if (fs.existsSync(slugFile)) {
+    res.sendFile(slugFile);
+  } else {
+    res.status(404).send(notFoundPage('Blog post not found'));
+  }
+});
+
 // ================================================================
 // SHAREABLE DOCUMENT LINKS — /d/:shareId
 // ================================================================

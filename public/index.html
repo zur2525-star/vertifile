@@ -153,7 +153,7 @@
     .doc-hash .hash-label{color:#4f46e5;font-weight:700;font-size:11px}
 
     /* Stamp on document */
-    .doc-stamp{position:absolute;bottom:3%;right:4%;width:96px;height:96px;z-index:10;pointer-events:none;opacity:0;perspective:800px}
+    .doc-stamp{position:absolute;bottom:2%;right:4%;width:96px;height:96px;z-index:10;pointer-events:none;opacity:0;perspective:800px}
     .doc-stamp.active{opacity:.4}
     .doc-stamp-coin{width:100%;height:100%;transform-style:preserve-3d;opacity:0}
     .doc-stamp-coin.animate{animation:heroStampFlip 1.8s ease-out forwards}
@@ -180,6 +180,7 @@
     .doc-stamp .s-brand,.doc-stamp .vfs-brand{font-size:6.5px;font-weight:900;letter-spacing:1.2px;color:rgba(124,58,237,.95);margin-top:1px;line-height:1}
     .doc-stamp .s-lbl,.doc-stamp .vfs-lbl,.doc-stamp .vfs-lbl-ok{font-size:5.5px;font-weight:900;letter-spacing:1px;color:rgba(46,125,50,1);margin-top:1px;line-height:1}
     .doc-stamp .s-outer text,.doc-stamp .vfs-outer text{font-size:8px;fill:rgba(124,58,237,.9);font-weight:700;letter-spacing:2.5px}
+    .doc-stamp .vfs-lbl-ok{background:rgba(46,125,50,.12);padding:1px 5px;border-radius:3px}
     .doc-stamp .vfs-stamp-coin{width:100%;height:100%}
 
     /* Holo waves on document */
@@ -693,7 +694,7 @@
       </div>
     </div>
     <!-- Document Scanning Animation -->
-    <div class="hero-left fade-up">
+    <div class="hero-left">
       <div class="doc-scene" id="docScene">
         <div class="doc-paper" id="docPaper">
           <div class="doc-header">
@@ -1099,7 +1100,7 @@
       <div class="label" style="color:#a78bfa;background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.2)" data-i18n="blog.label">From Our Blog</div>
       <h2 style="color:#ffffff" data-i18n="blog.sectionTitle">Latest Insights</h2>
     </div>
-    <a href="/blog" class="blog-featured fade-up">
+    <a href="/blog/why-pdf-signatures-fail" class="blog-featured fade-up">
       <div class="blog-featured-img">
         <div class="bf-grid"></div>
         <div class="bf-shield"><div class="bf-shield-body"></div></div>
