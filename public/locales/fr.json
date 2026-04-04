@@ -1074,7 +1074,8 @@
     "faq5a": "La securite est notre priorite absolue. Vertifile utilise le traitement aveugle, ce qui signifie que nous ne lisons ni ne stockons jamais le contenu de vos documents.",
     "bottomCtaTitle": "Pret a proteger vos documents ?",
     "bottomCtaSubtitle": "Rejoignez des milliers d'organisations qui font confiance a Vertifile pour la securite de leurs documents.",
-    "bottomCtaBtn": "Commencer gratuitement"
+    "bottomCtaBtn": "Commencer gratuitement",
+    "proTrialNote": "Essai gratuit de 14 jours — Sans carte bancaire"
   },
   "faq": {
     "heroTitle": "Questions fréquentes",

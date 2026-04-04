@@ -1074,7 +1074,8 @@
     "faq5a": "安全是我们的首要任务。Vertifile使用盲处理技术，意味着我们从不读取或存储您的文档内容。",
     "bottomCtaTitle": "准备好保护您的文档了吗？",
     "bottomCtaSubtitle": "加入成千上万信任Vertifile进行文档安全保护的组织。",
-    "bottomCtaBtn": "免费开始"
+    "bottomCtaBtn": "免费开始",
+    "proTrialNote": "14天免费试用 — 无需信用卡"
   },
   "faq": {
     "heroTitle": "常见问题",

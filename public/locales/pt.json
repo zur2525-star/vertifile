@@ -1074,7 +1074,8 @@
     "faq5a": "Seguranca e nossa principal prioridade. A Vertifile usa processamento cego, o que significa que nunca lemos ou armazenamos o conteudo dos seus documentos.",
     "bottomCtaTitle": "Pronto para proteger seus documentos?",
     "bottomCtaSubtitle": "Junte-se a milhares de organizacoes que confiam na Vertifile para seguranca de documentos.",
-    "bottomCtaBtn": "Comecar gratis"
+    "bottomCtaBtn": "Comecar gratis",
+    "proTrialNote": "Teste gratuito de 14 dias — Sem cartao de credito"
   },
   "faq": {
     "heroTitle": "Perguntas frequentes",

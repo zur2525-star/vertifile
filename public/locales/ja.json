@@ -1074,7 +1074,8 @@
     "faq5a": "セキュリティは最優先事項です。Vertifileはブラインド処理を使用し、文書の内容を読み取ったり保存したりすることはありません。",
     "bottomCtaTitle": "文書を保護する準備はできましたか？",
     "bottomCtaSubtitle": "Vertifileの文書セキュリティを信頼する何千もの組織に参加しましょう。",
-    "bottomCtaBtn": "無料で始める"
+    "bottomCtaBtn": "無料で始める",
+    "proTrialNote": "14日間無料トライアル — クレジットカード不要"
   },
   "faq": {
     "heroTitle": "よくある質問",

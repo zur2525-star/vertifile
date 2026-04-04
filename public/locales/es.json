@@ -1074,7 +1074,8 @@
     "faq5a": "La seguridad es nuestra maxima prioridad. Vertifile utiliza procesamiento ciego, lo que significa que nunca leemos ni almacenamos el contenido de tus documentos.",
     "bottomCtaTitle": "Listo para proteger tus documentos?",
     "bottomCtaSubtitle": "Unete a miles de organizaciones que confian en Vertifile para la seguridad de documentos.",
-    "bottomCtaBtn": "Comenzar gratis"
+    "bottomCtaBtn": "Comenzar gratis",
+    "proTrialNote": "Prueba gratuita de 14 dias — Sin tarjeta de credito"
   },
   "faq": {
     "heroTitle": "Preguntas frecuentes",

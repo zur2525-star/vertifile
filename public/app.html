@@ -15,6 +15,10 @@
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{overflow-x:hidden}
+
+    /* Loading skeleton */
+    .skeleton{background:linear-gradient(90deg,rgba(124,58,237,.05) 25%,rgba(124,58,237,.1) 50%,rgba(124,58,237,.05) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;height:48px;margin-bottom:8px}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
     body{font-family:'Inter',sans-serif;background:#0f0e17;color:#e2e0f0;min-height:100vh;transition:background .3s,color .3s}
 
     /* ===== LOGIN SCREEN ===== */
@@ -679,6 +683,7 @@
         <input type="checkbox" class="select-all" onchange="toggleSelectAll(this.checked)">
         <span data-i18n="app.name">Name</span>
       </div>
+      <div id="docSkeleton" style="padding:8px 16px"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
       <div id="docList"></div>
       <div class="doc-empty" id="docEmpty" style="display:none">
         <div class="empty-icon">&#128195;</div>
@@ -1246,16 +1251,20 @@ document.getElementById('loginPassword').addEventListener('keydown', e => {
 
 // ===== Documents =====
 async function loadDocuments() {
+  const skel = document.getElementById('docSkeleton');
+  if (skel) skel.style.display = '';
   try {
     const params = new URLSearchParams({ limit: 50 });
     const r = await fetch('/api/user/documents?' + params, { credentials: 'same-origin' });
     if (!r.ok) throw new Error('Failed to load');
     const data = await r.json();
     documents = data.documents || [];
+    if (skel) skel.style.display = 'none';
     renderDocumentList();
     updatePlanUsage();
   } catch (e) {
     documents = [];
+    if (skel) skel.style.display = 'none';
     renderDocumentList();
   }
 }

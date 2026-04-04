@@ -170,23 +170,24 @@ async function handleCreatePvf(req, res) {
     const chainedToken = crypto.createHmac('sha256', HMAC_SECRET)
       .update(fileHash + signature + req.org.orgId + codeIntegrity)
       .digest('hex');
-    await db.saveCodeIntegrity(fileHash, codeIntegrity, chainedToken);
-
-    logger.info({ event: 'create_pvf', file: originalName, mimeType, hash: fileHash.substring(0, 24), org: req.org.orgName, sizeKB: (fileBuffer.length / 1024).toFixed(1) }, `PVF created: ${originalName}`);
-
-    // Audit log: PVF creation
-    await db.log('pvf_created', {
-      orgId: req.org.orgId,
-      hash: fileHash,
-      originalName,
-      mimeType,
-      fileSize: fileBuffer.length,
-      ip: getClientIP(req)
-    });
-
     // Generate shareable link ID
     const shareId = crypto.randomBytes(8).toString('base64url'); // Short URL-safe ID
-    await db.setShareId(fileHash, shareId);
+
+    // Parallelise independent DB writes
+    await Promise.all([
+      db.saveCodeIntegrity(fileHash, codeIntegrity, chainedToken),
+      db.log('pvf_created', {
+        orgId: req.org.orgId,
+        hash: fileHash,
+        originalName,
+        mimeType,
+        fileSize: fileBuffer.length,
+        ip: getClientIP(req)
+      }),
+      db.setShareId(fileHash, shareId)
+    ]);
+
+    logger.info({ event: 'create_pvf', file: originalName, mimeType, hash: fileHash.substring(0, 24), org: req.org.orgName, sizeKB: (fileBuffer.length / 1024).toFixed(1) }, `PVF created: ${originalName}`);
 
     // Inject shareId into the PVF HTML now that it's been generated
     pvfHtml = pvfHtml.replace('var SHAREID=""', 'var SHAREID="' + shareId + '"');
