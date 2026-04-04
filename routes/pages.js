@@ -27,6 +27,12 @@ a:hover{background:#6d28d9;transform:translateY(-1px)}
 </div></body></html>`;
 }
 
+// Language path redirects — i18n is client-side, /he /ar etc redirect to /?lang=xx
+const SUPPORTED_LANGS = ['he','ar','fr','es','de','ru','zh','ja','pt'];
+SUPPORTED_LANGS.forEach(lang => {
+  router.get('/' + lang, (req, res) => res.redirect('/?lang=' + lang));
+});
+
 // Static page routes
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
