@@ -3,32 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vertifile Blog — Document Security Insights</title>
-  <meta name="description" content="Stay up to date with the latest in document verification, tamper-proof technology, and digital security from the Vertifile team. Deep dives into forgery prevention, blockchain verification, and .pvf file format insights.">
+  <title>Blog — Insights on Document Security, Verification &amp; Anti-Fraud | Vertifile</title>
+  <meta name="description" content="Stay up to date with the latest in document verification, tamper-proof technology, and anti-fraud insights from the Vertifile team. Deep dives into BLIND processing, forgery prevention, and .pvf file format security.">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
-  <meta property="og:title" content="Blog — Vertifile">
-  <meta property="og:description" content="Stay up to date with the latest in document verification, tamper-proof technology, and digital security from the Vertifile team.">
+  <meta property="og:title" content="Blog — Document Security, Verification & Anti-Fraud | Vertifile">
+  <meta property="og:description" content="Insights on document verification, tamper-proof technology, and anti-fraud from the Vertifile team. BLIND processing, forgery prevention, and .pvf security.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vertifile.com/blog">
   <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
   <link rel="canonical" href="https://vertifile.com/blog">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Blog — Vertifile">
-  <meta name="twitter:description" content="Stay up to date with the latest in document verification, tamper-proof technology, and digital security from the Vertifile team.">
+  <meta name="twitter:title" content="Blog — Document Security, Verification & Anti-Fraud | Vertifile">
+  <meta name="twitter:description" content="Insights on document verification, tamper-proof technology, and anti-fraud from the Vertifile team. BLIND processing, forgery prevention, and .pvf security.">
   <meta name="twitter:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
   <meta name="theme-color" content="#0f0e17">
 
-  <!-- JSON-LD Article Schema -->
+  <!-- JSON-LD Blog + CollectionPage Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Blog",
+    "@type": ["Blog", "CollectionPage"],
     "name": "Vertifile Blog",
-    "description": "Document security insights, tamper-proof technology updates, and digital verification best practices.",
+    "headline": "Insights on Document Security, Verification & Anti-Fraud",
+    "description": "Document security insights, tamper-proof technology updates, and digital verification best practices from the Vertifile team.",
     "url": "https://vertifile.com/blog",
+    "inLanguage": "en",
     "publisher": {
       "@type": "Organization",
       "name": "Vertifile",
+      "url": "https://vertifile.com",
       "logo": {
         "@type": "ImageObject",
         "url": "https://vertifile.com/images/logo-horizontal.png"
@@ -37,8 +40,8 @@
     "blogPost": [
       {
         "@type": "BlogPosting",
-        "headline": "Why PDF Signatures Fail — And What Vertifile Does Differently",
-        "description": "PDF digital signatures have fundamental weaknesses that make them unreliable for document verification. Learn how Vertifile solves these issues.",
+        "headline": "Why PDF Signatures Are Not Enough — And What Comes Next",
+        "description": "PDF digital signatures verify who signed a document, not whether it was changed after. Learn how tamper-proof .pvf files solve document fraud for good.",
         "url": "https://vertifile.com/blog/why-pdf-signatures-fail",
         "datePublished": "2026-04-01",
         "author": {
@@ -52,10 +55,55 @@
       },
       {
         "@type": "BlogPosting",
-        "headline": "Document Fraud in 2026: The Numbers That Should Scare You",
-        "description": "Comprehensive statistics on document fraud globally in 2026, covering financial impact, AI-powered forgery, and the industries most affected.",
-        "url": "https://vertifile.com/blog/document-fraud-statistics-2026",
-        "datePublished": "2026-04-03",
+        "headline": "What Is BLIND Processing?",
+        "description": "Vertifile never sees your content. BLIND processing means documents are hashed and sealed locally before any data leaves your device — true privacy-first verification.",
+        "url": "https://vertifile.com/blog/what-is-blind-processing",
+        "datePublished": "2026-04-02",
+        "author": {
+          "@type": "Person",
+          "name": "Zur Halfon"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Vertifile"
+        }
+      },
+      {
+        "@type": "BlogPosting",
+        "headline": "The $21 Billion Problem: Document Fraud in 2026",
+        "description": "Document fraud costs businesses and governments over $21 billion annually. AI-generated forgeries are becoming undetectable. Here is why the old defenses no longer work.",
+        "url": "https://vertifile.com/blog/document-fraud-21-billion-problem",
+        "datePublished": "2026-03-30",
+        "author": {
+          "@type": "Person",
+          "name": "Zur Halfon"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Vertifile"
+        }
+      },
+      {
+        "@type": "BlogPosting",
+        "headline": "Why Digital Signatures Aren't Enough",
+        "description": "Digital signatures prove who signed a document — but not whether it was altered after. Verification and signing are two fundamentally different problems.",
+        "url": "https://vertifile.com/blog/why-digital-signatures-arent-enough",
+        "datePublished": "2026-03-25",
+        "author": {
+          "@type": "Person",
+          "name": "Zur Halfon"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Vertifile"
+        }
+      },
+      {
+        "@type": "BlogPosting",
+        "headline": "Why Document Forgery Is a Growing Crisis — and What We Can Do About It",
+        "description": "Every year, millions of forged documents circulate worldwide. From fake diplomas to altered medical records, document fraud undermines trust across every industry.",
+        "url": "https://vertifile.com/blog/why-document-forgery-is-a-growing-crisis",
+        "datePublished": "2026-03-28",
         "author": {
           "@type": "Person",
           "name": "Zur Halfon"
@@ -318,6 +366,8 @@
       <a href="/pricing" data-i18n="nav.pricing">Pricing</a>
       <a href="/integration" data-i18n="nav.developers">Developers</a>
       <a href="/demo" data-i18n="nav.demo">Demo</a>
+      <a href="/blog" data-i18n="nav.blog">Blog</a>
+      <a href="/contact" data-i18n="nav.contact">Contact</a>
     </div>
     <div class="nav-actions">
       <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
@@ -353,6 +403,8 @@
   <a href="/pricing" onclick="closeMobile()" data-i18n="nav.pricing">Pricing</a>
   <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
   <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <a href="/blog" onclick="closeMobile()" data-i18n="nav.blog">Blog</a>
+  <a href="/contact" onclick="closeMobile()" data-i18n="nav.contact">Contact</a>
   <a href="/app" onclick="closeMobile()" data-i18n="nav.account">My Account</a>
   <div class="mob-actions">
     <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
@@ -373,7 +425,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
       <span data-i18n="blog.headerLabel">The Vertifile Blog</span>
     </div>
-    <h1 data-i18n="blog.heroTitle">Insights on Document Security</h1>
+    <h1 data-i18n="blog.heroTitle">Insights on Document Security, Verification &amp; Anti-Fraud</h1>
     <p data-i18n="blog.heroSub">Deep dives into verification technology, the fight against forgery, and the future of trusted documents.</p>
     <div class="blog-header-divider"></div>
   </div>
@@ -381,7 +433,7 @@
 
 <!-- ===== FEATURED ARTICLE ===== -->
 <div class="featured-wrap">
-  <a href="/blog/why-pdf-signatures-fail" class="featured-article">
+  <a href="/blog" class="featured-article">
     <!-- CSS Art Hero Image -->
     <div class="featured-image">
       <div class="fi-grid"></div>
@@ -446,8 +498,68 @@
   </div>
   <div class="articles-grid">
 
-    <!-- Article 2 (real) -->
-    <a href="/blog/why-document-forgery-is-a-growing-crisis" class="article-card">
+    <!-- Article: What is BLIND Processing? -->
+    <a href="/blog" class="article-card">
+      <div class="article-card-image aci-gradient-1">
+        <div class="aci-pattern"></div>
+        <div class="aci-icon"></div>
+      </div>
+      <div class="article-card-body">
+        <span class="article-card-tag" data-i18n="blog.tag.technology">Technology</span>
+        <h3 data-i18n="blog.post.blind.title">What Is BLIND Processing?</h3>
+        <p data-i18n="blog.post.blind.excerpt">Vertifile never sees your content. BLIND processing means documents are hashed and sealed locally before any data leaves your device &mdash; true privacy-first verification with zero knowledge of what you protect.</p>
+        <div class="article-card-footer">
+          <span data-i18n="blog.post.blind.date">Apr 2, 2026</span>
+          <span class="article-card-read">
+            <span data-i18n="blog.readMore">Read more</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Article: The $21 Billion Problem -->
+    <a href="/blog" class="article-card">
+      <div class="article-card-image aci-gradient-2">
+        <div class="aci-pattern"></div>
+        <div class="aci-icon"></div>
+      </div>
+      <div class="article-card-body">
+        <span class="article-card-tag" data-i18n="blog.tag.security">Document Security</span>
+        <h3 data-i18n="blog.post.fraud.title">The $21 Billion Problem: Document Fraud in 2026</h3>
+        <p data-i18n="blog.post.fraud.excerpt">Document fraud costs businesses and governments over $21 billion annually. AI-generated forgeries are becoming undetectable to the human eye. Here is why the old defenses no longer work.</p>
+        <div class="article-card-footer">
+          <span data-i18n="blog.post.fraud.date">Mar 30, 2026</span>
+          <span class="article-card-read">
+            <span data-i18n="blog.readMore">Read more</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Article: Why Digital Signatures Aren't Enough -->
+    <a href="/blog" class="article-card">
+      <div class="article-card-image aci-gradient-3">
+        <div class="aci-pattern"></div>
+        <div class="aci-icon"></div>
+      </div>
+      <div class="article-card-body">
+        <span class="article-card-tag" data-i18n="blog.tag.security">Document Security</span>
+        <h3 data-i18n="blog.post.sigs.title">Why Digital Signatures Aren&rsquo;t Enough</h3>
+        <p data-i18n="blog.post.sigs.excerpt">Digital signatures prove who signed a document &mdash; but not whether it was altered after. Verification and signing are two fundamentally different problems, and most solutions only solve one.</p>
+        <div class="article-card-footer">
+          <span data-i18n="blog.post.sigs.date">Mar 25, 2026</span>
+          <span class="article-card-read">
+            <span data-i18n="blog.readMore">Read more</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Article: Why Document Forgery Is a Growing Crisis (existing) -->
+    <a href="/blog" class="article-card">
       <div class="article-card-image aci-gradient-2">
         <div class="aci-pattern"></div>
         <div class="aci-icon"></div>
@@ -465,22 +577,6 @@
         </div>
       </div>
     </a>
-
-    <!-- Coming soon placeholder -->
-    <div class="article-card coming-soon">
-      <div class="article-card-image aci-gradient-3">
-        <div class="aci-pattern"></div>
-        <span class="coming-label" data-i18n="blog.comingSoon">Coming Soon</span>
-      </div>
-      <div class="article-card-body">
-        <span class="article-card-tag" data-i18n="blog.tag.technology">Technology</span>
-        <h3 data-i18n="blog.upcoming1.title">How Cryptographic Hashing Protects Your Documents</h3>
-        <p data-i18n="blog.upcoming1.excerpt">A technical deep-dive into the verification mechanisms that make tamper-proof documents possible.</p>
-        <div class="article-card-footer">
-          <span data-i18n="blog.comingSoon">Coming Soon</span>
-        </div>
-      </div>
-    </div>
 
   </div>
 </div>

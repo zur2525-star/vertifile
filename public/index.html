@@ -153,8 +153,8 @@
     .doc-hash .hash-label{color:#4f46e5;font-weight:700;font-size:11px}
 
     /* Stamp on document */
-    .doc-stamp{position:absolute;bottom:30px;right:14px;width:56px;height:56px;z-index:10;pointer-events:none;opacity:0;perspective:800px}
-    .doc-stamp.active{opacity:1}
+    .doc-stamp{position:absolute;bottom:8%;right:5%;width:96px;height:96px;z-index:10;pointer-events:none;opacity:0;perspective:800px}
+    .doc-stamp.active{opacity:.4}
     .doc-stamp-coin{width:100%;height:100%;transform-style:preserve-3d;opacity:0}
     .doc-stamp-coin.animate{animation:heroStampFlip 1.8s ease-out forwards}
     @keyframes heroStampFlip{
@@ -174,16 +174,16 @@
     @keyframes shimRot2{to{transform:rotate(-360deg)}}
     .doc-stamp .s-glow,.doc-stamp .vfs-glow{position:absolute;top:15%;left:15%;width:70%;height:70%;border-radius:50%;background:radial-gradient(circle,rgba(76,175,80,.12),transparent 70%);animation:glowP2 3s ease-in-out infinite}
     @keyframes glowP2{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
-    .doc-stamp .s-inner,.doc-stamp .vfs-inner-bg{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.8);border:1px solid rgba(124,58,237,.12)}
-    .doc-stamp .s-center,.doc-stamp .vfs-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-    .doc-stamp .s-center svg,.doc-stamp .vfs-center svg{width:14px;height:14px}
-    .doc-stamp .s-brand,.doc-stamp .vfs-brand{font-size:3.5px;font-weight:900;letter-spacing:.5px;color:rgba(124,58,237,.4);margin-top:0}
-    .doc-stamp .s-lbl,.doc-stamp .vfs-lbl,.doc-stamp .vfs-lbl-ok{font-size:4px;font-weight:900;letter-spacing:.3px;color:rgba(46,125,50,.5);margin-top:0}
+    .doc-stamp .s-inner,.doc-stamp .vfs-inner-bg{position:absolute;top:20%;left:20%;width:60%;height:60%;border-radius:50%;background:rgba(255,255,255,.95);border:1.5px solid rgba(124,58,237,.4);overflow:hidden}
+    .doc-stamp .s-center,.doc-stamp .vfs-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .doc-stamp .s-center svg,.doc-stamp .vfs-center svg{width:18px;height:18px}
+    .doc-stamp .s-brand,.doc-stamp .vfs-brand{font-size:6.5px;font-weight:900;letter-spacing:1.2px;color:rgba(124,58,237,.95);margin-top:1px;line-height:1}
+    .doc-stamp .s-lbl,.doc-stamp .vfs-lbl,.doc-stamp .vfs-lbl-ok{font-size:5.5px;font-weight:900;letter-spacing:1px;color:rgba(46,125,50,1);margin-top:1px;line-height:1}
     .doc-stamp .vfs-stamp-coin{width:100%;height:100%}
 
     /* Holo waves on document */
     .doc-waves{position:absolute;left:0;right:0;bottom:0;height:30%;z-index:6;pointer-events:none;overflow:hidden;border-radius:0 0 8px 8px;opacity:0;transition:opacity 1s;mask-image:linear-gradient(to bottom,transparent 0%,black 50%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 50%)}
-    .doc-waves.active{opacity:1}
+    .doc-waves.active{opacity:.4}
     .doc-waves svg{position:absolute;top:0;width:200%;height:100%;left:-50%}
     .doc-waves .dw-a{animation:dwDrift 8s ease-in-out infinite}
     .doc-waves .dw-b{animation:dwDrift2 10s ease-in-out infinite}
@@ -290,7 +290,7 @@
     /* ===== HOW IT WORKS ===== */
     .how{background:#ffffff;position:relative;overflow:hidden}
     .how::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.03),transparent 50%);pointer-events:none}
-    .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:1000px;margin:0 auto;position:relative}
+    .steps-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:24px;max-width:1100px;margin:0 auto;position:relative}
     .steps-grid::before{content:'';position:absolute;top:42px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,#4f46e5,#7c3aed,#06b6d4,#34d399);opacity:.18;border-radius:2px}
     [dir="rtl"] .steps-grid::before{background:linear-gradient(270deg,#4f46e5,#7c3aed,#06b6d4,#34d399)}
     .step-card{text-align:center;position:relative;z-index:1;padding:20px 16px;border-radius:20px;transition:all .3s}
@@ -391,8 +391,8 @@
     .demo-a4 .doc-sig{text-align:center;font-size:clamp(7px,1.1vw,9px);color:#888}
     .demo-a4 .doc-sig .sig-line{width:80px;height:1px;background:#aaa;margin:0 auto 4px}
     /* ===== REAL VERTIFILE STAMP (matches PVF output) ===== */
-    .demo-stamp{position:absolute;bottom:6%;right:5%;width:56px;height:56px;z-index:30;pointer-events:none;perspective:800px;opacity:.4}
-    @media(min-width:768px){.demo-stamp{width:56px;height:56px}}
+    .demo-stamp{position:absolute;bottom:6%;right:5%;width:96px;height:96px;z-index:30;pointer-events:none;perspective:800px;opacity:.4}
+    @media(min-width:768px){.demo-stamp{width:96px;height:96px}}
     .demo-stamp .stamp-coin,.demo-stamp .vfs-stamp-coin{width:100%;height:100%;transform-style:preserve-3d;animation:demoStampBreathe 3s ease-in-out infinite}
     @keyframes demoStampBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
     .demo-stamp .stamp-outer,.demo-stamp .vfs-outer{position:absolute;top:0;left:0;width:100%;height:100%;animation:demoStampSpin 30s linear infinite}
@@ -403,16 +403,16 @@
     @keyframes demoShimRot{to{transform:rotate(-360deg)}}
     .demo-stamp .stamp-glow,.demo-stamp .vfs-glow{position:absolute;top:15%;left:15%;width:70%;height:70%;border-radius:50%;background:radial-gradient(circle,rgba(76,175,80,.1),transparent 70%);animation:demoGlowP 3s ease-in-out infinite}
     @keyframes demoGlowP{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
-    .demo-stamp .stamp-inner-bg,.demo-stamp .vfs-inner-bg{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.95);border:1.5px solid rgba(124,58,237,.4)}
-    .demo-stamp .stamp-center,.demo-stamp .vfs-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-    .demo-stamp .stamp-center svg,.demo-stamp .vfs-center svg{width:24px;height:24px}
-    .demo-stamp .stamp-brand,.demo-stamp .vfs-brand{font-size:6px;font-weight:900;letter-spacing:1.5px;color:rgba(124,58,237,.9);margin-top:1px}
-    .demo-stamp .stamp-label,.demo-stamp .vfs-lbl{font-size:6px;font-weight:900;letter-spacing:1px;margin-top:1px;color:rgba(46,125,50,1)}
-    .demo-stamp .stamp-outer text,.demo-stamp .vfs-outer text{font-size:7px;fill:rgba(124,58,237,.8);font-weight:700;letter-spacing:2.5px}
+    .demo-stamp .stamp-inner-bg,.demo-stamp .vfs-inner-bg{position:absolute;top:20%;left:20%;width:60%;height:60%;border-radius:50%;background:rgba(255,255,255,.95);border:1.5px solid rgba(124,58,237,.4);overflow:hidden}
+    .demo-stamp .stamp-center,.demo-stamp .vfs-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .demo-stamp .stamp-center svg,.demo-stamp .vfs-center svg{width:18px;height:18px}
+    .demo-stamp .stamp-brand,.demo-stamp .vfs-brand{font-size:6.5px;font-weight:900;letter-spacing:1.2px;color:rgba(124,58,237,.95);margin-top:1px;line-height:1}
+    .demo-stamp .stamp-label,.demo-stamp .vfs-lbl{font-size:5.5px;font-weight:900;letter-spacing:1px;margin-top:1px;color:rgba(46,125,50,1);line-height:1}
+    .demo-stamp .stamp-outer text,.demo-stamp .vfs-outer text{font-size:8px;fill:rgba(124,58,237,.9);font-weight:700;letter-spacing:2.5px}
     .demo-stamp .vfs-ring{width:100%;height:100%;position:relative}
     .demo-stamp .vfs-lbl-ok{background:rgba(46,125,50,.12);padding:1px 5px;border-radius:3px}
     /* ===== REAL HOLOGRAPHIC WAVES (matches PVF output) ===== */
-    .demo-holo{position:absolute;left:0;right:0;bottom:0;height:35%;z-index:10;pointer-events:none;overflow:hidden;border-radius:0 0 3px 3px;opacity:.85;
+    .demo-holo{position:absolute;left:0;right:0;bottom:0;height:35%;z-index:10;pointer-events:none;overflow:hidden;border-radius:0 0 3px 3px;opacity:.4;
       mask-image:linear-gradient(to bottom,transparent 0%,black 40%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 40%)}
     .demo-holo .hw-svg{position:absolute;top:0;width:200%;height:100%;left:-50%}
     .demo-holo .hw-svg path{fill:none;stroke-linecap:round}
@@ -427,13 +427,13 @@
     .demo-forged-x svg{width:100%;height:100%}
     .demo-forged-wm{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-size:clamp(28px,6vw,50px);font-weight:900;color:rgba(229,57,53,.08);white-space:nowrap;z-index:6;pointer-events:none;letter-spacing:6px}
     /* Forged stamp */
-    .demo-stamp-forged{position:absolute;bottom:8%;right:6%;width:56px;height:56px;z-index:10}
-    @media(min-width:768px){.demo-stamp-forged{width:56px;height:56px}}
+    .demo-stamp-forged{position:absolute;bottom:8%;right:6%;width:96px;height:96px;z-index:10}
+    @media(min-width:768px){.demo-stamp-forged{width:96px;height:96px}}
     .demo-stamp-forged .stamp-ring,.demo-stamp-forged .vfs-forged-ring{width:100%;height:100%;border-radius:50%;border:2px solid rgba(220,38,38,.3);display:flex;align-items:center;justify-content:center;position:relative}
     .demo-stamp-forged .stamp-inner,.demo-stamp-forged .vfs-forged-inner{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center}
-    .demo-stamp-forged .stamp-x svg,.demo-stamp-forged .vfs-forged-x svg{width:28px;height:28px}
-    .demo-stamp-forged .stamp-brand,.demo-stamp-forged .vfs-forged-brand{font-size:7px;font-weight:800;color:#dc2626;letter-spacing:1px;margin-top:2px}
-    .demo-stamp-forged .stamp-label,.demo-stamp-forged .vfs-forged-label{font-size:6px;font-weight:700;color:#fff;background:#dc2626;padding:1px 6px;border-radius:3px;margin-top:2px;letter-spacing:.5px}
+    .demo-stamp-forged .stamp-x svg,.demo-stamp-forged .vfs-forged-x svg{width:22px;height:22px}
+    .demo-stamp-forged .stamp-brand,.demo-stamp-forged .vfs-forged-brand{font-size:7px;font-weight:800;color:#dc2626;letter-spacing:1px;margin-top:2px;line-height:1}
+    .demo-stamp-forged .stamp-label,.demo-stamp-forged .vfs-forged-label{font-size:5.5px;font-weight:700;color:#fff;background:#dc2626;padding:1.5px 6px;border-radius:3px;margin-top:2px;letter-spacing:.5px;line-height:1}
 
     /* ===== INDUSTRIES ===== */
     .industries-section{background:#ffffff;position:relative;overflow:hidden}
@@ -493,6 +493,49 @@
       .footer-bottom{flex-direction:column;gap:10px;text-align:center}
     }
     @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+    /* ===== FAQ ===== */
+    .faq-section{background:linear-gradient(180deg,#0f0e17 0%,#1a1833 50%,#0f0e17 100%);position:relative;overflow:hidden}
+    .faq-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 30%,rgba(124,58,237,.08),transparent 60%);pointer-events:none}
+    .faq-list{max-width:760px;margin:0 auto;position:relative;z-index:1}
+    .faq-item{border-radius:16px;background:rgba(255,255,255,.04);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(167,139,250,.1);margin-bottom:12px;overflow:hidden;transition:all .3s}
+    .faq-item:hover{border-color:rgba(167,139,250,.2)}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;cursor:pointer;font-size:16px;font-weight:600;color:#ffffff;transition:color .2s;gap:16px;-webkit-user-select:none;user-select:none}
+    .faq-q:hover{color:#a78bfa}
+    .faq-q svg{width:20px;height:20px;flex-shrink:0;stroke:#a78bfa;transition:transform .3s}
+    .faq-item.open .faq-q svg{transform:rotate(180deg)}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1),padding .3s}
+    .faq-item.open .faq-a{max-height:200px;padding:0 24px 20px}
+    .faq-a p{font-size:15px;color:rgba(196,181,253,.55);line-height:1.8}
+    /* ===== BLOG SECTION ===== */
+    .blog-section{background:#0f0e17;position:relative;padding:80px 32px;overflow:hidden}
+    .blog-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.2),transparent)}
+    .blog-inner{max-width:900px;margin:0 auto}
+    .blog-featured{display:block;border-radius:20px;overflow:hidden;background:rgba(26,25,41,.6);border:1px solid rgba(124,58,237,.1);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transition:.4s cubic-bezier(.23,1,.32,1);text-decoration:none;color:inherit}
+    .blog-featured:hover{transform:translateY(-4px);border-color:rgba(124,58,237,.25);box-shadow:0 24px 60px rgba(79,70,229,.12)}
+    .blog-featured-img{position:relative;width:100%;height:260px;overflow:hidden;background:linear-gradient(135deg,#1e1b4b 0%,#312e81 25%,#4c1d95 50%,#5b21b6 75%,#1e1b4b 100%)}
+    .blog-featured-img::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(139,92,246,.3),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.15),transparent 50%);z-index:1}
+    .blog-featured-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:100px;background:linear-gradient(to top,rgba(26,25,41,.9),transparent);z-index:2}
+    .blog-featured-img .bf-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(124,58,237,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,.06) 1px,transparent 1px);background-size:40px 40px;z-index:1}
+    .blog-featured-img .bf-shield{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;width:80px;height:96px;opacity:.2}
+    .blog-featured-img .bf-shield-body{width:80px;height:96px;background:linear-gradient(180deg,rgba(167,139,250,.4),rgba(79,70,229,.2));clip-path:polygon(50% 0%,100% 20%,100% 65%,50% 100%,0% 65%,0% 20%)}
+    .blog-featured-body{padding:28px 32px 32px}
+    .blog-featured-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#a78bfa;background:rgba(167,139,250,.1);padding:5px 12px;border-radius:6px;border:1px solid rgba(167,139,250,.15);margin-bottom:14px}
+    .blog-featured-tag svg{width:14px;height:14px}
+    .blog-featured h3{font-size:24px;font-weight:700;color:#f8f7ff;letter-spacing:-.5px;margin-bottom:10px;line-height:1.3}
+    .blog-featured p{font-size:15px;color:rgba(196,181,253,.55);line-height:1.7;margin-bottom:16px}
+    .blog-featured-meta{display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(196,181,253,.4)}
+    .blog-featured-meta .bf-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+    .blog-featured-cta{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-size:14px;font-weight:600;color:#a78bfa;transition:.2s}
+    .blog-featured:hover .blog-featured-cta{color:#c4b5fd}
+    .blog-featured-cta svg{width:16px;height:16px;transition:.2s}
+    .blog-featured:hover .blog-featured-cta svg{transform:translateX(3px)}
+    .blog-more{text-align:center;margin-top:28px}
+    .blog-more a{font-size:14px;font-weight:600;color:#7c3aed;text-decoration:none;transition:.2s}
+    .blog-more a:hover{color:#a78bfa;text-decoration:underline}
+    @media(max-width:768px){.blog-section{padding:60px 20px}.blog-featured-img{height:180px}.blog-featured-body{padding:20px 20px 24px}.blog-featured h3{font-size:20px}}
+    /* ===== TRUST SECTION RESPONSIVE ===== */
+    @media(max-width:768px){.trust-section .section-header h2{color:#fff}.trust-section>div:last-child{grid-template-columns:1fr!important;gap:16px!important}}
+
     button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
     input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
 
@@ -502,15 +545,15 @@
       .section-header{margin-bottom:36px}
       .section-header h2{font-size:28px}
       .section-header p{font-size:15px}
-      .demo-stamp{width:40px;height:40px}
-      .demo-stamp .stamp-center svg,.demo-stamp .vfs-center svg{width:14px;height:14px}
-      .demo-stamp .stamp-brand,.demo-stamp .vfs-brand{font-size:3.5px;letter-spacing:.6px}
+      .demo-stamp{width:50px;height:50px}
+      .demo-stamp .stamp-center svg,.demo-stamp .vfs-center svg{width:12px;height:12px}
+      .demo-stamp .stamp-brand,.demo-stamp .vfs-brand{font-size:4px;letter-spacing:.6px}
       .demo-stamp .stamp-label,.demo-stamp .vfs-lbl{font-size:3.5px}
       .demo-stamp .stamp-outer text,.demo-stamp .vfs-outer text{font-size:4.5px;letter-spacing:1.2px}
-      .demo-stamp-forged{width:40px;height:40px}
-      .demo-stamp-forged .stamp-x svg,.demo-stamp-forged .vfs-forged-x svg{width:16px;height:16px}
-      .demo-stamp-forged .stamp-brand,.demo-stamp-forged .vfs-forged-brand{font-size:4px}
-      .demo-stamp-forged .stamp-label,.demo-stamp-forged .vfs-forged-label{font-size:4px}
+      .demo-stamp-forged{width:50px;height:50px}
+      .demo-stamp-forged .stamp-x svg,.demo-stamp-forged .vfs-forged-x svg{width:14px;height:14px}
+      .demo-stamp-forged .stamp-brand,.demo-stamp-forged .vfs-forged-brand{font-size:4.5px}
+      .demo-stamp-forged .stamp-label,.demo-stamp-forged .vfs-forged-label{font-size:3.5px}
       .demo-a4{padding:6% 6% 4%}
       .demo-a4 .doc-sig .sig-line{width:50px}
       .demo-topbar{height:32px;padding:0 10px;gap:6px}
@@ -518,10 +561,10 @@
       .demo-url{font-size:9px;height:20px;padding:0 8px}
       .ind-card{padding:16px 18px;gap:12px}
       .ind-card h3{font-size:14px}
-      .doc-stamp{width:40px;height:40px;bottom:20px;right:10px}
-      .doc-stamp .s-center svg,.doc-stamp .vfs-center svg{width:10px;height:10px}
-      .doc-stamp .s-brand,.doc-stamp .vfs-brand{font-size:2.5px}
-      .doc-stamp .s-lbl,.doc-stamp .vfs-lbl,.doc-stamp .vfs-lbl-ok{font-size:3px}
+      .doc-stamp{width:60px;height:60px;bottom:20px;right:10px}
+      .doc-stamp .s-center svg,.doc-stamp .vfs-center svg{width:12px;height:12px}
+      .doc-stamp .s-brand,.doc-stamp .vfs-brand{font-size:4px}
+      .doc-stamp .s-lbl,.doc-stamp .vfs-lbl,.doc-stamp .vfs-lbl-ok{font-size:3.5px}
     }
     @media(max-width:480px){
       section{padding:48px 16px}
@@ -541,6 +584,7 @@
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Vertifile","url":"https://vertifile.com","logo":"https://vertifile.com/images/logo-icon.png","description":"Document verification and anti-forgery platform","foundingDate":"2026","foundingLocation":"Israel","contactPoint":{"@type":"ContactPoint","email":"info@vertifile.com","contactType":"customer service"}}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Vertifile","applicationCategory":"SecurityApplication","operatingSystem":"Web, macOS, Windows","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Protect any document from forgery with cryptographic verification"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a PVF file?","acceptedAnswer":{"@type":"Answer","text":"A PVF is a tamper-proof document file format developed by Vertifile. It wraps your original document with cryptographic verification and a live holographic stamp that proves authenticity in real-time."}},{"@type":"Question","name":"How do I open a PVF file?","acceptedAnswer":{"@type":"Answer","text":"PVF files open directly in any modern web browser — Chrome, Safari, Firefox, or Edge. No special software or plugins required."}},{"@type":"Question","name":"Can you see my document content?","acceptedAnswer":{"@type":"Answer","text":"No. Vertifile uses BLIND processing — we only see a cryptographic hash of your document. Your content is never read, stored, or transmitted to our servers."}},{"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes, Vertifile is free for individuals. Enterprise plans are available for organizations that need bulk processing, API access, and custom branding."}},{"@type":"Question","name":"How long does it take?","acceptedAnswer":{"@type":"Answer","text":"Protection takes seconds. Upload your document and get a tamper-proof PVF file instantly."}},{"@type":"Question","name":"What document types are supported?","acceptedAnswer":{"@type":"Answer","text":"PDF, images (JPEG, PNG), and text files. We are continuously expanding supported formats."}}]}</script>
 </head>
 <body>
 <a href="#main" class="skip-link" style="position:absolute;top:-40px;left:0;background:#4f46e5;color:#fff;padding:8px 16px;z-index:9999;transition:top .3s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>
@@ -562,6 +606,8 @@
       <a href="/pricing" data-i18n="nav.pricing">Pricing</a>
       <a href="/integration" data-i18n="nav.developers">Developers</a>
       <a href="/demo" data-i18n="nav.demo">Demo</a>
+      <a href="/blog" data-i18n="nav.blog">Blog</a>
+      <a href="/contact" data-i18n="nav.contact">Contact</a>
     </div>
     <div class="nav-actions">
       <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
@@ -631,11 +677,11 @@
     <!-- Text Content -->
     <div class="hero-right fade-up">
       <div class="hero-badge"><div class="pulse"></div><span data-i18n="hero.badge">Blockchain Verified</span></div>
-      <h1><span data-i18n="hero.headline1">Protect Any Document</span><br><span class="gradient" data-i18n="hero.headline2">From Forgery</span></h1>
-      <p class="sub" data-i18n="hero.subheadline">Vertifile creates tamper-proof digital documents with live animated verification stamps. Zero access to your content — total privacy.</p>
+      <h1><span data-i18n="hero.headline1">Verify &amp; Protect Any Document</span><br><span class="gradient" data-i18n="hero.headline2">Tamper-Proof in Seconds</span></h1>
+      <p class="sub" data-i18n="hero.subheadline">Issue tamper-proof documents with live holographic stamps. Let anyone verify them instantly — no software needed.</p>
       <div class="hero-buttons">
         <a href="/upload" class="btn-primary" data-i18n="hero.cta1">Protect a Document</a>
-        <a href="#how" class="btn-secondary" data-i18n="hero.cta2">See How It Works</a>
+        <a href="/contact" class="btn-secondary" data-i18n="hero.ctaDemo">Book a Demo</a>
       </div>
       <div class="trust-line" style="display:flex;align-items:center;gap:16px;justify-content:center;margin-top:20px;opacity:.7;font-size:13px;color:#9ca3af">
         <span>🔒 Patent Pending</span>
@@ -706,12 +752,12 @@
 <!-- ===== STATS BAR ===== -->
 <div class="stats-bar fade-up">
   <div class="stats-inner">
-    <div class="stat-item"><div class="stat-num"><span class="accent">256</span>-bit</div><div class="stat-label" data-i18n="stats.encryption">SHA-256 Encryption</div></div>
-    <div class="stat-item"><div class="stat-num">10<span class="accent">k+</span></div><div class="stat-label" data-i18n="stats.documents">Documents Protected</div></div>
-    <div class="stat-item"><div class="stat-num">30<span class="accent">s</span></div><div class="stat-label" data-i18n="stats.tokenRefresh">Token Refresh Cycle</div></div>
+    <div class="stat-item"><div class="stat-num">bit-256</div><div class="stat-label" data-i18n="stats.encryption">SHA-256 Encryption</div></div>
+    <div class="stat-item"><div class="stat-num">+10<span class="accent">k</span></div><div class="stat-label" data-i18n="stats.documents">Documents Protected</div></div>
+    <div class="stat-item"><div class="stat-num">30<span class="accent">s</span></div><div class="stat-label" data-i18n="stats.tokenRefresh">Token Refresh</div></div>
     <div class="stat-item"><div class="stat-num">8</div><div class="stat-label" data-i18n="stats.securityLayers">Security Layers</div></div>
-    <div class="stat-item" data-aos="fade-up">
-      <div class="stat-number" data-i18n="stats.patentPending">Patent Pending</div>
+    <div class="stat-item">
+      <div class="stat-num"><span class="accent" style="font-size:20px">Patent Pending</span></div>
       <div class="stat-label" data-i18n="stats.patentLabel">Israeli Patent Office</div>
     </div>
   </div>
@@ -724,7 +770,7 @@
   <div class="section-header fade-up">
     <div class="label" data-i18n="howItWorks.label">Process</div>
     <h2 data-i18n="howItWorks.title">How It Works</h2>
-    <p data-i18n="howItWorks.subtitle">Four simple steps to protect any document</p>
+    <p data-i18n="howItWorks.subtitle">Five simple steps to protect and verify any document</p>
   </div>
   <div class="steps-grid">
     <div class="step-card fade-up">
@@ -750,6 +796,12 @@
       <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
       <h3 data-i18n="howItWorks.step4title">Protected</h3>
       <p data-i18n="howItWorks.step4desc">Download your .pvf file — tamper-proof and verifiable</p>
+    </div>
+    <div class="step-card fade-up">
+      <div class="step-num">5</div>
+      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div>
+      <h3 data-i18n="howItWorks.step5title">Verify</h3>
+      <p data-i18n="howItWorks.step5desc">Anyone can verify the document instantly in any browser. If tampered, the stamp freezes red.</p>
     </div>
   </div>
 </section>
@@ -791,6 +843,39 @@
       <div class="feat-icon docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
       <h3 data-i18n="features.f6title">All Document Types</h3>
       <p data-i18n="features.f6desc">Works with PDF, images, text files and more. Any file can be protected.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TRUSTED TECHNOLOGY ===== -->
+<section class="trust-section" id="trust" style="background:linear-gradient(180deg,#0f0e17 0%,#1a1833 50%,#0f0e17 100%);position:relative;overflow:hidden">
+  <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 40% 30%,rgba(124,58,237,.12),transparent 60%),radial-gradient(ellipse at 70% 70%,rgba(6,182,212,.06),transparent 50%);pointer-events:none"></div>
+  <div class="section-header fade-up">
+    <div class="label" style="color:#a78bfa;background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.2)" data-i18n="trust.label">Credentials</div>
+    <h2 style="color:#ffffff" data-i18n="trust.title">Trusted Technology</h2>
+    <p style="color:rgba(196,181,253,.6)" data-i18n="trust.subtitle">Built on verified foundations</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:900px;margin:0 auto;position:relative;z-index:1">
+    <div class="fade-up" style="padding:32px;border-radius:20px;background:rgba(255,255,255,.05);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(167,139,250,.12);text-align:center;transition:all .4s cubic-bezier(.16,1,.3,1)">
+      <div style="width:56px;height:56px;border-radius:16px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg>
+      </div>
+      <h3 style="font-size:18px;font-weight:700;color:#ffffff;margin-bottom:10px" data-i18n="trust.t1title">Patent Filed</h3>
+      <p style="font-size:14px;color:rgba(196,181,253,.5);line-height:1.7" data-i18n="trust.t1desc">Technology patent filed at the Israel Patent Office</p>
+    </div>
+    <div class="fade-up" style="padding:32px;border-radius:20px;background:rgba(255,255,255,.05);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(167,139,250,.12);text-align:center;transition:all .4s cubic-bezier(.16,1,.3,1)">
+      <div style="width:56px;height:56px;border-radius:16px;background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+      </div>
+      <h3 style="font-size:18px;font-weight:700;color:#ffffff;margin-bottom:10px" data-i18n="trust.t2title">IANA Registered</h3>
+      <p style="font-size:14px;color:rgba(196,181,253,.5);line-height:1.7" data-i18n="trust.t2desc">Official MIME type application #1446680 pending with IANA</p>
+    </div>
+    <div class="fade-up" style="padding:32px;border-radius:20px;background:rgba(255,255,255,.05);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(167,139,250,.12);text-align:center;transition:all .4s cubic-bezier(.16,1,.3,1)">
+      <div style="width:56px;height:56px;border-radius:16px;background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <h3 style="font-size:18px;font-weight:700;color:#ffffff;margin-bottom:10px" data-i18n="trust.t3title">Built in Israel</h3>
+      <p style="font-size:14px;color:rgba(196,181,253,.5);line-height:1.7" data-i18n="trust.t3desc">Designed and built in Israel's innovation ecosystem</p>
     </div>
   </div>
 </section>
@@ -873,6 +958,7 @@
     <h2 data-i18n="demo.title">See It In Action</h2>
     <p data-i18n="demo.subtitle">A real university diploma protected by Vertifile</p>
   </div>
+  <p class="fade-up" style="text-align:center;font-size:16px;font-weight:600;color:#4f46e5;max-width:700px;margin:0 auto 32px;letter-spacing:-.2px" data-i18n="demo.comparison">Change a single letter and the verification stamp freezes instantly.</p>
   <div class="demo-wrapper fade-up">
     <!-- VERIFIED DOCUMENT -->
     <div>
@@ -1005,13 +1091,99 @@
   </div>
 </section>
 
+<!-- ===== BLOG TEASER ===== -->
+<section class="blog-section">
+  <div class="blog-inner">
+    <div class="section-header fade-up" style="margin-bottom:32px">
+      <div class="label" style="color:#a78bfa;background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.2)" data-i18n="blog.label">From Our Blog</div>
+      <h2 style="color:#ffffff" data-i18n="blog.sectionTitle">Latest Insights</h2>
+    </div>
+    <a href="/blog" class="blog-featured fade-up">
+      <div class="blog-featured-img">
+        <div class="bf-grid"></div>
+        <div class="bf-shield"><div class="bf-shield-body"></div></div>
+      </div>
+      <div class="blog-featured-body">
+        <span class="blog-featured-tag">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Document Security
+        </span>
+        <h3 data-i18n="blog.post2.title">Why PDF Signatures Are Not Enough &mdash; And What Comes Next</h3>
+        <p data-i18n="blog.post2.excerpt">PDF signatures verify who signed a document, not whether it was changed after. Learn how tamper-proof .pvf files solve document fraud for good.</p>
+        <div class="blog-featured-meta">
+          <div class="bf-avatar">ZH</div>
+          <span>Zur Halfon</span>
+          <span>&middot;</span>
+          <span>Apr 1, 2026</span>
+        </div>
+        <div class="blog-featured-cta">
+          Read Article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </a>
+    <div class="blog-more fade-up">
+      <a href="/blog">View all articles &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="faq-section" id="faq">
+  <div class="section-header fade-up">
+    <div class="label" style="color:#a78bfa;background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.2)" data-i18n="faq.label">FAQ</div>
+    <h2 style="color:#ffffff" data-i18n="faq.title">Frequently Asked Questions</h2>
+    <p style="color:rgba(196,181,253,.6)" data-i18n="faq.subtitle">Everything you need to know about Vertifile</p>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item fade-up">
+      <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q1">What is a PVF file?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a"><p data-i18n="faq.a1">A PVF is a tamper-proof document file format developed by Vertifile. It wraps your original document with cryptographic verification and a live holographic stamp that proves authenticity in real-time.</p></div>
+    </div>
+    <div class="faq-item fade-up">
+      <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q2">How do I open a PVF file?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a"><p data-i18n="faq.a2">PVF files open directly in any modern web browser — Chrome, Safari, Firefox, or Edge. No special software or plugins required.</p></div>
+    </div>
+    <div class="faq-item fade-up">
+      <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q3">Can you see my document content?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a"><p data-i18n="faq.a3">No. Vertifile uses BLIND processing — we only see a cryptographic hash of your document. Your content is never read, stored, or transmitted to our servers.</p></div>
+    </div>
+    <div class="faq-item fade-up">
+      <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q4">Is it free?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a"><p data-i18n="faq.a4">Yes, Vertifile is free for individuals. Enterprise plans are available for organizations that need bulk processing, API access, and custom branding.</p></div>
+    </div>
+    <div class="faq-item fade-up">
+      <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q5">How long does it take?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a"><p data-i18n="faq.a5">Protection takes seconds. Upload your document and get a tamper-proof PVF file instantly.</p></div>
+    </div>
+    <div class="faq-item fade-up">
+      <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q6">What document types are supported?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a"><p data-i18n="faq.a6">PDF, images (JPEG, PNG), and text files. We are continuously expanding supported formats.</p></div>
+    </div>
+  </div>
+</section>
+
 <!-- ===== BOTTOM CTA ===== -->
 <div style="padding:0 32px;max-width:1200px;margin:60px auto">
 <section class="bottom-cta">
   <div class="fade-up">
     <h2 data-i18n="cta.title">Ready to Protect Your Documents?</h2>
-    <p data-i18n="cta.subtitle">Join thousands of organizations that trust Vertifile for document security.</p>
-    <a href="/upload"><button class="btn-white" data-i18n="cta.button">Start Protecting Now</button></a>
+    <p data-i18n="cta.subtitle">Start protecting your documents today — it's free.</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
+      <a href="/upload"><button class="btn-white" data-i18n="cta.button">Start Protecting Now</button></a>
+      <a href="/contact" style="padding:16px 40px;background:transparent;color:#fff;border-radius:14px;font-weight:800;font-size:16px;border:2px solid rgba(255,255,255,.35);cursor:pointer;transition:all .3s;font-family:inherit;letter-spacing:-.2px;text-decoration:none;display:inline-block" data-i18n="cta.buttonDemo" onmouseover="this.style.borderColor='rgba(255,255,255,.7)';this.style.background='rgba(255,255,255,.08)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(255,255,255,.35)';this.style.background='transparent';this.style.transform='none'">Talk to Our Team</a>
+    </div>
   </div>
 </section>
 </div>
@@ -1070,8 +1242,17 @@
   // Hero decorative stamp
   S.inject('heroDecorativeStamp', 'decorative', { size: 48, opacity: 0.3 });
   // Hero document stamp (inside the coin-flip container)
-  var heroStamp = document.getElementById('heroStampContent');
-  if(heroStamp) heroStamp.innerHTML = S.renderStamp();
+  S.inject('heroStampContent', 'stamp', {
+    customIcon: S.defaults.defaultLogo,
+    ringStroke: 'rgba(124,58,237,.7)',
+    ringDash: 'rgba(124,58,237,.35)',
+    textFill: 'rgba(124,58,237,.8)',
+    brandLabelColor: 'rgba(124,58,237,.9)',
+    verifiedColor: 'rgba(46,125,50,1)',
+    checkColor: 'rgba(46,125,50,.9)',
+    shimGradient: 'conic-gradient(from 0deg,rgba(124,58,237,.2),rgba(109,40,217,.35) 60deg,rgba(76,175,80,.25) 120deg,rgba(124,58,237,.2) 180deg,rgba(109,40,217,.35) 240deg,rgba(76,175,80,.25) 300deg,rgba(124,58,237,.2))',
+    glowGradient: 'radial-gradient(circle,rgba(76,175,80,.35),transparent 70%)'
+  });
   // Demo verified waves (use component default colors, keep page-specific CSS animations)
   var wc = S.defaults.waveColors;
   var holoA = document.getElementById('demoHoloA');
@@ -1102,6 +1283,16 @@
 (function(){
   window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
   window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
+
+  // ===== FAQ ACCORDION =====
+  window.toggleFaq=function(el){
+    var item=el.parentElement;
+    var wasOpen=item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item.open').forEach(function(i){i.classList.remove('open')});
+    // Toggle clicked
+    if(!wasOpen) item.classList.add('open');
+  };
 
   // ===== SCROLL REVEAL =====
   var observer=new IntersectionObserver(function(entries){

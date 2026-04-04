@@ -59,7 +59,7 @@
     @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
 
     /* ===== HERO ===== */
-    .hero{padding:160px 60px 120px;position:relative;overflow:hidden;background:#0f0e17}
+    .hero{padding:100px 60px 40px;position:relative;overflow:hidden;background:#0f0e17}
     .hero-bg{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
     .hero-bg .grid{position:absolute;top:0;left:50%;transform:translateX(-50%);width:1400px;height:100%;background-image:linear-gradient(rgba(124,58,237,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,.06) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%)}
     .hero-bg .glow-1{position:absolute;top:-20%;left:-10%;width:800px;height:800px;background:radial-gradient(circle,rgba(124,58,237,.2),transparent 70%);filter:blur(100px);animation:nebulaFloat1 20s ease-in-out infinite alternate}
@@ -78,8 +78,8 @@
     .hero-stamp{position:absolute;top:40px;right:40px;width:120px;height:120px;opacity:.08;z-index:0;animation:stampRotate 30s linear infinite}
     @keyframes stampRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
     .hero-stamp svg{width:100%;height:100%}
-    @media(max-width:900px){.hero{padding:130px 24px 90px}.hero h1{font-size:44px;letter-spacing:-2px}.hero-stamp{display:none}}
-    @media(max-width:600px){.hero{padding:110px 20px 70px}.hero h1{font-size:34px;letter-spacing:-1px}.hero p.sub{font-size:15px}}
+    @media(max-width:900px){.hero{padding:90px 24px 30px}.hero h1{font-size:44px;letter-spacing:-2px}.hero-stamp{display:none}}
+    @media(max-width:600px){.hero{padding:80px 20px 20px}.hero h1{font-size:34px;letter-spacing:-1px}.hero p.sub{font-size:15px}}
 
     /* ===== WAVE DIVIDER ===== */
     .wave-divider{width:100%;overflow:hidden;line-height:0;position:relative;z-index:2;margin-top:-1px}
@@ -250,6 +250,8 @@
       <a href="/pricing" data-i18n="nav.pricing">Pricing</a>
       <a href="/integration" data-i18n="nav.developers">Developers</a>
       <a href="/demo" data-i18n="nav.demo">Demo</a>
+      <a href="/blog" data-i18n="nav.blog">Blog</a>
+      <a href="/contact" data-i18n="nav.contact">Contact</a>
     </div>
     <div class="nav-actions">
       <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
@@ -312,14 +314,6 @@
       <defs><path id="stampCircle" d="M100,16 a84,84 0 1,1 0,168 a84,84 0 1,1 0,-168"/></defs>
       <path d="M85 105l10 10 20-25" stroke="#7c3aed" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-  </div>
-  <div class="hero-content">
-    <div class="hero-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-      <span data-i18n="contact.heroBadge">We would love to hear from you</span>
-    </div>
-    <h1 data-i18n="contact.heroTitle">Let's <span class="gradient" data-i18n="contact.heroTitleGradient">Talk</span></h1>
-    <p class="sub" data-i18n="contact.heroSubtitle">Have a question, need support, or want to explore a partnership? Reach out and our team will get back to you promptly.</p>
   </div>
 </div>
 
