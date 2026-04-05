@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const helmet = require('helmet');
+const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -95,6 +96,7 @@ app.use(cors({
 }));
 app.use((req, res, next) => { express.json({ limit: '1mb' })(req, res, (err) => { if (err) return res.status(400).json({ success: false, error: 'Invalid JSON body' }); next(); }); });
 app.use(sanitizeBody);
+app.use(compression());
 app.use(express.static(path.join(__dirname, 'public'), {
   extensions: ['html'], maxAge: '7d',
   setHeaders: (res, fp) => { if (fp.endsWith('.html')) { res.setHeader('X-Content-Type-Options', 'nosniff'); res.setHeader('X-Frame-Options', 'DENY'); } }
