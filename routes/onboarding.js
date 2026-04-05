@@ -1,0 +1,397 @@
+const express = require('express');
+const crypto = require('crypto');
+const rateLimit = require('express-rate-limit');
+const logger = require('../services/logger');
+const { requireLogin } = require('../middleware/auth');
+
+const router = express.Router();
+
+// ---------------------------------------------------------------------------
+// In-memory stores (TODO: migrate to DB — verification_codes table)
+// ---------------------------------------------------------------------------
+
+// Map<email, { code, createdAt, expiresAt, attempts, used }>
+const pendingCodes = new Map();
+
+// Map<email, { count, windowStart }>  — rate limit: 3 sends per hour per email
+const sendRateMap = new Map();
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+const SEND_LIMIT = 3;
+const SEND_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const CODE_TTL_MS = 10 * 60 * 1000;    // 10 minutes
+const MAX_ATTEMPTS = 5;
+
+function isRateLimited(email) {
+  const now = Date.now();
+  const entry = sendRateMap.get(email);
+  if (!entry || now - entry.windowStart > SEND_WINDOW_MS) {
+    sendRateMap.set(email, { count: 1, windowStart: now });
+    return false;
+  }
+  if (entry.count >= SEND_LIMIT) return true;
+  entry.count += 1;
+  return false;
+}
+
+function generateCode() {
+  // crypto.randomInt(min, max) — max exclusive, so 1000000 gives 000000–999999
+  return String(crypto.randomInt(0, 1000000)).padStart(6, '0');
+}
+
+// ---------------------------------------------------------------------------
+// Route-level rate limiter (coarse guard on top of per-email logic)
+// ---------------------------------------------------------------------------
+
+const sendCodeLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { success: false, error: 'Too many requests. Try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+// ---------------------------------------------------------------------------
+// POST /api/auth/send-code
+// Send a 6-digit verification code to the given email address.
+// Rate limited to 3 sends per email per hour.
+// ---------------------------------------------------------------------------
+
+router.post('/auth/send-code', sendCodeLimiter, async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email || typeof email !== 'string') {
+      return res.status(400).json({ success: false, error: 'Email required' });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    if (isRateLimited(normalizedEmail)) {
+      return res.status(429).json({
+        success: false,
+        error: 'Too many codes sent. Please wait before requesting another.'
+      });
+    }
+
+    const code = generateCode();
+    const now = Date.now();
+    pendingCodes.set(normalizedEmail, {
+      code,
+      createdAt: now,
+      expiresAt: now + CODE_TTL_MS,
+      attempts: 0,
+      used: false
+    });
+
+    // TODO: replace with DB insert into verification_codes table:
+    // await db.query(
+    //   `INSERT INTO verification_codes (user_id, code, expires_at)
+    //    VALUES ((SELECT id FROM users WHERE email = $1), $2, NOW() + INTERVAL '10 minutes')`,
+    //   [normalizedEmail, code]
+    // );
+
+    // TODO: send email via email service (e.g. services/email.js)
+    // await emailService.sendVerificationCode(normalizedEmail, code);
+
+    logger.info({ email: normalizedEmail }, 'Verification code generated');
+
+    // In development expose the code in the response to ease testing.
+    const isDev = process.env.NODE_ENV !== 'production';
+    res.json({
+      success: true,
+      message: 'Verification code sent',
+      ...(isDev && { _dev_code: code })
+    });
+  } catch (e) {
+    logger.error({ err: e }, 'send-code failed');
+    res.status(500).json({ success: false, error: 'Failed to send code' });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// POST /api/auth/verify-code
+// Validate the 6-digit code. Marks the user's email as verified on success.
+// Max 5 attempts; code expires after 10 minutes.
+// ---------------------------------------------------------------------------
+
+router.post('/auth/verify-code', async (req, res) => {
+  try {
+    const { email, code } = req.body;
+    if (!email || !code) {
+      return res.status(400).json({ success: false, error: 'Email and code required' });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+    const entry = pendingCodes.get(normalizedEmail);
+
+    if (!entry) {
+      return res.status(400).json({ success: false, error: 'No verification code found for this email' });
+    }
+
+    if (entry.used) {
+      return res.status(400).json({ success: false, error: 'Code already used' });
+    }
+
+    if (Date.now() > entry.expiresAt) {
+      pendingCodes.delete(normalizedEmail);
+      return res.status(400).json({ success: false, error: 'Code expired. Please request a new one.' });
+    }
+
+    if (entry.attempts >= MAX_ATTEMPTS) {
+      pendingCodes.delete(normalizedEmail);
+      return res.status(400).json({ success: false, error: 'Too many failed attempts. Please request a new code.' });
+    }
+
+    // Timing-safe comparison
+    const provided = Buffer.from(String(code).trim());
+    const expected = Buffer.from(entry.code);
+    const match = provided.length === expected.length && crypto.timingSafeEqual(provided, expected);
+
+    if (!match) {
+      entry.attempts += 1;
+      const remaining = MAX_ATTEMPTS - entry.attempts;
+      return res.status(400).json({
+        success: false,
+        error: 'Incorrect code',
+        attempts_remaining: remaining
+      });
+    }
+
+    // Success — mark as used and verify user's email
+    entry.used = true;
+    pendingCodes.delete(normalizedEmail);
+
+    // TODO: update DB:
+    // await db.query(
+    //   `UPDATE users SET email_verified = TRUE WHERE email = $1`,
+    //   [normalizedEmail]
+    // );
+    // await db.query(
+    //   `UPDATE verification_codes SET used = TRUE WHERE user_id =
+    //    (SELECT id FROM users WHERE email = $1) ORDER BY created_at DESC LIMIT 1`,
+    //   [normalizedEmail]
+    // );
+
+    // If user is authenticated in session, update req.user too
+    if (req.user) {
+      req.user.email_verified = true;
+    }
+
+    logger.info({ email: normalizedEmail }, 'Email verified successfully');
+
+    res.json({
+      success: true,
+      message: 'Email verified',
+      redirect: '/onboarding'
+    });
+  } catch (e) {
+    logger.error({ err: e }, 'verify-code failed');
+    res.status(500).json({ success: false, error: 'Verification failed' });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// All routes below require an authenticated session
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// GET /api/onboarding/state
+// Return the wizard state for the current user.
+// ---------------------------------------------------------------------------
+
+router.get('/onboarding/state', requireLogin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+
+    const result = await db.query(
+      `SELECT current_step, selections, stamp_config, started_at, completed_at, last_active_at
+       FROM onboarding_state
+       WHERE user_id = $1`,
+      [req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      // No state yet — return defaults so the client can start fresh
+      return res.json({
+        success: true,
+        state: {
+          current_step: 1,
+          selections: {},
+          stamp_config: {},
+          started_at: null,
+          completed_at: null,
+          last_active_at: null
+        }
+      });
+    }
+
+    const row = result.rows[0];
+    res.json({
+      success: true,
+      state: {
+        current_step: row.current_step,
+        selections: row.selections,
+        stamp_config: row.stamp_config,
+        started_at: row.started_at,
+        completed_at: row.completed_at,
+        last_active_at: row.last_active_at
+      }
+    });
+  } catch (e) {
+    logger.error({ err: e, userId: req.user.id }, 'GET onboarding/state failed');
+    res.status(500).json({ success: false, error: 'Failed to load onboarding state' });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// PUT /api/onboarding/state
+// Upsert {current_step, selections, stamp_config} for the current user.
+// ---------------------------------------------------------------------------
+
+router.put('/onboarding/state', requireLogin, async (req, res) => {
+  try {
+    const { current_step, selections, stamp_config } = req.body;
+
+    if (current_step === undefined && selections === undefined && stamp_config === undefined) {
+      return res.status(400).json({ success: false, error: 'Nothing to update' });
+    }
+
+    const db = req.app.get('db');
+
+    await db.query(
+      `INSERT INTO onboarding_state (user_id, current_step, selections, stamp_config, last_active_at)
+       VALUES ($1, $2, $3, $4, NOW())
+       ON CONFLICT (user_id) DO UPDATE
+         SET current_step    = COALESCE($2, onboarding_state.current_step),
+             selections      = CASE WHEN $3::jsonb IS NOT NULL
+                                    THEN onboarding_state.selections || $3::jsonb
+                                    ELSE onboarding_state.selections END,
+             stamp_config    = CASE WHEN $4::jsonb IS NOT NULL
+                                    THEN onboarding_state.stamp_config || $4::jsonb
+                                    ELSE onboarding_state.stamp_config END,
+             last_active_at  = NOW()`,
+      [
+        req.user.id,
+        current_step ?? null,
+        selections ? JSON.stringify(selections) : null,
+        stamp_config ? JSON.stringify(stamp_config) : null
+      ]
+    );
+
+    res.json({ success: true, message: 'State saved' });
+  } catch (e) {
+    logger.error({ err: e, userId: req.user.id }, 'PUT onboarding/state failed');
+    res.status(500).json({ success: false, error: 'Failed to save onboarding state' });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// POST /api/onboarding/complete
+// Finalize the wizard: persist user profile fields, mark wizard done.
+// ---------------------------------------------------------------------------
+
+router.post('/onboarding/complete', requireLogin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+
+    // Pull the latest full state from DB so we always work from the canonical version
+    const stateResult = await db.query(
+      `SELECT selections, stamp_config FROM onboarding_state WHERE user_id = $1`,
+      [req.user.id]
+    );
+
+    if (stateResult.rows.length === 0) {
+      return res.status(400).json({ success: false, error: 'No onboarding state found. Complete the wizard first.' });
+    }
+
+    const { selections = {}, stamp_config = {} } = stateResult.rows[0];
+
+    const {
+      user_type,
+      industry,
+      industry_other,
+      document_types,
+      estimated_volume,
+      selected_plan
+    } = selections;
+
+    // Persist to user_profiles
+    await db.query(
+      `INSERT INTO user_profiles (user_id, user_type, industry, industry_other, document_types, estimated_volume,
+                                  selected_plan, plan_selected_at, onboarding_completed, onboarding_completed_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), TRUE, NOW())
+       ON CONFLICT (user_id) DO UPDATE
+         SET user_type                = EXCLUDED.user_type,
+             industry                 = EXCLUDED.industry,
+             industry_other           = EXCLUDED.industry_other,
+             document_types           = EXCLUDED.document_types,
+             estimated_volume         = EXCLUDED.estimated_volume,
+             selected_plan            = EXCLUDED.selected_plan,
+             plan_selected_at         = EXCLUDED.plan_selected_at,
+             onboarding_completed     = TRUE,
+             onboarding_completed_at  = EXCLUDED.onboarding_completed_at`,
+      [
+        req.user.id,
+        user_type || null,
+        industry || null,
+        industry_other || null,
+        document_types || null,
+        estimated_volume || null,
+        selected_plan || null
+      ]
+    );
+
+    // Persist stamp config if provided
+    if (stamp_config && Object.keys(stamp_config).length > 0) {
+      const { accent_color, wave_color, logo_url, stamp_size } = stamp_config;
+      await db.query(
+        `INSERT INTO stamp_configs (user_id, accent_color, wave_color, logo_url, stamp_size, updated_at)
+         VALUES ($1, $2, $3, $4, $5, NOW())
+         ON CONFLICT (user_id) DO UPDATE
+           SET accent_color = COALESCE($2, stamp_configs.accent_color),
+               wave_color   = COALESCE($3, stamp_configs.wave_color),
+               logo_url     = COALESCE($4, stamp_configs.logo_url),
+               stamp_size   = COALESCE($5, stamp_configs.stamp_size),
+               updated_at   = NOW()`,
+        [
+          req.user.id,
+          accent_color || null,
+          wave_color || null,
+          logo_url || null,
+          stamp_size || null
+        ]
+      );
+    }
+
+    // Update users table
+    await db.query(
+      `UPDATE users
+       SET onboarding_completed = TRUE,
+           selected_plan        = $2
+       WHERE id = $1`,
+      [req.user.id, selected_plan || null]
+    );
+
+    // Mark wizard complete in onboarding_state
+    await db.query(
+      `UPDATE onboarding_state SET completed_at = NOW() WHERE user_id = $1`,
+      [req.user.id]
+    );
+
+    logger.info({ userId: req.user.id, selected_plan }, 'Onboarding completed');
+
+    res.json({
+      success: true,
+      message: 'Onboarding complete',
+      redirect: '/app'
+    });
+  } catch (e) {
+    logger.error({ err: e, userId: req.user.id }, 'POST onboarding/complete failed');
+    res.status(500).json({ success: false, error: 'Failed to complete onboarding' });
+  }
+});
+
+module.exports = router;
