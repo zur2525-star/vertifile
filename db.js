@@ -169,6 +169,21 @@ const _ready = (async () => {
   } catch (_) { /* already exists */ }
   // Preview-only column for freemium paywall
   try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS preview_only BOOLEAN DEFAULT FALSE'); } catch (_) {}
+  // Auth columns — email_verified, last_login_at, updated_at, provider narrowing
+  try { await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified BOOLEAN NOT NULL DEFAULT FALSE'); } catch (_) {}
+  try { await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMPTZ'); } catch (_) {}
+  try { await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW()'); } catch (_) {}
+  // Issue #4: Per-account login failure tracking + lockout columns
+  try { await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS failed_login_attempts INT DEFAULT 0'); } catch (_) {}
+  try { await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS locked_until TIMESTAMPTZ'); } catch (_) {}
+  // user_profiles table (referenced by onboarding routes)
+  try {
+    await pool.query(`CREATE TABLE IF NOT EXISTS user_profiles (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )`);
+  } catch (_) {}
 })();
 
 // ================================================================
@@ -593,8 +608,20 @@ async function updateUserProfile(userId, { name }) {
   await pool.query('UPDATE users SET name = $1 WHERE id = $2', [name, userId]);
 }
 
-async function changeUserPassword(userId, newPasswordHash) {
+async function changeUserPassword(userId, newPasswordHash, currentSessionId) {
   await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [newPasswordHash, userId]);
+  // Issue #5: Invalidate all sessions EXCEPT current when password is changed
+  if (currentSessionId) {
+    await pool.query(
+      `DELETE FROM sessions WHERE sess::jsonb->'passport'->>'user' = $1 AND sid != $2`,
+      [String(userId), currentSessionId]
+    );
+  } else {
+    await pool.query(
+      `DELETE FROM sessions WHERE sess::jsonb->'passport'->>'user' = $1`,
+      [String(userId)]
+    );
+  }
 }
 
 async function deleteUser(userId) {
@@ -713,6 +740,51 @@ async function markDocumentPreviewOnly(hash, previewOnly) {
 }
 
 // ================================================================
+// HEALTH CHECK
+// ================================================================
+async function healthCheck() {
+  const start = Date.now();
+  try {
+    const { rows } = await pool.query('SELECT NOW() AS server_time, current_database() AS db_name');
+    const ms = Date.now() - start;
+    return {
+      ok: true,
+      responseMs: ms,
+      serverTime: rows[0].server_time,
+      database: rows[0].db_name,
+      pool: {
+        total: pool.totalCount,
+        idle: pool.idleCount,
+        waiting: pool.waitingCount,
+      },
+    };
+  } catch (e) {
+    const ms = Date.now() - start;
+    return {
+      ok: false,
+      responseMs: ms,
+      error: e.message,
+      pool: {
+        total: pool.totalCount,
+        idle: pool.idleCount,
+        waiting: pool.waitingCount,
+      },
+    };
+  }
+}
+
+// ================================================================
+// LOGIN TRACKING
+// ================================================================
+async function updateLastLogin(userId) {
+  await pool.query('UPDATE users SET last_login_at = NOW(), updated_at = NOW() WHERE id = $1', [userId]);
+}
+
+async function setEmailVerified(userId, verified = true) {
+  await pool.query('UPDATE users SET email_verified = $1, updated_at = NOW() WHERE id = $2', [verified, userId]);
+}
+
+// ================================================================
 // PASSWORD RESET
 // ================================================================
 async function saveResetToken(userId, token, expiresAt) {
@@ -795,6 +867,10 @@ module.exports = {
   getResetToken,
   deleteResetToken,
   updateUserPassword,
+  healthCheck,
+  updateLastLogin,
+  setEmailVerified,
+  query: queryWithRetry,
   close,
   _db: pool,
   _ready,

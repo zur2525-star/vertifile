@@ -1,0 +1,60 @@
+name: Vertifile Weekly Security Check
+
+on:
+  schedule:
+    # Every Sunday at 6:00 AM UTC
+    - cron: '0 6 * * 0'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Full audit report (all levels, not just high)
+      - name: Security audit
+        run: |
+          echo "## Security Audit" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          npm audit 2>&1 | tee audit-output.txt || true
+          cat audit-output.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Check if there are high/critical vulnerabilities
+          if npm audit --audit-level=high 2>&1 | grep -q 'found 0 vulnerabilities'; then
+            echo "**Status: No high/critical vulnerabilities found.**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Status: High or critical vulnerabilities may be present. Review above.**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # Check for outdated packages
+      - name: Check outdated packages
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Outdated Packages" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          OUTDATED=$(npm outdated 2>&1 || true)
+          if [ -z "$OUTDATED" ]; then
+            echo "All packages are up to date." >> $GITHUB_STEP_SUMMARY
+          else
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "$OUTDATED" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "*Report generated on $(date -u '+%Y-%m-%d %H:%M UTC')*" >> $GITHUB_STEP_SUMMARY

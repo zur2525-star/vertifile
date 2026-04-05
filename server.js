@@ -26,6 +26,7 @@ const adminRoutes = require('./routes/admin');
 const gatewayRoutes = require('./routes/gateway');
 const webhookRoutes = require('./routes/webhooks');
 const pageRoutes = require('./routes/pages');
+const onboardingRoutes = require('./routes/onboarding');
 const { requestLogger } = require('./middleware/request-logger');
 const { responseEnvelope } = require('./middleware/response-envelope');
 const { trackError } = require('./middleware/error-alerter');
@@ -83,6 +84,11 @@ const ALLOWED_ORIGINS = [
   ...(process.env.NODE_ENV !== 'production' ? ['http://localhost:3002'] : [])
 ];
 
+// Issue #19: CORS localhost safety check for production
+if (process.env.NODE_ENV === 'production' && ALLOWED_ORIGINS.includes('http://localhost:3002')) {
+  throw new Error('SECURITY: localhost in production CORS origins');
+}
+
 app.use(cors({
   origin: (origin, cb) => { if (!origin || ALLOWED_ORIGINS.includes(origin)) cb(null, true); else cb(new Error('Not allowed by CORS')); },
   methods: ['GET', 'POST', 'DELETE'], allowedHeaders: ['Content-Type', 'X-API-Key', 'X-Admin-Secret'], credentials: true, maxAge: 86400
@@ -97,7 +103,7 @@ app.use(express.static(path.join(__dirname, 'public'), {
 app.use(session({
   store: new PgSession({ pool: db._db, tableName: 'sessions' }), secret: loadOrCreateSessionSecret(),
   resave: false, saveUninitialized: false, proxy: true,
-  cookie: { secure: !!(process.env.RENDER || process.env.NODE_ENV === 'production'), httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000, sameSite: 'lax' }
+  cookie: { secure: !!(process.env.RENDER || process.env.NODE_ENV === 'production'), httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000, sameSite: 'lax' }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -105,12 +111,45 @@ app.use(passport.session());
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => { try { done(null, await db.getUserById(id)); } catch(e) { done(e); } });
 
+// Pre-hash a dummy value once for timing-safe comparison when user not found — Issue #2
+const DUMMY_HASH = '$2b$12$LJ3m4ys3Lk0TSwHFnHBGMeZR5JkXBqEWvRyDJyQGqOM5rLSsMwDOi';
+
 passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
   try {
     const user = await db.getUserByEmail(email.toLowerCase().trim());
-    if (!user) return done(null, false, { message: 'Invalid email or password' });
-    if (!user.password_hash) return done(null, false, { message: 'Please use Google or Microsoft to sign in' });
-    if (!(await bcrypt.compare(password, user.password_hash))) return done(null, false, { message: 'Invalid email or password' });
+
+    // Issue #2: Dummy bcrypt compare when user not found (prevent timing attacks)
+    if (!user) {
+      await bcrypt.compare(password, DUMMY_HASH);
+      return done(null, false, { message: 'Invalid email or password' });
+    }
+
+    // Issue #20: Generic error for OAuth-only accounts (don't reveal provider)
+    if (!user.password_hash) {
+      await bcrypt.compare(password, DUMMY_HASH);
+      return done(null, false, { message: 'Invalid email or password' });
+    }
+
+    // Issue #4: Check account lockout before password check
+    if (user.locked_until && new Date(user.locked_until) > new Date()) {
+      return done(null, false, { message: 'Invalid email or password' }); // Generic — don't reveal lockout
+    }
+
+    if (!(await bcrypt.compare(password, user.password_hash))) {
+      // Issue #4: Track failed login attempts + lockout after 10
+      const attempts = (user.failed_login_attempts || 0) + 1;
+      await db.query('UPDATE users SET failed_login_attempts = $1 WHERE id = $2', [attempts, user.id]);
+      if (attempts >= 10) {
+        const lockUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 minute lockout
+        await db.query('UPDATE users SET locked_until = $1 WHERE id = $2', [lockUntil, user.id]);
+        await db.log('account_locked', { userId: user.id, attempts, ip: 'from-request' });
+      }
+      return done(null, false, { message: 'Invalid email or password' });
+    }
+
+    // Issue #4: On successful login, reset failure counter
+    await db.query('UPDATE users SET failed_login_attempts = 0, locked_until = NULL WHERE id = $1', [user.id]);
+
     done(null, user);
   } catch(e) { done(e); }
 }));
@@ -120,8 +159,32 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     clientID: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET, callbackURL: '/auth/google/callback'
   }, async (accessToken, refreshToken, profile, done) => {
     try {
+      // Issue #3: Check that Google email is verified
+      const email = profile.emails?.[0];
+      if (!email || email.verified === false) {
+        return done(null, false, { message: 'Google email not verified' });
+      }
+
       let user = await db.getUserByProviderId('google', profile.id);
-      if (!user) user = await db.createUser({ email: profile.emails[0].value, name: profile.displayName, provider: 'google', providerId: profile.id, avatarUrl: profile.photos?.[0]?.value || null });
+      if (!user) {
+        // Issue #8: Don't auto-merge — if email exists with different provider, show error
+        const existingByEmail = await db.getUserByEmail(email.value);
+        if (existingByEmail && existingByEmail.provider !== 'google') {
+          return done(null, false, {
+            message: 'An account with this email exists. Please sign in with your password first, then link Google from settings.'
+          });
+        }
+
+        user = await db.createUser({
+          email: email.value,
+          name: profile.displayName,
+          provider: 'google',
+          providerId: profile.id,
+          avatarUrl: profile.photos?.[0]?.value || null,
+        });
+        // Google-verified email — mark as verified
+        await db.setEmailVerified(user.id, true);
+      }
       done(null, user);
     } catch(e) { done(e); }
   }));
@@ -134,6 +197,17 @@ app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: { succ
 app.use(responseEnvelope());
 app.use(requestLogger());
 
+// Health check endpoint (no auth required)
+app.get('/api/health', async (req, res) => {
+  try {
+    const health = await db.healthCheck();
+    const status = health.ok ? 200 : 503;
+    res.status(status).json({ success: health.ok, ...health });
+  } catch (e) {
+    res.status(503).json({ success: false, error: 'Health check failed', message: e.message });
+  }
+});
+
 // Mount routes
 app.use('/auth', authRoutes);
 app.use('/api/user', userRoutes);
@@ -143,6 +217,7 @@ app.use('/api/gateway', gatewayRoutes);
 app.use('/api/webhooks', webhookRoutes);
 app.post('/api/keys/create', (req, res, next) => { req.url = '/keys-legacy/create'; adminRoutes(req, res, next); });
 app.get('/api/keys', (req, res, next) => { req.url = '/keys-legacy'; adminRoutes(req, res, next); });
+app.use('/api', onboardingRoutes);
 app.use('/', pageRoutes);
 
 // Global error handler

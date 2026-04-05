@@ -101,11 +101,13 @@ const authLimiter = rateLimit({
   legacyHeaders: false
 });
 
-// Rate limiter — signup
+// Rate limiter — signup (Issue #15: reduced from 10 to 3 per hour)
 const signupLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 10, // 10 signups per hour per IP
-  message: { success: false, error: 'Too many signup attempts. Try again later.' }
+  max: 3, // 3 signups per hour per IP
+  message: { success: false, error: 'Too many signup attempts. Try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
 module.exports = {

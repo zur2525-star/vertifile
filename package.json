@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "test": "node tests/api.test.js"
+    "test": "node tests/api.test.js",
+    "migrate": "node scripts/migrate.js"
   },
   "keywords": [],
   "author": "",

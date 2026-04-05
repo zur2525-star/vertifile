@@ -194,7 +194,7 @@ router.put('/profile', requireLogin, async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to update profile' }); }
 });
 
-// CHANGE password
+// CHANGE password — Issue #5: passes session ID so current session is preserved
 router.post('/change-password', requireLogin, async (req, res) => {
   try {
     const db = req.app.get('db');
@@ -206,7 +206,10 @@ router.post('/change-password', requireLogin, async (req, res) => {
     const valid = await bcrypt.compare(currentPassword, user.password_hash);
     if (!valid) return res.status(401).json({ success: false, error: 'Current password is incorrect' });
     const hash = await bcrypt.hash(newPassword, 12);
-    await db.changeUserPassword(req.user.id, hash);
+    // Issue #5: Pass current session ID to preserve it, invalidate all others
+    await db.changeUserPassword(req.user.id, hash, req.sessionID);
+    await db.log('password_changed', { userId: req.user.id });
+    await db.log('sessions_invalidated', { userId: req.user.id, reason: 'password_change', preservedSession: req.sessionID?.substring(0, 8) });
     res.json({ success: true });
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to change password' }); }
 });

@@ -7,36 +7,122 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  quality-gates:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '18'
           cache: 'npm'
-      - run: npm ci
-      - name: Syntax check
-        run: |
-          for f in server.js db.js blockchain.js obfuscate.js routes/*.js services/*.js middleware/*.js; do
-            node --check "$f" || exit 1
-          done
+
+      # 1. Clean install
+      - name: Install dependencies
+        run: npm ci
+
+      # 2. Security audit — fail on high/critical
       - name: Security audit
         run: npm audit --audit-level=high
-      - name: No console.log in production
+
+      # 3. Syntax validation (no eslint config in project — validate JS parses cleanly)
+      - name: Syntax check
         run: |
-          if grep -rn "console\.\(log\|error\|warn\)" routes/ services/ middleware/ 2>/dev/null | grep -v node_modules; then
-            echo "ERROR: console.log found in production code"
-            exit 1
-          fi
-      - name: No secrets in code
-        run: |
-          if grep -rn "sk_live\|sk_test" routes/ services/ middleware/ server.js 2>/dev/null | grep -v node_modules; then
-            echo "ERROR: Possible hardcoded secrets"
-            exit 1
-          fi
-      - name: Validate JSON locales
-        run: |
-          for f in public/locales/*.json; do
-            node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" || exit 1
+          echo "Checking JS syntax..."
+          fail=0
+          for f in $(find . -name '*.js' -not -path './node_modules/*' -not -path './.git/*'); do
+            if ! node --check "$f" 2>/dev/null; then
+              echo "FAIL: $f"
+              fail=1
+            fi
           done
+          if [ "$fail" -eq 1 ]; then
+            echo "::error::Syntax errors found in JS files"
+            exit 1
+          fi
+          echo "All JS files pass syntax check"
+
+      # 4. No console.log in production code (exclude tests, node_modules)
+      - name: Check for console.log in production code
+        run: |
+          echo "Scanning for console.log in production code..."
+          HITS=$(grep -rn 'console\.\(log\|debug\|info\|warn\|error\)' \
+            --include='*.js' \
+            --exclude-dir=node_modules \
+            --exclude-dir=tests \
+            --exclude-dir=test \
+            --exclude-dir=.git \
+            . 2>/dev/null || true)
+          if [ -n "$HITS" ]; then
+            echo "$HITS"
+            echo ""
+            echo "::error::console.log statements found in production code. Use the pino logger instead."
+            exit 1
+          fi
+          echo "Clean — no console.log in production code"
+
+      # 5. Check for hardcoded secrets patterns
+      - name: Check for hardcoded secrets
+        run: |
+          echo "Scanning for hardcoded secret patterns..."
+          PATTERNS='(sk_live_|sk_test_|AKIA[0-9A-Z]{16}|password\s*[:=]\s*["\x27][^"\x27]{6,}|api[_-]?key\s*[:=]\s*["\x27][^"\x27]{6,}|secret\s*[:=]\s*["\x27][^"\x27]{6,})'
+          HITS=$(grep -rEn "$PATTERNS" \
+            --include='*.js' \
+            --include='*.json' \
+            --exclude-dir=node_modules \
+            --exclude-dir=.git \
+            --exclude='package-lock.json' \
+            --exclude='*.test.js' \
+            . 2>/dev/null || true)
+          # Filter out env variable references (process.env.X) and common false positives
+          REAL_HITS=$(echo "$HITS" | grep -v 'process\.env\.' | grep -v 'node_modules' | grep -v '\.example' || true)
+          if [ -n "$REAL_HITS" ]; then
+            echo "$REAL_HITS"
+            echo ""
+            echo "::error::Possible hardcoded secrets detected. Use environment variables instead."
+            exit 1
+          fi
+          echo "Clean — no hardcoded secrets detected"
+
+      # 6. Run tests (don't fail if test script exits non-zero due to missing deps/db)
+      - name: Run tests
+        run: |
+          npm test || echo "::warning::Tests did not pass — check test output above"
+        continue-on-error: true
+
+      # 7. Validate JSON locale files
+      - name: Validate JSON files
+        run: |
+          if [ -d "public/locales" ]; then
+            echo "Validating locale JSON files..."
+            fail=0
+            for f in public/locales/*.json; do
+              if ! node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" 2>/dev/null; then
+                echo "FAIL: $f is not valid JSON"
+                fail=1
+              fi
+            done
+            if [ "$fail" -eq 1 ]; then
+              echo "::error::Invalid JSON locale files found"
+              exit 1
+            fi
+            echo "All locale files are valid JSON"
+          else
+            echo "No locales directory — skipping"
+          fi
+
+  # Notify on push to main only (Render auto-deploys from main)
+  deploy-notify:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: quality-gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment notice
+        run: |
+          echo "## Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Deployed to **Render** via auto-deploy from \`main\` branch." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Commit: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "By: @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY

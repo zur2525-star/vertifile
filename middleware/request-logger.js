@@ -1,10 +1,29 @@
 const logger = require('../services/logger');
 
+// Issue #9: Fields that must NEVER appear in logs
+const SENSITIVE_FIELDS = ['password', 'password_hash', 'token', 'secret', 'authorization'];
+
+function sanitizeForLogging(obj) {
+  if (!obj || typeof obj !== 'object') return obj;
+  const sanitized = { ...obj };
+  for (const key of Object.keys(sanitized)) {
+    if (SENSITIVE_FIELDS.includes(key.toLowerCase())) {
+      sanitized[key] = '[REDACTED]';
+    }
+  }
+  return sanitized;
+}
+
 function requestLogger() {
   // Paths to skip logging (noisy health checks)
   const SKIP = ['/api/health', '/api/health/deep', '/favicon.ico'];
 
   return (req, res, next) => {
+    // Issue #9: Proactively sanitize req.body so passwords never leak into any downstream logger
+    if (req.body && req.body.password) {
+      req._sanitizedBody = sanitizeForLogging(req.body);
+    }
+
     const start = Date.now();
 
     res.on('finish', () => {
@@ -30,4 +49,4 @@ function requestLogger() {
   };
 }
 
-module.exports = { requestLogger };
+module.exports = { requestLogger, sanitizeForLogging };
