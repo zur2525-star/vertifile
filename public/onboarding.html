@@ -970,10 +970,11 @@
     if (!target) return;
 
     target.classList.add('entering');
-    // Force reflow
+    // Force reflow so 'entering' styles are computed before transition starts
     void target.offsetWidth;
-    target.classList.remove('entering');
+    // Transition from entering -> active (both are display:block so transition works)
     target.classList.add('active');
+    target.classList.remove('entering');
 
     // Update progress
     updateProgressDots();
@@ -985,11 +986,16 @@
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Step-specific hooks
+    // Step-specific hooks — defer stamp/summary rendering to next frame
+    // so the container is fully laid out and visible before we inject
     if (stepNum === 3) reorderDocCards();
     if (stepNum === 5) updatePlanRecommendation();
-    if (stepNum === 6) updateStampPreview();
-    if (stepNum === 7) buildSummary();
+    if (stepNum === 6) {
+      requestAnimationFrame(function() { updateStampPreview(); });
+    }
+    if (stepNum === 7) {
+      requestAnimationFrame(function() { buildSummary(); });
+    }
 
     // Save state to server
     saveState();
@@ -1627,9 +1633,40 @@
               if (s.selections.selected_plan) { state.plan = s.selections.selected_plan; restoreCard('planGrid', s.selections.selected_plan); document.getElementById('cta5').disabled = false; }
             }
             if (s.stamp_config) {
-              if (s.stamp_config.accent_color) state.stampConfig.accentColor = s.stamp_config.accent_color;
-              if (s.stamp_config.wave_color) state.stampConfig.waveColor = s.stamp_config.wave_color;
-              if (s.stamp_config.stamp_size) state.stampConfig.stampSize = s.stamp_config.stamp_size;
+              if (s.stamp_config.accent_color) {
+                state.stampConfig.accentColor = s.stamp_config.accent_color;
+                var ap = document.getElementById('accentPicker');
+                var ah = document.getElementById('accentHex');
+                var av = document.getElementById('accentVal');
+                if (ap) ap.value = s.stamp_config.accent_color;
+                if (ah) ah.value = s.stamp_config.accent_color;
+                if (av) av.textContent = s.stamp_config.accent_color;
+                highlightSwatch('accentPresets', s.stamp_config.accent_color);
+              }
+              if (s.stamp_config.wave_color) {
+                state.stampConfig.waveColor = s.stamp_config.wave_color;
+                var wp = document.getElementById('wavePicker');
+                var wh = document.getElementById('waveHex');
+                var wv = document.getElementById('waveVal');
+                if (wp) wp.value = s.stamp_config.wave_color;
+                if (wh) wh.value = s.stamp_config.wave_color;
+                if (wv) wv.textContent = s.stamp_config.wave_color;
+                highlightSwatch('wavePresets', s.stamp_config.wave_color);
+              }
+              if (s.stamp_config.stamp_size) {
+                state.stampConfig.stampSize = s.stamp_config.stamp_size;
+                var sizeOpts = document.querySelectorAll('#sizeOptions .size-opt');
+                sizeOpts.forEach(function(o) {
+                  o.classList.remove('active');
+                  o.setAttribute('aria-checked', 'false');
+                  if (o.getAttribute('data-value') === s.stamp_config.stamp_size) {
+                    o.classList.add('active');
+                    o.setAttribute('aria-checked', 'true');
+                  }
+                });
+                var sv = document.getElementById('sizeVal');
+                if (sv) sv.textContent = s.stamp_config.stamp_size.charAt(0).toUpperCase() + s.stamp_config.stamp_size.slice(1);
+              }
             }
             // Enable CTA for step 1 if needed
             if (state.userType && state.industry) document.getElementById('cta1').disabled = false;

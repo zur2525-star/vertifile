@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS verification_codes (
   id         SERIAL PRIMARY KEY,
   user_id    INTEGER REFERENCES users(id) ON DELETE CASCADE,
   code       VARCHAR(6)  NOT NULL,
-  created_at TIMESTAMP   NOT NULL DEFAULT NOW(),
-  expires_at TIMESTAMP   NOT NULL,              -- NOW() + INTERVAL '10 minutes'
+  created_at TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
+  expires_at TIMESTAMPTZ   NOT NULL,              -- NOW() + INTERVAL '10 minutes'
   attempts   INTEGER     NOT NULL DEFAULT 0,    -- max 5
   used       BOOLEAN     NOT NULL DEFAULT FALSE
 );
@@ -38,9 +38,9 @@ CREATE TABLE IF NOT EXISTS onboarding_state (
   current_step   INTEGER   NOT NULL DEFAULT 1,
   selections     JSONB     NOT NULL DEFAULT '{}',  -- all step answers
   stamp_config   JSONB     NOT NULL DEFAULT '{}',  -- stamp customization
-  started_at     TIMESTAMP NOT NULL DEFAULT NOW(),
-  completed_at   TIMESTAMP,                        -- NULL until /onboarding/complete
-  last_active_at TIMESTAMP NOT NULL DEFAULT NOW()
+  started_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  completed_at   TIMESTAMPTZ,                        -- NULL until /onboarding/complete
+  last_active_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX IF NOT EXISTS idx_onboarding_state_user_id
@@ -58,9 +58,9 @@ ALTER TABLE user_profiles
   ADD COLUMN IF NOT EXISTS document_types          TEXT[],               -- array of selected doc type keys
   ADD COLUMN IF NOT EXISTS estimated_volume        VARCHAR(20),          -- under_50, 50_500, 500_5000, over_5000
   ADD COLUMN IF NOT EXISTS selected_plan           VARCHAR(20),          -- pro, pro_plus, enterprise
-  ADD COLUMN IF NOT EXISTS plan_selected_at        TIMESTAMP,
+  ADD COLUMN IF NOT EXISTS plan_selected_at        TIMESTAMPTZ,
   ADD COLUMN IF NOT EXISTS onboarding_completed    BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN IF NOT EXISTS onboarding_completed_at TIMESTAMP;
+  ADD COLUMN IF NOT EXISTS onboarding_completed_at TIMESTAMPTZ;
 
 -- -----------------------------------------------------------------------------
 -- 4. subscriptions
@@ -81,12 +81,12 @@ CREATE TABLE IF NOT EXISTS subscriptions (
   billing_cycle        VARCHAR(10)  NOT NULL DEFAULT 'monthly', -- monthly, annual
   payment_provider     VARCHAR(20),                         -- stripe, paypal
   payment_provider_id  VARCHAR(100),                        -- Stripe subscription ID / PayPal agreement ID
-  trial_ends_at        TIMESTAMP,
-  current_period_start TIMESTAMP,
-  current_period_end   TIMESTAMP,
-  created_at           TIMESTAMP NOT NULL DEFAULT NOW(),
-  activated_at         TIMESTAMP,                           -- first successful payment
-  cancelled_at         TIMESTAMP
+  trial_ends_at        TIMESTAMPTZ,
+  current_period_start TIMESTAMPTZ,
+  current_period_end   TIMESTAMPTZ,
+  created_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  activated_at         TIMESTAMPTZ,                           -- first successful payment
+  cancelled_at         TIMESTAMPTZ
 );
 
 CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id
@@ -107,8 +107,8 @@ CREATE TABLE IF NOT EXISTS stamp_configs (
   wave_color   VARCHAR(7)   NOT NULL DEFAULT '#06b6d4',
   logo_url     VARCHAR(500),
   stamp_size   VARCHAR(10)  NOT NULL DEFAULT 'medium',  -- small, medium, large
-  created_at   TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at   TIMESTAMP NOT NULL DEFAULT NOW()
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- -----------------------------------------------------------------------------
@@ -120,5 +120,5 @@ CREATE TABLE IF NOT EXISTS stamp_configs (
 ALTER TABLE users
   ADD COLUMN IF NOT EXISTS subscription_status    VARCHAR(20),  -- mirrors subscriptions.status
   ADD COLUMN IF NOT EXISTS selected_plan          VARCHAR(20),  -- mirrors subscriptions.plan
-  ADD COLUMN IF NOT EXISTS subscription_started_at TIMESTAMP,  -- mirrors subscriptions.activated_at
+  ADD COLUMN IF NOT EXISTS subscription_started_at TIMESTAMPTZ,  -- mirrors subscriptions.activated_at
   ADD COLUMN IF NOT EXISTS onboarding_completed   BOOLEAN NOT NULL DEFAULT FALSE;
