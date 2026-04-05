@@ -256,6 +256,16 @@
       </div>
 
       <div class="form-group">
+        <label class="form-label" for="signupPassword" data-i18n="signup.passwordLabel">Password</label>
+        <input class="form-input" type="password" id="signupPassword" required placeholder="Minimum 8 characters" minlength="8" autocomplete="new-password" data-i18n-placeholder="signup.passwordPlaceholder">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="signupPasswordConfirm" data-i18n="signup.confirmLabel">Confirm Password</label>
+        <input class="form-input" type="password" id="signupPasswordConfirm" required placeholder="Re-enter password" minlength="8" autocomplete="new-password" data-i18n-placeholder="signup.confirmPlaceholder">
+      </div>
+
+      <div class="form-group">
         <label class="form-label" for="useCase" data-i18n="signup.useCaseLabel">Use Case <span class="optional" data-i18n="signup.optional">(optional)</span></label>
         <select class="form-select" id="useCase" name="useCase">
           <option value="" data-i18n="signup.selectCategory">Select a category...</option>
@@ -374,6 +384,8 @@ signupForm.addEventListener('submit', function(e) {
   var orgName = document.getElementById('orgName').value.trim();
   var contactName = document.getElementById('contactName').value.trim();
   var email = document.getElementById('email').value.trim();
+  var password = document.getElementById('signupPassword').value;
+  var passwordConfirm = document.getElementById('signupPasswordConfirm').value;
   var useCase = document.getElementById('useCase').value;
 
   // Validation
@@ -381,6 +393,9 @@ signupForm.addEventListener('submit', function(e) {
   if (!contactName) { showError('Your name is required.'); return; }
   if (!email) { showError('Email is required.'); return; }
   if (!isValidEmail(email)) { showError('Please enter a valid email address.'); return; }
+  if (!password) { showError('Password is required.'); return; }
+  if (password.length < 8) { showError('Password must be at least 8 characters.'); return; }
+  if (password !== passwordConfirm) { showError('Passwords do not match.'); return; }
 
   // Disable button and show loading
   submitBtn.disabled = true;
@@ -393,6 +408,7 @@ signupForm.addEventListener('submit', function(e) {
       orgName: orgName,
       contactName: contactName,
       email: email,
+      password: password,
       useCase: useCase
     })
   })
@@ -410,6 +426,10 @@ signupForm.addEventListener('submit', function(e) {
   .then(function(data) {
     if (!data.success) {
       throw new Error(data.error || 'Signup failed. Please try again.');
+    }
+    if (data.redirect) {
+      window.location.href = data.redirect;
+      return;
     }
     showResult(data);
   })

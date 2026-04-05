@@ -46,9 +46,7 @@ router.get('/verify', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'verify.html'));
 });
 
-router.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'dashboard.html'));
-});
+router.get('/dashboard', (req, res) => res.redirect('/app'));
 
 router.get('/enterprise', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'enterprise.html'));

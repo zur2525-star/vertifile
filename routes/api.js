@@ -1,5 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
 const { signupLimiter, getClientIP } = require('../middleware/auth');
@@ -50,10 +51,14 @@ const _dailySignups = new Map(); // IP -> { count, resetAt }
 router.post('/signup', signupLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
-    let { orgName, contactName, email, useCase } = req.body;
+    let { orgName, contactName, email, useCase, password } = req.body;
 
-    if (!orgName || !contactName || !email) {
-      return res.status(400).json({ success: false, error: 'orgName, contactName, and email are required' });
+    if (!orgName || !contactName || !email || !password) {
+      return res.status(400).json({ success: false, error: 'orgName, contactName, email, and password are required' });
+    }
+
+    if (typeof password !== 'string' || password.length < 8) {
+      return res.status(400).json({ success: false, error: 'Password must be at least 8 characters' });
     }
 
     // Daily IP signup limit (max 3 per day)
@@ -107,14 +112,51 @@ router.post('/signup', signupLimiter, async (req, res) => {
 
     logger.info({ event: 'signup', orgName, plan: selectedPlan, email }, `New org: ${orgName}`);
 
-    res.json({
-      success: true,
-      apiKey,
-      orgId,
-      orgName,
-      plan: selectedPlan,
-      rateLimit: rateLimitVal,
-      message: 'Save this API key — it will not be shown again.'
+    // --- Create user account so they can log in to /app ---
+    const existing = await db.getUserByEmail(email);
+    if (existing) {
+      return res.status(409).json({ success: false, error: 'An account with this email already exists. Please log in instead.' });
+    }
+
+    const BCRYPT_ROUNDS = 12;
+    const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
+    const user = await db.createUser({
+      email,
+      name: contactName,
+      passwordHash,
+      provider: 'email',
+    });
+
+    await db.log('user_registered', { userId: user.id, ip: getClientIP(req), provider: 'email', orgId });
+
+    // Create session so user is logged in immediately
+    req.login(user, (loginErr) => {
+      if (loginErr) {
+        logger.warn({ err: loginErr }, 'Auto-login after signup failed');
+        // Still return success — they got their API key, they can log in manually
+        return res.json({
+          success: true,
+          apiKey,
+          orgId,
+          orgName,
+          plan: selectedPlan,
+          rateLimit: rateLimitVal,
+          message: 'Save this API key — it will not be shown again.'
+        });
+      }
+
+      req.session.createdAt = Date.now();
+
+      res.json({
+        success: true,
+        apiKey,
+        orgId,
+        orgName,
+        plan: selectedPlan,
+        rateLimit: rateLimitVal,
+        redirect: '/app',
+        message: 'Account created. Save this API key — it will not be shown again.'
+      });
     });
 
   } catch (error) {
