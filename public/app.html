@@ -2078,10 +2078,14 @@ window.Dashboard = {
   setStampSize: function(btn){
     document.querySelectorAll('.stamp-size-btn').forEach(function(b){ b.classList.remove('active'); });
     btn.classList.add('active');
+    this.renderStamps();
   },
   removeLogo: function(){
     var lc = document.getElementById('logoCurrent'); if(lc) lc.style.display = 'none';
     var la = document.getElementById('logoUploadArea'); if(la) la.style.display = 'block';
+    var thumb = document.getElementById('logoThumbImg'); if(thumb) thumb.src = '';
+    window.__customLogo = null;
+    this.renderStamps();
   },
   saveStamp: function(){ this.showToast('Stamp saved successfully'); },
   renderStamps: function(){
@@ -2091,8 +2095,20 @@ window.Dashboard = {
     document.querySelectorAll('.wave-color-input').forEach(function(inp) {
       waveColors.push(inp.value);
     });
-    var opts = {size: 120, waveCount: 7};
+    // Read selected accent color
+    var accentEl = document.querySelector('#accentPresets .color-preset.selected');
+    var accentColor = accentEl ? (accentEl.style.background || accentEl.style.backgroundColor) : null;
+    // Read active stamp size
+    var sizeMap = {Small: 96, Medium: 120, Large: 160};
+    var activeSizeBtn = document.querySelector('.stamp-size-btn.active');
+    var sizeName = activeSizeBtn ? activeSizeBtn.textContent.trim() : 'Medium';
+    var stampSize = sizeMap[sizeName] || 120;
+    // Read custom logo if uploaded
+    var customIcon = window.__customLogo || null;
+    var opts = {size: stampSize, waveCount: 7};
     if (waveColors.length > 0) opts.waveColors = waveColors;
+    if (accentColor) opts.brandColor = accentColor;
+    if (customIcon) opts.customIcon = customIcon;
 
     var ow = document.getElementById('overviewStampWrap');
     if(ow) ow.innerHTML = VertifileStamp.renderStamp(opts);
@@ -2444,6 +2460,8 @@ function handleLogoUpload(e) {
     if (area) area.style.display = 'none';
     if (thumb) thumb.src = dataUrl;
     if (fname) fname.textContent = file.name;
+    // Save logo for stamp preview rendering
+    window.__customLogo = '<img src="' + dataUrl + '" style="width:100%;height:100%;object-fit:contain"/>';
     // Update stamp preview
     Dashboard.renderStamps();
   };
