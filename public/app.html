@@ -727,12 +727,16 @@
     body.light-mode .stamp-wave-strip{background:rgba(124,58,237,.04)}
     .stamp-wave-strip svg{width:200%;height:100%;position:absolute;left:0;top:0;animation:waveFlow 6s linear infinite}
     /* Big Wave Preview — fills the full 7-wave gradient in a tall container */
-    .stamp-wave-big{margin-top:16px;background:linear-gradient(180deg,rgba(10,9,20,.9),rgba(26,24,48,.6));border-radius:14px;border:1px solid rgba(124,58,237,.16);height:200px;overflow:hidden;position:relative}
-    body.light-mode .stamp-wave-big{background:linear-gradient(180deg,#ffffff,#faf9ff);border-color:rgba(124,58,237,.12)}
-    .stamp-wave-big .wave-big-label{position:absolute;top:10px;left:14px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-2);font-weight:600;z-index:2}
-    .stamp-wave-big svg{width:100%;height:100%;position:absolute;left:0;top:0}
-    .stamp-wave-big svg path{animation:waveFlow 8s linear infinite}
+    .stamp-wave-big{margin-top:16px;background:radial-gradient(ellipse at 50% 50%,rgba(124,58,237,.08),transparent 70%),linear-gradient(180deg,#0a0814,#15132a);border-radius:18px;border:1px solid rgba(124,58,237,.25);height:220px;overflow:hidden;position:relative;box-shadow:inset 0 0 40px rgba(124,58,237,.1),0 4px 24px rgba(0,0,0,.15)}
+    body.light-mode .stamp-wave-big{background:radial-gradient(ellipse at 50% 50%,rgba(124,58,237,.05),transparent 70%),linear-gradient(180deg,#fafaff,#f3f0ff);border-color:rgba(124,58,237,.18);box-shadow:inset 0 0 30px rgba(124,58,237,.04),0 4px 24px rgba(124,58,237,.08)}
+    .stamp-wave-big .wave-big-label{position:absolute;top:12px;left:16px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--text-2);font-weight:700;z-index:2;background:rgba(255,255,255,.04);padding:4px 10px;border-radius:6px;border:1px solid rgba(124,58,237,.12);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+    body.light-mode .stamp-wave-big .wave-big-label{background:rgba(255,255,255,.7);border-color:rgba(124,58,237,.15)}
+    .stamp-wave-big svg{width:100%;height:100%;position:absolute;left:0;top:0;display:block}
+    .stamp-wave-big::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.05) 50%,transparent 100%);animation:waveShimmer 4s ease-in-out infinite;pointer-events:none;z-index:1}
+    body.light-mode .stamp-wave-big::before{background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.4) 50%,transparent 100%)}
+    @keyframes waveShimmer{0%,100%{transform:translateX(-30%);opacity:.3}50%{transform:translateX(30%);opacity:.7}}
     @keyframes waveFlow{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    @keyframes waveBigFlow{0%{transform:translateY(0) scaleX(1)}50%{transform:translateY(-3px) scaleX(1.02)}100%{transform:translateY(2px) scaleX(0.99)}}
     .stamp-controls-section h2{font-size:20px;font-weight:700;color:var(--text-1);margin-bottom:20px}
     .control-section{margin-bottom:20px}
     .control-section-title{font-size:12px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--divider);display:flex;align-items:center;gap:6px}
@@ -2127,23 +2131,38 @@ window.Dashboard = {
     // Render big wave preview (tall container) for My Stamp tab
     var swb = document.getElementById('stampWaveBig');
     if(swb) {
-      // Build tall multi-wave SVG with all 7 colors, each wave line thicker and more visible
       var colors = waveColors.length > 0 ? waveColors : ['#1e0a4a','#2e1065','#4c1d95','#6d28d9','#7c3aed','#a78bfa','#c4b5fd'];
-      var svgPaths = '';
+      // Build smooth Bezier wave paths — varied amplitudes, frequencies and phases for organic look
+      var defs = '<defs>';
+      var paths = '';
       for (var i = 0; i < 7; i++) {
-        var y = 30 + i * 22;  // evenly spaced from 30 to 162
-        var amp = 12 + i * 2;
-        var phase = i * 40;
-        var d = 'M0,' + y;
-        for (var x = 0; x <= 800; x += 8) {
-          d += ' L' + x + ',' + (y + Math.sin((x + phase) * Math.PI / 180) * amp);
+        var baseY = 36 + i * 22;             // rows 36..168
+        var amp = 14 + (i % 3) * 4;          // 14, 18, 22 cycling
+        var freq = 1.6 + (i * 0.18);         // varied frequency per wave
+        var phase = i * 53;                  // distinct phase offsets
+        var dur = (5 + (i * 0.6)).toFixed(1); // 5s, 5.6s, 6.2s, ...
+        // Build smooth curve via cubic bezier in 100px chunks
+        var d = 'M0,' + baseY;
+        var lastY = baseY;
+        for (var x = 0; x <= 800; x += 100) {
+          var nextX = x + 100;
+          var nextY = baseY + Math.sin((nextX * freq + phase) * Math.PI / 180) * amp;
+          var midY = (lastY + nextY) / 2 - amp * 0.4 * Math.cos((x * freq + phase) * Math.PI / 180);
+          d += ' Q ' + (x + 50) + ',' + midY + ' ' + nextX + ',' + nextY;
+          lastY = nextY;
         }
-        svgPaths += '<path d="' + d + '" stroke="' + colors[i] + '" stroke-width="2.5" fill="none" opacity="0.85"/>';
+        // Gradient for each wave (slightly transparent at edges)
+        defs += '<linearGradient id="waveGrad' + i + '" x1="0%" x2="100%">'
+              +   '<stop offset="0%" stop-color="' + colors[i] + '" stop-opacity="0.15"/>'
+              +   '<stop offset="50%" stop-color="' + colors[i] + '" stop-opacity="1"/>'
+              +   '<stop offset="100%" stop-color="' + colors[i] + '" stop-opacity="0.15"/>'
+              + '</linearGradient>';
+        paths += '<path d="' + d + '" stroke="url(#waveGrad' + i + ')" stroke-width="2.5" fill="none" stroke-linecap="round" style="animation:waveBigFlow ' + dur + 's ease-in-out infinite alternate;animation-delay:' + (i * -0.4).toFixed(1) + 's"/>';
       }
-      // Keep the label span, replace inner SVG
+      defs += '</defs>';
       var label = swb.querySelector('.wave-big-label');
-      swb.innerHTML = (label ? label.outerHTML : '<div class="wave-big-label">7 Waves Preview</div>') +
-        '<svg viewBox="0 0 800 200" preserveAspectRatio="none">' + svgPaths + '</svg>';
+      swb.innerHTML = (label ? label.outerHTML : '<div class="wave-big-label" data-i18n="tab.stamp.wavesPreview">7 Waves Preview</div>') +
+        '<svg viewBox="0 0 800 200" preserveAspectRatio="none" style="filter:drop-shadow(0 2px 6px rgba(124,58,237,.15))">' + defs + paths + '</svg>';
     }
   },
 
