@@ -196,13 +196,13 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 @keyframes glowP{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
 
 /* Inner circle */
-.stamp .inner-bg{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(124,58,237,.12)}
+.stamp .inner-bg{position:absolute;top:19%;left:19%;width:62%;height:62%;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(124,58,237,.12)}
 
 /* Center content — logo + label */
-.stamp .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:54%;max-width:54%;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;gap:calc(var(--ss)*0.015)}
+.stamp .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:60%;max-width:60%;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;gap:calc(var(--ss)*0.015)}
 .stamp .center svg.stamp-logo{width:calc(var(--ss)*0.30);height:calc(var(--ss)*0.30);display:block;flex-shrink:0}
 .stamp .center img.stamp-logo{width:calc(var(--ss)*0.30);height:calc(var(--ss)*0.30);border-radius:50%;object-fit:cover;background:#fff;padding:0;display:block;flex-shrink:0}
-.stamp .brand{font-size:calc(var(--ss)*0.085);font-weight:900;letter-spacing:.04em;color:rgba(124,58,237,.65);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:100%;text-transform:uppercase;line-height:1.1}
+.stamp .brand{font-size:calc(var(--ss)*0.078);font-weight:900;letter-spacing:.04em;color:rgba(124,58,237,.65);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:100%;text-transform:uppercase;line-height:1.1}
 .stamp .lbl{font-size:calc(var(--ss)*0.085);font-weight:900;letter-spacing:.04em;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:100%;line-height:1.1}
 .stamp .lbl.ok{color:rgba(46,125,50,.6)}
 .stamp .lbl.bad{color:rgba(198,40,40,.6)}
