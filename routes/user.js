@@ -13,7 +13,42 @@ const router = express.Router();
 
 router.get('/me', (req, res) => {
   if (!req.user) return res.status(401).json({ success: false, error: 'Not authenticated' });
-  res.json({ success: true, user: { id: req.user.id, email: req.user.email, name: req.user.name, avatar: req.user.avatar_url, plan: req.user.plan, documentsUsed: req.user.documents_used, documentsLimit: req.user.documents_limit } });
+  res.json({ success: true, user: {
+    id: req.user.id,
+    email: req.user.email,
+    name: req.user.name,
+    avatar: req.user.avatar_url,
+    plan: req.user.plan,
+    documentsUsed: req.user.documents_used,
+    documentsLimit: req.user.documents_limit,
+    stampConfig: req.user.stamp_config || {},
+    stampUpdatedAt: req.user.stamp_updated_at
+  }});
+});
+
+// Stamp config (Layer 2 — visual wrapper)
+router.get('/stamp', requireLogin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const result = await db.getUserStampConfig(req.user.id);
+    res.json({ success: true, stampConfig: result?.config || {}, updatedAt: result?.updatedAt });
+  } catch(e) { res.status(500).json({ success: false, error: 'Failed to load stamp config' }); }
+});
+
+router.post('/stamp', requireLogin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    if (!req.body || typeof req.body !== 'object') {
+      return res.status(400).json({ success: false, error: 'Invalid body' });
+    }
+    const saved = await db.updateUserStampConfig(req.user.id, req.body);
+    // Invalidate cache so next /d/:shareId/raw rebuilds with new stamp
+    if (req.app.get('stampCache')) req.app.get('stampCache').delete(req.user.id);
+    await db.log('stamp_config_updated', { userId: req.user.id });
+    res.json({ success: true, stampConfig: saved });
+  } catch(e) {
+    res.status(400).json({ success: false, error: e.message || 'Failed to update stamp config' });
+  }
 });
 
 router.get('/documents', requireLogin, async (req, res) => {

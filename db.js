@@ -176,6 +176,10 @@ const _ready = (async () => {
   // Issue #4: Per-account login failure tracking + lockout columns
   try { await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS failed_login_attempts INT DEFAULT 0'); } catch (_) {}
   try { await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS locked_until TIMESTAMPTZ'); } catch (_) {}
+  // Stamp branding config — Layer 2 visual wrapper (waveColors, accentColor, customLogo, etc.)
+  // Per ADR: stored as JSONB, applied dynamically at /d/:shareId render time
+  try { await pool.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS stamp_config JSONB DEFAULT '{}'::jsonb"); } catch (_) {}
+  try { await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS stamp_updated_at TIMESTAMPTZ'); } catch (_) {}
   // user_profiles table (referenced by onboarding routes)
   try {
     await pool.query(`CREATE TABLE IF NOT EXISTS user_profiles (
@@ -608,6 +612,49 @@ async function updateUserProfile(userId, { name }) {
   await pool.query('UPDATE users SET name = $1 WHERE id = $2', [name, userId]);
 }
 
+// ================================================================
+// STAMP CONFIG (Layer 2 — visual wrapper, not part of doc hash)
+// ================================================================
+async function getUserStampConfig(userId) {
+  const { rows } = await pool.query('SELECT stamp_config, stamp_updated_at FROM users WHERE id = $1', [userId]);
+  if (!rows[0]) return null;
+  return {
+    config: rows[0].stamp_config || {},
+    updatedAt: rows[0].stamp_updated_at
+  };
+}
+
+async function updateUserStampConfig(userId, config) {
+  // Validation guard — strip any non-allowed keys to prevent injection
+  const ALLOWED_KEYS = ['waveColors', 'accentColor', 'customLogo', 'orgName', 'stampText', 'size'];
+  const safe = {};
+  for (const k of ALLOWED_KEYS) {
+    if (config[k] !== undefined) safe[k] = config[k];
+  }
+  // Hard limits
+  if (safe.waveColors && (!Array.isArray(safe.waveColors) || safe.waveColors.length > 7)) {
+    throw new Error('waveColors must be an array of <=7 hex strings');
+  }
+  if (safe.customLogo && typeof safe.customLogo === 'string') {
+    // Must be data URL (no external URLs allowed per Avi)
+    if (!safe.customLogo.startsWith('data:image/')) {
+      throw new Error('customLogo must be a data: URL (no external URLs)');
+    }
+    // Limit to 500KB base64 (~365KB binary)
+    if (safe.customLogo.length > 500 * 1024) {
+      throw new Error('customLogo too large (max 500KB)');
+    }
+  }
+  if (safe.orgName && safe.orgName.length > 50) safe.orgName = safe.orgName.substring(0, 50);
+  if (safe.stampText && safe.stampText.length > 30) safe.stampText = safe.stampText.substring(0, 30);
+
+  await pool.query(
+    'UPDATE users SET stamp_config = $1::jsonb, stamp_updated_at = NOW() WHERE id = $2',
+    [JSON.stringify(safe), userId]
+  );
+  return safe;
+}
+
 async function changeUserPassword(userId, newPasswordHash, currentSessionId) {
   await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [newPasswordHash, userId]);
   // Issue #5: Invalidate all sessions EXCEPT current when password is changed
@@ -849,6 +896,8 @@ module.exports = {
   savePvfContent,
   getPvfContent,
   updateUserProfile,
+  getUserStampConfig,
+  updateUserStampConfig,
   changeUserPassword,
   deleteUser,
   logHealthCheck,

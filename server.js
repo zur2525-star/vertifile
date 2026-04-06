@@ -62,6 +62,22 @@ app.set('authenticateApiKey', createAuthenticateApiKey(db));
 app.set('authenticateAdmin', createAuthenticateAdmin(db));
 app.set('trust proxy', 1);
 
+// Stamp config in-memory cache (Layer 2 visual wrapper)
+// userId → { config, expiresAt }
+// TTL 5 min. Invalidated on POST /api/user/stamp.
+const STAMP_CACHE_TTL_MS = 5 * 60 * 1000;
+const stampCache = new Map();
+stampCache._get = function(userId) {
+  const e = this.get(userId);
+  if (!e) return null;
+  if (Date.now() > e.expiresAt) { this.delete(userId); return null; }
+  return e.config;
+};
+stampCache._set = function(userId, config) {
+  this.set(userId, { config, expiresAt: Date.now() + STAMP_CACHE_TTL_MS });
+};
+app.set('stampCache', stampCache);
+
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {

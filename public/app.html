@@ -1510,10 +1510,53 @@ function showApp() {
     // Populate settings
     document.getElementById('settingsName').value = currentUser.name || '';
     document.getElementById('settingsEmail').value = currentUser.email || '';
+    // Apply saved stamp config to UI
+    applyStampConfigToUI(currentUser.stampConfig || {});
   }
   // Initialize the new dashboard
   Dashboard.init();
   loadDocuments();
+}
+
+// Restore saved stamp config to the customizer UI on /app#stamp
+function applyStampConfigToUI(cfg) {
+  if (!cfg || typeof cfg !== 'object') return;
+  // Wave colors
+  if (Array.isArray(cfg.waveColors) && cfg.waveColors.length) {
+    var inputs = document.querySelectorAll('.wave-color-input');
+    inputs.forEach(function(inp, i) { if (cfg.waveColors[i]) inp.value = cfg.waveColors[i]; });
+  }
+  // Accent color
+  if (cfg.accentColor) {
+    document.querySelectorAll('#accentPresets .color-preset').forEach(function(p) {
+      var bg = (p.style.background || p.style.backgroundColor || '').replace(/\s/g,'');
+      if (bg.indexOf(cfg.accentColor.replace(/\s/g,'')) !== -1) {
+        document.querySelectorAll('#accentPresets .color-preset').forEach(function(x) { x.classList.remove('selected'); });
+        p.classList.add('selected');
+      }
+    });
+  }
+  // Size
+  if (cfg.size) {
+    var sizeMap = {96: 'Small', 120: 'Medium', 160: 'Large'};
+    var label = sizeMap[cfg.size] || 'Medium';
+    document.querySelectorAll('.stamp-size-btn').forEach(function(b) {
+      b.classList.toggle('active', b.textContent.trim() === label);
+    });
+  }
+  // Custom logo
+  if (cfg.customLogo && typeof cfg.customLogo === 'string' && cfg.customLogo.startsWith('data:image/')) {
+    window.__customLogo = '<img src="' + cfg.customLogo + '" alt="Custom logo"/>';
+    window.__customLogoDataUrl = cfg.customLogo;
+    var cur = document.getElementById('logoCurrent');
+    var area = document.getElementById('logoUploadArea');
+    var thumb = document.getElementById('logoThumbImg');
+    if (cur) cur.style.display = 'block';
+    if (area) area.style.display = 'none';
+    if (thumb) thumb.src = cfg.customLogo;
+  }
+  // Re-render preview after applying
+  if (window.Dashboard && Dashboard.renderStamps) Dashboard.renderStamps();
 }
 
 function showLogin() {
@@ -2095,7 +2138,43 @@ window.Dashboard = {
     window.__customLogo = null;
     this.renderStamps();
   },
-  saveStamp: function(){ this.showToast('Stamp saved successfully'); },
+  saveStamp: function(){
+    var self = this;
+    // Build the stamp config from current UI state
+    var waveColors = [];
+    document.querySelectorAll('.wave-color-input').forEach(function(inp) { waveColors.push(inp.value); });
+    var accentEl = document.querySelector('#accentPresets .color-preset.selected');
+    var accentColor = accentEl ? (accentEl.style.background || accentEl.style.backgroundColor || '#7c3aed') : '#7c3aed';
+    var sizeMap = {Small: 96, Medium: 120, Large: 160};
+    var activeSizeBtn = document.querySelector('.stamp-size-btn.active');
+    var sizeName = activeSizeBtn ? activeSizeBtn.textContent.trim() : 'Medium';
+    var customLogo = window.__customLogoDataUrl || null;
+    var orgName = (currentUser && currentUser.name) ? currentUser.name.toUpperCase() : 'VERTIFILE';
+
+    var config = {
+      waveColors: waveColors,
+      accentColor: accentColor,
+      size: sizeMap[sizeName] || 120,
+      orgName: orgName
+    };
+    if (customLogo) config.customLogo = customLogo;
+
+    fetch('/api/user/stamp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(config)
+    }).then(function(r) { return r.json().then(function(d) { return {ok: r.ok, data: d}; }); })
+      .then(function(res) {
+        if (res.ok) {
+          if (currentUser) currentUser.stampConfig = res.data.stampConfig;
+          self.showToast('Stamp saved — applying to all your documents');
+        } else {
+          self.showToast(res.data.error || 'Failed to save stamp');
+        }
+      })
+      .catch(function(e) { self.showToast('Error: ' + e.message); });
+  },
   renderStamps: function(){
     if(!window.VertifileStamp) return;
     // Collect wave colors from pickers
@@ -2486,6 +2565,8 @@ function handleLogoUpload(e) {
     // Save logo as raw <img> — VertifileStamp.renderStamp wraps it in
     // .vfs-custom-logo which fills the entire inner circle and replaces text
     window.__customLogo = '<img src="' + dataUrl + '" alt="Custom logo"/>';
+    // Save raw dataURL too for sending to backend (saveStamp)
+    window.__customLogoDataUrl = dataUrl;
     // Update stamp preview
     Dashboard.renderStamps();
   };

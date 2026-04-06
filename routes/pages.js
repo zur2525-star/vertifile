@@ -111,10 +111,13 @@ router.get('/d/:shareId', async (req, res) => {
       return res.status(404).send(notFoundPage('Document not found'));
     }
 
-    const pvfContent = await db.getPvfContent(shareId);
+    let pvfContent = await db.getPvfContent(shareId);
     if (!pvfContent) {
       return res.status(404).send(notFoundPage('Document file not available'));
     }
+
+    // Layer 2 stamp injection — fresh per-view, hash unchanged
+    pvfContent = await injectStampConfig(req, shareId, pvfContent, db);
 
     await db.log('document_viewed', { shareId, hash: doc.hash, ip: getClientIP(req) });
 
@@ -131,8 +134,12 @@ router.get('/d/:shareId/raw', async (req, res) => {
     const { shareId } = req.params;
     if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).send('Not found');
 
-    const pvfContent = await db.getPvfContent(shareId);
+    let pvfContent = await db.getPvfContent(shareId);
     if (!pvfContent) return res.status(404).send('Not found');
+
+    // Layer 2 — inject the document owner's latest stamp config dynamically.
+    // Doc content (Layer 1) is unchanged → hash stays valid.
+    pvfContent = await injectStampConfig(req, shareId, pvfContent, db);
 
     res.setHeader('Content-Security-Policy', [
       "default-src 'self'",
@@ -153,6 +160,90 @@ router.get('/d/:shareId/raw', async (req, res) => {
     res.send(pvfContent);
   } catch(e) { return res.status(500).send('Server error'); }
 });
+
+// ============================================================
+// Stamp config injection — Layer 2 visual wrapper
+// ============================================================
+// Looks up the document owner's current stamp_config and injects an
+// inline <script> + <style> block at the top of the PVF that overrides
+// the wave colors and accent color at view time. Doc content (Layer 1)
+// is untouched, so the hash remains valid.
+async function injectStampConfig(req, shareId, pvfContent, db) {
+  try {
+    const cache = req.app.get('stampCache');
+    const doc = await db.getDocumentByShareId(shareId);
+    if (!doc || !doc.user_id) return pvfContent;
+    const userId = doc.user_id;
+
+    let cfg = cache && cache._get ? cache._get(userId) : null;
+    if (!cfg) {
+      const result = await db.getUserStampConfig(userId);
+      cfg = result?.config || {};
+      if (cache && cache._set) cache._set(userId, cfg);
+    }
+    // Empty config = no override
+    if (!cfg || Object.keys(cfg).length === 0) return pvfContent;
+
+    // Build override SVG/CSS
+    const waveColors = Array.isArray(cfg.waveColors) && cfg.waveColors.length
+      ? cfg.waveColors.slice(0, 7).map(c => String(c).replace(/[^#0-9a-fA-F]/g, ''))
+      : null;
+    const accent = cfg.accentColor && /^#?[0-9a-fA-F]{3,6}$/.test(String(cfg.accentColor).trim().replace('#',''))
+      ? String(cfg.accentColor).startsWith('#') ? cfg.accentColor : '#' + cfg.accentColor
+      : null;
+    const customLogo = cfg.customLogo && typeof cfg.customLogo === 'string' && cfg.customLogo.startsWith('data:image/')
+      ? cfg.customLogo : null;
+
+    // Build the override script
+    const overrideScript = `<script>(function(){
+      window.__VF_STAMP_OVERRIDE__ = ${JSON.stringify({ waveColors, accent, customLogo })};
+      function applyOverride(){
+        var o = window.__VF_STAMP_OVERRIDE__;
+        if (!o) return;
+        // 1. Override wave path strokes (they have stroke="..." attribute)
+        if (o.waveColors && o.waveColors.length) {
+          var paths = document.querySelectorAll('.holo-waves path[stroke], .vfs-wave-svg path[stroke]');
+          for (var i=0; i<paths.length && i<o.waveColors.length; i++) {
+            paths[i].setAttribute('stroke', o.waveColors[i]);
+          }
+        }
+        // 2. Override accent color (CSS variable + brand color)
+        if (o.accent) {
+          document.documentElement.style.setProperty('--vf-accent', o.accent);
+          var brandEls = document.querySelectorAll('.vfs-brand, .stamp-brand-name');
+          for (var j=0; j<brandEls.length; j++) brandEls[j].style.color = o.accent;
+        }
+        // 3. Replace logo if customLogo set
+        if (o.customLogo) {
+          var logoSlots = document.querySelectorAll('.vfs-stamp-logo, .vfs-center svg, .stamp-logo-slot');
+          for (var k=0; k<logoSlots.length; k++) {
+            var img = document.createElement('div');
+            img.style.cssText='position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;overflow:hidden;background:#fff;border:1px solid rgba(124,58,237,.12);z-index:10';
+            img.innerHTML = '<img src="' + o.customLogo + '" style="width:100%;height:100%;object-fit:cover;display:block"/>';
+            var coin = logoSlots[k].closest('.vfs-stamp-coin') || logoSlots[k].parentElement;
+            if (coin) coin.appendChild(img);
+            // Hide brand/verified text since logo replaces them
+            var center = coin && coin.querySelector('.vfs-center');
+            if (center) center.style.display = 'none';
+            break;
+          }
+        }
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyOverride);
+      } else {
+        applyOverride();
+      }
+    })();</script>`;
+    // Inject right before </body> so DOM is ready
+    if (pvfContent.indexOf('</body>') !== -1) {
+      return pvfContent.replace('</body>', overrideScript + '</body>');
+    }
+    return pvfContent + overrideScript;
+  } catch(e) {
+    return pvfContent; // Fail open — original PVF still displays
+  }
+}
 
 // Download route — /d/:shareId/download
 router.get('/d/:shareId/download', async (req, res) => {
