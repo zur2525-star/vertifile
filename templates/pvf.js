@@ -207,12 +207,12 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 .stamp .lbl.ok{color:rgba(46,125,50,.6)}
 .stamp .lbl.bad{color:rgba(198,40,40,.6)}
 
-/* Verified badge overlay */
-.stamp .verified-badge{position:absolute;bottom:calc(var(--ss)*0.025);right:calc(var(--ss)*0.025);width:calc(var(--ss)*0.20);height:calc(var(--ss)*0.20);border-radius:50%;background:#fff;border:1.5px solid rgba(46,125,50,.5);display:flex;align-items:center;justify-content:center;z-index:31;box-shadow:0 1px 3px rgba(0,0,0,.15)}
-.stamp .verified-badge svg{width:60%;height:60%}
+/* Verified badge — hidden per Zur's request (the inner VERIFIED label is enough).
+   Forged badge stays visible so users can still see the X mark on tampered docs. */
+.stamp .verified-badge{display:none}
 .stamp .forged-badge{position:absolute;bottom:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#fff;border:1.5px solid rgba(198,40,40,.5);display:flex;align-items:center;justify-content:center;z-index:31;box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .stamp .forged-badge svg{width:10px;height:10px}
-@media(max-width:600px){.stamp .verified-badge,.stamp .forged-badge{width:14px;height:14px;bottom:1px;right:1px}.stamp .verified-badge svg,.stamp .forged-badge svg{width:8px;height:8px}}
+@media(max-width:600px){.stamp .forged-badge{width:14px;height:14px;bottom:1px;right:1px}.stamp .forged-badge svg{width:8px;height:8px}}
 
 /* Check & X animations */
 .chk{stroke-dasharray:60;stroke-dashoffset:60;animation:dChk 1s ease forwards .8s}
