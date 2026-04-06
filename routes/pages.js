@@ -271,10 +271,14 @@ router.get('/d/:shareId/download', async (req, res) => {
       }
     }
 
-    const pvfContent = await db.getPvfContent(shareId);
+    let pvfContent = await db.getPvfContent(shareId);
     if (!pvfContent) {
       return res.status(404).json({ success: false, error: 'Document file not available' });
     }
+
+    // Layer 2 — apply current owner stamp config to the downloaded snapshot
+    // so the user gets a fresh copy with their latest stamp branding
+    pvfContent = await injectStampConfig(req, shareId, pvfContent, db);
 
     const pvfFileName = (doc.originalName || 'document').replace(/\.[^.]+$/, '') + '.pvf';
     res.setHeader('Content-Type', 'application/vnd.vertifile.pvf; charset=utf-8');
