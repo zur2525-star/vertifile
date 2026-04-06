@@ -575,7 +575,7 @@ var isLocal=location.protocol==="file:"||location.protocol==="about:"||window!==
 // Code Integrity — hash the script content to detect tampering
 async function computeCodeIntegrity(){
   try{
-    var scripts=document.querySelectorAll("script");
+    var scripts=document.querySelectorAll("script:not([data-vf-stamp-override])");
     var allCode="";
     for(var i=0;i<scripts.length;i++){if(scripts[i].textContent)allCode+=scripts[i].textContent}
     var encoder=new TextEncoder();

@@ -4,6 +4,7 @@ const fs = require('fs');
 const { escapeHtml } = require('../templates/pvf');
 const { setPvfSecurityHeaders } = require('../services/pvf-generator');
 const { getClientIP } = require('../middleware/auth');
+const logger = require('../services/logger');
 
 const router = express.Router();
 
@@ -165,15 +166,39 @@ router.get('/d/:shareId/raw', async (req, res) => {
 // Stamp config injection — Layer 2 visual wrapper
 // ============================================================
 // Looks up the document owner's current stamp_config and injects an
-// inline <script> + <style> block at the top of the PVF that overrides
-// the wave colors and accent color at view time. Doc content (Layer 1)
-// is untouched, so the hash remains valid.
+// inline <script data-vf-stamp-override> block immediately before the
+// REAL </body> tag (not a fake one inside obfuscated JS string literals)
+// that overrides the wave colors and accent color at view time.
+// Doc content (Layer 1) is untouched, so the hash remains valid.
+//
+// Verified docs call /api/verify with a client-side sha256 of all
+// <script> textContent concatenated. For NEW docs the client-side
+// hasher skips scripts tagged with data-vf-stamp-override so the
+// hash still matches doc.code_integrity. For OLD docs the client
+// includes the override script in its hash, and /api/verify uses
+// a dual-hash fallback (see routes/api.js) that reconstructs the
+// expected hash from the deterministic override text.
+const { buildOverrideScriptTag } = require('../services/stamp-override');
+
 async function injectStampConfig(req, shareId, pvfContent, db) {
   try {
     const cache = req.app.get('stampCache');
     const doc = await db.getDocumentByShareId(shareId);
-    if (!doc || !doc.user_id) return pvfContent;
-    const userId = doc.user_id;
+    if (!doc) {
+      logger.info({ event: 'stamp_inject', shareId, ok: false, reason: 'doc_not_found' });
+      return pvfContent;
+    }
+
+    // Fallback: if user_id is null, try to extract user from orgId
+    // (API-created docs sometimes encode the user in orgId as "user_<id>")
+    let userId = doc.user_id;
+    if (!userId && typeof doc.orgId === 'string' && doc.orgId.startsWith('user_')) {
+      userId = doc.orgId.slice('user_'.length);
+    }
+    if (!userId) {
+      logger.info({ event: 'stamp_inject', shareId, ok: false, reason: 'no_user_id' });
+      return pvfContent;
+    }
 
     let cfg = cache && cache._get ? cache._get(userId) : null;
     if (!cfg) {
@@ -181,85 +206,34 @@ async function injectStampConfig(req, shareId, pvfContent, db) {
       cfg = result?.config || {};
       if (cache && cache._set) cache._set(userId, cfg);
     }
-    // Empty config = no override
-    if (!cfg || Object.keys(cfg).length === 0) return pvfContent;
-
-    // Build override SVG/CSS
-    const waveColors = Array.isArray(cfg.waveColors) && cfg.waveColors.length
-      ? cfg.waveColors.slice(0, 7).map(c => String(c).replace(/[^#0-9a-fA-F]/g, ''))
-      : null;
-    const accent = cfg.accentColor && /^#?[0-9a-fA-F]{3,6}$/.test(String(cfg.accentColor).trim().replace('#',''))
-      ? String(cfg.accentColor).startsWith('#') ? cfg.accentColor : '#' + cfg.accentColor
-      : null;
-    const customLogo = cfg.customLogo && typeof cfg.customLogo === 'string' && cfg.customLogo.startsWith('data:image/')
-      ? cfg.customLogo : null;
-    const brandText = cfg.brandText && typeof cfg.brandText === 'string' && cfg.brandText.trim()
-      ? cfg.brandText.trim().slice(0, 16)
-      : null;
-
-    // Build the override script — uses the actual class names from
-    // templates/pvf.js (not the stamp-component.js .vfs-* names)
-    const overrideScript = `<script>(function(){
-      window.__VF_STAMP_OVERRIDE__ = ${JSON.stringify({ waveColors, accent, customLogo, brandText })};
-      function applyOverride(){
-        var o = window.__VF_STAMP_OVERRIDE__;
-        if (!o) return;
-        try {
-          // 1. Override wave path strokes
-          if (o.waveColors && o.waveColors.length) {
-            var paths = document.querySelectorAll('.holo-waves svg path[stroke], .holo-waves path[stroke]');
-            for (var i=0; i<paths.length && i<o.waveColors.length; i++) {
-              paths[i].setAttribute('stroke', o.waveColors[i]);
-            }
-          }
-          // 2. Override accent color (brand text, CSS variable)
-          if (o.accent) {
-            document.documentElement.style.setProperty('--vf-accent', o.accent);
-            var brandEls = document.querySelectorAll('.brand, .vfs-brand');
-            for (var j=0; j<brandEls.length; j++) brandEls[j].style.color = o.accent;
-          }
-          // 3. Replace inner stamp area with custom logo (fills inner circle)
-          if (o.customLogo) {
-            var coin = document.querySelector('.stamp-coin') || document.querySelector('.vfs-stamp-coin');
-            if (coin) {
-              // Hide existing center content (.center has logo+brand+lbl)
-              var center = coin.querySelector('.center') || coin.querySelector('.vfs-center');
-              if (center) center.style.display = 'none';
-              // Add a new logo overlay that fills inner-bg (56% × 56% positioned at 22%/22%)
-              var existing = coin.querySelector('.vf-custom-logo-overlay');
-              if (existing) existing.remove();
-              var overlay = document.createElement('div');
-              overlay.className = 'vf-custom-logo-overlay';
-              overlay.style.cssText = 'position:absolute;top:19%;left:19%;width:62%;height:62%;border-radius:50%;overflow:hidden;background:#fff;border:1px solid rgba(124,58,237,.12);z-index:10;display:flex;align-items:center;justify-content:center';
-              overlay.innerHTML = '<img src="' + o.customLogo + '" style="width:100%;height:100%;object-fit:cover;display:block" alt="Custom logo"/>';
-              var ring = coin.querySelector('.ring') || coin;
-              ring.appendChild(overlay);
-            }
-          }
-          // 4. Override brand text in the stamp .center
-          if (o.brandText) {
-            var brandEls = document.querySelectorAll('.stamp .brand');
-            for (var k=0; k<brandEls.length; k++) brandEls[k].textContent = o.brandText;
-            // Also update the perimeter SVG textPath if it exists
-            var tp = document.querySelector('.stamp svg textPath');
-            if (tp) {
-              tp.textContent = 'VERIFIED BY ' + o.brandText.toUpperCase() + ' \u2022 DOCUMENT APPROVED \u2022 BLOCKCHAIN SECURED \u2022';
-            }
-          }
-        } catch(e) { /* fail open — keep original stamp */ }
-      }
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', applyOverride);
-      } else {
-        applyOverride();
-      }
-    })();</script>`;
-    // Inject right before </body> so DOM is ready
-    if (pvfContent.indexOf('</body>') !== -1) {
-      return pvfContent.replace('</body>', overrideScript + '</body>');
+    // Empty config = no override — return unchanged
+    if (!cfg || Object.keys(cfg).length === 0) {
+      logger.info({ event: 'stamp_inject', shareId, ok: false, reason: 'empty_cfg' });
+      return pvfContent;
     }
-    return pvfContent + overrideScript;
+
+    // Build the override script tag (empty string if cfg has no valid fields)
+    const overrideScript = buildOverrideScriptTag(cfg);
+    if (!overrideScript) {
+      logger.info({ event: 'stamp_inject', shareId, ok: false, reason: 'no_valid_fields' });
+      return pvfContent;
+    }
+
+    // CRITICAL FIX: use lastIndexOf('</body>') + slice, not
+    // replace('</body>', ...). The naive .replace() hits the FIRST
+    // occurrence, which in an obfuscated PVF is often a false match
+    // inside a JS string literal (e.g. "</body>" embedded in minified
+    // code). The REAL closing tag is always the last one.
+    const bodyIdx = pvfContent.lastIndexOf('</body>');
+    if (bodyIdx === -1) {
+      logger.warn({ event: 'stamp_inject', shareId, ok: false, reason: 'no_body_tag' });
+      return pvfContent + overrideScript;
+    }
+
+    logger.info({ event: 'stamp_inject', shareId, ok: true, reason: 'injected' });
+    return pvfContent.slice(0, bodyIdx) + overrideScript + pvfContent.slice(bodyIdx);
   } catch(e) {
+    logger.warn({ event: 'stamp_inject', shareId, ok: false, reason: 'exception', err: e && e.message });
     return pvfContent; // Fail open — original PVF still displays
   }
 }

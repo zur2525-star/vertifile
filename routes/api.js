@@ -7,6 +7,7 @@ const { signupLimiter, getClientIP } = require('../middleware/auth');
 const logger = require('../services/logger');
 const { escapeHtml } = require('../templates/pvf');
 const { handleCreatePvf, verifySignature, generateToken, HMAC_SECRET } = require('../services/pvf-generator');
+const { buildOverrideScriptInnerText } = require('../services/stamp-override');
 
 const router = express.Router();
 
@@ -238,18 +239,98 @@ router.post('/verify', verifyLimiter, async (req, res) => {
         return res.json({ success: true, verified: false, reason: 'invalid_signature' });
       }
 
-      // Code integrity check
+      // Code integrity check — with dual-hash fallback for Layer 2 overrides
+      //
+      // OLD documents (created before the data-vf-stamp-override marker
+      // was added to the client-side hasher) will include the injected
+      // override script in their client-side hash. The stored
+      // doc.code_integrity only covers the original script. To verify
+      // those documents we recompute the expected hash on the fly:
+      //   expectedHash = sha256(originalScriptText + overrideScriptText)
+      // where overrideScriptText is rebuilt deterministically from the
+      // owner's current stamp_config (same logic used by injectStampConfig).
+      //
+      // NEW documents get the :not([data-vf-stamp-override]) selector
+      // on the client, so their codeIntegrity never includes the override
+      // and the first equality check passes. The fallback path only
+      // runs when the first check fails AND the document owner has an
+      // active, non-empty stamp_config.
+      let integrityOk = true;
+      let effectiveCodeIntegrity = codeIntegrity; // what we feed into the chained token below
       if (codeIntegrity && doc.code_integrity) {
         if (codeIntegrity !== doc.code_integrity) {
-          logger.warn({ event: 'verify_fail', reason: 'code_tampered', hash: lookupHash.substring(0, 16) }, 'Code integrity mismatch');
-          await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'code_tampered' });
-          return res.json({ success: true, verified: false, reason: 'code_tampered' });
+          integrityOk = false;
+          try {
+            // Look up the owner's current stamp config. Use cache to avoid
+            // a DB round trip on every verify; fall back to DB on miss.
+            const cache = req.app.get('stampCache');
+            let ownerUserId = doc.user_id;
+            if (!ownerUserId && typeof doc.orgId === 'string' && doc.orgId.startsWith('user_')) {
+              ownerUserId = doc.orgId.slice('user_'.length);
+            }
+            if (ownerUserId) {
+              let cfg = cache && cache._get ? cache._get(ownerUserId) : null;
+              if (!cfg) {
+                const result = await db.getUserStampConfig(ownerUserId);
+                cfg = result?.config || {};
+                if (cache && cache._set) cache._set(ownerUserId, cfg);
+              }
+              if (cfg && Object.keys(cfg).length > 0) {
+                // Rebuild the override script inner text deterministically.
+                const overrideInner = buildOverrideScriptInnerText(cfg);
+                if (overrideInner) {
+                  // Extract the ORIGINAL script textContent from pvf_content.
+                  // Doc generation stores exactly one <script>...</script>
+                  // tag before the override is injected, and code_integrity
+                  // was computed as sha256(that script's textContent).
+                  // Use the same regex pvf-generator.js uses for consistency.
+                  const pvf = await db.getPvfContent(doc.shareId || doc.share_id);
+                  if (pvf) {
+                    const m = pvf.match(/<script>([\s\S]*?)<\/script>/);
+                    if (m) {
+                      const originalScript = m[1];
+                      // Sanity guard: the stored original must still hash
+                      // to doc.code_integrity. If not, the PVF blob was
+                      // tampered with server-side — hard fail.
+                      const originalHash = crypto.createHash('sha256').update(originalScript).digest('hex');
+                      if (originalHash === doc.code_integrity) {
+                        const expectedWithOverride = crypto.createHash('sha256')
+                          .update(originalScript + overrideInner)
+                          .digest('hex');
+                        if (crypto.timingSafeEqual(
+                          Buffer.from(codeIntegrity, 'hex'),
+                          Buffer.from(expectedWithOverride, 'hex')
+                        )) {
+                          integrityOk = true;
+                          // Chained token was computed over doc.code_integrity
+                          // at creation time. Use that, not the client's
+                          // override-inclusive hash, for the chain check.
+                          effectiveCodeIntegrity = doc.code_integrity;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          } catch (e) {
+            // fall through to code_tampered
+            integrityOk = false;
+          }
+
+          if (!integrityOk) {
+            logger.warn({ event: 'verify_fail', reason: 'code_tampered', hash: lookupHash.substring(0, 16) }, 'Code integrity mismatch');
+            await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'code_tampered' });
+            return res.json({ success: true, verified: false, reason: 'code_tampered' });
+          }
         }
 
-        // Chained token verification
+        // Chained token verification — use effectiveCodeIntegrity so the
+        // chain check still matches what was stored at document creation,
+        // even when the client submitted an override-inclusive hash.
         if (doc.chained_token) {
           const expectedChain = crypto.createHmac('sha256', HMAC_SECRET)
-            .update(lookupHash + (signature || doc.signature) + doc.orgId + codeIntegrity)
+            .update(lookupHash + (signature || doc.signature) + doc.orgId + effectiveCodeIntegrity)
             .digest('hex');
           const chainValid = crypto.timingSafeEqual(
             Buffer.from(doc.chained_token, 'hex'),

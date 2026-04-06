@@ -209,6 +209,11 @@ function mapDocRow(row) {
     recipient: row.recipient || null,
     recipientHash: row.recipient_hash || null,
     shareId: row.share_id || undefined,
+    // Integrity + owner columns — required by /api/verify and the
+    // Layer 2 dual-hash fallback for stamp overrides.
+    code_integrity: row.code_integrity || null,
+    chained_token: row.chained_token || null,
+    user_id: row.user_id || null,
   };
 }
 
@@ -313,6 +318,8 @@ async function getDocumentByShareId(shareId) {
     shareId: row.share_id,
     recipient: row.recipient || null,
     recipientHash: row.recipient_hash || null,
+    // Needed by injectStampConfig to look up the owner's stamp_config.
+    user_id: row.user_id || null,
   };
 }
 
