@@ -4,7 +4,7 @@
     "howItWorks": "איך זה עובד",
     "features": "יתרונות",
     "industries": "תעשיות",
-    "upload": "הגנה",
+    "upload": "העלאה",
     "verify": "אימות",
     "enterprise": "ארגוני",
     "developers": "מפתחים",
@@ -19,7 +19,12 @@
     "account": "החשבון שלי",
     "pricing": "מחירים",
     "blog": "בלוג",
-    "contact": "צור קשר"
+    "contact": "צור קשר",
+    "overview": "סקירה כללית",
+    "documents": "מסמכים",
+    "stamp": "החותמת שלי",
+    "settings": "הגדרות",
+    "help": "עזרה"
   },
   "hero": {
     "headline": "הגנו על כל מסמך מפני זיופים",
@@ -1198,5 +1203,102 @@
       "cta": "הרשמה",
       "note": "ללא ספאם. ביטול בכל עת."
     }
+  },
+  "tab": {
+    "overview": {
+      "welcome": "ברוך שובך",
+      "docsProtected": "מסמכים מוגנים",
+      "thisMonth": "החודש",
+      "verifiedByOthers": "אומתו על-ידי אחרים",
+      "shareLinks": "פתיחות קישור",
+      "yourPlan": "התוכנית שלך",
+      "gettingStarted": "התחלה מהירה",
+      "gsDesc": "השלם שלבים אלה כדי להפיק את המרב מ-Vertifile",
+      "gsUpload": "העלה את המסמך הראשון שלך",
+      "gsCustomize": "התאם את החותמת שלך",
+      "gsShare": "שתף מסמך",
+      "gsVerify": "אימות חיצוני ראשון",
+      "uploadDoc": "העלה מסמך",
+      "shareLast": "שתף את המסמך האחרון",
+      "checkVerify": "בדוק סטטוס אימות",
+      "recentDocs": "מסמכים אחרונים",
+      "viewAll": "צפה בכל המסמכים"
+    },
+    "upload": {
+      "title": "העלאת מסמך",
+      "subtitle": "הגן על המסמך שלך עם אימות חסין זיוף",
+      "dropZone": "גרור ושחרר את הקובץ כאן",
+      "dropHint": "או לחץ לבחירה. PDF, תמונות, קבצי טקסט. עד 50MB."
+    },
+    "documents": {
+      "title": "מסמכים",
+      "filter": "סנן מסמכים...",
+      "newest": "החדשים ביותר",
+      "oldest": "הישנים ביותר",
+      "nameAZ": "שם א-ת",
+      "colName": "שם",
+      "colStatus": "סטטוס",
+      "colDate": "תאריך הגנה",
+      "colSize": "גודל",
+      "empty": "אין עדיין מסמכים",
+      "emptyDesc": "העלה את המסמך הראשון שלך כדי להתחיל.",
+      "uploadFirst": "העלה את המסמך הראשון שלך"
+    },
+    "stamp": {
+      "title": "החותמת שלי",
+      "customize": "התאם את החותמת שלך",
+      "accentColor": "צבע הדגשה",
+      "waveColors": "צבעי גלים",
+      "colorPalettes": "פלטות צבעים",
+      "logo": "לוגו",
+      "dragLogo": "גרור לוגו לכאן או לחץ להעלאה",
+      "logoHint": "PNG, SVG, JPG. עד 2MB.",
+      "size": "גודל החותמת",
+      "small": "קטן",
+      "medium": "בינוני",
+      "large": "גדול",
+      "saveChanges": "שמור שינויים",
+      "resetDefault": "אפס לברירת מחדל",
+      "livePreview": "תצוגה חיה",
+      "inAction": "החותמת שלך בפעולה",
+      "wavesPreview": "תצוגת 7 גלים"
+    },
+    "settings": {
+      "title": "הגדרות",
+      "profile": "פרופיל",
+      "profileDesc": "נהל את המידע האישי שלך",
+      "fullName": "שם מלא",
+      "email": "אימייל",
+      "emailHelp": "לשינוי אימייל, פנה אל",
+      "saveChanges": "שמור שינויים",
+      "security": "אבטחה",
+      "securityDesc": "נהל את הסיסמה והאבטחה שלך",
+      "currentPassword": "סיסמה נוכחית",
+      "newPassword": "סיסמה חדשה",
+      "confirmPassword": "אישור סיסמה חדשה",
+      "updatePassword": "עדכן סיסמה",
+      "planBilling": "תוכנית וחיוב",
+      "changePlan": "שנה תוכנית",
+      "cancelPlan": "בטל תוכנית",
+      "notifications": "התראות",
+      "dangerZone": "אזור מסוכן",
+      "deleteAccount": "מחק חשבון"
+    },
+    "help": {
+      "title": "עזרה ותמיכה",
+      "faq": "שאלות נפוצות",
+      "contactSupport": "צור קשר עם התמיכה",
+      "didntFind": "לא מצאת את מה שחיפשת?",
+      "supportDesc": "צוות התמיכה שלנו ישמח לעזור.",
+      "quickLinks": "קישורים מהירים",
+      "docs": "תיעוד",
+      "apiRef": "תיעוד API"
+    }
+  },
+  "topbar": {
+    "search": "חיפוש ב-Vertifile...",
+    "newDoc": "מסמך חדש",
+    "notifications": "התראות",
+    "markAllRead": "סמן הכל כנקרא"
   }
 }

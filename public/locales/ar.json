@@ -4,7 +4,7 @@
     "howItWorks": "كيف يعمل",
     "features": "المزايا",
     "industries": "القطاعات",
-    "upload": "حماية",
+    "upload": "Upload",
     "verify": "تحقق",
     "enterprise": "المؤسسات",
     "developers": "المطورون",
@@ -19,7 +19,12 @@
     "account": "حسابي",
     "pricing": "الأسعار",
     "blog": "المدونة",
-    "contact": "اتصل بنا"
+    "contact": "اتصل بنا",
+    "overview": "Overview",
+    "documents": "Documents",
+    "stamp": "My Stamp",
+    "settings": "Settings",
+    "help": "Help"
   },
   "hero": {
     "headline": "احمِ أي مستند من التزوير",
@@ -1198,5 +1203,102 @@
       "cta": "اشترك",
       "note": "بدون إزعاج. إلغاء الاشتراك في أي وقت."
     }
+  },
+  "tab": {
+    "overview": {
+      "welcome": "Welcome back",
+      "docsProtected": "Documents Protected",
+      "thisMonth": "this month",
+      "verifiedByOthers": "Verified by Others",
+      "shareLinks": "Share Link Opens",
+      "yourPlan": "Your Plan",
+      "gettingStarted": "Getting Started",
+      "gsDesc": "Complete these steps to get the most out of Vertifile",
+      "gsUpload": "Upload your first document",
+      "gsCustomize": "Customize your stamp",
+      "gsShare": "Share a document",
+      "gsVerify": "First external verification",
+      "uploadDoc": "Upload Document",
+      "shareLast": "Share Last Document",
+      "checkVerify": "Check Verification Status",
+      "recentDocs": "Recent Documents",
+      "viewAll": "View All Documents"
+    },
+    "upload": {
+      "title": "Upload Document",
+      "subtitle": "Protect your document with tamper-proof verification",
+      "dropZone": "Drag & drop your file here",
+      "dropHint": "or click to browse. PDF, images, text files accepted. Max 50MB."
+    },
+    "documents": {
+      "title": "Documents",
+      "filter": "Filter documents...",
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "nameAZ": "Name A-Z",
+      "colName": "Name",
+      "colStatus": "Status",
+      "colDate": "Date Protected",
+      "colSize": "Size",
+      "empty": "No documents yet",
+      "emptyDesc": "Upload your first document to get started.",
+      "uploadFirst": "Upload your first document"
+    },
+    "stamp": {
+      "title": "My Stamp",
+      "customize": "Customize Your Stamp",
+      "accentColor": "Accent Color",
+      "waveColors": "Wave Colors",
+      "colorPalettes": "Color Palettes",
+      "logo": "Logo",
+      "dragLogo": "Drag logo here or click to upload",
+      "logoHint": "PNG, SVG, JPG. Max 2MB.",
+      "size": "Stamp Size",
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large",
+      "saveChanges": "Save Changes",
+      "resetDefault": "Reset to Default",
+      "livePreview": "Live Preview",
+      "inAction": "Your Stamp in Action",
+      "wavesPreview": "7 Waves Preview"
+    },
+    "settings": {
+      "title": "Settings",
+      "profile": "Profile",
+      "profileDesc": "Manage your personal information",
+      "fullName": "Full Name",
+      "email": "Email",
+      "emailHelp": "To change email, contact",
+      "saveChanges": "Save Changes",
+      "security": "Security",
+      "securityDesc": "Manage your password and security settings",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "updatePassword": "Update Password",
+      "planBilling": "Plan & Billing",
+      "changePlan": "Change Plan",
+      "cancelPlan": "Cancel Plan",
+      "notifications": "Notifications",
+      "dangerZone": "Danger Zone",
+      "deleteAccount": "Delete Account"
+    },
+    "help": {
+      "title": "Help & Support",
+      "faq": "Frequently Asked Questions",
+      "contactSupport": "Contact Support",
+      "didntFind": "Didn't find what you need?",
+      "supportDesc": "Our support team is happy to help.",
+      "quickLinks": "Quick Links",
+      "docs": "Documentation",
+      "apiRef": "API Reference"
+    }
+  },
+  "topbar": {
+    "search": "Search Vertifile...",
+    "newDoc": "New Document",
+    "notifications": "Notifications",
+    "markAllRead": "Mark all read"
   }
 }

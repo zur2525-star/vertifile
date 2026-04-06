@@ -52,6 +52,21 @@
       var val = getVal(translations, el.getAttribute('data-i18n'));
       if(val){if(/<[a-z][\s\S]*>/i.test(val))el.innerHTML=val;else el.textContent=val;}
     });
+    // Translate placeholder attributes
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el){
+      var val = getVal(translations, el.getAttribute('data-i18n-placeholder'));
+      if(val) el.setAttribute('placeholder', val);
+    });
+    // Translate title attributes
+    document.querySelectorAll('[data-i18n-title]').forEach(function(el){
+      var val = getVal(translations, el.getAttribute('data-i18n-title'));
+      if(val) el.setAttribute('title', val);
+    });
+    // Translate aria-label attributes
+    document.querySelectorAll('[data-i18n-aria]').forEach(function(el){
+      var val = getVal(translations, el.getAttribute('data-i18n-aria'));
+      if(val) el.setAttribute('aria-label', val);
+    });
     // Update page title if available
     var pageTitle = getVal(translations,'pageTitle');
     if(pageTitle) document.title = 'Vertifile \u2014 ' + pageTitle;
