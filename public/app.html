@@ -990,7 +990,7 @@
     <div class="topbar-actions">
       <button class="new-doc-topbar" onclick="Dashboard.switchTab('upload')" aria-label="New Document">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-        <span data-i18n="app.newDoc">New Document</span>
+        <span data-i18n="topbar.newDoc">New Document</span>
       </button>
 
       <button class="tb-icon-btn" id="themeToggle" aria-label="Toggle dark/light mode" onclick="Dashboard.toggleTheme()">
@@ -1023,8 +1023,8 @@
         </button>
         <div class="notif-dropdown" id="notifDropdown" role="region" aria-label="Notifications">
           <div class="notif-header">
-            Notifications
-            <button class="notif-mark-all" onclick="Dashboard.markAllRead()">Mark all read</button>
+            <span data-i18n="topbar.notifications">Notifications</span>
+            <button class="notif-mark-all" onclick="Dashboard.markAllRead()" data-i18n="topbar.markAllRead">Mark all read</button>
           </div>
           <div id="notifList">
             <div class="notif-item unread">
