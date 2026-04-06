@@ -15,9 +15,14 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
+// SSL is required for managed Postgres (Neon/Render/etc) but NOT for local
+// Postgres (service containers in CI, local docker, dev machines). Detect by URL.
+const dbUrl = process.env.DATABASE_URL;
+const isLocalDb = /(?:localhost|127\.0\.0\.1|::1)(?::\d+)?\//.test(dbUrl) || /^postgres(?:ql)?:\/\/[^@]*@(?:localhost|127\.0\.0\.1|::1)/.test(dbUrl);
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+  connectionString: dbUrl,
+  ssl: isLocalDb ? false : { rejectUnauthorized: false },
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 10000,

@@ -10,6 +10,26 @@ jobs:
   quality-gates:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: vertifile_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/vertifile_test
+      HMAC_SECRET: test-secret-for-ci-do-not-use-in-production
+      ADMIN_SECRET: test-admin-secret-for-ci
+
     steps:
       - uses: actions/checkout@v4
 
@@ -43,24 +63,39 @@ jobs:
           fi
           echo "All JS files pass syntax check"
 
-      # 4. No console.log in production code (exclude tests, node_modules)
-      - name: Check for console.log in production code
+      # 4. No console.log in production server code
+      # Scope: routes/, middleware/, services/, workers/, db.js, server.js, obfuscate.js, blockchain.js
+      # Excluded (legitimate console usage):
+      #   - tests/        — test output
+      #   - contracts/    — blockchain deploy CLI scripts
+      #   - sdk.js        — client-facing SDK uses console intentionally
+      #   - templates/    — browser-embedded JS inside generated PVF files
+      #   - viewer/       — desktop Electron viewer build scripts
+      #   - scripts/      — one-off admin / migration scripts
+      #   - public/       — static frontend JS (if any)
+      - name: Check for console.log in production server code
         run: |
-          echo "Scanning for console.log in production code..."
+          echo "Scanning for console.log in production server code..."
           HITS=$(grep -rn 'console\.\(log\|debug\|info\|warn\|error\)' \
             --include='*.js' \
             --exclude-dir=node_modules \
             --exclude-dir=tests \
             --exclude-dir=test \
             --exclude-dir=.git \
+            --exclude-dir=contracts \
+            --exclude-dir=templates \
+            --exclude-dir=viewer \
+            --exclude-dir=scripts \
+            --exclude-dir=public \
+            --exclude='sdk.js' \
             . 2>/dev/null || true)
           if [ -n "$HITS" ]; then
             echo "$HITS"
             echo ""
-            echo "::error::console.log statements found in production code. Use the pino logger instead."
+            echo "::error::console.log statements found in production server code. Use the pino logger instead."
             exit 1
           fi
-          echo "Clean — no console.log in production code"
+          echo "Clean — no console.log in production server code"
 
       # 5. Check for hardcoded secrets patterns
       - name: Check for hardcoded secrets
@@ -85,11 +120,9 @@ jobs:
           fi
           echo "Clean — no hardcoded secrets detected"
 
-      # 6. Run tests (don't fail if test script exits non-zero due to missing deps/db)
+      # 6. Run tests — HARD GATE. Failing tests block the build.
       - name: Run tests
-        run: |
-          npm test || echo "::warning::Tests did not pass — check test output above"
-        continue-on-error: true
+        run: npm test
 
       # 7. Validate JSON locale files
       - name: Validate JSON files

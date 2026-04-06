@@ -88,14 +88,17 @@ function startServer() {
 
     // The server.js exports the Express app when not require.main
     const app = require(appPath);
+    const db = require(dbPath);
 
-    server = app.listen(0, '127.0.0.1', () => {
-      const port = server.address().port;
-      BASE_URL = `http://127.0.0.1:${port}`;
-      resolve();
-    });
-
-    server.on('error', reject);
+    // Wait for schema bootstrap before accepting requests
+    db._ready.then(() => {
+      server = app.listen(0, '127.0.0.1', () => {
+        const port = server.address().port;
+        BASE_URL = `http://127.0.0.1:${port}`;
+        resolve();
+      });
+      server.on('error', reject);
+    }).catch(reject);
   });
 }
 
