@@ -503,7 +503,7 @@ document.addEventListener("visibilitychange", function() {
     freezeStamp();
     var overlay = document.createElement("div");
     overlay.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;background:#121212;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#c62828;font-family:Heebo,sans-serif";
-    overlay.innerHTML = '<div style="font-size:48px;font-weight:900;margin-bottom:16px">⛔</div><div style="font-size:20px;font-weight:700">Screen Recording Detected</div><div style="font-size:14px;color:#888;margin-top:8px">This document cannot be captured.</div>';
+    overlay.innerHTML = '<svg style="width:56px;height:56px;margin-bottom:16px" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg><div style="font-size:20px;font-weight:700">Screen Recording Detected</div><div style="font-size:14px;color:#888;margin-top:8px">This document cannot be captured.</div>';
     document.body.appendChild(overlay);
   }
   // Method 1: Display Capture API detection (navigator.mediaDevices)

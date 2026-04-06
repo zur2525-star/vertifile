@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertifile — Documents</title>
+  <meta name="description" content="Manage, protect, and share your documents with Vertifile's tamper-proof verification platform. Upload files, generate .pvf protected documents, and track verification status from your personal dashboard.">
+  <meta property="og:title" content="Vertifile — Document Management">
+  <meta property="og:description" content="Manage and protect your documents with Vertifile">
+  <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
+  <meta property="og:url" content="https://vertifile.com/app">
+  <link rel="canonical" href="https://vertifile.com/app">
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{overflow-x:hidden}
+
+    /* Loading skeleton */
+    .skeleton{background:linear-gradient(90deg,rgba(124,58,237,.05) 25%,rgba(124,58,237,.1) 50%,rgba(124,58,237,.05) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;height:48px;margin-bottom:8px}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    body{font-family:'Inter',sans-serif;background:#0f0e17;color:#e2e0f0;min-height:100vh;transition:background .3s,color .3s}
+
+    /* ===== LOGIN SCREEN ===== */
+    .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f0e17;position:relative;overflow:hidden}
+    .login-screen::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,.15),transparent 70%);top:-100px;right:-100px;pointer-events:none}
+    .login-screen::after{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(79,70,229,.1),transparent 70%);bottom:-100px;left:-100px;pointer-events:none}
+    .login-card{background:rgba(26,24,48,.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(124,58,237,.15);border-radius:20px;padding:48px;box-shadow:0 8px 40px rgba(0,0,0,.4);max-width:440px;width:90%;text-align:center;position:relative;z-index:1}
+    .login-card img{height:36px;margin-bottom:28px;filter:brightness(1.1)}
+    .login-card h2{font-size:22px;font-weight:700;margin-bottom:8px;color:#e2e0f0}
+    .login-card p{font-size:13px;color:#8b89a6;margin-bottom:24px}
+    .login-card .login-error{color:#dc2626;font-size:13px;margin-top:12px;display:none;background:rgba(220,38,38,.1);padding:8px 12px;border-radius:8px}
+
+    .login-tabs{display:flex;margin-bottom:24px;background:rgba(15,14,23,.5);border-radius:12px;padding:4px;gap:4px}
+    .login-tab{flex:1;padding:10px;border:none;background:transparent;color:#8b89a6;font-size:13px;font-weight:600;cursor:pointer;border-radius:10px;font-family:inherit;transition:.2s}
+    .login-tab.active{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff}
+
+    .oauth-btn{width:100%;padding:14px 16px;border:1px solid rgba(124,58,237,.2);border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(26,24,48,.5);color:#e2e0f0;transition:.2s;text-decoration:none;margin-bottom:12px}
+    .oauth-btn:hover{border-color:#7c3aed;background:rgba(124,58,237,.08);transform:translateY(-1px)}
+    .oauth-btn svg{width:20px;height:20px;flex-shrink:0}
+
+    .login-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:#8b89a6;font-size:12px}
+    .login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:rgba(124,58,237,.15)}
+
+    .login-input{width:100%;padding:12px 16px;border:1px solid rgba(124,58,237,.15);border-radius:12px;font-size:14px;font-family:inherit;outline:none;transition:border .2s,background .2s;margin-bottom:10px;background:rgba(15,14,23,.5);color:#e2e0f0}
+    .login-input::placeholder{color:#8b89a6}
+    .login-input:focus{border-color:#7c3aed;background:rgba(15,14,23,.8)}
+
+    .login-submit{width:100%;padding:13px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:4px;transition:all .2s}
+    .login-submit:hover{box-shadow:0 4px 20px rgba(124,58,237,.4);transform:translateY(-1px)}
+
+    .login-toggle{font-size:13px;color:#8b89a6;margin-top:20px}
+    .login-toggle a{color:#a78bfa;font-weight:500;text-decoration:none;cursor:pointer}
+    .login-toggle a:hover{text-decoration:underline;color:#c4b5fd}
+
+    /* ===== APP LAYOUT ===== */
+    .app{display:none;height:100vh;flex-direction:column}
+
+    /* Top Bar */
+    .topbar{height:60px;background:rgba(15,14,23,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(124,58,237,.1);display:flex;align-items:center;padding:0 20px;gap:12px;position:fixed;top:0;left:0;right:0;z-index:100}
+    .topbar-logo{display:flex;align-items:center;gap:8px;min-width:200px}
+    .topbar-logo img{height:24px;filter:brightness(1.1)}
+    .topbar-logo span{font-size:11px;color:#a78bfa;font-weight:600;background:rgba(124,58,237,.12);padding:2px 8px;border-radius:4px}
+    .hamburger{display:none;background:none;border:none;font-size:20px;cursor:pointer;color:#e2e0f0;padding:4px}
+
+    .topbar-title{font-size:16px;font-weight:600;color:#e2e0f0;display:none}
+    @media(min-width:769px){.topbar-title{display:block}}
+
+    .search-bar{flex:1;max-width:480px;margin:0 auto}
+    .search-bar input{width:100%;padding:9px 16px 9px 40px;border:1px solid rgba(124,58,237,.12);border-radius:10px;font-size:13px;font-family:inherit;outline:none;background:rgba(26,24,48,.5) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238b89a6' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.414-1.414l-3.85-3.85zm-5.242.156a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E") no-repeat 12px center;transition:border .2s,background .2s;color:#e2e0f0}
+    .search-bar input::placeholder{color:#8b89a6}
+    .search-bar input:focus{border-color:#7c3aed;background:rgba(26,24,48,.8)}
+
+    .topbar-actions{display:flex;align-items:center;gap:8px}
+
+    .theme-toggle{background:none;border:1px solid rgba(124,58,237,.15);border-radius:10px;padding:7px 10px;cursor:pointer;font-size:16px;transition:.2s;display:flex;align-items:center;color:#e2e0f0}
+    .theme-toggle:hover{border-color:#7c3aed;background:rgba(124,58,237,.08)}
+
+    .lang-switch{position:relative;display:inline-block}
+    .lang-switch button{padding:7px 10px;border:1px solid rgba(124,58,237,.15);border-radius:10px;background:transparent;font-size:12px;cursor:pointer;font-family:inherit;color:#e2e0f0;transition:.2s;display:flex;align-items:center;gap:4px}
+    .lang-switch button:hover{border-color:#7c3aed;background:rgba(124,58,237,.08)}
+    .lang-switch .lang-menu{display:none;position:absolute;top:100%;right:0;margin-top:4px;background:#1a1830;border:1px solid rgba(124,58,237,.15);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.4);min-width:120px;z-index:110;overflow:hidden}
+    .lang-switch .lang-menu.show{display:block}
+    .lang-switch .lang-menu a{display:block;padding:9px 14px;font-size:12px;color:#e2e0f0;text-decoration:none;transition:.15s}
+    .lang-switch .lang-menu a:hover{background:rgba(124,58,237,.1);color:#a78bfa}
+    [dir="rtl"] .lang-switch .lang-menu{right:auto;left:0}
+
+    .new-doc-topbar{padding:8px 16px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:.2s;white-space:nowrap}
+    .new-doc-topbar:hover{box-shadow:0 4px 16px rgba(124,58,237,.4);transform:translateY(-1px)}
+    @media(max-width:768px){.new-doc-topbar span{display:none}}
+
+    .user-menu{position:relative;display:flex;align-items:center;gap:8px;cursor:pointer;justify-content:flex-end}
+    .user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;border:2px solid rgba(124,58,237,.3)}
+    .user-name{font-size:13px;font-weight:500;color:#e2e0f0}
+    .user-dropdown{display:none;position:absolute;top:100%;right:0;margin-top:8px;background:#1a1830;border:1px solid rgba(124,58,237,.15);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.5);min-width:180px;z-index:110;overflow:hidden}
+    .user-dropdown.show{display:block}
+    .user-dropdown a{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:13px;color:#e2e0f0;text-decoration:none;transition:.15s;cursor:pointer}
+    .user-dropdown a:hover{background:rgba(124,58,237,.1);color:#a78bfa}
+    .user-dropdown .divider{height:1px;background:rgba(124,58,237,.1);margin:4px 0}
+
+    /* Main Content Area */
+    .app-body{display:flex;margin-top:60px;height:calc(100vh - 60px)}
+
+    /* Sidebar */
+    .sidebar{width:240px;background:#1a1830;border-right:1px solid rgba(124,58,237,.1);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;padding:16px 12px;transition:transform .3s}
+
+    .new-doc-btn{width:100%;padding:12px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s;margin-bottom:16px}
+    .new-doc-btn:hover{box-shadow:0 4px 20px rgba(124,58,237,.4);transform:translateY(-2px)}
+
+    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:500;color:#8b89a6;cursor:pointer;transition:.15s;user-select:none;border-left:3px solid transparent;margin-bottom:2px}
+    .nav-item:hover{background:rgba(124,58,237,.06);color:#e2e0f0}
+    .nav-item.active{background:rgba(124,58,237,.1);color:#a78bfa;font-weight:600;border-left-color:#7c3aed}
+    .nav-item .nav-icon{font-size:16px;width:20px;text-align:center;display:flex;align-items:center;justify-content:center}
+    .nav-item .nav-badge{margin-left:auto;font-size:11px;font-weight:600;background:rgba(124,58,237,.15);color:#a78bfa;padding:2px 8px;border-radius:10px}
+
+    .nav-divider{height:1px;background:rgba(124,58,237,.08);margin:8px 12px}
+
+    .plan-badge{margin-top:auto;padding:14px;background:rgba(26,24,48,.5);backdrop-filter:blur(10px);border-radius:14px;border:1px solid rgba(124,58,237,.1)}
+    .plan-badge .plan-label{font-size:11px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+    .plan-badge .plan-usage{font-size:12px;color:#8b89a6;margin-bottom:8px}
+    .plan-bar{height:4px;background:rgba(124,58,237,.15);border-radius:2px;overflow:hidden}
+    .plan-bar-fill{height:100%;background:linear-gradient(90deg,#4f46e5,#7c3aed);border-radius:2px;transition:width .3s}
+
+    /* Document List */
+    .doc-list-panel{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0}
+    .doc-list-header{padding:12px 16px;border-bottom:1px solid rgba(124,58,237,.08);display:flex;align-items:center;gap:12px;background:rgba(15,14,23,.5);font-size:12px;color:#8b89a6;font-weight:500}
+    .doc-list-header .select-all{margin-right:4px;accent-color:#7c3aed}
+
+    .doc-row{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid rgba(124,58,237,.04);background:transparent;cursor:pointer;transition:all .15s;border-left:3px solid transparent;min-height:50px}
+    .doc-row:hover{background:rgba(124,58,237,.04)}
+    .doc-row.selected{border-left-color:#7c3aed;background:rgba(124,58,237,.08)}
+    .doc-row .doc-check{flex-shrink:0;accent-color:#7c3aed}
+    .doc-row .doc-star{flex-shrink:0;background:none;border:none;font-size:16px;cursor:pointer;color:#4a4862;transition:.15s;padding:0;line-height:1}
+    .doc-row .doc-star.starred{color:#f59e0b}
+    .doc-row .doc-star:hover{color:#f59e0b}
+    .doc-row .doc-type-icon{flex-shrink:0;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+    .doc-type-pdf{background:rgba(239,68,68,.12);color:#dc2626}
+    .doc-type-image{background:rgba(59,130,246,.12);color:#3b82f6}
+    .doc-type-text{background:rgba(34,197,94,.12);color:#16a34a}
+    .doc-type-other{background:rgba(107,114,128,.12);color:#6b7280}
+    .doc-row .doc-name{flex:1;font-size:13px;font-weight:600;color:#e2e0f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+    .doc-row .doc-status{flex-shrink:0;font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px}
+    .doc-status.verified{color:#16a34a}
+    .doc-status.unverified{color:#dc2626}
+    .doc-row .doc-size{flex-shrink:0;font-size:12px;color:#8b89a6;width:60px;text-align:right}
+    .doc-row .doc-date{flex-shrink:0;font-size:12px;color:#8b89a6;width:80px;text-align:right}
+
+    .doc-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:48px;text-align:center;color:#8b89a6}
+    .doc-empty .empty-icon{font-size:56px;margin-bottom:16px;opacity:.4}
+    .doc-empty h3{font-size:18px;font-weight:600;color:#e2e0f0;margin-bottom:8px}
+    .doc-empty p{font-size:13px;margin-bottom:20px;max-width:300px}
+    .doc-empty button{padding:10px 24px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+    .doc-empty button:hover{box-shadow:0 4px 16px rgba(124,58,237,.4);transform:translateY(-2px)}
+
+    /* Document Preview Panel (slide from right) */
+    .doc-preview{width:0;overflow:hidden;background:#1a1830;border-left:1px solid rgba(124,58,237,.1);display:flex;flex-direction:column;transition:width .25s ease}
+    .doc-preview.open{width:480px}
+    .doc-preview-toolbar{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid rgba(124,58,237,.08);gap:8px;flex-shrink:0}
+    .doc-preview-toolbar .preview-title{flex:1;font-size:14px;font-weight:600;color:#e2e0f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .doc-preview-toolbar button{background:none;border:1px solid rgba(124,58,237,.15);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;color:#8b89a6;transition:.15s;font-family:inherit;display:flex;align-items:center;gap:4px}
+    .doc-preview-toolbar button:hover{border-color:#7c3aed;color:#a78bfa}
+    .doc-preview-toolbar .close-preview{border:none;font-size:20px;padding:4px 8px;color:#8b89a6}
+    .doc-preview-toolbar .close-preview:hover{color:#e2e0f0}
+
+    .doc-preview-content{flex:1;overflow:auto;background:rgba(15,14,23,.5)}
+    .doc-preview-content iframe{width:100%;height:100%;border:none}
+
+    .doc-preview-info{padding:16px;border-top:1px solid rgba(124,58,237,.08);flex-shrink:0;background:#1a1830}
+    .doc-preview-info .info-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px}
+    .doc-preview-info .info-label{color:#8b89a6;font-weight:500}
+    .doc-preview-info .info-value{color:#e2e0f0;font-family:'SF Mono','Fira Code',monospace;font-size:11px}
+
+    /* ===== CONTENT PANELS (Settings, Branding, Shared, API) ===== */
+    .content-panel{display:none;flex:1;overflow-y:auto;padding:32px;background:transparent}
+    .content-panel.active{display:block}
+    .content-panel h2{font-size:20px;font-weight:700;color:#e2e0f0;margin-bottom:20px}
+    .panel-card{background:rgba(26,24,48,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:14px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.2);margin-bottom:20px;border:1px solid rgba(124,58,237,.1)}
+    .panel-card h3{font-size:16px;font-weight:700;color:#e2e0f0;margin-bottom:4px}
+    .panel-card .card-desc{font-size:13px;color:#8b89a6;margin-bottom:20px}
+    .panel-card label{display:block;font-size:13px;font-weight:600;color:#e2e0f0;margin-bottom:6px}
+    .panel-card input[type="text"],.panel-card input[type="email"],.panel-card input[type="password"],.panel-card input[type="url"],.panel-card input[type="color"],.panel-card select,.panel-card textarea{width:100%;padding:10px 14px;border:1px solid rgba(124,58,237,.15);border-radius:12px;font-size:13px;font-family:inherit;outline:none;transition:border .2s,background .2s;margin-bottom:14px;background:rgba(15,14,23,.5);color:#e2e0f0}
+    .panel-card input::placeholder,.panel-card textarea::placeholder{color:#8b89a6}
+    .panel-card input:focus,.panel-card select:focus,.panel-card textarea:focus{border-color:#7c3aed}
+    .panel-card textarea{min-height:80px;resize:vertical}
+    .panel-card .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:600px){.panel-card .form-row{grid-template-columns:1fr}}
+    .panel-card .btn{padding:10px 24px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+    .panel-card .btn-primary{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff}
+    .panel-card .btn-primary:hover{box-shadow:0 4px 16px rgba(124,58,237,.4);transform:translateY(-2px)}
+    .panel-card .btn-secondary{background:rgba(124,58,237,.08);color:#a78bfa;border:1px solid rgba(124,58,237,.15)}
+    .panel-card .btn-secondary:hover{border-color:#7c3aed;background:rgba(124,58,237,.15)}
+    .panel-card .btn-danger{background:rgba(220,38,38,.1);color:#dc2626;border:1px solid rgba(220,38,38,.2)}
+    .panel-card .btn-danger:hover{background:#dc2626;color:#fff}
+    .btn-row{display:flex;gap:10px;margin-top:8px}
+
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(124,58,237,.06)}
+    .toggle-row:last-child{border-bottom:none}
+    .toggle-label{font-size:13px;font-weight:500;color:#e2e0f0}
+    .toggle-desc{font-size:11px;color:#8b89a6;margin-top:2px}
+    .toggle-switch{position:relative;width:42px;height:24px;flex-shrink:0}
+    .toggle-switch input{opacity:0;width:0;height:0}
+    .toggle-switch .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:rgba(124,58,237,.2);border-radius:24px;transition:.3s}
+    .toggle-switch .slider:before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#e2e0f0;border-radius:50%;transition:.3s}
+    .toggle-switch input:checked+.slider{background:#7c3aed}
+    .toggle-switch input:checked+.slider:before{transform:translateX(18px)}
+
+    /* ===== Branding Visual Editor ===== */
+    @keyframes wavePreviewFlow{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    @keyframes stampRotateText{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+    .brand-live-preview{background:rgba(10,9,20,.7);border-radius:16px;border:1px solid rgba(124,58,237,.12);padding:32px 24px 20px;text-align:center;margin-bottom:24px;position:relative;overflow:hidden}
+    .brand-live-preview .blp-label{position:absolute;top:10px;left:14px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#8b89a6;font-weight:600}
+
+    /* Circular stamp preview */
+    .blp-stamp-wrap{position:relative;width:160px;height:160px;margin:12px auto 20px}
+    .blp-stamp-circle{width:160px;height:160px;border-radius:50%;border:3px solid rgba(124,58,237,.3);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:rgba(15,14,23,.6)}
+    .blp-rotating-text{position:absolute;inset:0;animation:stampRotateText 20s linear infinite}
+    .blp-rotating-text svg{width:100%;height:100%}
+    .blp-rotating-text text{fill:#a78bfa;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+    .blp-logo-center{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;background:rgba(15,14,23,.4)}
+    .blp-logo-center img{width:56px;height:56px;border-radius:50%;object-fit:contain;background:#fff;padding:2px}
+    .blp-badge{position:absolute;bottom:4px;right:4px;width:28px;height:28px;border-radius:50%;background:rgba(15,14,23,.9);border:2px solid rgba(46,125,50,.6);display:flex;align-items:center;justify-content:center;z-index:3}
+    .blp-org-name{font-size:14px;font-weight:700;color:#e2e0f0;margin-bottom:2px}
+    .blp-verified{font-size:11px;color:#a78bfa;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+
+    /* Wave preview inside live preview */
+    .blp-wave-strip{margin-top:16px;background:rgba(15,14,23,.5);border-radius:10px;height:48px;overflow:hidden;position:relative}
+    .blp-wave-strip svg{width:200%;height:100%;position:absolute;left:0;top:0;animation:wavePreviewFlow 6s linear infinite}
+
+    /* Branding sections */
+    .brand-section{margin-bottom:20px}
+    .brand-section-title{font-size:12px;font-weight:700;color:#8b89a6;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(124,58,237,.1);display:flex;align-items:center;gap:6px}
+
+    /* Logo section */
+    .brand-logo-current{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:10px 14px;background:rgba(15,14,23,.4);border-radius:10px;border:1px solid rgba(124,58,237,.08)}
+    .brand-logo-thumb{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(124,58,237,.08);flex-shrink:0;overflow:hidden}
+    .brand-logo-thumb img{width:36px;height:36px;border-radius:50%;object-fit:contain;background:#fff;padding:1px}
+    .brand-logo-info{flex:1;text-align:left}
+    .brand-logo-info .logo-label{font-size:12px;color:#e2e0f0;font-weight:500}
+    .brand-logo-info .logo-hint{font-size:11px;color:#8b89a6}
+    .brand-logo-actions{display:flex;gap:8px;align-items:center}
+    .brand-logo-actions .btn{font-size:12px;padding:6px 14px}
+
+    /* Wave controls */
+    .wave-count-slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:rgba(124,58,237,.2);outline:none;margin:8px 0 12px}
+    .wave-count-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:#7c3aed;cursor:pointer;border:2px solid #a78bfa;box-shadow:0 0 6px rgba(124,58,237,.4)}
+    .wave-count-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#7c3aed;cursor:pointer;border:2px solid #a78bfa}
+
+    .gradient-presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+    .gradient-preset-btn{padding:5px 14px;font-size:12px;border-radius:8px;border:1px solid rgba(124,58,237,.2);background:rgba(15,14,23,.6);color:#c4b5fd;cursor:pointer;transition:all .2s;font-family:inherit}
+    .gradient-preset-btn:hover{border-color:#a78bfa;background:rgba(124,58,237,.12);transform:scale(1.04)}
+
+    .wave-color-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+    .wave-color-row span{font-size:12px;color:#8b89a6;min-width:56px}
+    .wave-color-row input[type="color"]{width:32px;height:24px;padding:1px;cursor:pointer;border:1px solid rgba(124,58,237,.15);border-radius:4px;background:transparent}
+
+    .auto-gradient-row{display:flex;align-items:center;gap:8px;margin-top:8px;margin-bottom:4px}
+
+    /* Bottom wave preview */
+    .brand-wave-preview-box{background:rgba(15,14,23,.5);border-radius:10px;height:60px;overflow:hidden;position:relative;margin-top:12px}
+    .brand-wave-preview-box svg{width:200%;height:100%;position:absolute;left:0;top:0;animation:wavePreviewFlow 6s linear infinite}
+
+    /* Action row */
+    .brand-action-row{display:flex;gap:12px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid rgba(124,58,237,.1)}
+
+    /* Shared links table */
+    .shared-table{width:100%;border-collapse:collapse;margin-top:12px}
+    .shared-table th{text-align:left;font-size:11px;font-weight:600;color:#8b89a6;text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;border-bottom:1px solid rgba(124,58,237,.1)}
+    .shared-table td{padding:10px 12px;font-size:13px;color:#e2e0f0;border-bottom:1px solid rgba(124,58,237,.05);vertical-align:middle}
+    .shared-table tr:hover td{background:rgba(124,58,237,.04)}
+    .shared-link{color:#a78bfa;text-decoration:none;font-weight:500;font-size:12px;word-break:break-all}
+    .shared-link:hover{text-decoration:underline;color:#c4b5fd}
+    .copy-btn{padding:4px 10px;border:1px solid rgba(124,58,237,.15);border-radius:8px;background:transparent;font-size:11px;cursor:pointer;color:#8b89a6;transition:.2s}
+    .copy-btn:hover{border-color:#7c3aed;color:#a78bfa}
+
+    .shared-empty{text-align:center;padding:40px 20px;color:#8b89a6}
+    .shared-empty .se-icon{font-size:48px;margin-bottom:12px;opacity:.4}
+    .shared-empty h4{font-size:15px;font-weight:600;color:#e2e0f0;margin-bottom:6px}
+    .shared-empty p{font-size:12px}
+
+    /* API Key display */
+    .api-key-box{display:flex;align-items:center;gap:8px;background:rgba(15,14,23,.5);border:1px solid rgba(124,58,237,.15);border-radius:10px;padding:10px 14px;margin-bottom:14px}
+    .api-key-box code{flex:1;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:#e2e0f0;word-break:break-all}
+    .api-key-box button{padding:6px 12px;border:1px solid rgba(124,58,237,.15);border-radius:8px;background:transparent;font-size:11px;font-weight:500;cursor:pointer;transition:.2s;white-space:nowrap;color:#8b89a6}
+    .api-key-box button:hover{border-color:#7c3aed;color:#a78bfa}
+
+    /* API Stats */
+    .api-stat-card{background:rgba(15,14,23,.5);border:1px solid rgba(124,58,237,.08);border-radius:12px;padding:18px;text-align:center}
+    .api-stat-label{font-size:11px;font-weight:600;color:#8b89a6;text-transform:uppercase;letter-spacing:.5px}
+    .api-stat-value{font-size:32px;font-weight:800;margin-top:4px;background:linear-gradient(135deg,#4f46e5,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .api-doc-link{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;background:rgba(26,24,48,.5);border:1px solid rgba(124,58,237,.12);border-radius:10px;font-size:13px;font-weight:500;color:#e2e0f0;text-decoration:none;transition:.2s}
+    .api-doc-link:hover{border-color:#7c3aed;background:rgba(124,58,237,.08);transform:translateY(-1px)}
+
+    /* ===== UPLOAD MODAL ===== */
+    .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center}
+    .modal-overlay.show{display:flex}
+    .modal{background:#1a1830;border:1px solid rgba(124,58,237,.15);border-radius:20px;padding:32px;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .modal h3{font-size:18px;font-weight:700;margin-bottom:4px;color:#e2e0f0}
+    .modal .modal-subtitle{font-size:13px;color:#8b89a6;margin-bottom:20px}
+    .modal .modal-actions{display:flex;gap:10px;margin-top:24px}
+    .modal .modal-actions button{flex:1;padding:10px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:.2s}
+
+    .upload-zone{border:2px dashed rgba(124,58,237,.2);border-radius:14px;padding:40px 24px;text-align:center;cursor:pointer;transition:.2s;background:rgba(15,14,23,.3)}
+    .upload-zone:hover,.upload-zone.dragover{border-color:#7c3aed;background:rgba(124,58,237,.04)}
+    .upload-zone .uz-icon{font-size:40px;margin-bottom:8px;color:#8b89a6}
+    .upload-zone .uz-text{font-size:14px;font-weight:500;color:#e2e0f0}
+    .upload-zone .uz-hint{font-size:12px;color:#8b89a6;margin-top:4px}
+
+    .upload-progress{margin-top:16px;display:none}
+    .upload-progress .up-filename{font-size:13px;font-weight:500;color:#e2e0f0;margin-bottom:6px}
+    .upload-progress .up-bar{height:4px;background:rgba(124,58,237,.15);border-radius:2px;overflow:hidden}
+    .upload-progress .up-bar-fill{height:100%;background:linear-gradient(90deg,#4f46e5,#7c3aed);border-radius:2px;width:0;transition:width .3s}
+    .upload-progress .up-status{font-size:12px;color:#8b89a6;margin-top:4px}
+
+    .upload-limit{margin-top:16px;padding:12px;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);border-radius:10px;display:none;text-align:center}
+    .upload-limit p{font-size:13px;color:#dc2626;margin-bottom:8px}
+    .upload-limit a{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block}
+
+    /* ===== TOAST ===== */
+    .toast{position:fixed;bottom:24px;right:24px;background:rgba(26,24,48,.95);backdrop-filter:blur(10px);color:#e2e0f0;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.4);border:1px solid rgba(124,58,237,.15);transform:translateY(80px);opacity:0;transition:.3s;z-index:300}
+    .toast.show{transform:translateY(0);opacity:1}
+
+    /* ===== RESPONSIVE ===== */
+    @media(max-width:768px){
+      .hamburger{display:block}
+      .topbar-logo span{display:none}
+      .user-name{display:none}
+      .sidebar{position:fixed;top:60px;left:0;bottom:0;z-index:90;transform:translateX(-100%);box-shadow:4px 0 24px rgba(0,0,0,.3)}
+      .sidebar.open{transform:translateX(0)}
+      .sidebar-overlay{display:none;position:fixed;top:60px;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:80}
+      .sidebar-overlay.show{display:block}
+      .doc-preview{position:fixed;top:60px;right:0;bottom:0;z-index:95;width:0;box-shadow:-4px 0 24px rgba(0,0,0,.3)}
+      .doc-preview.open{width:100%}
+      .doc-row .doc-size{display:none}
+      .modal{max-width:100%;width:95%;border-radius:16px}
+      .content-panel{padding:20px}
+      /* Table becomes card-like on mobile */
+      .doc-row{flex-wrap:wrap;gap:6px;padding:12px 16px}
+      .doc-row .doc-date{width:auto;text-align:left}
+    }
+
+    /* ===== RTL SUPPORT ===== */
+    [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
+    [dir="rtl"] .sidebar{border-right:none;border-left:1px solid rgba(124,58,237,.1)}
+    [dir="rtl"] .doc-preview{border-left:none;border-right:1px solid rgba(124,58,237,.1)}
+    [dir="rtl"] .doc-row{border-left:none;border-right:3px solid transparent}
+    [dir="rtl"] .doc-row.selected{border-right-color:#7c3aed;border-left-color:transparent}
+    [dir="rtl"] .nav-item{border-left:none;border-right:3px solid transparent}
+    [dir="rtl"] .nav-item.active{border-right-color:#7c3aed;border-left-color:transparent}
+    [dir="rtl"] .nav-item .nav-badge{margin-left:0;margin-right:auto}
+    [dir="rtl"] .toast{right:auto;left:24px}
+    [dir="rtl"] .user-dropdown{right:auto;left:0}
+    [dir="rtl"] .doc-size,[dir="rtl"] .doc-date{text-align:left!important}
+    [dir="rtl"] .search-bar input{padding:9px 40px 9px 16px;background-position:right 12px center}
+    @media(max-width:768px){
+      [dir="rtl"] .sidebar{left:auto;right:0;transform:translateX(100%);border-left:none;border-right:none;box-shadow:-4px 0 24px rgba(0,0,0,.3)}
+      [dir="rtl"] .sidebar.open{transform:translateX(0)}
+    }
+
+    /* ===== LIGHT MODE ===== */
+    body.light-mode{background:#f8f7ff;color:#1e1b4b}
+    body.light-mode .login-screen{background:#f8f7ff}
+    body.light-mode .login-card{background:rgba(255,255,255,.9);border-color:#e5e7eb;box-shadow:0 8px 40px rgba(0,0,0,.08)}
+    body.light-mode .login-card h2{color:#1e1b4b}
+    body.light-mode .login-card p{color:#6b7280}
+    body.light-mode .login-tabs{background:#f1f0f9}
+    body.light-mode .login-tab{color:#6b7280}
+    body.light-mode .login-input{background:#f9fafb;border-color:#d1d5db;color:#1e1b4b}
+    body.light-mode .login-input::placeholder{color:#9ca3af}
+    body.light-mode .login-input:focus{border-color:#7c3aed;background:#fff}
+    body.light-mode .oauth-btn{background:#fff;border-color:#e5e7eb;color:#374151}
+    body.light-mode .oauth-btn:hover{border-color:#7c3aed;background:#faf9ff}
+    body.light-mode .login-divider{color:#9ca3af}
+    body.light-mode .login-divider::before,body.light-mode .login-divider::after{background:#e5e7eb}
+    body.light-mode .login-toggle{color:#6b7280}
+    body.light-mode .login-toggle a{color:#7c3aed}
+
+    body.light-mode .topbar{background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid #e5e7eb}
+    body.light-mode .topbar-title{color:#1e1b4b}
+    body.light-mode .hamburger{color:#374151}
+    body.light-mode .search-bar input{background:#f9fafb;border-color:#d1d5db;color:#1e1b4b}
+    body.light-mode .search-bar input::placeholder{color:#9ca3af}
+    body.light-mode .search-bar input:focus{border-color:#7c3aed;background:#fff}
+    body.light-mode .theme-toggle{border-color:#e5e7eb;color:#374151}
+    body.light-mode .theme-toggle:hover{border-color:#7c3aed}
+    body.light-mode .lang-switch button{border-color:#e5e7eb;color:#374151}
+    body.light-mode .lang-switch button:hover{border-color:#7c3aed}
+    body.light-mode .lang-switch .lang-menu{background:#fff;border-color:#e5e7eb;box-shadow:0 8px 24px rgba(0,0,0,.1)}
+    body.light-mode .lang-switch .lang-menu a{color:#374151}
+    body.light-mode .lang-switch .lang-menu a:hover{background:#f5f3ff;color:#7c3aed}
+    body.light-mode .user-name{color:#374151}
+    body.light-mode .user-dropdown{background:#fff;border-color:#e5e7eb;box-shadow:0 8px 24px rgba(0,0,0,.1)}
+    body.light-mode .user-dropdown a{color:#374151}
+    body.light-mode .user-dropdown a:hover{background:#f5f3ff;color:#7c3aed}
+    body.light-mode .user-dropdown .divider{background:#e5e7eb}
+
+    body.light-mode .sidebar{background:#fff;border-right-color:#e5e7eb}
+    body.light-mode .nav-item{color:#6b7280}
+    body.light-mode .nav-item:hover{background:rgba(124,58,237,.05);color:#1e1b4b}
+    body.light-mode .nav-item.active{background:rgba(124,58,237,.06);color:#4f46e5;border-left-color:#4f46e5}
+    body.light-mode .nav-item .nav-badge{background:rgba(124,58,237,.08);color:#7c3aed}
+    body.light-mode .nav-divider{background:#e5e7eb}
+    body.light-mode .plan-badge{background:#faf9ff;border-color:#e5e7eb}
+    body.light-mode .plan-badge .plan-label{color:#7c3aed}
+    body.light-mode .plan-badge .plan-usage{color:#6b7280}
+    body.light-mode .plan-bar{background:#e5e7eb}
+
+    body.light-mode .doc-list-header{background:#faf9ff;border-bottom-color:#e5e7eb;color:#9ca3af}
+    body.light-mode .doc-row{border-bottom-color:#f3f4f6}
+    body.light-mode .doc-row:hover{background:#faf9ff}
+    body.light-mode .doc-row.selected{background:#f3f0ff}
+    body.light-mode .doc-row .doc-name{color:#1e1b4b}
+    body.light-mode .doc-row .doc-star{color:#d1d5db}
+    body.light-mode .doc-row .doc-size,.doc-row .doc-date{color:#9ca3af}
+    body.light-mode .doc-empty h3{color:#6b7280}
+
+    body.light-mode .doc-preview{background:#fff;border-left-color:#e5e7eb}
+    body.light-mode .doc-preview-toolbar{border-bottom-color:#e5e7eb}
+    body.light-mode .doc-preview-toolbar .preview-title{color:#1e1b4b}
+    body.light-mode .doc-preview-toolbar button{border-color:#e5e7eb;color:#4b5563}
+    body.light-mode .doc-preview-toolbar button:hover{border-color:#7c3aed;color:#7c3aed}
+    body.light-mode .doc-preview-content{background:#f5f5f5}
+    body.light-mode .doc-preview-info{background:#fff;border-top-color:#e5e7eb}
+    body.light-mode .doc-preview-info .info-label{color:#9ca3af}
+    body.light-mode .doc-preview-info .info-value{color:#374151}
+
+    body.light-mode .content-panel h2{color:#1e1b4b}
+    body.light-mode .panel-card{background:#fff;border-color:#e5e7eb;box-shadow:0 1px 3px rgba(0,0,0,.06);backdrop-filter:none}
+    body.light-mode .panel-card h3{color:#1e1b4b}
+    body.light-mode .panel-card .card-desc{color:#9ca3af}
+    body.light-mode .panel-card label{color:#374151}
+    body.light-mode .panel-card input[type="text"],body.light-mode .panel-card input[type="email"],body.light-mode .panel-card input[type="password"],body.light-mode .panel-card input[type="url"],body.light-mode .panel-card select,body.light-mode .panel-card textarea{background:#f9fafb;border-color:#d1d5db;color:#1e1b4b}
+    body.light-mode .panel-card input::placeholder,body.light-mode .panel-card textarea::placeholder{color:#9ca3af}
+    body.light-mode .panel-card .btn-secondary{background:#f3f4f6;color:#4b5563;border-color:#e5e7eb}
+    body.light-mode .panel-card .btn-secondary:hover{border-color:#7c3aed;color:#7c3aed}
+    body.light-mode .panel-card .btn-danger{background:#fef2f2;border-color:#fecaca}
+    body.light-mode .toggle-label{color:#374151}
+    body.light-mode .toggle-desc{color:#9ca3af}
+    body.light-mode .toggle-row{border-bottom-color:#f3f4f6}
+    body.light-mode .toggle-switch .slider{background:#d1d5db}
+
+    body.light-mode .api-key-box{background:#f5f5f5;border-color:#e5e7eb}
+    body.light-mode .api-key-box code{color:#374151}
+    body.light-mode .api-key-box button{border-color:#e5e7eb;color:#4b5563}
+    body.light-mode .api-stat-card{background:#faf9ff;border-color:#e5e7eb}
+    body.light-mode .api-stat-label{color:#9ca3af}
+    body.light-mode .api-doc-link{background:#fff;border-color:#e5e7eb;color:#374151}
+    body.light-mode .api-doc-link:hover{border-color:#7c3aed}
+
+    body.light-mode .shared-table th{border-bottom-color:#e5e7eb;color:#9ca3af}
+    body.light-mode .shared-table td{color:#374151;border-bottom-color:#f3f4f6}
+    body.light-mode .shared-table tr:hover td{background:#faf9ff}
+    body.light-mode .shared-link{color:#7c3aed}
+    body.light-mode .copy-btn{border-color:#e5e7eb;color:#4b5563}
+    body.light-mode .shared-empty h4{color:#6b7280}
+    body.light-mode .brand-live-preview{background:#f5f5f5;border-color:#e5e7eb}
+    body.light-mode .brand-live-preview .blp-label{color:#9ca3af}
+    body.light-mode .blp-stamp-circle{border-color:rgba(124,58,237,.2);background:#f9fafb}
+    body.light-mode .blp-rotating-text text{fill:#7c3aed}
+    body.light-mode .blp-org-name{color:#1e1b4b}
+    body.light-mode .blp-verified{color:#7c3aed}
+    body.light-mode .blp-badge{background:#fff}
+    body.light-mode .blp-wave-strip{background:#f0f0f0}
+    body.light-mode .brand-logo-current{background:#f9fafb;border-color:#e5e7eb}
+    body.light-mode .brand-logo-thumb{background:rgba(124,58,237,.06)}
+    body.light-mode .brand-logo-info .logo-label{color:#374151}
+    body.light-mode .brand-logo-info .logo-hint{color:#9ca3af}
+    body.light-mode .brand-section-title{color:#6b7280;border-color:#e5e7eb}
+    body.light-mode .brand-wave-preview-box{background:#f0f0f0}
+    body.light-mode .wave-color-row span{color:#6b7280}
+    body.light-mode .gradient-preset-btn{background:#f5f5f5;border-color:#d1d5db;color:#7c3aed}
+
+    body.light-mode .modal{background:#fff;border-color:#e5e7eb;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+    body.light-mode .modal h3{color:#1e1b4b}
+    body.light-mode .modal .modal-subtitle{color:#6b7280}
+    body.light-mode .upload-zone{border-color:#e5e7eb;background:#faf9ff}
+    body.light-mode .upload-zone:hover,.upload-zone.dragover{border-color:#7c3aed;background:rgba(124,58,237,.04)}
+    body.light-mode .upload-zone .uz-text{color:#374151}
+    body.light-mode .upload-zone .uz-icon,.upload-zone .uz-hint{color:#9ca3af}
+    body.light-mode .upload-progress .up-filename{color:#374151}
+    body.light-mode .upload-progress .up-bar{background:#e5e7eb}
+    body.light-mode .upload-limit{background:#fef2f2;border-color:#fecaca}
+
+    body.light-mode .toast{background:rgba(255,255,255,.95);color:#1e1b4b;border-color:#e5e7eb;box-shadow:0 8px 24px rgba(0,0,0,.1)}
+
+    /* RTL light mode */
+    body.light-mode[dir="rtl"] .sidebar,body.light-mode [dir="rtl"] .sidebar{border-left-color:#e5e7eb}
+    body.light-mode .doc-preview{border-left-color:#e5e7eb}
+    button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+    input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+
+    /* ===== PAYWALL OVERLAY ===== */
+    .paywall-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:3000;align-items:center;justify-content:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+    .paywall-overlay.show{display:flex}
+    .paywall-card{background:rgba(255,255,255,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.4);border-radius:24px;padding:40px;max-width:480px;width:92%;box-shadow:0 24px 80px rgba(0,0,0,.2);text-align:center;position:relative}
+    .paywall-card h2{font-size:22px;font-weight:800;color:#111827;margin-bottom:8px}
+    .paywall-card>p{font-size:14px;color:#6b7280;margin-bottom:20px}
+    .paywall-cta{background:rgba(79,70,229,.04);border:1px solid rgba(79,70,229,.12);border-radius:16px;padding:24px;margin-top:4px}
+    .paywall-cta h3{font-size:18px;font-weight:700;color:#1e1b4b;margin-bottom:8px}
+    .paywall-cta>p{font-size:14px;color:#6b7280;margin-bottom:16px}
+    .paywall-cta .btn-primary{display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:14px;font-size:16px;font-weight:700;text-decoration:none;transition:all .3s;box-shadow:0 4px 20px rgba(79,70,229,.3)}
+    .paywall-cta .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,70,229,.5)}
+    .paywall-note{font-size:12px;color:#9ca3af;margin-top:12px}
+    .paywall-close{position:absolute;top:14px;right:18px;background:none;border:none;font-size:22px;color:#9ca3af;cursor:pointer;padding:4px}
+    .paywall-close:hover{color:#111}
+    body.light-mode .paywall-card{background:rgba(255,255,255,.95)}
+
+    /* ===== ADDITIONAL MOBILE FIXES ===== */
+    @media(max-width:768px){
+      .login-card{padding:32px 24px;width:95%}
+      .login-card h2{font-size:18px}
+      .login-input{font-size:16px;min-height:44px}
+      .login-submit{min-height:48px}
+      .oauth-btn{min-height:44px}
+      .topbar{padding:0 12px}
+      .search-bar{max-width:none}
+      .search-bar input{font-size:16px;padding:10px 16px 10px 38px}
+      .new-doc-topbar{padding:0 12px}
+      .content-panel{padding:16px 12px}
+      .panel-card .form-row{grid-template-columns:1fr}
+      .modal{padding:24px 18px;width:95%}
+      .modal-actions button{min-height:44px}
+    }
+    @media(max-width:480px){
+      .topbar-logo{min-width:auto}
+      .topbar-logo img{height:20px}
+      .doc-row{padding:10px 12px}
+      .nav-item{padding:8px 12px;font-size:12px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <img src="/images/logo-horizontal.png" alt="Vertifile">
+
+    <div class="login-tabs">
+      <button class="login-tab active" id="tabSignIn" onclick="showLogin()" data-i18n="app.signIn">Sign In</button>
+      <button class="login-tab" id="tabCreateAccount" onclick="showRegister()" data-i18n="app.createAccount">Create Account</button>
+    </div>
+
+    <div id="loginForm">
+      <a href="/auth/google" class="oauth-btn">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.97 6.97 0 0 1 5.47 12c0-.72.13-1.43.37-2.09V7.07H2.18A11.96 11.96 0 0 0 0 12c0 1.94.46 3.77 1.28 5.4l3.56-2.77.01-.54z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        <span data-i18n="app.continueGoogle">Continue with Google</span>
+      </a>
+
+      <div class="login-divider" data-i18n="app.or">or</div>
+
+      <input type="email" class="login-input" id="loginEmail" placeholder="Email address" data-i18n-placeholder="app.emailPlaceholder">
+      <input type="password" class="login-input" id="loginPassword" placeholder="Password" data-i18n-placeholder="app.passwordPlaceholder">
+      <a href="#" onclick="showForgotPassword(event)" style="display:block;text-align:right;font-size:13px;color:#a78bfa;margin:-8px 0 12px;text-decoration:none;" data-i18n="app.forgotPassword">Forgot password?</a>
+      <button class="login-submit" onclick="doLogin()" data-i18n="app.signInBtn">Sign In</button>
+
+      <div class="login-error" id="loginError">Invalid email or password</div>
+
+      <div class="login-toggle">
+        <span data-i18n="app.noAccount">Don't have an account?</span>
+        <a onclick="showRegister()" data-i18n="app.createOne">Create one</a>
+      </div>
+    </div>
+
+    <div id="registerForm" style="display:none">
+      <a href="/auth/google" class="oauth-btn">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.97 6.97 0 0 1 5.47 12c0-.72.13-1.43.37-2.09V7.07H2.18A11.96 11.96 0 0 0 0 12c0 1.94.46 3.77 1.28 5.4l3.56-2.77.01-.54z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        <span data-i18n="app.continueGoogle">Continue with Google</span>
+      </a>
+
+      <div class="login-divider" data-i18n="app.or">or</div>
+
+      <input type="text" class="login-input" id="regName" placeholder="Full name" data-i18n-placeholder="app.namePlaceholder">
+      <input type="email" class="login-input" id="regEmail" placeholder="Email address" data-i18n-placeholder="app.emailPlaceholder">
+      <input type="password" class="login-input" id="regPassword" placeholder="Password (min 8 characters)" data-i18n-placeholder="app.passwordMinPlaceholder" onkeydown="if(event.key==='Enter')doRegister()">
+      <button class="login-submit" onclick="doRegister()" data-i18n="app.createAccountBtn">Create Account</button>
+
+      <div class="login-error" id="regError">Registration failed</div>
+
+      <div class="login-toggle">
+        <span data-i18n="app.haveAccount">Already have an account?</span>
+        <a onclick="showLogin()" data-i18n="app.signInLink">Sign in</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div class="app" id="app">
+  <!-- Top Bar -->
+  <div class="topbar">
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+    <div class="topbar-logo">
+      <img src="/images/logo-horizontal.png" alt="Vertifile">
+    </div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search documents..." oninput="filterDocuments()" data-i18n-placeholder="app.searchPlaceholder">
+    </div>
+    <div class="topbar-actions">
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">
+        <span id="themeIcon">&#9790;</span>
+      </button>
+      <div class="lang-switch" onclick="event.stopPropagation()">
+        <button onclick="toggleAppLang(event)" id="appLangBtn"><span id="appLangLabel">EN</span></button>
+        <div class="lang-menu" id="appLangMenu">
+          <a href="#" onclick="switchLang('en',event)">English</a>
+          <a href="#" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+          <a href="#" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+          <a href="#" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+          <a href="#" onclick="switchLang('es',event)">Espa&#241;ol</a>
+          <a href="#" onclick="switchLang('de',event)">Deutsch</a>
+          <a href="#" onclick="switchLang('ru',event)">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</a>
+          <a href="#" onclick="switchLang('zh',event)">&#31616;&#20307;&#20013;&#25991;</a>
+          <a href="#" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
+          <a href="#" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+        </div>
+      </div>
+      <button class="new-doc-topbar" onclick="showUploadModal()">
+        <span>+</span> <span data-i18n="app.newDoc">New Document</span>
+      </button>
+    </div>
+    <div class="user-menu" onclick="toggleUserMenu()">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <span class="user-name" id="userName">User</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="color:#8b89a6"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="user-dropdown" id="userDropdown">
+        <a onclick="switchView('settings')"><span>&#9881;</span> <span data-i18n="app.settings">Settings</span></a>
+        <div class="divider"></div>
+        <a onclick="doLogout()"><span>&#9211;</span> <span data-i18n="app.logout">Logout</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <!-- Sidebar Overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <button class="new-doc-btn" onclick="showUploadModal()">
+        <span style="font-size:18px">+</span> <span data-i18n="app.newDocument">New Document</span>
+      </button>
+
+      <div class="nav-item active" onclick="switchView('all')" data-view="all">
+        <span class="nav-icon">&#128196;</span>
+        <span data-i18n="app.allDocs">All Documents</span>
+        <span class="nav-badge" id="badgeAll">0</span>
+      </div>
+      <div class="nav-item" onclick="switchView('starred')" data-view="starred">
+        <span class="nav-icon">&#11088;</span>
+        <span data-i18n="app.starred">Starred</span>
+      </div>
+      <div class="nav-item" onclick="switchView('shared')" data-view="shared">
+        <span class="nav-icon">&#128279;</span>
+        <span data-i18n="app.shared">Shared</span>
+      </div>
+
+      <div class="nav-divider"></div>
+
+      <div class="nav-item" onclick="switchView('api')" data-view="api">
+        <span class="nav-icon">&#128273;</span>
+        <span data-i18n="app.api">API</span>
+      </div>
+      <div class="nav-item" onclick="switchView('branding')" data-view="branding">
+        <span class="nav-icon">&#127912;</span>
+        <span data-i18n="app.branding">Branding</span>
+      </div>
+      <div class="nav-item" onclick="switchView('settings')" data-view="settings">
+        <span class="nav-icon">&#9881;</span>
+        <span data-i18n="app.settings">Settings</span>
+      </div>
+
+      <div class="plan-badge">
+        <div class="plan-label" id="planLabel">Free Plan</div>
+        <div class="plan-usage" id="planUsage">0 / 5 documents</div>
+        <div class="plan-bar"><div class="plan-bar-fill" id="planBarFill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- Document List (for all/starred views) -->
+    <div class="doc-list-panel" id="docListPanel">
+      <div class="doc-list-header" id="docListHeader">
+        <input type="checkbox" class="select-all" onchange="toggleSelectAll(this.checked)">
+        <span data-i18n="app.name">Name</span>
+      </div>
+      <div id="docSkeleton" style="padding:8px 16px"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+      <div id="docList"></div>
+      <div class="doc-empty" id="docEmpty" style="display:none">
+        <div class="empty-icon">&#128195;</div>
+        <h3 data-i18n="app.noDocsYet">No documents yet</h3>
+        <p data-i18n="app.noDocsDesc">Upload your first document to get started with Vertifile protection.</p>
+        <button onclick="showUploadModal()" data-i18n="app.uploadFirst">Upload your first document</button>
+      </div>
+    </div>
+
+    <!-- API Panel -->
+    <div class="content-panel" id="apiPanel">
+      <h2>&#128273; <span data-i18n="app.apiIntegration">API & Integration</span></h2>
+
+      <!-- API Key Section -->
+      <div class="panel-card" style="margin-bottom:20px">
+        <h3 data-i18n="app.apiKey">Your API Key</h3>
+        <p class="card-desc" data-i18n="app.apiKeyDesc">Use this key to integrate Vertifile into your systems via the API.</p>
+        <div id="apiKeySection">
+          <div id="apiKeyDisplay" style="display:none;margin-top:12px">
+            <div style="display:flex;align-items:center;gap:8px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.15);border-radius:10px;padding:10px 14px">
+              <code id="apiKeyValue" style="flex:1;font-size:13px;color:#e2e0f0;word-break:break-all;font-family:'SF Mono','Fira Code',monospace">vf_live_****...****</code>
+              <button onclick="copyApiKeyApp()" style="padding:6px 12px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer" data-i18n="app.copy">Copy</button>
+            </div>
+          </div>
+          <div id="apiKeyEmpty" style="margin-top:12px">
+            <p style="font-size:13px;color:#8b89a6;margin-bottom:12px" data-i18n="app.noApiKey">You don't have an API key yet. Generate one to start using the Vertifile API.</p>
+            <button onclick="generateApiKey()" style="padding:10px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer" data-i18n="app.generateKey">Generate API Key</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Stats -->
+      <div class="panel-card" style="margin-bottom:20px">
+        <h3 data-i18n="app.apiStats">API Statistics</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:16px">
+          <div class="api-stat-card">
+            <div class="api-stat-label" data-i18n="app.docsCreated">Documents Created</div>
+            <div class="api-stat-value" id="apiStatDocs">--</div>
+          </div>
+          <div class="api-stat-card">
+            <div class="api-stat-label" data-i18n="app.planType">Plan</div>
+            <div class="api-stat-value" id="apiStatPlan">--</div>
+          </div>
+          <div class="api-stat-card">
+            <div class="api-stat-label" data-i18n="app.rateLimit">Rate Limit</div>
+            <div class="api-stat-value" id="apiStatRate">--</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="panel-card">
+        <h3 data-i18n="app.apiDocs">Documentation</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px">
+          <a href="/integration" class="api-doc-link">
+            &#128214; <span data-i18n="app.apiDocsLink">API Documentation</span>
+          </a>
+          <a href="/integration#webhooks" class="api-doc-link">
+            &#128276; <span data-i18n="app.webhooks">Webhooks</span>
+          </a>
+          <a href="/signup" class="api-doc-link">
+            &#128640; <span data-i18n="app.getStarted">Get Started Guide</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shared Panel -->
+    <div class="content-panel" id="sharedPanel">
+      <h2>&#128279; <span data-i18n="app.sharedDocuments">Shared Documents</span></h2>
+      <div class="panel-card">
+        <h3 data-i18n="app.yourSharedLinks">Your Shared Links</h3>
+        <p class="card-desc" data-i18n="app.sharedDesc">Documents you've shared via link. Anyone with the link can verify the document.</p>
+        <div id="sharedContent">
+          <div class="shared-empty">
+            <div class="se-icon">&#128279;</div>
+            <h4 data-i18n="app.noSharedDocs">No shared documents</h4>
+            <p data-i18n="app.noSharedDocsDesc">When you share a document, it will appear here with its public verification link.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Branding Panel -->
+    <div class="content-panel" id="brandingPanel">
+      <h2>&#127912; <span data-i18n="app.branding">Branding</span> &mdash; <span data-i18n="app.stampCustomization">Stamp Customization</span></h2>
+
+      <div class="panel-card">
+        <!-- ====== LIVE STAMP PREVIEW ====== -->
+        <div class="brand-live-preview" id="brandPreview">
+          <span class="blp-label" data-i18n="app.livePreview">LIVE PREVIEW</span>
+
+          <div class="blp-stamp-wrap">
+            <div class="blp-stamp-circle" id="bpStamp">
+              <!-- Rotating text ring -->
+              <svg class="blp-rotating-text" id="bpRotatingText" viewBox="0 0 160 160">
+                <defs>
+                  <path id="stampTextPath" d="M80,80 m-60,0 a60,60 0 1,1 120,0 a60,60 0 1,1 -120,0"/>
+                </defs>
+                <text><textPath href="#stampTextPath" id="bpRotatingLabel">VERIFIED BY VERTIFILE &bull; VERIFIED BY VERTIFILE &bull; </textPath></text>
+              </svg>
+              <!-- Center logo -->
+              <div class="blp-logo-center" id="bpStampLogo">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <!-- Verified badge -->
+            <div class="blp-badge" id="bpBadge">
+              <svg width="14" height="14" viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.8)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+
+          <div class="blp-org-name" id="bpOrgLabel">Vertifile</div>
+          <div class="blp-verified" data-i18n="app.verified">VERIFIED</div>
+
+          <!-- Wave strip inside preview -->
+          <div class="blp-wave-strip">
+            <svg id="bpWaveStripSvg" viewBox="0 0 400 48" preserveAspectRatio="none"></svg>
+          </div>
+        </div>
+
+        <!-- Hidden file input -->
+        <input type="file" id="brandLogoFile" accept="image/png" style="display:none" onchange="handleLogoUpload(event)">
+        <input type="hidden" id="brandIconUrl" value="">
+
+        <!-- ====== LOGO SECTION ====== -->
+        <div class="brand-section">
+          <div class="brand-section-title" data-i18n="app.logoSection">Logo</div>
+          <div class="brand-logo-current" id="brandLogoCurrentRow">
+            <div class="brand-logo-thumb" id="brandLogoThumb">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5"/></svg>
+            </div>
+            <div class="brand-logo-info">
+              <div class="logo-label" id="brandLogoFileName" data-i18n="app.defaultShield">Vertifile Shield (default)</div>
+              <div class="logo-hint" data-i18n="app.logoHint">PNG, transparent background recommended</div>
+            </div>
+            <div class="brand-logo-actions">
+              <button class="btn btn-secondary" onclick="document.getElementById('brandLogoFile').click()" data-i18n="app.uploadLogo">Upload Logo</button>
+              <button class="btn btn-secondary" id="brandLogoRemoveBtn" onclick="removeLogo()" style="display:none" data-i18n="app.removeLogo">Remove</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====== ORGANIZATION NAME ====== -->
+        <div class="brand-section">
+          <div class="brand-section-title" data-i18n="app.orgNameSection">Organization Name</div>
+          <input type="text" id="brandOrgName" placeholder="Your Company Name" value="" data-i18n-placeholder="app.orgNamePlaceholder" oninput="updateBrandPreview()">
+        </div>
+
+        <!-- ====== WAVE COLORS ====== -->
+        <div class="brand-section">
+          <div class="brand-section-title" data-i18n="app.waveColorsSection">Wave Colors</div>
+
+          <!-- Wave count -->
+          <div style="margin-bottom:4px">
+            <label style="font-size:12px;color:#8b89a6;margin:0" data-i18n="app.waveCount">Waves: <span id="waveCountLabel" style="color:#c4b5fd;font-weight:600">5</span></label>
+            <input type="range" id="waveCount" class="wave-count-slider" min="3" max="10" value="5" oninput="updateWaveCount(this.value)">
+          </div>
+
+          <!-- Presets -->
+          <div class="gradient-presets">
+            <button type="button" class="gradient-preset-btn" onclick="applyGradientPreset('purple')" data-i18n="app.presetPurple">Purple</button>
+            <button type="button" class="gradient-preset-btn" onclick="applyGradientPreset('blue')" data-i18n="app.presetBlue">Blue</button>
+            <button type="button" class="gradient-preset-btn" onclick="applyGradientPreset('green')" data-i18n="app.presetGreen">Green</button>
+            <button type="button" class="gradient-preset-btn" onclick="applyGradientPreset('orange')" data-i18n="app.presetOrange">Orange</button>
+          </div>
+
+          <!-- Individual pickers -->
+          <div id="waveColorList" style="max-height:220px;overflow-y:auto;padding-right:4px;margin-bottom:8px">
+            <!-- Generated dynamically by updateWaveCount() -->
+          </div>
+
+          <!-- Auto Gradient -->
+          <div class="auto-gradient-row">
+            <button type="button" class="btn btn-secondary" onclick="autoGradient()" style="font-size:12px;padding:5px 12px" data-i18n="app.autoGradient">Auto Gradient</button>
+            <span style="font-size:11px;color:#8b89a6" data-i18n="app.fromColor">from:</span>
+            <input type="color" id="gradientBase" value="#3b82f6" style="width:32px;height:24px;padding:1px;cursor:pointer;border:1px solid rgba(124,58,237,.15);border-radius:4px;background:transparent">
+          </div>
+
+          <!-- Live Wave Preview -->
+          <div class="brand-section-title" style="margin-top:16px" data-i18n="app.wavePreviewLabel">Live Wave Preview</div>
+          <div class="brand-wave-preview-box" id="wavePreviewBox">
+            <svg id="wavePreviewSvg" viewBox="0 0 400 60" preserveAspectRatio="none"></svg>
+          </div>
+        </div>
+
+        <!-- ====== ACTION BUTTONS ====== -->
+        <div class="brand-action-row">
+          <button class="btn btn-secondary" onclick="resetBranding()" data-i18n="app.resetDefault">Reset to Default</button>
+          <button class="btn btn-primary" onclick="saveBranding()" data-i18n="app.saveBranding">Save Branding</button>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3 data-i18n="app.customDomain">Custom Domain Verification</h3>
+        <p class="card-desc" data-i18n="app.customDomainDesc">Use your own domain for document verification links (Enterprise plan).</p>
+        <label data-i18n="app.verificationDomain">Verification Domain</label>
+        <input type="text" id="customDomain" placeholder="verify.yourdomain.com" disabled>
+        <p style="font-size:12px;color:#8b89a6">&#128274; <span data-i18n="app.enterpriseOnly">Available on Enterprise plan.</span> <a href="/contact" style="color:#a78bfa" data-i18n="app.contactUpgrade">Contact us</a> to upgrade.</p>
+      </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="content-panel" id="settingsPanel">
+      <h2>&#9881; <span data-i18n="app.settings">Settings</span></h2>
+
+      <div class="panel-card">
+        <h3 data-i18n="app.profile">Profile</h3>
+        <p class="card-desc" data-i18n="app.profileDesc">Manage your account details.</p>
+        <div class="form-row">
+          <div>
+            <label data-i18n="app.fullName">Full Name</label>
+            <input type="text" id="settingsName" placeholder="Your name" data-i18n-placeholder="app.yourNamePlaceholder">
+          </div>
+          <div>
+            <label data-i18n="app.email">Email</label>
+            <input type="email" id="settingsEmail" placeholder="your@email.com" disabled style="opacity:.6;cursor:not-allowed">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveProfile()" data-i18n="app.saveChanges">Save Changes</button>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3 data-i18n="app.apiKey">API Key</h3>
+        <p class="card-desc" data-i18n="app.apiKeySettingsDesc">Use your API key to integrate Vertifile with your application.</p>
+        <div class="api-key-box" id="apiKeyBox">
+          <code id="apiKeyDisplay2">No API key generated</code>
+          <button onclick="copyApiKey()">Copy</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="generateApiKey()" data-i18n="app.generateNewKey">Generate New Key</button>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3 data-i18n="app.notifications">Notifications</h3>
+        <p class="card-desc" data-i18n="app.notifDesc">Choose what notifications you receive.</p>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label" data-i18n="app.emailNotif">Email notifications</div>
+            <div class="toggle-desc" data-i18n="app.emailNotifDesc">Receive email when a document is verified</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" id="notifEmail" checked><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label" data-i18n="app.weeklyDigest">Weekly digest</div>
+            <div class="toggle-desc" data-i18n="app.weeklyDigestDesc">Receive a weekly summary of document activity</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" id="notifDigest"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label" data-i18n="app.securityAlerts">Security alerts</div>
+            <div class="toggle-desc" data-i18n="app.securityAlertsDesc">Get notified when a forged document is detected</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" id="notifSecurity" checked><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3 data-i18n="app.changePassword">Change Password</h3>
+        <p class="card-desc" data-i18n="app.changePasswordDesc">Update your account password.</p>
+        <label data-i18n="app.currentPassword">Current Password</label>
+        <input type="password" id="currentPassword" placeholder="Enter current password" data-i18n-placeholder="app.currentPasswordPlaceholder">
+        <label data-i18n="app.newPassword">New Password</label>
+        <input type="password" id="newPassword" placeholder="Enter new password" data-i18n-placeholder="app.newPasswordPlaceholder">
+        <label data-i18n="app.confirmPassword">Confirm New Password</label>
+        <input type="password" id="confirmPassword" placeholder="Confirm new password" data-i18n-placeholder="app.confirmPasswordPlaceholder">
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="changePassword()" data-i18n="app.updatePassword">Update Password</button>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h3 data-i18n="app.dangerZone">Danger Zone</h3>
+        <p class="card-desc" data-i18n="app.dangerZoneDesc">Irreversible actions for your account.</p>
+        <div class="btn-row">
+          <button class="btn btn-danger" onclick="deleteAccount()" data-i18n="app.deleteAccount">Delete Account</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Document Preview (slides from right) -->
+    <div class="doc-preview" id="docPreview">
+      <div class="doc-preview-toolbar">
+        <span class="preview-title" id="previewTitle">Document</span>
+        <button onclick="deleteDoc()" title="Delete" style="color:#dc2626"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+        <button onclick="printDoc()" title="Print"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
+        <button onclick="shareDoc()" title="Share"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> <span data-i18n="app.share">Share</span></button>
+        <button onclick="downloadDoc()" title="Download"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span data-i18n="app.download">Download</span></button>
+        <button class="close-preview" onclick="closePreview()" title="Close">&times;</button>
+      </div>
+      <div class="doc-preview-content" id="previewContent"></div>
+      <div class="doc-preview-info" id="previewInfo">
+        <div class="info-row">
+          <span class="info-label" data-i18n="app.hash">Hash</span>
+          <span class="info-value" id="previewHash">--</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label" data-i18n="app.created">Created</span>
+          <span class="info-value" id="previewCreated">--</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label" data-i18n="app.status">Status</span>
+          <span class="info-value" id="previewStatus">--</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal">
+    <h3 data-i18n="app.uploadDocument">Upload Document</h3>
+    <p class="modal-subtitle" data-i18n="app.uploadDesc">Drag and drop files or click to browse. PDF, images, and text files are supported.</p>
+
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <div class="uz-icon">&#128228;</div>
+      <div class="uz-text" data-i18n="app.dropFiles">Drop files here or click to browse</div>
+      <div class="uz-hint">PDF, PNG, JPG, TXT</div>
+    </div>
+    <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.txt,.doc,.docx" style="display:none" onchange="handleUploadFile(this.files[0])">
+
+    <div class="upload-progress" id="uploadProgress">
+      <div class="up-filename" id="upFilename"></div>
+      <div class="up-bar"><div class="up-bar-fill" id="upBarFill"></div></div>
+      <div class="up-status" id="upStatus" data-i18n="app.uploading">Uploading...</div>
+    </div>
+
+    <div class="upload-limit" id="uploadLimit">
+      <p data-i18n="app.limitReached">You've reached the free document limit. Contact us for more.</p>
+      <a href="/contact" data-i18n="app.contactUs">Contact Us</a>
+    </div>
+
+    <div class="modal-actions">
+      <button style="background:rgba(124,58,237,.08);color:#8b89a6;border:1px solid rgba(124,58,237,.12)" onclick="hideUploadModal()" data-i18n="app.cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Paywall Overlay -->
+<div class="paywall-overlay" id="paywallOverlay" onclick="if(event.target===this)closePaywall()">
+  <div class="paywall-card">
+    <button class="paywall-close" onclick="closePaywall()">&times;</button>
+    <h2 data-i18n="paywall.dashboardTitle">Upgrade to Download & Share</h2>
+    <p data-i18n="paywall.dashboardSubtitle">Your document is protected, but downloading and sharing requires a Pro or Enterprise plan.</p>
+    <div class="paywall-cta">
+      <h3 data-i18n="paywall.ctaTitle">Ready to download and share?</h3>
+      <p data-i18n="paywall.ctaDesc">Subscribe to Pro to unlock downloading, sharing, and full verification.</p>
+      <a href="/pricing" class="btn-primary" data-i18n="paywall.ctaBtn">Upgrade to Pro — $29/mo</a>
+      <p class="paywall-note" data-i18n="paywall.ctaNote">Includes 100 documents/month, custom branding, API access</p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== State =====
+let currentUser = null;
+let documents = [];
+let selectedDoc = null;
+let currentView = 'all';
+let starredIds = new Set(JSON.parse(localStorage.getItem('vf_starred') || '[]'));
+
+// ===== Theme =====
+function initTheme() {
+  const saved = localStorage.getItem('vf-app-theme');
+  if (saved === 'light') {
+    document.body.classList.add('light-mode');
+    updateThemeIcon();
+  }
+}
+function toggleTheme() {
+  document.body.classList.toggle('light-mode');
+  const isLight = document.body.classList.contains('light-mode');
+  localStorage.setItem('vf-app-theme', isLight ? 'light' : 'dark');
+  updateThemeIcon();
+}
+function updateThemeIcon() {
+  const icon = document.getElementById('themeIcon');
+  if (icon) {
+    icon.innerHTML = document.body.classList.contains('light-mode') ? '&#9728;' : '&#9790;';
+  }
+}
+initTheme();
+
+// ===== Auth =====
+async function checkAuth() {
+  try {
+    const r = await fetch('/api/user/me', { credentials: 'same-origin' });
+    if (r.ok) {
+      const data = await r.json();
+      currentUser = data.user;
+      showApp();
+    } else {
+      showLoginScreen();
+    }
+  } catch (e) {
+    showLoginScreen();
+  }
+}
+
+function showLoginScreen() {
+  document.getElementById('loginScreen').style.display = '';
+  document.getElementById('app').style.display = 'none';
+}
+
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  if (currentUser) {
+    const initials = getInitials(currentUser.name || currentUser.email || '?');
+    document.getElementById('userAvatar').textContent = initials;
+    document.getElementById('userName').textContent = currentUser.name || currentUser.email || 'User';
+    // Populate settings
+    document.getElementById('settingsName').value = currentUser.name || '';
+    document.getElementById('settingsEmail').value = currentUser.email || '';
+    if (currentUser.apiKey) {
+      document.getElementById('apiKeyDisplay2').textContent = currentUser.apiKey;
+    }
+  }
+  loadDocuments();
+
+  // Check URL params for tab switching (e.g., /app?tab=api)
+  const urlParams = new URLSearchParams(window.location.search);
+  const tab = urlParams.get('tab');
+  if (tab && ['all', 'starred', 'shared', 'api', 'branding', 'settings'].includes(tab)) {
+    switchView(tab);
+  }
+}
+
+function showLogin() {
+  document.getElementById('loginForm').style.display = '';
+  document.getElementById('registerForm').style.display = 'none';
+  document.getElementById('tabSignIn').classList.add('active');
+  document.getElementById('tabCreateAccount').classList.remove('active');
+}
+
+function showRegister() {
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('registerForm').style.display = '';
+  document.getElementById('tabSignIn').classList.remove('active');
+  document.getElementById('tabCreateAccount').classList.add('active');
+}
+
+function showForgotPassword(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim();
+  if (!email) { toast('Please enter your email address first'); return; }
+  fetch('/auth/forgot-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+    credentials: 'same-origin'
+  }).then(r => r.json()).then(d => {
+    toast(d.message || 'If this email exists, a reset link has been sent');
+  }).catch(() => toast('Something went wrong'));
+}
+
+// Check for reset token in URL
+(function checkResetToken() {
+  var params = new URLSearchParams(window.location.search);
+  var token = params.get('reset');
+  if (!token) return;
+  var loginCard = document.querySelector('.login-card') || document.querySelector('.auth-card');
+  if (!loginCard) return;
+  loginCard.innerHTML = '<h2 style="margin-bottom:8px">Set New Password</h2>' +
+    '<p style="color:#8b89a6;margin-bottom:20px;font-size:13px">Enter your new password below</p>' +
+    '<input type="password" id="resetPassword" placeholder="New password (min 8 chars)" style="width:100%;padding:12px 16px;border:1px solid rgba(124,58,237,.2);border-radius:10px;font-size:14px;font-family:inherit;background:rgba(26,24,48,.5);color:#e2e0f0;outline:none;margin-bottom:12px">' +
+    '<input type="password" id="resetPasswordConfirm" placeholder="Confirm password" style="width:100%;padding:12px 16px;border:1px solid rgba(124,58,237,.2);border-radius:10px;font-size:14px;font-family:inherit;background:rgba(26,24,48,.5);color:#e2e0f0;outline:none;margin-bottom:16px">' +
+    '<button onclick="doResetPassword(\'' + token + '\')" style="width:100%;padding:14px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer">Update Password</button>';
+})();
+
+function doResetPassword(token) {
+  var pw = document.getElementById('resetPassword').value;
+  var pw2 = document.getElementById('resetPasswordConfirm').value;
+  if (pw.length < 8) { toast('Password must be at least 8 characters'); return; }
+  if (pw !== pw2) { toast('Passwords do not match'); return; }
+  fetch('/auth/reset-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: token, password: pw }),
+    credentials: 'same-origin'
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      toast('Password updated! You can now sign in.');
+      window.history.replaceState({}, '', '/app');
+      setTimeout(function() { location.reload(); }, 1500);
+    } else {
+      toast(d.error || 'Reset failed');
+    }
+  }).catch(function() { toast('Something went wrong'); });
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  if (!email || !password) return;
+  try {
+    const r = await fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+      credentials: 'same-origin'
+    });
+    const data = await r.json();
+    if (r.ok && data.success !== false) {
+      currentUser = data.user;
+      showApp();
+    } else {
+      const err = document.getElementById('loginError');
+      err.textContent = data.error || 'Invalid email or password';
+      err.style.display = 'block';
+      setTimeout(() => err.style.display = 'none', 3000);
+    }
+  } catch (e) {
+    toast('Login failed: ' + e.message);
+  }
+}
+
+async function doRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  if (!name || !email || !password) return;
+  try {
+    const r = await fetch('/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password }),
+      credentials: 'same-origin'
+    });
+    const data = await r.json();
+    if (r.ok && data.success !== false) {
+      currentUser = data.user;
+      showApp();
+    } else {
+      const err = document.getElementById('regError');
+      err.textContent = data.error || 'Registration failed';
+      err.style.display = 'block';
+      setTimeout(() => err.style.display = 'none', 3000);
+    }
+  } catch (e) {
+    toast('Registration failed: ' + e.message);
+  }
+}
+
+async function doLogout() {
+  try { await fetch('/auth/logout', { method: 'POST', credentials: 'same-origin' }); } catch (e) {}
+  currentUser = null;
+  documents = [];
+  selectedDoc = null;
+  showLoginScreen();
+}
+
+document.getElementById('loginPassword').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ===== Documents =====
+async function loadDocuments() {
+  const skel = document.getElementById('docSkeleton');
+  if (skel) skel.style.display = '';
+  try {
+    const params = new URLSearchParams({ limit: 50 });
+    const r = await fetch('/api/user/documents?' + params, { credentials: 'same-origin' });
+    if (!r.ok) throw new Error('Failed to load');
+    const data = await r.json();
+    documents = data.documents || [];
+    if (skel) skel.style.display = 'none';
+    renderDocumentList();
+    updatePlanUsage();
+  } catch (e) {
+    documents = [];
+    if (skel) skel.style.display = 'none';
+    renderDocumentList();
+  }
+}
+
+function renderDocumentList() {
+  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  let filtered = documents;
+  if (search) {
+    filtered = documents.filter(d =>
+      (d.originalName || d.original_name || '').toLowerCase().includes(search) ||
+      (d.hash || '').toLowerCase().includes(search)
+    );
+  }
+  if (currentView === 'starred') {
+    filtered = filtered.filter(d => starredIds.has(d.id || d._id || d.hash));
+  }
+
+  const container = document.getElementById('docList');
+  const emptyEl = document.getElementById('docEmpty');
+
+  if (filtered.length === 0) {
+    container.innerHTML = '';
+    emptyEl.style.display = 'flex';
+    document.getElementById('badgeAll').textContent = documents.length;
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  document.getElementById('badgeAll').textContent = documents.length;
+
+  container.innerHTML = filtered.map((d, i) => {
+    const id = d.id || d._id || d.hash;
+    const rawName = d.originalName || d.original_name || 'Untitled';
+    const name = rawName.replace(/\.[^.]+$/, '') + '.pvf';
+    const typeClass = 'pvf';
+    const typeIcon = getTypeIcon('pvf');
+    const size = formatSize(d.fileSize || d.file_size || 0);
+    const date = formatDate(d.timestamp || d.createdAt || d.created_at || d.created);
+    const isStarred = starredIds.has(id);
+    const verified = d.verified !== false;
+    const isSelected = selectedDoc && (selectedDoc.id || selectedDoc._id || selectedDoc.hash) === id;
+
+    return `<div class="doc-row${isSelected ? ' selected' : ''}" onclick="selectDoc(${i})" data-idx="${i}">
+      <input type="checkbox" class="doc-check" onclick="event.stopPropagation()">
+      <button class="doc-star${isStarred ? ' starred' : ''}" onclick="event.stopPropagation();toggleStar('${escHtml(id)}')" title="Star">${isStarred ? '&#9733;' : '&#9734;'}</button>
+      <div class="doc-type-icon ${typeClass}">${typeIcon}</div>
+      <span class="doc-name">${escHtml(name)}</span>
+      <span class="doc-status ${verified ? 'verified' : 'unverified'}">${verified ? '&#10003; Verified' : '&#10007; Unverified'}</span>
+      <span class="doc-size">${size}</span>
+      <span class="doc-date">${date}</span>
+    </div>`;
+  }).join('');
+}
+
+function selectDoc(idx) {
+  const filtered = getFilteredDocs();
+  if (idx < 0 || idx >= filtered.length) return;
+  selectedDoc = filtered[idx];
+  renderDocumentList();
+  openPreview();
+}
+
+function getFilteredDocs() {
+  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  let filtered = documents;
+  if (search) {
+    filtered = documents.filter(d =>
+      (d.originalName || d.original_name || '').toLowerCase().includes(search) ||
+      (d.hash || '').toLowerCase().includes(search)
+    );
+  }
+  if (currentView === 'starred') {
+    filtered = filtered.filter(d => starredIds.has(d.id || d._id || d.hash));
+  }
+  return filtered;
+}
+
+function openPreview() {
+  if (!selectedDoc) return;
+  const panel = document.getElementById('docPreview');
+  panel.classList.add('open');
+
+  const rawName = selectedDoc.originalName || selectedDoc.original_name || 'Untitled';
+  // Show as .pvf file name (replace original extension with .pvf)
+  const pvfName = rawName.replace(/\.[^.]+$/, '') + '.pvf';
+  document.getElementById('previewTitle').textContent = pvfName;
+
+  const hash = selectedDoc.hash || '';
+  document.getElementById('previewHash').textContent = hash.length > 20 ? hash.substring(0, 10) + '...' + hash.slice(-6) : hash;
+  document.getElementById('previewCreated').textContent = formatDate(selectedDoc.timestamp || selectedDoc.createdAt || selectedDoc.created_at || selectedDoc.created);
+  document.getElementById('previewStatus').textContent = selectedDoc.verified !== false ? 'Verified' : 'Unverified';
+
+  const contentEl = document.getElementById('previewContent');
+  const shareId = selectedDoc.shareId || selectedDoc.share_id;
+  if (shareId) {
+    contentEl.innerHTML = `<iframe src="/d/${escHtml(shareId)}/raw" sandbox="allow-scripts allow-same-origin"></iframe>`;
+  } else {
+    contentEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#8b89a6;font-size:14px">Preview not available</div>';
+  }
+}
+
+function closePreview() {
+  document.getElementById('docPreview').classList.remove('open');
+  selectedDoc = null;
+  renderDocumentList();
+}
+
+function filterDocuments() {
+  renderDocumentList();
+}
+
+// ===== Star Toggle =====
+async function toggleStar(id) {
+  const wasStarred = starredIds.has(id);
+  if (wasStarred) {
+    starredIds.delete(id);
+  } else {
+    starredIds.add(id);
+  }
+  localStorage.setItem('vf_starred', JSON.stringify([...starredIds]));
+  renderDocumentList();
+  // Sync with server
+  try {
+    await fetch('/api/user/documents/' + encodeURIComponent(id) + '/star', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ starred: !wasStarred }),
+      credentials: 'same-origin'
+    });
+  } catch(e) { /* best effort */ }
+}
+
+function toggleSelectAll(checked) {
+  document.querySelectorAll('.doc-check').forEach(cb => cb.checked = checked);
+}
+
+// ===== View Switching =====
+function switchView(view) {
+  currentView = view;
+
+  // Update nav active state
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navItem = document.querySelector(`.nav-item[data-view="${view}"]`);
+  if (navItem) navItem.classList.add('active');
+
+  // Hide all panels
+  document.getElementById('docListPanel').style.display = 'none';
+  document.getElementById('apiPanel').classList.remove('active');
+  document.getElementById('sharedPanel').classList.remove('active');
+  document.getElementById('brandingPanel').classList.remove('active');
+  document.getElementById('settingsPanel').classList.remove('active');
+  closePreview();
+
+  // Show correct panel
+  const docViews = ['all', 'starred'];
+  if (docViews.includes(view)) {
+    document.getElementById('docListPanel').style.display = '';
+    if (view === 'starred') {
+      renderDocumentList();
+    } else {
+      loadDocuments();
+    }
+  } else if (view === 'api') {
+    document.getElementById('apiPanel').classList.add('active');
+    loadApiInfo();
+  } else if (view === 'shared') {
+    document.getElementById('sharedPanel').classList.add('active');
+    loadSharedDocuments();
+  } else if (view === 'branding') {
+    document.getElementById('brandingPanel').classList.add('active');
+    loadBranding();
+  } else if (view === 'settings') {
+    document.getElementById('settingsPanel').classList.add('active');
+  }
+
+  // Close mobile sidebar
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+  // Close user dropdown
+  document.getElementById('userDropdown').classList.remove('show');
+}
+
+// ===== Shared Documents =====
+function loadSharedDocuments() {
+  const sharedDocs = documents.filter(d => d.shareId || d.share_id);
+  const container = document.getElementById('sharedContent');
+
+  if (sharedDocs.length === 0) {
+    container.innerHTML = `<div class="shared-empty">
+      <div class="se-icon">&#128279;</div>
+      <h4>No shared documents</h4>
+      <p>When you share a document, it will appear here with its public verification link.</p>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = `<table class="shared-table">
+    <thead><tr><th>Document</th><th>Share Link</th><th>Created</th><th></th></tr></thead>
+    <tbody>${sharedDocs.map(d => {
+      const name = d.originalName || d.original_name || 'Untitled';
+      const shareId = d.shareId || d.share_id;
+      const url = window.location.origin + '/d/' + shareId;
+      const date = formatDate(d.timestamp || d.createdAt || d.created_at || d.created);
+      return `<tr>
+        <td style="font-weight:500">${escHtml(name)}</td>
+        <td><a href="${url}" target="_blank" class="shared-link">${url}</a></td>
+        <td style="color:#8b89a6;font-size:12px">${date}</td>
+        <td><button class="copy-btn" onclick="copyToClipboard('${url}')">Copy</button></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>`;
+}
+
+// ===== Branding =====
+async function loadBranding() {
+  if (currentUser) {
+    document.getElementById('brandOrgName').value = currentUser.name || '';
+  }
+  try {
+    const r = await fetch('/api/user/branding', { credentials: 'same-origin' });
+    if (r.ok) {
+      const data = await r.json();
+      if (data.orgName) {
+        document.getElementById('brandOrgName').value = data.orgName;
+      }
+      if (data.customIcon) {
+        document.getElementById('brandIconUrl').value = data.customIcon;
+        if (data.customIcon.startsWith('data:image/')) {
+          document.getElementById('brandLogoFileName').textContent = 'Custom logo (saved)';
+          document.getElementById('brandLogoRemoveBtn').style.display = 'inline-block';
+          document.getElementById('bpStampLogo').innerHTML = '<img src="' + data.customIcon + '" style="width:56px;height:56px;border-radius:50%;object-fit:cover" alt="logo">';
+          document.getElementById('brandLogoThumb').innerHTML = '<img src="' + data.customIcon + '" style="width:36px;height:36px;border-radius:50%;object-fit:cover" alt="logo">';
+        }
+      }
+      if (data.waveColor) {
+        let waveColors;
+        try { waveColors = JSON.parse(data.waveColor); } catch(e) { waveColors = null; }
+        if (Array.isArray(waveColors)) {
+          document.getElementById('waveCount').value = waveColors.length;
+          updateWaveCount(waveColors.length);
+          const pickers = document.querySelectorAll('#waveColorList input[type="color"]');
+          pickers.forEach((p, i) => { if (waveColors[i]) p.value = waveColors[i]; });
+          updateWavePreview();
+        } else {
+          // Legacy single color
+          const singleColor = data.waveColor;
+          document.getElementById('waveCount').value = 5;
+          updateWaveCount(5);
+          const pickers = document.querySelectorAll('#waveColorList input[type="color"]');
+          pickers.forEach((p, i) => { p.value = generateGradientColor(singleColor, i, 5); });
+          updateWavePreview();
+        }
+      } else {
+        // Default: init with purple gradient
+        document.getElementById('waveCount').value = 5;
+        updateWaveCount(5);
+        applyGradientPreset('purple');
+      }
+    }
+  } catch(e) { /* use defaults */ }
+  updateBrandPreview();
+  // Initialize wave count if not done yet
+  if (!document.querySelectorAll('#waveColorList input[type="color"]').length) {
+    updateWaveCount(5);
+    applyGradientPreset('purple');
+  }
+}
+
+function updateBrandPreview() {
+  // Update org name label
+  const orgName = document.getElementById('brandOrgName').value.trim() || 'Vertifile';
+  document.getElementById('bpOrgLabel').textContent = orgName;
+  // Update rotating text
+  const rotLabel = 'VERIFIED BY ' + orgName.toUpperCase() + ' \u2022 ';
+  const repeatCount = Math.max(2, Math.ceil(60 / rotLabel.length));
+  document.getElementById('bpRotatingLabel').textContent = rotLabel.repeat(repeatCount);
+  // Update stamp border color from first wave color
+  const waveColors = getWaveColors();
+  const primary = waveColors.length ? waveColors[0] : '#7c3aed';
+  document.getElementById('bpStamp').style.borderColor = primary + '4D';
+  // Update inline wave strip in preview
+  renderWaveStripPreview(waveColors);
+}
+
+function renderWaveStripPreview(colors) {
+  const svg = document.getElementById('bpWaveStripSvg');
+  if (!svg) return;
+  const count = colors.length;
+  let paths = '';
+  for (let i = 0; i < count; i++) {
+    const y = 4 + i * (40 / count);
+    const amp = 3 + Math.sin(i * 0.7) * 2;
+    const phase = i * 35;
+    let d = 'M0,' + y;
+    for (let x = 0; x <= 800; x += 6) {
+      d += ' L' + x + ',' + (y + Math.sin((x + phase) * Math.PI / 180) * amp);
+    }
+    const op = (0.3 + (i / count) * 0.5).toFixed(2);
+    paths += '<path d="' + d + '" stroke="' + colors[i] + '" fill="none" stroke-width="0.6" opacity="' + op + '"/>';
+  }
+  svg.innerHTML = paths;
+}
+
+// ===== Advanced Wave Color Controls =====
+const GRADIENT_PRESETS = {
+  purple: ["#2e1065","#4c1d95","#6d28d9","#7c3aed","#a78bfa","#c4b5fd","#ddd6fe","#ede9fe","#f5f3ff","#faf5ff"],
+  blue:   ["#1e3a5f","#1e40af","#2563eb","#3b82f6","#60a5fa","#93c5fd","#bfdbfe","#dbeafe","#eff6ff","#f0f9ff"],
+  green:  ["#064e3b","#047857","#059669","#10b981","#34d399","#6ee7b7","#a7f3d0","#d1fae5","#ecfdf5","#f0fdf4"],
+  orange: ["#78350f","#92400e","#b45309","#d97706","#f59e0b","#fbbf24","#fcd34d","#fde68a","#fef3c7","#fffbeb"]
+};
+
+function getWaveColors() {
+  const pickers = document.querySelectorAll('#waveColorList input[type="color"]');
+  return Array.from(pickers).map(p => p.value);
+}
+
+function updateWaveCount(count) {
+  count = parseInt(count);
+  document.getElementById('waveCountLabel').textContent = count;
+  const list = document.getElementById('waveColorList');
+  const existing = getWaveColors();
+  let html = '';
+  for (let i = 0; i < count; i++) {
+    const color = existing[i] || generateGradientColor('#7c3aed', i, count);
+    html += '<div class="wave-color-row">' +
+      '<span>Wave ' + (i + 1) + ':</span>' +
+      '<input type="color" value="' + color + '" onchange="updateWavePreview()">' +
+      '</div>';
+  }
+  list.innerHTML = html;
+  updateWavePreview();
+}
+
+function updateWavePreview() {
+  const colors = getWaveColors();
+  renderWavePreviewMulti(colors);
+  renderWaveStripPreview(colors);
+}
+
+function renderWavePreviewMulti(colors) {
+  const svg = document.getElementById('wavePreviewSvg');
+  if (!svg) return;
+  const count = colors.length;
+  let paths = '';
+  for (let i = 0; i < count; i++) {
+    const y = 5 + i * (50 / count);
+    const amp = 4 + Math.sin(i * 0.7) * 2.5;
+    const phase = i * 35;
+    let d = 'M0,' + y;
+    for (let x = 0; x <= 800; x += 6) {
+      d += ' L' + x + ',' + (y + Math.sin((x + phase) * Math.PI / 180) * amp);
+    }
+    const op = (0.3 + (i / count) * 0.5).toFixed(2);
+    paths += '<path d="' + d + '" stroke="' + colors[i] + '" fill="none" stroke-width="0.6" opacity="' + op + '"/>';
+  }
+  svg.innerHTML = paths;
+}
+
+function hexToHSL(hex) {
+  let r = parseInt(hex.slice(1,3),16)/255, g = parseInt(hex.slice(3,5),16)/255, b = parseInt(hex.slice(5,7),16)/255;
+  const max = Math.max(r,g,b), min = Math.min(r,g,b);
+  let h, s, l = (max+min)/2;
+  if (max === min) { h = s = 0; }
+  else {
+    const d = max - min;
+    s = l > 0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max) {
+      case r: h = ((g-b)/d + (g<b?6:0))/6; break;
+      case g: h = ((b-r)/d + 2)/6; break;
+      case b: h = ((r-g)/d + 4)/6; break;
+    }
+  }
+  return [h*360, s*100, l*100];
+}
+
+function hslToHex(h, s, l) {
+  h /= 360; s /= 100; l /= 100;
+  let r, g, b2;
+  if (s === 0) { r = g = b2 = l; }
+  else {
+    const hue2rgb = (p, q, t) => { if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p; };
+    const q = l < 0.5 ? l*(1+s) : l+s-l*s;
+    const p = 2*l - q;
+    r = hue2rgb(p, q, h+1/3);
+    g = hue2rgb(p, q, h);
+    b2 = hue2rgb(p, q, h-1/3);
+  }
+  const toHex = x => { const hex = Math.round(x*255).toString(16); return hex.length===1?'0'+hex:hex; };
+  return '#' + toHex(r) + toHex(g) + toHex(b2);
+}
+
+function generateGradientColor(baseHex, index, total) {
+  const [h, s, l] = hexToHSL(baseHex);
+  const darkL = Math.max(l - 25, 10);
+  const lightL = Math.min(l + 30, 90);
+  const step = total > 1 ? (lightL - darkL) / (total - 1) : 0;
+  return hslToHex(h, s, darkL + step * index);
+}
+
+function autoGradient() {
+  const base = document.getElementById('gradientBase').value;
+  const count = parseInt(document.getElementById('waveCount').value);
+  const pickers = document.querySelectorAll('#waveColorList input[type="color"]');
+  pickers.forEach((p, i) => {
+    p.value = generateGradientColor(base, i, count);
+  });
+  updateWavePreview();
+}
+
+function applyGradientPreset(name) {
+  const count = parseInt(document.getElementById('waveCount').value);
+  const full = GRADIENT_PRESETS[name];
+  if (!full) return;
+  // Pick evenly spaced colors from the preset
+  const pickers = document.querySelectorAll('#waveColorList input[type="color"]');
+  pickers.forEach((p, i) => {
+    const idx = Math.round(i * (full.length - 1) / (count - 1));
+    p.value = full[Math.min(idx, full.length - 1)];
+  });
+  updateWavePreview();
+}
+
+// Legacy compat: single-color renderWavePreview
+function renderWavePreview(color) {
+  const count = parseInt(document.getElementById('waveCount').value) || 5;
+  const colors = [];
+  for (let i = 0; i < count; i++) colors.push(generateGradientColor(color, i, count));
+  renderWavePreviewMulti(colors);
+}
+
+function handleLogoUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/png')) {
+    toast('Please upload a PNG file with transparent background');
+    return;
+  }
+  if (file.size > 512 * 1024) {
+    toast('Logo must be under 512KB');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const dataUrl = ev.target.result;
+    document.getElementById('brandIconUrl').value = dataUrl;
+    document.getElementById('brandLogoFileName').textContent = file.name;
+    document.getElementById('brandLogoRemoveBtn').style.display = 'inline-block';
+    // Update large stamp preview
+    document.getElementById('bpStampLogo').innerHTML = '<img src="' + dataUrl + '" style="width:56px;height:56px;border-radius:50%;object-fit:cover" alt="logo">';
+    // Update thumbnail
+    document.getElementById('brandLogoThumb').innerHTML = '<img src="' + dataUrl + '" style="width:36px;height:36px;border-radius:50%;object-fit:cover" alt="logo">';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeLogo() {
+  document.getElementById('brandIconUrl').value = '';
+  document.getElementById('brandLogoFile').value = '';
+  document.getElementById('brandLogoFileName').textContent = 'Vertifile Shield (default)';
+  document.getElementById('brandLogoRemoveBtn').style.display = 'none';
+  const defaultShield = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  document.getElementById('bpStampLogo').innerHTML = defaultShield;
+  document.getElementById('brandLogoThumb').innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5"/></svg>';
+}
+
+async function saveBranding() {
+  try {
+    const waveColor = getWaveColors(); // Send as array
+    const brandColor = waveColor.length ? waveColor[0] : '#7c3aed'; // Primary = first wave
+    const customIcon = document.getElementById('brandIconUrl').value.trim();
+    const orgName = document.getElementById('brandOrgName').value.trim();
+    const stampText = ''; // Removed from UI
+    const r = await fetch('/api/user/branding', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ brandColor, waveColor, customIcon, orgName, stampText }),
+      credentials: 'same-origin'
+    });
+    if (r.ok) {
+      toast('Branding saved successfully!');
+    } else {
+      const data = await r.json();
+      toast(data.error || 'Failed to save branding');
+    }
+  } catch(e) { toast('Error: ' + e.message); }
+}
+
+function resetBranding() {
+  document.getElementById('waveCount').value = 5;
+  updateWaveCount(5);
+  applyGradientPreset('purple');
+  document.getElementById('brandOrgName').value = '';
+  document.getElementById('brandIconUrl').value = '';
+  removeLogo();
+  updateBrandPreview();
+  toast('Branding reset to default');
+}
+
+// ===== Settings Actions =====
+async function saveProfile() {
+  const name = document.getElementById('settingsName').value.trim();
+  if (!name) { toast('Name cannot be empty'); return; }
+  try {
+    const r = await fetch('/api/user/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name }),
+      credentials: 'same-origin'
+    });
+    if (r.ok) {
+      if (currentUser) currentUser.name = name;
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userAvatar').textContent = getInitials(name);
+      toast('Profile saved!');
+    } else {
+      const data = await r.json();
+      toast(data.error || 'Failed to save profile');
+    }
+  } catch(e) { toast('Error: ' + e.message); }
+}
+
+async function generateApiKey() {
+  if (!currentUser) return;
+  try {
+    const r = await fetch('/api/user/api-key', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin'
+    });
+    const data = await r.json();
+    if (data.success && data.apiKey) {
+      userApiKey = data.apiKey;
+      document.getElementById('apiKeyValue').textContent = data.apiKey;
+      document.getElementById('apiKeyDisplay').style.display = 'block';
+      document.getElementById('apiKeyEmpty').style.display = 'none';
+      // Also update settings panel
+      document.getElementById('apiKeyDisplay2').textContent = data.apiKey;
+      showToast('API key generated! Copy it now — it won\'t be shown again in full.');
+    } else {
+      showToast(data.error || 'Failed to generate API key', true);
+    }
+  } catch (e) {
+    // Generate a demo key locally
+    const demoKey = 'vf_' + Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b => b.toString(16).padStart(2, '0')).join('');
+    document.getElementById('apiKeyDisplay2').textContent = demoKey;
+    toast('API key generated (demo mode)');
+  }
+}
+
+function copyApiKey() {
+  const key = document.getElementById('apiKeyDisplay2').textContent;
+  if (key && key !== 'No API key generated') {
+    copyToClipboard(key);
+  }
+}
+
+function copyApiKeyApp() {
+  const keyEl = document.getElementById('apiKeyValue');
+  const text = userApiKey || keyEl.textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('API key copied!')).catch(() => showToast('Copy failed', true));
+}
+
+async function changePassword() {
+  const curr = document.getElementById('currentPassword').value;
+  const newP = document.getElementById('newPassword').value;
+  const conf = document.getElementById('confirmPassword').value;
+  if (!curr || !newP) { toast('Please fill in all password fields'); return; }
+  if (newP !== conf) { toast('New passwords do not match'); return; }
+  if (newP.length < 8) { toast('Password must be at least 8 characters'); return; }
+  try {
+    const r = await fetch('/api/user/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword: curr, newPassword: newP }),
+      credentials: 'same-origin'
+    });
+    const data = await r.json();
+    if (r.ok) {
+      document.getElementById('currentPassword').value = '';
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmPassword').value = '';
+      toast('Password updated!');
+    } else {
+      toast(data.error || 'Failed to change password');
+    }
+  } catch(e) { toast('Error: ' + e.message); }
+}
+
+async function deleteAccount() {
+  if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) return;
+  if (!confirm('This will permanently delete all your documents and data. Are you absolutely sure?')) return;
+  try {
+    const r = await fetch('/api/user/account', { method: 'DELETE', credentials: 'same-origin' });
+    if (r.ok) {
+      toast('Account deleted.');
+      setTimeout(() => { window.location.href = '/'; }, 1500);
+    } else {
+      toast('Failed to delete account');
+    }
+  } catch(e) { toast('Error: ' + e.message); }
+}
+
+// ===== Paywall =====
+function isFreePlan() {
+  if (!currentUser) return false;
+  // Admin/owner always has full access
+  if (currentUser.email === 'zur2525@gmail.com' || currentUser.email === 'info@vertifile.com') return false;
+  return !currentUser.plan || currentUser.plan === 'free';
+}
+
+function showPaywall() {
+  document.getElementById('paywallOverlay').classList.add('show');
+}
+
+function closePaywall() {
+  document.getElementById('paywallOverlay').classList.remove('show');
+}
+
+// ===== Document Actions =====
+async function downloadDoc() {
+  if (!selectedDoc) return;
+  if (isFreePlan()) { showPaywall(); return; }
+  const shareId = selectedDoc.shareId || selectedDoc.share_id;
+  if (shareId) {
+    window.open('/d/' + shareId + '/download', '_blank');
+  }
+}
+
+function shareDoc() {
+  if (!selectedDoc) return;
+  if (isFreePlan()) { showPaywall(); return; }
+  const shareId = selectedDoc.shareId || selectedDoc.share_id;
+  if (shareId) {
+    const url = window.location.origin + '/d/' + shareId;
+    copyToClipboard(url);
+    toast('Share link copied to clipboard!');
+  }
+}
+
+function printDoc() {
+  if (!selectedDoc) return;
+  // Fetch the PVF content and extract the original document for printing
+  var shareId = selectedDoc.share_id || selectedDoc.shareId;
+  if (!shareId) { toast('Cannot print — no share link'); return; }
+  fetch('/d/' + shareId + '/raw', { credentials: 'same-origin' })
+    .then(function(r) { return r.text(); })
+    .then(function(html) {
+      // Extract the base64 payload (original file embedded in PVF)
+      var match = html.match(/src="data:([^;]+);base64,([^"]+)"/);
+      if (match) {
+        var mime = match[1];
+        var b64 = match[2];
+        var dataUrl = 'data:' + mime + ';base64,' + b64;
+        if (mime === 'application/pdf') {
+          // Open PDF in new window and print
+          var w = window.open('', '_blank');
+          w.document.write('<html><head><title>Print</title></head><body style="margin:0"><iframe src="' + dataUrl + '" style="width:100%;height:100vh;border:none"></iframe></body></html>');
+          w.document.close();
+          setTimeout(function() { w.print(); }, 1000);
+        } else if (mime.startsWith('image/')) {
+          var w = window.open('', '_blank');
+          w.document.write('<html><head><title>Print</title></head><body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh"><img src="' + dataUrl + '" style="max-width:100%;max-height:100vh"></body></html>');
+          w.document.close();
+          setTimeout(function() { w.print(); }, 500);
+        }
+      } else {
+        // Text document — extract text content
+        var textMatch = html.match(/<div class="text-doc"[^>]*>([\s\S]*?)<\/div>/);
+        if (textMatch) {
+          var w = window.open('', '_blank');
+          w.document.write('<html><head><title>Print</title><style>body{font-family:serif;padding:40px;max-width:800px;margin:0 auto;font-size:14px;line-height:1.6;white-space:pre-wrap}</style></head><body>' + textMatch[1] + '</body></html>');
+          w.document.close();
+          setTimeout(function() { w.print(); }, 300);
+        } else {
+          toast('Cannot extract document for printing');
+        }
+      }
+    })
+    .catch(function() { toast('Failed to load document for printing'); });
+}
+
+async function deleteDoc() {
+  if (!selectedDoc) return;
+  if (!confirm('Are you sure you want to delete this document?')) return;
+  try {
+    const id = selectedDoc.id || selectedDoc._id || selectedDoc.hash;
+    const r = await fetch('/api/user/documents/' + id, { method: 'DELETE', credentials: 'same-origin' });
+    if (r.ok) {
+      toast('Document deleted');
+      closePreview();
+      loadDocuments();
+    } else {
+      toast('Failed to delete document');
+    }
+  } catch (e) {
+    toast('Error: ' + e.message);
+  }
+}
+
+// ===== Upload =====
+function showUploadModal() {
+  document.getElementById('uploadModal').classList.add('show');
+  document.getElementById('uploadProgress').style.display = 'none';
+  document.getElementById('uploadLimit').style.display = 'none';
+  document.getElementById('fileInput').value = '';
+}
+
+function hideUploadModal() {
+  document.getElementById('uploadModal').classList.remove('show');
+}
+
+async function handleUploadFile(file) {
+  if (!file) return;
+
+  // Check plan limit
+  const planLimit = currentUser?.planLimit || currentUser?.documentsLimit || 1;
+  if (documents.length >= planLimit) {
+    document.getElementById('uploadLimit').style.display = 'block';
+    return;
+  }
+
+  const progress = document.getElementById('uploadProgress');
+  const barFill = document.getElementById('upBarFill');
+  const status = document.getElementById('upStatus');
+  document.getElementById('upFilename').textContent = file.name;
+  progress.style.display = 'block';
+  barFill.style.width = '0%';
+  status.textContent = 'Uploading...';
+
+  // Simulate progress
+  let pct = 0;
+  const interval = setInterval(() => {
+    pct = Math.min(pct + Math.random() * 20, 90);
+    barFill.style.width = pct + '%';
+  }, 200);
+
+  try {
+    await uploadFile(file);
+    clearInterval(interval);
+    barFill.style.width = '100%';
+    status.textContent = 'Protected!';
+    setTimeout(() => hideUploadModal(), 1200);
+  } catch (e) {
+    clearInterval(interval);
+    barFill.style.width = '0%';
+    status.textContent = 'Failed: ' + e.message;
+  }
+}
+
+async function uploadFile(file) {
+  const form = new FormData();
+  form.append('file', file);
+  const r = await fetch('/api/user/upload', { method: 'POST', body: form, credentials: 'same-origin' });
+  const data = await r.json();
+  if (!data.success && data.error) {
+    throw new Error(data.error);
+  }
+  loadDocuments();
+  toast('Document protected!');
+}
+
+// Upload zone drag/drop
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('dragover');
+  if (e.dataTransfer.files.length) handleUploadFile(e.dataTransfer.files[0]);
+});
+
+// ===== UI Helpers =====
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
+}
+
+function toggleUserMenu() {
+  document.getElementById('userDropdown').classList.toggle('show');
+}
+
+function toggleAppLang(e) {
+  e.stopPropagation();
+  document.getElementById('appLangMenu').classList.toggle('show');
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => toast('Copied to clipboard!')).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('Copied to clipboard!');
+  });
+}
+
+// Close dropdowns on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.user-menu')) {
+    document.getElementById('userDropdown').classList.remove('show');
+  }
+  if (!e.target.closest('.lang-switch')) {
+    const m = document.getElementById('appLangMenu');
+    if (m) m.classList.remove('show');
+  }
+});
+
+// Close modal on backdrop click
+document.getElementById('uploadModal').addEventListener('click', function(e) {
+  if (e.target === this) hideUploadModal();
+});
+
+// ===== Plan Usage =====
+function updatePlanUsage() {
+  const used = currentUser?.documentsUsed ?? documents.length;
+  const limit = currentUser?.documentsLimit || 1;
+  const plan = currentUser?.plan || 'free';
+  const planNames = { free: 'Free Plan', professional: 'Pro Plan', enterprise: 'Enterprise' };
+  document.getElementById('planLabel').textContent = planNames[plan] || 'Free Plan';
+  document.getElementById('planUsage').textContent = `${used} / ${limit} documents`;
+  const pct = Math.min((used / limit) * 100, 100);
+  document.getElementById('planBarFill').style.width = pct + '%';
+}
+
+// ===== API Panel =====
+let userApiKey = '';
+
+async function loadApiInfo() {
+  // Show user's plan info
+  const used = currentUser?.documentsUsed ?? documents.length;
+  const plan = currentUser?.plan || 'free';
+  const limit = currentUser?.documentsLimit || 1;
+  document.getElementById('apiStatDocs').textContent = used;
+  document.getElementById('apiStatPlan').textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
+  document.getElementById('apiStatRate').textContent = { free: '5/day', professional: '100/day', enterprise: '10K/day' }[plan] || '5/day';
+
+  // Check if user has an API key stored
+  try {
+    const r = await fetch('/api/user/api-key', { credentials: 'same-origin' });
+    if (r.ok) {
+      const data = await r.json();
+      if (data.apiKey) {
+        userApiKey = data.apiKey;
+        document.getElementById('apiKeyValue').textContent = data.apiKey.substring(0, 12) + '...' + data.apiKey.slice(-6);
+        document.getElementById('apiKeyDisplay').style.display = 'block';
+        document.getElementById('apiKeyEmpty').style.display = 'none';
+        return;
+      }
+    }
+  } catch (_) {}
+  document.getElementById('apiKeyDisplay').style.display = 'none';
+  document.getElementById('apiKeyEmpty').style.display = 'block';
+}
+
+// ===== Formatters =====
+function formatSize(bytes) {
+  if (!bytes || bytes === 0) return '0 B';
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(0) + ' KB';
+  return (bytes / 1048576).toFixed(1) + ' MB';
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '--';
+  const d = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now - d;
+  const diffMin = Math.floor(diffMs / 60000);
+  const diffHr = Math.floor(diffMs / 3600000);
+  const diffDay = Math.floor(diffMs / 86400000);
+
+  if (diffMin < 1) return 'just now';
+  if (diffMin < 60) return diffMin + 'm ago';
+  if (diffHr < 24) return diffHr + 'h ago';
+  if (diffDay === 1) return 'yesterday';
+  if (diffDay < 7) return diffDay + 'd ago';
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+
+function getInitials(name) {
+  if (!name) return '?';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.substring(0, 2).toUpperCase();
+}
+
+function getTypeClass(ext) {
+  if (ext === 'pvf') return 'doc-type-pvf';
+  if (ext === 'pdf') return 'doc-type-pdf';
+  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return 'doc-type-image';
+  if (['txt', 'doc', 'docx', 'rtf'].includes(ext)) return 'doc-type-text';
+  return 'doc-type-other';
+}
+
+function getTypeIcon(ext) {
+  if (ext === 'pvf') return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4" stroke="#7c3aed" stroke-width="2"/></svg>';
+  if (ext === 'pdf') return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+  if (['txt', 'doc', 'docx', 'rtf'].includes(ext)) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>';
+  return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ===== Toast =====
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// showToast alias (used in API panel code)
+function showToast(msg, isError) {
+  toast(msg);
+}
+
+// ===== i18n Patch =====
+var _origSwitchLang = null;
+function appI18nPatch() {
+  var label = document.getElementById('appLangLabel');
+  if (label && typeof vfGetLang === 'function') {
+    label.textContent = vfGetLang().toUpperCase();
+  }
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+    var val = typeof vfGetTranslation === 'function' ? vfGetTranslation(el.getAttribute('data-i18n-placeholder')) : null;
+    if (val) el.setAttribute('placeholder', val);
+  });
+}
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    if (typeof switchLang === 'function' && !_origSwitchLang) {
+      _origSwitchLang = switchLang;
+      window.switchLang = function(lang, e) {
+        _origSwitchLang(lang, e);
+        setTimeout(appI18nPatch, 100);
+      };
+    }
+    appI18nPatch();
+  }, 200);
+});
+
+// ===== Init =====
+checkAuth();
+</script>
+<script src="/js/stamp-component.js"></script>
+<script>
+/* Sync app.html branding defaults from stamp component single source of truth */
+(function(){
+  if(!window.VertifileStamp) return;
+  var d = VertifileStamp.defaults;
+  // Update the initial rotating text to match component defaults
+  var rotLabel = document.getElementById('bpRotatingLabel');
+  if(rotLabel) {
+    var text = 'VERIFIED BY ' + d.orgName + ' \u2022 ';
+    var repeatCount = Math.max(2, Math.ceil(60 / text.length));
+    rotLabel.textContent = text.repeat(repeatCount);
+  }
+})();
+</script>
+<script src="/js/i18n.js"></script>
+</body>
+</html>
