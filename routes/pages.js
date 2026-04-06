@@ -230,7 +230,7 @@ async function injectStampConfig(req, shareId, pvfContent, db) {
               if (existing) existing.remove();
               var overlay = document.createElement('div');
               overlay.className = 'vf-custom-logo-overlay';
-              overlay.style.cssText = 'position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;overflow:hidden;background:#fff;border:1px solid rgba(124,58,237,.12);z-index:10;display:flex;align-items:center;justify-content:center';
+              overlay.style.cssText = 'position:absolute;top:19%;left:19%;width:62%;height:62%;border-radius:50%;overflow:hidden;background:#fff;border:1px solid rgba(124,58,237,.12);z-index:10;display:flex;align-items:center;justify-content:center';
               overlay.innerHTML = '<img src="' + o.customLogo + '" style="width:100%;height:100%;object-fit:cover;display:block" alt="Custom logo"/>';
               var ring = coin.querySelector('.ring') || coin;
               ring.appendChild(overlay);
