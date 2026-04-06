@@ -2464,8 +2464,8 @@ function handleLogoUpload(e) {
     if (area) area.style.display = 'none';
     if (thumb) thumb.src = dataUrl;
     if (fname) fname.textContent = file.name;
-    // Save logo for stamp preview rendering
-    window.__customLogo = '<img src="' + dataUrl + '" style="width:100%;height:100%;object-fit:contain"/>';
+    // Save logo for stamp preview rendering — clipped to circle, square crop
+    window.__customLogo = '<div style="width:32px;height:32px;border-radius:50%;overflow:hidden;display:inline-block;background:#fff"><img src="' + dataUrl + '" style="width:100%;height:100%;object-fit:cover;display:block"/></div>';
     // Update stamp preview
     Dashboard.renderStamps();
   };
