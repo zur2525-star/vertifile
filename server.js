@@ -99,7 +99,18 @@ app.use(sanitizeBody);
 app.use(compression());
 app.use(express.static(path.join(__dirname, 'public'), {
   extensions: ['html'], maxAge: '7d',
-  setHeaders: (res, fp) => { if (fp.endsWith('.html')) { res.setHeader('X-Content-Type-Options', 'nosniff'); res.setHeader('X-Frame-Options', 'DENY'); } }
+  setHeaders: (res, fp) => {
+    if (fp.endsWith('.html')) {
+      // HTML: no cache — always revalidate so nav/content stays fresh
+      res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('X-Frame-Options', 'DENY');
+    } else if (fp.endsWith('.js') || fp.endsWith('.css')) {
+      // JS/CSS: 1 hour cache with revalidation (short, since no hash in filename)
+      res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate');
+    }
+    // Images/fonts keep the default 7d maxAge from express.static
+  }
 }));
 
 app.use(session({
