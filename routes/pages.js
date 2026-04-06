@@ -194,40 +194,46 @@ async function injectStampConfig(req, shareId, pvfContent, db) {
     const customLogo = cfg.customLogo && typeof cfg.customLogo === 'string' && cfg.customLogo.startsWith('data:image/')
       ? cfg.customLogo : null;
 
-    // Build the override script
+    // Build the override script — uses the actual class names from
+    // templates/pvf.js (not the stamp-component.js .vfs-* names)
     const overrideScript = `<script>(function(){
       window.__VF_STAMP_OVERRIDE__ = ${JSON.stringify({ waveColors, accent, customLogo })};
       function applyOverride(){
         var o = window.__VF_STAMP_OVERRIDE__;
         if (!o) return;
-        // 1. Override wave path strokes (they have stroke="..." attribute)
-        if (o.waveColors && o.waveColors.length) {
-          var paths = document.querySelectorAll('.holo-waves path[stroke], .vfs-wave-svg path[stroke]');
-          for (var i=0; i<paths.length && i<o.waveColors.length; i++) {
-            paths[i].setAttribute('stroke', o.waveColors[i]);
+        try {
+          // 1. Override wave path strokes
+          if (o.waveColors && o.waveColors.length) {
+            var paths = document.querySelectorAll('.holo-waves svg path[stroke], .holo-waves path[stroke]');
+            for (var i=0; i<paths.length && i<o.waveColors.length; i++) {
+              paths[i].setAttribute('stroke', o.waveColors[i]);
+            }
           }
-        }
-        // 2. Override accent color (CSS variable + brand color)
-        if (o.accent) {
-          document.documentElement.style.setProperty('--vf-accent', o.accent);
-          var brandEls = document.querySelectorAll('.vfs-brand, .stamp-brand-name');
-          for (var j=0; j<brandEls.length; j++) brandEls[j].style.color = o.accent;
-        }
-        // 3. Replace logo if customLogo set
-        if (o.customLogo) {
-          var logoSlots = document.querySelectorAll('.vfs-stamp-logo, .vfs-center svg, .stamp-logo-slot');
-          for (var k=0; k<logoSlots.length; k++) {
-            var img = document.createElement('div');
-            img.style.cssText='position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;overflow:hidden;background:#fff;border:1px solid rgba(124,58,237,.12);z-index:10';
-            img.innerHTML = '<img src="' + o.customLogo + '" style="width:100%;height:100%;object-fit:cover;display:block"/>';
-            var coin = logoSlots[k].closest('.vfs-stamp-coin') || logoSlots[k].parentElement;
-            if (coin) coin.appendChild(img);
-            // Hide brand/verified text since logo replaces them
-            var center = coin && coin.querySelector('.vfs-center');
-            if (center) center.style.display = 'none';
-            break;
+          // 2. Override accent color (brand text, CSS variable)
+          if (o.accent) {
+            document.documentElement.style.setProperty('--vf-accent', o.accent);
+            var brandEls = document.querySelectorAll('.brand, .vfs-brand');
+            for (var j=0; j<brandEls.length; j++) brandEls[j].style.color = o.accent;
           }
-        }
+          // 3. Replace inner stamp area with custom logo (fills inner circle)
+          if (o.customLogo) {
+            var coin = document.querySelector('.stamp-coin') || document.querySelector('.vfs-stamp-coin');
+            if (coin) {
+              // Hide existing center content (.center has logo+brand+lbl)
+              var center = coin.querySelector('.center') || coin.querySelector('.vfs-center');
+              if (center) center.style.display = 'none';
+              // Add a new logo overlay that fills inner-bg (56% × 56% positioned at 22%/22%)
+              var existing = coin.querySelector('.vf-custom-logo-overlay');
+              if (existing) existing.remove();
+              var overlay = document.createElement('div');
+              overlay.className = 'vf-custom-logo-overlay';
+              overlay.style.cssText = 'position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;overflow:hidden;background:#fff;border:1px solid rgba(124,58,237,.12);z-index:10;display:flex;align-items:center;justify-content:center';
+              overlay.innerHTML = '<img src="' + o.customLogo + '" style="width:100%;height:100%;object-fit:cover;display:block" alt="Custom logo"/>';
+              var ring = coin.querySelector('.ring') || coin;
+              ring.appendChild(overlay);
+            }
+          }
+        } catch(e) { /* fail open — keep original stamp */ }
       }
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', applyOverride);
