@@ -336,10 +336,10 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
         <svg class="outer" id="sOut" viewBox="0 0 200 200">
           <circle cx="100" cy="100" r="95" fill="none" stroke="rgba(124,58,237,.18)" stroke-width="1.2"/>
           <circle cx="100" cy="100" r="89" fill="none" stroke="rgba(124,58,237,.08)" stroke-width=".5" stroke-dasharray="3 3"/>
-          <line x1="100" y1="2" x2="100" y2="8" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
-          <line x1="100" y1="192" x2="100" y2="198" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
-          <line x1="2" y1="100" x2="8" y2="100" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
-          <line x1="192" y1="100" x2="198" y2="100" stroke="rgba(124,58,237,.2)" stroke-width="1.2"/>
+          <line x1="100" y1="0" x2="100" y2="11" stroke="rgba(124,58,237,.45)" stroke-width="2" stroke-linecap="round"/>
+          <line x1="100" y1="189" x2="100" y2="200" stroke="rgba(124,58,237,.45)" stroke-width="2" stroke-linecap="round"/>
+          <line x1="0" y1="100" x2="11" y2="100" stroke="rgba(124,58,237,.45)" stroke-width="2" stroke-linecap="round"/>
+          <line x1="189" y1="100" x2="200" y2="100" stroke="rgba(124,58,237,.45)" stroke-width="2" stroke-linecap="round"/>
           <defs><path id="tp" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
           <text font-size="7" fill="rgba(124,58,237,.25)" font-weight="700" letter-spacing="2.5"><textPath href="#tp">VERIFIED BY ${escapeHtml((orgName || 'VERTIFILE').toUpperCase())} \\u2022 DOCUMENT APPROVED \\u2022 BLOCKCHAIN SECURED \\u2022</textPath></text>
         </svg>
