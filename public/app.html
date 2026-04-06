@@ -1234,7 +1234,7 @@
           <div class="stamp-wrap-large" id="stampPreviewLarge"></div>
           <div class="stamp-org-name" id="stampOrgLabel">VERTIFILE</div>
           <div class="stamp-verified">VERIFIED</div>
-          <div class="stamp-wave-strip"><svg viewBox="0 0 800 48" preserveAspectRatio="none"><defs><linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#2e1065;stop-opacity:.4"/><stop offset="50%" style="stop-color:#6d28d9;stop-opacity:.4"/><stop offset="100%" style="stop-color:#a78bfa;stop-opacity:.4"/></linearGradient></defs><path d="M0,24 Q50,4 100,24 T200,24 T300,24 T400,24 T500,24 T600,24 T700,24 T800,24 V48 H0 Z" fill="url(#waveGrad)"/></svg></div>
+          <div class="stamp-wave-strip" id="stampWaveStrip"></div>
         </div>
         <div class="card" style="margin-top:20px"><h4 style="font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:12px">Your Stamp in Action</h4><div class="stamp-doc-mock"><div class="mock-lines"><div class="mock-line"></div><div class="mock-line short"></div><div class="mock-line"></div><div class="mock-line med"></div><div class="mock-line"></div><div class="mock-line short"></div></div><div class="stamp-overlay" id="stampDocOverlay"></div></div></div>
       </div>
@@ -2062,7 +2062,7 @@ window.Dashboard = {
     document.querySelectorAll('.wave-color-input').forEach(function(inp) {
       waveColors.push(inp.value);
     });
-    var opts = {size: 120};
+    var opts = {size: 120, waveCount: 7};
     if (waveColors.length > 0) opts.waveColors = waveColors;
 
     var ow = document.getElementById('overviewStampWrap');
@@ -2071,6 +2071,10 @@ window.Dashboard = {
     if(sl) sl.innerHTML = VertifileStamp.renderStamp(Object.assign({}, opts, {size: 160}));
     var so = document.getElementById('stampDocOverlay');
     if(so) so.innerHTML = VertifileStamp.renderStamp(Object.assign({}, opts, {size: 72}));
+
+    // Render waves strip (separate from stamp coin)
+    var sws = document.getElementById('stampWaveStrip');
+    if(sws) sws.innerHTML = VertifileStamp.renderWaves(opts);
   },
 
   // Password strength
@@ -2094,28 +2098,45 @@ window.Dashboard = {
     var used = currentUser.documentsUsed || documents.length;
     var limit = currentUser.documentsLimit || 5;
     var plan = currentUser.plan || 'free';
-    var planNames = { free: 'Free', professional: 'Pro', enterprise: 'Enterprise' };
-    var planPrices = { free: '$0/month', professional: '$29/month', enterprise: 'Custom' };
+    var planNames = {
+      free: 'Free',
+      pro: 'Pro',
+      professional: 'Pro',
+      pro_plus: 'Pro+',
+      proplus: 'Pro+',
+      enterprise: 'Enterprise'
+    };
+    var planPrices = {
+      free: '$0/month',
+      pro: '$29/month',
+      professional: '$29/month',
+      pro_plus: '$79/month',
+      proplus: '$79/month',
+      enterprise: 'Custom'
+    };
+    var isUnlimited = limit >= 999000;
+    var limitDisplay = isUnlimited ? 'Unlimited' : limit;
+    var usageText = isUnlimited ? (used + ' documents') : (used + ' of ' + limit + ' documents');
 
     // Sidebar plan badge
     var pl = document.getElementById('planLabel'); if(pl) pl.textContent = (planNames[plan] || 'Free').toUpperCase() + ' PLAN';
     var pu = document.getElementById('planUsed'); if(pu) pu.textContent = used;
-    var plim = document.getElementById('planLimit'); if(plim) plim.textContent = limit;
-    var pf = document.getElementById('planBarFill'); if(pf) pf.style.width = Math.min((used/limit)*100, 100) + '%';
+    var plim = document.getElementById('planLimit'); if(plim) plim.textContent = limitDisplay;
+    var pf = document.getElementById('planBarFill'); if(pf) pf.style.width = isUnlimited ? '0%' : Math.min((used/limit)*100, 100) + '%';
 
     // Stats on overview
     var sp = document.getElementById('statDocsProtected'); if(sp) sp.textContent = used;
     var spn = document.getElementById('statPlanName'); if(spn) spn.textContent = planNames[plan] || 'Free';
-    var spu = document.getElementById('statPlanUsage'); if(spu) spu.textContent = used + '/' + limit + ' documents';
+    var spu = document.getElementById('statPlanUsage'); if(spu) spu.textContent = isUnlimited ? (used + ' documents') : (used + '/' + limit + ' documents');
 
     // Settings plan
     var spn2 = document.getElementById('settingsPlanName'); if(spn2) spn2.textContent = planNames[plan] || 'Free';
     var spp = document.getElementById('settingsPlanPrice'); if(spp) spp.textContent = planPrices[plan] || '$0/month';
-    var spu2 = document.getElementById('settingsPlanUsage'); if(spu2) spu2.textContent = used + ' of ' + limit + ' documents used';
-    var spb = document.getElementById('settingsPlanBar'); if(spb) spb.style.width = Math.min((used/limit)*100, 100) + '%';
+    var spu2 = document.getElementById('settingsPlanUsage'); if(spu2) spu2.textContent = usageText + ' used';
+    var spb = document.getElementById('settingsPlanBar'); if(spb) spb.style.width = isUnlimited ? '0%' : Math.min((used/limit)*100, 100) + '%';
 
     // Upload quota
-    var uqi = document.getElementById('uploadQuotaInfo'); if(uqi) uqi.textContent = used + ' of ' + limit + ' documents used this month.';
+    var uqi = document.getElementById('uploadQuotaInfo'); if(uqi) uqi.textContent = usageText + ' used this month.';
     // Doc count badge
     var dcb = document.getElementById('docCountBadge'); if(dcb) dcb.textContent = documents.length;
   },
