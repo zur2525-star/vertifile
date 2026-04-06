@@ -1247,6 +1247,9 @@
     "stamp": {
       "title": "החותמת שלי",
       "customize": "התאם את החותמת שלך",
+      "brandTextLabel": "טקסט בחותמת",
+      "brandTextPlaceholder": "צור חלפון",
+      "brandTextHint": "הטקסט שיופיע על חותמת המסמך שלך. עד 16 תווים.",
       "accentColor": "צבע הדגשה",
       "waveColors": "צבעי גלים",
       "colorPalettes": "פלטות צבעים",

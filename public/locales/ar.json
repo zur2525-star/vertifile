@@ -1247,6 +1247,9 @@
     "stamp": {
       "title": "My Stamp",
       "customize": "Customize Your Stamp",
+      "brandTextLabel": "Stamp Text",
+      "brandTextPlaceholder": "ZUR HALFON",
+      "brandTextHint": "Text shown on your document stamp. Max 16 characters.",
       "accentColor": "Accent Color",
       "waveColors": "Wave Colors",
       "colorPalettes": "Color Palettes",

@@ -28,6 +28,10 @@ function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature
   const isPdf = mimeType === 'application/pdf';
   const safeOriginalName = escapeHtml(originalName);
 
+  // Stamp brand text — uses displayBrand sanitized to 16 chars max (surrogate-pair safe).
+  // Layer 2 (routes/pages.js injectStampConfig) overrides this at view time with user's custom brandText if set.
+  const displayBrand = ((Array.from((orgName || 'VERTIFILE').toString().trim().normalize('NFKC').replace(/[\u202A-\u202E\u200B-\u200F\u2066-\u2069]/g,'')).slice(0,16).join('')) || 'VERTIFILE').toUpperCase();
+
   const createdAt = new Date().toISOString();
 
   return `<!--PVF:1.0-->
@@ -148,8 +152,8 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 .holo-waves.frozen .wave-svg{animation-play-state:paused}
 
 /* ===== VERTIFILE STAMP ===== */
-.stamp{--ss:clamp(110px,13vw,160px);position:absolute;bottom:5%;right:4%;width:var(--ss);height:var(--ss);z-index:30;pointer-events:none;opacity:0.55;perspective:800px}
-@media(max-width:600px){.stamp{--ss:84px;bottom:3%;right:3%;opacity:0.6}}
+.stamp{--ss:clamp(52px,5.6vw,72px);position:absolute;bottom:5%;right:4%;width:var(--ss);height:var(--ss);z-index:30;pointer-events:none;opacity:0.55;perspective:800px}
+@media(max-width:600px){.stamp{--ss:46px;bottom:3%;right:3%;opacity:0.6}}
 
 /* 3D Coin-flip animation */
 .stamp-coin{width:100%;height:100%;transform-style:preserve-3d;opacity:0}
@@ -195,16 +199,16 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 .stamp .inner-bg{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(124,58,237,.12)}
 
 /* Center content — logo + label */
-.stamp .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:54%;max-width:54%;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;gap:calc(var(--ss)*0.015)}
-.stamp .center svg.stamp-logo{width:calc(var(--ss)*0.30);height:calc(var(--ss)*0.30);display:block;flex-shrink:0}
-.stamp .center img.stamp-logo{width:calc(var(--ss)*0.30);height:calc(var(--ss)*0.30);border-radius:50%;object-fit:cover;background:#fff;padding:0;display:block;flex-shrink:0}
-.stamp .brand{font-size:calc(var(--ss)*0.085);font-weight:900;letter-spacing:.04em;color:rgba(124,58,237,.65);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:100%;text-transform:uppercase;line-height:1.1}
-.stamp .lbl{font-size:calc(var(--ss)*0.085);font-weight:900;letter-spacing:.04em;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:100%;line-height:1.1}
-.stamp .lbl.ok{color:rgba(46,125,50,.6)}
-.stamp .lbl.bad{color:rgba(198,40,40,.6)}
+.stamp .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:65%;max-width:65%;height:65%;display:flex;flex-direction:column;align-items:center;justify-content:space-between;line-height:1.05;padding:calc(var(--ss)*0.012) 0;box-sizing:border-box}
+.stamp .center svg.stamp-logo{width:calc(var(--ss)*0.25);height:calc(var(--ss)*0.25);display:block;flex-shrink:0}
+.stamp .center img.stamp-logo{width:calc(var(--ss)*0.25);height:calc(var(--ss)*0.25);border-radius:50%;object-fit:cover;background:#fff;padding:0;display:block;flex-shrink:0}
+.stamp .brand{font-size:calc(var(--ss)*0.095);font-weight:900;letter-spacing:.02em;color:rgba(124,58,237,.72);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:100%;text-transform:uppercase;line-height:1;flex-shrink:0}
+.stamp .lbl{font-size:calc(var(--ss)*0.11);font-weight:900;letter-spacing:.03em;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:100%;line-height:1;flex-shrink:0}
+.stamp .lbl.ok{color:rgba(46,125,50,.75)}
+.stamp .lbl.bad{color:rgba(198,40,40,.75)}
 
 /* Verified badge overlay */
-.stamp .verified-badge{position:absolute;bottom:calc(var(--ss)*0.025);right:calc(var(--ss)*0.025);width:calc(var(--ss)*0.20);height:calc(var(--ss)*0.20);border-radius:50%;background:#fff;border:1.5px solid rgba(46,125,50,.5);display:flex;align-items:center;justify-content:center;z-index:31;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.stamp .verified-badge{position:absolute;bottom:calc(var(--ss)*0.055);right:calc(var(--ss)*0.055);width:13px;height:13px;border-radius:50%;background:#fff;border:1.5px solid rgba(46,125,50,.5);display:flex;align-items:center;justify-content:center;z-index:31;box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .stamp .verified-badge svg{width:60%;height:60%}
 .stamp .forged-badge{position:absolute;bottom:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#fff;border:1.5px solid rgba(198,40,40,.5);display:flex;align-items:center;justify-content:center;z-index:31;box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .stamp .forged-badge svg{width:10px;height:10px}
@@ -345,7 +349,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
         <div class="center" id="sCtr">${customIcon ?
      (customIcon.startsWith('<svg') ? customIcon.replace(/<svg/, '<svg class="stamp-logo"') : `<img class="stamp-logo" src="${customIcon}" alt="">`)
      : `<svg class="stamp-logo" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-   }<div class="brand">${escapeHtml(orgName || 'VERTIFILE')}</div><div class="lbl ok">VERIFIED</div></div>
+   }<div class="brand">${escapeHtml(displayBrand)}</div><div class="lbl ok">VERIFIED</div></div>
         <div class="verified-badge" id="sBadge"><svg viewBox="0 0 50 50" fill="none"><path d="M14 26L22 34L36 18" stroke="rgba(46,125,50,.8)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </div>
       </div>

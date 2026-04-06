@@ -193,11 +193,14 @@ async function injectStampConfig(req, shareId, pvfContent, db) {
       : null;
     const customLogo = cfg.customLogo && typeof cfg.customLogo === 'string' && cfg.customLogo.startsWith('data:image/')
       ? cfg.customLogo : null;
+    const brandText = cfg.brandText && typeof cfg.brandText === 'string' && cfg.brandText.trim()
+      ? cfg.brandText.trim().slice(0, 16)
+      : null;
 
     // Build the override script — uses the actual class names from
     // templates/pvf.js (not the stamp-component.js .vfs-* names)
     const overrideScript = `<script>(function(){
-      window.__VF_STAMP_OVERRIDE__ = ${JSON.stringify({ waveColors, accent, customLogo })};
+      window.__VF_STAMP_OVERRIDE__ = ${JSON.stringify({ waveColors, accent, customLogo, brandText })};
       function applyOverride(){
         var o = window.__VF_STAMP_OVERRIDE__;
         if (!o) return;
@@ -231,6 +234,16 @@ async function injectStampConfig(req, shareId, pvfContent, db) {
               overlay.innerHTML = '<img src="' + o.customLogo + '" style="width:100%;height:100%;object-fit:cover;display:block" alt="Custom logo"/>';
               var ring = coin.querySelector('.ring') || coin;
               ring.appendChild(overlay);
+            }
+          }
+          // 4. Override brand text in the stamp .center
+          if (o.brandText) {
+            var brandEls = document.querySelectorAll('.stamp .brand');
+            for (var k=0; k<brandEls.length; k++) brandEls[k].textContent = o.brandText;
+            // Also update the perimeter SVG textPath if it exists
+            var tp = document.querySelector('.stamp svg textPath');
+            if (tp) {
+              tp.textContent = 'VERIFIED BY ' + o.brandText.toUpperCase() + ' \u2022 DOCUMENT APPROVED \u2022 BLOCKCHAIN SECURED \u2022';
             }
           }
         } catch(e) { /* fail open — keep original stamp */ }

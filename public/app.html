@@ -765,6 +765,17 @@
     .stamp-save-row{display:flex;gap:12px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--divider);align-items:center}
     .stamp-reset-link{font-size:13px;color:var(--text-2);cursor:pointer;background:none;border:none}
     .stamp-reset-link:hover{color:var(--text-1)}
+    .stamp-field-group{margin:0}
+    .stamp-field-group .input-with-counter{position:relative}
+    .stamp-field-group .input-with-counter input{width:100%;padding:10px 60px 10px 14px;border:1px solid var(--input-border);border-radius:12px;font-size:13px;background:var(--input-bg);color:var(--text-1);outline:none;transition:border .2s,box-shadow .2s;font-family:inherit;letter-spacing:.3px}
+    .stamp-field-group .input-with-counter input::placeholder{color:var(--text-2);opacity:.7}
+    .stamp-field-group .input-with-counter input:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+    .stamp-field-group .char-counter{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;color:var(--text-2);font-variant-numeric:tabular-nums;pointer-events:none;padding:2px 6px;border-radius:6px;background:rgba(124,58,237,.08)}
+    .stamp-field-group .char-counter.near-limit{color:#f59e0b;background:rgba(245,158,11,.12)}
+    .stamp-field-group .char-counter.at-limit{color:#dc2626;background:rgba(220,38,38,.12)}
+    .stamp-field-group .field-hint{font-size:11px;color:var(--text-2);margin:8px 0 0;line-height:1.5}
+    html[dir="rtl"] .stamp-field-group .input-with-counter input{padding:10px 14px 10px 60px}
+    html[dir="rtl"] .stamp-field-group .char-counter{right:auto;left:12px}
 
     /* ===== SETTINGS TAB ===== */
     .settings-section{max-width:800px}
@@ -1278,6 +1289,21 @@
       <div class="stamp-controls-section">
         <h2 data-i18n="tab.stamp.customize">Customize Your Stamp</h2>
         <div class="control-section"><div class="control-section-title" data-i18n="tab.stamp.accentColor">Accent Color</div><div class="color-presets" id="accentPresets"><div class="color-preset selected" style="background:#7c3aed" onclick="Dashboard.setAccent(this)"></div><div class="color-preset" style="background:#2563eb" onclick="Dashboard.setAccent(this)"></div><div class="color-preset" style="background:#0d9488" onclick="Dashboard.setAccent(this)"></div><div class="color-preset" style="background:#16a34a" onclick="Dashboard.setAccent(this)"></div><div class="color-preset" style="background:#dc2626" onclick="Dashboard.setAccent(this)"></div><div class="color-preset" style="background:#ea580c" onclick="Dashboard.setAccent(this)"></div></div></div>
+        <div class="control-section">
+          <div class="control-section-title" data-i18n="tab.stamp.brandTextLabel">Stamp Text</div>
+          <div class="stamp-field-group">
+            <div class="input-with-counter">
+              <input type="text" id="stampBrandText" maxlength="16"
+                     placeholder="ZUR HALFON"
+                     data-i18n-placeholder="tab.stamp.brandTextPlaceholder"
+                     autocomplete="off"
+                     spellcheck="false"
+                     aria-describedby="stampBrandTextHint stampBrandTextCounter" />
+              <span class="char-counter" id="stampBrandTextCounter" aria-live="polite">0/16</span>
+            </div>
+            <p class="field-hint" id="stampBrandTextHint" data-i18n="tab.stamp.brandTextHint">Text shown on your document stamp. Max 16 characters.</p>
+          </div>
+        </div>
         <div class="control-section"><div class="control-section-title" data-i18n="tab.stamp.waveColors">Wave Colors</div><div id="waveColorPickers" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="wave-color-row"><span style="font-size:12px">Wave 1</span><input type="color" value="#1e0a4a" class="wave-color-input" data-wave="0"></div><div class="wave-color-row"><span style="font-size:12px">Wave 2</span><input type="color" value="#2e1065" class="wave-color-input" data-wave="1"></div><div class="wave-color-row"><span style="font-size:12px">Wave 3</span><input type="color" value="#4c1d95" class="wave-color-input" data-wave="2"></div><div class="wave-color-row"><span style="font-size:12px">Wave 4</span><input type="color" value="#6d28d9" class="wave-color-input" data-wave="3"></div><div class="wave-color-row"><span style="font-size:12px">Wave 5</span><input type="color" value="#7c3aed" class="wave-color-input" data-wave="4"></div><div class="wave-color-row"><span style="font-size:12px">Wave 6</span><input type="color" value="#a78bfa" class="wave-color-input" data-wave="5"></div><div class="wave-color-row"><span style="font-size:12px">Wave 7</span><input type="color" value="#c4b5fd" class="wave-color-input" data-wave="6"></div></div><div style="margin-top:12px"><div class="control-section-title" style="font-size:12px;margin-bottom:8px">Color Palettes</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="color-preset" onclick="Dashboard.setWavePalette('purple')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(124,58,237,.2);background:linear-gradient(90deg,#2e1065,#a78bfa);color:white;border-radius:6px;cursor:pointer">Purple</button><button class="color-preset" onclick="Dashboard.setWavePalette('blue')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(59,130,246,.2);background:linear-gradient(90deg,#1e3a5f,#93c5fd);color:white;border-radius:6px;cursor:pointer">Blue</button><button class="color-preset" onclick="Dashboard.setWavePalette('green')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(34,197,94,.2);background:linear-gradient(90deg,#14532d,#86efac);color:white;border-radius:6px;cursor:pointer">Green</button><button class="color-preset" onclick="Dashboard.setWavePalette('gold')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(234,179,8,.2);background:linear-gradient(90deg,#713f12,#fde68a);color:white;border-radius:6px;cursor:pointer">Gold</button><button class="color-preset" onclick="Dashboard.setWavePalette('red')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(239,68,68,.2);background:linear-gradient(90deg,#7f1d1d,#fca5a5);color:white;border-radius:6px;cursor:pointer">Red</button></div></div></div>
         <div class="control-section"><div class="control-section-title" data-i18n="tab.stamp.logo">Logo</div><div class="logo-current" id="logoCurrent" style="display:none"><div class="logo-thumb"><img src="" alt="Logo" id="logoThumbImg"></div><div class="logo-info"><div class="logo-name" id="logoFileName">logo.png</div><div class="logo-hint">Center-cropped for stamp</div></div><div class="btn-row"><button class="btn btn-secondary" style="padding:6px 14px;font-size:12px" onclick="document.getElementById('logoInput').click()">Change</button><button class="btn btn-danger" style="padding:6px 14px;font-size:12px" onclick="Dashboard.removeLogo()">Remove</button></div></div><div class="logo-upload-area" id="logoUploadArea" onclick="document.getElementById('logoInput').click()"><div style="font-size:24px;color:var(--text-2);margin-bottom:4px"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></div><div style="font-size:13px;color:var(--text-1);font-weight:500">Drag logo here or click to upload</div><div style="font-size:12px;color:var(--text-2);margin-top:4px">PNG, SVG, JPG. Max 2MB.</div></div><input type="file" id="logoInput" style="display:none" accept=".png,.svg,.jpg,.jpeg"></div>
         <div class="control-section"><div class="control-section-title">Stamp Size</div><div class="stamp-size-options"><button class="stamp-size-btn" onclick="Dashboard.setStampSize(this)">Small</button><button class="stamp-size-btn active" onclick="Dashboard.setStampSize(this)">Medium</button><button class="stamp-size-btn" onclick="Dashboard.setStampSize(this)">Large</button></div></div>
@@ -1521,6 +1547,12 @@ function showApp() {
 // Restore saved stamp config to the customizer UI on /app#stamp
 function applyStampConfigToUI(cfg) {
   if (!cfg || typeof cfg !== 'object') return;
+  // Brand text (stamp text)
+  var brandTextInput = document.getElementById('stampBrandText');
+  if (brandTextInput) {
+    brandTextInput.value = (typeof cfg.brandText === 'string') ? cfg.brandText : '';
+    if (typeof updateBrandTextCounter === 'function') updateBrandTextCounter();
+  }
   // Wave colors
   if (Array.isArray(cfg.waveColors) && cfg.waveColors.length) {
     var inputs = document.querySelectorAll('.wave-color-input');
@@ -1558,6 +1590,34 @@ function applyStampConfigToUI(cfg) {
   // Re-render preview after applying
   if (window.Dashboard && Dashboard.renderStamps) Dashboard.renderStamps();
 }
+
+// Live counter for the Stamp Text field (0/16, 12+ = amber, 16 = red)
+function updateBrandTextCounter() {
+  var input = document.getElementById('stampBrandText');
+  var counter = document.getElementById('stampBrandTextCounter');
+  if (!input || !counter) return;
+  // Surrogate-pair safe length (emoji, combined chars)
+  var len = Array.from(input.value).length;
+  counter.textContent = len + '/16';
+  counter.classList.toggle('near-limit', len >= 12 && len < 16);
+  counter.classList.toggle('at-limit', len >= 16);
+}
+
+// Wire up the Stamp Text input listener once the DOM is ready
+(function wireStampBrandTextInput() {
+  function attach() {
+    var el = document.getElementById('stampBrandText');
+    if (!el || el.__vfBrandTextWired) return;
+    el.__vfBrandTextWired = true;
+    el.addEventListener('input', updateBrandTextCounter);
+    updateBrandTextCounter();
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attach);
+  } else {
+    attach();
+  }
+})();
 
 function showLogin() {
   document.getElementById('loginForm').style.display = '';
@@ -2150,12 +2210,17 @@ window.Dashboard = {
     var sizeName = activeSizeBtn ? activeSizeBtn.textContent.trim() : 'Medium';
     var customLogo = window.__customLogoDataUrl || null;
     var orgName = (currentUser && currentUser.name) ? currentUser.name.toUpperCase() : 'VERTIFILE';
+    var brandTextEl = document.getElementById('stampBrandText');
+    var brandText = brandTextEl && brandTextEl.value ? brandTextEl.value.trim() : '';
+    // Enforce 16-char limit (surrogate-pair safe)
+    if (brandText) brandText = Array.from(brandText).slice(0, 16).join('');
 
     var config = {
       waveColors: waveColors,
       accentColor: accentColor,
       size: sizeMap[sizeName] || 120,
-      orgName: orgName
+      orgName: orgName,
+      brandText: brandText
     };
     if (customLogo) config.customLogo = customLogo;
 

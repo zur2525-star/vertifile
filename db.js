@@ -626,7 +626,7 @@ async function getUserStampConfig(userId) {
 
 async function updateUserStampConfig(userId, config) {
   // Validation guard — strip any non-allowed keys to prevent injection
-  const ALLOWED_KEYS = ['waveColors', 'accentColor', 'customLogo', 'orgName', 'stampText', 'size'];
+  const ALLOWED_KEYS = ['waveColors', 'accentColor', 'customLogo', 'orgName', 'stampText', 'size', 'brandText'];
   const safe = {};
   for (const k of ALLOWED_KEYS) {
     if (config[k] !== undefined) safe[k] = config[k];
@@ -647,6 +647,20 @@ async function updateUserStampConfig(userId, config) {
   }
   if (safe.orgName && safe.orgName.length > 50) safe.orgName = safe.orgName.substring(0, 50);
   if (safe.stampText && safe.stampText.length > 30) safe.stampText = safe.stampText.substring(0, 30);
+  // brandText: user-visible custom stamp label (max 16 chars, Unicode-safe, no blocklist per boss)
+  if (safe.brandText !== undefined && safe.brandText !== null) {
+    if (typeof safe.brandText !== 'string') {
+      throw new Error('brandText must be a string');
+    }
+    let bt = String(safe.brandText).normalize('NFKC');
+    // Strip RTL override + zero-width chars (spoofing protection)
+    bt = bt.replace(/[\u202A-\u202E\u200B-\u200F\u2066-\u2069]/g, '');
+    bt = bt.trim();
+    // Surrogate-pair-safe truncate to 16 chars max
+    bt = [...bt].slice(0, 16).join('');
+    // Empty after sanitization → store empty string (template falls back to orgName)
+    safe.brandText = bt;
+  }
 
   await pool.query(
     'UPDATE users SET stamp_config = $1::jsonb, stamp_updated_at = NOW() WHERE id = $2',
