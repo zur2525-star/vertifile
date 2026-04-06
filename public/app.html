@@ -519,6 +519,10 @@
     /* ===== SKIP LINK ===== */
     .skip-link{position:absolute;top:-40px;left:0;background:#7c3aed;color:#fff;padding:8px 16px;z-index:9999;font-size:13px;font-weight:600;border-radius:0 0 8px 0;transition:top .2s}
     .skip-link:focus{top:0}
+    /* Language dropdown — hidden by default, shown via .show class */
+    #langDropdown{display:none}
+    #langDropdown.show{display:block}
+    #langDropdown a:hover{background:rgba(124,58,237,.08);color:#7c3aed !important}
 
     /* ===== DASHBOARD TOPBAR ENHANCEMENTS ===== */
     .search-results{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--sidebar-bg);border:1px solid var(--card-border);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.3);z-index:110;max-height:360px;overflow-y:auto;padding:8px 0}
@@ -1002,7 +1006,7 @@
           <svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
           <span id="langLabel" style="font-size:11px;font-weight:600;margin-left:4px">EN</span>
         </button>
-        <div id="langDropdown" class="lang-dropdown" role="menu" aria-label="Language" style="position:absolute;top:calc(100% + 6px);right:0;background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.15);min-width:160px;padding:4px 0;display:none;z-index:1000">
+        <div id="langDropdown" class="lang-dropdown" role="menu" aria-label="Language" style="position:absolute;top:calc(100% + 6px);right:0;background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.15);min-width:160px;padding:4px 0;z-index:1000">
           <a href="?lang=en" onclick="switchLang('en',event)" style="display:block;padding:8px 14px;font-size:13px;color:var(--text-1);text-decoration:none">English</a>
           <a href="?lang=he" onclick="switchLang('he',event)" style="display:block;padding:8px 14px;font-size:13px;color:var(--text-1);text-decoration:none">עברית</a>
           <a href="?lang=ar" onclick="switchLang('ar',event)" style="display:block;padding:8px 14px;font-size:13px;color:var(--text-1);text-decoration:none">العربية</a>
@@ -1330,7 +1334,7 @@
       <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')">How do I share a protected document?<span class="faq-chevron"><svg style="width:10px;height:10px;display:inline;vertical-align:-1px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-answer"><div class="faq-answer-inner">From the Documents tab, use the actions menu on any document and select "Copy Share Link." Track opens from your dashboard.<div class="faq-feedback"><span>Was this helpful?</span> <button class="fb-up" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><line x1="3" y1="22" x2="7" y2="22"/><line x1="3" y1="11" x2="7" y2="22"/></svg></button> <button class="fb-down" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9A2 2 0 004.34 15H10z"/><line x1="17" y1="2" x2="21" y2="2"/><line x1="17" y1="13" x2="21" y2="2"/></svg></button> <span class="fb-thanks">Thanks!</span></div></div></div></div>
     </div></div>
 
-    <div class="card escalation-card"><h4>Didn't find what you need?</h4><p>Our support team is happy to help.</p><a href="mailto:support@vertifile.com" class="btn btn-secondary">Contact Support</a></div>
+    <div class="card escalation-card"><h4 data-i18n="tab.help.didntFind">Didn't find what you need?</h4><p data-i18n="tab.help.supportDesc">Our support team is happy to help.</p><a href="/contact" class="btn btn-secondary" data-i18n="tab.help.contactSupport">Contact Support</a></div>
 
     <!-- Quick Links -->
     <div class="card"><h3>Quick Links</h3><div class="quick-links" style="margin-top:12px">
