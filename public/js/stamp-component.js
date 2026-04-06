@@ -14,8 +14,8 @@ window.VertifileStamp = {
     orgName: 'VERTIFILE',
     stampText: 'VERIFIED',
     rotatingText: 'VERIFIED BY VERTIFILE \u2022 DOCUMENT APPROVED \u2022 BLOCKCHAIN SECURED \u2022',
-    waveColors: ['#2e1065', '#4c1d95', '#6d28d9', '#7c3aed', '#a78bfa'],
-    waveCount: 5,
+    waveColors: ['#1e0a4a', '#2e1065', '#4c1d95', '#6d28d9', '#7c3aed', '#a78bfa', '#c4b5fd'],
+    waveCount: 7,
     waveOpacity: 0.4,
     checkColor: 'rgba(46,125,50,.5)',
     ringStroke: 'rgba(124,58,237,.18)',
@@ -88,7 +88,7 @@ window.VertifileStamp = {
   renderWaves(options) {
     var cfg = this._merge(options);
     var colors = cfg.waveColors;
-    var count = colors.length;
+    var count = cfg.waveCount || colors.length;
     var paths1 = '', paths2 = '';
 
     for (var i = 0; i < count; i++) {
@@ -117,10 +117,10 @@ window.VertifileStamp = {
         d += ' Q' + cx1 + ',' + cy1 + ' ' + (wx + seg) + ',' + baseY;
       }
 
-      if (i < 3) {
+      if (i < Math.ceil(count / 2)) {
         paths1 += '<path d="' + d + '" stroke="' + colors[i] + '" stroke-width="' + (1.2 + i * 0.3) + '" fill="none" opacity="' + op + '"/>';
       } else {
-        paths2 += '<path d="' + d + '" stroke="' + colors[i] + '" stroke-width="' + (1.2 + (i - 3) * 0.3) + '" fill="none" opacity="' + op + '"/>';
+        paths2 += '<path d="' + d + '" stroke="' + colors[i] + '" stroke-width="' + (1.2 + (i - Math.ceil(count / 2)) * 0.3) + '" fill="none" opacity="' + op + '"/>';
       }
     }
 

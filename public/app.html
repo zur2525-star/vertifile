@@ -1241,7 +1241,7 @@
       <div class="stamp-controls-section">
         <h2>Customize Your Stamp</h2>
         <div class="control-section"><div class="control-section-title">Accent Color</div><div class="color-presets" id="accentPresets"><div class="color-preset selected" style="background:#7c3aed" onclick="Dashboard.setAccent(this)"></div><div class="color-preset" style="background:#2563eb" onclick="Dashboard.setAccent(this)"></div><div class="color-preset" style="background:#0d9488" onclick="Dashboard.setAccent(this)"></div><div class="color-preset" style="background:#16a34a" onclick="Dashboard.setAccent(this)"></div><div class="color-preset" style="background:#dc2626" onclick="Dashboard.setAccent(this)"></div><div class="color-preset" style="background:#ea580c" onclick="Dashboard.setAccent(this)"></div></div></div>
-        <div class="control-section"><div class="control-section-title">Wave Color</div><div class="gradient-presets"><button class="gradient-preset-btn active" onclick="Dashboard.setWavePreset(this)">Ocean</button><button class="gradient-preset-btn" onclick="Dashboard.setWavePreset(this)">Sunset</button><button class="gradient-preset-btn" onclick="Dashboard.setWavePreset(this)">Forest</button><button class="gradient-preset-btn" onclick="Dashboard.setWavePreset(this)">Royal</button></div><div class="wave-color-row"><span>Start</span><input type="color" value="#2e1065"></div><div class="wave-color-row"><span>End</span><input type="color" value="#a78bfa"></div></div>
+        <div class="control-section"><div class="control-section-title">Wave Colors</div><div id="waveColorPickers" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="wave-color-row"><span style="font-size:12px">Wave 1</span><input type="color" value="#1e0a4a" class="wave-color-input" data-wave="0"></div><div class="wave-color-row"><span style="font-size:12px">Wave 2</span><input type="color" value="#2e1065" class="wave-color-input" data-wave="1"></div><div class="wave-color-row"><span style="font-size:12px">Wave 3</span><input type="color" value="#4c1d95" class="wave-color-input" data-wave="2"></div><div class="wave-color-row"><span style="font-size:12px">Wave 4</span><input type="color" value="#6d28d9" class="wave-color-input" data-wave="3"></div><div class="wave-color-row"><span style="font-size:12px">Wave 5</span><input type="color" value="#7c3aed" class="wave-color-input" data-wave="4"></div><div class="wave-color-row"><span style="font-size:12px">Wave 6</span><input type="color" value="#a78bfa" class="wave-color-input" data-wave="5"></div><div class="wave-color-row"><span style="font-size:12px">Wave 7</span><input type="color" value="#c4b5fd" class="wave-color-input" data-wave="6"></div></div><div style="margin-top:12px"><div class="control-section-title" style="font-size:12px;margin-bottom:8px">Color Palettes</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="color-preset" onclick="Dashboard.setWavePalette('purple')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(124,58,237,.2);background:linear-gradient(90deg,#2e1065,#a78bfa);color:white;border-radius:6px;cursor:pointer">Purple</button><button class="color-preset" onclick="Dashboard.setWavePalette('blue')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(59,130,246,.2);background:linear-gradient(90deg,#1e3a5f,#93c5fd);color:white;border-radius:6px;cursor:pointer">Blue</button><button class="color-preset" onclick="Dashboard.setWavePalette('green')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(34,197,94,.2);background:linear-gradient(90deg,#14532d,#86efac);color:white;border-radius:6px;cursor:pointer">Green</button><button class="color-preset" onclick="Dashboard.setWavePalette('gold')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(234,179,8,.2);background:linear-gradient(90deg,#713f12,#fde68a);color:white;border-radius:6px;cursor:pointer">Gold</button><button class="color-preset" onclick="Dashboard.setWavePalette('red')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(239,68,68,.2);background:linear-gradient(90deg,#7f1d1d,#fca5a5);color:white;border-radius:6px;cursor:pointer">Red</button></div></div></div>
         <div class="control-section"><div class="control-section-title">Logo</div><div class="logo-current" id="logoCurrent" style="display:none"><div class="logo-thumb"><img src="" alt="Logo" id="logoThumbImg"></div><div class="logo-info"><div class="logo-name" id="logoFileName">logo.png</div><div class="logo-hint">Center-cropped for stamp</div></div><div class="btn-row"><button class="btn btn-secondary" style="padding:6px 14px;font-size:12px" onclick="document.getElementById('logoInput').click()">Change</button><button class="btn btn-danger" style="padding:6px 14px;font-size:12px" onclick="Dashboard.removeLogo()">Remove</button></div></div><div class="logo-upload-area" id="logoUploadArea" onclick="document.getElementById('logoInput').click()"><div style="font-size:24px;color:var(--text-2);margin-bottom:4px">&#8682;</div><div style="font-size:13px;color:var(--text-1);font-weight:500">Drag logo here or click to upload</div><div style="font-size:12px;color:var(--text-2);margin-top:4px">PNG, SVG, JPG. Max 2MB.</div></div><input type="file" id="logoInput" style="display:none" accept=".png,.svg,.jpg,.jpeg"></div>
         <div class="control-section"><div class="control-section-title">Stamp Size</div><div class="stamp-size-options"><button class="stamp-size-btn" onclick="Dashboard.setStampSize(this)">Small</button><button class="stamp-size-btn active" onclick="Dashboard.setStampSize(this)">Medium</button><button class="stamp-size-btn" onclick="Dashboard.setStampSize(this)">Large</button></div></div>
         <div class="stamp-save-row"><button class="stamp-reset-link">Reset to Default</button><button class="btn btn-primary" onclick="Dashboard.saveStamp()">Save Changes</button></div>
@@ -1711,6 +1711,15 @@ window.Dashboard = {
     // Init upload zone
     this.initUpload();
 
+    // Logo input event listener
+    var li = document.getElementById('logoInput');
+    if (li) li.addEventListener('change', handleLogoUpload);
+
+    // Wave color picker change listeners
+    document.querySelectorAll('.wave-color-input').forEach(function(inp) {
+      inp.addEventListener('change', function() { Dashboard.renderStamps(); });
+    });
+
     // Update plan info
     this.updatePlanDisplay();
 
@@ -2018,10 +2027,24 @@ window.Dashboard = {
   setAccent: function(el){
     document.querySelectorAll('#accentPresets .color-preset').forEach(function(p){ p.classList.remove('selected'); });
     el.classList.add('selected');
+    this.renderStamps();
   },
   setWavePreset: function(btn){
     document.querySelectorAll('.gradient-preset-btn').forEach(function(b){ b.classList.remove('active'); });
     btn.classList.add('active');
+  },
+  setWavePalette: function(name) {
+    var palettes = {
+      purple: ['#1e0a4a','#2e1065','#4c1d95','#6d28d9','#7c3aed','#a78bfa','#c4b5fd'],
+      blue: ['#0c1929','#1e3a5f','#1d4ed8','#3b82f6','#60a5fa','#93c5fd','#bfdbfe'],
+      green: ['#052e16','#14532d','#166534','#22c55e','#4ade80','#86efac','#bbf7d0'],
+      gold: ['#451a03','#713f12','#a16207','#eab308','#facc15','#fde68a','#fef9c3'],
+      red: ['#450a0a','#7f1d1d','#b91c1c','#ef4444','#f87171','#fca5a5','#fecaca']
+    };
+    var colors = palettes[name] || palettes.purple;
+    var inputs = document.querySelectorAll('.wave-color-input');
+    inputs.forEach(function(inp, i) { if (colors[i]) inp.value = colors[i]; });
+    this.renderStamps();
   },
   setStampSize: function(btn){
     document.querySelectorAll('.stamp-size-btn').forEach(function(b){ b.classList.remove('active'); });
@@ -2034,12 +2057,20 @@ window.Dashboard = {
   saveStamp: function(){ this.showToast('Stamp saved successfully'); },
   renderStamps: function(){
     if(!window.VertifileStamp) return;
+    // Collect wave colors from pickers
+    var waveColors = [];
+    document.querySelectorAll('.wave-color-input').forEach(function(inp) {
+      waveColors.push(inp.value);
+    });
+    var opts = {size: 120};
+    if (waveColors.length > 0) opts.waveColors = waveColors;
+
     var ow = document.getElementById('overviewStampWrap');
-    if(ow) ow.innerHTML = VertifileStamp.renderStamp({size:120});
+    if(ow) ow.innerHTML = VertifileStamp.renderStamp(opts);
     var sl = document.getElementById('stampPreviewLarge');
-    if(sl) sl.innerHTML = VertifileStamp.renderStamp({size:160});
+    if(sl) sl.innerHTML = VertifileStamp.renderStamp(Object.assign({}, opts, {size: 160}));
     var so = document.getElementById('stampDocOverlay');
-    if(so) so.innerHTML = VertifileStamp.renderStamp({size:72});
+    if(so) so.innerHTML = VertifileStamp.renderStamp(Object.assign({}, opts, {size: 72}));
   },
 
   // Password strength
@@ -2328,26 +2359,22 @@ function renderWavePreview(color) {
 }
 
 function handleLogoUpload(e) {
-  const file = e.target.files[0];
+  var file = e.target.files[0];
   if (!file) return;
-  if (!file.type.startsWith('image/png')) {
-    toast('Please upload a PNG file with transparent background');
-    return;
-  }
-  if (file.size > 512 * 1024) {
-    toast('Logo must be under 512KB');
-    return;
-  }
-  const reader = new FileReader();
+  if (file.size > 2 * 1024 * 1024) { toast('Logo must be under 2MB'); return; }
+  var reader = new FileReader();
   reader.onload = function(ev) {
-    const dataUrl = ev.target.result;
-    document.getElementById('brandIconUrl').value = dataUrl;
-    document.getElementById('brandLogoFileName').textContent = file.name;
-    document.getElementById('brandLogoRemoveBtn').style.display = 'inline-block';
-    // Update large stamp preview
-    document.getElementById('bpStampLogo').innerHTML = '<img src="' + dataUrl + '" style="width:56px;height:56px;border-radius:50%;object-fit:cover" alt="logo">';
-    // Update thumbnail
-    document.getElementById('brandLogoThumb').innerHTML = '<img src="' + dataUrl + '" style="width:36px;height:36px;border-radius:50%;object-fit:cover" alt="logo">';
+    var dataUrl = ev.target.result;
+    var cur = document.getElementById('logoCurrent');
+    var area = document.getElementById('logoUploadArea');
+    var thumb = document.getElementById('logoThumbImg');
+    var fname = document.getElementById('logoFileName');
+    if (cur) cur.style.display = 'block';
+    if (area) area.style.display = 'none';
+    if (thumb) thumb.src = dataUrl;
+    if (fname) fname.textContent = file.name;
+    // Update stamp preview
+    Dashboard.renderStamps();
   };
   reader.readAsDataURL(file);
 }
