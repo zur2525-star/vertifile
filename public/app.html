@@ -490,17 +490,18 @@
     input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
 
     /* ===== CSS VARIABLES (Dashboard) ===== */
+    /* Dark mode — refined for better depth + contrast */
     body{
-      --bg:#0f0e17;--bg-content:#0f0e17;
-      --sidebar-bg:#1a1830;
-      --card-bg:rgba(26,24,48,.5);--card-border:rgba(124,58,237,.1);--card-shadow:0 2px 8px rgba(0,0,0,.2);
-      --text-1:#e2e0f0;--text-2:#8b89a6;
-      --input-bg:rgba(15,14,23,.5);--input-border:rgba(124,58,237,.15);
-      --hover-bg:rgba(124,58,237,.04);
-      --topbar-bg:rgba(15,14,23,.95);
-      --nav-active-text:#a78bfa;--nav-active-bg:rgba(124,58,237,.1);
-      --divider:rgba(124,58,237,.08);
-      --border-subtle:rgba(124,58,237,.04);
+      --bg:#0b0a14;--bg-content:#0f0e1a;
+      --sidebar-bg:#15132a;
+      --card-bg:#1a1830;--card-border:rgba(124,58,237,.18);--card-shadow:0 4px 20px rgba(0,0,0,.35);
+      --text-1:#f1efff;--text-2:#9b98b8;
+      --input-bg:#0f0e1a;--input-border:rgba(124,58,237,.22);
+      --hover-bg:rgba(124,58,237,.08);
+      --topbar-bg:rgba(15,14,26,.95);
+      --nav-active-text:#c4b5fd;--nav-active-bg:rgba(124,58,237,.18);
+      --divider:rgba(124,58,237,.14);
+      --border-subtle:rgba(124,58,237,.08);
     }
     body.light-mode{
       --bg:#ffffff;--bg-content:#f9fafb;
@@ -721,6 +722,12 @@
     .stamp-wave-strip{margin-top:16px;background:rgba(15,14,23,.5);border-radius:10px;height:48px;overflow:hidden;position:relative}
     body.light-mode .stamp-wave-strip{background:rgba(124,58,237,.04)}
     .stamp-wave-strip svg{width:200%;height:100%;position:absolute;left:0;top:0;animation:waveFlow 6s linear infinite}
+    /* Big Wave Preview — fills the full 7-wave gradient in a tall container */
+    .stamp-wave-big{margin-top:16px;background:linear-gradient(180deg,rgba(10,9,20,.9),rgba(26,24,48,.6));border-radius:14px;border:1px solid rgba(124,58,237,.16);height:200px;overflow:hidden;position:relative}
+    body.light-mode .stamp-wave-big{background:linear-gradient(180deg,#ffffff,#faf9ff);border-color:rgba(124,58,237,.12)}
+    .stamp-wave-big .wave-big-label{position:absolute;top:10px;left:14px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-2);font-weight:600;z-index:2}
+    .stamp-wave-big svg{width:100%;height:100%;position:absolute;left:0;top:0}
+    .stamp-wave-big svg path{animation:waveFlow 8s linear infinite}
     @keyframes waveFlow{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
     .stamp-controls-section h2{font-size:20px;font-weight:700;color:var(--text-1);margin-bottom:20px}
     .control-section{margin-bottom:20px}
@@ -991,6 +998,25 @@
       </button>
 
       <div style="position:relative">
+        <button class="tb-icon-btn" id="langBtn" aria-label="Change language" onclick="toggleLangDropdown()">
+          <svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+          <span id="langLabel" style="font-size:11px;font-weight:600;margin-left:4px">EN</span>
+        </button>
+        <div id="langDropdown" class="lang-dropdown" role="menu" aria-label="Language" style="position:absolute;top:calc(100% + 6px);right:0;background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.15);min-width:160px;padding:4px 0;display:none;z-index:1000">
+          <a href="?lang=en" onclick="switchLang('en',event)" style="display:block;padding:8px 14px;font-size:13px;color:var(--text-1);text-decoration:none">English</a>
+          <a href="?lang=he" onclick="switchLang('he',event)" style="display:block;padding:8px 14px;font-size:13px;color:var(--text-1);text-decoration:none">עברית</a>
+          <a href="?lang=ar" onclick="switchLang('ar',event)" style="display:block;padding:8px 14px;font-size:13px;color:var(--text-1);text-decoration:none">العربية</a>
+          <a href="?lang=fr" onclick="switchLang('fr',event)" style="display:block;padding:8px 14px;font-size:13px;color:var(--text-1);text-decoration:none">Français</a>
+          <a href="?lang=es" onclick="switchLang('es',event)" style="display:block;padding:8px 14px;font-size:13px;color:var(--text-1);text-decoration:none">Español</a>
+          <a href="?lang=de" onclick="switchLang('de',event)" style="display:block;padding:8px 14px;font-size:13px;color:var(--text-1);text-decoration:none">Deutsch</a>
+          <a href="?lang=ru" onclick="switchLang('ru',event)" style="display:block;padding:8px 14px;font-size:13px;color:var(--text-1);text-decoration:none">Русский</a>
+          <a href="?lang=zh" onclick="switchLang('zh',event)" style="display:block;padding:8px 14px;font-size:13px;color:var(--text-1);text-decoration:none">简体中文</a>
+          <a href="?lang=ja" onclick="switchLang('ja',event)" style="display:block;padding:8px 14px;font-size:13px;color:var(--text-1);text-decoration:none">日本語</a>
+          <a href="?lang=pt" onclick="switchLang('pt',event)" style="display:block;padding:8px 14px;font-size:13px;color:var(--text-1);text-decoration:none">Português</a>
+        </div>
+      </div>
+
+      <div style="position:relative">
         <button class="tb-icon-btn" id="notifBtn" aria-label="Notifications" onclick="Dashboard.toggleNotifications()">
           <svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
           <span class="notif-dot" id="notifDot"></span>
@@ -1236,6 +1262,9 @@
           <div class="stamp-verified">VERIFIED</div>
           <div class="stamp-wave-strip" id="stampWaveStrip"></div>
         </div>
+        <div class="stamp-wave-big" id="stampWaveBig">
+          <div class="wave-big-label">7 Waves Preview</div>
+        </div>
         <div class="card" style="margin-top:20px"><h4 style="font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:12px">Your Stamp in Action</h4><div class="stamp-doc-mock"><div class="mock-lines"><div class="mock-line"></div><div class="mock-line short"></div><div class="mock-line"></div><div class="mock-line med"></div><div class="mock-line"></div><div class="mock-line short"></div></div><div class="stamp-overlay" id="stampDocOverlay"></div></div></div>
       </div>
       <div class="stamp-controls-section">
@@ -1255,7 +1284,7 @@
     <div class="settings-section">
       <!-- Profile -->
       <div class="card"><h3>Profile</h3><p class="card-sub">Manage your personal information</p>
-        <div class="form-row"><div><label class="form-label">Full Name</label><input type="text" class="form-input" id="settingsName" placeholder="Your name"></div><div><label class="form-label">Email</label><input type="email" class="form-input" id="settingsEmail" disabled style="opacity:.6;cursor:not-allowed"></div></div>
+        <div class="form-row"><div><label class="form-label">Full Name</label><input type="text" class="form-input" id="settingsName" placeholder="Your name"></div><div><label class="form-label">Email</label><input type="email" class="form-input" id="settingsEmail" disabled style="opacity:.6;cursor:not-allowed"><div style="font-size:11px;color:var(--text-2);margin-top:6px">To change email, contact <a href="mailto:support@vertifile.com" style="color:#7c3aed">support@vertifile.com</a></div></div></div>
         <div class="btn-row"><button class="btn btn-primary" onclick="saveProfile()">Save Changes</button></div>
       </div>
 
@@ -2075,6 +2104,27 @@ window.Dashboard = {
     // Render waves strip (separate from stamp coin)
     var sws = document.getElementById('stampWaveStrip');
     if(sws) sws.innerHTML = VertifileStamp.renderWaves(opts);
+    // Render big wave preview (tall container) for My Stamp tab
+    var swb = document.getElementById('stampWaveBig');
+    if(swb) {
+      // Build tall multi-wave SVG with all 7 colors, each wave line thicker and more visible
+      var colors = waveColors.length > 0 ? waveColors : ['#1e0a4a','#2e1065','#4c1d95','#6d28d9','#7c3aed','#a78bfa','#c4b5fd'];
+      var svgPaths = '';
+      for (var i = 0; i < 7; i++) {
+        var y = 30 + i * 22;  // evenly spaced from 30 to 162
+        var amp = 12 + i * 2;
+        var phase = i * 40;
+        var d = 'M0,' + y;
+        for (var x = 0; x <= 800; x += 8) {
+          d += ' L' + x + ',' + (y + Math.sin((x + phase) * Math.PI / 180) * amp);
+        }
+        svgPaths += '<path d="' + d + '" stroke="' + colors[i] + '" stroke-width="2.5" fill="none" opacity="0.85"/>';
+      }
+      // Keep the label span, replace inner SVG
+      var label = swb.querySelector('.wave-big-label');
+      swb.innerHTML = (label ? label.outerHTML : '<div class="wave-big-label">7 Waves Preview</div>') +
+        '<svg viewBox="0 0 800 200" preserveAspectRatio="none">' + svgPaths + '</svg>';
+    }
   },
 
   // Password strength

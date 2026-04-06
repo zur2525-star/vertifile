@@ -135,13 +135,13 @@ router.get('/d/:shareId/raw', async (req, res) => {
     if (!pvfContent) return res.status(404).send('Not found');
 
     res.setHeader('Content-Security-Policy', [
-      "default-src 'none'",
-      "script-src 'unsafe-inline'",
-      "style-src 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src https://fonts.gstatic.com",
-      "img-src data: blob:",
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com data:",
+      "img-src 'self' data: blob: https:",
       "connect-src 'self'",
-      "frame-src data:",
+      "frame-src 'self' data: blob:",
       "base-uri 'none'",
       "form-action 'none'",
       "frame-ancestors 'self'"
