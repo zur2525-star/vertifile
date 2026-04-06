@@ -1233,10 +1233,33 @@ body.light .shortcuts-card{background:#fff}
     },
     previewDoc: function(row){
       var n = row.querySelector('.col-name');
-      if(n) document.getElementById('previewTitle').textContent = n.textContent;
+      var name = n ? n.textContent.trim() : 'Document';
+      document.getElementById('previewTitle').textContent = name;
+
+      var ext = name.split('.').pop().toLowerCase();
+      var icon = '📄';
+      var typeLabel = 'Document';
+      if (ext === 'pdf') { icon = '📄'; typeLabel = 'PDF Document'; }
+      else if (['png','jpg','jpeg'].includes(ext)) { icon = '🖼️'; typeLabel = 'Image'; }
+      else if (ext === 'txt') { icon = '📝'; typeLabel = 'Text File'; }
+
+      var previewEl = document.querySelector('.preview-content');
+      if (previewEl) {
+        previewEl.innerHTML = '<div style="text-align:center;padding:40px">' +
+          '<div style="font-size:72px;margin-bottom:16px">' + icon + '</div>' +
+          '<div style="font-size:16px;font-weight:600;margin-bottom:8px;color:var(--text-1)">' + name + '</div>' +
+          '<div style="font-size:13px;color:var(--text-2);margin-bottom:24px">' + typeLabel + '</div>' +
+          '<button onclick="Dashboard.showToast(\'Download coming soon\')" style="padding:10px 24px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-size:14px">⬇ Download to View</button>' +
+          '</div>';
+      }
+
       document.getElementById('docPreview').classList.add('open');
     },
-    closePreview: function(){ document.getElementById('docPreview').classList.remove('open'); },
+    closePreview: function(){
+      var previewEl = document.querySelector('.preview-content');
+      if (previewEl) { previewEl.innerHTML = ''; }
+      document.getElementById('docPreview').classList.remove('open');
+    },
 
     setAccent: function(el){
       document.querySelectorAll('#accentPresets .color-preset').forEach(function(p){ p.classList.remove('selected'); });
