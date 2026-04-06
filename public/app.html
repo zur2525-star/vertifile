@@ -2464,8 +2464,9 @@ function handleLogoUpload(e) {
     if (area) area.style.display = 'none';
     if (thumb) thumb.src = dataUrl;
     if (fname) fname.textContent = file.name;
-    // Save logo for stamp preview rendering — clipped to circle, centered as block
-    window.__customLogo = '<div style="width:24px;height:24px;border-radius:50%;overflow:hidden;margin:0 auto 2px"><img src="' + dataUrl + '" style="width:100%;height:100%;object-fit:cover;display:block"/></div>';
+    // Save logo as raw <img> — VertifileStamp.renderStamp wraps it in
+    // .vfs-custom-logo which fills the entire inner circle and replaces text
+    window.__customLogo = '<img src="' + dataUrl + '" alt="Custom logo"/>';
     // Update stamp preview
     Dashboard.renderStamps();
   };

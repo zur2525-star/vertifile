@@ -47,6 +47,7 @@ window.VertifileStamp = {
 
     var forgedX = '<svg class="vfs-stamp-logo" viewBox="0 0 50 50" fill="none"><path d="M15 15L35 35" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/><path d="M35 15L15 35" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/></svg>';
 
+    var hasCustomLogo = !forged && !!cfg.customIcon;
     var logo = forged ? forgedX : (cfg.customIcon || cfg.defaultLogo);
     var labelClass = forged ? 'vfs-lbl-bad' : 'vfs-lbl-ok';
     var labelText = forged ? 'FORGED' : cfg.stampText;
@@ -54,6 +55,19 @@ window.VertifileStamp = {
     var rotText = forged
       ? 'TAMPERED \u2022 DOCUMENT MODIFIED \u2022 VERIFICATION FAILED \u2022'
       : cfg.rotatingText;
+
+    // When a custom logo is uploaded, it fills the entire inner circle
+    // and replaces the VERTIFILE / VERIFIED text. The default state shows
+    // the small icon + brand + verified labels.
+    var centerContent = hasCustomLogo
+      ? '<div class="vfs-custom-logo">' + cfg.customIcon + '</div>'
+      : (
+          '<div class="vfs-center">'
+          +   logo
+          +   '<div class="vfs-brand">' + this._escHtml(brandName) + '</div>'
+          +   '<div class="vfs-lbl ' + labelClass + '">' + this._escHtml(labelText) + '</div>'
+          + '</div>'
+        );
 
     return ''
       + '<div class="vfs-stamp-coin">'
@@ -71,11 +85,7 @@ window.VertifileStamp = {
       +     '<div class="vfs-shim"></div>'
       +     '<div class="vfs-glow"></div>'
       +     '<div class="vfs-inner-bg"></div>'
-      +     '<div class="vfs-center">'
-      +       logo
-      +       '<div class="vfs-brand">' + this._escHtml(brandName) + '</div>'
-      +       '<div class="vfs-lbl ' + labelClass + '">' + this._escHtml(labelText) + '</div>'
-      +     '</div>'
+      +     centerContent
       +   '</div>'
       + '</div>';
   },
@@ -267,6 +277,9 @@ window.VertifileStamp = {
 
       /* Inner BG */
       + '.vfs-inner-bg{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(124,58,237,.12)}'
+      + '.vfs-custom-logo{position:absolute;top:22%;left:22%;width:56%;height:56%;border-radius:50%;overflow:hidden;background:#fff;border:1px solid rgba(124,58,237,.12);display:flex;align-items:center;justify-content:center;z-index:2}'
+      + '.vfs-custom-logo>*{width:100%;height:100%;display:block}'
+      + '.vfs-custom-logo img{width:100%;height:100%;object-fit:cover;display:block}'
 
       /* Center */
       + '.vfs-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}'
