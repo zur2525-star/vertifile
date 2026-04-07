@@ -55,6 +55,16 @@ function initialize() {
     process.exit(1);
   }
 
+  // Phase 2B Fix #4: validate keyId format at boot. The DB column is
+  // VARCHAR(16); an operator who sets a non-16-hex-char keyId would boot fine
+  // but crash at the first Ed25519 INSERT with a SQL length error — a latent
+  // runtime failure. Fail-closed at boot instead. Log only a truncated keyId
+  // (first 8 chars + ellipsis) to avoid leaking the full identifier.
+  if (!/^[a-f0-9]{16}$/.test(primaryKeyId)) {
+    logger.error({ keyId: primaryKeyId.slice(0, 8) + '...' }, '[key-manager] ED25519_PRIMARY_KEY_ID must be exactly 16 lowercase hex characters');
+    process.exit(1);
+  }
+
   try {
     const privateKey = crypto.createPrivateKey({ key: privPem, format: 'pem' });
     if (privateKey.asymmetricKeyType !== 'ed25519') {

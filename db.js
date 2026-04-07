@@ -355,13 +355,18 @@ async function getDocumentByShareId(shareId) {
   };
 }
 
-async function createDocument({ hash, signature, originalName, mimeType, fileSize, orgId, orgName, token, tokenCreatedAt, recipient, recipientHash, shareId }) {
+async function createDocument({ hash, signature, originalName, mimeType, fileSize, createdAt, orgId, orgName, token, tokenCreatedAt, recipient, recipientHash, shareId, ed25519_signature, ed25519_key_id }) {
+  // Phase 2B Fix #1: createdAt is threaded from the pipeline so the DB value
+  // matches the timestamp used to build the Ed25519 signing payload. Legacy
+  // callers without the field fall back to a fresh ISO string (byte-identical
+  // to the previous behavior).
   await queryWithRetry(
-    `INSERT INTO documents (hash, signature, original_name, mime_type, file_size, created_at, token, token_created_at, org_id, org_name, recipient, recipient_hash, share_id)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
+    `INSERT INTO documents (hash, signature, original_name, mime_type, file_size, created_at, token, token_created_at, org_id, org_name, recipient, recipient_hash, share_id, ed25519_signature, ed25519_key_id)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)`,
     [hash, signature, originalName || null, mimeType || null, fileSize || null,
-     new Date().toISOString(), token || null, tokenCreatedAt || null,
-     orgId, orgName, recipient || null, recipientHash || null, shareId || null]
+     createdAt || new Date().toISOString(), token || null, tokenCreatedAt || null,
+     orgId, orgName, recipient || null, recipientHash || null, shareId || null,
+     ed25519_signature || null, ed25519_key_id || null]
   );
 }
 

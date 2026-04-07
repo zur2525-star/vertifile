@@ -49,6 +49,7 @@ const logger = require('./logger');
 const { obfuscatePvf } = require('../obfuscate');
 const { generatePvfHtml } = require('../templates/pvf');
 const { HMAC_SECRET, hashBytes, signHash, generateToken } = require('./pvf-generator');
+const signing = require('./signing');
 const chain = require('../blockchain');
 const db = require('../db');
 const { getClientIP } = require('../middleware/auth');
@@ -219,6 +220,41 @@ async function createPvf(opts) {
   }
 
   // -----------------------------------------------------------------
+  // 6b. ED25519 DUAL-SIGNATURE (Phase 2B — invisible-with-fallback)
+  //
+  // signing.signEd25519() returns null if no primary key is configured
+  // (Phase 2A invisible mode — production state today). When that happens,
+  // the pipeline proceeds with HMAC only and the document is byte-equivalent
+  // to a Phase 2A doc.
+  //
+  // The Ed25519 payload INTENTIONALLY does NOT include codeIntegrity, because
+  // codeIntegrity is computed after obfuscation and the signature is embedded
+  // in the inline script (chicken-and-egg). The HMAC chain_token below still
+  // covers codeIntegrity — Ed25519 is a parallel asymmetric proof of document
+  // identity, not a replacement for the chain.
+  // -----------------------------------------------------------------
+  // Phase 2B Fix #2: wrap signEd25519 in try/catch. If crypto.sign() throws
+  // at runtime (corrupted KeyObject, OpenSSL failure, hardware issue), the
+  // pipeline must degrade to HMAC-only rather than aborting doc creation
+  // entirely. Phase 2B's "invisible-with-fallback" contract requires graceful
+  // degradation.
+  let ed25519Result = null;
+  try {
+    ed25519Result = signing.signEd25519(signing.buildSigningPayload({
+      hash: fileHash,
+      orgId,
+      createdAt: timestamp,
+      recipientHash: recipientHash || '',
+      codeIntegrity: ''   // Intentionally empty — see comment above
+    }));
+  } catch (e) {
+    logger.warn({ err: e.message, event: 'ed25519_sign_failed' }, '[pvf-pipeline] Ed25519 signing failed — falling back to HMAC-only');
+    ed25519Result = null;
+  }
+  const ed25519Signature = ed25519Result ? ed25519Result.signature : null;
+  const ed25519KeyId = ed25519Result ? ed25519Result.keyId : null;
+
+  // -----------------------------------------------------------------
   // 7. ENCODE FILE (text → HTML escape, binary → base64)
   // -----------------------------------------------------------------
   const fileBase64 = encodeFileForTemplate(buffer, mimeType);
@@ -246,6 +282,9 @@ async function createPvf(opts) {
 
   // -----------------------------------------------------------------
   // 10. GENERATE PVF HTML — shareId is now baked in pre-obfuscation
+  // Phase 2B: Ed25519 signature + keyId passed through. When no key is
+  // configured both are null and the template omits var SIG_ED / var KEY_ID
+  // entirely — documents are byte-equivalent to Phase 2A.
   // -----------------------------------------------------------------
   let pvfHtml = generatePvfHtml(
     fileBase64,
@@ -259,7 +298,10 @@ async function createPvf(opts) {
     orgName,
     orgId,
     branding.wave_color,
-    shareId   // ← NEW final parameter (Step A.1)
+    shareId,
+    timestamp,         // Phase 2B Fix #1 — single source of truth for created_at
+    ed25519Signature,  // Phase 2B — null if no key configured
+    ed25519KeyId       // Phase 2B — null if no key configured
   );
 
   // -----------------------------------------------------------------
@@ -273,12 +315,15 @@ async function createPvf(opts) {
     originalName,
     mimeType,
     fileSize: buffer.length,
+    createdAt: timestamp,  // Phase 2B Fix #1 — same ISO string used in Ed25519 payload & HTML template
     orgId,
     orgName,
     token,
     tokenCreatedAt,
     recipient: recipient || null,
-    recipientHash
+    recipientHash,
+    ed25519_signature: ed25519Signature,
+    ed25519_key_id: ed25519KeyId
   });
 
   // -----------------------------------------------------------------
@@ -422,6 +467,11 @@ async function createPvf(opts) {
 
   // -----------------------------------------------------------------
   // 21. RETURN STRUCTURED RESULT
+  // Phase 2B: ed25519Signature/ed25519KeyId are added to the internal
+  // result for future consumers (Phase 2C verify, Phase 2D migration).
+  // They are NOT yet surfaced in HTTP responses — call sites (wrappers in
+  // pvf-generator.js handleCreatePvf and routes/user.js upload) don't
+  // expose them in JSON responses. That's Phase 2C/D territory.
   // -----------------------------------------------------------------
   return {
     success: true,
@@ -437,7 +487,9 @@ async function createPvf(opts) {
     preview,
     codeIntegrity,
     chainToken,
-    token
+    token,
+    ed25519Signature: ed25519Signature || null,
+    ed25519KeyId: ed25519KeyId || null
   };
 }
 

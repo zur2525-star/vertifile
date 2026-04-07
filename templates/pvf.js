@@ -19,7 +19,13 @@ function sanitizeSvg(svg) {
   return clean;
 }
 
-function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, customIcon, brandColor, orgName, orgId, waveColor, shareId) {
+function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, customIcon, brandColor, orgName, orgId, waveColor, shareId, createdAt, ed25519Signature, ed25519KeyId) {
+  // Phase 2B Fix #1: createdAt is threaded from createPvf() so the value baked
+  // into <meta name="pvf:created"> and var CREATED matches the value used in
+  // the Ed25519 signing payload AND the documents.created_at DB column.
+  // BACKWARD COMPAT: legacy callers without the param fall back to a fresh ISO
+  // string so Phase 2A docs (and any future direct caller) still render.
+  if (!createdAt) createdAt = new Date().toISOString();
   // Sanitize customIcon SVG if present
   if (customIcon && customIcon.startsWith('<svg')) {
     customIcon = sanitizeSvg(customIcon);
@@ -31,8 +37,6 @@ function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature
   // Stamp brand text — uses displayBrand sanitized to 16 chars max (surrogate-pair safe).
   // Layer 2 (routes/pages.js injectStampConfig) overrides this at view time with user's custom brandText if set.
   const displayBrand = ((Array.from((orgName || 'VERTIFILE').toString().trim().normalize('NFKC').replace(/[\u202A-\u202E\u200B-\u200F\u2066-\u2069]/g,'')).slice(0,16).join('')) || 'VERTIFILE').toUpperCase();
-
-  const createdAt = new Date().toISOString();
 
   return `<!--PVF:1.0-->
 <!DOCTYPE html>
@@ -537,7 +541,7 @@ document.addEventListener("visibilitychange", function() {
 
 var HASH="${fileHash}";
 var SIG="${signature}";
-var RCPT="${recipientHash || ''}";
+${(ed25519Signature && ed25519KeyId) ? `var SIG_ED="${ed25519Signature}";\nvar KEY_ID="${ed25519KeyId}";\n` : ''}var RCPT="${recipientHash || ''}";
 var CREATED="${createdAt}";
 var ORGID="${orgId || ''}";
 var SHAREID="${shareId || ''}";

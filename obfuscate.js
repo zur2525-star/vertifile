@@ -28,7 +28,7 @@ const OBFUSCATION_OPTIONS = {
   selfDefending: false,
   target: 'browser',
   reservedNames: [
-    'HASH', 'SIG', 'API', 'RCPT', 'SHAREID', 'token', 'init',
+    'HASH', 'SIG', 'API', 'RCPT', 'SHAREID', 'SIG_ED', 'KEY_ID', 'token', 'init',
     'show', 'setOk', 'setFk', 'freezeStamp',
     'triggerFlip', 'showLocal', 'activateWaves',
     'startRefresh', '__securityFrozen', '__devToolsOpen',
