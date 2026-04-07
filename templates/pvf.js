@@ -610,7 +610,13 @@ async function init(){
   try{
     await new Promise(r=>setTimeout(r,500));
     var codeCheck=await computeCodeIntegrity();
-    var r=await fetch(apiUrl+"/api/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({hash:HASH,signature:SIG,recipientHash:RCPT||undefined,created:CREATED,orgId:ORGID,codeIntegrity:codeCheck})});
+    // Phase 2C: forward Ed25519 dual-signature when available. Pre-Phase-2B
+    // docs (and Phase-2B docs created with no key configured) DO NOT have
+    // SIG_ED / KEY_ID variables in the inline script at all. typeof is the
+    // only safe check; a bare if(SIG_ED) would throw ReferenceError.
+    var sigEd=(typeof SIG_ED!=="undefined")?SIG_ED:null;
+    var keyId=(typeof KEY_ID!=="undefined")?KEY_ID:null;
+    var r=await fetch(apiUrl+"/api/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({hash:HASH,signature:SIG,recipientHash:RCPT||undefined,created:CREATED,orgId:ORGID,codeIntegrity:codeCheck,ed25519Signature:sigEd,ed25519KeyId:keyId})});
     var d=await r.json();
     if(d.verified){token=d.token;show(true);if(!isLocal)startRefresh();return}
     // Server says NOT verified — if online (not local), trust the server → FORGED

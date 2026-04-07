@@ -8,6 +8,7 @@ const logger = require('../services/logger');
 const { escapeHtml } = require('../templates/pvf');
 const { handleCreatePvf, verifySignature, generateToken, HMAC_SECRET } = require('../services/pvf-generator');
 const { buildOverrideScriptInnerText } = require('../services/stamp-override');
+const signing = require('../services/signing');
 
 const router = express.Router();
 
@@ -202,7 +203,7 @@ router.post('/verify', verifyLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
     const chain = req.app.get('chain');
-    const { hash, signature, content, recipientHash, created, orgId, codeIntegrity } = req.body;
+    const { hash, signature, content, recipientHash, created, orgId, codeIntegrity, ed25519Signature, ed25519KeyId } = req.body;
 
     let lookupHash = hash;
 
@@ -237,6 +238,89 @@ router.post('/verify', verifyLimiter, async (req, res) => {
         logger.warn({ event: 'verify_fail', reason: 'signature_mismatch', hash: lookupHash.substring(0, 16) }, 'Signature mismatch');
         await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'invalid_signature' });
         return res.json({ success: true, verified: false, reason: 'invalid_signature' });
+      }
+
+      // ============================================================
+      // PHASE 2C — Ed25519 verification + no-downgrade enforcement
+      //
+      // Behavior matrix:
+      //   doc.ed25519_signature  | client ed25519Signature | result
+      //   ---------------------- | ----------------------- | ------
+      //   NULL  (legacy / no key)| absent                  | OK — HMAC-only path (signedBy='hmac')
+      //   NULL  (legacy / no key)| present                 | REJECT — forge-by-claim defense ('ed25519_unexpected')
+      //   PRESENT (dual-signed)  | absent                  | REJECT — no-downgrade ('ed25519_required')
+      //   PRESENT (dual-signed)  | present + verifies      | OK — dual-verified (signedBy='both')
+      //   PRESENT (dual-signed)  | present + invalid       | REJECT ('ed25519_invalid')
+      //
+      // The Ed25519 payload is reconstructed from the DB row, NEVER from
+      // client-supplied fields. This is the no-downgrade defense: the
+      // verifier never trusts the client about orgId / createdAt /
+      // recipientHash / codeIntegrity. The exact payload format MUST
+      // match Phase 2B (services/pvf-pipeline.js:243-249) byte-for-byte
+      // or crypto.verify() returns false.
+      //
+      // The mapped doc fields are: doc.timestamp (← created_at),
+      // doc.orgId, doc.recipientHash, doc.ed25519_signature,
+      // doc.ed25519_key_id (see db.js mapDocRow).
+      // ============================================================
+      // Phase 2C Fix #2 (Ori): reject inconsistent rows up front.
+      // A row with one-of-two ed25519 columns set indicates data corruption
+      // or a botched migration. Falling through to the else branch would
+      // silently downgrade the doc to HMAC-only, which is a security risk.
+      if (!!doc.ed25519_signature !== !!doc.ed25519_key_id) {
+        logger.warn({ event: 'verify_fail', reason: 'ed25519_inconsistent', hash: lookupHash.substring(0, 16) }, 'Half-dual-signed row');
+        await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'ed25519_inconsistent' });
+        return res.json({ success: true, verified: false, reason: 'ed25519_inconsistent' });
+      }
+
+      let signedBy = 'hmac';
+      if (doc.ed25519_signature && doc.ed25519_key_id) {
+        // Doc is dual-signed — client MUST submit a matching Ed25519 signature.
+        if (!ed25519Signature || !ed25519KeyId) {
+          logger.warn({ event: 'verify_fail', reason: 'ed25519_required', hash: lookupHash.substring(0, 16) }, 'Ed25519 required but missing');
+          await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'ed25519_required' });
+          return res.json({ success: true, verified: false, reason: 'ed25519_required' });
+        }
+
+        // Phase 2C Fix #1 (Avi): hard-bind the client's keyId to the DB row.
+        // As-written, the code is not exploitable (an attacker can't find a
+        // (signature, keyId) pair where the sig verifies under a different key
+        // without breaking Ed25519), but the wrong-keyId surface is a future-bug
+        // magnet. Defense in depth.
+        if (ed25519KeyId !== doc.ed25519_key_id) {
+          logger.warn({ event: 'verify_fail', reason: 'ed25519_key_mismatch', hash: lookupHash.substring(0, 16) }, 'Ed25519 keyId mismatch');
+          await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'ed25519_key_mismatch' });
+          return res.json({ success: true, verified: false, reason: 'ed25519_key_mismatch' });
+        }
+
+        // Reconstruct the EXACT payload that Phase 2B signed (DB-only, never client).
+        // codeIntegrity is intentionally empty — see services/pvf-pipeline.js:248.
+        const expectedPayload = signing.buildSigningPayload({
+          hash: doc.hash,
+          orgId: doc.orgId,
+          createdAt: doc.timestamp,
+          recipientHash: doc.recipientHash || '',
+          codeIntegrity: ''
+        });
+
+        let ed25519Ok = false;
+        try {
+          ed25519Ok = await signing.verifyEd25519(expectedPayload, ed25519Signature, ed25519KeyId);
+        } catch (e) {
+          ed25519Ok = false;
+        }
+        if (!ed25519Ok) {
+          logger.warn({ event: 'verify_fail', reason: 'ed25519_invalid', hash: lookupHash.substring(0, 16) }, 'Ed25519 signature invalid');
+          await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'ed25519_invalid' });
+          return res.json({ success: true, verified: false, reason: 'ed25519_invalid' });
+        }
+        signedBy = 'both';
+      } else if (ed25519Signature) {
+        // Doc was NOT dual-signed but client claims an Ed25519 signature exists.
+        // Reject — protects against forge-by-claim attacks.
+        logger.warn({ event: 'verify_fail', reason: 'ed25519_unexpected', hash: lookupHash.substring(0, 16) }, 'Ed25519 supplied for unsigned doc');
+        await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'ed25519_unexpected' });
+        return res.json({ success: true, verified: false, reason: 'ed25519_unexpected' });
       }
 
       // Code integrity check — with dual-hash fallback for Layer 2 overrides
@@ -372,6 +456,7 @@ router.post('/verify', verifyLimiter, async (req, res) => {
         token: newToken,
         timestamp: doc.timestamp,
         orgName: doc.orgName,
+        signedBy,                 // Phase 2C: 'hmac' (legacy) | 'both' (dual-signed)
         blockchain: blockchainProof
       });
     } else {
@@ -380,6 +465,7 @@ router.post('/verify', verifyLimiter, async (req, res) => {
       res.json({ success: true, verified: false, hash: lookupHash });
     }
   } catch (error) {
+    logger.error({ err: error.message, stack: error.stack, event: 'verify_internal_error' }, '[verify] handler crashed');
     res.status(500).json({ success: false, verified: false, error: 'Verification error' });
   }
 });

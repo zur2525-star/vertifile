@@ -67,6 +67,10 @@ const SCHEMA_SQL = `
     original_name TEXT,
     mime_type TEXT,
     file_size BIGINT,
+    -- PHASE 2C INVARIANT: created_at MUST remain TEXT.
+    -- pg returns Date for TIMESTAMPTZ, and String(Date) -> 'Wed Apr 09 2026...'
+    -- which is NOT byte-equivalent to the ISO string Phase 2B signed.
+    -- Migrating to TIMESTAMPTZ would silently break every Ed25519 verification.
     created_at TEXT DEFAULT (now() AT TIME ZONE 'UTC'),
     token TEXT,
     token_created_at BIGINT,
