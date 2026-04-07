@@ -135,7 +135,14 @@ describe('signing.signEd25519 / verifyEd25519 (with key configured)', () => {
     const payload = 'test payload';
     const result = signing.signEd25519(payload);
     assert.ok(result);
-    const tampered = result.signature.substring(0, result.signature.length - 2) + 'AA';
+    // Tamper a middle character — middle chars encode full 6 bits each, so
+    // any replacement guarantees a different signature (avoids the 1/256
+    // flake on the last 2 chars where 'AA' decodes to 0x00 and could match
+    // a signature whose 64th byte was already 0x00).
+    const mid = Math.floor(result.signature.length / 2);
+    const origChar = result.signature[mid];
+    const newChar = origChar === 'A' ? 'B' : 'A';
+    const tampered = result.signature.substring(0, mid) + newChar + result.signature.substring(mid + 1);
     const valid = await signing.verifyEd25519(payload, tampered, testKeyId);
     assert.equal(valid, false);
   });
