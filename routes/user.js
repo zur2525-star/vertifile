@@ -8,6 +8,10 @@ const { requireLogin } = require('../middleware/auth');
 const { hashBytes, signHash, fixFilename, HMAC_SECRET } = require('../services/pvf-generator');
 const { generatePvfHtml } = require('../templates/pvf');
 const { obfuscatePvf } = require('../obfuscate');
+// Phase 1B: unified PVF creation pipeline. Lazy-required inside the upload
+// handler so the legacy code path keeps working unchanged when the feature
+// flag is off.
+const pvfPipeline = require('../services/pvf-pipeline');
 
 const router = express.Router();
 
@@ -64,6 +68,16 @@ router.get('/documents', requireLogin, async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to load documents' }); }
 });
 
+// ============================================================================
+// POST /api/user/upload — dashboard PVF creation
+// ============================================================================
+//
+// Phase 1B: thin wrapper around services/pvf-pipeline.createPvf().
+// Feature flag PVF_PIPELINE_V2 (default ON):
+//   - PVF_PIPELINE_V2 !== '0'  → unified pipeline path
+//   - PVF_PIPELINE_V2 === '0'  → legacy 121-line per-endpoint path (rollback)
+// The legacy implementation is preserved verbatim as `uploadLegacy` below.
+// ============================================================================
 router.post('/upload', requireLogin, (req, res, next) => {
   const upload = req.app.get('upload');
   upload.single('file')(req, res, (err) => {
@@ -71,6 +85,92 @@ router.post('/upload', requireLogin, (req, res, next) => {
     next();
   });
 }, async (req, res) => {
+  // Emergency rollback path
+  if (process.env.PVF_PIPELINE_V2 === '0') {
+    return uploadLegacy(req, res);
+  }
+
+  try {
+    const db = req.app.get('db');
+
+    if (req.file) fixFilename(req.file);
+    // Check document limit (preserved from legacy)
+    if (req.user.documents_used >= req.user.documents_limit) {
+      return res.status(403).json({ success: false, error: 'Document limit reached. Upgrade your plan for more.' });
+    }
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'No file uploaded' });
+    }
+    // Dashboard's strict allowlist (5 types). The pipeline's allowlist is a
+    // superset; we enforce the dashboard restriction here at the boundary so
+    // dashboard users continue to see the same rejection behavior.
+    const dashboardAllowedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg', 'text/plain'];
+    if (!dashboardAllowedTypes.includes(req.file.mimetype)) {
+      return res.status(400).json({ success: false, error: 'Unsupported file type' });
+    }
+
+    let result;
+    try {
+      result = await pvfPipeline.createPvf({
+        buffer: req.file.buffer,
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+        owner: {
+          type: 'user',
+          id: req.user.id,
+          plan: req.user.plan,
+          email: req.user.email,
+          displayName: req.user.name || req.user.email.split('@')[0]
+        },
+        // Dashboard legacy did NOT sanitize filenames — preserve byte-identity
+        sanitizeFilename: false,
+        req
+      });
+    } catch (err) {
+      if (err && (err.message === 'INVALID_MIME_TYPE' || err.message === 'EMPTY_FILE')) {
+        return res.status(400).json({ success: false, error: 'Unsupported file type' });
+      }
+      throw err;
+    }
+
+    // Build response — match the legacy two-shape contract exactly
+    if (result.preview) {
+      return res.json({
+        success: true,
+        preview: true,
+        previewUrl: '/d/' + result.shareId,
+        shareId: result.shareId,
+        hash: result.hash,
+        fileName: req.file.originalname,
+        message: 'Document protected! Subscribe to download.',
+        upgradeUrl: '/pricing',
+        documentsUsed: req.user.documents_used + 1,
+        documentsLimit: req.user.documents_limit
+      });
+    }
+
+    return res.json({
+      success: true,
+      hash: result.hash,
+      shareId: result.shareId,
+      fileName: req.file.originalname,
+      documentsUsed: req.user.documents_used + 1,
+      documentsLimit: req.user.documents_limit
+    });
+  } catch(e) {
+    logger.error('[USER UPLOAD]', e.message);
+    return res.status(500).json({ success: false, error: 'Upload failed' });
+  }
+});
+
+// ============================================================================
+// LEGACY UPLOAD HANDLER  (Phase 1B rollback path)
+// ============================================================================
+// Pre-Phase-1B implementation, preserved verbatim. Reachable only when
+// PVF_PIPELINE_V2=0. Do NOT modify — fix bugs in services/pvf-pipeline.js
+// instead. This file exists solely for the 30-second rollback safety net.
+// ============================================================================
+async function uploadLegacy(req, res) {
   try {
     const db = req.app.get('db');
 
@@ -185,7 +285,7 @@ router.post('/upload', requireLogin, (req, res, next) => {
     logger.error('[USER UPLOAD]', e.message);
     res.status(500).json({ success: false, error: 'Upload failed' });
   }
-});
+}
 
 router.post('/documents/:hash/star', requireLogin, async (req, res) => {
   try {

@@ -229,13 +229,17 @@
     var hideToolbarCSS = '<style>#toolbar{display:none!important}#wrap{margin-top:20px!important}</style>';
     var content = data.content.replace('<head>', '<head>' + markerScript + hideToolbarCSS);
     // Extract shareId from PVF content for browser link
-    var shareMatch = content.match(/var SHAREID="([A-Za-z0-9_-]+)"/);
-    if (shareMatch && shareMatch[1]) __pvfMeta.shareId = shareMatch[1];
-    // Fallback: try to find /d/ URL in content
-    if (!__pvfMeta.shareId) {
-      var dMatch = content.match(/\/d\/([A-Za-z0-9_-]{6,20})/);
-      if (dMatch) __pvfMeta.shareId = dMatch[1];
+    // Strategy 1: read the stable meta tag (preferred — not subject to obfuscator output)
+    var shareMatch = content.match(/<meta\s+name="pvf:share-id"\s+content="([A-Za-z0-9_-]+)"/);
+    // Strategy 2: fallback regex for obfuscated script body (handles both quote styles)
+    if (!shareMatch || !shareMatch[1]) {
+      shareMatch = content.match(/SHAREID\s*=\s*['"]([A-Za-z0-9_-]+)['"]/);
     }
+    // Strategy 3: last-resort fallback — scan for /d/<shareId> URL patterns in the HTML body
+    if (!shareMatch || !shareMatch[1]) {
+      shareMatch = content.match(/\/d\/([A-Za-z0-9_-]{6,20})/);
+    }
+    if (shareMatch && shareMatch[1]) __pvfMeta.shareId = shareMatch[1];
     frame.srcdoc = content;
 
     // Show document immediately while verification happens in background

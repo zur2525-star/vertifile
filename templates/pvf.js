@@ -19,7 +19,7 @@ function sanitizeSvg(svg) {
   return clean;
 }
 
-function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, customIcon, brandColor, orgName, orgId, waveColor) {
+function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, customIcon, brandColor, orgName, orgId, waveColor, shareId) {
   // Sanitize customIcon SVG if present
   if (customIcon && customIcon.startsWith('<svg')) {
     customIcon = sanitizeSvg(customIcon);
@@ -46,6 +46,7 @@ function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature
 <meta name="pvf:original-name" content="${safeOriginalName}">
 <meta name="pvf:mime-type" content="${mimeType}">
 <meta name="pvf:created" content="${createdAt}">
+<meta name="pvf:share-id" content="${shareId || ''}">
 ${recipientHash ? `<meta name="pvf:recipient-hash" content="${recipientHash}">` : ''}
 <title>PVF — ${safeOriginalName}</title>
 <style>
@@ -539,7 +540,7 @@ var SIG="${signature}";
 var RCPT="${recipientHash || ''}";
 var CREATED="${createdAt}";
 var ORGID="${orgId || ''}";
-var SHAREID="";
+var SHAREID="${shareId || ''}";
 var API=window.location.origin;
 var ORGNAME="${escapeHtml(orgName || 'VERTIFILE')}";
 var CUSTOMICON=${customIcon ? `"${customIcon.startsWith('<svg') ? 'svg' : 'img'}"` : 'null'};

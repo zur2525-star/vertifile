@@ -59,7 +59,10 @@ function getSafeHostForLogging(dbUrl) {
  * production.
  */
 function assertProductionNotLocal(dbUrl, logger) {
-  const isProd = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
+  // Phase 1B (Avi): match logger.js semantics — `!!process.env.RENDER`
+  // catches all truthy values (e.g. 'true', '1', 'yes') instead of only the
+  // literal string 'true'. Render sets this var on every deploy.
+  const isProd = process.env.NODE_ENV === 'production' || !!process.env.RENDER;
   if (isProd && isLocalDatabase(dbUrl)) {
     const host = getSafeHostForLogging(dbUrl);
     const msg = '[DB] FATAL: production environment cannot use a local DATABASE_URL (host=' + host + '). Refusing to start to prevent silent plaintext transport. If this is intentional, unset NODE_ENV/RENDER.';

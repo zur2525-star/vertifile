@@ -84,7 +84,119 @@ function fixFilename(file) {
   return file;
 }
 
+// ============================================================================
+// PVF CREATION HANDLER
+// ============================================================================
+//
+// Phase 1B: this is now a thin wrapper around services/pvf-pipeline.createPvf().
+// The unified pipeline is the SINGLE source of truth for PVF creation, used by
+// both this handler and routes/user.js POST /upload.
+//
+// Feature flag PVF_PIPELINE_V2 (default ON):
+//   - PVF_PIPELINE_V2 !== '0'  → new unified pipeline path (createPvf)
+//   - PVF_PIPELINE_V2 === '0'  → legacy 159-line per-endpoint path (rollback)
+//
+// The legacy implementation is preserved verbatim as handleCreatePvfLegacy
+// below. Do NOT delete it until at least one production release validates
+// the new pipeline. Deletion is a separate PR.
+// ============================================================================
 async function handleCreatePvf(req, res) {
+  // Emergency rollback path
+  if (process.env.PVF_PIPELINE_V2 === '0') {
+    return handleCreatePvfLegacy(req, res);
+  }
+
+  try {
+    if (req.file) fixFilename(req.file);
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'No file uploaded' });
+    }
+
+    // Lazy require to avoid module-load circular dependency.
+    // pvf-pipeline.js imports HMAC_SECRET/hashBytes/signHash/generateToken
+    // from THIS file at top level, so it can only safely be required after
+    // pvf-generator.js has finished evaluating its module.exports.
+    const { createPvf } = require('./pvf-pipeline');
+
+    // Determine owner shape — demo and authenticated API both look like 'org'
+    // from the pipeline's POV; we use 'demo' explicitly so the pipeline can
+    // log appropriately (and to keep behavior crisp for future telemetry).
+    const ownerType = req.apiKey === 'demo' ? 'demo' : 'org';
+    const owner = {
+      type: ownerType,
+      id: req.org.orgId,           // already 'org_<key>' or 'org_demo'
+      displayName: req.org.orgName
+    };
+
+    const recipient = (req.body && req.body.recipient) || (req.query && req.query.recipient) || null;
+
+    let result;
+    try {
+      result = await createPvf({
+        buffer: req.file.buffer,
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype || 'application/octet-stream',
+        owner,
+        recipient,
+        apiKey: req.apiKey,
+        req
+      });
+    } catch (err) {
+      // Map pipeline-domain errors to HTTP responses
+      if (err && err.message === 'INVALID_MIME_TYPE') {
+        return res.status(400).json({
+          success: false,
+          error: 'Unsupported file type: ' + (req.file.mimetype || 'unknown')
+        });
+      }
+      if (err && err.message === 'EMPTY_FILE') {
+        return res.status(400).json({ success: false, error: 'Empty file uploaded' });
+      }
+      throw err;
+    }
+
+    // Build share URL (force HTTPS behind proxy) — same logic as legacy
+    const proto = req.get('x-forwarded-proto') || req.protocol;
+    const baseUrl = process.env.BASE_URL || `${proto}://${req.get('host')}`;
+    const shareUrl = `${baseUrl}/d/${result.shareId}`;
+    logger.info({ event: 'pvf_shared', shareUrl }, `Share URL: ${shareUrl}`);
+
+    // JSON response (for API integrations)
+    if (req.query.format === 'json' || req.headers.accept === 'application/json') {
+      return res.json({
+        success: true,
+        hash: result.hash,
+        signature: result.signature.substring(0, 16) + '...',
+        shareUrl,
+        shareId: result.shareId,
+        fileName: result.fileName,
+        fileSize: result.pvfHtml.length,
+        downloadUrl: `${baseUrl}/d/${result.shareId}/download`
+      });
+    }
+
+    // Binary .pvf download with security headers
+    setPvfSecurityHeaders(res);
+    res.setHeader('Content-Type', 'application/vnd.vertifile.pvf; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${result.fileName}"`);
+    res.setHeader('X-PVF-Share-URL', shareUrl);
+    return res.send(result.pvfHtml);
+
+  } catch (error) {
+    logger.error({ err: error, event: 'create_pvf_error' }, 'Create PVF failed');
+    return res.status(500).json({ success: false, error: 'Failed to create PVF' });
+  }
+}
+
+// ============================================================================
+// LEGACY PVF CREATION HANDLER  (Phase 1B rollback path)
+// ============================================================================
+// This is the previous (pre-Phase-1B) implementation, preserved verbatim.
+// It is reachable only when PVF_PIPELINE_V2=0. Do NOT modify — if you find
+// a bug here, fix it in services/pvf-pipeline.js too. This file exists
+// solely so an emergency rollback is one env var away.
+// ============================================================================
+async function handleCreatePvfLegacy(req, res) {
   try {
     if (req.file) fixFilename(req.file);
     if (!req.file) {
@@ -253,5 +365,6 @@ module.exports = {
   generateToken,
   setPvfSecurityHeaders,
   fixFilename,
-  handleCreatePvf
+  handleCreatePvf,
+  handleCreatePvfLegacy
 };
