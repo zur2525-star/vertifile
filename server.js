@@ -226,17 +226,6 @@ app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: { succ
 app.use(responseEnvelope());
 app.use(requestLogger());
 
-// Health check endpoint (no auth required)
-app.get('/api/health', async (req, res) => {
-  try {
-    const health = await db.healthCheck();
-    const status = health.ok ? 200 : 503;
-    res.status(status).json({ success: health.ok, ...health });
-  } catch (e) {
-    res.status(503).json({ success: false, error: 'Health check failed', message: e.message });
-  }
-});
-
 // Mount routes
 app.use('/auth', authRoutes);
 app.use('/api/user', userRoutes);
