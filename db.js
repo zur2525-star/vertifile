@@ -134,6 +134,17 @@ const SCHEMA_SQL = `
   CREATE INDEX IF NOT EXISTS idx_audit_time ON audit_log(timestamp);
   CREATE INDEX IF NOT EXISTS idx_webhooks_org ON webhooks(org_id);
   CREATE UNIQUE INDEX IF NOT EXISTS idx_docs_share ON documents(share_id) WHERE share_id IS NOT NULL;
+
+  CREATE TABLE IF NOT EXISTS ed25519_keys (
+    id              VARCHAR(16) PRIMARY KEY,
+    public_key_pem  TEXT NOT NULL,
+    valid_from      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    valid_until     TIMESTAMPTZ,
+    is_primary      BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  );
+  CREATE UNIQUE INDEX IF NOT EXISTS idx_ed25519_keys_primary ON ed25519_keys(is_primary) WHERE is_primary = TRUE;
+  CREATE INDEX IF NOT EXISTS idx_ed25519_keys_valid ON ed25519_keys(valid_until) WHERE valid_until IS NULL OR valid_until > NOW();
 `;
 
 // _ready resolves once the schema is bootstrapped.
@@ -183,6 +194,10 @@ const _ready = (async () => {
   } catch (_) { /* already exists */ }
   // Preview-only column for freemium paywall
   try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS preview_only BOOLEAN DEFAULT FALSE'); } catch (_) {}
+  // Ed25519 dual-signature columns (Phase 2A) — populated by Phase 2B
+  try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS ed25519_signature TEXT'); } catch (_) {}
+  try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS ed25519_key_id VARCHAR(16)'); } catch (_) {}
+  try { await pool.query('CREATE INDEX IF NOT EXISTS idx_docs_ed25519_key ON documents(ed25519_key_id) WHERE ed25519_key_id IS NOT NULL'); } catch (_) {}
   // Auth columns — email_verified, last_login_at, updated_at, provider narrowing
   try { await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified BOOLEAN NOT NULL DEFAULT FALSE'); } catch (_) {}
   try { await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMPTZ'); } catch (_) {}
@@ -228,6 +243,9 @@ function mapDocRow(row) {
     code_integrity: row.code_integrity || null,
     chained_token: row.chained_token || null,
     user_id: row.user_id || null,
+    // Ed25519 dual-signature columns (Phase 2A — null until Phase 2B activates signing)
+    ed25519_signature: row.ed25519_signature || null,
+    ed25519_key_id: row.ed25519_key_id || null,
   };
 }
 
@@ -765,6 +783,39 @@ async function getAllAuditForExport() {
 }
 
 // ================================================================
+// ED25519 KEY CRUD (Phase 2A)
+// ================================================================
+async function getEd25519KeyById(keyId) {
+  if (!keyId || typeof keyId !== 'string') return null;
+  const { rows } = await queryWithRetry(
+    'SELECT id, public_key_pem, valid_from, valid_until, is_primary FROM ed25519_keys WHERE id = $1',
+    [keyId]
+  );
+  return rows[0] || null;
+}
+
+async function getPrimaryEd25519Key() {
+  const { rows } = await queryWithRetry(
+    'SELECT id, public_key_pem, valid_from, valid_until, is_primary FROM ed25519_keys WHERE is_primary = TRUE LIMIT 1'
+  );
+  return rows[0] || null;
+}
+
+async function listActiveEd25519Keys() {
+  const { rows } = await queryWithRetry(
+    'SELECT id, public_key_pem, valid_from, valid_until, is_primary FROM ed25519_keys WHERE valid_until IS NULL OR valid_until > NOW() ORDER BY is_primary DESC, valid_from DESC'
+  );
+  return rows || [];
+}
+
+async function insertEd25519Key({ id, publicKeyPem, validFrom, validUntil, isPrimary }) {
+  await queryWithRetry(
+    'INSERT INTO ed25519_keys (id, public_key_pem, valid_from, valid_until, is_primary) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING',
+    [id, publicKeyPem, validFrom || new Date(), validUntil || null, !!isPrimary]
+  );
+}
+
+// ================================================================
 // CLOSE
 // ================================================================
 async function close() {
@@ -954,6 +1005,11 @@ module.exports = {
   healthCheck,
   updateLastLogin,
   setEmailVerified,
+  // Ed25519 key CRUD (Phase 2A)
+  getEd25519KeyById,
+  getPrimaryEd25519Key,
+  listActiveEd25519Keys,
+  insertEd25519Key,
   query: queryWithRetry,
   close,
   _db: pool,

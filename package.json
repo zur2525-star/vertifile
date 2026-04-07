@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "test": "node tests/api.test.js",
+    "test": "node tests/api.test.js && node tests/signing.test.js",
+    "test:api": "node tests/api.test.js",
+    "test:signing": "node tests/signing.test.js",
     "migrate": "node scripts/migrate.js"
   },
   "keywords": [],

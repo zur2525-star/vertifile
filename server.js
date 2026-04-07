@@ -28,6 +28,8 @@ const gatewayRoutes = require('./routes/gateway');
 const webhookRoutes = require('./routes/webhooks');
 const pageRoutes = require('./routes/pages');
 const onboardingRoutes = require('./routes/onboarding');
+const wellKnownRoutes = require('./routes/well-known');
+const keyManager = require('./services/key-manager');
 const { requestLogger } = require('./middleware/request-logger');
 const { responseEnvelope } = require('./middleware/response-envelope');
 const { trackError } = require('./middleware/error-alerter');
@@ -236,6 +238,8 @@ app.use('/api/webhooks', webhookRoutes);
 app.post('/api/keys/create', (req, res, next) => { req.url = '/keys-legacy/create'; adminRoutes(req, res, next); });
 app.get('/api/keys', (req, res, next) => { req.url = '/keys-legacy'; adminRoutes(req, res, next); });
 app.use('/api', onboardingRoutes);
+// Mount /.well-known/ BEFORE the static/page handler so it takes priority over wildcards.
+app.use('/.well-known', wellKnownRoutes);
 app.use('/', pageRoutes);
 
 // Global error handler
@@ -249,6 +253,10 @@ app.use(async (err, req, res, next) => {
 
 // Bootstrap
 db._ready.then(async () => {
+  // Initialize Ed25519 key manager AFTER env vars are loaded but BEFORE routes accept work.
+  // In Phase 2A this is invisible: if no ED25519_PRIVATE_KEY_PEM is set, no key is loaded
+  // and signing.signEd25519() returns null. The pipeline is unchanged.
+  keyManager.initialize();
   await db.migrateFromJson();
   const existingKeys = await db.listApiKeys();
   if (existingKeys.length === 0) {
