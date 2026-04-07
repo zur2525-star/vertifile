@@ -54,6 +54,17 @@ function main() {
   process.stdout.write(privPem);
   process.stdout.write('\n');
 
+  // Phase 2B: also print a single-line \n-escaped version of the same private
+  // key. Render's env var input UI sometimes strips real newlines, so this
+  // safer format uses literal '\n' as a line separator. The server's
+  // key-manager will accept either format.
+  const privPemSingleLine = privPem.replace(/\n/g, '\\n');
+  process.stdout.write('\n');
+  process.stdout.write('PRIVATE KEY (Render-friendly single-line format with \\n separators):\n');
+  process.stdout.write('-- Use this if Render is stripping newlines from your multi-line paste --\n');
+  process.stdout.write(privPemSingleLine);
+  process.stdout.write('\n\n');
+
   process.stdout.write('SQL to insert the public key into the database:\n');
   process.stdout.write('INSERT INTO ed25519_keys (id, public_key_pem, valid_from, is_primary)\n');
   process.stdout.write("VALUES ('" + keyId + "',\n");

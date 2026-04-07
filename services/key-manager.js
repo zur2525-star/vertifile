@@ -42,13 +42,21 @@ function initialize() {
   if (_initialized) return;
   _initialized = true;
 
-  const privPem = process.env.ED25519_PRIVATE_KEY_PEM;
+  let privPem = process.env.ED25519_PRIVATE_KEY_PEM;
   const primaryKeyId = process.env.ED25519_PRIMARY_KEY_ID;
 
   if (!privPem) {
     logger.info('[key-manager] ED25519_PRIVATE_KEY_PEM not set — Ed25519 signing disabled (Phase 2A invisible mode)');
     return;
   }
+
+  // Phase 2B fix: Render and other env-var systems sometimes strip real
+  // newlines from multi-line values. Operators can paste a single-line PEM
+  // using literal '\n' as a line separator (e.g.
+  // '-----BEGIN PRIVATE KEY-----\n<base64>\n-----END PRIVATE KEY-----\n').
+  // This replace is a no-op for properly multi-line PEMs (no '\n' literals
+  // to find) so it preserves both formats.
+  privPem = privPem.replace(/\\n/g, '\n');
 
   if (!primaryKeyId) {
     logger.error('[key-manager] ED25519_PRIVATE_KEY_PEM is set but ED25519_PRIMARY_KEY_ID is not. Refusing to boot with inconsistent key config.');
