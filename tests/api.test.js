@@ -234,9 +234,9 @@ describe('Signup', () => {
       body: JSON.stringify({
         orgName: 'Test Organization',
         contactName: 'Test User',
-        email: 'test@example.com',
+        email: 'signup-valid@test.example.com',
         useCase: 'automated testing',
-        plan: 'professional',
+        password: 'TestPassword123!',
       }),
     });
 
@@ -246,7 +246,8 @@ describe('Signup', () => {
     assert.ok(data.apiKey, 'Should return an API key');
     assert.ok(data.apiKey.startsWith('vf_live_'), 'API key should start with vf_live_');
     assert.ok(data.orgId, 'Should return an org ID');
-    assert.equal(data.plan, 'professional');
+    // Handler forces plan='free' on signup — paid upgrades happen separately
+    assert.equal(data.plan, 'free');
 
     // Save for use in authenticated tests
     apiKey = data.apiKey;
@@ -272,6 +273,7 @@ describe('Signup', () => {
         orgName: 'Bad Email Org',
         contactName: 'User',
         email: 'not-an-email',
+        password: 'TestPassword123!',
       }),
     });
 
