@@ -43,9 +43,15 @@ async function main() {
     process.exit(1);
   }
 
+  const dbConfig = require('../services/db-config');
+  const dbUrl = process.env.DATABASE_URL;
+
+  // Same safety guard as db.js — no local URL in production
+  dbConfig.assertProductionNotLocal(dbUrl, console);
+
   const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
+    connectionString: dbUrl,
+    ssl: dbConfig.getPoolSslConfig(dbUrl),
     connectionTimeoutMillis: 15000,
   });
 

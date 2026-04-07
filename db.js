@@ -15,18 +15,27 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-// SSL is required for managed Postgres (Neon/Render/etc) but NOT for local
-// Postgres (service containers in CI, local docker, dev machines). Detect by URL.
+const dbConfig = require('./services/db-config');
 const dbUrl = process.env.DATABASE_URL;
-const isLocalDb = /(?:localhost|127\.0\.0\.1|::1)(?::\d+)?\//.test(dbUrl) || /^postgres(?:ql)?:\/\/[^@]*@(?:localhost|127\.0\.0\.1|::1)/.test(dbUrl);
+
+// Production startup guard: refuse to boot if production + local DB URL.
+// Prevents silent SSL downgrade from a misconfigured env var.
+dbConfig.assertProductionNotLocal(dbUrl, logger);
+
+const sslConfig = dbConfig.getPoolSslConfig(dbUrl);
+const dbHost = dbConfig.getSafeHostForLogging(dbUrl);
 
 const pool = new Pool({
   connectionString: dbUrl,
-  ssl: isLocalDb ? false : { rejectUnauthorized: false },
+  ssl: sslConfig,
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 10000,
 });
+
+// Observability: log the SSL state and host at boot so operators can
+// verify production is always SSL-on. NEVER logs the URL itself.
+logger.info({ ssl: sslConfig !== false, host: dbHost }, '[DB] pool initialized');
 
 pool.on('error', (err) => {
   logger.error('[PG] Unexpected pool error:', err.message);
