@@ -144,7 +144,7 @@ const SCHEMA_SQL = `
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );
   CREATE UNIQUE INDEX IF NOT EXISTS idx_ed25519_keys_primary ON ed25519_keys(is_primary) WHERE is_primary = TRUE;
-  CREATE INDEX IF NOT EXISTS idx_ed25519_keys_valid ON ed25519_keys(valid_until) WHERE valid_until IS NULL OR valid_until > NOW();
+  CREATE INDEX IF NOT EXISTS idx_ed25519_keys_valid ON ed25519_keys(valid_until);
 `;
 
 // _ready resolves once the schema is bootstrapped.
