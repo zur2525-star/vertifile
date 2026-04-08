@@ -78,16 +78,11 @@ const pipeline = require('../services/pvf-pipeline');
 const signing = require('../services/signing');
 const keyManager = require('../services/key-manager');
 
-// Safety net: if the test process crashes (uncaught exception, SIGINT)
-// BEFORE after() runs, these hooks still fire and clean up the org rows.
-// Best-effort — ignore errors. Note: placed after `db` is required so the
-// handlers can reference it; the DATABASE_URL guard above already skipped
+// Safety net: if the test process crashes with an uncaught exception BEFORE
+// after() runs, this handler still fires, cleans up the org rows, and exits
+// with code 1. Best-effort — ignore errors. Placed after `db` is required so
+// the handler can reference it; the DATABASE_URL guard above already skipped
 // if no DB is available.
-process.on('beforeExit', async () => {
-  try {
-    await db.query("DELETE FROM documents WHERE org_id = 'org_phase2e_test'", []).catch(()=>{});
-  } catch (e) { /* swallow */ }
-});
 process.on('uncaughtException', async (err) => {
   console.error('[phase2e-test] uncaughtException:', err.message);
   try {
@@ -201,9 +196,10 @@ after(async () => {
     await db.query('DELETE FROM documents WHERE hash = $1', [hash]).catch(() => {});
   }
 
-  // Close the pool so the Node process can exit cleanly. Mirrors the pattern
-  // in verify-ed25519.test.js after-hook.
-  await db.close().catch(() => {});
+  // Force exit — db.js holds an open pg pool that can keep the event loop alive.
+  // Matches the pattern in tests/verify-public.test.js and verify-ed25519.test.js.
+  // Do NOT call db.close() here — it interacts badly with any deferred cleanup.
+  process.exit(0);
 });
 
 // ---------------------------------------------------------------------------
