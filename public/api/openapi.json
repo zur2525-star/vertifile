@@ -133,6 +133,68 @@
         }
       }
     },
+    "/api/verify-public": {
+      "get": {
+        "tags": ["Documents"],
+        "summary": "Stateless public verification (Audit Mode)",
+        "description": "Trust-minimized Ed25519 signature verification. Anyone can call this endpoint (no auth, CORS open) to verify a Vertifile document's signature using the public key Vertifile publishes at /.well-known/vertifile-pubkey.pem. This endpoint does NOT touch the documents table — it only verifies the cryptographic math against the published public key. Rate limited to 500 requests per 15 minutes per IP.",
+        "security": [],
+        "parameters": [
+          {
+            "name": "hash",
+            "in": "query",
+            "required": true,
+            "description": "Lowercase hex SHA-256 of the document (64 chars)",
+            "schema": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+          },
+          {
+            "name": "signature",
+            "in": "query",
+            "required": true,
+            "description": "Ed25519 signature over the canonical payload, base64url-encoded (86 chars, no padding)",
+            "schema": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+          },
+          {
+            "name": "keyId",
+            "in": "query",
+            "required": true,
+            "description": "16 lowercase hex chars identifying the signing key",
+            "schema": { "type": "string", "pattern": "^[a-f0-9]{16}$" }
+          },
+          {
+            "name": "payload",
+            "in": "query",
+            "required": true,
+            "description": "The canonical pipe-separated payload that was signed: hash|orgId|createdAt|recipientHash|codeIntegrity",
+            "schema": { "type": "string", "maxLength": 512 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verification result. Note: always returns 200 even for invalid signatures — check the 'valid' field.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "valid": { "type": "boolean" },
+                    "keyId": { "type": "string" },
+                    "fingerprint": { "type": "string", "description": "Full SHA-256 hex of the canonical public key PEM (only present on valid:true)" },
+                    "algorithm": { "type": "string", "enum": ["Ed25519"] },
+                    "verifiedAt": { "type": "string", "format": "date-time" },
+                    "error": { "type": "string", "enum": ["invalid_signature", "unknown_key"], "description": "Present only on valid:false" }
+                  },
+                  "required": ["valid"]
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
     "/api/token/refresh": {
       "post": {
         "tags": ["Documents"],

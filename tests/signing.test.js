@@ -161,3 +161,69 @@ describe('signing.signEd25519 / verifyEd25519 (with key configured)', () => {
     assert.equal(a.signature, b.signature, 'Ed25519 signing must be deterministic');
   });
 });
+
+// ===========================================================================
+// Phase 2D — PEM canonicalization invariant (regression test)
+//
+// Guards against the /api/verify-public fingerprint drift bug found during
+// Phase 2D wet verification. The Vertifile keyId convention is:
+//
+//   keyId = sha256(pubPem).slice(0, 16)
+//
+// where pubPem is the EXACT byte string `crypto.KeyObject.export(...)`
+// returns. If a PEM ever ends up in the DB with a different byte shape
+// (e.g., a manual SQL INSERT stripped the trailing '\n'), then hashing the
+// raw DB bytes produces a fingerprint that does NOT start with the keyId,
+// breaking the fingerprint→keyId contract that SECURITY.md and
+// /api/verify-public expose to third parties.
+//
+// The fix lives in key-manager.js::_loadPublicKeyEntry — it re-exports the
+// parsed KeyObject to produce the canonical form. This test proves the
+// underlying crypto invariant: parsing a PEM that lost its trailing
+// newline and re-exporting it yields the SAME bytes as the original
+// canonical form, regardless of how battered the input was.
+// ===========================================================================
+describe('PEM canonicalization invariant (Phase 2D regression)', () => {
+  const kp = crypto.generateKeyPairSync('ed25519');
+  const canonicalPem = kp.publicKey.export({ type: 'spki', format: 'pem' });
+  const canonicalHash = crypto.createHash('sha256').update(canonicalPem).digest('hex');
+  const canonicalKeyId = canonicalHash.slice(0, 16);
+
+  it('canonical PEM from KeyObject.export ends with a single newline', () => {
+    assert.equal(canonicalPem.endsWith('\n'), true, 'canonical form must end in \\n');
+    assert.equal(canonicalPem.endsWith('\n\n'), false, 'canonical form must NOT end in double \\n');
+  });
+
+  it('fingerprint (sha256 of canonical PEM) starts with keyId', () => {
+    assert.equal(canonicalHash.slice(0, 16), canonicalKeyId, 'fingerprint[0..16] === keyId');
+  });
+
+  it('stripping the trailing newline breaks the raw fingerprint but not the parsed form', () => {
+    const strippedPem = canonicalPem.replace(/\n$/, '');
+    assert.notEqual(
+      crypto.createHash('sha256').update(strippedPem).digest('hex'),
+      canonicalHash,
+      'raw hash of stripped PEM MUST differ — proves the bug class exists'
+    );
+
+    // The fix: re-parse and re-export the battered PEM to recover the
+    // canonical form. This is exactly what _loadPublicKeyEntry does.
+    const reParsed = crypto.createPublicKey({ key: strippedPem, format: 'pem' });
+    const reExported = reParsed.export({ type: 'spki', format: 'pem' });
+    assert.equal(reExported, canonicalPem, 're-export must reproduce canonical PEM byte-for-byte');
+
+    const reHash = crypto.createHash('sha256').update(reExported).digest('hex');
+    assert.equal(reHash, canonicalHash, 'sha256 of re-exported PEM must match canonical fingerprint');
+    assert.equal(reHash.slice(0, 16), canonicalKeyId, 'fingerprint[0..16] still equals keyId after canonicalization');
+  });
+
+  it('PEM with extra whitespace round-trips to the same canonical form', () => {
+    // Simulate a pastebin / console UI that adds trailing spaces or extra
+    // blank lines. Node's parser is tolerant; the canonicalization must
+    // still emit the stable byte-form.
+    const mangledPem = '  \n' + canonicalPem.trim() + '\n  \n';
+    const reParsed = crypto.createPublicKey({ key: mangledPem, format: 'pem' });
+    const reExported = reParsed.export({ type: 'spki', format: 'pem' });
+    assert.equal(reExported, canonicalPem, 'canonicalization must absorb surrounding whitespace');
+  });
+});

@@ -108,10 +108,33 @@ if (process.env.NODE_ENV === 'production' && ALLOWED_ORIGINS.includes('http://lo
   throw new Error('SECURITY: localhost in production CORS origins');
 }
 
-app.use(cors({
+// ---- Phase 2D: public crypto verification — trust-minimized CORS ----
+// These endpoints publish cryptographic material (public keys, verification
+// results) and are meant to be called from any origin, including third-party
+// auditors running in a browser. They send Access-Control-Allow-Origin: *
+// with NO credentials. The restrictive CORS below applies to every OTHER
+// route (documents, dashboards, API keys).
+const PUBLIC_CORS_PATHS = new Set([
+  '/api/verify-public',
+  '/.well-known/vertifile-pubkey.pem',
+  '/.well-known/vertifile-jwks.json'
+]);
+const publicCorsMiddleware = cors({
+  origin: '*',
+  methods: ['GET', 'HEAD', 'OPTIONS'],
+  credentials: false,
+  maxAge: 86400
+});
+const restrictiveCorsMiddleware = cors({
   origin: (origin, cb) => { if (!origin || ALLOWED_ORIGINS.includes(origin)) cb(null, true); else cb(new Error('Not allowed by CORS')); },
   methods: ['GET', 'POST', 'DELETE'], allowedHeaders: ['Content-Type', 'X-API-Key', 'X-Admin-Secret'], credentials: true, maxAge: 86400
-}));
+});
+app.use((req, res, next) => {
+  if (PUBLIC_CORS_PATHS.has(req.path)) {
+    return publicCorsMiddleware(req, res, next);
+  }
+  return restrictiveCorsMiddleware(req, res, next);
+});
 app.use((req, res, next) => { express.json({ limit: '1mb' })(req, res, (err) => { if (err) return res.status(400).json({ success: false, error: 'Invalid JSON body' }); next(); }); });
 app.use(sanitizeBody);
 app.use(compression());
@@ -223,7 +246,21 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 
 app.use(requestTimeout(30000));
 
-app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: { success: false, error: 'Too many requests, try again later' }, standardHeaders: true, legacyHeaders: false }));
+const globalApiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  message: { success: false, error: 'Too many requests, try again later' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+app.use('/api/', (req, res, next) => {
+  // Phase 2D: /verify-public is a public audit endpoint. It has its own
+  // 500/15min route-level limiter (verifyLimiter in routes/api.js) and must
+  // NOT be subject to the global 200/15min cap, which would deny legitimate
+  // verification attempts from shared IPs (NAT, CGNAT, cloud).
+  if (req.path === '/verify-public') return next();
+  return globalApiLimiter(req, res, next);
+});
 
 app.use(responseEnvelope());
 app.use(requestLogger());

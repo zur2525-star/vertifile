@@ -9,6 +9,7 @@ const { escapeHtml } = require('../templates/pvf');
 const { handleCreatePvf, verifySignature, generateToken, HMAC_SECRET } = require('../services/pvf-generator');
 const { buildOverrideScriptInnerText } = require('../services/stamp-override');
 const signing = require('../services/signing');
+const keyManager = require('../services/key-manager');
 
 const router = express.Router();
 
@@ -470,6 +471,147 @@ router.post('/verify', verifyLimiter, async (req, res) => {
   }
 });
 
+// ================================================================
+// PHASE 2D — Stateless public verification (Audit Mode)
+// ================================================================
+// GET /api/verify-public — pure cryptographic signature verification.
+//
+// This endpoint NEVER touches the documents table. It takes a signature,
+// a key id, and the canonical payload that was signed, and verifies the
+// math against the public key Vertifile published for that key id. A
+// caller can therefore verify a signature for a document Vertifile has
+// never seen, as long as the signing key is one Vertifile published —
+// turning Vertifile from a closed system into a trust-minimized
+// cryptographic protocol.
+//
+// The "fingerprint" returned is sha256(public_key_pem) hex. The first 16
+// chars of that fingerprint equal the keyId by convention; the full 64
+// chars are the trust-anchor a human can compare against an out-of-band
+// source (the JWKS / well-known endpoint, a published transparency log).
+//
+// Inputs are query parameters so the endpoint is cacheable, GET-shareable,
+// and trivially callable from curl. All four are required:
+//   hash       — hex sha256 (64 chars), the document hash that was signed
+//   signature  — base64url Ed25519 signature (≤100 chars)
+//   keyId      — 16 lowercase hex chars
+//   payload    — canonical pipe-separated string (≤4096 chars):
+//                hash|orgId|createdAt|recipientHash|codeIntegrity
+// ================================================================
+router.get('/verify-public', verifyLimiter, async (req, res) => {
+  try {
+    const { hash, signature, keyId, payload } = req.query;
+
+    // ---- Input validation -----------------------------------------------
+    // All four params are required, in the documented format. We return a
+    // structured error so callers can programmatically tell what went wrong
+    // without having to parse a free-form string.
+    if (typeof hash !== 'string' || !hash) {
+      return res.status(400).json({ valid: false, error: 'invalid_input', detail: 'hash' });
+    }
+    if (!/^[a-f0-9]{64}$/.test(hash)) {
+      return res.status(400).json({ valid: false, error: 'invalid_input', detail: 'hash' });
+    }
+
+    if (typeof signature !== 'string' || !signature) {
+      return res.status(400).json({ valid: false, error: 'invalid_input', detail: 'signature' });
+    }
+    // Ed25519 signatures are exactly 64 bytes, which encodes to exactly 86 chars
+    // in unpadded base64url (base64url omits padding by spec). The strict length +
+    // charset regex catches every malformed signature before any crypto runs.
+    if (!/^[A-Za-z0-9_-]{86}$/.test(signature)) {
+      return res.status(400).json({ valid: false, error: 'invalid_input', detail: 'signature' });
+    }
+
+    if (typeof keyId !== 'string' || !keyId) {
+      return res.status(400).json({ valid: false, error: 'invalid_input', detail: 'keyId' });
+    }
+    if (!/^[a-f0-9]{16}$/.test(keyId)) {
+      return res.status(400).json({ valid: false, error: 'invalid_input', detail: 'keyId' });
+    }
+
+    if (typeof payload !== 'string' || !payload) {
+      return res.status(400).json({ valid: false, error: 'invalid_input', detail: 'payload' });
+    }
+    // Real payloads from buildSigningPayload are bounded by:
+    //   hash (64) + '|' + orgId (~64) + '|' + iso (24) + '|' + rcpt (64) + '|' + ci (0)
+    // ≈ 220 chars in practice. 512 is a generous upper bound that still defends
+    // against CPU-DoS via oversized inputs.
+    if (payload.length > 512) {
+      return res.status(400).json({ valid: false, error: 'invalid_input', detail: 'payload' });
+    }
+
+    // Soft consistency check: the first '|'-separated component of the
+    // payload must equal the supplied hash. This protects callers from
+    // confusing themselves (verifying a signature against a payload that
+    // doesn't match the hash they think they're checking). It is NOT a
+    // security check — the cryptographic verification below is the security
+    // boundary — but it catches an entire class of integration mistakes.
+    //
+    // The canonical payload must begin with "<hash>|" — a leading hash
+    // followed by the '|' separator. startsWith is byte-tight and catches
+    // payloads that contain no separator at all (e.g. a bare hash), which
+    // split('|', 1) would silently accept.
+    if (!payload.startsWith(hash + '|')) {
+      return res.status(400).json({ valid: false, error: 'invalid_input', detail: 'payload_hash_mismatch' });
+    }
+
+    // ---- Resolve the public key + fingerprint ---------------------------
+    // No documents-table touch. The PEM comes from key-manager's cache or
+    // from the ed25519_keys table on a cache miss.
+    const pem = await keyManager.getPublicKeyPemById(keyId);
+    if (!pem) {
+      logger.warn({ event: 'verify_public_unknown_key', keyId: keyId.slice(0, 8) + '...' }, '[verify-public] unknown key');
+      return res.json({ valid: false, error: 'unknown_key', keyId });
+    }
+
+    const fingerprint = crypto.createHash('sha256').update(pem).digest('hex');
+
+    // ---- Verify the signature -------------------------------------------
+    let ok = false;
+    try {
+      ok = await signing.verifyEd25519(payload, signature, keyId);
+    } catch (e) {
+      ok = false;
+    }
+
+    if (!ok) {
+      logger.warn({ event: 'verify_public_invalid_sig', keyId: keyId.slice(0, 8) + '...' }, '[verify-public] signature invalid');
+      return res.json({
+        valid: false,
+        error: 'invalid_signature',
+        keyId,
+        // fingerprint intentionally omitted to prevent keyId enumeration oracle
+        // (unknown_key can't return one because we have no PEM to hash; for
+        // shape-consistency across failure branches, invalid_signature also
+        // omits it. The fingerprint is only returned on valid:true.)
+        algorithm: 'Ed25519'
+      });
+    }
+
+    logger.info({ event: 'verify_public_ok', keyId: keyId.slice(0, 8) + '...' }, '[verify-public] verified');
+    return res.json({
+      valid: true,
+      keyId,
+      fingerprint,
+      algorithm: 'Ed25519',
+      verifiedAt: new Date().toISOString()
+    });
+  } catch (error) {
+    logger.error({ err: error.message, stack: error.stack, event: 'verify_public_internal_error' }, '[verify-public] handler crashed');
+    return res.status(500).json({ valid: false, error: 'internal_error' });
+  }
+});
+
+// OPTIONS preflight for /api/verify-public — matches the pattern used by
+// routes/well-known.js. Needed for browser-based verifiers that send any
+// non-simple header (though we don't require any today).
+router.options('/verify-public', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  res.status(204).end();
+});
+
 // ===== API: Token Refresh (heartbeat) =====
 router.post('/token/refresh', verifyLimiter, async (req, res) => {
   try {
@@ -550,6 +692,12 @@ router.get('/docs', (req, res) => {
           auth: 'None',
           body: '{ hash, signature, recipientHash? }',
           response: '{ verified, token, timestamp, orgName, blockchain? }'
+        },
+        'GET /api/verify-public': {
+          description: 'Stateless public Ed25519 verification (Audit Mode) — verifies signature math against the published public key. Does NOT touch the documents table. Third parties can verify any Vertifile document without an API call by fetching /.well-known/vertifile-pubkey.pem and running the math themselves; this endpoint is a convenience for those who prefer a HTTP call.',
+          auth: 'None',
+          query: '?hash=<hex64>&signature=<base64url86>&keyId=<hex16>&payload=<hash|orgId|createdAt|recipientHash|codeIntegrity>',
+          response: '{ valid, keyId, fingerprint?, algorithm: "Ed25519", verifiedAt?, error? }'
         },
         'POST /api/token/refresh': {
           description: 'Refresh session token (heartbeat, every 30s)',

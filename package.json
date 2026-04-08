@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "test": "node tests/api.test.js && node tests/signing.test.js && node tests/verify-ed25519.test.js",
+    "test": "node tests/api.test.js && node tests/signing.test.js && node tests/verify-ed25519.test.js && node tests/verify-public.test.js",
     "test:api": "node tests/api.test.js",
     "test:signing": "node tests/signing.test.js",
     "test:verify-ed25519": "node tests/verify-ed25519.test.js",
+    "test:verify-public": "node tests/verify-public.test.js",
     "migrate": "node scripts/migrate.js"
   },
   "keywords": [],

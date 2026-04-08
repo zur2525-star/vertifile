@@ -31,7 +31,10 @@ const logger = require('./logger');
 
 // State held at module scope
 let _primary = null;       // { keyId, privateKey: KeyObject } | null
-let _publicKeyCache = new Map();  // keyId → KeyObject
+// Cache value shape: { publicKey: KeyObject, pem: string }
+// Phase 2D: cache the PEM alongside the KeyObject so /api/verify-public can
+// compute a stable fingerprint without re-hitting the DB.
+let _publicKeyCache = new Map();
 let _initialized = false;
 
 /**
@@ -111,6 +114,35 @@ function getPrimaryKeyId() {
  * @returns {Promise<crypto.KeyObject | null>}
  */
 async function getPublicKeyById(keyId) {
+  const entry = await _loadPublicKeyEntry(keyId);
+  return entry ? entry.publicKey : null;
+}
+
+/**
+ * Returns the cached PEM string for a key id, or null if unknown / expired.
+ * Used by /api/verify-public to compute a stable fingerprint.
+ *
+ * The PEM bytes are the canonical form for the human-comparable fingerprint:
+ * sha256(pem) hex. Two callers running on different boxes against the same
+ * ed25519_keys row will compute the same fingerprint.
+ *
+ * @param {string} keyId
+ * @returns {Promise<string | null>}
+ */
+async function getPublicKeyPemById(keyId) {
+  const entry = await _loadPublicKeyEntry(keyId);
+  return entry ? entry.pem : null;
+}
+
+/**
+ * Internal: load (and cache) the {publicKey, pem} entry for a keyId.
+ * Both getPublicKeyById and getPublicKeyPemById delegate here to keep the
+ * cache and the expiry/validation logic in one place.
+ *
+ * @param {string} keyId
+ * @returns {Promise<{publicKey: crypto.KeyObject, pem: string} | null>}
+ */
+async function _loadPublicKeyEntry(keyId) {
   if (!keyId || typeof keyId !== 'string') return null;
   if (_publicKeyCache.has(keyId)) return _publicKeyCache.get(keyId);
 
@@ -126,13 +158,39 @@ async function getPublicKeyById(keyId) {
       return null;
     }
 
-    const publicKey = crypto.createPublicKey({ key: row.public_key_pem, format: 'pem' });
+    // Sanitize literal '\n' escapes — matches the Phase 2B fix in initialize()
+    // for private keys. An operator who pastes a PEM into a single-line DB field
+    // (Neon console UI, quick admin SQL) may end up with '\n' as a two-char
+    // literal instead of a real newline. Node's PEM parser rejects that;
+    // normalizing first keeps us tolerant. This is a pre-parse sanitization
+    // layer — the canonicalization fix below still applies.
+    const pemForParse = row.public_key_pem.replace(/\\n/g, '\n');
+    const publicKey = crypto.createPublicKey({ key: pemForParse, format: 'pem' });
     if (publicKey.asymmetricKeyType !== 'ed25519') return null;
 
-    _publicKeyCache.set(keyId, publicKey);
-    return publicKey;
+    // PEM CANONICALIZATION (critical for fingerprint stability):
+    //
+    // The PEM stored in the DB may have lost its trailing '\n' during manual
+    // INSERT (e.g., a Neon/pgAdmin console paste that trimmed whitespace).
+    // The Vertifile keyId convention is keyId = sha256(pubPem).slice(0,16)
+    // where pubPem is the EXACT string `crypto.KeyObject.export(...)` returns
+    // — which always ends in a single '\n'. If we hash the raw DB bytes, we
+    // get a different fingerprint than the one the keyId was derived from,
+    // breaking the `fingerprint.slice(0,16) === keyId` contract that
+    // /api/verify-public and SECURITY.md rely on.
+    //
+    // Fix: re-export the parsed KeyObject. This produces the canonical
+    // byte-stable PEM regardless of whatever whitespace quirks the DB row
+    // contains. All downstream callers (/api/verify-public fingerprint,
+    // /.well-known/vertifile-pubkey.pem, the JWKS builder) now see the same
+    // bytes as the operator who originally generated the key.
+    const canonicalPem = publicKey.export({ type: 'spki', format: 'pem' });
+
+    const entry = { publicKey, pem: canonicalPem };
+    _publicKeyCache.set(keyId, entry);
+    return entry;
   } catch (e) {
-    logger.warn({ err: e.message, keyId }, '[key-manager] getPublicKeyById error');
+    logger.warn({ err: e.message, keyId }, '[key-manager] _loadPublicKeyEntry error');
     return null;
   }
 }
@@ -173,19 +231,19 @@ async function listActivePublicKeys() {
 }
 
 /**
- * Returns the primary public key PEM for /.well-known/vertifile-pubkey.pem.
+ * Returns the CANONICAL primary public key PEM for /.well-known/vertifile-pubkey.pem.
+ *
+ * Routes through _loadPublicKeyEntry so the served bytes match whatever
+ * crypto.KeyObject.export(...) produces — the same form the keyId and the
+ * published fingerprint were computed against. See the PEM CANONICALIZATION
+ * comment in _loadPublicKeyEntry for the full reasoning.
+ *
  * @returns {Promise<string | null>}
  */
 async function getPrimaryPublicKeyPem() {
   if (!_primary) return null;
-  try {
-    const db = require('../db');
-    const row = await db.getEd25519KeyById(_primary.keyId);
-    return row ? row.public_key_pem : null;
-  } catch (e) {
-    logger.warn({ err: e.message }, '[key-manager] getPrimaryPublicKeyPem error');
-    return null;
-  }
+  const entry = await _loadPublicKeyEntry(_primary.keyId);
+  return entry ? entry.pem : null;
 }
 
 module.exports = {
@@ -193,6 +251,7 @@ module.exports = {
   getPrimary,
   getPrimaryKeyId,
   getPublicKeyById,
+  getPublicKeyPemById,
   listActivePublicKeys,
   getPrimaryPublicKeyPem
 };
