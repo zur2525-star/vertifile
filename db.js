@@ -202,6 +202,221 @@ const _ready = (async () => {
   try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS ed25519_signature TEXT'); } catch (_) {}
   try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS ed25519_key_id VARCHAR(16)'); } catch (_) {}
   try { await pool.query('CREATE INDEX IF NOT EXISTS idx_docs_ed25519_key ON documents(ed25519_key_id) WHERE ed25519_key_id IS NOT NULL'); } catch (_) {}
+
+  // ================================================================
+  // PHASE 3A — KEY ROTATION SCHEMA
+  // ================================================================
+  // Everything below is the schema foundation for Phase 3B-3E.
+  // 3A is schema-only: no rotation command, no verification-path changes,
+  // no admin endpoint. Just the tables, triggers, and backfill that the
+  // rest of Phase 3 will build on.
+  //
+  // INVARIANTS (locked in by Zur, do not weaken without explicit approval):
+  //   1. The state machine is STRICTLY MONOTONIC FORWARD. grace -> active
+  //      is forbidden — enforced at the DB layer by a trigger. Rollback
+  //      is always a NEW rotation with a NEW key.
+  //   2. audit_log.actor is DB-only; the public rotation log endpoint (3C)
+  //      must NOT surface it. listRotationLog() below deliberately omits it.
+  //   3. Every SQL statement is idempotent (IF NOT EXISTS / CREATE OR REPLACE
+  //      / WHERE NOT EXISTS). The bootstrap runs on every boot; any
+  //      non-idempotent statement would crash the second restart.
+  // ----------------------------------------------------------------
+
+  // 1. Add state / retired_at / rotation_reason columns to ed25519_keys.
+  //    The existing production primary key row inherits state='active' via
+  //    the DEFAULT clause, so no explicit backfill is needed. The no-op
+  //    UPDATE below is kept as documentation / safety net.
+  try {
+    await pool.query(`
+      ALTER TABLE ed25519_keys
+        ADD COLUMN IF NOT EXISTS state TEXT NOT NULL DEFAULT 'active'
+          CHECK (state IN ('pending','active','grace','expired')),
+        ADD COLUMN IF NOT EXISTS retired_at TIMESTAMPTZ,
+        ADD COLUMN IF NOT EXISTS rotation_reason TEXT
+    `);
+  } catch (e) {
+    logger.error({ err: e.message }, '[PG][phase3a] ed25519_keys column add failed');
+    throw e;
+  }
+
+  // 2. Explicit no-op backfill for the single existing primary key row.
+  //    The DEFAULT above already populated state='active' when the column
+  //    was added. This UPDATE is a documentation safety net — it makes the
+  //    intent obvious and is idempotent (the WHERE state='active' guard
+  //    means zero writes in steady state).
+  try {
+    await pool.query("UPDATE ed25519_keys SET state='active' WHERE id='0f65ad1b92590c92' AND state='active'");
+  } catch (_) { /* never fails — no-op by construction */ }
+
+  // 3. Create the key_rotation_log table + index. Backs the public
+  //    /.well-known/vertifile-rotation-log.json endpoint that 3C will add.
+  //    NO FOREIGN KEYS to ed25519_keys — the architect's plan explicitly
+  //    forbids them so that deleting a key cannot cascade-orphan rotation
+  //    history.
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS key_rotation_log (
+        id              SERIAL PRIMARY KEY,
+        rotated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        old_key_id      VARCHAR(16),
+        new_key_id      VARCHAR(16) NOT NULL,
+        old_fingerprint TEXT,
+        new_fingerprint TEXT NOT NULL,
+        grace_until     TIMESTAMPTZ,
+        reason          TEXT,
+        actor           TEXT
+      )
+    `);
+    await pool.query('CREATE INDEX IF NOT EXISTS idx_key_rotation_log_rotated_at ON key_rotation_log(rotated_at DESC)');
+  } catch (e) {
+    logger.error({ err: e.message }, '[PG][phase3a] key_rotation_log create failed');
+    throw e;
+  }
+
+  // 4. Genesis entry: retroactively log the first key Vertifile ever issued.
+  //    The current production primary key (0f65ad1b92590c92) predates
+  //    rotation infrastructure, so it was never logged as a "rotation event".
+  //    We insert it now so the public rotation log (3C) starts with a
+  //    complete history instead of appearing to spring into existence at
+  //    the first real rotation.
+  //
+  //    There is no UNIQUE constraint on new_key_id (we want to allow
+  //    re-activation history in principle), so we use a WHERE NOT EXISTS
+  //    guard instead of ON CONFLICT for idempotency. The SELECT also
+  //    gates on the key actually being in ed25519_keys — if the row has
+  //    been deleted, we skip the insert rather than write a dangling entry.
+  try {
+    await pool.query(`
+      INSERT INTO key_rotation_log (
+        rotated_at, old_key_id, new_key_id, old_fingerprint, new_fingerprint,
+        grace_until, reason, actor
+      )
+      SELECT
+        valid_from,
+        NULL,
+        '0f65ad1b92590c92',
+        NULL,
+        '0f65ad1b92590c9255b3de67758c49c7fe5169fdd47abb187e795a2edf03a372',
+        NULL,
+        'initial-key',
+        'system-genesis'
+      FROM ed25519_keys
+      WHERE id = '0f65ad1b92590c92'
+        AND NOT EXISTS (
+          SELECT 1 FROM key_rotation_log WHERE new_key_id = '0f65ad1b92590c92'
+        )
+    `);
+  } catch (e) {
+    logger.error({ err: e.message }, '[PG][phase3a] genesis rotation log insert failed');
+    throw e;
+  }
+
+  // 5. State-transition enforcement trigger. This is the security
+  //    boundary that makes rollback impossible at the DB layer.
+  //
+  //    CHECK constraints can only reference the NEW row, so they cannot
+  //    express "state may only move forward". A BEFORE UPDATE trigger
+  //    comparing OLD vs NEW is the only way to enforce monotonic
+  //    transitions.
+  //
+  //    Allowed:  pending -> active | expired
+  //              active  -> grace
+  //              grace   -> expired
+  //              (no-op, same state)
+  //
+  //    Forbidden (rejected with RAISE EXCEPTION):
+  //              grace   -> active   <-- the rollback Zur explicitly banned
+  //              active  -> pending
+  //              active  -> expired  (must pass through grace)
+  //              expired -> anything
+  //              pending -> grace    (must activate first)
+  try {
+    await pool.query(`
+      CREATE OR REPLACE FUNCTION ed25519_keys_enforce_state_transition()
+      RETURNS TRIGGER AS $$
+      BEGIN
+        -- No-op UPDATEs on the state column are always allowed.
+        IF OLD.state = NEW.state THEN
+          RETURN NEW;
+        END IF;
+
+        -- Allowed forward transitions.
+        IF OLD.state = 'pending' AND NEW.state IN ('active', 'expired') THEN
+          RETURN NEW;
+        END IF;
+        IF OLD.state = 'active' AND NEW.state = 'grace' THEN
+          RETURN NEW;
+        END IF;
+        IF OLD.state = 'grace' AND NEW.state = 'expired' THEN
+          RETURN NEW;
+        END IF;
+
+        -- Everything else is forbidden. The grace->active rollback is
+        -- the only "tempting" path that gets rejected here. Per the
+        -- Phase 3 decision: rollback is a NEW rotation, never a state
+        -- regression.
+        RAISE EXCEPTION 'ed25519_keys: forbidden state transition % -> % for key %. State machine is monotonic forward (Phase 3 invariant). To recover from a bad rotation, run a NEW rotation with a NEW key.', OLD.state, NEW.state, OLD.id;
+      END;
+      $$ LANGUAGE plpgsql
+    `);
+    await pool.query('DROP TRIGGER IF EXISTS trg_ed25519_keys_state_transition ON ed25519_keys');
+    await pool.query(`
+      CREATE TRIGGER trg_ed25519_keys_state_transition
+        BEFORE UPDATE OF state ON ed25519_keys
+        FOR EACH ROW
+        EXECUTE FUNCTION ed25519_keys_enforce_state_transition()
+    `);
+  } catch (e) {
+    logger.error({ err: e.message }, '[PG][phase3a] state-transition trigger create failed');
+    throw e;
+  }
+
+  // 6. Audit trigger — write an audit_log row every time state changes.
+  //    Runs AFTER UPDATE, so if the BEFORE trigger above rejects the
+  //    transition, no audit row is written (we only record transitions
+  //    that actually happened).
+  //
+  //    audit_log.details is TEXT (not jsonb) per the schema, so we cast
+  //    jsonb_build_object()::text before inserting. audit_log.timestamp
+  //    is also TEXT (ISO string), so we use to_char(NOW() AT TIME ZONE
+  //    'UTC', ...) to match the shape that db.log() writes.
+  try {
+    await pool.query(`
+      CREATE OR REPLACE FUNCTION ed25519_keys_audit_state_change()
+      RETURNS TRIGGER AS $$
+      BEGIN
+        IF OLD.state IS DISTINCT FROM NEW.state THEN
+          INSERT INTO audit_log (timestamp, event, details)
+          VALUES (
+            to_char(NOW() AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
+            'ed25519_key_state_change',
+            jsonb_build_object(
+              'key_id',       OLD.id,
+              'old_state',    OLD.state,
+              'new_state',    NEW.state,
+              'session_user', current_user
+            )::text
+          );
+        END IF;
+        RETURN NEW;
+      END;
+      $$ LANGUAGE plpgsql
+    `);
+    await pool.query('DROP TRIGGER IF EXISTS trg_ed25519_keys_audit_state ON ed25519_keys');
+    await pool.query(`
+      CREATE TRIGGER trg_ed25519_keys_audit_state
+        AFTER UPDATE OF state ON ed25519_keys
+        FOR EACH ROW
+        EXECUTE FUNCTION ed25519_keys_audit_state_change()
+    `);
+  } catch (e) {
+    logger.error({ err: e.message }, '[PG][phase3a] audit trigger create failed');
+    throw e;
+  }
+  // ================================================================
+  // END PHASE 3A
+  // ================================================================
+
   // Auth columns — email_verified, last_login_at, updated_at, provider narrowing
   try { await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified BOOLEAN NOT NULL DEFAULT FALSE'); } catch (_) {}
   try { await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMPTZ'); } catch (_) {}
@@ -825,6 +1040,106 @@ async function insertEd25519Key({ id, publicKeyPem, validFrom, validUntil, isPri
 }
 
 // ================================================================
+// PHASE 3A — KEY ROTATION HELPERS
+// ================================================================
+// Exposed for use by Phase 3B (rotation command), 3C (public rotation log
+// endpoint), 3D (tests), and 3E (health endpoints). Phase 3A itself only
+// needs getEd25519KeyState + listRotationLog from the tests.
+
+/**
+ * Returns the current state of an ed25519 key, or null if not found.
+ * @param {string} keyId
+ * @returns {Promise<'pending'|'active'|'grace'|'expired'|null>}
+ */
+async function getEd25519KeyState(keyId) {
+  if (!keyId || typeof keyId !== 'string') return null;
+  const { rows } = await queryWithRetry(
+    'SELECT state FROM ed25519_keys WHERE id = $1',
+    [keyId]
+  );
+  return rows[0] ? rows[0].state : null;
+}
+
+/**
+ * Lists all rotation log entries, newest first.
+ * Used by /.well-known/vertifile-rotation-log.json (Phase 3C).
+ *
+ * SECURITY INVARIANT: the `actor` column is intentionally NOT returned.
+ * It is DB-only — the public rotation log must never surface who ran
+ * the rotation command. Exposing `actor` would leak operator identity
+ * and/or CI system names to any third-party verifier. If you need to
+ * audit actors, query audit_log.details->>'session_user' directly.
+ *
+ * @returns {Promise<Array<{id, rotated_at, old_key_id, new_key_id, old_fingerprint, new_fingerprint, grace_until, reason}>>}
+ */
+async function listRotationLog() {
+  const { rows } = await queryWithRetry(
+    `SELECT id, rotated_at, old_key_id, new_key_id, old_fingerprint, new_fingerprint, grace_until, reason
+     FROM key_rotation_log
+     ORDER BY rotated_at DESC, id DESC`
+  );
+  return rows;
+}
+
+/**
+ * Inserts a new rotation log entry. Used by the Phase 3B rotation command.
+ *
+ * `reason` is bound to 280 chars at this layer (the architect's plan
+ * specifies an application-level cap; the column itself is unconstrained
+ * TEXT so a future policy change wouldn't need a DB migration).
+ *
+ * @param {Object} entry
+ * @param {string|null} entry.oldKeyId
+ * @param {string} entry.newKeyId
+ * @param {string|null} entry.oldFingerprint
+ * @param {string} entry.newFingerprint
+ * @param {string|Date|null} entry.graceUntil
+ * @param {string|null} entry.reason
+ * @param {string|null} entry.actor
+ * @returns {Promise<number>} The new id
+ */
+async function insertRotationLog({ oldKeyId, newKeyId, oldFingerprint, newFingerprint, graceUntil, reason, actor }) {
+  if (!newKeyId || !newFingerprint) {
+    throw new Error('insertRotationLog: newKeyId and newFingerprint are required');
+  }
+  const boundedReason = reason ? String(reason).slice(0, 280) : null;
+  const { rows } = await queryWithRetry(
+    `INSERT INTO key_rotation_log
+       (old_key_id, new_key_id, old_fingerprint, new_fingerprint, grace_until, reason, actor)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
+     RETURNING id`,
+    [
+      oldKeyId || null,
+      newKeyId,
+      oldFingerprint || null,
+      newFingerprint,
+      graceUntil || null,
+      boundedReason,
+      actor || null
+    ]
+  );
+  return rows[0].id;
+}
+
+/**
+ * Returns the count of ed25519_keys rows grouped by state.
+ * Used by health endpoints and Phase 3D tests. States with zero rows
+ * are returned as 0 (not omitted) so callers never have to null-guard.
+ *
+ * @returns {Promise<{pending: number, active: number, grace: number, expired: number}>}
+ */
+async function countEd25519KeysByState() {
+  const { rows } = await queryWithRetry(
+    'SELECT state, COUNT(*)::int AS n FROM ed25519_keys GROUP BY state'
+  );
+  const out = { pending: 0, active: 0, grace: 0, expired: 0 };
+  for (const row of rows) {
+    if (out[row.state] !== undefined) out[row.state] = Number(row.n);
+  }
+  return out;
+}
+
+// ================================================================
 // CLOSE
 // ================================================================
 async function close() {
@@ -1019,6 +1334,11 @@ module.exports = {
   getPrimaryEd25519Key,
   listActiveEd25519Keys,
   insertEd25519Key,
+  // Key rotation helpers (Phase 3A schema; consumers wired up in 3B-3E)
+  getEd25519KeyState,
+  listRotationLog,
+  insertRotationLog,
+  countEd25519KeysByState,
   query: queryWithRetry,
   close,
   _db: pool,
