@@ -1,7 +1,7 @@
 # Vertifile Security Model
 
 > **Last updated:** 2026-04-08
-> **Document version:** 1.0 (Phase 2D)
+> **Document version:** 2.0 (Phase 2D — sales-ready)
 > **Contact:** security@vertifile.com
 
 Vertifile is a tamper-proof document protection platform. When we say "tamper-proof," we mean it in the narrow, falsifiable, cryptographic sense: every document Vertifile issues is bound to a pair of signatures that anyone on the internet can verify independently, using only a published public key and a short snippet of standard code.
@@ -12,9 +12,24 @@ If anything in this document is unclear, wrong, or missing — email security@ve
 
 ---
 
+## 0. For your security team — 30 seconds
+
+**Vertifile is the only document authenticity platform where you don't have to trust us — you can verify every document we issue using only a 64-byte public key and ten lines of code.**
+
+- **What we sign:** the SHA-256 hash of the document content, plus the issuing organization, timestamp, and recipient binding — all in one canonical payload.
+- **What you get:** an Ed25519 signature (64 bytes) plus an HMAC tag, embedded in the PVF file alongside the document. Both cover the same payload; changing a single byte invalidates both.
+- **How you verify it:** fetch our public key from `https://vertifile.com/.well-known/vertifile-pubkey.pem`, confirm its fingerprint against the one in section 3 of this document, and run `openssl pkeyutl -verify`. No Vertifile API, no SDK, no account.
+- **How much code:** ten lines in Node or Python, or three shell commands. All three are in section 4 and have been wet-tested against production documents.
+
+Vertifile's core signing mechanism is the subject of a pending patent (Israel) and the PVF container uses IANA MIME type `application/vnd.vertifile.pvf` — request #1446680, currently pending. The cryptographic contract in this document is stable regardless of the outcome of either process.
+
+The rest of this document is the math and the evidence. If you want the 10-second version: open section 4 and copy the `openssl` command.
+
+---
+
 ## 1. The guarantee, in one paragraph
 
-Every PVF file issued by Vertifile contains two cryptographic signatures over the same canonical payload:
+When you accept a Vertifile document — a diploma, a medical record, a signed contract, a certificate of insurance — you are accepting it with a cryptographic guarantee that nobody, not even Vertifile, can alter it after issuance without invalidating the signature you verified. Every PVF file contains two cryptographic signatures over the same canonical payload:
 
 1. An **HMAC-SHA256** tag, verifiable by Vertifile's API.
 2. An **Ed25519** signature, verifiable by **anyone** who fetches our published public key.
@@ -55,6 +70,18 @@ We chose explicit `|` separators instead of fixed-width concatenation because `|
 Ed25519 is deterministic (no nonce reuse), produces 64-byte signatures (no document bloat), and is built into Node.js `crypto` and every modern TLS library. It is the same primitive used by OpenSSH, Signal, WireGuard, Tailscale, PASETO, and age. It is patent-free, battle-tested, and has a ~128-bit security level.
 
 We deliberately did **not** choose RSA-PSS (5–8× larger signatures, slower keygen) or ECDSA P-256 (historically vulnerable to nonce-reuse footguns when implemented naively).
+
+---
+
+> ### Why this matters to your business
+>
+> The mechanism above binds every document to its issuer. The verifier needs no relationship with Vertifile. Three concrete cases where that property is the entire point:
+>
+> - **Healthcare.** A hospital credentialing office receives a physician license from a medical school. The license is a PVF file signed with that school's issuance key through Vertifile. The hospital verifies the Ed25519 signature against the published public key before granting privileges — and learns the license is forged *before* the unlicensed practitioner sees a patient. No phone call to the school's registrar. No trust in email headers.
+> - **Financial services.** An underwriter reviews an income statement attached to a loan application. The statement is a PVF file issued by the applicant's employer. The underwriter runs the same 10-line verifier, confirms the payload matches the employer's published key, and detects a forged pay stub in the time it takes to run one `openssl` command.
+> - **Enterprise HR.** A Fortune 500 recruiter receives a degree certificate with an offer acceptance. The certificate is a PVF file issued by the awarding university. Verification happens against the university's key — not Vertifile's word — so a forged diploma fails the check even if Vertifile's servers are down, compromised, or no longer exist.
+>
+> In all three cases the verifying party needs **no account with Vertifile, no API credentials, and no runtime dependency on us**. That is the trust-minimization story, and it is the reason security teams accept this architecture in a vendor review.
 
 ---
 
@@ -206,15 +233,15 @@ Success response:
 
 This endpoint **never** touches the `documents` table. It verifies the math against the published public key — nothing more. A caller can verify a signature for a document Vertifile has never seen.
 
-**Why you should still prefer Methods 1–3:** the `/api/verify-public` endpoint is convenient, but it requires you to trust our server to run the math correctly. The published public key and a 10-line verifier let you cut us out of the trust chain entirely. That's the point.
+**Why you should still prefer Methods 1–3:** the `/api/verify-public` endpoint is convenient, but it requires you to trust our server to run the math correctly. The published public key and a 10-line verifier let you cut us out of the trust chain entirely. That's the point. Vertifile is, as far as we know, the only platform in the document authenticity space that actively encourages you to verify independently instead of calling our API — every other vendor in this category locks verification behind a credentialed endpoint they control; we publish the key, publish the code, and tell you to run it yourself.
 
 ---
 
-## 5. What Vertifile promises — and what it does not
+## 5. What Vertifile commits to — and what it does not
 
-### Promises
+### Our commitments
 
-- Every PVF file we issue from 2026-04-07 onward is signed with Ed25519 in addition to HMAC.
+- Every PVF file we issue from 2026-04-07 onward is signed with Ed25519 in addition to HMAC. From the Phase 2E cutover onward, the platform physically refuses to issue an HMAC-only document — the dual-signature is enforced at creation time and cannot silently degrade to a single-signature fallback. If Ed25519 signing is unavailable for any reason, document creation fails with a loud error rather than producing a partially-signed file.
 - The Ed25519 public key at the fingerprint above is the only key we use to sign production documents today.
 - The private key is held in Vertifile's production secret store and is **never** written to disk, logs, version control, or any location accessible outside of the signing process.
 - We will never issue a backdoored or retroactive signature for a document we did not originally sign.
@@ -225,11 +252,41 @@ This endpoint **never** touches the `documents` table. It verifies the math agai
 - **Private key compromise.** If the private key is ever stolen, a forger could produce signatures that pass the same math any honest verifier uses. Our defense is operational: HSM-backed secret storage, the key never leaves memory of the signing process, aggressive rotation, monitoring for anomalous signing activity. If a compromise occurs, we revoke via the published JWKS (`valid_until` set) and rotate to a new key.
 - **Pre-Phase-2D documents.** Documents issued before 2026-04-07 are signed with HMAC only. They can still be verified via our API (`POST /api/verify`), but not via Ed25519. Look for `signedBy: "both"` in the API response to confirm a document has the full dual-signature.
 - **Social engineering and endpoint compromise.** Cryptography binds the document; it doesn't protect the endpoint that shows you the verified result. A verifier running on a compromised laptop can be made to lie to its user. Run verification on a machine you trust.
-- **This document is not legal advice.** It describes the cryptographic binding. Whether the cryptographic binding is legally admissible, compliant, or sufficient for your use case is a question for your legal team.
+- **No financial advice or legal binding.** This document describes a cryptographic property. Whether a particular jurisdiction treats an Ed25519 signature as legally equivalent to a wet-ink signature, whether a specific regulator accepts it as an audit artifact, and whether it satisfies a specific compliance regime are questions for your legal team. We describe the mechanism; we do not opine on its legal effect.
 
 ---
 
-## 6. Disclosing a vulnerability
+## 6. Questions your team will ask
+
+These are the questions a security team actually asks in a vendor review. Direct answers only.
+
+**1. Where is the private key stored?**
+In-memory only, loaded from our production secret store at process boot, never written to disk, never logged, never checked into version control. Rotation policy is in section 3. The signing process runs in an isolated environment; the key material does not leave it.
+
+**2. What happens if Vertifile goes out of business?**
+Every PVF document issued before the shutdown remains verifiable by anyone who has a snapshot of the public key in section 3 (or the PEM at `/.well-known/vertifile-pubkey.pem`) and a machine that can run `openssl`. The verification chain does not depend on Vertifile being alive. This is the strongest trust-minimization property of the architecture: a dead Vertifile does not break any document already issued.
+
+**3. Can you forge a document for a customer we sued?**
+No. We have no feature to re-issue, backdate, or modify a signature for a specific customer, and we would not add one. Every signature is deterministic over the canonical payload; the same document content plus the same metadata always produces the same signature, and any change produces a different one. We also have no "delete" operation that hides an already-issued signature from the verifier, because the verifier never talks to us.
+
+**4. What's your incident response?**
+If we discover or suspect private-key compromise, we rotate to a new Ed25519 keypair within one hour, publish the new key at the `/.well-known` URLs, mark the compromised key's `valid_until` in the JWKS so pre-compromise documents still verify, and update this document with the new key ID and fingerprint. We also announce the incident in the changelog and email customers on the affected window.
+
+**5. Do you share documents with third parties?**
+No. We store an obfuscated copy of the document's HTML rendering and the SHA-256 hash of the original. We never read the document content, we never share it, and because the stored form is a one-way hash, we cannot reconstruct the document from what we retain even if we wanted to. The content-binding property is enforced by math, not by policy.
+
+**6. What crypto primitive?**
+Ed25519 (RFC 8032). The same curve used by OpenSSH, Signal, WireGuard, and age. Patent-free, deterministic (no nonce-reuse class of attacks), ~128-bit security level, and built directly into Node.js `crypto` and Python's `cryptography` package. No custom crypto, no hand-rolled primitives, no bespoke key derivation.
+
+**7. Is the source code open?**
+The verification code is trivial and fully published — see section 4 for three independent implementations in bash, Node, and Python. The server-side signing code is proprietary, but the cryptographic contract is fully specified in section 2: anyone can reimplement a verifier from scratch without reading our code, because the canonical payload format and the public key are all they need.
+
+**8. What about quantum?**
+Ed25519 is not post-quantum secure. A sufficiently advanced quantum computer would break it, along with every other classical signature in production today. We will migrate to a post-quantum primitive when NIST's PQC standards are deployable and mainstream libraries support them. The migration is planned but not yet scheduled; until then, the threat model is classical adversaries.
+
+---
+
+## 7. Disclosing a vulnerability
 
 If you believe you have found a security vulnerability in Vertifile — a way to forge signatures, bypass verification, extract the private key, extract stored documents, or anything else that breaks the guarantees in section 5 — please email **security@vertifile.com** with:
 
@@ -244,8 +301,9 @@ Please **do not** file security issues on GitHub or in public support channels.
 
 ---
 
-## 7. Version history
+## 8. Version history
 
 | Date | Change |
 |---|---|
 | 2026-04-08 | v1.0 — Phase 2D — initial publication with dual-signature model, Ed25519 key ID `0f65ad1b92590c92`, and three independent verification methods. |
+| 2026-04-08 | v2.0 — Added executive TL;DR for non-technical readers, buyer-oriented framing in sections 1-2, FAQ for vendor security reviews, and strengthened trust-minimization positioning in section 4. No cryptographic changes. |

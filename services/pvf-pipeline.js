@@ -255,6 +255,47 @@ async function createPvf(opts) {
   const ed25519KeyId = ed25519Result ? ed25519Result.keyId : null;
 
   // -----------------------------------------------------------------
+  // 6c. PHASE 2E — Hard requirement (fail-closed)
+  //
+  // When ED25519_REQUIRED=1 is set, Ed25519 signing is MANDATORY. If the
+  // signing step produced no signature — whether because no primary key
+  // was loaded at boot, or because crypto.sign() threw — we ABORT PVF
+  // creation rather than silently producing an HMAC-only document.
+  //
+  // This is the point where Vertifile transitions from "dual-signed with
+  // graceful HMAC fallback" to "dual-signed or nothing". No customer will
+  // ever receive an HMAC-only document issued after Phase 2E deployment.
+  //
+  // Phase 2A invariant still holds: when ED25519_REQUIRED is unset (or any
+  // value other than '1'), the pipeline degrades to HMAC-only exactly as
+  // in Phase 2B. This is the safe default for local dev and CI runs that
+  // don't have a test Ed25519 keypair configured.
+  // -----------------------------------------------------------------
+  // STRICT '1' equality — see tests/pipeline-phase2e.test.js Scenario E.
+  // Truthy coercion (=== 'true', !!, parseInt, etc.) is FORBIDDEN here: a future
+  // refactor that "helpfully" accepts more values would silently activate Phase 2E
+  // in dev environments that ship ED25519_REQUIRED=0 in .env.example. The strict
+  // check is the contract.
+  if (process.env.ED25519_REQUIRED === '1' && (!ed25519Signature || !ed25519KeyId)) {
+    // Discriminator: which failure mode fired? The inner try/catch (line 250) sets
+    // ed25519Result=null on EITHER "no primary key loaded" OR "crypto.sign threw".
+    // For on-call triage we want to know which — config issue (rotate env vars) vs.
+    // runtime/hardware issue (escalate to security). The inner try/catch already
+    // logs 'ed25519_sign_failed' for the throw path; this discriminator is for the
+    // enforcement log specifically.
+    const failMode = ed25519Result === null
+      ? 'no_primary_key_or_sign_returned_null'
+      : 'half_state_signature_or_keyid_missing';
+    logger.error({
+      event: 'ed25519_required_fail_closed',
+      failMode,
+      hash: fileHash.substring(0, 16),
+      orgId
+    }, '[pvf-pipeline] ED25519_REQUIRED=1 but no Ed25519 signature produced — aborting PVF creation');
+    throw new Error('ED25519_REQUIRED_NO_SIGNATURE');
+  }
+
+  // -----------------------------------------------------------------
   // 7. ENCODE FILE (text → HTML escape, binary → base64)
   // -----------------------------------------------------------------
   const fileBase64 = encodeFileForTemplate(buffer, mimeType);

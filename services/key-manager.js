@@ -43,6 +43,10 @@ let _initialized = false;
  */
 function initialize() {
   if (_initialized) return;
+  // _initialized=true here is intentional — the function is fully synchronous
+  // and the early-return gate prevents double-init. Do NOT add any `await`
+  // inside initialize() without revisiting this gate and the Phase 2E boot
+  // check below.
   _initialized = true;
 
   let privPem = process.env.ED25519_PRIVATE_KEY_PEM;
@@ -50,43 +54,69 @@ function initialize() {
 
   if (!privPem) {
     logger.info('[key-manager] ED25519_PRIVATE_KEY_PEM not set — Ed25519 signing disabled (Phase 2A invisible mode)');
-    return;
-  }
+    // Fall through to the Phase 2E boot guard below so an operator who set
+    // ED25519_REQUIRED=1 without configuring a key fails loudly at boot.
+  } else {
+    // Phase 2B fix: Render and other env-var systems sometimes strip real
+    // newlines from multi-line values. Operators can paste a single-line PEM
+    // using literal '\n' as a line separator (e.g.
+    // '-----BEGIN PRIVATE KEY-----\n<base64>\n-----END PRIVATE KEY-----\n').
+    // This replace is a no-op for properly multi-line PEMs (no '\n' literals
+    // to find) so it preserves both formats.
+    privPem = privPem.replace(/\\n/g, '\n');
 
-  // Phase 2B fix: Render and other env-var systems sometimes strip real
-  // newlines from multi-line values. Operators can paste a single-line PEM
-  // using literal '\n' as a line separator (e.g.
-  // '-----BEGIN PRIVATE KEY-----\n<base64>\n-----END PRIVATE KEY-----\n').
-  // This replace is a no-op for properly multi-line PEMs (no '\n' literals
-  // to find) so it preserves both formats.
-  privPem = privPem.replace(/\\n/g, '\n');
-
-  if (!primaryKeyId) {
-    logger.error('[key-manager] ED25519_PRIVATE_KEY_PEM is set but ED25519_PRIMARY_KEY_ID is not. Refusing to boot with inconsistent key config.');
-    process.exit(1);
-  }
-
-  // Phase 2B Fix #4: validate keyId format at boot. The DB column is
-  // VARCHAR(16); an operator who sets a non-16-hex-char keyId would boot fine
-  // but crash at the first Ed25519 INSERT with a SQL length error — a latent
-  // runtime failure. Fail-closed at boot instead. Log only a truncated keyId
-  // (first 8 chars + ellipsis) to avoid leaking the full identifier.
-  if (!/^[a-f0-9]{16}$/.test(primaryKeyId)) {
-    logger.error({ keyId: primaryKeyId.slice(0, 8) + '...' }, '[key-manager] ED25519_PRIMARY_KEY_ID must be exactly 16 lowercase hex characters');
-    process.exit(1);
-  }
-
-  try {
-    const privateKey = crypto.createPrivateKey({ key: privPem, format: 'pem' });
-    if (privateKey.asymmetricKeyType !== 'ed25519') {
-      logger.error({ type: privateKey.asymmetricKeyType }, '[key-manager] ED25519_PRIVATE_KEY_PEM is not an Ed25519 key');
+    if (!primaryKeyId) {
+      logger.error('[key-manager] ED25519_PRIVATE_KEY_PEM is set but ED25519_PRIMARY_KEY_ID is not. Refusing to boot with inconsistent key config.');
       process.exit(1);
     }
-    _primary = { keyId: primaryKeyId, privateKey };
-    logger.info({ keyId: primaryKeyId, type: 'ed25519' }, '[key-manager] primary key loaded');
-  } catch (e) {
-    logger.error({ err: e.message }, '[key-manager] failed to parse ED25519_PRIVATE_KEY_PEM');
+
+    // Phase 2B Fix #4: validate keyId format at boot. The DB column is
+    // VARCHAR(16); an operator who sets a non-16-hex-char keyId would boot fine
+    // but crash at the first Ed25519 INSERT with a SQL length error — a latent
+    // runtime failure. Fail-closed at boot instead. Log only a truncated keyId
+    // (first 8 chars + ellipsis) to avoid leaking the full identifier.
+    if (!/^[a-f0-9]{16}$/.test(primaryKeyId)) {
+      logger.error({ keyId: primaryKeyId.slice(0, 8) + '...' }, '[key-manager] ED25519_PRIMARY_KEY_ID must be exactly 16 lowercase hex characters');
+      process.exit(1);
+    }
+
+    try {
+      const privateKey = crypto.createPrivateKey({ key: privPem, format: 'pem' });
+      if (privateKey.asymmetricKeyType !== 'ed25519') {
+        logger.error({ type: privateKey.asymmetricKeyType }, '[key-manager] ED25519_PRIVATE_KEY_PEM is not an Ed25519 key');
+        process.exit(1);
+      }
+      _primary = { keyId: primaryKeyId, privateKey };
+      logger.info({ keyId: primaryKeyId, type: 'ed25519' }, '[key-manager] primary key loaded');
+    } catch (e) {
+      logger.error({ err: e.message }, '[key-manager] failed to parse ED25519_PRIVATE_KEY_PEM');
+      process.exit(1);
+    }
+  }
+
+  // Phase 2E — fail-closed boot check.
+  // If the operator set ED25519_REQUIRED=1 but we did NOT successfully load
+  // a primary key (either because PEM is unset, or because the try/catch
+  // above hit a non-fatal code path in the future), refuse to boot. Silent
+  // HMAC-only operation in a Phase 2E environment is a production bug, not
+  // a graceful degradation.
+  // STRICT '1' equality — see tests/pipeline-phase2e.test.js Scenario E.
+  // Truthy coercion is FORBIDDEN here. See services/pvf-pipeline.js:274 for the
+  // matching signing-side check. Both must stay byte-identical.
+  if (process.env.ED25519_REQUIRED === '1' && !_primary) {
+    logger.error('[key-manager] ED25519_REQUIRED=1 but no Ed25519 primary key loaded. Refusing to boot. Either unset ED25519_REQUIRED or configure ED25519_PRIVATE_KEY_PEM + ED25519_PRIMARY_KEY_ID.');
     process.exit(1);
+  }
+
+  // Positive observability: when Phase 2E IS active and the key IS loaded, emit
+  // an info log so on-call can grep for it after a cutover. Without this, there
+  // is no positive signal that Phase 2E enforcement is running — only the absence
+  // of the error log above, which is unobservable in practice.
+  if (process.env.ED25519_REQUIRED === '1' && _primary) {
+    logger.info({
+      keyId: _primary.keyId,
+      event: 'phase2e_active'
+    }, '[key-manager] Phase 2E fail-closed enforcement ACTIVE — every new PVF will be dual-signed or rejected');
   }
 }
 

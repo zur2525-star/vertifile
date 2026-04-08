@@ -661,7 +661,12 @@ router.get('/health/deep', async (req, res) => {
       timestamp: new Date().toISOString(),
       documents: stats.totalDocuments,
       organizations: stats.totalOrganizations,
-      blockchain: chain.isConnected() ? 'connected' : 'off-chain'
+      blockchain: chain.isConnected() ? 'connected' : 'off-chain',
+      // Phase 2E observability — lets operators / uptime probes confirm the
+      // fail-closed enforcement state without grepping logs. See Ori's cutover
+      // smoke test: `curl /api/health/deep | jq '.phase2e_active'`.
+      phase2e_active: process.env.ED25519_REQUIRED === '1' && keyManager.getPrimaryKeyId() !== null,
+      primary_key_id: keyManager.getPrimaryKeyId() || null
     });
   } catch(e) { res.status(500).json({ status: 'error', error: 'Health check failed' }); }
 });
