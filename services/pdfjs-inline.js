@@ -113,7 +113,12 @@ function injectPdfJsBundle(html, mimeType) {
   if (html.indexOf('</head>') === -1) {
     return bundle + html;
   }
-  return html.replace('</head>', bundle + '</head>');
+  // Use function-callback form of String.prototype.replace() — the 2-arg
+  // string form interprets $&, $$, $', $`, and $1-$99 as replacement patterns,
+  // which corrupts the pdf.js bundle (contains `this.#$&&this.#yt()`). The
+  // callback form treats the return value as a literal string with no
+  // pattern interpretation, so $& inside `bundle` stays intact.
+  return html.replace('</head>', function() { return bundle + '</head>'; });
 }
 
 module.exports = { injectPdfJsBundle, loadPdfJs, escapeScriptClose, isPdfjsAvailable };
