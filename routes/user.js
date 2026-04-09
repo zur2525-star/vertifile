@@ -64,7 +64,19 @@ router.get('/documents', requireLogin, async (req, res) => {
     const starred = req.query.starred === 'true';
     const docs = await db.getUserDocuments(req.user.id, { limit, offset, search, starred });
     const total = await db.getUserDocumentCount(req.user.id);
-    res.json({ success: true, documents: docs, total, limit, offset });
+    // Sanitize the Ed25519 columns before sending them over the wire:
+    //   * drop the raw 64-byte signature blob (the dashboard never needs it —
+    //     the /d/{shareId} viewer verifies signatures server-side),
+    //   * expose a cheap is_dual_signed boolean that the sidebar renders,
+    //   * keep ed25519_key_id so the sidebar can show which key signed it.
+    const sanitized = docs.map(function(d) {
+      var isDualSigned = !!d.ed25519_signature;
+      var out = Object.assign({}, d);
+      delete out.ed25519_signature;
+      out.is_dual_signed = isDualSigned;
+      return out;
+    });
+    res.json({ success: true, documents: sanitized, total, limit, offset });
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to load documents' }); }
 });
 

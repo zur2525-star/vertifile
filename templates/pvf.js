@@ -162,7 +162,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 
 /* 3D Coin-flip animation */
 .stamp-coin{width:100%;height:100%;transform-style:preserve-3d;opacity:0}
-.stamp-coin.animate{animation:coinFlip 2.2s ease-out forwards}
+.stamp-coin.animate{animation:coinFlip 1.2s ease-out forwards}
 @keyframes coinFlip{
   0%{opacity:0;transform:translateY(-300px) rotateY(0deg) scale(.2)}
   15%{opacity:1;transform:translateY(-180px) rotateY(540deg) scale(.6)}
@@ -656,14 +656,12 @@ function triggerFlip(){
   if(__devToolsOpen||__securityFrozen) return;
   var c=document.getElementById("sCoin");
   if(c){c.classList.remove("animate","landed");c.style.opacity="0";void c.offsetWidth;c.classList.add("animate")}
-  // After flip completes (2.2s), switch to gentle breathing
+  // After flip completes (1.2s), switch to gentle breathing
   setTimeout(function(){
     if(__devToolsOpen||__securityFrozen) return;
     if(c){c.style.opacity="1";c.classList.remove("animate");void c.offsetWidth;c.classList.add("landed")}
-  },2300);
+  },1300);
 }
-// Repeat flip every 10 seconds
-setInterval(triggerFlip,10000);
 
 var __isDesktopViewer = !!window.__pvfDesktopViewer;
 var __isIframe = (window.self !== window.top);

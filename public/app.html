@@ -170,6 +170,36 @@
     .doc-preview-info .info-label{color:#8b89a6;font-weight:500}
     .doc-preview-info .info-value{color:#e2e0f0;font-family:'SF Mono','Fira Code',monospace;font-size:11px}
 
+    /* Cryptographic Proof accordion (Phase 2E dual-signing) */
+    .crypto-proof{margin-top:12px;border:1px solid rgba(124,58,237,.15);border-radius:10px;background:rgba(124,58,237,.05);overflow:hidden}
+    .crypto-proof-header{width:100%;display:flex;align-items:center;gap:8px;padding:10px 12px;background:none;border:none;color:#e2e0f0;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;text-align:left}
+    .crypto-proof-header:hover{background:rgba(124,58,237,.08)}
+    .crypto-proof-header .cpe-icon{display:inline-flex;width:16px;height:16px;color:#a78bfa;flex-shrink:0}
+    .crypto-proof-header .cpe-icon svg{width:16px;height:16px}
+    .crypto-proof-header .cpe-title{flex:1}
+    .crypto-proof-header .cpe-chevron{display:inline-flex;width:14px;height:14px;color:#8b89a6;transition:transform .2s ease;flex-shrink:0}
+    .crypto-proof-header .cpe-chevron svg{width:14px;height:14px}
+    .crypto-proof-header[aria-expanded="false"] .cpe-chevron{transform:rotate(-90deg)}
+    [dir="rtl"] .crypto-proof-header[aria-expanded="false"] .cpe-chevron{transform:rotate(90deg)}
+    .crypto-proof-body{padding:10px 12px 12px;border-top:1px solid rgba(124,58,237,.1)}
+    .crypto-proof-body .info-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+    .crypto-proof-body .info-row:last-child{margin-bottom:0}
+    .crypto-proof-body .info-label{color:#8b89a6;font-weight:500}
+    .crypto-proof-body .info-value{color:#e2e0f0;font-size:11px;max-width:60%;text-align:right;overflow-wrap:anywhere}
+    .crypto-proof-body .info-value.mono{font-family:'SF Mono','Fira Code',monospace}
+    .crypto-proof-body .info-value.copyable{cursor:pointer}
+    .crypto-proof-body .info-value.copyable:hover{color:#a78bfa}
+    /* Status row: the value cell is a flex container so the pill hugs the end edge (RTL-safe). */
+    .crypto-proof-body .cpe-status-cell{display:inline-flex;justify-content:flex-end;align-items:center;max-width:60%}
+    /* Trust-badge pill — prominent, rounded, slightly larger than plain row values */
+    .crypto-proof-body .cpe-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 11px;border-radius:999px;font-size:11px;font-weight:600;line-height:1.4;letter-spacing:.2px;white-space:nowrap}
+    .crypto-proof-body .cpe-pill-icon{width:11px;height:11px;flex-shrink:0}
+    .crypto-proof-body .cpe-pill-verified{background:#16a34a;color:#fff;box-shadow:0 0 0 1px rgba(22,163,74,.35),0 2px 6px rgba(22,163,74,.25)}
+    .crypto-proof-body .cpe-pill-legacy{background:#6b7280;color:#fff;box-shadow:0 0 0 1px rgba(107,114,128,.3),0 1px 3px rgba(0,0,0,.15)}
+    .crypto-proof.collapsed .crypto-proof-body{display:none}
+    [dir="rtl"] .crypto-proof-body .info-value{text-align:left}
+    [dir="rtl"] .crypto-proof-body .cpe-status-cell{justify-content:flex-start}
+
     /* ===== CONTENT PANELS (Settings, Branding, Shared, API) ===== */
     .content-panel{display:none;flex:1;overflow-y:auto;padding:32px;background:transparent}
     .content-panel.active{display:block}
@@ -310,7 +340,15 @@
     .upload-progress .up-filename{font-size:13px;font-weight:500;color:#e2e0f0;margin-bottom:6px}
     .upload-progress .up-bar{height:4px;background:rgba(124,58,237,.15);border-radius:2px;overflow:hidden}
     .upload-progress .up-bar-fill{height:100%;background:linear-gradient(90deg,#4f46e5,#7c3aed);border-radius:2px;width:0;transition:width .3s}
+    .upload-progress.is-success .up-bar-fill{background:linear-gradient(90deg,#16a34a,#22c55e)}
     .upload-progress .up-status{font-size:12px;color:#8b89a6;margin-top:4px}
+    .upload-progress.is-success .up-status{color:#16a34a;font-weight:600}
+    .upload-progress.is-error .up-status{color:#dc2626;font-weight:600}
+    .upload-progress .up-actions{margin-top:8px;display:flex;align-items:center;gap:10px}
+    .upload-progress .up-success-row{display:flex;align-items:center;gap:8px;font-size:12px;color:#16a34a}
+    .upload-progress .up-success-row svg{width:16px;height:16px;flex-shrink:0}
+    .upload-progress .up-view-link{color:#a78bfa;text-decoration:none;font-size:12px;font-weight:600}
+    .upload-progress .up-view-link:hover{text-decoration:underline}
 
     .upload-limit{margin-top:16px;padding:12px;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);border-radius:10px;display:none;text-align:center}
     .upload-limit p{font-size:13px;color:#dc2626;margin-bottom:8px}
@@ -480,6 +518,14 @@
     body.light-mode .upload-progress .up-filename{color:#374151}
     body.light-mode .upload-progress .up-bar{background:#e5e7eb}
     body.light-mode .upload-limit{background:#fef2f2;border-color:#fecaca}
+    body.light-mode .crypto-proof{border-color:#e5e7eb;background:#faf9ff}
+    body.light-mode .crypto-proof-header{color:#1e1b4b}
+    body.light-mode .crypto-proof-header:hover{background:rgba(124,58,237,.06)}
+    body.light-mode .crypto-proof-body{border-top-color:#e5e7eb}
+    body.light-mode .crypto-proof-body .info-label{color:#6b7280}
+    body.light-mode .crypto-proof-body .info-value{color:#1e1b4b}
+    body.light-mode .crypto-proof-body .cpe-pill-verified{background:#16a34a;color:#fff;box-shadow:0 0 0 1px rgba(22,163,74,.4),0 2px 6px rgba(22,163,74,.2)}
+    body.light-mode .crypto-proof-body .cpe-pill-legacy{background:#6b7280;color:#fff;box-shadow:0 0 0 1px rgba(107,114,128,.4),0 1px 3px rgba(0,0,0,.08)}
 
     body.light-mode .toast{background:rgba(255,255,255,.95);color:#1e1b4b;border-color:#e5e7eb;box-shadow:0 8px 24px rgba(0,0,0,.1)}
 
@@ -1226,7 +1272,7 @@
         <div class="uz-hint" data-i18n="tab.upload.dropHint">or click to browse. PDF, images, text files accepted. Max 50MB.</div>
       </div>
       <input type="file" id="fileInput" style="display:none" accept=".pdf,.png,.jpg,.jpeg,.tiff,.txt,.docx">
-      <div class="upload-progress" id="uploadProgress"><div class="up-filename" id="upFilename"></div><div class="up-bar"><div class="up-bar-fill" id="upBarFill"></div></div><div class="up-status" id="upStatus">Uploading...</div><button class="up-cancel" onclick="Dashboard.cancelUpload()">Cancel</button></div>
+      <div class="upload-progress" id="uploadProgress"><div class="up-filename" id="upFilename"></div><div class="up-bar"><div class="up-bar-fill" id="upBarFill"></div></div><div class="up-status" id="upStatus">Uploading...</div><div class="up-actions" id="upActions"><button class="up-cancel" onclick="Dashboard.cancelUpload()">Cancel</button></div></div>
       <div class="upload-error-card" id="uploadError"><div class="ue-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div class="ue-heading">Upload Failed</div><div class="ue-text" id="ueText">Something went wrong. Please try again.</div><div class="btn-row" style="justify-content:center"><button class="btn btn-primary" onclick="Dashboard.retryUpload()">Retry Upload</button></div></div>
       <div class="upload-complete" id="uploadComplete"><div class="uc-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><h3>Document Protected</h3><div class="uc-details" id="ucDetails"></div><div class="uc-hash" id="ucHash"></div><div class="btn-row" style="justify-content:center"><button class="btn btn-primary" onclick="Dashboard.switchTab('documents')">View in Documents</button></div></div>
     </div>
@@ -1266,7 +1312,25 @@
   <div class="doc-preview" id="docPreview">
     <div class="preview-toolbar"><span class="preview-title" id="previewTitle">Document</span><button onclick="Dashboard.downloadCurrentDoc()"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download</button><button onclick="Dashboard.shareCurrentDoc()"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</button><button class="close-preview" onclick="Dashboard.closePreview()" aria-label="Close preview">&times;</button></div>
     <div class="preview-content" id="previewContent">Select a document to preview</div>
-    <div class="preview-info" id="previewInfo"><div class="info-row"><span class="info-label">Hash</span><span class="info-value" id="previewHash">--</span></div><div class="info-row"><span class="info-label">Created</span><span class="info-value" id="previewCreated">--</span></div><div class="info-row"><span class="info-label">Status</span><span class="info-value" id="previewStatus">--</span></div></div>
+    <div class="preview-info" id="previewInfo"><div class="info-row"><span class="info-label">Hash</span><span class="info-value" id="previewHash">--</span></div><div class="info-row"><span class="info-label">Created</span><span class="info-value" id="previewCreated">--</span></div><div class="info-row"><span class="info-label">Status</span><span class="info-value" id="previewStatus">--</span></div>
+      <!-- Cryptographic Proof accordion (Phase 2B/2E dual-signing) -->
+      <div class="crypto-proof" id="cryptoProof">
+        <button type="button" class="crypto-proof-header" id="cryptoProofToggle" aria-expanded="true" aria-controls="cryptoProofBody" onclick="Dashboard.toggleCryptoProof()">
+          <span class="cpe-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <span class="cpe-title" data-i18n="tab.documents.cryptoProof">Cryptographic Proof</span>
+          <span class="cpe-chevron" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+        </button>
+        <div class="crypto-proof-body" id="cryptoProofBody" role="region" aria-labelledby="cryptoProofToggle">
+          <div class="info-row"><span class="info-label" data-i18n="tab.documents.algorithm">Algorithm</span><span class="info-value" id="previewAlgo">--</span></div>
+          <div class="info-row"><span class="info-label" data-i18n="tab.documents.keyId">Key ID</span><span class="info-value mono copyable" id="previewKeyId" title="Click to copy">--</span></div>
+          <div class="info-row"><span class="info-label" data-i18n="tab.documents.status">Status</span><span class="info-value cpe-status-cell" id="previewStatusPill">--</span></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ===================== TAB 4: MY STAMP ===================== -->
@@ -2066,6 +2130,40 @@ window.Dashboard = {
     document.getElementById('previewCreated').textContent = formatDate(selectedDoc.timestamp || selectedDoc.createdAt || selectedDoc.created_at || selectedDoc.created);
     document.getElementById('previewStatus').textContent = selectedDoc.verified !== false ? 'Verified' : 'Unverified';
 
+    // ---- Cryptographic Proof accordion (Phase 2E dual-signing) ----
+    // The API strips the raw signature blob — we only get is_dual_signed + ed25519_key_id.
+    // Zur spec: exactly 3 rows — Algorithm, Key ID, Status (prominent trust pill).
+    var isDualSigned = selectedDoc.is_dual_signed === true || selectedDoc.isDualSigned === true;
+    var keyId = selectedDoc.ed25519_key_id || selectedDoc.ed25519KeyId || '';
+    var algoEl = document.getElementById('previewAlgo');
+    var keyEl = document.getElementById('previewKeyId');
+    var statusEl = document.getElementById('previewStatusPill');
+    if (algoEl && keyEl && statusEl) {
+      // Shared SVG check icon — white stroke, sits inside the pill.
+      var checkSvg = '<svg class="cpe-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+      if (isDualSigned && keyId) {
+        algoEl.textContent = 'Ed25519';
+        keyEl.textContent = keyId;
+        keyEl.classList.add('mono', 'copyable');
+        keyEl.onclick = function(){ copyToClipboard(keyId); };
+        statusEl.innerHTML =
+          '<span class="cpe-pill cpe-pill-verified" role="status" aria-label="Verified">' +
+            checkSvg +
+            '<span>Verified</span>' +
+          '</span>';
+      } else {
+        // Legacy HMAC-only (pre-Phase-2B) docs get a neutral grey trust badge.
+        algoEl.textContent = 'HMAC-SHA256';
+        keyEl.textContent = 'n/a';
+        keyEl.classList.remove('copyable');
+        keyEl.onclick = null;
+        statusEl.innerHTML =
+          '<span class="cpe-pill cpe-pill-legacy" role="status" title="This document was signed before Ed25519 dual-signing was enabled." aria-label="HMAC-only legacy document">' +
+            '<span>HMAC-only</span>' +
+          '</span>';
+      }
+    }
+
     var previewEl = document.getElementById('previewContent');
     var shareId = selectedDoc.shareId || selectedDoc.share_id;
     if (shareId && previewEl) {
@@ -2076,6 +2174,13 @@ window.Dashboard = {
 
     document.getElementById('docPreview').classList.add('open');
     this.renderDocRows();
+  },
+  toggleCryptoProof: function(){
+    var wrap = document.getElementById('cryptoProof');
+    var btn = document.getElementById('cryptoProofToggle');
+    if (!wrap || !btn) return;
+    var collapsed = wrap.classList.toggle('collapsed');
+    btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
   },
   closePreview: function(){
     document.getElementById('docPreview').classList.remove('open');
@@ -2905,10 +3010,16 @@ async function handleUploadFile(file) {
   const progress = document.getElementById('uploadProgress');
   const barFill = document.getElementById('upBarFill');
   const status = document.getElementById('upStatus');
+  const actions = document.getElementById('upActions');
   document.getElementById('upFilename').textContent = file.name;
+  // Reset any previous success/error state from earlier uploads
+  progress.classList.remove('is-success', 'is-error');
   progress.style.display = 'block';
   barFill.style.width = '0%';
   status.textContent = 'Uploading...';
+  if (actions) {
+    actions.innerHTML = '<button class="up-cancel" onclick="Dashboard.cancelUpload()">Cancel</button>';
+  }
 
   // Simulate progress
   let pct = 0;
@@ -2918,15 +3029,40 @@ async function handleUploadFile(file) {
   }, 200);
 
   try {
-    await uploadFile(file);
+    const result = await uploadFile(file);
     clearInterval(interval);
+    // Success: pin to 100%, show green checkmark + View link, auto-dismiss.
     barFill.style.width = '100%';
-    status.textContent = 'Protected!';
-    setTimeout(() => hideUploadModal(), 1200);
+    progress.classList.add('is-success');
+    status.textContent = 'Protected';
+    if (actions) {
+      const shareId = result && result.shareId ? result.shareId : '';
+      const viewHref = shareId ? '/d/' + encodeURIComponent(shareId) : '#';
+      actions.innerHTML =
+        '<span class="up-success-row">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            '<polyline points="20 6 9 17 4 12"/>' +
+          '</svg>' +
+          '<span>Document protected</span>' +
+        '</span>' +
+        (shareId ? '<a class="up-view-link" href="' + viewHref + '" target="_blank" rel="noopener">View document</a>' : '');
+    }
+    // Auto-dismiss after 4 seconds so the user can still glance at the confirmation.
+    setTimeout(function(){
+      if (progress.classList.contains('is-success')) {
+        progress.style.display = 'none';
+        progress.classList.remove('is-success');
+      }
+    }, 4000);
   } catch (e) {
     clearInterval(interval);
     barFill.style.width = '0%';
-    status.textContent = 'Failed: ' + e.message;
+    progress.classList.add('is-error');
+    status.textContent = 'Failed: ' + (e && e.message ? e.message : 'Upload failed');
+    // Keep Cancel link visible so the user can dismiss the failed entry.
+    if (actions) {
+      actions.innerHTML = '<button class="up-cancel" onclick="Dashboard.cancelUpload()">Cancel</button>';
+    }
   }
 }
 
@@ -2934,12 +3070,21 @@ async function uploadFile(file) {
   const form = new FormData();
   form.append('file', file);
   const r = await fetch('/api/user/upload', { method: 'POST', body: form, credentials: 'same-origin' });
-  const data = await r.json();
-  if (!data.success && data.error) {
-    throw new Error(data.error);
+  // Parse the body defensively — some error paths return empty bodies.
+  let data = {};
+  try { data = await r.json(); } catch(_) { data = {}; }
+  // Treat the request as successful only when BOTH the HTTP status is OK and
+  // the server explicitly marked the payload as successful. This prevents a
+  // partial-success 5xx from flashing "Protected!" while the doc was never
+  // persisted, AND prevents a false "Failed: Upload failed" when the server
+  // actually persisted the document and returned success:true.
+  if (!r.ok || data.success === false) {
+    const msg = (data && data.error) ? data.error : ('Upload failed (HTTP ' + r.status + ')');
+    throw new Error(msg);
   }
   loadDocuments();
   toast('Document protected!');
+  return data;
 }
 
 // Upload zone drag/drop — now handled by Dashboard.initUpload()
@@ -3030,6 +3175,19 @@ function formatSize(bytes) {
   if (bytes < 1024) return bytes + ' B';
   if (bytes < 1048576) return (bytes / 1024).toFixed(0) + ' KB';
   return (bytes / 1048576).toFixed(1) + ' MB';
+}
+
+// Full UTC timestamp for the Cryptographic Proof accordion — format matches
+// the spec mockup: "2026-04-07 14:22:11 UTC". Using UTC keeps the audit
+// timeline timezone-independent across distributed recipients.
+function _formatUtcTimestamp(dateStr) {
+  if (!dateStr) return '--';
+  var d = new Date(dateStr);
+  if (isNaN(d.getTime())) return '--';
+  var pad = function(n){ return n < 10 ? '0' + n : '' + n; };
+  return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate())
+    + ' ' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds())
+    + ' UTC';
 }
 
 function formatDate(dateStr) {
