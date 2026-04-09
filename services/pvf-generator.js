@@ -60,7 +60,8 @@ function generateToken() {
 function setPvfSecurityHeaders(res) {
   res.setHeader('Content-Security-Policy', [
     "default-src 'none'",
-    "script-src 'unsafe-inline'",                       // PVF inline scripts need this
+    "script-src 'unsafe-inline' 'self'",                // PVF inline scripts need 'unsafe-inline'; 'self' enables PDF.js worker loading from /vendor/pdfjs/
+    "worker-src 'self'",                                // Allow same-origin Web Workers (PDF.js)
     "style-src 'unsafe-inline' https://fonts.googleapis.com",
     "font-src https://fonts.gstatic.com",
     "img-src data: blob:",
