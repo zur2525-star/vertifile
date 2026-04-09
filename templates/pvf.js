@@ -728,25 +728,29 @@ async function renderPdfInline(){
     }
     if(!pdfjsLib) throw new Error("pdfjsLib not available after wait");
 
-    // 2. Decode base64 payload into a Uint8Array
+    // 2. Tell PDF.js where to load the worker. We use a same-origin HTTPS URL
+    //    (served by Express at /vendor/pdfjs/) instead of a blob: URL because
+    //    Chrome rejects module workers from blob: URLs (opaque origin) and
+    //    pdfjs-dist v4 is ES-module-only with no UMD fallback.
+    //    Trade-off: PDF PVFs need vertifile.com reachable to render. The
+    //    signing chain (HMAC + Ed25519) stays 100% self-contained.
+    //    Phase 4 follow-up: server-side rasterization to PNG will remove
+    //    this dependency entirely.
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://vertifile.com/vendor/pdfjs/pdf.worker.min.mjs";
+
+    // 3. Decode base64 payload into a Uint8Array
     var base64 = (dataEl.textContent || "").trim();
     var binary = atob(base64);
     var len = binary.length;
     var bytes = new Uint8Array(len);
     for(var i=0; i<len; i++) bytes[i] = binary.charCodeAt(i);
 
-    // 3. Load the PDF. We run PDF.js on the main thread (disableWorker: true)
-    //    because module Workers from blob: URLs fail under Chrome's opaque-origin
-    //    rules, and PDF.js's fake-worker fallback ALSO fails (dynamic import of a
-    //    blob: URL throws "Failed to fetch dynamically imported module"). For
-    //    typical Vertifile documents (1-50 pages, 100KB-5MB) main-thread parsing
-    //    is sub-second. The trade-off: very large PDFs (100+ pages, 20+ MB) may
-    //    cause a brief UI freeze during parse — acceptable for now.
+    // 4. Load the PDF.
     //    - isEvalSupported: false — defensive against CSP that would block eval
     //    - useSystemFonts: true   — graceful fallback when embedded fonts fail
     __pdfDoc = await pdfjsLib.getDocument({
       data: bytes,
-      disableWorker: true,
       isEvalSupported: false,
       useSystemFonts: true
     }).promise;

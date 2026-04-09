@@ -156,6 +156,31 @@ app.use((req, res, next) => {
 app.use((req, res, next) => { express.json({ limit: '1mb' })(req, res, (err) => { if (err) return res.status(400).json({ success: false, error: 'Invalid JSON body' }); next(); }); });
 app.use(sanitizeBody);
 app.use(compression());
+
+// ---- PDF.js vendor static route (Phase 3 — Option B) ----
+// Serves the pinned pdfjs-dist@4.10.38 worker as a same-origin HTTPS asset.
+// Why not a Blob URL inlined into the PVF? Chrome rejects module workers
+// from blob: URLs (opaque origin), and pdfjs-dist v4 ships ES-module-only
+// with no UMD fallback. Hosting the worker at a real HTTPS URL side-steps
+// both problems.
+// Trade-off: PDF PVFs need vertifile.com reachable to render. Signing and
+// Ed25519 verification remain fully self-contained. Phase 4 will rasterize
+// PDFs to PNG server-side so the viewer no longer needs PDF.js at all.
+// Files are pinned to pdfjs-dist@4.10.38 on disk → safe to cache forever.
+app.use('/vendor/pdfjs', express.static(path.join(__dirname, 'vendor', 'pdfjs'), {
+  maxAge: '1y',
+  immutable: true,
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.mjs')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+    // CORS: allow the worker to load from any origin (PVFs may be embedded
+    // anywhere). No credentials sent — this asset contains no user data.
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  }
+}));
+
 app.use(express.static(path.join(__dirname, 'public'), {
   extensions: ['html'], maxAge: '7d',
   setHeaders: (res, fp) => {

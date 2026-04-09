@@ -1,27 +1,33 @@
 /**
- * PDF.js Conditional Inline Bundling (Option E — per Avi's spec v2)
+ * PDF.js Conditional Inline Bundling (Phase 3 — Option B)
  * ============================================================================
  *
- * This module injects the PDF.js library and worker directly into a PVF HTML
- * file at upload time, but ONLY when the uploaded document is application/pdf.
- * Text and image PVFs are returned byte-identical to the input.
+ * This module injects the PDF.js MAIN library directly into a PVF HTML file at
+ * upload time, but ONLY when the uploaded document is application/pdf. Text
+ * and image PVFs are returned byte-identical to the input.
  *
- * Why: Vertifile's "works fully offline" guarantee. A CDN reference breaks the
- * guarantee. Server-side rasterization (Phase 4) is the correct long-term fix,
- * but Option E is tonight's no-compromise bridge.
+ * The worker is NO LONGER inlined. It is served as a same-origin HTTPS asset
+ * from /vendor/pdfjs/pdf.worker.min.mjs (see server.js static route). Chrome
+ * rejects module workers constructed from blob: URLs (opaque origin), and
+ * pdfjs-dist v4 is ES-module-only with no UMD fallback, so a real HTTPS URL
+ * is the only viable path. Trade-off: PDF PVFs need vertifile.com reachable
+ * to render. Signing + Ed25519 verification stay 100% self-contained.
+ *
+ * Phase 4 follow-up: server-side rasterization to PNG removes the need for
+ * PDF.js in the viewer entirely and restores full offline operation.
  *
  * Safety:
- *  - The two <script> tags injected here both carry id attributes
- *    (id="pdfjs-main" and id="pdfjs-worker"). The obfuscator regex in
- *    obfuscate.js line 97 is /<script>([\s\S]*?)<\/script>/ — it matches
- *    ONLY tags with no attributes. Therefore the obfuscator will skip our
- *    injected bundles and only obfuscate the main template script block.
+ *  - The injected <script id="pdfjs-main"> tag carries an id attribute so the
+ *    obfuscator regex /<script>([\s\S]*?)<\/script>/ in obfuscate.js:97
+ *    (which matches only tags with no attributes) skips it. The hash chain
+ *    stays symmetric: both sides hash only the obfuscated main template script.
  *  - escapeScriptClose() rewrites every literal "</script" inside the library
- *    source to "<\/script". The browser HTML tokenizer closes a <script> block
- *    on the literal string "</script" regardless of surrounding context, so
- *    this escaping is mandatory.
+ *    source to "<\/script". The HTML tokenizer closes a <script> block on
+ *    "</script" regardless of surrounding context, so this escaping is
+ *    mandatory.
  *
- * Both files live in vendor/pdfjs/ and are read once, cached in process memory.
+ * Size impact vs Phase 2: ~1.3 MB saved per PDF PVF (the worker source is
+ * no longer embedded).
  * ============================================================================
  */
 
@@ -31,10 +37,12 @@ const fs = require('fs');
 const path = require('path');
 
 const PDFJS_MAIN_PATH = path.join(__dirname, '..', 'vendor', 'pdfjs', 'pdf.min.mjs');
+// Worker is still kept on disk — it's served by the Express static route at
+// /vendor/pdfjs/pdf.worker.min.mjs. We don't read it here, but we keep it in
+// the availability check so a broken deploy fails loud.
 const PDFJS_WORKER_PATH = path.join(__dirname, '..', 'vendor', 'pdfjs', 'pdf.worker.min.mjs');
 
 let __mainCache = null;
-let __workerCache = null;
 
 // Module-level availability flag. Computed once at require time via fs.existsSync.
 // Pipeline callers can read isPdfjsAvailable() to decide whether to fail fast on
@@ -61,52 +69,50 @@ function escapeScriptClose(s) {
 }
 
 /**
- * Load and cache the PDF.js main + worker source files from disk.
- * Throws synchronously if either file is missing — deployment bug, not a
- * runtime condition. A startup sanity check in server.js should validate
- * both files exist at boot so upload-time failures don't surprise anyone.
+ * Load and cache the PDF.js main library source from disk.
+ * Throws synchronously if the file is missing — deployment bug, not a
+ * runtime condition. The startup sanity check in server.js validates both
+ * main and worker files exist at boot so upload-time failures don't surprise
+ * anyone. The worker file is served via the static route, not read here.
  */
 function loadPdfJs() {
   if (__mainCache === null) {
     __mainCache = escapeScriptClose(fs.readFileSync(PDFJS_MAIN_PATH, 'utf8'));
-    __workerCache = escapeScriptClose(fs.readFileSync(PDFJS_WORKER_PATH, 'utf8'));
   }
-  return { main: __mainCache, worker: __workerCache };
+  return { main: __mainCache };
 }
 
 /**
- * Inject PDF.js main library + worker source into a PVF HTML string.
- * Only runs when mimeType === 'application/pdf'. Returns HTML unchanged for
- * every other MIME type, so text and image PVFs pay zero bytes.
+ * Inject PDF.js main library into a PVF HTML string. Only runs when
+ * mimeType === 'application/pdf'. Returns HTML unchanged for every other
+ * MIME type, so text and image PVFs pay zero bytes.
  *
  * The main library is loaded as an ES module (type="module") because
  * pdfjs-dist v4 only ships .mjs files — there is no UMD build. The end of
  * pdf.min.mjs assigns itself to globalThis.pdfjsLib, so window.pdfjsLib is
  * available to our template script after the module resolves.
  *
- * The worker source is stored as <script type="text/plain"> — the browser
- * ignores type="text/plain" as an executable script, so we can read its
- * textContent from the template script and construct a Blob URL at runtime.
+ * The worker is NOT inlined. The template script sets
+ * pdfjsLib.GlobalWorkerOptions.workerSrc to the absolute HTTPS URL
+ * https://vertifile.com/vendor/pdfjs/pdf.worker.min.mjs and the browser
+ * fetches it at PDF load time.
  */
 function injectPdfJsBundle(html, mimeType) {
   if (mimeType !== 'application/pdf') return html;
   if (typeof html !== 'string' || html.length === 0) return html;
 
-  const { main, worker } = loadPdfJs();
+  const { main } = loadPdfJs();
 
   // Inject just before </head> so the module starts loading before the
-  // body parses. Two tags:
-  //   1. <script id="pdfjs-main" type="module"> — main library as ES module
-  //   2. <script id="pdfjs-worker" type="text/plain"> — worker source stashed
-  //      for the template script to lift into a Blob URL at runtime
+  // body parses. Single tag:
+  //   <script id="pdfjs-main" type="module"> — main library as ES module
   //
-  // Both tags carry data-vf-bundle so the client-side computeCodeIntegrity()
-  // selector skips them. The server-side regex /<script>/ already skips them
+  // The tag carries data-vf-bundle so the client-side computeCodeIntegrity()
+  // selector skips it. The server-side regex /<script>/ already skips it
   // (it requires no attributes immediately after `script`), so the hash chain
   // stays symmetric: both sides hash ONLY the obfuscated main template script.
   const bundle =
-    '<script id="pdfjs-main" type="module" data-vf-bundle="pdfjs-main">\n' + main + '\n</script>\n' +
-    '<script id="pdfjs-worker" type="text/plain" data-vf-bundle="pdfjs-worker">\n' + worker + '\n</script>\n';
+    '<script id="pdfjs-main" type="module" data-vf-bundle="pdfjs-main">\n' + main + '\n</script>\n';
 
   // If there's no </head>, the template is malformed — fall back to prepending
   // the bundle at the start of the document so the library still loads.
