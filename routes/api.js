@@ -653,6 +653,13 @@ router.get('/health/deep', async (req, res) => {
     const db = req.app.get('db');
     const chain = req.app.get('chain');
     const stats = await db.getStats();
+    // Phase 3A observability — key lifecycle state distribution. Best-effort:
+    // if countEd25519KeysByState is unavailable for any reason, we still want
+    // the rest of /health/deep to return a useful payload.
+    let ed25519KeysByState = null;
+    try {
+      ed25519KeysByState = await db.countEd25519KeysByState();
+    } catch (_) { /* leave null, don't fail the whole health check */ }
     res.json({
       status: 'online',
       service: 'Vertifile',
@@ -666,7 +673,12 @@ router.get('/health/deep', async (req, res) => {
       // fail-closed enforcement state without grepping logs. See Ori's cutover
       // smoke test: `curl /api/health/deep | jq '.phase2e_active'`.
       phase2e_active: process.env.ED25519_REQUIRED === '1' && keyManager.getPrimaryKeyId() !== null,
-      primary_key_id: keyManager.getPrimaryKeyId() || null
+      primary_key_id: keyManager.getPrimaryKeyId() || null,
+      // Phase 3A observability — state machine distribution for the
+      // ed25519_keys table. Gives on-call a fast view of whether any
+      // rotations are in flight and how many keys are in each lifecycle
+      // state. Shape: { pending, active, grace, expired } all as integers.
+      ed25519_keys_by_state: ed25519KeysByState
     });
   } catch(e) { res.status(500).json({ status: 'error', error: 'Health check failed' }); }
 });

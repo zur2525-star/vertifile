@@ -139,29 +139,49 @@ after(async () => {
 // ---------------------------------------------------------------------------
 describe('Phase 3A — ed25519 rotation schema', () => {
 
-  // Scenario 1 — Idempotency.
-  // The bootstrap runs on every app boot. If ANY statement in the Phase 3A
-  // block is non-idempotent (missing IF NOT EXISTS / CREATE OR REPLACE /
-  // WHERE NOT EXISTS), the second call will throw. We verify the column
-  // shape is unchanged to also catch a subtle "accidentally adds a new
-  // column on re-run" regression.
-  it('1. migration is idempotent — second bootstrap does not error and does not add columns', async () => {
-    // Snapshot the columns BEFORE a second bootstrap. Local variable names
-    // avoid shadowing the `before` / `after` test hooks imported at module
-    // scope.
+  // Scenario 1 — REAL idempotency test.
+  //
+  // The previous version of this test awaited db._ready twice and claimed
+  // that verified idempotency. It did not — db._ready is a cached promise,
+  // so the second await returns the memoized resolution instantly and no
+  // SQL is actually re-executed. A future dev could remove every
+  // IF NOT EXISTS clause and this test would still pass.
+  //
+  // The real test calls runPhase3aMigration() directly with a fresh pg
+  // client + transaction, which runs the SQL a SECOND time for real.
+  // The key assertion is `genesisRowsInserted === 0` — the second run
+  // must not duplicate the genesis row, which is the hard proof that the
+  // WHERE NOT EXISTS guard is working.
+  it('1. runPhase3aMigration is truly idempotent on a second invocation', async () => {
     const beforeSnapshot = await db.query(
       `SELECT column_name FROM information_schema.columns
        WHERE table_name = 'ed25519_keys' ORDER BY ordinal_position`
     );
     const beforeCols = beforeSnapshot.rows.map(r => r.column_name);
 
-    // db._ready is a one-shot promise, but the underlying SQL block is
-    // idempotent by construction. We re-run the exact statements by
-    // awaiting the promise a second time — which should resolve instantly.
-    // This verifies the promise itself is not in a broken state; the real
-    // "second boot" check lives in the column-count assertion below.
-    await db._ready;
-    await db._ready;
+    // Re-run the migration via a fresh client + transaction. This is the
+    // ACTUAL second run — the cached db._ready promise will not do this
+    // work. The silent logger swallows any error-path noise the migration
+    // function emits (we do not expect any; we assert on the return value).
+    const silentLog = { error: () => {} };
+    const client = await db._db.connect();
+    let result;
+    try {
+      await client.query('BEGIN');
+      result = await db.runPhase3aMigration(client, silentLog);
+      await client.query('COMMIT');
+    } catch (e) {
+      try { await client.query('ROLLBACK'); } catch (_) { /* already aborted is fine */ }
+      throw e;
+    } finally {
+      client.release();
+    }
+
+    assert.equal(
+      result.genesisRowsInserted,
+      0,
+      'second migration run must insert zero genesis rows (idempotency proof)'
+    );
 
     const afterSnapshot = await db.query(
       `SELECT column_name FROM information_schema.columns
@@ -169,11 +189,19 @@ describe('Phase 3A — ed25519 rotation schema', () => {
     );
     const afterCols = afterSnapshot.rows.map(r => r.column_name);
 
-    assert.deepEqual(afterCols, beforeCols, 'column set must be stable across repeated _ready awaits');
-    // Specifically, the Phase 3A columns must exist.
+    assert.deepEqual(afterCols, beforeCols, 'column set must be stable across migration re-runs');
     assert.ok(afterCols.includes('state'),           'state column must exist');
     assert.ok(afterCols.includes('retired_at'),      'retired_at column must exist');
     assert.ok(afterCols.includes('rotation_reason'), 'rotation_reason column must exist');
+
+    // Also assert the genesis row still exists exactly once after re-run
+    // — this catches a regression where the second run somehow duplicates
+    // the initial-key row despite the WHERE NOT EXISTS / partial UNIQUE
+    // index guarding against it.
+    const { rows: genesisRows } = await db.query(
+      "SELECT COUNT(*)::int AS n FROM key_rotation_log WHERE new_key_id = '0f65ad1b92590c92' AND reason = 'initial-key'"
+    );
+    assert.equal(genesisRows[0].n, 1, 'exactly one genesis row must exist after migration re-run');
   });
 
   // Scenario 2 — Default state is 'active'.
@@ -341,5 +369,151 @@ describe('Phase 3A — ed25519 rotation schema', () => {
     assert.equal(details.old_state, 'active');
     assert.equal(details.new_state, 'grace');
     assert.ok(details.session_user,   'audit row must include session_user (who ran the UPDATE)');
+  });
+
+  // Scenario 9a — Parameterized forbidden-transition coverage.
+  //
+  // Scenarios 5 and 6 cover two of the eight forbidden transitions
+  // (grace->active and active->expired). This scenario covers the six
+  // NON-ACTIVE-ORIGIN forbidden transitions in a single parameterized
+  // loop so a future trigger edit that accidentally permits any of them
+  // breaks CI immediately.
+  //
+  // Active-origin forbidden transitions (active->pending, active->expired)
+  // are deliberately NOT in this loop because they require inserting an
+  // 'active' test row, which will conflict with the partial UNIQUE index
+  // on state='active' once Phase 3B lands it. Scenario 6 already covers
+  // active->expired via the current (pre-index) pattern. Once 3B adds
+  // the partial UNIQUE index, 3B will migrate Scenarios 2/6/7/8 and this
+  // scenario to use a transaction+ROLLBACK pattern against the genesis
+  // row.
+  it('9a. six non-active-origin forbidden transitions are all rejected', async () => {
+    const FORBIDDEN = [
+      ['pending', 'grace'],
+      ['grace',   'pending'],
+      ['grace',   'active'],   // THE ROLLBACK — covered by Scenario 5 too, kept in loop for coverage symmetry
+      ['expired', 'pending'],
+      ['expired', 'active'],
+      ['expired', 'grace'],
+    ];
+
+    for (const [from, to] of FORBIDDEN) {
+      const keyId = makeTestKeyId();
+      await insertTestKey({ id: keyId, state: from });
+
+      let threw = false;
+      let err = null;
+      try {
+        await db.query('UPDATE ed25519_keys SET state = $1 WHERE id = $2', [to, keyId]);
+      } catch (e) {
+        threw = true;
+        err = e;
+      }
+      assert.ok(threw, `${from} -> ${to} must throw`);
+      assert.match(err.message, /forbidden state transition/i, `${from} -> ${to}: error must name the invariant`);
+      assert.match(err.message, new RegExp(`${from} -> ${to}`), `${from} -> ${to}: error must name the specific transition`);
+
+      // Row state must be unchanged after the rejected UPDATE.
+      const state = await db.getEd25519KeyState(keyId);
+      assert.equal(state, from, `${from} -> ${to}: row state must remain ${from}`);
+    }
+  });
+
+  // Scenario 9b — UPDATE on a non-state column does NOT fire the audit trigger.
+  //
+  // The trigger is declared `BEFORE/AFTER UPDATE OF state` — if a future
+  // dev drops the `OF state` clause, every UPDATE on any column would
+  // fire both triggers and flood audit_log. Guard against that regression
+  // by updating rotation_reason alone and asserting no audit row appears.
+  it('9b. UPDATE on a non-state column does not fire the audit trigger', async () => {
+    const keyId = makeTestKeyId();
+    await insertTestKey({ id: keyId, state: 'pending' });
+
+    const beforeCount = await db.query(
+      `SELECT COUNT(*)::int AS n FROM audit_log
+       WHERE event = 'ed25519_key_state_change'
+         AND details::jsonb->>'key_id' = $1`,
+      [keyId]
+    );
+
+    await db.query(
+      'UPDATE ed25519_keys SET rotation_reason = $1 WHERE id = $2',
+      ['test-non-state-update', keyId]
+    );
+
+    const afterCount = await db.query(
+      `SELECT COUNT(*)::int AS n FROM audit_log
+       WHERE event = 'ed25519_key_state_change'
+         AND details::jsonb->>'key_id' = $1`,
+      [keyId]
+    );
+
+    assert.equal(
+      afterCount.rows[0].n,
+      beforeCount.rows[0].n,
+      'audit row count must be unchanged when UPDATE does not touch the state column'
+    );
+  });
+
+  // Scenario 9c — No-op UPDATE (same state) does NOT write an audit row.
+  //
+  // The audit trigger function has an `IF OLD.state IS DISTINCT FROM
+  // NEW.state` guard at the top. Without that guard, a no-op UPDATE like
+  // `SET state='pending' WHERE state='pending'` would write an audit
+  // row with old_state===new_state, which is useless noise. Guard
+  // against a future trigger edit that removes this check.
+  it('9c. no-op UPDATE (same state) does not write an audit row', async () => {
+    const keyId = makeTestKeyId();
+    await insertTestKey({ id: keyId, state: 'pending' });
+
+    const beforeCount = await db.query(
+      `SELECT COUNT(*)::int AS n FROM audit_log
+       WHERE event = 'ed25519_key_state_change'
+         AND details::jsonb->>'key_id' = $1`,
+      [keyId]
+    );
+
+    // UPDATE state to the same value.
+    await db.query(
+      'UPDATE ed25519_keys SET state = $1 WHERE id = $2',
+      ['pending', keyId]
+    );
+
+    const afterCount = await db.query(
+      `SELECT COUNT(*)::int AS n FROM audit_log
+       WHERE event = 'ed25519_key_state_change'
+         AND details::jsonb->>'key_id' = $1`,
+      [keyId]
+    );
+
+    assert.equal(
+      afterCount.rows[0].n,
+      beforeCount.rows[0].n,
+      'audit row count must be unchanged when UPDATE keeps state the same'
+    );
+  });
+
+  // Scenario 9e — listRotationLog() does NOT return the actor column.
+  //
+  // This is a load-bearing invariant for the Phase 3C public endpoint.
+  // A future dev who "helpfully" refactors listRotationLog to `SELECT *`
+  // would leak operator identity to any third-party verifier. A one-line
+  // assertion here prevents that regression forever.
+  it('9e. listRotationLog excludes the actor column from returned rows', async () => {
+    const rows = await db.listRotationLog();
+    assert.ok(rows.length >= 1, 'at least the genesis row must exist');
+    for (const row of rows) {
+      assert.ok(
+        !('actor' in row),
+        'actor column must never appear in listRotationLog output (DB-only invariant)'
+      );
+    }
+    // And sanity-check the expected columns ARE present on at least the
+    // first row, so a future refactor that accidentally drops them is
+    // caught too.
+    const expected = ['id', 'rotated_at', 'old_key_id', 'new_key_id', 'old_fingerprint', 'new_fingerprint', 'grace_until', 'reason'];
+    for (const col of expected) {
+      assert.ok(col in rows[0], `expected column ${col} missing from listRotationLog output`);
+    }
   });
 });
