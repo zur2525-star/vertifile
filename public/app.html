@@ -750,6 +750,21 @@
     .preview-toolbar .close-preview:hover{color:var(--text-1)}
     .preview-content{flex:1;overflow:auto;background:rgba(15,14,23,.3);display:flex;align-items:center;justify-content:center;color:var(--text-2);font-size:13px}
     body.light-mode .preview-content{background:rgba(0,0,0,.02)}
+    /* ===== Type-specific Preview Card (replaces broken-image icon) ===== */
+    .doc-preview-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:48px 24px;background:linear-gradient(135deg,rgba(124,58,237,.04),rgba(124,58,237,.08));border:1px solid rgba(124,58,237,.15);border-radius:12px;min-height:280px;width:calc(100% - 32px);margin:16px;box-sizing:border-box}
+    .doc-preview-card .dpc-icon{width:96px;height:96px;color:#7c3aed;opacity:.85;flex-shrink:0}
+    .doc-preview-card .dpc-icon svg{width:100%;height:100%}
+    .doc-preview-card .dpc-name{font-size:14px;font-weight:600;color:#c4b5fd;text-align:center;word-break:break-all;max-width:280px;line-height:1.4;margin-top:4px}
+    .doc-preview-card .dpc-meta{font-size:11px;color:rgba(196,181,253,.6);letter-spacing:.5px;text-transform:uppercase;font-weight:500}
+    .doc-preview-card .dpc-cta{margin-top:8px;padding:9px 22px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);border-radius:8px;color:#c4b5fd;text-decoration:none;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:all .2s ease;font-family:inherit;cursor:pointer}
+    .doc-preview-card .dpc-cta:hover{background:rgba(124,58,237,.25);border-color:rgba(124,58,237,.5);color:#e9d5ff;transform:translateY(-1px)}
+    .doc-preview-card .dpc-cta svg{width:14px;height:14px;flex-shrink:0}
+    body.light-mode .doc-preview-card{background:linear-gradient(135deg,rgba(124,58,237,.05),rgba(124,58,237,.10));border-color:rgba(124,58,237,.2)}
+    body.light-mode .doc-preview-card .dpc-icon{color:#7c3aed;opacity:1}
+    body.light-mode .doc-preview-card .dpc-name{color:#4c1d95}
+    body.light-mode .doc-preview-card .dpc-meta{color:rgba(76,29,149,.6)}
+    body.light-mode .doc-preview-card .dpc-cta{background:rgba(124,58,237,.10);border-color:rgba(124,58,237,.35);color:#5b21b6}
+    body.light-mode .doc-preview-card .dpc-cta:hover{background:rgba(124,58,237,.18);border-color:rgba(124,58,237,.55);color:#4c1d95}
     .preview-info{padding:16px;border-top:1px solid var(--divider);flex-shrink:0}
     .preview-info .info-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px}
     .preview-info .info-label{color:var(--text-2);font-weight:500}
@@ -2164,12 +2179,72 @@ window.Dashboard = {
       }
     }
 
+    // ---- Sidebar preview card (type-specific placeholder, replaces broken iframe) ----
+    // Reasoning: PDFs/binary files in an <iframe src="/d/{id}/raw"> render the browser's
+    // generic broken-image icon. Type-specific cards look intentional and match Slack/Notion/Drive UX.
     var previewEl = document.getElementById('previewContent');
     var shareId = selectedDoc.shareId || selectedDoc.share_id;
-    if (shareId && previewEl) {
-      previewEl.innerHTML = '<iframe src="/d/' + escHtml(shareId) + '/raw" sandbox="allow-scripts allow-same-origin allow-popups allow-downloads allow-forms" style="width:100%;height:100%;border:none"></iframe>';
-    } else if (previewEl) {
-      previewEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-2)">Preview not available</div>';
+    if (previewEl) {
+      var rawNameForCard = selectedDoc.originalName || selectedDoc.original_name || 'Untitled';
+      var mime = (selectedDoc.mimeType || selectedDoc.mime_type || '').toLowerCase();
+      var ext = (rawNameForCard.split('.').pop() || '').toLowerCase();
+      var sizeStr = formatSize(selectedDoc.fileSize || selectedDoc.file_size || 0);
+
+      // Detect file kind from mime first, fall back to extension.
+      var kind = 'other';
+      if (mime.indexOf('application/pdf') === 0 || ext === 'pdf') {
+        kind = 'pdf';
+      } else if (mime.indexOf('image/') === 0 || ['png','jpg','jpeg','gif','webp','svg','tiff','tif','bmp'].indexOf(ext) !== -1) {
+        kind = 'image';
+      } else if (mime.indexOf('text/') === 0 || mime.indexOf('application/msword') === 0 || mime.indexOf('application/vnd.openxmlformats') === 0 || ['txt','md','rtf','doc','docx'].indexOf(ext) !== -1) {
+        kind = 'text';
+      }
+
+      // SVG icons (96x96, currentColor — picks up the purple via .dpc-icon).
+      var iconSvg;
+      var labelText;
+      if (kind === 'pdf') {
+        iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>' +
+          '<polyline points="14 2 14 8 20 8"/>' +
+          '<text x="7" y="17.5" font-size="5" font-weight="700" font-family="-apple-system,sans-serif" stroke="none" fill="currentColor">PDF</text>' +
+          '</svg>';
+        labelText = 'PDF DOCUMENT';
+      } else if (kind === 'image') {
+        iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>' +
+          '<circle cx="8.5" cy="8.5" r="1.5"/>' +
+          '<polyline points="21 15 16 10 5 21"/>' +
+          '</svg>';
+        labelText = 'IMAGE FILE';
+      } else if (kind === 'text') {
+        iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>' +
+          '<polyline points="14 2 14 8 20 8"/>' +
+          '<line x1="9" y1="13" x2="15" y2="13"/>' +
+          '<line x1="9" y1="17" x2="15" y2="17"/>' +
+          '</svg>';
+        labelText = 'TEXT DOCUMENT';
+      } else {
+        iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>' +
+          '<polyline points="14 2 14 8 20 8"/>' +
+          '</svg>';
+        labelText = 'FILE';
+      }
+
+      var openCtaSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+      var ctaHtml = shareId
+        ? '<a class="dpc-cta" href="/d/' + escHtml(shareId) + '" target="_blank" rel="noopener">' + openCtaSvg + '<span>Open document</span></a>'
+        : '';
+
+      previewEl.innerHTML =
+        '<div class="doc-preview-card" role="group" aria-label="Document preview">' +
+          '<div class="dpc-icon">' + iconSvg + '</div>' +
+          '<div class="dpc-meta">' + labelText + (sizeStr && sizeStr !== '0 B' ? ' &middot; ' + escHtml(sizeStr) : '') + '</div>' +
+          '<div class="dpc-name">' + escHtml(rawNameForCard) + '</div>' +
+          ctaHtml +
+        '</div>';
     }
 
     document.getElementById('docPreview').classList.add('open');

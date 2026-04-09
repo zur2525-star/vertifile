@@ -122,7 +122,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 
 /* Document frame */
 .doc-frame{width:100%;min-height:842px}
-.doc-frame.pdf{height:calc(100vh - 120px);min-height:842px}
+.doc-frame.pdf{height:8420px;min-height:842px;max-height:none}
 .doc-frame img{width:100%;display:block}
 .doc-frame iframe{width:100%;height:100%;border:none}
 .doc-frame .text-doc{padding:50px 60px;font-size:14px;line-height:1.9;color:#333;white-space:pre-wrap;word-wrap:break-word}
@@ -229,7 +229,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 /* Security: prevent user selection of protected content */
 .stamp,.stamp *{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-user-drag:none;user-drag:none}
 .page-bg img{-webkit-user-drag:none;user-drag:none;pointer-events:none}
-@media print{.pvf-toolbar,.tb-toast,.stamp-container,.holo-waves,.pvf-footer,#sCoin,.wave-layer,.loading{display:none!important}body{background:#fff!important;padding:0!important}*{color:#000!important;background:transparent!important}.page-wrap{box-shadow:none!important;margin:0!important;padding:0!important}.page-bg{box-shadow:none!important}}
+@media print{.pvf-toolbar,.tb-toast,.stamp-container,.holo-waves,.pvf-footer,#sCoin,.wave-layer,.loading{display:none!important}body{background:#fff!important;padding:0!important}*{color:#000!important;background:transparent!important}.page-wrap{box-shadow:none!important;margin:0!important;padding:0!important;width:100%!important;max-width:none!important}.page-bg{box-shadow:none!important}.doc-frame{height:auto!important;min-height:0!important}.doc-frame .text-doc{white-space:pre-wrap!important;word-wrap:break-word!important;font-family:inherit!important;line-height:1.9!important;padding:0!important}}
 /* Screen capture CSS protection — content-visibility hidden for captured contexts */
 @media (display-mode: picture-in-picture){.page-wrap{filter:blur(30px)!important}.stamp{display:none!important}}
 </style>
@@ -786,33 +786,15 @@ document.getElementById("tbShare").addEventListener("click", function() {
 function printDoc(){
   var pg = document.getElementById("pg");
   if(!pg) return;
-  // PDF — open the original embedded PDF and print it
+  // PDF — open the original embedded PDF in a new tab and print it (browser native PDF viewer)
   var pdfFrame = pg.querySelector("iframe[src^='data:application/pdf']");
   if(pdfFrame){
     var win = window.open(pdfFrame.src,"_blank");
     if(win){setTimeout(function(){try{win.print()}catch(e){}},1000)}
     return;
   }
-  // Image — print the original embedded image
-  var img = pg.querySelector("img[src^='data:image']");
-  if(img){
-    var win = window.open("","_blank");
-    win.document.write("<html><head><title>Print</title><style>body{margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;height:auto}</style></head><body><img src='"+img.src+"'/></body></html>");
-    win.document.close();
-    win.focus();
-    setTimeout(function(){win.print()},500);
-    return;
-  }
-  // Text — print the original text content only
-  var textDoc = pg.querySelector(".text-doc");
-  if(textDoc){
-    var win = window.open("","_blank");
-    win.document.write("<html><head><title>Print</title><style>body{font-family:Arial,sans-serif;padding:40px 60px;margin:0;font-size:14px;line-height:1.8;color:#000}</style></head><body>"+textDoc.innerHTML+"</body></html>");
-    win.document.close();
-    win.focus();
-    setTimeout(function(){win.print()},500);
-    return;
-  }
+  // Image and Text — use the page's own @media print rules (preserves white-space:pre-wrap, fonts, layout)
+  window.print();
 }
 
 // ===== TOOLBAR: Keyboard shortcuts =====
