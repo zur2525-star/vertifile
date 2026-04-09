@@ -728,28 +728,28 @@ async function renderPdfInline(){
     }
     if(!pdfjsLib) throw new Error("pdfjsLib not available after wait");
 
-    // 2. Build a Blob URL for the worker from the inlined worker source.
-    //    We revoke the URL string after the document handle is created — the
-    //    worker is already spawned by then and PDF.js keeps its internal
-    //    reference, so the URL name itself is no longer needed (and the 1 MB
-    //    blob would otherwise live until page unload).
-    var workerTag = document.getElementById("pdfjs-worker");
-    if(!workerTag) throw new Error("pdfjs-worker tag missing");
-    var workerBlob = new Blob([workerTag.textContent], { type: "application/javascript" });
-    var workerUrl = URL.createObjectURL(workerBlob);
-    pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
-
-    // 3. Decode base64 payload into a Uint8Array
+    // 2. Decode base64 payload into a Uint8Array
     var base64 = (dataEl.textContent || "").trim();
     var binary = atob(base64);
     var len = binary.length;
     var bytes = new Uint8Array(len);
     for(var i=0; i<len; i++) bytes[i] = binary.charCodeAt(i);
 
-    // 4. Load the PDF, then revoke the worker Blob URL (the worker is live
-    //    and PDF.js no longer needs the URL name).
-    __pdfDoc = await pdfjsLib.getDocument({ data: bytes }).promise;
-    try { URL.revokeObjectURL(workerUrl); } catch(e){ /* ignore */ }
+    // 3. Load the PDF. We run PDF.js on the main thread (disableWorker: true)
+    //    because module Workers from blob: URLs fail under Chrome's opaque-origin
+    //    rules, and PDF.js's fake-worker fallback ALSO fails (dynamic import of a
+    //    blob: URL throws "Failed to fetch dynamically imported module"). For
+    //    typical Vertifile documents (1-50 pages, 100KB-5MB) main-thread parsing
+    //    is sub-second. The trade-off: very large PDFs (100+ pages, 20+ MB) may
+    //    cause a brief UI freeze during parse — acceptable for now.
+    //    - isEvalSupported: false — defensive against CSP that would block eval
+    //    - useSystemFonts: true   — graceful fallback when embedded fonts fail
+    __pdfDoc = await pdfjsLib.getDocument({
+      data: bytes,
+      disableWorker: true,
+      isEvalSupported: false,
+      useSystemFonts: true
+    }).promise;
     if(loading && loading.parentNode) loading.parentNode.removeChild(loading);
 
     // 5. Create a canvas per page (empty, sized to A4 aspect — rendered lazily).
