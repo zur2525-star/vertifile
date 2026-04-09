@@ -660,6 +660,32 @@ router.get('/health/deep', async (req, res) => {
     try {
       ed25519KeysByState = await db.countEd25519KeysByState();
     } catch (_) { /* leave null, don't fail the whole health check */ }
+    // Phase 3B observability — which key slots did this process load at
+    // boot? Exposed so the rotation command's pre-flight check can verify
+    // the running app has picked up the new key BEFORE flipping the DB
+    // state. Shape: { primary: keyId|null, next: keyId|null }. Best-effort
+    // — if getLoadedSlots is unavailable (pre-3B build) leave null.
+    let ed25519LoadedSlots = null;
+    try {
+      if (typeof keyManager.getLoadedSlots === 'function') {
+        ed25519LoadedSlots = keyManager.getLoadedSlots();
+      }
+    } catch (_) { /* leave null, don't fail the whole health check */ }
+    // Phase 3B Ori R3 — what is this process CURRENTLY signing with?
+    // Resolved via the DB's state='active' row → slot-match, not via the
+    // static env-var _primary slot. During a wet-drill rotation, the
+    // operator needs ONE field they can poll with `curl /api/health/deep
+    // | jq .ed25519_signing_key_id` to see the rotation taking effect
+    // across the fleet within 30s (one 30s cache TTL per process).
+    // Best-effort: never fail the health endpoint if getActivePrimary
+    // throws — report null and let the operator investigate.
+    let ed25519SigningKeyId = null;
+    try {
+      const activeSlot = await keyManager.getActivePrimary();
+      ed25519SigningKeyId = activeSlot ? activeSlot.keyId : null;
+    } catch (_) {
+      ed25519SigningKeyId = null;
+    }
     res.json({
       status: 'online',
       service: 'Vertifile',
@@ -678,7 +704,18 @@ router.get('/health/deep', async (req, res) => {
       // ed25519_keys table. Gives on-call a fast view of whether any
       // rotations are in flight and how many keys are in each lifecycle
       // state. Shape: { pending, active, grace, expired } all as integers.
-      ed25519_keys_by_state: ed25519KeysByState
+      ed25519_keys_by_state: ed25519KeysByState,
+      // Phase 3B observability — which key slots this process has loaded
+      // in memory. The rotation command's pre-flight reads this field to
+      // verify the running app picked up the new key BEFORE committing
+      // the DB state flip. Shape: { primary: keyId|null, next: keyId|null }.
+      ed25519_loaded_slots: ed25519LoadedSlots,
+      // Phase 3B Ori R3 observability — what this process is CURRENTLY
+      // using to sign (resolved via DB state, not env vars). Updates
+      // within 30s of a rotation (the active-primary cache TTL). This is
+      // the canonical field to poll during a rotation wet drill to
+      // verify the fleet has picked up the new key.
+      ed25519_signing_key_id: ed25519SigningKeyId
     });
   } catch(e) { res.status(500).json({ status: 'error', error: 'Health check failed' }); }
 });

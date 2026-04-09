@@ -105,9 +105,27 @@ const TEST_KEY_ID = crypto.createHash('sha256').update(TEST_PUB_PEM).digest('hex
 // ---------------------------------------------------------------------------
 // 4. Stubbing hooks. Each scenario reassigns one or both; the originals are
 //    captured in before() and restored in after().
+//
+// Phase 3B note: the pipeline now consults keyManager.getActivePrimary()
+// (DB-backed, async) rather than the sync getPrimary() it used in Phase 2E.
+// The stub target for "which slot signs" moved from getPrimary → getActivePrimary.
+// getPrimary is still captured + restored so any legacy reader of the historical
+// primary slot continues to work, but the fail-closed contract now hinges on
+// getActivePrimary being non-null.
 // ---------------------------------------------------------------------------
 let origGetPrimary = null;
+let origGetActivePrimary = null;
 let origSignEd25519 = null;
+let origInvalidateCache = null;
+
+// Reset the key-manager's internal active-primary cache between scenarios so
+// a stub assignment in scenario N isn't shadowed by a cache hit leaking from
+// scenario N-1. The cache TTL is 30s and the scenarios run in well under that.
+function resetActivePrimaryCache() {
+  if (typeof keyManager.invalidateActivePrimaryCache === 'function') {
+    keyManager.invalidateActivePrimaryCache();
+  }
+}
 
 // Track every hash our tests insert so after() can clean them up. The
 // pipeline writes via db.createDocument → queryWithRetry, so a simple
@@ -154,7 +172,9 @@ before(async () => {
 
   // Capture originals before any scenario mutates them.
   origGetPrimary = keyManager.getPrimary;
+  origGetActivePrimary = keyManager.getActivePrimary;
   origSignEd25519 = signing.signEd25519;
+  origInvalidateCache = keyManager.invalidateActivePrimaryCache;
 });
 
 after(async () => {
@@ -172,7 +192,9 @@ after(async () => {
   try {
     // Restore stubs on the real module singletons.
     if (origGetPrimary) keyManager.getPrimary = origGetPrimary;
+    if (origGetActivePrimary) keyManager.getActivePrimary = origGetActivePrimary;
     if (origSignEd25519) signing.signEd25519 = origSignEd25519;
+    if (origInvalidateCache) keyManager.invalidateActivePrimaryCache = origInvalidateCache;
   } catch (e) { /* swallow */ }
 
   // Defensive bulk cleanup: any rows from previous crashed runs under the
@@ -213,8 +235,14 @@ describe('pipeline.createPvf — Phase 2E fail-closed contract', () => {
     //   valid PEM, and a healthy crypto.sign() path must produce a dual-signed
     //   document. If this scenario breaks, the whole platform stops issuing
     //   new PVFs — this is the "does Phase 2E boot at all" smoke test.
+    //
+    // Phase 3B: the pipeline reads keyManager.getActivePrimary() (DB-backed,
+    // async) not the old sync getPrimary(). Stub the async method and reset
+    // the 30s cache so the stub takes effect immediately.
     process.env.ED25519_REQUIRED = '1';
     keyManager.getPrimary = () => ({ keyId: TEST_KEY_ID, privateKey: TEST_PRIV });
+    keyManager.getActivePrimary = async () => ({ keyId: TEST_KEY_ID, privateKey: TEST_PRIV });
+    resetActivePrimaryCache();
     signing.signEd25519 = origSignEd25519;  // use the real path
 
     const fixture = makeFixture('scenarioA');
@@ -237,6 +265,8 @@ describe('pipeline.createPvf — Phase 2E fail-closed contract', () => {
     //   must instead abort loudly so monitoring catches the regression.
     process.env.ED25519_REQUIRED = '1';
     keyManager.getPrimary = () => null;
+    keyManager.getActivePrimary = async () => null;
+    resetActivePrimaryCache();
     signing.signEd25519 = origSignEd25519;  // real path, which will see null primary and return null
 
     const fixture = makeFixture('scenarioB');
@@ -275,7 +305,12 @@ describe('pipeline.createPvf — Phase 2E fail-closed contract', () => {
     //   abort. This scenario proves the two layers compose correctly.
     process.env.ED25519_REQUIRED = '1';
     keyManager.getPrimary = () => ({ keyId: TEST_KEY_ID, privateKey: TEST_PRIV });
-    signing.signEd25519 = () => { throw new Error('simulated crypto failure'); };
+    keyManager.getActivePrimary = async () => ({ keyId: TEST_KEY_ID, privateKey: TEST_PRIV });
+    resetActivePrimaryCache();
+    // Phase 3B: signEd25519 is async, so the stub must return a rejected
+    // promise to match the real path's contract. The pipeline wraps the call
+    // in try/catch that catches both sync throws and rejections.
+    signing.signEd25519 = async () => { throw new Error('simulated crypto failure'); };
 
     const fixture = makeFixture('scenarioC');
 
@@ -310,6 +345,8 @@ describe('pipeline.createPvf — Phase 2E fail-closed contract', () => {
     //   Ed25519 keys just to run the pipeline — a huge dev-ex regression.
     delete process.env.ED25519_REQUIRED;
     keyManager.getPrimary = () => null;
+    keyManager.getActivePrimary = async () => null;
+    resetActivePrimaryCache();
     signing.signEd25519 = origSignEd25519;
 
     const fixture = makeFixture('scenarioD');
@@ -343,8 +380,12 @@ describe('pipeline.createPvf — Phase 2E fail-closed contract', () => {
 
     for (const s of scenarios) {
       process.env.ED25519_REQUIRED = s.val;
-      // Stub getPrimary → null to force the null-result path
+      // Phase 3B: stub getActivePrimary → null to force the null-result path.
+      // (getPrimary stayed sync for legacy callers; the pipeline reads
+      // getActivePrimary now.)
       keyManager.getPrimary = () => null;
+      keyManager.getActivePrimary = async () => null;
+      resetActivePrimaryCache();
       signing.signEd25519 = origSignEd25519;
 
       // Expect: createPvf succeeds with HMAC-only (no throw), because the strict

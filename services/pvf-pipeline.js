@@ -238,9 +238,13 @@ async function createPvf(opts) {
   // pipeline must degrade to HMAC-only rather than aborting doc creation
   // entirely. Phase 2B's "invisible-with-fallback" contract requires graceful
   // degradation.
+  // Phase 3B: signEd25519 is now async — it consults
+  // keyManager.getActivePrimary() which reads ed25519_keys WHERE state='active'
+  // behind a 30s cache. The surrounding try/catch still works because await
+  // inside try/catch catches rejections the same way it catches sync throws.
   let ed25519Result = null;
   try {
-    ed25519Result = signing.signEd25519(signing.buildSigningPayload({
+    ed25519Result = await signing.signEd25519(signing.buildSigningPayload({
       hash: fileHash,
       orgId,
       createdAt: timestamp,

@@ -21,11 +21,19 @@
  *     operator running raw SQL must still leave a trace.
  *
  * What this DOES NOT test (out of scope, deferred to Phase 3B-3E):
- *   - The rotation command itself (3B).
- *   - Two-slot key-manager loading (3B).
+ *   - The rotation command itself (3B — see tests/rotation-phase3b.test.js).
+ *   - Two-slot key-manager loading (3B — see tests/rotation-phase3b.test.js).
  *   - Verification path tolerance for grace-state keys (3C).
  *   - The public rotation log HTTP endpoint (3C).
- *   - The grace-period default / floor / ceiling (3B).
+ *   - The grace-period default / floor / ceiling (3B — CLI-layer).
+ *
+ * Phase 3B updates:
+ *   - Scenarios 2, 6, 7, 8 now run inside withTransactionalActiveRow to
+ *     avoid colliding with M5 (one-active partial unique index).
+ *   - Scenarios 9b, 9c switched from state='pending' to state='grace' to
+ *     avoid colliding with M6 (one-pending partial unique index).
+ *   - Scenario 9a only inserts ONE pending row (the pending->grace
+ *     iteration) which fits under M6.
  *
  * Strategy:
  *   1. Skip if DATABASE_URL is unset. This matches the verify-public and
@@ -93,6 +101,66 @@ function makeTestPubPem() {
 // test the forbidden grace->active transition).
 async function insertTestKey({ id, state }) {
   await db.query(
+    `INSERT INTO ed25519_keys (id, public_key_pem, valid_from, is_primary, state)
+     VALUES ($1, $2, NOW(), FALSE, $3)`,
+    [id, makeTestPubPem(), state]
+  );
+}
+
+// -----------------------------------------------------------------------
+// withTransactionalActiveRow — M5 (partial UNIQUE on state='active') escape
+// hatch for the scenarios that need to insert or mutate a test row IN
+// state='active'.
+//
+// Why we need it: the production DB always has one row in state='active'
+// (the genesis 0f65ad1b92590c92). Once M5 lands, any direct INSERT/UPDATE
+// that creates a SECOND state='active' row collides with the partial UNIQUE
+// index. The previous Phase 3A test fixtures did exactly that for
+// Scenarios 2, 6, 7, 8 — they're rewritten here to run inside a transaction
+// that temporarily deletes the genesis row, exercises the test path, then
+// ROLLBACKs (restoring genesis atomically).
+//
+// The caller receives an open pg client scoped to the transaction. All
+// DB reads and writes for the test body MUST go through this client, not
+// db.query() — anything issued on the pool would auto-commit and see the
+// pre-delete state, defeating the rollback. Helper functions that go
+// through the pool (db.getEd25519KeyState, db.insertEd25519Key) are NOT
+// safe to use inside the callback.
+//
+// The cleanup on the way out is a plain ROLLBACK regardless of whether the
+// callback threw; the genesis row, any test rows, and any audit_log rows
+// the callback caused are ALL rolled back together. This keeps the shared
+// DB state untouched even across a crashed test.
+// -----------------------------------------------------------------------
+async function withTransactionalActiveRow(fn) {
+  const client = await db._db.connect();
+  try {
+    await client.query('BEGIN');
+    // Delete the genesis rotation log entry BEFORE the ed25519_keys row.
+    // The genesis row in key_rotation_log has new_key_id='0f65ad1b92590c92'
+    // and reason='initial-key'; with no FK it won't cascade, but we still
+    // want the pre-state to match "no active key anywhere" so the test
+    // can insert a fresh active row cleanly.
+    await client.query(
+      "DELETE FROM key_rotation_log WHERE new_key_id = '0f65ad1b92590c92' AND reason = 'initial-key'"
+    );
+    await client.query("DELETE FROM ed25519_keys WHERE id = '0f65ad1b92590c92'");
+    await fn(client);
+  } finally {
+    // ROLLBACK unconditionally. If the callback threw, this is the error
+    // path; if it succeeded, this is the normal exit. Either way the
+    // genesis row comes back and the test DB state is pristine.
+    try { await client.query('ROLLBACK'); } catch (_) { /* already aborted is fine */ }
+    client.release();
+  }
+}
+
+// Client-scoped version of insertTestKey — mirrors insertTestKey() but runs
+// on an open client instead of the pool. Used exclusively inside
+// withTransactionalActiveRow callbacks. Crosses the Phase 2A helper path
+// because we need the `state` column explicitly.
+async function insertTestKeyOnClient(client, { id, state }) {
+  await client.query(
     `INSERT INTO ed25519_keys (id, public_key_pem, valid_from, is_primary, state)
      VALUES ($1, $2, NOW(), FALSE, $3)`,
     [id, makeTestPubPem(), state]
@@ -205,22 +273,32 @@ describe('Phase 3A — ed25519 rotation schema', () => {
   });
 
   // Scenario 2 — Default state is 'active'.
-  // When a Phase 2A caller (insertEd25519Key) inserts a row WITHOUT
-  // specifying state, it must inherit the 'active' default. This is how
-  // the existing production primary key row got its state.
+  // When an INSERT omits the state column, the row must inherit the 'active'
+  // default. This is how the existing production primary key row got its
+  // state, and is the contract Phase 2A callers (insertEd25519Key) rely on.
+  //
+  // Phase 3B note: this test used to call db.insertEd25519Key() directly.
+  // M5 now forbids two rows in state='active' — since the genesis row is
+  // already 'active', the second insert would collide with
+  // idx_ed25519_keys_one_active. We run inside withTransactionalActiveRow
+  // so the genesis is temporarily removed; the INSERT uses a client-scoped
+  // raw query that omits state and lets the default fire. The containing
+  // transaction is rolled back at the end, restoring the genesis row.
   it("2. default state is 'active' when not specified on insert", async () => {
     const keyId = makeTestKeyId();
-    // Use the bare Phase 2A helper, which does NOT set state — relies on
-    // the DEFAULT clause to populate it.
-    await db.insertEd25519Key({
-      id: keyId,
-      publicKeyPem: makeTestPubPem(),
-      validFrom: new Date(),
-      validUntil: null,
-      isPrimary: false
+    await withTransactionalActiveRow(async (client) => {
+      // Deliberately omit the state column so the DEFAULT clause fires.
+      // Mirrors the column set db.insertEd25519Key uses minus the state
+      // column itself.
+      await client.query(
+        `INSERT INTO ed25519_keys (id, public_key_pem, valid_from, valid_until, is_primary)
+         VALUES ($1, $2, NOW(), NULL, FALSE)`,
+        [keyId, makeTestPubPem()]
+      );
+      const { rows } = await client.query('SELECT state FROM ed25519_keys WHERE id = $1', [keyId]);
+      assert.equal(rows.length, 1, 'inserted row must exist inside the transaction');
+      assert.equal(rows[0].state, 'active', 'missing state on insert must default to active');
     });
-    const state = await db.getEd25519KeyState(keyId);
-    assert.equal(state, 'active', 'missing state on insert must default to active');
   });
 
   // Scenario 3 — CHECK constraint rejects invalid state values.
@@ -301,36 +379,54 @@ describe('Phase 3A — ed25519 rotation schema', () => {
   // the way out. Skipping grace would let an operator delete a key without
   // giving its signatures a tolerance window, which would break every
   // PVF signed with that key the instant the UPDATE committed.
+  //
+  // Phase 3B: wrapped in withTransactionalActiveRow so inserting a fresh
+  // active test row does not collide with the genesis row under M5.
   it('6. forbidden transition: active -> expired (skipping grace) is rejected', async () => {
     const keyId = makeTestKeyId();
-    await insertTestKey({ id: keyId, state: 'active' });
+    await withTransactionalActiveRow(async (client) => {
+      await insertTestKeyOnClient(client, { id: keyId, state: 'active' });
 
-    let threw = false;
-    let err = null;
-    try {
-      await db.query('UPDATE ed25519_keys SET state = $1 WHERE id = $2', ['expired', keyId]);
-    } catch (e) {
-      threw = true;
-      err = e;
-    }
-    assert.ok(threw, 'active -> expired must throw');
-    assert.match(err.message, /forbidden state transition/i);
-    assert.match(err.message, /active -> expired/);
+      let threw = false;
+      let err = null;
+      try {
+        await client.query('UPDATE ed25519_keys SET state = $1 WHERE id = $2', ['expired', keyId]);
+      } catch (e) {
+        threw = true;
+        err = e;
+      }
+      assert.ok(threw, 'active -> expired must throw');
+      assert.match(err.message, /forbidden state transition/i);
+      assert.match(err.message, /active -> expired/);
 
-    const state = await db.getEd25519KeyState(keyId);
-    assert.equal(state, 'active', 'row state must be unchanged after rejected UPDATE');
+      // Note: we can't call db.getEd25519KeyState here — that goes through
+      // the pool and bypasses the transaction. Read via the client instead.
+      //
+      // Postgres aborts the whole transaction on a trigger RAISE EXCEPTION,
+      // so subsequent queries on this client would error with "current
+      // transaction is aborted". The row state is PROVEN to be unchanged
+      // by the fact that the trigger rolled back — no separate SELECT
+      // is needed (and any SELECT issued here would itself throw with
+      // 25P02). The withTransactionalActiveRow wrapper's ROLLBACK on the
+      // way out unwinds the abort cleanly.
+    });
   });
 
   // Scenario 7 — Allowed transition: active -> grace.
   // The happy path for retirement. This is what the Phase 3B rotation
-  // command will run when it demotes the outgoing primary key.
+  // command runs when it demotes the outgoing primary key.
+  //
+  // Phase 3B: wrapped in withTransactionalActiveRow for the same reason
+  // as Scenario 6.
   it('7. allowed transition: active -> grace succeeds', async () => {
     const keyId = makeTestKeyId();
-    await insertTestKey({ id: keyId, state: 'active' });
-
-    await db.query('UPDATE ed25519_keys SET state = $1 WHERE id = $2', ['grace', keyId]);
-    const state = await db.getEd25519KeyState(keyId);
-    assert.equal(state, 'grace', 'active -> grace must succeed');
+    await withTransactionalActiveRow(async (client) => {
+      await insertTestKeyOnClient(client, { id: keyId, state: 'active' });
+      await client.query('UPDATE ed25519_keys SET state = $1 WHERE id = $2', ['grace', keyId]);
+      const { rows } = await client.query('SELECT state FROM ed25519_keys WHERE id = $1', [keyId]);
+      assert.equal(rows.length, 1);
+      assert.equal(rows[0].state, 'grace', 'active -> grace must succeed');
+    });
   });
 
   // Scenario 8 — Audit trigger fires on every allowed state change.
@@ -338,37 +434,44 @@ describe('Phase 3A — ed25519 rotation schema', () => {
   // A compromised operator who ran raw SQL to demote a key must still
   // show up in audit_log. We verify exactly one audit row is written per
   // state change, with the correct old/new states.
+  //
+  // Phase 3B: wrapped in withTransactionalActiveRow. The audit row is
+  // written inside the transaction and rolled back with the rest, so the
+  // assertion is "exactly one audit row exists FOR THIS KEY ID inside the
+  // transaction" — we read it via the client while the transaction is
+  // still open.
   it('8. audit trigger writes one row per state change with correct old/new states', async () => {
     const keyId = makeTestKeyId();
-    await insertTestKey({ id: keyId, state: 'active' });
+    await withTransactionalActiveRow(async (client) => {
+      await insertTestKeyOnClient(client, { id: keyId, state: 'active' });
 
-    // Count the audit rows BEFORE the transition so we can assert a delta
-    // of exactly one. Using a count is more robust than assuming an empty
-    // table, since other tests / real traffic may be writing concurrently.
-    const beforeCount = await db.query(
-      `SELECT COUNT(*)::int AS n FROM audit_log
-       WHERE event = 'ed25519_key_state_change'
-         AND details::jsonb->>'key_id' = $1`,
-      [keyId]
-    );
-    assert.equal(beforeCount.rows[0].n, 0, 'no audit rows should exist for a freshly inserted test key');
+      // No audit row should exist yet (the INSERT fires the AFTER-INSERT
+      // path but the trigger is AFTER UPDATE OF state, not AFTER INSERT).
+      const beforeCount = await client.query(
+        `SELECT COUNT(*)::int AS n FROM audit_log
+         WHERE event = 'ed25519_key_state_change'
+           AND details::jsonb->>'key_id' = $1`,
+        [keyId]
+      );
+      assert.equal(beforeCount.rows[0].n, 0, 'no audit rows should exist for a freshly inserted test key');
 
-    await db.query('UPDATE ed25519_keys SET state = $1 WHERE id = $2', ['grace', keyId]);
+      await client.query('UPDATE ed25519_keys SET state = $1 WHERE id = $2', ['grace', keyId]);
 
-    const afterRows = await db.query(
-      `SELECT details FROM audit_log
-       WHERE event = 'ed25519_key_state_change'
-         AND details::jsonb->>'key_id' = $1
-       ORDER BY id DESC`,
-      [keyId]
-    );
-    assert.equal(afterRows.rows.length, 1, 'exactly one audit row must be written per state change');
+      const afterRows = await client.query(
+        `SELECT details FROM audit_log
+         WHERE event = 'ed25519_key_state_change'
+           AND details::jsonb->>'key_id' = $1
+         ORDER BY id DESC`,
+        [keyId]
+      );
+      assert.equal(afterRows.rows.length, 1, 'exactly one audit row must be written per state change');
 
-    const details = JSON.parse(afterRows.rows[0].details);
-    assert.equal(details.key_id,    keyId);
-    assert.equal(details.old_state, 'active');
-    assert.equal(details.new_state, 'grace');
-    assert.ok(details.session_user,   'audit row must include session_user (who ran the UPDATE)');
+      const details = JSON.parse(afterRows.rows[0].details);
+      assert.equal(details.key_id,    keyId);
+      assert.equal(details.old_state, 'active');
+      assert.equal(details.new_state, 'grace');
+      assert.ok(details.session_user, 'audit row must include session_user (who ran the UPDATE)');
+    });
   });
 
   // Scenario 9a — Parameterized forbidden-transition coverage.
@@ -425,9 +528,14 @@ describe('Phase 3A — ed25519 rotation schema', () => {
   // dev drops the `OF state` clause, every UPDATE on any column would
   // fire both triggers and flood audit_log. Guard against that regression
   // by updating rotation_reason alone and asserting no audit row appears.
+  //
+  // Phase 3B: state='grace' rather than 'pending' so this test does not
+  // collide with Scenario 9a's pending row under M6 (one-pending partial
+  // unique index). The test logic is state-independent — we only need ANY
+  // row to UPDATE the rotation_reason column on.
   it('9b. UPDATE on a non-state column does not fire the audit trigger', async () => {
     const keyId = makeTestKeyId();
-    await insertTestKey({ id: keyId, state: 'pending' });
+    await insertTestKey({ id: keyId, state: 'grace' });
 
     const beforeCount = await db.query(
       `SELECT COUNT(*)::int AS n FROM audit_log
@@ -459,12 +567,15 @@ describe('Phase 3A — ed25519 rotation schema', () => {
   //
   // The audit trigger function has an `IF OLD.state IS DISTINCT FROM
   // NEW.state` guard at the top. Without that guard, a no-op UPDATE like
-  // `SET state='pending' WHERE state='pending'` would write an audit
-  // row with old_state===new_state, which is useless noise. Guard
-  // against a future trigger edit that removes this check.
+  // `SET state='grace' WHERE state='grace'` would write an audit row with
+  // old_state===new_state, which is useless noise. Guard against a future
+  // trigger edit that removes this check.
+  //
+  // Phase 3B: state='grace' rather than 'pending' so this test does not
+  // collide with Scenario 9a's pending row under M6.
   it('9c. no-op UPDATE (same state) does not write an audit row', async () => {
     const keyId = makeTestKeyId();
-    await insertTestKey({ id: keyId, state: 'pending' });
+    await insertTestKey({ id: keyId, state: 'grace' });
 
     const beforeCount = await db.query(
       `SELECT COUNT(*)::int AS n FROM audit_log
@@ -473,10 +584,13 @@ describe('Phase 3A — ed25519 rotation schema', () => {
       [keyId]
     );
 
-    // UPDATE state to the same value.
+    // UPDATE state to the same value. Because the row starts in 'grace'
+    // (changed from 'pending' in Phase 3B to accommodate M6), the no-op
+    // target is also 'grace'. The trigger's `IF OLD.state = NEW.state`
+    // guard must short-circuit before the audit row is written.
     await db.query(
       'UPDATE ed25519_keys SET state = $1 WHERE id = $2',
-      ['pending', keyId]
+      ['grace', keyId]
     );
 
     const afterCount = await db.query(

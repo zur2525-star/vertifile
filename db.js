@@ -845,8 +845,25 @@ async function getPrimaryEd25519Key() {
 }
 
 async function listActiveEd25519Keys() {
+  // Phase 3B Avi FIX 4 — JWKS pending-key leak defense.
+  //
+  // Prior to this filter, the WHERE clause was `valid_until IS NULL OR
+  // valid_until > NOW()` which matched pending (state='pending',
+  // valid_until=NULL) rows. That caused /.well-known/vertifile-jwks.json
+  // to publish the public keys of not-yet-activated keys the instant the
+  // operator ran `generate` — an information leak to external verifiers.
+  //
+  // Fix: require state IN ('active', 'grace'). This filters out:
+  //   - state='pending'  (not yet activated — should never be published)
+  //   - state='expired'  (past grace window — should no longer be published)
+  // while keeping state='grace' keys visible so documents signed under
+  // the previous rotation continue to verify for the full grace window.
+  //
+  // Note: this query requires the Phase 3A `state` column to exist. A test
+  // DB that skipped the migration will throw — which is acceptable because
+  // the Phase 3A migration is mandatory for every deployment.
   const { rows } = await queryWithRetry(
-    'SELECT id, public_key_pem, valid_from, valid_until, is_primary FROM ed25519_keys WHERE valid_until IS NULL OR valid_until > NOW() ORDER BY is_primary DESC, valid_from DESC'
+    "SELECT id, public_key_pem, valid_from, valid_until, is_primary FROM ed25519_keys WHERE state IN ('active', 'grace') AND (valid_until IS NULL OR valid_until > NOW()) ORDER BY is_primary DESC, valid_from DESC"
   );
   return rows || [];
 }
@@ -878,6 +895,30 @@ class Ed25519KeyNotFoundError extends Error {
     super(`Ed25519 key not found: ${keyId}`);
     this.name = 'Ed25519KeyNotFoundError';
     this.keyId = keyId;
+  }
+}
+
+/**
+ * Error thrown by setEd25519KeyState when the Phase 3A trigger rejects a
+ * state transition (e.g. grace -> active, active -> expired). The trigger
+ * raises a generic SQL exception with a free-form message; setEd25519KeyState
+ * wraps it in this typed error so the rotation command can distinguish a
+ * forbidden-transition mistake from a database connectivity failure and emit
+ * a precise message to the operator.
+ *
+ * Phase 3 invariant: rollback is a NEW rotation with a NEW key, never a
+ * state regression. Catching this error and re-issuing the same UPDATE in
+ * the opposite direction would defeat the invariant — callers MUST surface
+ * the error to the operator and force them to start a new rotation.
+ */
+class Ed25519ForbiddenTransitionError extends Error {
+  constructor(keyId, fromState, toState, triggerMessage) {
+    super(`Ed25519 state transition rejected: ${fromState} -> ${toState} for key ${keyId}. ${triggerMessage}`);
+    this.name = 'Ed25519ForbiddenTransitionError';
+    this.keyId = keyId;
+    this.fromState = fromState;
+    this.toState = toState;
+    this.triggerMessage = triggerMessage;
   }
 }
 
@@ -932,6 +973,40 @@ async function runPhase3aMigration(client, log) {
     `);
   } catch (e) {
     log.error({ err: e.message }, '[PG][phase3a] ed25519_keys column add failed');
+    throw e;
+  }
+
+  // 1b. Phase 3B hardening — partial UNIQUE indexes enforcing "at most one
+  //     active" and "at most one pending" row at any moment in time. Without
+  //     these, two concurrent rotation commands could race to INSERT a second
+  //     active row (each one passes its own pre-flight check, then both
+  //     commit), leaving getActivePrimary() unable to choose a single
+  //     authoritative slot. The activate command would then become
+  //     non-deterministic.
+  //
+  //     These were intentionally deferred from the Phase 3A migration because
+  //     several test fixtures in tests/rotation-schema.test.js insert test
+  //     rows with state='active', and adding the index without rewriting
+  //     those scenarios would have broken CI. Phase 3B rewrites the affected
+  //     scenarios to use a transaction-rollback pattern around the genesis
+  //     row, so the index can land here.
+  //
+  //     Production safety: at index-creation time the production DB has
+  //     exactly ONE row in state='active' (the genesis 0f65ad1b92590c92).
+  //     CREATE UNIQUE INDEX with WHERE state='active' will succeed because
+  //     a one-row partial unique index is trivially valid. CREATE UNIQUE
+  //     INDEX IF NOT EXISTS makes this idempotent for the second/Nth boot.
+  try {
+    await client.query(`
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_ed25519_keys_one_active
+        ON ed25519_keys(state) WHERE state = 'active'
+    `);
+    await client.query(`
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_ed25519_keys_one_pending
+        ON ed25519_keys(state) WHERE state = 'pending'
+    `);
+  } catch (e) {
+    log.error({ err: e.message }, '[PG][phase3b] state partial unique indexes create failed');
     throw e;
   }
 
@@ -1148,6 +1223,91 @@ async function getEd25519KeyState(keyId) {
     throw new Ed25519KeyNotFoundError(keyId);
   }
   return rows[0].state;
+}
+
+/**
+ * Updates an ed25519 key's state, with structured error wrapping.
+ *
+ * Takes an OPEN pg client (NOT the pool) so the caller controls the
+ * transaction lifecycle. The Phase 3B rotation command opens a transaction,
+ * calls setEd25519KeyState twice (demote outgoing, promote incoming),
+ * inserts the rotation log row, and commits — all atomically. Passing the
+ * pool here would auto-commit each UPDATE, breaking the atomicity guarantee.
+ *
+ * The Phase 3A BEFORE UPDATE trigger enforces the monotonic-forward state
+ * machine; if a forbidden transition is attempted, the trigger raises a
+ * SQL exception with a message containing "forbidden state transition".
+ * We catch that specific shape and rethrow as Ed25519ForbiddenTransitionError
+ * so the rotation command can distinguish "operator typo on the new state"
+ * from "the underlying DB query failed for some other reason".
+ *
+ * The function reads the current state BEFORE the UPDATE so the wrapped
+ * error can carry both fromState and toState for the operator's log. If the
+ * key id is unknown, throws Ed25519KeyNotFoundError to match the contract
+ * of the other Phase 3A helpers.
+ *
+ * As a convenience, this also stamps `retired_at = NOW()` whenever the new
+ * state is 'grace' — that's the moment the key transitions from "issuing
+ * new signatures" to "verification only" and is the natural point to record
+ * the retirement timestamp. The trigger does not enforce this; the column
+ * defaults to NULL and stays NULL until the rotation command sets it via
+ * this helper.
+ *
+ * `reason` is optional. When supplied (typically the operator-supplied
+ * --reason flag), it overwrites the rotation_reason column on the row;
+ * passing null leaves any existing value intact via COALESCE.
+ *
+ * @param {import('pg').PoolClient} client - open client (caller owns the txn)
+ * @param {string} keyId
+ * @param {'pending'|'active'|'grace'|'expired'} newState
+ * @param {Object} [opts]
+ * @param {string|null} [opts.reason]
+ * @returns {Promise<void>}
+ * @throws {Ed25519KeyNotFoundError} if the key id does not exist
+ * @throws {Ed25519ForbiddenTransitionError} if the state-transition trigger rejects
+ * @throws {Error} if keyId or newState fail input validation
+ */
+async function setEd25519KeyState(client, keyId, newState, { reason = null } = {}) {
+  if (typeof keyId !== 'string' || !keyId) {
+    throw new Error('setEd25519KeyState: keyId must be a non-empty string');
+  }
+  if (!['pending', 'active', 'grace', 'expired'].includes(newState)) {
+    throw new Error(`setEd25519KeyState: invalid newState '${newState}' (must be one of pending|active|grace|expired)`);
+  }
+  if (reason !== null && reason !== undefined && typeof reason !== 'string') {
+    throw new Error('setEd25519KeyState: reason must be a string, null, or undefined');
+  }
+
+  // Read current state for the error wrapping below. Doing this before the
+  // UPDATE means we can report fromState/toState even if the trigger fires.
+  const beforeResult = await client.query(
+    'SELECT state FROM ed25519_keys WHERE id = $1',
+    [keyId]
+  );
+  if (beforeResult.rows.length === 0) {
+    throw new Ed25519KeyNotFoundError(keyId);
+  }
+  const fromState = beforeResult.rows[0].state;
+
+  try {
+    await client.query(
+      `UPDATE ed25519_keys
+         SET state = $1,
+             rotation_reason = COALESCE($2, rotation_reason),
+             retired_at = CASE WHEN $1 = 'grace' THEN NOW() ELSE retired_at END
+       WHERE id = $3`,
+      [newState, reason, keyId]
+    );
+  } catch (e) {
+    // The Phase 3A trigger raises with the literal substring "forbidden
+    // state transition" — see runPhase3aMigration trigger body. Match on
+    // that and wrap. Any OTHER error (connectivity, lock timeout, etc.)
+    // bubbles up untouched.
+    if (e && e.message && /forbidden state transition/i.test(e.message)) {
+      throw new Ed25519ForbiddenTransitionError(keyId, fromState, newState, e.message);
+    }
+    throw e;
+  }
 }
 
 /**
@@ -1476,7 +1636,9 @@ module.exports = {
   // Key rotation helpers (Phase 3A schema; consumers wired up in 3B-3E)
   runPhase3aMigration,
   Ed25519KeyNotFoundError,
+  Ed25519ForbiddenTransitionError,
   getEd25519KeyState,
+  setEd25519KeyState,
   listRotationLog,
   insertRotationLog,
   countEd25519KeysByState,

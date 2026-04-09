@@ -83,17 +83,27 @@ function verifyHMAC(payload, tagHex) {
 // ============================================================
 
 /**
- * Signs the payload with the active Ed25519 primary key.
+ * Signs the payload with the currently-active Ed25519 signing key.
  * Returns null if no Ed25519 key is configured (feature not yet active).
  *
+ * PHASE 3B: this function is now ASYNC. It consults keyManager.getActivePrimary()
+ * which performs a (cached) DB lookup against ed25519_keys WHERE state='active'
+ * to decide which of the two loaded slots (primary or next) should sign. This
+ * decouples "which slot the env vars loaded" from "which slot is authoritative
+ * for new signatures", which is what makes the atomic rotation flip work.
+ *
+ * At steady state (no rotation in progress) getActivePrimary() resolves to the
+ * same slot as the old synchronous getPrimary() did, and the 30s cache means
+ * the hot path is a pure in-memory lookup in the vast majority of calls.
+ *
  * @param {string|Buffer} payload - the exact bytes to sign
- * @returns {{ signature: string, keyId: string } | null}
+ * @returns {Promise<{ signature: string, keyId: string } | null>}
  *   signature is base64url-encoded (86 chars for Ed25519)
  *   keyId is 16 hex chars identifying the key that signed
  */
-function signEd25519(payload) {
-  const primary = keyManager.getPrimary();
-  if (!primary) return null;  // No key configured — not an error in Phase 2A
+async function signEd25519(payload) {
+  const primary = await keyManager.getActivePrimary();
+  if (!primary) return null;  // No active key — not an error in Phase 2A/2B
   const buf = Buffer.isBuffer(payload) ? payload : Buffer.from(String(payload), 'utf8');
   const sig = crypto.sign(null, buf, primary.privateKey);
   return {

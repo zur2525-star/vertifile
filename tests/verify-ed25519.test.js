@@ -125,9 +125,17 @@ before(async () => {
     return origGet.call(keyManager, keyId);
   };
 
+  // Phase 3B: signEd25519 now consults keyManager.getActivePrimary() which
+  // reads ed25519_keys WHERE state='active'. The test's TEST_KEY_ID is NOT
+  // in the DB (see comment above — deliberately not inserted), so the DB
+  // lookup would resolve to the production genesis keyId, not TEST_KEY_ID.
+  // Stub getActivePrimary to return the in-memory test key directly.
+  const testPrivateKeyObj = crypto.createPrivateKey({ key: TEST_PRIV_PEM, format: 'pem' });
+  keyManager.getActivePrimary = async () => ({ keyId: TEST_KEY_ID, privateKey: testPrivateKeyObj });
+
   // Sign the dual payload with the real Phase-2B path. signEd25519 reads
-  // the primary key the same way the production pipeline does.
-  const ed = signing.signEd25519(DUAL_PAYLOAD);
+  // the active signing slot the same way the production pipeline does.
+  const ed = await signing.signEd25519(DUAL_PAYLOAD);
   assert.ok(ed, 'signEd25519 should return a signature once key is loaded');
   assert.equal(ed.keyId, TEST_KEY_ID, 'signing keyId must match the test key');
   DUAL_ED25519_SIG = ed.signature;

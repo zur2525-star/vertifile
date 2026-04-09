@@ -81,11 +81,16 @@ describe('signing.buildSigningPayload', () => {
 });
 
 describe('signing.signEd25519 / verifyEd25519 (no key configured)', () => {
+  // Phase 3B: signEd25519 is async and consults keyManager.getActivePrimary()
+  // which queries the DB. Stub getActivePrimary so this test can run in a
+  // DB-less CI environment (the previous sync path never touched the DB).
+  const keyManager = require('../services/key-manager');
   const signing = require('../services/signing');
+  keyManager.getActivePrimary = async () => null;
 
-  it('signEd25519 returns null when no primary key loaded', () => {
+  it('signEd25519 returns null when no primary key loaded', async () => {
     // Phase 2A: no ED25519_PRIVATE_KEY_PEM set → key-manager never loaded a primary
-    const result = signing.signEd25519('test');
+    const result = await signing.signEd25519('test');
     assert.equal(result, null);
   });
 
@@ -120,8 +125,14 @@ describe('signing.signEd25519 / verifyEd25519 (with key configured)', () => {
       return null;
     };
 
+    // Phase 3B: signEd25519 now reads keyManager.getActivePrimary() (DB-backed)
+    // instead of the sync getPrimary(). Stub it to return the freshly loaded
+    // primary slot so the roundtrip works without a live DB.
+    const privateKeyObj = crypto.createPrivateKey({ key: privPem, format: 'pem' });
+    keyManager.getActivePrimary = async () => ({ keyId: testKeyId, privateKey: privateKeyObj });
+
     const payload = 'hash|org|2026-01-01T00:00:00Z||codeIntegrity';
-    const result = signing.signEd25519(payload);
+    const result = await signing.signEd25519(payload);
     assert.ok(result, 'signEd25519 should return object');
     assert.equal(result.keyId, testKeyId);
     assert.match(result.signature, /^[A-Za-z0-9_-]+$/);
@@ -133,7 +144,7 @@ describe('signing.signEd25519 / verifyEd25519 (with key configured)', () => {
   it('verifyEd25519 rejects tampered signatures', async () => {
     const signing = require('../services/signing');
     const payload = 'test payload';
-    const result = signing.signEd25519(payload);
+    const result = await signing.signEd25519(payload);
     assert.ok(result);
     // Tamper a middle character — middle chars encode full 6 bits each, so
     // any replacement guarantees a different signature (avoids the 1/256
@@ -149,15 +160,15 @@ describe('signing.signEd25519 / verifyEd25519 (with key configured)', () => {
 
   it('verifyEd25519 rejects wrong payload', async () => {
     const signing = require('../services/signing');
-    const result = signing.signEd25519('original');
+    const result = await signing.signEd25519('original');
     const valid = await signing.verifyEd25519('different', result.signature, testKeyId);
     assert.equal(valid, false);
   });
 
-  it('signEd25519 is deterministic (Ed25519 spec)', () => {
+  it('signEd25519 is deterministic (Ed25519 spec)', async () => {
     const signing = require('../services/signing');
-    const a = signing.signEd25519('deterministic input');
-    const b = signing.signEd25519('deterministic input');
+    const a = await signing.signEd25519('deterministic input');
+    const b = await signing.signEd25519('deterministic input');
     assert.equal(a.signature, b.signature, 'Ed25519 signing must be deterministic');
   });
 });
