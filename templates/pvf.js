@@ -122,10 +122,24 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 
 /* Document frame */
 .doc-frame{width:100%;min-height:842px}
-.doc-frame.pdf{height:8420px;min-height:842px;max-height:none}
+.doc-frame.pdf{min-height:842px;display:flex;flex-direction:column;gap:14px;padding:0;position:relative}
 .doc-frame img{width:100%;display:block}
-.doc-frame iframe{width:100%;height:100%;border:none}
+.doc-frame canvas.pdf-page{width:100%;height:auto;display:block;box-shadow:0 1px 4px rgba(0,0,0,.15);background:#fff}
+.doc-frame .pdf-error{padding:40px;text-align:center;color:#c62828;font-family:Heebo,sans-serif;font-size:13px}
+.doc-frame .pdf-loading{padding:60px;text-align:center;color:#6d28d9;font-family:Heebo,sans-serif;font-size:13px}
 .doc-frame .text-doc{padding:50px 60px;font-size:14px;line-height:1.9;color:#333;white-space:pre-wrap;word-wrap:break-word}
+
+/* ===== PDF thumbnails sidebar — right side, only for multi-page PDFs ===== */
+.pdf-thumbs{display:none;position:fixed;top:80px;right:12px;width:156px;max-height:calc(100vh - 100px);overflow-y:auto;overflow-x:hidden;padding:10px 8px;background:rgba(26,22,37,.92);border:1px solid rgba(124,58,237,.18);border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.35);z-index:40;scrollbar-width:thin;scrollbar-color:rgba(124,58,237,.4) transparent}
+.pdf-thumbs.active{display:block}
+.pdf-thumbs::-webkit-scrollbar{width:6px}
+.pdf-thumbs::-webkit-scrollbar-thumb{background:rgba(124,58,237,.4);border-radius:3px}
+.pdf-thumb{width:140px;aspect-ratio:210/297;margin:0 auto 4px auto;background:#fff;border-radius:3px;border:2px solid transparent;cursor:pointer;display:block;transition:border-color .18s ease, transform .18s ease;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.pdf-thumb:hover{border-color:rgba(124,58,237,.5);transform:scale(1.03)}
+.pdf-thumb.current{border-color:#7c3aed;box-shadow:0 0 0 1px #7c3aed, 0 2px 8px rgba(124,58,237,.5)}
+.pdf-thumb-label{font-size:10px;color:rgba(196,181,253,.55);text-align:center;margin:0 0 10px 0;font-family:'Heebo',sans-serif;letter-spacing:.05em}
+@media(max-width:900px){.pdf-thumbs{display:none!important}}
+.desktop-viewer .pdf-thumbs{display:none!important}
 
 @media(max-width:660px){
 .page-wrap{width:calc(100vw - 24px)}
@@ -229,7 +243,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 /* Security: prevent user selection of protected content */
 .stamp,.stamp *{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-user-drag:none;user-drag:none}
 .page-bg img{-webkit-user-drag:none;user-drag:none;pointer-events:none}
-@media print{.pvf-toolbar,.tb-toast,.stamp-container,.holo-waves,.pvf-footer,#sCoin,.wave-layer,.loading{display:none!important}body{background:#fff!important;padding:0!important}*{color:#000!important;background:transparent!important}.page-wrap{box-shadow:none!important;margin:0!important;padding:0!important;width:100%!important;max-width:none!important}.page-bg{box-shadow:none!important}.doc-frame{height:auto!important;min-height:0!important}.doc-frame .text-doc{white-space:pre-wrap!important;word-wrap:break-word!important;font-family:inherit!important;line-height:1.9!important;padding:0!important}}
+@media print{.pvf-toolbar,.tb-toast,.stamp-container,.holo-waves,.pvf-footer,#sCoin,.wave-layer,.loading{display:none!important}body{background:#fff!important;padding:0!important}*{color:#000!important;background:transparent!important}.page-wrap{box-shadow:none!important;margin:0!important;padding:0!important;width:100%!important;max-width:none!important}.page-bg{box-shadow:none!important}.doc-frame{height:auto!important;min-height:0!important}.doc-frame .text-doc{white-space:pre-wrap!important;word-wrap:break-word!important;font-family:inherit!important;line-height:1.9!important;padding:0!important}.doc-frame canvas.pdf-page{break-inside:avoid;page-break-inside:avoid;box-shadow:none!important;margin:0 0 8px 0!important;width:100%!important;height:auto!important}.pdf-thumbs{display:none!important}}
 /* Screen capture CSS protection — content-visibility hidden for captured contexts */
 @media (display-mode: picture-in-picture){.page-wrap{filter:blur(30px)!important}.stamp{display:none!important}}
 </style>
@@ -327,12 +341,14 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 
     <div class="doc-frame ${isPdf ? 'pdf' : ''}" id="frame">
       ${isPdf
-        ? `<iframe src="data:application/pdf;base64,${fileBase64}"></iframe>`
+        ? `<div class="pdf-loading" id="pdfLoading">Loading PDF...</div>`
         : isImage
           ? `<img src="data:${mimeType};base64,${fileBase64}" alt="document"/>`
           : `<div class="text-doc">${fileBase64}</div>`
       }
     </div>
+    ${isPdf ? `<aside class="pdf-thumbs" id="pdfThumbs" aria-label="Page thumbnails"></aside>` : ''}
+    ${isPdf ? `<script type="application/octet-stream" id="pdfData" data-vf-bundle="pdf-data">${fileBase64}</script>` : ''}
 
     <!-- VERTIFILE STAMP -->
     <div class="stamp" id="stamp">
@@ -376,6 +392,9 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 // Remove no-js class immediately (enables loading screen + animations in browser)
 document.documentElement.classList.remove("no-js");
 document.documentElement.classList.add("js");
+
+// Document type flag — used by the PDF.js inline rendering path
+var __isPdf = ${isPdf};
 
 // ===== SECURITY: Environment detection =====
 var __securityFrozen = false;
@@ -578,9 +597,16 @@ var token=null;
 var isLocal=location.protocol==="file:"||location.protocol==="about:"||window!==window.top;
 
 // Code Integrity — hash the script content to detect tampering
+//
+// Selector MUST stay symmetric with the server-side regex /<script>/ used in
+// pvf-pipeline.js and pvf-generator.js (which matches ONLY plain <script> tags
+// with no attributes). We exclude:
+//   - [data-vf-stamp-override] — override block appended at verify time
+//   - [data-vf-bundle]         — PDF.js main/worker/pdf-data bundle tags
+// Both sides hash ONLY the obfuscated main template script block.
 async function computeCodeIntegrity(){
   try{
-    var scripts=document.querySelectorAll("script:not([data-vf-stamp-override])");
+    var scripts=document.querySelectorAll("script:not([data-vf-stamp-override]):not([data-vf-bundle])");
     var allCode="";
     for(var i=0;i<scripts.length;i++){if(scripts[i].textContent)allCode+=scripts[i].textContent}
     var encoder=new TextEncoder();
@@ -644,6 +670,8 @@ function showLocal(){
   var initLogo = CUSTOMICON === 'svg' ? CUSTOMICONDATA.replace(/<svg/, '<svg class="stamp-logo"') : CUSTOMICON === 'img' ? '<img class="stamp-logo" src="'+CUSTOMICONDATA+'" alt="">' : '<svg class="stamp-logo" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   document.getElementById("sCtr").innerHTML=initLogo+'<div class="brand">VERTIFILE</div><div class="lbl ok">PROTECTED</div>';
   triggerFlip();
+  // Inline PDF render — same delay as show() so the stamp flip plays first
+  if(__isPdf){ setTimeout(function(){ renderPdfInline(); }, 800); }
 }
 
 function activateWaves(){
@@ -666,6 +694,197 @@ function triggerFlip(){
 var __isDesktopViewer = !!window.__pvfDesktopViewer;
 var __isIframe = (window.self !== window.top);
 
+// ===== PDF.js INLINE RENDERING =====
+// Module-scope state so buildThumbnailsSidebar() and renderPdfInline()
+// share the PDF document and the list of main-view canvases.
+var __pdfDoc = null;
+var __pdfPageCanvases = [];
+var __pdfRenderStarted = false;
+
+async function renderPdfInline(){
+  if(!__isPdf || __pdfRenderStarted) return;
+  __pdfRenderStarted = true;
+  var frame = document.getElementById("frame");
+  var loading = document.getElementById("pdfLoading");
+  var dataEl = document.getElementById("pdfData");
+  if(!frame || !dataEl) return;
+
+  try{
+    // 1. PDF.js was injected by the pipeline as a <script id="pdfjs-main" type="module">.
+    //    pdfjs-dist v4 auto-attaches the module to globalThis.pdfjsLib at end of
+    //    execution (verified against pdf.min.mjs, line: r=globalThis.pdfjsLib=await(...)).
+    //    The module also exposes globalThis.pdfjsLibPromise which resolves to
+    //    pdfjsLib — prefer that (race-free) and fall back to polling as a safety net.
+    var pdfjsLib = window.pdfjsLib;
+    if(!pdfjsLib && window.pdfjsLibPromise){
+      try { pdfjsLib = await window.pdfjsLibPromise; } catch(e){ /* fall through */ }
+    }
+    if(!pdfjsLib){
+      // Last-resort polling fallback — should never hit if module loaded
+      for(var w=0; w<50 && !window.pdfjsLib; w++){
+        await new Promise(function(r){ setTimeout(r, 50); });
+      }
+      pdfjsLib = window.pdfjsLib;
+    }
+    if(!pdfjsLib) throw new Error("pdfjsLib not available after wait");
+
+    // 2. Build a Blob URL for the worker from the inlined worker source.
+    //    We revoke the URL string after the document handle is created — the
+    //    worker is already spawned by then and PDF.js keeps its internal
+    //    reference, so the URL name itself is no longer needed (and the 1 MB
+    //    blob would otherwise live until page unload).
+    var workerTag = document.getElementById("pdfjs-worker");
+    if(!workerTag) throw new Error("pdfjs-worker tag missing");
+    var workerBlob = new Blob([workerTag.textContent], { type: "application/javascript" });
+    var workerUrl = URL.createObjectURL(workerBlob);
+    pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
+
+    // 3. Decode base64 payload into a Uint8Array
+    var base64 = (dataEl.textContent || "").trim();
+    var binary = atob(base64);
+    var len = binary.length;
+    var bytes = new Uint8Array(len);
+    for(var i=0; i<len; i++) bytes[i] = binary.charCodeAt(i);
+
+    // 4. Load the PDF, then revoke the worker Blob URL (the worker is live
+    //    and PDF.js no longer needs the URL name).
+    __pdfDoc = await pdfjsLib.getDocument({ data: bytes }).promise;
+    try { URL.revokeObjectURL(workerUrl); } catch(e){ /* ignore */ }
+    if(loading && loading.parentNode) loading.parentNode.removeChild(loading);
+
+    // 5. Create a canvas per page (empty, sized to A4 aspect — rendered lazily).
+    //    Cap DPR based on page count to keep canvas memory within budget.
+    //    At DPR 2 each page is ~14 MB RGBA → 50 pages = ~715 MB which crashes
+    //    mobile Safari. Spec target is 100-200 MB total.
+    //      1-10 pages   → up to 2x DPR (sharp on retina, short docs)
+    //      11-25 pages  → up to 1.5x DPR
+    //      26+ pages    → 1x DPR (quality drop but device survives)
+    //    At DPR 1 a page is ~3.6 MB so 50 pages ≈ 180 MB, within budget.
+    var dprCap = __pdfDoc.numPages <= 10 ? 2
+               : __pdfDoc.numPages <= 25 ? 1.5
+               : 1;
+    var dpr = Math.min(window.devicePixelRatio || 1, dprCap);
+    var targetWidth = frame.clientWidth || 794;
+    for(var p=1; p<=__pdfDoc.numPages; p++){
+      var canvas = document.createElement("canvas");
+      canvas.className = "pdf-page";
+      canvas.dataset.pageNum = p;
+      // Reserve layout space so the scrollbar doesn't jump as pages render
+      canvas.style.width = targetWidth + "px";
+      canvas.style.height = Math.round(targetWidth * 297 / 210) + "px";
+      canvas.style.background = "#fff";
+      frame.appendChild(canvas);
+      __pdfPageCanvases.push(canvas);
+    }
+
+    // 6. Lazy-render main-view pages via IntersectionObserver
+    var rendered = new Set();
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(!entry.isIntersecting) return;
+        var c = entry.target;
+        var n = parseInt(c.dataset.pageNum, 10);
+        if(rendered.has(n)) return;
+        rendered.add(n);
+        renderMainPage(n, c, targetWidth, dpr).catch(function(err){
+          // per-page failure is isolated — allow retry on next intersect
+          rendered.delete(n);
+          if(console && console.warn) console.warn("[PVF] main page " + n + " failed:", err);
+        });
+      });
+    }, { rootMargin: "400px 0px" });
+    __pdfPageCanvases.forEach(function(c){ io.observe(c); });
+
+    // 7. Thumbnails sidebar — only for multi-page PDFs
+    if(__pdfDoc.numPages > 1){
+      buildThumbnailsSidebar();
+    }
+  } catch(err){
+    if(loading && loading.parentNode) loading.parentNode.removeChild(loading);
+    var msg = document.createElement("div");
+    msg.className = "pdf-error";
+    msg.textContent = "Unable to render PDF.";
+    frame.appendChild(msg);
+    if(console && console.warn) console.warn("[PVF] PDF render failed:", err);
+  }
+}
+
+async function renderMainPage(n, canvas, targetWidth, dpr){
+  var page = await __pdfDoc.getPage(n);
+  var vp1 = page.getViewport({ scale: 1 });
+  var scale = (targetWidth / vp1.width) * dpr;
+  var vp = page.getViewport({ scale: scale });
+  canvas.width = Math.floor(vp.width);
+  canvas.height = Math.floor(vp.height);
+  canvas.style.width = Math.floor(vp.width / dpr) + "px";
+  canvas.style.height = Math.floor(vp.height / dpr) + "px";
+  await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
+}
+
+function buildThumbnailsSidebar(){
+  var sidebar = document.getElementById("pdfThumbs");
+  if(!sidebar || !__pdfDoc) return;
+
+  // Hide in desktop viewer and iframe embed — they provide their own nav
+  if(__isDesktopViewer || __isIframe) return;
+
+  sidebar.classList.add("active");
+
+  // Build thumbnails upfront — small canvases (~111 KB RGBA each at 140x198),
+  // so 50 pages is roughly 5.5 MB of canvas memory. Well within budget.
+  for(var p=1; p<=__pdfDoc.numPages; p++){
+    (function(pageNum){
+      var canvas = document.createElement("canvas");
+      canvas.className = "pdf-thumb";
+      canvas.dataset.thumbNum = pageNum;
+      canvas.setAttribute("role", "button");
+      canvas.setAttribute("aria-label", "Page " + pageNum);
+      canvas.setAttribute("tabindex", "0");
+      var label = document.createElement("div");
+      label.className = "pdf-thumb-label";
+      label.textContent = String(pageNum);
+      sidebar.appendChild(canvas);
+      sidebar.appendChild(label);
+
+      canvas.addEventListener("click", function(){
+        var target = __pdfPageCanvases[pageNum - 1];
+        if(target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      canvas.addEventListener("keydown", function(e){
+        if(e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          canvas.click();
+        }
+      });
+
+      __pdfDoc.getPage(pageNum).then(function(page){
+        var vp1 = page.getViewport({ scale: 1 });
+        var scale = 140 / vp1.width;
+        var vp = page.getViewport({ scale: scale });
+        canvas.width = Math.floor(vp.width);
+        canvas.height = Math.floor(vp.height);
+        return page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
+      }).catch(function(){ /* per-thumb failure is silent */ });
+    })(p);
+  }
+
+  // Highlight the current page in the sidebar based on main-view scroll
+  var currentObserver = new IntersectionObserver(function(entries){
+    var best = null;
+    entries.forEach(function(e){
+      if(!best || e.intersectionRatio > best.intersectionRatio) best = e;
+    });
+    if(best && best.isIntersecting){
+      var n = parseInt(best.target.dataset.pageNum, 10);
+      var thumbs = sidebar.querySelectorAll(".pdf-thumb");
+      thumbs.forEach(function(t){
+        t.classList.toggle("current", parseInt(t.dataset.thumbNum, 10) === n);
+      });
+    }
+  }, { threshold: [0.25, 0.5, 0.75] });
+  __pdfPageCanvases.forEach(function(c){ currentObserver.observe(c); });
+}
+
 function show(ok){
   document.getElementById("ld").classList.add("hide");
   document.getElementById("wrap").style.display="block";
@@ -681,6 +900,9 @@ function show(ok){
   if(ok){setOk();activateWaves()}else setFk();
   setTimeout(triggerFlip,400);
   fitToPage();
+  // Kick off inline PDF render AFTER the stamp flip so the user sees the
+  // coin land first, then the PDF pages appear below.
+  if(__isPdf){ setTimeout(function(){ renderPdfInline(); }, 800); }
 }
 
 function setOk(){
@@ -786,14 +1008,9 @@ document.getElementById("tbShare").addEventListener("click", function() {
 function printDoc(){
   var pg = document.getElementById("pg");
   if(!pg) return;
-  // PDF — open the original embedded PDF in a new tab and print it (browser native PDF viewer)
-  var pdfFrame = pg.querySelector("iframe[src^='data:application/pdf']");
-  if(pdfFrame){
-    var win = window.open(pdfFrame.src,"_blank");
-    if(win){setTimeout(function(){try{win.print()}catch(e){}},1000)}
-    return;
-  }
-  // Image and Text — use the page's own @media print rules (preserves white-space:pre-wrap, fonts, layout)
+  // Unified print path — PDF canvases are now inline DOM nodes and the
+  // updated @media print rule handles them, so we can call window.print()
+  // for every document type (image, text, PDF). No more iframe hop.
   window.print();
 }
 

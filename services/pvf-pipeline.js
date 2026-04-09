@@ -49,6 +49,7 @@ const logger = require('./logger');
 const { obfuscatePvf } = require('../obfuscate');
 const { generatePvfHtml } = require('../templates/pvf');
 const { HMAC_SECRET, hashBytes, signHash, generateToken } = require('./pvf-generator');
+const { injectPdfJsBundle, isPdfjsAvailable } = require('./pdfjs-inline');
 const signing = require('./signing');
 const chain = require('../blockchain');
 const db = require('../db');
@@ -391,7 +392,23 @@ async function createPvf(opts) {
   }
 
   // -----------------------------------------------------------------
-  // 14. OBFUSCATE — same seed (first 8 hex chars of hash → 32-bit int)
+  // 14. INJECT PDF.JS BUNDLE (PDFs only, non-op for other MIME types)
+  // Must run BEFORE obfuscatePvf so the obfuscator's regex only matches
+  // the main <script> (plain, no attributes). Our injected tags carry
+  // id attributes and will be skipped by the obfuscator.
+  //
+  // Fail fast on PDF uploads when vendor files are missing — the boot sanity
+  // check in server.js logs a loud warning but intentionally does not crash
+  // so text/image uploads still work. Without this guard the user would get
+  // a cryptic ENOENT from fs.readFileSync inside injectPdfJsBundle.
+  // -----------------------------------------------------------------
+  if (mimeType === 'application/pdf' && !isPdfjsAvailable()) {
+    throw new Error('PDF support unavailable: vendor files missing');
+  }
+  pvfHtml = injectPdfJsBundle(pvfHtml, mimeType);
+
+  // -----------------------------------------------------------------
+  // 15. OBFUSCATE — same seed (first 8 hex chars of hash → 32-bit int)
   // -----------------------------------------------------------------
   const seed = parseInt(fileHash.substring(0, 8), 16);
   pvfHtml = await obfuscatePvf(pvfHtml, seed);

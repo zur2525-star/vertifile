@@ -6,6 +6,7 @@ const chain = require('../blockchain');
 const logger = require('./logger');
 const { obfuscatePvf } = require('../obfuscate');
 const { generatePvfHtml } = require('../templates/pvf');
+const { injectPdfJsBundle } = require('./pdfjs-inline');
 const { getClientIP } = require('../middleware/auth');
 
 // ===== HMAC Secret — persistent (survives restarts) =====
@@ -269,6 +270,12 @@ async function handleCreatePvfLegacy(req, res) {
       (req.apiKey && req.apiKey !== 'demo') ? db.incrementDocCount(req.apiKey).catch(e => logger.warn({ err: e }, 'incrementDocCount failed')) : Promise.resolve()
     ]);
     let pvfHtml = generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, branding.custom_icon, branding.brand_color, req.org.orgName, req.org.orgId, branding.wave_color);
+
+    // Inject PDF.js bundle for PDFs only (no-op for other MIME types).
+    // Must run BEFORE obfuscatePvf — the obfuscator regex /<script>/ only
+    // matches tags with no attributes, so our <script id="pdfjs-..."> tags
+    // are skipped automatically. See services/pdfjs-inline.js for details.
+    pvfHtml = injectPdfJsBundle(pvfHtml, mimeType);
 
     // Obfuscate the JavaScript inside the PVF (deterministic per document hash)
     const seed = parseInt(fileHash.substring(0, 8), 16);

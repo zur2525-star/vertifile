@@ -37,6 +37,24 @@ const { trackError } = require('./middleware/error-alerter');
 const app = express();
 const PORT = process.env.PORT || 3002;
 
+// ---- Boot sanity check: PDF.js vendor files must exist on disk ----
+// The PVF pipeline reads these at upload time for PDF documents.
+// A missing file is a deployment bug, not a runtime condition — fail loud
+// at boot so it never surprises us mid-upload. See services/pdfjs-inline.js
+// for the runtime injection logic and docs/PDF-JS-INLINE-SPEC.md section 6.
+(function verifyPdfjsVendor() {
+  const pdfjsMain = path.join(__dirname, 'vendor', 'pdfjs', 'pdf.min.mjs');
+  const pdfjsWorker = path.join(__dirname, 'vendor', 'pdfjs', 'pdf.worker.min.mjs');
+  if (!fs.existsSync(pdfjsMain) || !fs.existsSync(pdfjsWorker)) {
+    logger.error(
+      { event: 'pdfjs_vendor_missing', pdfjsMain, pdfjsWorker },
+      'PDF.js vendor files missing. Run: npm install pdfjs-dist@4.0.379 && cp node_modules/pdfjs-dist/build/pdf.min.mjs vendor/pdfjs/ && cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs vendor/pdfjs/'
+    );
+    // Do not crash — non-PDF PVFs still work. Log loud and continue.
+    // PDF uploads will throw a clear error at injection time.
+  }
+})();
+
 // Session secret — persistent across restarts
 const SESSION_SECRET_FILE = path.join(__dirname, 'data', '.session_secret');
 function loadOrCreateSessionSecret() {
