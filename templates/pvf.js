@@ -130,7 +130,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 .doc-frame .text-doc{padding:50px 60px;font-size:14px;line-height:1.9;color:#333;white-space:pre-wrap;word-wrap:break-word}
 
 /* ===== PDF thumbnails sidebar — right side, only for multi-page PDFs ===== */
-.pdf-thumbs{display:none;position:fixed;top:80px;right:12px;width:156px;max-height:calc(100vh - 100px);overflow-y:auto;overflow-x:hidden;padding:10px 8px;background:rgba(26,22,37,.92);border:1px solid rgba(124,58,237,.18);border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.35);z-index:40;scrollbar-width:thin;scrollbar-color:rgba(124,58,237,.4) transparent}
+.pdf-thumbs{display:none;position:fixed;top:80px;left:calc(50% + 318px);width:156px;max-height:calc(100vh - 100px);overflow-y:auto;overflow-x:hidden;padding:10px 8px;background:rgba(15,14,23,.8);border:1px solid rgba(124,58,237,.18);border-left:1px solid rgba(124,58,237,.15);border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.35);z-index:40;scrollbar-width:thin;scrollbar-color:rgba(124,58,237,.4) transparent}
 .pdf-thumbs.active{display:block}
 .pdf-thumbs::-webkit-scrollbar{width:6px}
 .pdf-thumbs::-webkit-scrollbar-thumb{background:rgba(124,58,237,.4);border-radius:3px}
