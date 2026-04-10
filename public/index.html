@@ -246,6 +246,13 @@
     .stat-item .stat-label{font-size:13px;color:#6b7280;margin-top:6px;font-weight:500}
     @media(max-width:600px){.stats-inner{grid-template-columns:repeat(2,1fr);gap:20px}.stat-item .stat-num{font-size:28px}}
 
+    /* ===== ZERO-KNOWLEDGE SECTION ===== */
+    .zk-section{background:linear-gradient(135deg,#1E1B2E 0%,#2D1B4E 100%);color:#fff;padding:100px 32px;font-family:'Heebo','Inter',sans-serif;position:relative;overflow:hidden}
+    .zk-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 40% 30%,rgba(124,58,237,.15),transparent 60%),radial-gradient(ellipse at 70% 70%,rgba(6,182,212,.06),transparent 50%);pointer-events:none}
+    .zk-container{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+    @media(max-width:768px){.zk-section .section-header h2{font-size:32px}}
+    @media(max-width:600px){.zk-section div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}}
+
     /* ===== SECTIONS COMMON ===== */
     section{padding:100px 32px}
     .section-header{text-align:center;max-width:600px;margin:0 auto 60px}
@@ -742,7 +749,7 @@
         </div>
         <!-- Hash output -->
         <div class="doc-hash" id="docHash">
-          <div class="hash-label">SHA-256 Fingerprint</div>
+          <div class="hash-label">Ed25519 Fingerprint</div>
           <div id="hashText">—</div>
         </div>
         <!-- Status -->
@@ -822,8 +829,8 @@
   <div class="features-grid">
     <div class="feat-card fade-up">
       <div class="feat-icon privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-      <h3 data-i18n="features.f1title">Total Privacy</h3>
-      <p data-i18n="features.f1desc">We never read or store your document content. Only a cryptographic fingerprint is processed.</p>
+      <h3 data-i18n="features.f1title">Zero-Knowledge Privacy</h3>
+      <p data-i18n="features.f1desc">Your documents are encrypted in the browser before upload. We cannot read your content — only a cryptographic fingerprint is processed.</p>
     </div>
     <div class="feat-card fade-up">
       <div class="feat-icon blockchain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
@@ -910,7 +917,7 @@
       <div class="layer-num">1</div>
       <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
       <h4 data-i18n="security.s1title">Cryptographic Signing</h4>
-      <p data-i18n="security.s1desc">SHA-256 + HMAC digital signature on every document</p>
+      <p data-i18n="security.s1desc">Zero-Knowledge encryption + Ed25519 dual signature on every document</p>
     </div>
     <div class="sec-layer fade-up">
       <div class="layer-num">2</div>
@@ -953,6 +960,57 @@
       <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
       <h4 data-i18n="security.s8title">Audit Logging</h4>
       <p data-i18n="security.s8desc">Every access attempt is logged with timestamp and IP</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ZERO-KNOWLEDGE ===== -->
+<section id="zero-knowledge" class="zk-section" dir="rtl">
+  <div class="zk-container">
+    <div class="section-header fade-up">
+      <div class="label" style="color:#a78bfa;background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.2)">Zero-Knowledge</div>
+      <h2 style="color:#ffffff;font-size:40px;font-weight:900;line-height:1.2">אפס ידע. מאה אחוז שליטה.</h2>
+      <p style="color:#C4B5FD;max-width:700px;line-height:1.7">Vertifile היא Zero-Knowledge — אנחנו לא יכולים לקרוא את המסמכים שלכם גם אם נרצה. גם אם יכריחו אותנו.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px;max-width:1100px;margin:0 auto 48px;position:relative;z-index:1">
+      <div class="fade-up" style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3);border-radius:12px;padding:28px">
+        <h3 style="font-size:1.15rem;font-weight:700;color:#A78BFA;margin-bottom:10px">הצפנה מלאה לפני ההעלאה</h3>
+        <p style="font-size:.95rem;color:#D1D5DB;line-height:1.7">המסמכים שלכם מוצפנים בתקן AES-256-GCM ישירות בדפדפן, עוד לפני שהם עוזבים את המחשב שלכם. מה שמגיע לשרתים שלנו הוא קוד בלתי קריא.</p>
+      </div>
+      <div class="fade-up" style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3);border-radius:12px;padding:28px">
+        <h3 style="font-size:1.15rem;font-weight:700;color:#A78BFA;margin-bottom:10px">המפתח נשאר אצלכם -- תמיד</h3>
+        <p style="font-size:.95rem;color:#D1D5DB;line-height:1.7">מפתח ההצפנה מועבר אך ורק דרך URL Fragment -- חלק בכתובת שלעולם לא נשלח לשרת. אף אחד חוץ מכם ומהנמען לא יכול לפתוח את המסמך.</p>
+      </div>
+      <div class="fade-up" style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3);border-radius:12px;padding:28px">
+        <h3 style="font-size:1.15rem;font-weight:700;color:#A78BFA;margin-bottom:10px">חתימה כפולה לאימות מוחלט</h3>
+        <p style="font-size:.95rem;color:#D1D5DB;line-height:1.7">כל מסמך נחתם בחתימה דיגיטלית כפולה: Ed25519 לזהות השולח ו-HMAC לשלמות התוכן. כל שינוי, ולו הקטן ביותר, מתגלה מיד.</p>
+      </div>
+      <div class="fade-up" style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3);border-radius:12px;padding:28px">
+        <h3 style="font-size:1.15rem;font-weight:700;color:#A78BFA;margin-bottom:10px">פרטיות ברמה של חוק</h3>
+        <p style="font-size:.95rem;color:#D1D5DB;line-height:1.7">עומד בדרישות GDPR, HIPAA ותקני פרטיות בינלאומיים. כשהשרת לא יכול לקרוא -- אין מה לדלוף, אין מה לפרוץ, אין מה לחשוף.</p>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:1100px;margin:0 auto;position:relative;z-index:1">
+      <div class="fade-up" style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:28px">
+        <h3 style="color:#FCA5A5;margin-bottom:16px;font-size:1.2rem">לפני Vertifile</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="color:#D1D5DB;margin-bottom:10px;padding-right:12px;line-height:1.6">מסמכים נשלחים באימייל בלי הגנה</li>
+          <li style="color:#D1D5DB;margin-bottom:10px;padding-right:12px;line-height:1.6">כל שרת שמעביר את הקובץ יכול לקרוא אותו</li>
+          <li style="color:#D1D5DB;margin-bottom:10px;padding-right:12px;line-height:1.6">אין דרך לדעת אם מישהו שינה את התוכן</li>
+          <li style="color:#D1D5DB;margin-bottom:10px;padding-right:12px;line-height:1.6">פלטפורמות ענן שומרות עותק קריא</li>
+          <li style="color:#D1D5DB;margin-bottom:0;padding-right:12px;line-height:1.6">דליפת מידע = אסון עסקי ומשפטי</li>
+        </ul>
+      </div>
+      <div class="fade-up" style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3);border-radius:12px;padding:28px">
+        <h3 style="color:#86EFAC;margin-bottom:16px;font-size:1.2rem">עם Vertifile</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="color:#D1D5DB;margin-bottom:10px;padding-right:12px;line-height:1.6">הצפנה מלאה מקצה לקצה, לפני ההעלאה</li>
+          <li style="color:#D1D5DB;margin-bottom:10px;padding-right:12px;line-height:1.6">השרת מעביר -- אבל לא יכול לקרוא</li>
+          <li style="color:#D1D5DB;margin-bottom:10px;padding-right:12px;line-height:1.6">חתימה כפולה מזהה כל שינוי מיד</li>
+          <li style="color:#D1D5DB;margin-bottom:10px;padding-right:12px;line-height:1.6">מפתח ההצפנה לעולם לא עוזב את הדפדפן</li>
+          <li style="color:#D1D5DB;margin-bottom:0;padding-right:12px;line-height:1.6">גם בפריצה -- אין מה לגנוב</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
@@ -1157,13 +1215,13 @@
       <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q3">Can you see my document content?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <div class="faq-a"><p data-i18n="faq.a3">No. Vertifile uses BLIND processing — we only see a cryptographic hash of your document. Your content is never read, stored, or transmitted to our servers.</p></div>
+      <div class="faq-a"><p data-i18n="faq.a3">No. Vertifile is a Zero-Knowledge platform — your documents are encrypted in the browser before they ever leave your device. We cannot read your content even if we wanted to. Only a cryptographic fingerprint is processed on our servers.</p></div>
     </div>
     <div class="faq-item fade-up">
       <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q4">Is it free?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <div class="faq-a"><p data-i18n="faq.a4">Yes, Vertifile is free for individuals. Enterprise plans are available for organizations that need bulk processing, API access, and custom branding.</p></div>
+      <div class="faq-a"><p data-i18n="faq.a4">Vertifile offers a Free plan ($0) for individuals, a Pro plan ($19/month) for professionals, and a Business plan ($12/user/month) for organizations. The Free plan includes basic document protection with no credit card required.</p></div>
     </div>
     <div class="faq-item fade-up">
       <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q5">How long does it take?
