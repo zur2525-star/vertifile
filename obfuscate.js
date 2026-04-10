@@ -28,7 +28,7 @@ const OBFUSCATION_OPTIONS = {
   selfDefending: false,
   target: 'browser',
   reservedNames: [
-    'HASH', 'SIG', 'API', 'RCPT', 'SHAREID', 'SIG_ED', 'KEY_ID', 'CREATED', 'ORGID', 'token', 'init',
+    'HASH', 'SIG', 'API', 'RCPT', 'SHAREID', 'SIG_ED', 'KEY_ID', 'CREATED', 'ORGID', 'ENCRYPTED', 'token', 'init',
     'show', 'setOk', 'setFk', 'freezeStamp',
     'triggerFlip', 'showLocal', 'activateWaves',
     'startRefresh', '__securityFrozen', '__devToolsOpen',
@@ -41,8 +41,9 @@ const OBFUSCATION_OPTIONS = {
   reservedStrings: [
     'Vertifile', 'pvf-verification', 'verified', 'failed',
     'forged', 'big-x', 'lbl', 'stamp',
-    'pvf:hash', 'pvf:version', 'pvf:signature',
-    'PVF:1.0', 'screen-capture', 'display-capture'
+    'pvf:hash', 'pvf:version', 'pvf:signature', 'pvf:encrypted',
+    'PVF:1.0', 'PVF:2.0', 'screen-capture', 'display-capture',
+    'encryptedDoc', 'encryptionMeta', 'encrypted-doc', 'encryption-meta'
   ]
 };
 

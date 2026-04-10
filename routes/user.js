@@ -176,6 +176,115 @@ router.post('/upload', requireLogin, (req, res, next) => {
 });
 
 // ============================================================================
+// POST /api/user/upload-encrypted — Zero-Knowledge PVF 2.0 creation
+// ============================================================================
+// The client encrypts the document with AES-256-GCM before upload. The server
+// receives only the encrypted blob, the client-computed SHA-256 hash, the IV,
+// and metadata. The AES key never touches the server.
+//
+// Form fields (multipart):
+//   file          - encrypted blob (binary)
+//   hash          - SHA-256 hex of original content (64 chars)
+//   iv            - base64 IV (decodes to 12 bytes)
+//   mimeType      - original MIME type
+//   originalName  - original filename
+// ============================================================================
+router.post('/upload-encrypted', requireLogin, (req, res, next) => {
+  const upload = req.app.get('upload');
+  upload.single('file')(req, res, (err) => {
+    if (err) return res.status(400).json({ success: false, error: err.message });
+    next();
+  });
+}, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+
+    // Check document limit
+    if (req.user.documents_used >= req.user.documents_limit) {
+      return res.status(403).json({ success: false, error: 'Document limit reached. Upgrade your plan for more.' });
+    }
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'No file uploaded' });
+    }
+    if (!req.body.hash || !req.body.iv) {
+      return res.status(400).json({ success: false, error: 'Missing encryption parameters (hash, iv)' });
+    }
+
+    // Dashboard's strict allowlist for original MIME type
+    const mimeType = req.body.mimeType || 'application/octet-stream';
+    const dashboardAllowedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg', 'text/plain'];
+    if (!dashboardAllowedTypes.includes(mimeType)) {
+      return res.status(400).json({ success: false, error: 'Unsupported file type' });
+    }
+
+    let result;
+    try {
+      result = await pvfPipeline.createPvfEncrypted({
+        encryptedBlob: req.file.buffer,
+        hash: req.body.hash,
+        iv: req.body.iv,
+        mimeType,
+        originalName: req.body.originalName || req.file.originalname || 'document',
+        owner: {
+          type: 'user',
+          id: req.user.id,
+          plan: req.user.plan,
+          email: req.user.email,
+          displayName: req.user.name || req.user.email.split('@')[0]
+        },
+        req
+      });
+    } catch (err) {
+      if (err && err.message === 'INVALID_MIME_TYPE') {
+        return res.status(400).json({ success: false, error: 'Unsupported file type' });
+      }
+      if (err && err.message === 'INVALID_HASH') {
+        return res.status(400).json({ success: false, error: 'Invalid hash format. Expected 64-char lowercase hex.' });
+      }
+      if (err && err.message === 'INVALID_IV') {
+        return res.status(400).json({ success: false, error: 'Invalid IV. Must be base64-encoded 12 bytes.' });
+      }
+      if (err && err.message === 'EMPTY_FILE') {
+        return res.status(400).json({ success: false, error: 'Empty file' });
+      }
+      throw err;
+    }
+
+    // Build response
+    if (result.preview) {
+      return res.json({
+        success: true,
+        preview: true,
+        previewUrl: '/d/' + result.slug,
+        shareId: result.shareId,
+        slug: result.slug,
+        shareUrl: '/d/' + result.slug,
+        hash: result.hash,
+        fileName: (req.body.originalName || req.file.originalname || 'document').replace(/\.[^.]+$/, '') + '.pvf',
+        message: 'Document protected! Subscribe to download.',
+        upgradeUrl: '/pricing',
+        documentsUsed: req.user.documents_used + 1,
+        documentsLimit: req.user.documents_limit
+      });
+    }
+
+    return res.json({
+      success: true,
+      hash: result.hash,
+      shareId: result.shareId,
+      slug: result.slug,
+      shareUrl: '/d/' + result.slug,
+      fileName: (req.body.originalName || req.file.originalname || 'document').replace(/\.[^.]+$/, '') + '.pvf',
+      documentsUsed: req.user.documents_used + 1,
+      documentsLimit: req.user.documents_limit
+    });
+  } catch (e) {
+    logger.error('[ENCRYPTED UPLOAD]', e.message);
+    return res.status(500).json({ success: false, error: 'Encrypted upload failed' });
+  }
+});
+
+// ============================================================================
 // LEGACY UPLOAD HANDLER  (Phase 1B rollback path)
 // ============================================================================
 // Pre-Phase-1B implementation, preserved verbatim. Reachable only when

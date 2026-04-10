@@ -98,29 +98,36 @@ router.get('/view-by-hash/:hash', async (req, res) => {
 });
 
 // View PVF document in-browser
-router.get('/d/:shareId', async (req, res) => {
+// Supports both shareId (legacy, base64url, 6-20 chars) and slug (PVF 2.0, up to 80 chars)
+router.get('/d/:identifier', async (req, res) => {
   try {
     const db = req.app.get('db');
-    const { shareId } = req.params;
+    const identifier = req.params.identifier;
 
-    if (!shareId || shareId.length < 6 || shareId.length > 20 || !/^[a-zA-Z0-9_-]+$/.test(shareId)) {
+    // Basic validation — allow alphanumeric, hyphens, underscores (covers both shareId and slug)
+    if (!identifier || identifier.length < 3 || identifier.length > 80 || !/^[a-zA-Z0-9_-]+$/.test(identifier)) {
       return res.status(404).send(notFoundPage('Invalid document link'));
     }
 
-    const doc = await db.getDocumentByShareId(shareId);
+    // Try slug first (PVF 2.0), then fall back to shareId (PVF 1.0)
+    let doc = await db.getDocumentBySlug(identifier);
+    if (!doc) {
+      doc = await db.getDocumentByShareId(identifier);
+    }
     if (!doc) {
       return res.status(404).send(notFoundPage('Document not found'));
     }
 
-    let pvfContent = await db.getPvfContent(shareId);
+    // Fetch PVF content — try by shareId (the pvf_content column is keyed by share_id)
+    let pvfContent = await db.getPvfContent(doc.shareId);
     if (!pvfContent) {
       return res.status(404).send(notFoundPage('Document file not available'));
     }
 
     // Layer 2 stamp injection — fresh per-view, hash unchanged
-    pvfContent = await injectStampConfig(req, shareId, pvfContent, db);
+    pvfContent = await injectStampConfig(req, doc.shareId, pvfContent, db);
 
-    await db.log('document_viewed', { shareId, hash: doc.hash, ip: getClientIP(req) });
+    await db.log('document_viewed', { shareId: doc.shareId, slug: doc.slug, hash: doc.hash, ip: getClientIP(req) });
 
     setPvfSecurityHeaders(res);
     res.setHeader('Content-Type', 'text/html; charset=utf-8');

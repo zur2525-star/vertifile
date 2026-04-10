@@ -255,6 +255,22 @@ const _ready = (async () => {
       created_at TIMESTAMPTZ DEFAULT NOW()
     )`);
   } catch (_) {}
+
+  // ================================================================
+  // ZERO-KNOWLEDGE ARCHITECTURE — PVF 2.0 schema additions
+  // ================================================================
+  // Slug column for human-readable URLs (/d/patent-claims-final instead of /d/aB3x_kLm)
+  try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS slug TEXT'); } catch (_) {}
+  try { await pool.query('CREATE UNIQUE INDEX IF NOT EXISTS idx_docs_slug ON documents(slug) WHERE slug IS NOT NULL'); } catch (_) {}
+  // Encryption flag (false for v1.0 docs, true for v2.0 encrypted docs)
+  try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS encrypted BOOLEAN DEFAULT false'); } catch (_) {}
+  // Initialization vector (base64 string, null for v1.0 docs)
+  try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS iv TEXT'); } catch (_) {}
+  // PVF version tag for query filtering
+  try { await pool.query("ALTER TABLE documents ADD COLUMN IF NOT EXISTS pvf_version TEXT DEFAULT '1.0'"); } catch (_) {}
+  // ================================================================
+  // END ZERO-KNOWLEDGE SCHEMA
+  // ================================================================
 })();
 
 // ================================================================
@@ -284,6 +300,11 @@ function mapDocRow(row) {
     // Ed25519 dual-signature columns (Phase 2A — null until Phase 2B activates signing)
     ed25519_signature: row.ed25519_signature || null,
     ed25519_key_id: row.ed25519_key_id || null,
+    // Zero-knowledge columns (PVF 2.0)
+    slug: row.slug || null,
+    encrypted: !!row.encrypted,
+    iv: row.iv || null,
+    pvf_version: row.pvf_version || '1.0',
   };
 }
 
@@ -410,6 +431,23 @@ async function createDocument({ hash, signature, originalName, mimeType, fileSiz
 
 async function setShareId(hash, shareId) {
   await pool.query('UPDATE documents SET share_id = $1 WHERE hash = $2', [shareId, hash]);
+}
+
+// ================================================================
+// SLUG LOOKUP (Zero-Knowledge / PVF 2.0)
+// ================================================================
+async function getDocumentBySlug(slug) {
+  const { rows } = await pool.query('SELECT * FROM documents WHERE slug = $1', [slug]);
+  return rows.length ? mapDocRow(rows[0]) : null;
+}
+
+async function setSlug(hash, slug) {
+  await pool.query('UPDATE documents SET slug = $1 WHERE hash = $2', [slug, hash]);
+}
+
+async function getPvfContentBySlug(slug) {
+  const { rows } = await pool.query('SELECT pvf_content FROM documents WHERE slug = $1', [slug]);
+  return rows.length ? rows[0].pvf_content : null;
 }
 
 async function updateDocumentToken(hash, token) {
@@ -1570,6 +1608,10 @@ module.exports = {
   createDocument,
   updateDocumentToken,
   setShareId,
+  // Zero-Knowledge / PVF 2.0 slug helpers
+  getDocumentBySlug,
+  setSlug,
+  getPvfContentBySlug,
   getDocumentsByOrg,
   getDocumentCount,
   getAllDocuments,

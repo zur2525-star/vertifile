@@ -702,6 +702,21 @@
     .upload-complete .uc-hash{font-size:11px;color:var(--text-2);font-family:'SF Mono','Fira Code',monospace;margin-bottom:16px}
     .up-cancel{font-size:12px;color:#dc2626;cursor:pointer;background:none;border:none;margin-top:4px}
 
+    /* ===== SHARE URL (Zero-Knowledge Upload) ===== */
+    .up-share-url-wrap{margin-top:12px;padding:14px;background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.15);border-radius:10px;text-align:left}
+    .up-share-url-label{font-size:11px;font-weight:600;color:#a78bfa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+    .up-share-url-label svg{width:14px;height:14px;flex-shrink:0}
+    .up-share-url-field{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+    .up-share-url-field input{flex:1;font-size:12px;font-family:'SF Mono','Fira Code',monospace;background:rgba(15,14,23,.5);border:1px solid rgba(124,58,237,.2);border-radius:6px;padding:8px 10px;color:#e2e0f0;outline:none;overflow:hidden;text-overflow:ellipsis}
+    .up-share-url-field input:focus{border-color:#7c3aed}
+    .up-share-url-copy{padding:8px 14px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px;transition:.15s}
+    .up-share-url-copy:hover{opacity:.9}
+    .up-share-url-copy svg{width:14px;height:14px;flex-shrink:0}
+    .up-share-url-warning{font-size:11px;color:#f59e0b;display:flex;align-items:flex-start;gap:6px;line-height:1.4}
+    .up-share-url-warning svg{width:14px;height:14px;flex-shrink:0;margin-top:1px}
+    body.light-mode .up-share-url-wrap{background:rgba(124,58,237,.04);border-color:rgba(124,58,237,.1)}
+    body.light-mode .up-share-url-field input{background:#f8f7ff;border-color:#e5e7eb;color:#374151}
+
     /* ===== DOCUMENTS TAB ===== */
     .docs-toolbar{display:flex;align-items:center;gap:12px;padding:12px 0;margin-bottom:16px;flex-wrap:wrap}
     .docs-toolbar .filter-input{max-width:320px;padding:9px 16px 9px 40px;border:1px solid var(--input-border);border-radius:10px;font-size:13px;outline:none;background:var(--input-bg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238b89a6' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.414-1.414l-3.85-3.85zm-5.242.156a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;color:var(--text-1);flex:1;min-width:200px}
@@ -992,6 +1007,7 @@
       .nav-item{padding:8px 12px;font-size:12px}
     }
   </style>
+  <script src="/js/crypto.js"></script>
 </head>
 <body>
 
@@ -3063,6 +3079,9 @@ async function handleUploadFile(file) {
   document.getElementById('upFilename').textContent = file.name;
   // Reset any previous success/error state from earlier uploads
   progress.classList.remove('is-success', 'is-error');
+  // Remove any lingering share URL block from a prior encrypted upload
+  var oldShareWrap = progress.querySelector('.up-share-url-wrap');
+  if (oldShareWrap) oldShareWrap.remove();
   progress.style.display = 'block';
   barFill.style.width = '0%';
   status.textContent = 'Uploading...';
@@ -3080,29 +3099,98 @@ async function handleUploadFile(file) {
   try {
     const result = await uploadFile(file);
     clearInterval(interval);
-    // Success: pin to 100%, show green checkmark + View link, auto-dismiss.
+    // Success: pin to 100%, show green checkmark + share URL with key fragment.
     barFill.style.width = '100%';
     progress.classList.add('is-success');
     status.textContent = 'Protected';
+
+    // Construct the full share URL with encryption key in the fragment.
+    // The key fragment is NEVER sent to the server (per HTTP spec).
+    var shareId = result && result.shareId ? result.shareId : '';
+    var slug = result && result.slug ? result.slug : '';
+    var identifier = slug || shareId;
+    var keyFragment = result && result._keyBase64url ? result._keyBase64url : '';
+    var viewHref = identifier ? '/d/' + encodeURIComponent(identifier) : '#';
+    var fullShareUrl = keyFragment
+      ? (window.location.origin + '/d/' + encodeURIComponent(identifier) + '#key=' + keyFragment)
+      : '';
+
     if (actions) {
-      const shareId = result && result.shareId ? result.shareId : '';
-      const viewHref = shareId ? '/d/' + encodeURIComponent(shareId) : '#';
-      actions.innerHTML =
+      // Success row with checkmark
+      var html =
         '<span class="up-success-row">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
             '<polyline points="20 6 9 17 4 12"/>' +
           '</svg>' +
           '<span>Document protected</span>' +
-        '</span>' +
-        (shareId ? '<a class="up-view-link" href="' + viewHref + '" target="_blank" rel="noopener">View document</a>' : '');
-    }
-    // Auto-dismiss after 4 seconds so the user can still glance at the confirmation.
-    setTimeout(function(){
-      if (progress.classList.contains('is-success')) {
-        progress.style.display = 'none';
-        progress.classList.remove('is-success');
+        '</span>';
+
+      // View link uses the full URL with key fragment
+      if (identifier) {
+        var linkHref = fullShareUrl || viewHref;
+        html += '<a class="up-view-link" href="' + linkHref + '" target="_blank" rel="noopener">View document</a>';
       }
-    }, 4000);
+
+      actions.innerHTML = html;
+
+      // Append the share URL block with copy button and warning (only if we have a key)
+      if (fullShareUrl) {
+        var shareBlock = document.createElement('div');
+        shareBlock.className = 'up-share-url-wrap';
+        shareBlock.innerHTML =
+          '<div class="up-share-url-label">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>' +
+              '<path d="M7 11V7a5 5 0 0110 0v4"/>' +
+            '</svg>' +
+            'Encrypted share link' +
+          '</div>' +
+          '<div class="up-share-url-field">' +
+            '<input type="text" id="upShareUrlInput" value="' + fullShareUrl.replace(/"/g, '&quot;') + '" readonly onclick="this.select()">' +
+            '<button class="up-share-url-copy" id="upShareUrlCopy" type="button">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>' +
+                '<path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>' +
+              '</svg>' +
+              'Copy link' +
+            '</button>' +
+          '</div>' +
+          '<div class="up-share-url-warning">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>' +
+              '<line x1="12" y1="9" x2="12" y2="13"/>' +
+              '<line x1="12" y1="17" x2="12.01" y2="17"/>' +
+            '</svg>' +
+            'Save this link! Without it, the document cannot be viewed. Vertifile cannot recover it.' +
+          '</div>';
+        actions.parentNode.appendChild(shareBlock);
+
+        // Wire up the copy button
+        var copyBtn = document.getElementById('upShareUrlCopy');
+        if (copyBtn) {
+          copyBtn.addEventListener('click', function() {
+            copyToClipboard(fullShareUrl);
+            this.innerHTML =
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                '<polyline points="20 6 9 17 4 12"/>' +
+              '</svg>' +
+              'Copied!';
+            var btn = this;
+            setTimeout(function() {
+              btn.innerHTML =
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                  '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>' +
+                  '<path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>' +
+                '</svg>' +
+                'Copy link';
+            }, 2000);
+          });
+        }
+      }
+    }
+
+    // NO auto-dismiss: the user MUST have time to copy the share URL.
+    // The share URL contains the only copy of the decryption key.
   } catch (e) {
     clearInterval(interval);
     barFill.style.width = '0%';
@@ -3116,9 +3204,30 @@ async function handleUploadFile(file) {
 }
 
 async function uploadFile(file) {
+  // --- Zero-Knowledge: encrypt client-side before upload ---
+  if (!window.VertifileCrypto) {
+    throw new Error('Encryption module not loaded. Please reload the page.');
+  }
+
+  // Update status to show encryption phase
+  var upStatus = document.getElementById('upStatus');
+  if (upStatus) upStatus.textContent = 'Encrypting...';
+
+  // Encrypt the file: generates AES-256 key, encrypts content, computes SHA-256 hash
+  var encrypted = await VertifileCrypto.encryptFile(file);
+
+  if (upStatus) upStatus.textContent = 'Uploading...';
+
+  // Build FormData with encrypted data (NOT the original file content)
   const form = new FormData();
-  form.append('file', file);
-  const r = await fetch('/api/user/upload', { method: 'POST', body: form, credentials: 'same-origin' });
+  form.append('file', encrypted.encryptedBlob, file.name);  // encrypted blob, original filename
+  form.append('hash', encrypted.hash);                        // client-computed SHA-256 of original
+  form.append('iv', encrypted.iv);                            // base64url-encoded 12-byte IV
+  form.append('mimeType', file.type || 'application/octet-stream');
+  form.append('originalName', file.name);                      // explicit original filename (H3)
+  form.append('encrypted', 'true');                           // flag: server knows this is ZK encrypted
+
+  const r = await fetch('/api/user/upload-encrypted', { method: 'POST', body: form, credentials: 'same-origin' });
   // Parse the body defensively — some error paths return empty bodies.
   let data = {};
   try { data = await r.json(); } catch(_) { data = {}; }
@@ -3131,6 +3240,11 @@ async function uploadFile(file) {
     const msg = (data && data.error) ? data.error : ('Upload failed (HTTP ' + r.status + ')');
     throw new Error(msg);
   }
+
+  // Attach the encryption key to the result so handleUploadFile can construct the share URL.
+  // The key NEVER goes to the server — it only exists in the browser.
+  data._keyBase64url = encrypted.keyBase64url;
+
   loadDocuments();
   toast('Document protected!');
   return data;

@@ -19,7 +19,10 @@ function sanitizeSvg(svg) {
   return clean;
 }
 
-function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, customIcon, brandColor, orgName, orgId, waveColor, shareId, createdAt, ed25519Signature, ed25519KeyId) {
+function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature, recipientHash, customIcon, brandColor, orgName, orgId, waveColor, shareId, createdAt, ed25519Signature, ed25519KeyId, encryptedOpts) {
+  // encryptedOpts (optional): { encrypted: true, encryptedBase64, iv }
+  // When provided, the template renders PVF 2.0 with encrypted payload instead of plaintext content.
+  var isEncryptedMode = !!(encryptedOpts && encryptedOpts.encrypted);
   // Phase 2B Fix #1: createdAt is threaded from createPvf() so the value baked
   // into <meta name="pvf:created"> and var CREATED matches the value used in
   // the Ed25519 signing payload AND the documents.created_at DB column.
@@ -38,21 +41,22 @@ function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature
   // Layer 2 (routes/pages.js injectStampConfig) overrides this at view time with user's custom brandText if set.
   const displayBrand = ((Array.from((orgName || 'VERTIFILE').toString().trim().normalize('NFKC').replace(/[\u202A-\u202E\u200B-\u200F\u2066-\u2069]/g,'')).slice(0,16).join('')) || 'VERTIFILE').toUpperCase();
 
-  return `<!--PVF:1.0-->
+  return `<!--PVF:${isEncryptedMode ? '2.0' : '1.0'}-->
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="no-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="pvf:version" content="1.0">
+<meta name="pvf:version" content="${isEncryptedMode ? '2.0' : '1.0'}">
 <meta name="pvf:hash" content="${fileHash}">
 <meta name="pvf:signature" content="${signature}">
 <meta name="pvf:original-name" content="${safeOriginalName}">
 <meta name="pvf:mime-type" content="${mimeType}">
 <meta name="pvf:created" content="${createdAt}">
 <meta name="pvf:share-id" content="${shareId || ''}">
+${isEncryptedMode ? '<meta name="pvf:encrypted" content="true">' : ''}
 ${recipientHash ? `<meta name="pvf:recipient-hash" content="${recipientHash}">` : ''}
-<title>PVF — ${safeOriginalName}</title>
+<title>PVF ${isEncryptedMode ? '--' : '\u2014'} ${safeOriginalName}</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
@@ -128,6 +132,12 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 .doc-frame .pdf-error{padding:40px;text-align:center;color:#c62828;font-family:Heebo,sans-serif;font-size:13px}
 .doc-frame .pdf-loading{padding:60px;text-align:center;color:#6d28d9;font-family:Heebo,sans-serif;font-size:13px}
 .doc-frame .text-doc{padding:50px 60px;font-size:14px;line-height:1.9;color:#333;white-space:pre-wrap;word-wrap:break-word}
+
+/* ===== Zero-Knowledge decryption states ===== */
+.zk-error{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;padding:40px;text-align:center}
+.zk-decrypting{display:flex;align-items:center;justify-content:center;min-height:200px;color:rgba(196,181,253,.8);font-size:14px}
+.decrypt-prompt{padding:60px 40px;text-align:center;font-family:'Heebo',sans-serif;color:#6d28d9;font-size:14px}
+.decrypt-error{padding:40px;text-align:center;color:#c62828;font-family:'Heebo',sans-serif;font-size:13px}
 
 /* ===== PDF thumbnails sidebar — right side, only for multi-page PDFs ===== */
 .pdf-thumbs{display:none;position:fixed;top:80px;left:calc(50% + 318px);width:156px;max-height:calc(100vh - 100px);overflow-y:auto;overflow-x:hidden;padding:10px 8px;background:rgba(15,14,23,.8);border:1px solid rgba(124,58,237,.18);border-left:1px solid rgba(124,58,237,.15);border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.35);z-index:40;scrollbar-width:thin;scrollbar-color:rgba(124,58,237,.4) transparent}
@@ -257,7 +267,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
     <span class="logo-text">Vertifile</span>
   </div>
   <div class="sp"></div>
-  <p>Verifying document...</p>
+  <p>${isEncryptedMode ? 'Decrypting and verifying document...' : 'Verifying document...'}</p>
 </div>
 
 <!-- Top Toolbar (Gmail-style) -->
@@ -278,7 +288,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
   </div>
   <!-- Center: Filename -->
   <div class="tb-filename" id="tbName">
-    <span class="vf-badge">PVF</span>
+    <span class="vf-badge">${isEncryptedMode ? 'PVF 2.0' : 'PVF'}</span>
     <span id="tbNameText">${safeOriginalName.replace(/\.[^.]+$/, '')}.pvf</span>
   </div>
   <!-- Right: Zoom -->
@@ -340,15 +350,17 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
     </div>
 
     <div class="doc-frame ${isPdf ? 'pdf' : ''}" id="frame">
-      ${isPdf
-        ? `<div class="pdf-loading" id="pdfLoading">Loading PDF...</div>`
-        : isImage
-          ? `<img src="data:${mimeType};base64,${fileBase64}" alt="document"/>`
-          : `<div class="text-doc">${fileBase64}</div>`
+      ${isEncryptedMode
+        ? `<div class="decrypt-prompt" id="decryptPrompt">Decrypting document...</div>`
+        : isPdf
+          ? `<div class="pdf-loading" id="pdfLoading">Loading PDF...</div>`
+          : isImage
+            ? `<img src="data:${mimeType};base64,${fileBase64}" alt="document"/>`
+            : `<div class="text-doc">${fileBase64}</div>`
       }
     </div>
     ${isPdf ? `<aside class="pdf-thumbs" id="pdfThumbs" aria-label="Page thumbnails"></aside>` : ''}
-    ${isPdf ? `<script type="application/octet-stream" id="pdfData" data-vf-bundle="pdf-data">${fileBase64}</script>` : ''}
+    ${(!isEncryptedMode && isPdf) ? `<script type="application/octet-stream" id="pdfData" data-vf-bundle="pdf-data">${fileBase64}</script>` : ''}
 
     <!-- VERTIFILE STAMP -->
     <div class="stamp" id="stamp">
@@ -384,9 +396,11 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 <div id="pvf-footer" style="display:none;text-align:center;padding:16px;margin-top:24px;border-top:1px solid rgba(0,0,0,0.06)">
   <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#9ca3af">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    Protected by Vertifile — Make your documents tamper-proof at <a href="https://vertifile.com" target="_blank" rel="noopener" style="color:#7c3aed;text-decoration:none">vertifile.com</a>
+    Protected by Vertifile ${isEncryptedMode ? '--' : '\u2014'} Make your documents tamper-proof at <a href="https://vertifile.com" target="_blank" rel="noopener" style="color:#7c3aed;text-decoration:none">vertifile.com</a>
   </span>
 </div>
+${isEncryptedMode ? `<script type="application/octet-stream" id="encryptedDoc" data-vf-bundle="encrypted-doc">${encryptedOpts.encryptedBase64}</scr` + `ipt>
+<script type="application/json" id="encryptionMeta" data-vf-bundle="encryption-meta">${JSON.stringify({ iv: encryptedOpts.iv, mimeType: mimeType, fileName: originalName })}</scr` + `ipt>` : ''}
 
 <script>
 // Remove no-js class immediately (enables loading screen + animations in browser)
@@ -395,6 +409,30 @@ document.documentElement.classList.add("js");
 
 // Document type flag — used by the PDF.js inline rendering path
 var __isPdf = ${isPdf};
+
+// ===== ZERO-KNOWLEDGE: Extract decryption key from URL fragment, then mask it =====
+var __zkKey = null;
+(function() {
+  var hash = window.location.hash;
+  if (hash && hash.indexOf('#key=') === 0) {
+    __zkKey = hash.substring(5); // base64url key
+    // URL Masking: remove the key from address bar and history
+    // After this, the address bar shows /d/{slug} without the #key=...
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+    // SessionStorage backup (for same-tab refresh resilience)
+    // Keyed by the document slug/path so different docs don't collide
+    try {
+      sessionStorage.setItem('vf_zk_' + window.location.pathname, __zkKey);
+    } catch(e) {}
+  } else {
+    // No key in fragment — try sessionStorage (page refresh case)
+    try {
+      __zkKey = sessionStorage.getItem('vf_zk_' + window.location.pathname);
+    } catch(e) {}
+  }
+})();
 
 // ===== SECURITY: Environment detection =====
 var __securityFrozen = false;
@@ -564,6 +602,7 @@ ${(ed25519Signature && ed25519KeyId) ? `var SIG_ED="${ed25519Signature}";\nvar K
 var CREATED="${createdAt}";
 var ORGID="${orgId || ''}";
 var SHAREID="${shareId || ''}";
+${isEncryptedMode ? 'var ENCRYPTED=true;' : ''}
 var API=window.location.origin;
 var ORGNAME="${escapeHtml(orgName || 'VERTIFILE')}";
 var CUSTOMICON=${customIcon ? `"${customIcon.startsWith('<svg') ? 'svg' : 'img'}"` : 'null'};
@@ -618,6 +657,144 @@ async function computeCodeIntegrity(){
 }
 var VERIFY_URL="https://vertifile.com";
 
+// ===== ZERO-KNOWLEDGE: Inline crypto functions (decryption only) =====
+// Stripped from public/js/crypto.js — self-contained, no external deps.
+
+// Base64url (RFC 4648 Section 5) -> ArrayBuffer
+function zkBase64urlToBuffer(b64url) {
+  var b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
+  var padded = b64 + '='.repeat((4 - b64.length % 4) % 4);
+  var binary = atob(padded);
+  var bytes = new Uint8Array(binary.length);
+  for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes.buffer;
+}
+
+// Standard Base64 -> ArrayBuffer (for encrypted blob embedded in PVF HTML)
+function zkBase64ToBuffer(b64) {
+  var binary = atob(b64);
+  var bytes = new Uint8Array(binary.length);
+  for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes.buffer;
+}
+
+// Import AES-256-GCM key from base64url string
+async function zkImportKey(b64url) {
+  var raw = zkBase64urlToBuffer(b64url);
+  return crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['decrypt']);
+}
+
+// Decrypt AES-256-GCM ciphertext
+async function zkDecrypt(key, ciphertext, iv) {
+  return crypto.subtle.decrypt({ name: 'AES-GCM', iv: new Uint8Array(iv) }, key, ciphertext);
+}
+
+// SHA-256 hash -> lowercase hex string
+async function zkHash(data) {
+  var buf = await crypto.subtle.digest('SHA-256', data);
+  var arr = Array.from(new Uint8Array(buf));
+  return arr.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+}
+
+// ===== ZERO-KNOWLEDGE: Decrypt and display encrypted document =====
+async function decryptAndDisplay() {
+  if (typeof ENCRYPTED === 'undefined' || !ENCRYPTED) return false; // v1.0 PVF — skip
+
+  var frame = document.getElementById('frame') || document.getElementById('pg');
+  if (!frame) return false;
+
+  // Show decrypting indicator
+  var loadingDiv = document.createElement('div');
+  loadingDiv.className = 'zk-decrypting';
+  loadingDiv.textContent = 'Decrypting document...';
+  frame.appendChild(loadingDiv);
+
+  if (!__zkKey) {
+    // No decryption key available — show error
+    if (loadingDiv.parentNode) loadingDiv.parentNode.removeChild(loadingDiv);
+    var errDiv = document.createElement('div');
+    errDiv.className = 'zk-error';
+    errDiv.innerHTML = '<svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#e53935" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>' +
+      '<div style="margin-top:16px;font-size:16px;color:#e53935;font-weight:600">Decryption key not found</div>' +
+      '<div style="margin-top:8px;font-size:13px;color:rgba(255,255,255,.6)">Please use the original shared link containing the decryption key.</div>';
+    frame.appendChild(errDiv);
+    return true; // handled — don't continue to normal display
+  }
+
+  try {
+    // Read encrypted data from embedded script tags
+    var encDocEl = document.getElementById('encryptedDoc');
+    var encMetaEl = document.getElementById('encryptionMeta');
+    if (!encDocEl || !encMetaEl) throw new Error('Encrypted payload missing from document');
+
+    var encBase64 = (encDocEl.textContent || '').trim();
+    var meta = JSON.parse(encMetaEl.textContent || '{}');
+    var ivB64url = meta.iv;
+    var mimeType = meta.mimeType || 'application/octet-stream';
+
+    // Import key and decrypt
+    var key = await zkImportKey(__zkKey);
+    var cipherBuffer = zkBase64ToBuffer(encBase64);
+    var ivBuffer = zkBase64urlToBuffer(ivB64url);
+    var decrypted = await zkDecrypt(key, cipherBuffer, ivBuffer);
+
+    // Verify hash integrity — computed hash of decrypted content must match HASH
+    var computedHash = await zkHash(decrypted);
+    if (computedHash !== HASH) {
+      throw new Error('Hash mismatch after decryption — document may be tampered');
+    }
+
+    // Store decrypted bytes + metadata globally for the download handler (H1)
+    window.__zkDecryptedBytes = new Uint8Array(decrypted);
+    window.__zkMimeType = mimeType;
+    window.__zkFileName = meta.fileName || 'document';
+
+    // Remove decrypting indicator
+    if (loadingDiv.parentNode) loadingDiv.parentNode.removeChild(loadingDiv);
+
+    // Display based on content type
+    if (mimeType === 'application/pdf') {
+      // Store decrypted bytes for PDF.js renderPdfInline
+      window.__zkDecryptedPdfBytes = new Uint8Array(decrypted);
+      __isPdf = true;
+      // renderPdfInline will be called later by show()/showLocal()
+    } else if (mimeType.indexOf('image/') === 0) {
+      var blob = new Blob([decrypted], { type: mimeType });
+      var url = URL.createObjectURL(blob);
+      var img = document.createElement('img');
+      img.src = url;
+      img.style.width = '100%';
+      img.style.display = 'block';
+      frame.innerHTML = '';
+      frame.appendChild(img);
+    } else {
+      // Text or other — decode as UTF-8
+      var textDecoder = new TextDecoder('utf-8');
+      var text = textDecoder.decode(decrypted);
+      var textDiv = document.createElement('div');
+      textDiv.className = 'text-doc';
+      textDiv.textContent = text;
+      frame.innerHTML = '';
+      frame.appendChild(textDiv);
+    }
+
+    return true; // encrypted doc handled
+  } catch(err) {
+    if (loadingDiv.parentNode) loadingDiv.parentNode.removeChild(loadingDiv);
+    var errDiv2 = document.createElement('div');
+    errDiv2.className = 'zk-error';
+    // Distinguish wrong-key (GCM auth failure) from hash mismatch
+    var errMsg = (err.message || '').indexOf('Hash mismatch') >= 0
+      ? 'Document integrity check failed. Content may have been tampered with.'
+      : 'Decryption failed. The link may be incorrect or corrupted.';
+    errDiv2.innerHTML = '<svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#e53935" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' +
+      '<div style="margin-top:16px;font-size:16px;color:#e53935;font-weight:600">' + errMsg + '</div>';
+    frame.appendChild(errDiv2);
+    if (console && console.warn) console.warn('[PVF] ZK decryption failed:', err);
+    return true; // handled — error displayed
+  }
+}
+
 async function init(){
   // Security: if environment is frozen (cross-origin iframe / missing navigator), show forged
   if(__securityFrozen){
@@ -628,6 +805,10 @@ async function init(){
     freezeStamp();
     return;
   }
+
+  // Zero-Knowledge: decrypt encrypted content before verification
+  var isEncrypted = await decryptAndDisplay();
+  if (isEncrypted && !__zkKey) return; // No key — error already shown, don't continue
 
   // Determine the verification API URL
   var apiUrl=isLocal?VERIFY_URL:API;
@@ -707,7 +888,7 @@ async function renderPdfInline(){
   var frame = document.getElementById("frame");
   var loading = document.getElementById("pdfLoading");
   var dataEl = document.getElementById("pdfData");
-  if(!frame || !dataEl) return;
+  if(!frame || (!dataEl && !window.__zkDecryptedPdfBytes)) return;
 
   try{
     // 1. PDF.js was injected by the pipeline as a <script id="pdfjs-main" type="module">.
@@ -739,12 +920,21 @@ async function renderPdfInline(){
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://vertifile.com/vendor/pdfjs/pdf.worker.min.mjs";
 
-    // 3. Decode base64 payload into a Uint8Array
-    var base64 = (dataEl.textContent || "").trim();
-    var binary = atob(base64);
-    var len = binary.length;
-    var bytes = new Uint8Array(len);
-    for(var i=0; i<len; i++) bytes[i] = binary.charCodeAt(i);
+    // 3. Decode payload into a Uint8Array
+    //    For encrypted (ZK) PVFs, decryptAndDisplay() already decrypted and stored
+    //    the raw bytes in window.__zkDecryptedPdfBytes. For v1.0 PVFs, decode
+    //    the base64 from <script id="pdfData">.
+    var bytes;
+    if (window.__zkDecryptedPdfBytes) {
+      bytes = window.__zkDecryptedPdfBytes;
+      delete window.__zkDecryptedPdfBytes; // cleanup after consumption
+    } else {
+      var base64 = (dataEl.textContent || "").trim();
+      var binary = atob(base64);
+      var len = binary.length;
+      bytes = new Uint8Array(len);
+      for(var i=0; i<len; i++) bytes[i] = binary.charCodeAt(i);
+    }
 
     // 4. Load the PDF.
     //    - isEvalSupported: false — defensive against CSP that would block eval
@@ -984,6 +1174,20 @@ document.getElementById("tbFit").addEventListener("click", fitToPage);
 
 // ===== TOOLBAR: Download =====
 document.getElementById("tbDownload").addEventListener("click", function() {
+  // Encrypted PVF: download the decrypted original document (not the PVF wrapper)
+  if (typeof ENCRYPTED !== 'undefined' && ENCRYPTED && window.__zkDecryptedBytes) {
+    var blob = new Blob([window.__zkDecryptedBytes], { type: window.__zkMimeType || 'application/octet-stream' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = window.__zkFileName || 'document';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    return;
+  }
+  // v1.0 PVF: download the PVF wrapper as HTML
   var html = document.documentElement.outerHTML;
   var blob = new Blob([html], { type: "text/html" });
   var a = document.createElement("a");
