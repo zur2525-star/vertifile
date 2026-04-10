@@ -778,6 +778,12 @@ async function decryptAndDisplay() {
       frame.appendChild(textDiv);
     }
 
+    // P0 Security fix: zero out the decryption key and remove sessionStorage
+    // entry immediately after successful decryption. The decrypted bytes are
+    // kept only until the user downloads or the page unloads.
+    __zkKey = null;
+    try { sessionStorage.removeItem('vf_zk_' + window.location.pathname); } catch(e) {}
+
     return true; // encrypted doc handled
   } catch(err) {
     if (loadingDiv.parentNode) loadingDiv.parentNode.removeChild(loadingDiv);
@@ -1185,6 +1191,9 @@ document.getElementById("tbDownload").addEventListener("click", function() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    // P0 Security fix: zero out decrypted bytes after download
+    delete window.__zkDecryptedBytes;
+    delete window.__zkDecryptedPdfBytes;
     return;
   }
   // v1.0 PVF: download the PVF wrapper as HTML

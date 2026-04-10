@@ -217,6 +217,25 @@ router.post('/upload-encrypted', requireLogin, (req, res, next) => {
       return res.status(400).json({ success: false, error: 'Unsupported file type' });
     }
 
+    // ── Idempotency: prevent replay attacks (Yonatan P0) ─────────────
+    // If a document with the same content hash already exists AND belongs
+    // to this user, return the existing shareId/slug instead of creating
+    // a duplicate. This neutralises replay of captured upload requests.
+    const existingDoc = await db.getDocument(req.body.hash);
+    if (existingDoc && existingDoc.user_id === req.user.id) {
+      return res.json({
+        success: true,
+        hash: existingDoc.hash,
+        shareId: existingDoc.shareId,
+        slug: existingDoc.slug,
+        shareUrl: '/d/' + (existingDoc.slug || existingDoc.shareId),
+        fileName: (req.body.originalName || req.file.originalname || 'document').replace(/\.[^.]+$/, '') + '.pvf',
+        documentsUsed: req.user.documents_used,
+        documentsLimit: req.user.documents_limit,
+        deduplicated: true
+      });
+    }
+
     let result;
     try {
       result = await pvfPipeline.createPvfEncrypted({
