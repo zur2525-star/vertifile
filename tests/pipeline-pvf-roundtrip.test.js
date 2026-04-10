@@ -388,6 +388,11 @@ describe('PVF pipeline end-to-end round-trip (VP6mXapK9bU guardrail)', () => {
     // breaks Ed25519 verification because the payload is reconstructed
     // from the DB row.
     //
+    // We check the <meta name="pvf:created"> tag rather than the JS
+    // variable because the obfuscator's stringArray feature encodes JS
+    // string values, so `var CREATED="..."` no longer appears literally.
+    // The meta tag is HTML and is never obfuscated.
+    //
     // Reuse the dual-signed fixture from scenario 1 is tempting for
     // speed, but node:test does not guarantee execution order between
     // it() blocks (it does in practice, but we don't want to rely on it
@@ -412,12 +417,13 @@ describe('PVF pipeline end-to-end round-trip (VP6mXapK9bU guardrail)', () => {
       'db timestamp must byte-equal the pipeline result timestamp'
     );
 
-    // The stored HTML bakes the created_at into `var CREATED="<iso>";`.
-    // Assert the exact value appears as a CREATED literal.
-    const createdLiteral = 'var CREATED="' + dbRow.timestamp + '"';
+    // The obfuscator's stringArray feature encodes JS string values into an
+    // array, so `var CREATED="..."` is not a reliable search target. The
+    // `<meta name="pvf:created">` tag is HTML and is never obfuscated.
+    const createdMeta = '<meta name="pvf:created" content="' + dbRow.timestamp + '"';
     assert.ok(
-      stored.includes(createdLiteral),
-      'stored pvf_content must contain the exact createdAt literal from the DB row — Phase 2C byte-identity'
+      stored.includes(createdMeta),
+      'stored pvf_content must contain the exact createdAt in <meta name="pvf:created"> — Phase 2C byte-identity'
     );
   });
 });
