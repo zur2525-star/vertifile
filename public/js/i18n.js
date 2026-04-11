@@ -97,7 +97,7 @@
   }
 
   function loadLang(lang){
-    fetch('/locales/'+lang+'.json?v=20260411g').then(function(r){
+    fetch('/locales/'+lang+'.json?v=20260411h').then(function(r){
       if(!r.ok) throw new Error();
       return r.json();
     }).then(function(d){
