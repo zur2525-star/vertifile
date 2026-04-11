@@ -33,7 +33,12 @@
     "subheadline": "O Vertifile cria documentos digitais à prova de adulteração com selos de verificação animados. Sem acesso ao seu conteúdo — privacidade total.",
     "cta1": "Proteger um documento",
     "cta2": "Veja como funciona",
-    "badge": "Verificado por Blockchain"
+    "badge": "Verificado por Blockchain",
+    "trustPatent": "Patente em tramitacao",
+    "trustIANA": "Tipo MIME registrado na IANA",
+    "trustBlockchain": "Verificado por Blockchain",
+    "hashLabel": "Impressao digital Ed25519",
+    "ctaDemo": "Agendar demonstracao"
   },
   "stats": {
     "encryption": "Criptografia SHA-256",
@@ -156,7 +161,14 @@
     "ctaTitle": "Pronto para experimentar?",
     "ctaSubtitle": "Proteja seu primeiro documento gratuitamente. Veja o selo de verificação ao vivo em ação.",
     "ctaProtect": "Proteger um documento",
-    "ctaVerify": "Verificar um documento"
+    "ctaVerify": "Verificar um documento",
+    "statusVerified": "Documento verificado -- Autentico",
+    "statusForged": "Verificacao falhou -- Documento adulterado",
+    "docUni": "UNIVERSIDADE DE TEL AVIV",
+    "docFaculty": "Faculdade de Engenharia",
+    "docCertTitle": "CERTIFICADO DE GRAU",
+    "docCertify": "Certifica-se que",
+    "docCompleted": "completou com sucesso os requisitos para o grau de"
   },
   "industries": {
     "title": "Feito para todos os setores",
@@ -1303,5 +1315,30 @@
     "newDoc": "New Document",
     "notifications": "Notifications",
     "markAllRead": "Mark all read"
+  },
+  "zk": {
+    "label": "Conhecimento Zero",
+    "title": "Conhecimento Zero. Controle Total.",
+    "subtitle": "Vertifile e Zero-Knowledge -- nao podemos ler seus documentos mesmo se quisessemos.",
+    "card1title": "Criptografia completa antes do upload",
+    "card1desc": "Seus documentos sao criptografados com AES-256-GCM diretamente no navegador, antes de sair do seu computador.",
+    "card2title": "A chave fica com voce -- sempre",
+    "card2desc": "A chave de criptografia e transmitida apenas via fragmento de URL -- uma parte do endereco que nunca e enviada ao servidor.",
+    "card3title": "Assinatura dupla para verificacao absoluta",
+    "card3desc": "Cada documento e assinado com uma assinatura digital dupla: Ed25519 e HMAC.",
+    "card4title": "Privacidade de nivel juridico",
+    "card4desc": "Em conformidade com LGPD, GDPR, HIPAA e padroes internacionais de privacidade.",
+    "beforeTitle": "Antes do Vertifile",
+    "before1": "Documentos enviados por email sem protecao",
+    "before2": "Cada servidor que transmite o arquivo pode le-lo",
+    "before3": "Sem como saber se alguem alterou o conteudo",
+    "before4": "Plataformas em nuvem mantem uma copia legivel",
+    "before5": "Vazamento de dados = desastre juridico e comercial",
+    "afterTitle": "Com Vertifile",
+    "after1": "Criptografia completa de ponta a ponta, antes do upload",
+    "after2": "O servidor transmite -- mas nao pode ler",
+    "after3": "A assinatura dupla detecta qualquer alteracao instantaneamente",
+    "after4": "A chave de criptografia nunca sai do navegador",
+    "after5": "Mesmo em uma violacao -- nao ha nada para roubar"
   }
 }

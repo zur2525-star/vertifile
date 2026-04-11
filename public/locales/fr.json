@@ -33,7 +33,12 @@
     "subheadline": "Vertifile crée des documents numériques inviolables avec des cachets de vérification animés. Aucun accès à votre contenu — confidentialité totale.",
     "cta1": "Protéger un document",
     "cta2": "Voir comment ça marche",
-    "badge": "Vérifié par Blockchain"
+    "badge": "Vérifié par Blockchain",
+    "trustPatent": "Brevet depose",
+    "trustIANA": "Type MIME enregistre a l'IANA",
+    "trustBlockchain": "Verifie par Blockchain",
+    "hashLabel": "Empreinte Ed25519",
+    "ctaDemo": "Reserver une demo"
   },
   "stats": {
     "encryption": "Chiffrement SHA-256",
@@ -156,7 +161,14 @@
     "ctaTitle": "Prêt à essayer ?",
     "ctaSubtitle": "Protégez votre premier document gratuitement. Voyez le cachet de vérification en direct en action.",
     "ctaProtect": "Protéger un document",
-    "ctaVerify": "Vérifier un document"
+    "ctaVerify": "Vérifier un document",
+    "statusVerified": "Document verifie -- Authentique",
+    "statusForged": "Verification echouee -- Document altere",
+    "docUni": "UNIVERSITE DE TEL AVIV",
+    "docFaculty": "Faculte d'Ingenierie",
+    "docCertTitle": "CERTIFICAT DE DIPLOME",
+    "docCertify": "Il est certifie que",
+    "docCompleted": "a rempli avec succes les exigences pour le diplome de"
   },
   "industries": {
     "title": "Conçu pour chaque secteur",
@@ -1303,5 +1315,30 @@
     "newDoc": "New Document",
     "notifications": "Notifications",
     "markAllRead": "Mark all read"
+  },
+  "zk": {
+    "label": "Zero-Knowledge",
+    "title": "Zero Knowledge. Controle total.",
+    "subtitle": "Vertifile est Zero-Knowledge -- nous ne pouvons pas lire vos documents meme si nous le voulions.",
+    "card1title": "Chiffrement complet avant envoi",
+    "card1desc": "Vos documents sont chiffres avec AES-256-GCM directement dans le navigateur, avant de quitter votre ordinateur.",
+    "card2title": "La cle reste avec vous -- toujours",
+    "card2desc": "La cle de chiffrement est transmise uniquement via le fragment d'URL -- une partie de l'adresse qui n'est jamais envoyee au serveur.",
+    "card3title": "Double signature pour verification absolue",
+    "card3desc": "Chaque document est signe avec une double signature numerique: Ed25519 et HMAC.",
+    "card4title": "Confidentialite de niveau juridique",
+    "card4desc": "Conforme au RGPD, HIPAA et aux normes internationales de confidentialite.",
+    "beforeTitle": "Avant Vertifile",
+    "before1": "Documents envoyes par email sans protection",
+    "before2": "Chaque serveur qui transmet le fichier peut le lire",
+    "before3": "Aucun moyen de savoir si quelqu'un a modifie le contenu",
+    "before4": "Les plateformes cloud conservent une copie lisible",
+    "before5": "Fuite de donnees = catastrophe juridique et commerciale",
+    "afterTitle": "Avec Vertifile",
+    "after1": "Chiffrement complet de bout en bout, avant envoi",
+    "after2": "Le serveur transmet -- mais ne peut pas lire",
+    "after3": "La double signature detecte tout changement instantanement",
+    "after4": "La cle de chiffrement ne quitte jamais le navigateur",
+    "after5": "Meme en cas de violation -- il n'y a rien a voler"
   }
 }

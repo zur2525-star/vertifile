@@ -33,7 +33,12 @@
     "subheadline": "Vertifile 创建防篡改数字文档，内置动态验证印章。完全不接触您的内容——绝对隐私。",
     "cta1": "保护文档",
     "cta2": "了解工作原理",
-    "badge": "Blockchain 验证"
+    "badge": "Blockchain 验证",
+    "trustPatent": "专利申请中",
+    "trustIANA": "IANA MIME类型已注册",
+    "trustBlockchain": "区块链验证",
+    "hashLabel": "Ed25519指纹",
+    "ctaDemo": "预约演示"
   },
   "stats": {
     "encryption": "SHA-256 加密",
@@ -156,7 +161,14 @@
     "ctaTitle": "准备好试试了吗？",
     "ctaSubtitle": "免费保护您的第一份文档。观看实时验证印章的实际效果。",
     "ctaProtect": "保护文档",
-    "ctaVerify": "验证文档"
+    "ctaVerify": "验证文档",
+    "statusVerified": "文档已验证 -- 真实",
+    "statusForged": "验证失败 -- 文档被篡改",
+    "docUni": "特拉维夫大学",
+    "docFaculty": "工程学院",
+    "docCertTitle": "学位证书",
+    "docCertify": "特此证明",
+    "docCompleted": "已成功完成以下学位的要求"
   },
   "industries": {
     "title": "为各行各业打造",
@@ -1303,5 +1315,30 @@
     "newDoc": "New Document",
     "notifications": "Notifications",
     "markAllRead": "Mark all read"
+  },
+  "zk": {
+    "label": "零知识",
+    "title": "零知识。完全控制。",
+    "subtitle": "Vertifile采用零知识技术 -- 即使我们想要也无法阅读您的文档。",
+    "card1title": "上传前完全加密",
+    "card1desc": "您的文档在浏览器中直接使用AES-256-GCM加密，在离开您的电脑之前。到达我们服务器的是不可读的代码。",
+    "card2title": "密钥始终由您掌控",
+    "card2desc": "加密密钥仅通过URL片段传输 -- 这是地址中永远不会发送到服务器的部分。",
+    "card3title": "双重签名实现绝对验证",
+    "card3desc": "每个文档都使用双重数字签名：Ed25519用于发送者身份，HMAC用于内容完整性。",
+    "card4title": "法律级别的隐私保护",
+    "card4desc": "符合GDPR、HIPAA和国际隐私标准。",
+    "beforeTitle": "使用Vertifile之前",
+    "before1": "文档通过电子邮件发送，没有保护",
+    "before2": "每个中继文件的服务器都可以读取它",
+    "before3": "无法知道是否有人更改了内容",
+    "before4": "云平台保留可读副本",
+    "before5": "数据泄露 = 商业和法律灾难",
+    "afterTitle": "使用Vertifile",
+    "after1": "上传前完全端到端加密",
+    "after2": "服务器中继 -- 但无法读取",
+    "after3": "双重签名即时检测任何更改",
+    "after4": "加密密钥永远不会离开浏览器",
+    "after5": "即使在泄露中 -- 也没有什么可偷的"
   }
 }

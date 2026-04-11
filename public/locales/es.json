@@ -33,7 +33,12 @@
     "subheadline": "Vertifile crea documentos digitales a prueba de manipulaciones con sellos de verificación animados. Sin acceso a tu contenido — privacidad total.",
     "cta1": "Proteger un documento",
     "cta2": "Ver cómo funciona",
-    "badge": "Verificado por Blockchain"
+    "badge": "Verificado por Blockchain",
+    "trustPatent": "Patente en tramite",
+    "trustIANA": "Tipo MIME registrado en IANA",
+    "trustBlockchain": "Verificado en Blockchain",
+    "hashLabel": "Huella Ed25519",
+    "ctaDemo": "Reservar demo"
   },
   "stats": {
     "encryption": "Cifrado SHA-256",
@@ -156,7 +161,14 @@
     "ctaTitle": "¿Listo para probarlo?",
     "ctaSubtitle": "Proteja su primer documento gratis. Vea el sello de verificación en vivo en acción.",
     "ctaProtect": "Proteger un documento",
-    "ctaVerify": "Verificar un documento"
+    "ctaVerify": "Verificar un documento",
+    "statusVerified": "Documento verificado -- Autentico",
+    "statusForged": "Verificacion fallida -- Documento alterado",
+    "docUni": "UNIVERSIDAD DE TEL AVIV",
+    "docFaculty": "Facultad de Ingenieria",
+    "docCertTitle": "CERTIFICADO DE GRADO",
+    "docCertify": "Se certifica que",
+    "docCompleted": "ha completado exitosamente los requisitos para el grado de"
   },
   "industries": {
     "title": "Diseñado para cada sector",
@@ -1303,5 +1315,30 @@
     "newDoc": "New Document",
     "notifications": "Notifications",
     "markAllRead": "Mark all read"
+  },
+  "zk": {
+    "label": "Conocimiento Cero",
+    "title": "Conocimiento Cero. Control Total.",
+    "subtitle": "Vertifile es Zero-Knowledge -- no podemos leer tus documentos aunque quisieramos.",
+    "card1title": "Cifrado completo antes de subir",
+    "card1desc": "Tus documentos se cifran con AES-256-GCM directamente en el navegador, antes de salir de tu computadora.",
+    "card2title": "La clave se queda contigo -- siempre",
+    "card2desc": "La clave de cifrado se transmite solo via fragmento de URL -- una parte de la direccion que nunca se envia al servidor.",
+    "card3title": "Firma dual para verificacion absoluta",
+    "card3desc": "Cada documento se firma con una firma digital dual: Ed25519 y HMAC.",
+    "card4title": "Privacidad de grado legal",
+    "card4desc": "Compatible con GDPR, HIPAA y estandares internacionales de privacidad.",
+    "beforeTitle": "Antes de Vertifile",
+    "before1": "Documentos enviados por email sin proteccion",
+    "before2": "Cada servidor que transmite el archivo puede leerlo",
+    "before3": "Sin forma de saber si alguien altero el contenido",
+    "before4": "Las plataformas en la nube guardan una copia legible",
+    "before5": "Fuga de datos = desastre legal y comercial",
+    "afterTitle": "Con Vertifile",
+    "after1": "Cifrado completo de extremo a extremo, antes de subir",
+    "after2": "El servidor transmite -- pero no puede leer",
+    "after3": "La firma dual detecta cualquier cambio al instante",
+    "after4": "La clave de cifrado nunca sale del navegador",
+    "after5": "Incluso en una brecha -- no hay nada que robar"
   }
 }

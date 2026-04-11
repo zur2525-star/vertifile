@@ -33,7 +33,12 @@
     "subheadline": "Vertifile erstellt manipulationssichere digitale Dokumente mit animierten Verifizierungsstempeln. Kein Zugriff auf Ihre Inhalte — absolute Privatsphäre.",
     "cta1": "Dokument schützen",
     "cta2": "So funktioniert's",
-    "badge": "Blockchain-verifiziert"
+    "badge": "Blockchain-verifiziert",
+    "trustPatent": "Patent angemeldet",
+    "trustIANA": "IANA MIME-Typ registriert",
+    "trustBlockchain": "Blockchain-verifiziert",
+    "hashLabel": "Ed25519-Fingerabdruck",
+    "ctaDemo": "Demo buchen"
   },
   "stats": {
     "encryption": "SHA-256-Verschlüsselung",
@@ -156,7 +161,14 @@
     "ctaTitle": "Bereit zum Ausprobieren?",
     "ctaSubtitle": "Schützen Sie Ihr erstes Dokument kostenlos. Sehen Sie das Live-Verifizierungssiegel in Aktion.",
     "ctaProtect": "Dokument schützen",
-    "ctaVerify": "Dokument verifizieren"
+    "ctaVerify": "Dokument verifizieren",
+    "statusVerified": "Dokument verifiziert -- Authentisch",
+    "statusForged": "Verifizierung fehlgeschlagen -- Dokument manipuliert",
+    "docUni": "UNIVERSITAET TEL AVIV",
+    "docFaculty": "Fakultaet fuer Ingenieurwesen",
+    "docCertTitle": "ABSCHLUSSZEUGNIS",
+    "docCertify": "Hiermit wird bescheinigt, dass",
+    "docCompleted": "die Anforderungen fuer den Abschluss erfolgreich erfuellt hat"
   },
   "industries": {
     "title": "Für jede Branche entwickelt",
@@ -1303,5 +1315,30 @@
     "newDoc": "New Document",
     "notifications": "Notifications",
     "markAllRead": "Mark all read"
+  },
+  "zk": {
+    "label": "Zero-Knowledge",
+    "title": "Zero Knowledge. Volle Kontrolle.",
+    "subtitle": "Vertifile ist Zero-Knowledge -- wir koennen Ihre Dokumente nicht lesen, selbst wenn wir wollten.",
+    "card1title": "Vollstaendige Verschluesselung vor dem Upload",
+    "card1desc": "Ihre Dokumente werden mit AES-256-GCM direkt im Browser verschluesselt, bevor sie Ihren Computer verlassen.",
+    "card2title": "Der Schluessel bleibt bei Ihnen -- immer",
+    "card2desc": "Der Verschluesselungsschluessel wird nur ueber das URL-Fragment uebertragen -- ein Teil der Adresse, der nie an den Server gesendet wird.",
+    "card3title": "Doppelte Signatur fuer absolute Verifizierung",
+    "card3desc": "Jedes Dokument wird mit einer doppelten digitalen Signatur signiert: Ed25519 und HMAC.",
+    "card4title": "Datenschutz auf Rechtsniveau",
+    "card4desc": "Konform mit DSGVO, HIPAA und internationalen Datenschutzstandards.",
+    "beforeTitle": "Vor Vertifile",
+    "before1": "Dokumente per E-Mail ohne Schutz versandt",
+    "before2": "Jeder Server, der die Datei weiterleitet, kann sie lesen",
+    "before3": "Keine Moeglichkeit zu wissen, ob jemand den Inhalt geaendert hat",
+    "before4": "Cloud-Plattformen behalten eine lesbare Kopie",
+    "before5": "Datenleck = geschaeftliche und rechtliche Katastrophe",
+    "afterTitle": "Mit Vertifile",
+    "after1": "Vollstaendige Ende-zu-Ende-Verschluesselung vor dem Upload",
+    "after2": "Der Server leitet weiter -- kann aber nicht lesen",
+    "after3": "Doppelte Signatur erkennt jede Aenderung sofort",
+    "after4": "Der Verschluesselungsschluessel verlaesst nie den Browser",
+    "after5": "Selbst bei einem Einbruch -- es gibt nichts zu stehlen"
   }
 }

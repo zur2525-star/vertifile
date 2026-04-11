@@ -99,7 +99,8 @@ router.get('/webhooks', authenticateAdmin, async (req, res) => {
     const webhooks = db.getAllWebhooks ? await db.getAllWebhooks() : [];
     res.json({ success: true, webhooks });
   } catch (e) {
-    res.json({ success: true, webhooks: [] });
+    logger.error({ err: e }, 'Admin webhooks listing error');
+    res.status(500).json({ success: false, error: 'Failed to list webhooks' });
   }
 });
 
