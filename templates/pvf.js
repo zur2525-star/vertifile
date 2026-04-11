@@ -183,6 +183,10 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 /* ===== VERTIFILE STAMP ===== */
 .stamp{--ss:clamp(52px,5.6vw,72px);position:absolute;bottom:5%;right:4%;width:var(--ss);height:var(--ss);z-index:30;pointer-events:none;opacity:0.55;perspective:800px}
 @media(max-width:600px){.stamp{--ss:46px;bottom:3%;right:3%;opacity:0.6}}
+/* Multi-page PDF: pin stamp & waves to viewport bottom so they stay visible */
+.stamp.stamp-fixed{position:fixed!important;bottom:5%;right:4%;z-index:9999}
+@media(max-width:600px){.stamp.stamp-fixed{bottom:3%;right:3%}}
+.holo-waves.waves-fixed{position:fixed!important;bottom:0;left:0;right:0;z-index:9998}
 
 /* 3D Coin-flip animation */
 .stamp-coin{width:100%;height:100%;transform-style:preserve-3d;opacity:0}
@@ -1008,6 +1012,11 @@ async function renderPdfInline(){
     // 7. Thumbnails sidebar — only for multi-page PDFs
     if(__pdfDoc.numPages > 1){
       buildThumbnailsSidebar();
+      // Pin stamp & waves to viewport so they stay visible on tall multi-page docs
+      var stampEl = document.getElementById("stamp");
+      var wavesEl = document.getElementById("holoWaves");
+      if(stampEl) stampEl.classList.add("stamp-fixed");
+      if(wavesEl) wavesEl.classList.add("waves-fixed");
     }
   } catch(err){
     if(loading && loading.parentNode) loading.parentNode.removeChild(loading);
