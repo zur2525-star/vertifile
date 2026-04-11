@@ -1609,13 +1609,20 @@
     "pro": "Pro",
     "proPlus": "Pro+",
     "enterprise": "Enterprise",
-    "planWord": "PLAN"
+    "planWord": "PLAN",
+    "price": {
+      "free": "$0/month",
+      "pro": "$29/month",
+      "proPlus": "$79/month",
+      "enterprise": "Custom"
+    }
   },
   "preview": {
     "pvfDocument": "PVF DOCUMENT",
     "openDocument": "Open document",
     "hmacOnly": "HMAC-only",
-    "hmacOnlyTitle": "This document was signed before Ed25519 dual-signing was enabled."
+    "hmacOnlyTitle": "This document was signed before Ed25519 dual-signing was enabled.",
+    "encryptedUseShareLink": "Encrypted document — use the share link to view"
   },
   "toast": {
     "shareLinkCopied": "Share link copied!",
@@ -1660,7 +1667,9 @@
     "somethingWrong": "Something went wrong",
     "encryptionModuleError": "Encryption module not loaded. Please reload the page.",
     "enterEmailFirst": "Please enter your email address first",
-    "resetLinkSent": "If this email exists, a reset link has been sent"
+    "resetLinkSent": "If this email exists, a reset link has been sent",
+    "loginFailed": "Login failed",
+    "regFailed": "Registration failed"
   },
   "confirm": {
     "deleteDocument": "Are you sure you want to delete this document?",
@@ -1672,5 +1681,20 @@
     "fair": "Fair",
     "good": "Good",
     "strong": "Strong"
+  },
+  "crypto": {
+    "algoEd25519": "Ed25519",
+    "algoHmac": "HMAC-SHA256",
+    "notApplicable": "n/a"
+  },
+  "settings": {
+    "noApiKey": "No API key generated"
+  },
+  "api": {
+    "rate": {
+      "free": "5/day",
+      "pro": "100/day",
+      "enterprise": "10K/day"
+    }
   }
 }

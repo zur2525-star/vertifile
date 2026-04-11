@@ -1610,13 +1610,20 @@
     "pro": "Pro",
     "proPlus": "Pro+",
     "enterprise": "Empresarial",
-    "planWord": "PLANO"
+    "planWord": "PLANO",
+    "price": {
+      "free": "$0/mês",
+      "pro": "$29/mês",
+      "proPlus": "$79/mês",
+      "enterprise": "Personalizado"
+    }
   },
   "preview": {
     "pvfDocument": "DOCUMENTO PVF",
     "openDocument": "Abrir documento",
     "hmacOnly": "Apenas HMAC",
-    "hmacOnlyTitle": "Este documento foi assinado antes da assinatura dupla Ed25519 ser habilitada."
+    "hmacOnlyTitle": "Este documento foi assinado antes da assinatura dupla Ed25519 ser habilitada.",
+    "encryptedUseShareLink": "Documento criptografado — use o link de compartilhamento"
   },
   "toast": {
     "shareLinkCopied": "Link de compartilhamento copiado!",
@@ -1661,7 +1668,9 @@
     "somethingWrong": "Algo deu errado",
     "encryptionModuleError": "Módulo de criptografia não carregado. Por favor, recarregue a página.",
     "enterEmailFirst": "Por favor, insira seu endereço de e-mail primeiro",
-    "resetLinkSent": "Se este e-mail existir, um link de redefinição foi enviado"
+    "resetLinkSent": "Se este e-mail existir, um link de redefinição foi enviado",
+    "loginFailed": "Falha no login",
+    "regFailed": "Falha no registro"
   },
   "confirm": {
     "deleteDocument": "Tem certeza de que deseja excluir este documento?",
@@ -1673,5 +1682,20 @@
     "fair": "Regular",
     "good": "Boa",
     "strong": "Forte"
+  },
+  "crypto": {
+    "algoEd25519": "Ed25519",
+    "algoHmac": "HMAC-SHA256",
+    "notApplicable": "n/d"
+  },
+  "settings": {
+    "noApiKey": "Nenhuma chave API gerada"
+  },
+  "api": {
+    "rate": {
+      "free": "5/dia",
+      "pro": "100/dia",
+      "enterprise": "10K/dia"
+    }
   }
 }

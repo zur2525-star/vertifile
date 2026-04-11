@@ -1610,13 +1610,20 @@
     "pro": "Pro",
     "proPlus": "Pro+",
     "enterprise": "エンタープライズ",
-    "planWord": "プラン"
+    "planWord": "プラン",
+    "price": {
+      "free": "$0/月",
+      "pro": "$29/月",
+      "proPlus": "$79/月",
+      "enterprise": "カスタム"
+    }
   },
   "preview": {
     "pvfDocument": "PVF ドキュメント",
     "openDocument": "ドキュメントを開く",
     "hmacOnly": "HMACのみ",
-    "hmacOnlyTitle": "このドキュメントはEd25519デュアル署名が有効になる前に署名されました。"
+    "hmacOnlyTitle": "このドキュメントはEd25519デュアル署名が有効になる前に署名されました。",
+    "encryptedUseShareLink": "暗号化文書 — 共有リンクを使用してください"
   },
   "toast": {
     "shareLinkCopied": "共有リンクをコピーしました！",
@@ -1661,7 +1668,9 @@
     "somethingWrong": "エラーが発生しました",
     "encryptionModuleError": "暗号化モジュールが読み込まれていません。ページを再読み込みしてください。",
     "enterEmailFirst": "まずメールアドレスを入力してください",
-    "resetLinkSent": "このメールアドレスが存在する場合、リセットリンクが送信されました"
+    "resetLinkSent": "このメールアドレスが存在する場合、リセットリンクが送信されました",
+    "loginFailed": "ログインに失敗しました",
+    "regFailed": "登録に失敗しました"
   },
   "confirm": {
     "deleteDocument": "このドキュメントを削除してもよろしいですか？",
@@ -1673,5 +1682,20 @@
     "fair": "普通",
     "good": "良い",
     "strong": "強い"
+  },
+  "crypto": {
+    "algoEd25519": "Ed25519",
+    "algoHmac": "HMAC-SHA256",
+    "notApplicable": "該当なし"
+  },
+  "settings": {
+    "noApiKey": "APIキーが生成されていません"
+  },
+  "api": {
+    "rate": {
+      "free": "5/日",
+      "pro": "100/日",
+      "enterprise": "10K/日"
+    }
   }
 }

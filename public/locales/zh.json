@@ -1610,13 +1610,20 @@
     "pro": "Pro",
     "proPlus": "Pro+",
     "enterprise": "企业版",
-    "planWord": "计划"
+    "planWord": "计划",
+    "price": {
+      "free": "$0/月",
+      "pro": "$29/月",
+      "proPlus": "$79/月",
+      "enterprise": "定制"
+    }
   },
   "preview": {
     "pvfDocument": "PVF 文档",
     "openDocument": "打开文档",
     "hmacOnly": "仅 HMAC",
-    "hmacOnlyTitle": "此文档在启用 Ed25519 双重签名之前签署。"
+    "hmacOnlyTitle": "此文档在启用 Ed25519 双重签名之前签署。",
+    "encryptedUseShareLink": "加密文档 — 请使用分享链接查看"
   },
   "toast": {
     "shareLinkCopied": "分享链接已复制！",
@@ -1661,7 +1668,9 @@
     "somethingWrong": "出了点问题",
     "encryptionModuleError": "加密模块未加载。请重新加载页面。",
     "enterEmailFirst": "请先输入您的电子邮件地址",
-    "resetLinkSent": "如果此邮箱存在，重置链接已发送"
+    "resetLinkSent": "如果此邮箱存在，重置链接已发送",
+    "loginFailed": "登录失败",
+    "regFailed": "注册失败"
   },
   "confirm": {
     "deleteDocument": "您确定要删除此文档吗？",
@@ -1673,5 +1682,20 @@
     "fair": "一般",
     "good": "好",
     "strong": "强"
+  },
+  "crypto": {
+    "algoEd25519": "Ed25519",
+    "algoHmac": "HMAC-SHA256",
+    "notApplicable": "不适用"
+  },
+  "settings": {
+    "noApiKey": "未生成 API 密钥"
+  },
+  "api": {
+    "rate": {
+      "free": "5/天",
+      "pro": "100/天",
+      "enterprise": "10K/天"
+    }
   }
 }

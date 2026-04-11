@@ -1610,13 +1610,20 @@
     "pro": "Pro",
     "proPlus": "Pro+",
     "enterprise": "مؤسسات",
-    "planWord": "خطة"
+    "planWord": "خطة",
+    "price": {
+      "free": "$0/شهر",
+      "pro": "$29/شهر",
+      "proPlus": "$79/شهر",
+      "enterprise": "مخصص"
+    }
   },
   "preview": {
     "pvfDocument": "مستند PVF",
     "openDocument": "فتح المستند",
     "hmacOnly": "HMAC فقط",
-    "hmacOnlyTitle": "تم توقيع هذا المستند قبل تفعيل التوقيع المزدوج Ed25519."
+    "hmacOnlyTitle": "تم توقيع هذا المستند قبل تفعيل التوقيع المزدوج Ed25519.",
+    "encryptedUseShareLink": "مستند مشفر — استخدم رابط المشاركة للعرض"
   },
   "toast": {
     "shareLinkCopied": "تم نسخ رابط المشاركة!",
@@ -1661,7 +1668,9 @@
     "somethingWrong": "حدث خطأ ما",
     "encryptionModuleError": "لم يتم تحميل وحدة التشفير. يرجى إعادة تحميل الصفحة.",
     "enterEmailFirst": "يرجى إدخال عنوان بريدك الإلكتروني أولاً",
-    "resetLinkSent": "إذا كان هذا البريد موجوداً، فقد تم إرسال رابط إعادة التعيين"
+    "resetLinkSent": "إذا كان هذا البريد موجوداً، فقد تم إرسال رابط إعادة التعيين",
+    "loginFailed": "فشل تسجيل الدخول",
+    "regFailed": "فشل التسجيل"
   },
   "confirm": {
     "deleteDocument": "هل أنت متأكد أنك تريد حذف هذا المستند؟",
@@ -1673,5 +1682,20 @@
     "fair": "مقبولة",
     "good": "جيدة",
     "strong": "قوية"
+  },
+  "crypto": {
+    "algoEd25519": "Ed25519",
+    "algoHmac": "HMAC-SHA256",
+    "notApplicable": "غير متاح"
+  },
+  "settings": {
+    "noApiKey": "لم يتم إنشاء مفتاح API"
+  },
+  "api": {
+    "rate": {
+      "free": "5/يوم",
+      "pro": "100/يوم",
+      "enterprise": "10K/يوم"
+    }
   }
 }

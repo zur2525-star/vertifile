@@ -1609,13 +1609,20 @@
     "pro": "Pro",
     "proPlus": "Pro+",
     "enterprise": "ארגוני",
-    "planWord": "תוכנית"
+    "planWord": "תוכנית",
+    "price": {
+      "free": "$0/חודש",
+      "pro": "$29/חודש",
+      "proPlus": "$79/חודש",
+      "enterprise": "מותאם אישית"
+    }
   },
   "preview": {
     "pvfDocument": "מסמך PVF",
     "openDocument": "פתח מסמך",
     "hmacOnly": "HMAC בלבד",
-    "hmacOnlyTitle": "מסמך זה נחתם לפני שחתימה כפולה עם Ed25519 הופעלה."
+    "hmacOnlyTitle": "מסמך זה נחתם לפני שחתימה כפולה עם Ed25519 הופעלה.",
+    "encryptedUseShareLink": "מסמך מוצפן — השתמש בקישור השיתוף"
   },
   "toast": {
     "shareLinkCopied": "קישור שיתוף הועתק!",
@@ -1660,7 +1667,9 @@
     "somethingWrong": "משהו השתבש",
     "encryptionModuleError": "מודול ההצפנה לא נטען. אנא רענן את הדף.",
     "enterEmailFirst": "אנא הזן את כתובת האימייל שלך תחילה",
-    "resetLinkSent": "אם אימייל זה קיים, נשלח קישור לאיפוס"
+    "resetLinkSent": "אם אימייל זה קיים, נשלח קישור לאיפוס",
+    "loginFailed": "ההתחברות נכשלה",
+    "regFailed": "הרשמה נכשלה"
   },
   "confirm": {
     "deleteDocument": "האם אתה בטוח שברצונך למחוק מסמך זה?",
@@ -1672,5 +1681,20 @@
     "fair": "סבירה",
     "good": "טובה",
     "strong": "חזקה"
+  },
+  "crypto": {
+    "algoEd25519": "Ed25519",
+    "algoHmac": "HMAC-SHA256",
+    "notApplicable": "לא רלוונטי"
+  },
+  "settings": {
+    "noApiKey": "לא נוצר מפתח API"
+  },
+  "api": {
+    "rate": {
+      "free": "5/יום",
+      "pro": "100/יום",
+      "enterprise": "10K/יום"
+    }
   }
 }

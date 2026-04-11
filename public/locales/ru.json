@@ -1610,13 +1610,20 @@
     "pro": "Pro",
     "proPlus": "Pro+",
     "enterprise": "Корпоративный",
-    "planWord": "ПЛАН"
+    "planWord": "ПЛАН",
+    "price": {
+      "free": "$0/месяц",
+      "pro": "$29/месяц",
+      "proPlus": "$79/месяц",
+      "enterprise": "Индивидуально"
+    }
   },
   "preview": {
     "pvfDocument": "ДОКУМЕНТ PVF",
     "openDocument": "Открыть документ",
     "hmacOnly": "Только HMAC",
-    "hmacOnlyTitle": "Этот документ был подписан до включения двойной подписи Ed25519."
+    "hmacOnlyTitle": "Этот документ был подписан до включения двойной подписи Ed25519.",
+    "encryptedUseShareLink": "Зашифрованный документ — используйте ссылку для просмотра"
   },
   "toast": {
     "shareLinkCopied": "Ссылка скопирована!",
@@ -1661,7 +1668,9 @@
     "somethingWrong": "Что-то пошло не так",
     "encryptionModuleError": "Модуль шифрования не загружен. Пожалуйста, перезагрузите страницу.",
     "enterEmailFirst": "Сначала введите ваш адрес электронной почты",
-    "resetLinkSent": "Если этот email существует, ссылка для сброса б��ла отправлена"
+    "resetLinkSent": "Если этот email существует, ссылка для сброса б��ла отправлена",
+    "loginFailed": "Ошибка входа",
+    "regFailed": "Ошибка регистрации"
   },
   "confirm": {
     "deleteDocument": "Вы уверены, что хотите удалить этот документ?",
@@ -1673,5 +1682,20 @@
     "fair": "Средний",
     "good": "Хороший",
     "strong": "Надёжный"
+  },
+  "crypto": {
+    "algoEd25519": "Ed25519",
+    "algoHmac": "HMAC-SHA256",
+    "notApplicable": "н/д"
+  },
+  "settings": {
+    "noApiKey": "API-ключ не создан"
+  },
+  "api": {
+    "rate": {
+      "free": "5/день",
+      "pro": "100/день",
+      "enterprise": "10K/день"
+    }
   }
 }

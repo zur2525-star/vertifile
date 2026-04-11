@@ -1535,6 +1535,9 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ===== Global i18n shorthand =====
+function _t(key, fb) { return (typeof vfGetTranslation==='function' && vfGetTranslation(key)) || fb || key; }
+
 // ===== State =====
 let currentUser = null;
 let documents = [];
@@ -1773,12 +1776,12 @@ async function doLogin() {
       showApp();
     } else {
       const err = document.getElementById('loginError');
-      err.textContent = data.error || 'Invalid email or password';
+      err.textContent = data.error || _t('app.invalidCredentials', 'Invalid email or password');
       err.style.display = 'block';
       setTimeout(() => err.style.display = 'none', 3000);
     }
   } catch (e) {
-    toast('Login failed: ' + e.message);
+    toast(_t('toast.loginFailed', 'Login failed') + ': ' + e.message);
   }
 }
 
@@ -1800,12 +1803,12 @@ async function doRegister() {
       showApp();
     } else {
       const err = document.getElementById('regError');
-      err.textContent = data.error || 'Registration failed';
+      err.textContent = data.error || _t('app.regFailed', 'Registration failed');
       err.style.display = 'block';
       setTimeout(() => err.style.display = 'none', 3000);
     }
   } catch (e) {
-    toast('Registration failed: ' + e.message);
+    toast(_t('toast.regFailed', 'Registration failed') + ': ' + e.message);
   }
 }
 
@@ -2180,7 +2183,7 @@ window.Dashboard = {
       // Shared SVG check icon — white stroke, sits inside the pill.
       var checkSvg = '<svg class="cpe-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
       if (isDualSigned && keyId) {
-        algoEl.textContent = 'Ed25519';
+        algoEl.textContent = _t('crypto.algoEd25519', 'Ed25519');
         keyEl.textContent = keyId;
         keyEl.classList.add('mono', 'copyable');
         keyEl.onclick = function(){ copyToClipboard(keyId); };
@@ -2192,8 +2195,8 @@ window.Dashboard = {
           '</span>';
       } else {
         // Legacy HMAC-only (pre-Phase-2B) docs get a neutral grey trust badge.
-        algoEl.textContent = 'HMAC-SHA256';
-        keyEl.textContent = 'n/a';
+        algoEl.textContent = _t('crypto.algoHmac', 'HMAC-SHA256');
+        keyEl.textContent = _t('crypto.notApplicable', 'n/a');
         keyEl.classList.remove('copyable');
         keyEl.onclick = null;
         var _hmacTitle = (typeof vfGetTranslation === 'function' && vfGetTranslation('preview.hmacOnlyTitle')) || 'This document was signed before Ed25519 dual-signing was enabled.';
@@ -2249,7 +2252,7 @@ window.Dashboard = {
         // Different browser — no key available
         ctaHtml = '<div class="dpc-cta-encrypted">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;vertical-align:-3px;margin-inline-end:6px;opacity:.7"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>' +
-            '<span>\u05DE\u05E1\u05DE\u05DA \u05DE\u05D5\u05E6\u05E4\u05DF \u2014 \u05D4\u05E9\u05EA\u05DE\u05E9 \u05D1\u05E7\u05D9\u05E9\u05D5\u05E8 \u05D4\u05E9\u05D9\u05EA\u05D5\u05E3</span>' +
+            '<span>' + _t('preview.encryptedUseShareLink', 'Encrypted document \u2014 use the share link to view') + '</span>' +
           '</div>';
       } else {
         // Normal non-encrypted doc
@@ -2581,12 +2584,12 @@ window.Dashboard = {
       enterprise: _tpl('plan.enterprise') || 'Enterprise'
     };
     var planPrices = {
-      free: '$0/month',
-      pro: '$29/month',
-      professional: '$29/month',
-      pro_plus: '$79/month',
-      proplus: '$79/month',
-      enterprise: 'Custom'
+      free: _t('plan.price.free', '$0/month'),
+      pro: _t('plan.price.pro', '$29/month'),
+      professional: _t('plan.price.pro', '$29/month'),
+      pro_plus: _t('plan.price.proPlus', '$79/month'),
+      proplus: _t('plan.price.proPlus', '$79/month'),
+      enterprise: _t('plan.price.enterprise', 'Custom')
     };
     var _t = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
     var docsWord = _t('plan.documents') || 'documents';
@@ -3085,7 +3088,7 @@ async function generateApiKey() {
 
 function copyApiKey() {
   const key = document.getElementById('apiKeyDisplay2').textContent;
-  if (key && key !== 'No API key generated') {
+  if (key && key !== _t('settings.noApiKey', 'No API key generated')) {
     copyToClipboard(key);
   }
 }
@@ -3512,7 +3515,7 @@ async function loadApiInfo() {
   };
   document.getElementById('apiStatDocs').textContent = used;
   document.getElementById('apiStatPlan').textContent = _apiPlanNames[plan] || plan.charAt(0).toUpperCase() + plan.slice(1);
-  document.getElementById('apiStatRate').textContent = { free: '5/day', professional: '100/day', enterprise: '10K/day' }[plan] || '5/day';
+  document.getElementById('apiStatRate').textContent = { free: _t('api.rate.free', '5/day'), professional: _t('api.rate.pro', '100/day'), enterprise: _t('api.rate.enterprise', '10K/day') }[plan] || _t('api.rate.free', '5/day');
 
   // Check if user has an API key stored
   try {
@@ -3620,36 +3623,38 @@ function showToast(msg, isError) {
 // ===== i18n Patch =====
 var _origSwitchLang = null;
 function appI18nPatch() {
+  // 1. Update lang label
   var label = document.getElementById('langLabel');
   if (label && typeof vfGetLang === 'function') {
     label.textContent = vfGetLang().toUpperCase();
   }
-  // Apply data-i18n text content translations (for dashboard-specific elements)
+
+  // 2. Apply static data-i18n translations
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
-    var val = typeof vfGetTranslation === 'function' ? vfGetTranslation(el.getAttribute('data-i18n')) : null;
-    if (val) { if(/<[a-z][\s\S]*>/i.test(val)) el.innerHTML = val; else el.textContent = val; }
+    var val = _t(el.getAttribute('data-i18n'));
+    if (val && val !== el.getAttribute('data-i18n')) {
+      if(/<[a-z][\s\S]*>/i.test(val)) el.innerHTML = val; else el.textContent = val;
+    }
   });
-  // Apply placeholder translations
   document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
-    var val = typeof vfGetTranslation === 'function' ? vfGetTranslation(el.getAttribute('data-i18n-placeholder')) : null;
-    if (val) el.setAttribute('placeholder', val);
+    var val = _t(el.getAttribute('data-i18n-placeholder'));
+    if (val && val !== el.getAttribute('data-i18n-placeholder')) el.setAttribute('placeholder', val);
   });
-  // Apply aria-label translations
   document.querySelectorAll('[data-i18n-aria]').forEach(function(el) {
-    var val = typeof vfGetTranslation === 'function' ? vfGetTranslation(el.getAttribute('data-i18n-aria')) : null;
-    if (val) el.setAttribute('aria-label', val);
+    var val = _t(el.getAttribute('data-i18n-aria'));
+    if (val && val !== el.getAttribute('data-i18n-aria')) el.setAttribute('aria-label', val);
   });
-  // Re-render ALL dynamic content with the current language
+
+  // 3. RE-RENDER all dynamic components
+  if (typeof renderWelcomeDate === 'function') renderWelcomeDate();
+  if (typeof renderWelcomeHeading === 'function') renderWelcomeHeading();
   if (window.Dashboard) {
-    // Welcome date (locale-aware)
     if (Dashboard.renderWelcomeDate) Dashboard.renderWelcomeDate();
-    // Welcome heading (translated template)
     if (Dashboard.renderWelcomeHeading) Dashboard.renderWelcomeHeading();
-    // Plan display — stat cards, sidebar badge, settings plan info
-    // (also calls updateGettingStartedProgress internally)
     if (Dashboard.updatePlanDisplay) Dashboard.updatePlanDisplay();
-    // Document rows — status labels, action menu text, time-ago strings
     if (Dashboard.renderDocRows) Dashboard.renderDocRows();
+    if (Dashboard.updateGettingStartedProgress) Dashboard.updateGettingStartedProgress();
+    if (Dashboard.renderStamps) Dashboard.renderStamps();
   }
 }
 document.addEventListener('DOMContentLoaded', function() {
