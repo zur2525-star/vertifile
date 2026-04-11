@@ -350,9 +350,11 @@ async function handleCreatePvfLegacy(req, res) {
       }).catch(async err => {
         logger.warn({ err, event: 'blockchain_retry' }, 'Registration failed, queued for retry');
         await db.log('blockchain_failed', { hash: fileHash, orgId: req.org.orgId, error: err.message });
-        // Store failed registration for retry
+        // Store failed registration for retry (capped at 1000 to prevent memory growth)
         if (!global._blockchainRetryQueue) global._blockchainRetryQueue = [];
-        global._blockchainRetryQueue.push({ hash: fileHash, signature, orgName: req.org.orgName, failedAt: Date.now() });
+        if (global._blockchainRetryQueue.length < 1000) {
+          global._blockchainRetryQueue.push({ hash: fileHash, signature, orgName: req.org.orgName, failedAt: Date.now() });
+        }
       });
     }
 

@@ -540,12 +540,15 @@ async function createPvf(opts) {
           error: err && err.message
         }).catch(() => { /* never block */ });
         if (!global._blockchainRetryQueue) global._blockchainRetryQueue = [];
-        global._blockchainRetryQueue.push({
-          hash: fileHash,
-          signature,
-          orgName,
-          failedAt: Date.now()
-        });
+        // Cap retry queue at 1000 entries to prevent unbounded memory growth
+        if (global._blockchainRetryQueue.length < 1000) {
+          global._blockchainRetryQueue.push({
+            hash: fileHash,
+            signature,
+            orgName,
+            failedAt: Date.now()
+          });
+        }
       });
     }
   } catch (e) {
@@ -1049,12 +1052,15 @@ async function createPvfEncrypted(opts) {
           error: err && err.message
         }).catch(() => {});
         if (!global._blockchainRetryQueue) global._blockchainRetryQueue = [];
-        global._blockchainRetryQueue.push({
-          hash: fileHash,
-          signature,
-          orgName,
-          failedAt: Date.now()
-        });
+        // Cap retry queue at 1000 entries to prevent unbounded memory growth
+        if (global._blockchainRetryQueue.length < 1000) {
+          global._blockchainRetryQueue.push({
+            hash: fileHash,
+            signature,
+            orgName,
+            failedAt: Date.now()
+          });
+        }
       });
     }
   } catch (e) {
