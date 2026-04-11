@@ -1164,9 +1164,9 @@
 
     <!-- Quick Summary -->
     <div class="sidebar-quick-summary" id="sidebarSummary" onclick="Dashboard.switchTab('overview')">
-      <div class="sidebar-qs-label">Getting Started: 1/4</div>
+      <div class="sidebar-qs-label" id="sidebarGsLabel">Getting Started: 1/4</div>
       <div class="sidebar-qs-bar"><div class="sidebar-qs-bar-fill" style="width:25%"></div></div>
-      <div class="sidebar-qs-text">Complete setup to unlock all features</div>
+      <div class="sidebar-qs-text" data-i18n="tab.overview.gsSetupHint">Complete setup to unlock all features</div>
     </div>
 
     <!-- Nav Items -->
@@ -1238,12 +1238,12 @@
 
     <!-- Getting Started Checklist -->
     <div class="card checklist-card" id="checklistCard">
-      <h3>Getting Started</h3>
-      <p class="card-desc">Complete these steps to get the most out of Vertifile</p>
-      <div class="checklist-item"><div class="checklist-check" id="cl1"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="checklist-text" id="cl1t">Upload your first document</span><span class="checklist-action" onclick="Dashboard.switchTab('upload')">Upload &#8594;</span></div>
-      <div class="checklist-item"><div class="checklist-check" id="cl2"></div><span class="checklist-text" id="cl2t">Customize your stamp</span><span class="checklist-action" onclick="Dashboard.switchTab('stamp')">Customize &#8594;</span></div>
-      <div class="checklist-item"><div class="checklist-check" id="cl3"></div><span class="checklist-text" id="cl3t">Share a document</span><span class="checklist-action" onclick="Dashboard.switchTab('documents')">Share &#8594;</span></div>
-      <div class="checklist-item"><div class="checklist-check" id="cl4"></div><span class="checklist-text" id="cl4t">First external verification</span><span class="checklist-action" style="color:var(--text-2);cursor:default">Waiting...</span></div>
+      <h3 data-i18n="tab.overview.gettingStarted">Getting Started</h3>
+      <p class="card-desc" data-i18n="tab.overview.gsDesc">Complete these steps to get the most out of Vertifile</p>
+      <div class="checklist-item"><div class="checklist-check" id="cl1"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="checklist-text" id="cl1t" data-i18n="tab.overview.gsUpload">Upload your first document</span><span class="checklist-action" onclick="Dashboard.switchTab('upload')" data-i18n="tab.overview.gsAction1">Upload &#8594;</span></div>
+      <div class="checklist-item"><div class="checklist-check" id="cl2"></div><span class="checklist-text" id="cl2t" data-i18n="tab.overview.gsCustomize">Customize your stamp</span><span class="checklist-action" onclick="Dashboard.switchTab('stamp')" data-i18n="tab.overview.gsAction2">Customize &#8594;</span></div>
+      <div class="checklist-item"><div class="checklist-check" id="cl3"></div><span class="checklist-text" id="cl3t" data-i18n="tab.overview.gsShare">Share a document</span><span class="checklist-action" onclick="Dashboard.switchTab('documents')" data-i18n="tab.overview.gsAction3">Share &#8594;</span></div>
+      <div class="checklist-item"><div class="checklist-check" id="cl4"></div><span class="checklist-text" id="cl4t" data-i18n="tab.overview.gsVerify">First external verification</span><span class="checklist-action" style="color:var(--text-2);cursor:default" data-i18n="tab.overview.gsWaiting">Waiting...</span></div>
       <div class="checklist-progress">
         <div class="checklist-progress-text" id="checklistProgressText">0 of 4 complete</div>
         <div class="plan-bar"><div class="plan-bar-fill" id="checklistBarFill" style="width:0%"></div></div>
@@ -1252,28 +1252,28 @@
 
     <!-- Quick Actions -->
     <div class="quick-actions-grid">
-      <div class="quick-action-card" onclick="Dashboard.switchTab('upload')"><div class="qa-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></div><div class="qa-label">Upload Document</div></div>
-      <div class="quick-action-card" onclick="Dashboard.shareLastDoc()"><div class="qa-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></div><div class="qa-label">Share Last Document</div></div>
-      <div class="quick-action-card" onclick="Dashboard.switchTab('documents')"><div class="qa-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="qa-label">Check Verification Status</div></div>
+      <div class="quick-action-card" onclick="Dashboard.switchTab('upload')"><div class="qa-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></div><div class="qa-label" data-i18n="tab.overview.uploadDoc">Upload Document</div></div>
+      <div class="quick-action-card" onclick="Dashboard.shareLastDoc()"><div class="qa-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></div><div class="qa-label" data-i18n="tab.overview.shareLast">Share Last Document</div></div>
+      <div class="quick-action-card" onclick="Dashboard.switchTab('documents')"><div class="qa-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="qa-label" data-i18n="tab.overview.checkVerify">Check Verification Status</div></div>
     </div>
 
     <!-- Recent Documents -->
     <div class="card">
       <div class="section-heading">
-        <h3>Recent Documents</h3>
-        <a onclick="Dashboard.switchTab('documents')">View All Documents</a>
+        <h3 data-i18n="tab.overview.recentDocs">Recent Documents</h3>
+        <a onclick="Dashboard.switchTab('documents')" data-i18n="tab.overview.viewAll">View All Documents</a>
       </div>
       <div id="recentDocsList">
-        <div class="empty-state" style="padding:24px"><div class="empty-icon" style="font-size:32px"><svg style="width:16px;height:16px;display:inline;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg></div><h4 style="font-size:14px">No documents yet</h4><p>Upload your first document to see it here.</p></div>
+        <div class="empty-state" style="padding:24px"><div class="empty-icon" style="font-size:32px"><svg style="width:16px;height:16px;display:inline;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg></div><h4 style="font-size:14px" data-i18n="tab.overview.noDocsYet">No documents yet</h4><p data-i18n="tab.overview.noDocsDesc">Upload your first document to see it here.</p></div>
       </div>
     </div>
 
     <!-- Two-column: Stamp Preview + Industry Tip -->
     <div class="overview-two-col">
       <div class="card stamp-preview-card">
-        <h3>Your Vertifile Stamp</h3>
+        <h3 data-i18n="tab.overview.yourStamp">Your Vertifile Stamp</h3>
         <div class="stamp-wrap" id="overviewStampWrap"></div>
-        <div class="stamp-customize" onclick="Dashboard.switchTab('stamp')">Customize</div>
+        <div class="stamp-customize" onclick="Dashboard.switchTab('stamp')" data-i18n="tab.overview.customize">Customize</div>
       </div>
       <div class="card" id="tipCard">
         <div class="tip-card">
@@ -1286,9 +1286,9 @@
 
     <!-- Activity Feed -->
     <div class="card">
-      <div class="section-heading"><h3>Recent Activity</h3></div>
+      <div class="section-heading"><h3 data-i18n="tab.overview.recentActivity">Recent Activity</h3></div>
       <div id="activityFeed">
-        <div style="text-align:center;padding:24px;color:var(--text-2);font-size:13px">No activity yet</div>
+        <div style="text-align:center;padding:24px;color:var(--text-2);font-size:13px" data-i18n="tab.overview.noActivity">No activity yet</div>
       </div>
     </div>
   </div>
@@ -1410,63 +1410,63 @@
   </div>
 
   <!-- ===================== TAB 5: SETTINGS ===================== -->
-  <div class="tab-panel" id="tab-settings" role="tabpanel" aria-label="Settings">
-    <h2 style="font-size:20px;font-weight:700;color:var(--text-1);margin-bottom:20px">Settings</h2>
+  <div class="tab-panel" id="tab-settings" role="tabpanel" data-i18n-aria="tab.settings.title" aria-label="Settings">
+    <h2 style="font-size:20px;font-weight:700;color:var(--text-1);margin-bottom:20px" data-i18n="tab.settings.title">Settings</h2>
     <div class="settings-section">
       <!-- Profile -->
-      <div class="card"><h3>Profile</h3><p class="card-sub">Manage your personal information</p>
-        <div class="form-row"><div><label class="form-label" data-i18n="tab.settings.fullName">Full Name</label><input type="text" class="form-input" id="settingsName" placeholder="Your name"></div><div><label class="form-label" data-i18n="tab.settings.email">Email</label><input type="email" class="form-input" id="settingsEmail" disabled style="opacity:.6;cursor:not-allowed"><div style="font-size:11px;color:var(--text-2);margin-top:6px">To change email, contact <a href="mailto:support@vertifile.com" style="color:#7c3aed">support@vertifile.com</a></div></div></div>
-        <div class="btn-row"><button class="btn btn-primary" onclick="saveProfile()">Save Changes</button></div>
+      <div class="card"><h3 data-i18n="tab.settings.profile">Profile</h3><p class="card-sub" data-i18n="tab.settings.profileDesc">Manage your personal information</p>
+        <div class="form-row"><div><label class="form-label" data-i18n="tab.settings.fullName">Full Name</label><input type="text" class="form-input" id="settingsName" placeholder="Your name" data-i18n-placeholder="tab.settings.namePlaceholder"></div><div><label class="form-label" data-i18n="tab.settings.email">Email</label><input type="email" class="form-input" id="settingsEmail" disabled style="opacity:.6;cursor:not-allowed"><div style="font-size:11px;color:var(--text-2);margin-top:6px" data-i18n="tab.settings.emailHelp">To change email, contact <a href="mailto:support@vertifile.com" style="color:#7c3aed">support@vertifile.com</a></div></div></div>
+        <div class="btn-row"><button class="btn btn-primary" onclick="saveProfile()" data-i18n="tab.settings.saveChanges">Save Changes</button></div>
       </div>
 
       <!-- Security -->
-      <div class="card"><h3>Security</h3><p class="card-sub">Manage your password and security settings</p>
-        <label class="form-label" for="currentPassword">Current Password</label><input type="password" class="form-input" id="currentPassword" placeholder="Enter current password" autocomplete="current-password">
-        <label class="form-label" for="newPassword">New Password</label><input type="password" class="form-input" id="newPassword" placeholder="Enter new password" autocomplete="new-password" oninput="Dashboard.checkPasswordStrength(this.value)">
-        <p class="password-requirements">Password must be at least 8 characters, with one uppercase letter, one number, and one special character.</p>
+      <div class="card"><h3 data-i18n="tab.settings.security">Security</h3><p class="card-sub" data-i18n="tab.settings.securityDesc">Manage your password and security settings</p>
+        <label class="form-label" for="currentPassword" data-i18n="tab.settings.currentPassword">Current Password</label><input type="password" class="form-input" id="currentPassword" placeholder="Enter current password" data-i18n-placeholder="tab.settings.currentPasswordPlaceholder" autocomplete="current-password">
+        <label class="form-label" for="newPassword" data-i18n="tab.settings.newPassword">New Password</label><input type="password" class="form-input" id="newPassword" placeholder="Enter new password" data-i18n-placeholder="tab.settings.newPasswordPlaceholder" autocomplete="new-password" oninput="Dashboard.checkPasswordStrength(this.value)">
+        <p class="password-requirements" data-i18n="tab.settings.passwordReq">Password must be at least 8 characters, with one uppercase letter, one number, and one special character.</p>
         <div class="strength-bar" id="strengthBar"><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
         <div class="strength-label" id="strengthLabel"></div>
-        <label class="form-label" for="confirmPassword">Confirm New Password</label><input type="password" class="form-input" id="confirmPassword" placeholder="Confirm new password" autocomplete="new-password">
-        <div class="btn-row"><button class="btn btn-primary" onclick="changePassword()">Update Password</button></div>
+        <label class="form-label" for="confirmPassword" data-i18n="tab.settings.confirmPassword">Confirm New Password</label><input type="password" class="form-input" id="confirmPassword" placeholder="Confirm new password" data-i18n-placeholder="tab.settings.confirmPasswordPlaceholder" autocomplete="new-password">
+        <div class="btn-row"><button class="btn btn-primary" onclick="changePassword()" data-i18n="tab.settings.updatePassword">Update Password</button></div>
       </div>
 
       <!-- Plan & Billing -->
-      <div class="card" id="planBilling"><h3>Plan &amp; Billing</h3><p class="card-sub">Manage your subscription and view usage</p>
+      <div class="card" id="planBilling"><h3 data-i18n="tab.settings.planBilling">Plan &amp; Billing</h3><p class="card-sub" data-i18n="tab.settings.planBillingDesc">Manage your subscription and view usage</p>
         <div class="plan-current"><div class="pc-name" id="settingsPlanName">Free</div><div class="pc-price" id="settingsPlanPrice">$0/month</div><div class="pc-usage" id="settingsPlanUsage">0 of 5 documents used</div><div class="plan-bar" style="margin-top:8px"><div class="plan-bar-fill" id="settingsPlanBar" style="width:0%"></div></div></div>
-        <div class="btn-row"><button class="btn btn-secondary" onclick="window.location.href='/pricing'">Change Plan</button></div>
+        <div class="btn-row"><button class="btn btn-secondary" onclick="window.location.href='/pricing'" data-i18n="tab.settings.changePlan">Change Plan</button></div>
       </div>
 
       <!-- Notifications -->
-      <div class="card"><h3>Notification Preferences</h3><p class="card-sub">Choose what notifications you receive</p>
-        <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Email when document is verified</div><div class="toggle-desc">Get notified when someone verifies your document</div></div><label class="toggle-switch"><input type="checkbox" id="notifEmail" checked><span class="slider"></span></label></div>
-        <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Weekly activity digest</div><div class="toggle-desc">Receive a summary of your weekly activity</div></div><label class="toggle-switch"><input type="checkbox" id="notifDigest"><span class="slider"></span></label></div>
-        <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Security alerts</div><div class="toggle-desc">Get notified when a forged document is detected</div></div><label class="toggle-switch"><input type="checkbox" id="notifSecurity" checked><span class="slider"></span></label></div>
+      <div class="card"><h3 data-i18n="tab.settings.notifTitle">Notification Preferences</h3><p class="card-sub" data-i18n="tab.settings.notifDesc">Choose what notifications you receive</p>
+        <div class="toggle-row"><div class="toggle-info"><div class="toggle-label" data-i18n="tab.settings.notifEmailLabel">Email when document is verified</div><div class="toggle-desc" data-i18n="tab.settings.notifEmailDesc">Get notified when someone verifies your document</div></div><label class="toggle-switch"><input type="checkbox" id="notifEmail" checked><span class="slider"></span></label></div>
+        <div class="toggle-row"><div class="toggle-info"><div class="toggle-label" data-i18n="tab.settings.notifDigestLabel">Weekly activity digest</div><div class="toggle-desc" data-i18n="tab.settings.notifDigestDesc">Receive a summary of your weekly activity</div></div><label class="toggle-switch"><input type="checkbox" id="notifDigest"><span class="slider"></span></label></div>
+        <div class="toggle-row"><div class="toggle-info"><div class="toggle-label" data-i18n="tab.settings.notifSecurityLabel">Security alerts</div><div class="toggle-desc" data-i18n="tab.settings.notifSecurityDesc">Get notified when a forged document is detected</div></div><label class="toggle-switch"><input type="checkbox" id="notifSecurity" checked><span class="slider"></span></label></div>
       </div>
 
       <!-- Danger Zone -->
-      <div class="card danger-zone"><h3 style="color:#dc2626">Danger Zone</h3><p class="dz-warning">This action cannot be undone. All documents and data will be permanently deleted.</p><button class="btn-danger-solid" onclick="deleteAccount()">Delete Account</button></div>
+      <div class="card danger-zone"><h3 style="color:#dc2626" data-i18n="tab.settings.dangerZone">Danger Zone</h3><p class="dz-warning" data-i18n="tab.settings.dangerWarning">This action cannot be undone. All documents and data will be permanently deleted.</p><button class="btn-danger-solid" onclick="deleteAccount()" data-i18n="tab.settings.deleteAccount">Delete Account</button></div>
     </div>
   </div>
 
   <!-- ===================== TAB 6: HELP ===================== -->
-  <div class="tab-panel" id="tab-help" role="tabpanel" aria-label="Help">
-    <h2 style="font-size:20px;font-weight:700;color:var(--text-1);margin-bottom:20px">Help &amp; Support</h2>
+  <div class="tab-panel" id="tab-help" role="tabpanel" data-i18n-aria="tab.help.title" aria-label="Help">
+    <h2 style="font-size:20px;font-weight:700;color:var(--text-1);margin-bottom:20px" data-i18n="tab.help.title">Help &amp; Support</h2>
 
     <!-- FAQ -->
-    <div class="card"><h3>Frequently Asked Questions</h3><div style="margin-top:16px">
-      <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')">What happens if someone alters a protected document?<span class="faq-chevron"><svg style="width:10px;height:10px;display:inline;vertical-align:-1px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-answer"><div class="faq-answer-inner">If a document has been altered after Vertifile protection was applied, the verification will fail immediately. The holographic stamp freezes red and displays a "FORGED" warning.<div class="faq-feedback"><span>Was this helpful?</span> <button class="fb-up" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><line x1="3" y1="22" x2="7" y2="22"/><line x1="3" y1="11" x2="7" y2="22"/></svg></button> <button class="fb-down" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9A2 2 0 004.34 15H10z"/><line x1="17" y1="2" x2="21" y2="2"/><line x1="17" y1="13" x2="21" y2="2"/></svg></button> <span class="fb-thanks">Thanks!</span></div></div></div></div>
-      <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')">What is a PVF file?<span class="faq-chevron"><svg style="width:10px;height:10px;display:inline;vertical-align:-1px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-answer"><div class="faq-answer-inner">A PVF (Protected Verification File) is Vertifile's proprietary format that bundles your original document with cryptographic verification data and a holographic stamp.<div class="faq-feedback"><span>Was this helpful?</span> <button class="fb-up" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><line x1="3" y1="22" x2="7" y2="22"/><line x1="3" y1="11" x2="7" y2="22"/></svg></button> <button class="fb-down" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9A2 2 0 004.34 15H10z"/><line x1="17" y1="2" x2="21" y2="2"/><line x1="17" y1="13" x2="21" y2="2"/></svg></button> <span class="fb-thanks">Thanks!</span></div></div></div></div>
-      <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')">How does Vertifile protect my documents?<span class="faq-chevron"><svg style="width:10px;height:10px;display:inline;vertical-align:-1px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-answer"><div class="faq-answer-inner">Vertifile creates a unique cryptographic hash and embeds it with a holographic verification stamp containing blockchain-backed digital signatures.<div class="faq-feedback"><span>Was this helpful?</span> <button class="fb-up" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><line x1="3" y1="22" x2="7" y2="22"/><line x1="3" y1="11" x2="7" y2="22"/></svg></button> <button class="fb-down" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9A2 2 0 004.34 15H10z"/><line x1="17" y1="2" x2="21" y2="2"/><line x1="17" y1="13" x2="21" y2="2"/></svg></button> <span class="fb-thanks">Thanks!</span></div></div></div></div>
-      <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')">What file types are supported?<span class="faq-chevron"><svg style="width:10px;height:10px;display:inline;vertical-align:-1px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-answer"><div class="faq-answer-inner">Vertifile supports PDF, images (PNG, JPG, TIFF), text files (TXT), and Word documents (DOCX). Maximum file size is 50MB.<div class="faq-feedback"><span>Was this helpful?</span> <button class="fb-up" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><line x1="3" y1="22" x2="7" y2="22"/><line x1="3" y1="11" x2="7" y2="22"/></svg></button> <button class="fb-down" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9A2 2 0 004.34 15H10z"/><line x1="17" y1="2" x2="21" y2="2"/><line x1="17" y1="13" x2="21" y2="2"/></svg></button> <span class="fb-thanks">Thanks!</span></div></div></div></div>
-      <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')">How do I share a protected document?<span class="faq-chevron"><svg style="width:10px;height:10px;display:inline;vertical-align:-1px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-answer"><div class="faq-answer-inner">From the Documents tab, use the actions menu on any document and select "Copy Share Link." Track opens from your dashboard.<div class="faq-feedback"><span>Was this helpful?</span> <button class="fb-up" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><line x1="3" y1="22" x2="7" y2="22"/><line x1="3" y1="11" x2="7" y2="22"/></svg></button> <button class="fb-down" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9A2 2 0 004.34 15H10z"/><line x1="17" y1="2" x2="21" y2="2"/><line x1="17" y1="13" x2="21" y2="2"/></svg></button> <span class="fb-thanks">Thanks!</span></div></div></div></div>
+    <div class="card"><h3 data-i18n="tab.help.faq">Frequently Asked Questions</h3><div style="margin-top:16px">
+      <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')"><span data-i18n="tab.help.faq1q">What happens if someone alters a protected document?</span><span class="faq-chevron"><svg style="width:10px;height:10px;display:inline;vertical-align:-1px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-answer"><div class="faq-answer-inner"><span data-i18n="tab.help.faq1a">If a document has been altered after Vertifile protection was applied, the verification will fail immediately. The holographic stamp freezes red and displays a "FORGED" warning.</span><div class="faq-feedback"><span data-i18n="tab.help.wasHelpful">Was this helpful?</span> <button class="fb-up" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><line x1="3" y1="22" x2="7" y2="22"/><line x1="3" y1="11" x2="7" y2="22"/></svg></button> <button class="fb-down" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9A2 2 0 004.34 15H10z"/><line x1="17" y1="2" x2="21" y2="2"/><line x1="17" y1="13" x2="21" y2="2"/></svg></button> <span class="fb-thanks" data-i18n="tab.help.thanks">Thanks!</span></div></div></div></div>
+      <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')"><span data-i18n="tab.help.faq2q">What is a PVF file?</span><span class="faq-chevron"><svg style="width:10px;height:10px;display:inline;vertical-align:-1px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-answer"><div class="faq-answer-inner"><span data-i18n="tab.help.faq2a">A PVF (Protected Verification File) is Vertifile's proprietary format that bundles your original document with cryptographic verification data and a holographic stamp.</span><div class="faq-feedback"><span data-i18n="tab.help.wasHelpful">Was this helpful?</span> <button class="fb-up" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><line x1="3" y1="22" x2="7" y2="22"/><line x1="3" y1="11" x2="7" y2="22"/></svg></button> <button class="fb-down" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9A2 2 0 004.34 15H10z"/><line x1="17" y1="2" x2="21" y2="2"/><line x1="17" y1="13" x2="21" y2="2"/></svg></button> <span class="fb-thanks" data-i18n="tab.help.thanks">Thanks!</span></div></div></div></div>
+      <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')"><span data-i18n="tab.help.faq3q">How does Vertifile protect my documents?</span><span class="faq-chevron"><svg style="width:10px;height:10px;display:inline;vertical-align:-1px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-answer"><div class="faq-answer-inner"><span data-i18n="tab.help.faq3a">Vertifile creates a unique cryptographic hash and embeds it with a holographic verification stamp containing blockchain-backed digital signatures.</span><div class="faq-feedback"><span data-i18n="tab.help.wasHelpful">Was this helpful?</span> <button class="fb-up" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><line x1="3" y1="22" x2="7" y2="22"/><line x1="3" y1="11" x2="7" y2="22"/></svg></button> <button class="fb-down" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9A2 2 0 004.34 15H10z"/><line x1="17" y1="2" x2="21" y2="2"/><line x1="17" y1="13" x2="21" y2="2"/></svg></button> <span class="fb-thanks" data-i18n="tab.help.thanks">Thanks!</span></div></div></div></div>
+      <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')"><span data-i18n="tab.help.faq4q">What file types are supported?</span><span class="faq-chevron"><svg style="width:10px;height:10px;display:inline;vertical-align:-1px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-answer"><div class="faq-answer-inner"><span data-i18n="tab.help.faq4a">Vertifile supports PDF, images (PNG, JPG, TIFF), text files (TXT), and Word documents (DOCX). Maximum file size is 50MB.</span><div class="faq-feedback"><span data-i18n="tab.help.wasHelpful">Was this helpful?</span> <button class="fb-up" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><line x1="3" y1="22" x2="7" y2="22"/><line x1="3" y1="11" x2="7" y2="22"/></svg></button> <button class="fb-down" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9A2 2 0 004.34 15H10z"/><line x1="17" y1="2" x2="21" y2="2"/><line x1="17" y1="13" x2="21" y2="2"/></svg></button> <span class="fb-thanks" data-i18n="tab.help.thanks">Thanks!</span></div></div></div></div>
+      <div class="faq-item"><div class="faq-question" onclick="this.parentElement.classList.toggle('open')"><span data-i18n="tab.help.faq5q">How do I share a protected document?</span><span class="faq-chevron"><svg style="width:10px;height:10px;display:inline;vertical-align:-1px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-answer"><div class="faq-answer-inner"><span data-i18n="tab.help.faq5a">From the Documents tab, use the actions menu on any document and select "Copy Share Link." Track opens from your dashboard.</span><div class="faq-feedback"><span data-i18n="tab.help.wasHelpful">Was this helpful?</span> <button class="fb-up" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><line x1="3" y1="22" x2="7" y2="22"/><line x1="3" y1="11" x2="7" y2="22"/></svg></button> <button class="fb-down" onclick="this.parentElement.querySelector('.fb-thanks').style.display='inline'"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9A2 2 0 004.34 15H10z"/><line x1="17" y1="2" x2="21" y2="2"/><line x1="17" y1="13" x2="21" y2="2"/></svg></button> <span class="fb-thanks" data-i18n="tab.help.thanks">Thanks!</span></div></div></div></div>
     </div></div>
 
     <div class="card escalation-card"><h4 data-i18n="tab.help.didntFind">Didn't find what you need?</h4><p data-i18n="tab.help.supportDesc">Our support team is happy to help.</p><a href="/contact" class="btn btn-secondary" data-i18n="tab.help.contactSupport">Contact Support</a></div>
 
     <!-- Quick Links -->
-    <div class="card"><h3>Quick Links</h3><div class="quick-links" style="margin-top:12px">
-      <a class="quick-link" href="/integration"><span class="ql-icon"><svg style="width:16px;height:16px;display:inline;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Documentation <span style="margin-left:auto;font-size:12px;color:var(--text-2)">&#8599;</span></a>
-      <a class="quick-link" href="/integration"><span class="ql-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20v-6"/><path d="M6 20V4"/></svg></span> API Reference <span style="margin-left:auto;font-size:12px;color:var(--text-2)">&#8599;</span></a>
+    <div class="card"><h3 data-i18n="tab.help.quickLinks">Quick Links</h3><div class="quick-links" style="margin-top:12px">
+      <a class="quick-link" href="/integration"><span class="ql-icon"><svg style="width:16px;height:16px;display:inline;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> <span data-i18n="tab.help.docs">Documentation</span> <span style="margin-left:auto;font-size:12px;color:var(--text-2)">&#8599;</span></a>
+      <a class="quick-link" href="/integration"><span class="ql-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20v-6"/><path d="M6 20V4"/></svg></span> <span data-i18n="tab.help.apiRef">API Reference</span> <span style="margin-left:auto;font-size:12px;color:var(--text-2)">&#8599;</span></a>
     </div></div>
   </div>
 
@@ -2621,13 +2621,19 @@ window.Dashboard = {
 
     // Update checklist card progress
     var cpt = document.getElementById('checklistProgressText');
-    if (cpt) cpt.textContent = completed + ' of ' + total + ' complete';
+    if (cpt) {
+      var progressTpl = (typeof vfGetTranslation === 'function' && vfGetTranslation('tab.overview.gsProgress')) || '{n} of {t} complete';
+      cpt.textContent = progressTpl.replace('{n}', completed).replace('{t}', total);
+    }
     var cbf = document.getElementById('checklistBarFill');
     if (cbf) cbf.style.width = (completed / total * 100) + '%';
 
     // Update sidebar summary
-    var sql = document.querySelector('.sidebar-qs-label');
-    if (sql) sql.textContent = 'Getting Started: ' + completed + '/' + total;
+    var sql = document.getElementById('sidebarGsLabel');
+    if (sql) {
+      var sidebarTpl = (typeof vfGetTranslation === 'function' && vfGetTranslation('tab.overview.gsSidebarLabel')) || 'Getting Started: {n}/{t}';
+      sql.textContent = sidebarTpl.replace('{n}', completed).replace('{t}', total);
+    }
     var sqb = document.querySelector('.sidebar-qs-bar-fill');
     if (sqb) sqb.style.width = (completed / total * 100) + '%';
 
@@ -3542,10 +3548,25 @@ function appI18nPatch() {
   if (label && typeof vfGetLang === 'function') {
     label.textContent = vfGetLang().toUpperCase();
   }
+  // Apply data-i18n text content translations (for dashboard-specific elements)
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var val = typeof vfGetTranslation === 'function' ? vfGetTranslation(el.getAttribute('data-i18n')) : null;
+    if (val) { if(/<[a-z][\s\S]*>/i.test(val)) el.innerHTML = val; else el.textContent = val; }
+  });
+  // Apply placeholder translations
   document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
     var val = typeof vfGetTranslation === 'function' ? vfGetTranslation(el.getAttribute('data-i18n-placeholder')) : null;
     if (val) el.setAttribute('placeholder', val);
   });
+  // Apply aria-label translations
+  document.querySelectorAll('[data-i18n-aria]').forEach(function(el) {
+    var val = typeof vfGetTranslation === 'function' ? vfGetTranslation(el.getAttribute('data-i18n-aria')) : null;
+    if (val) el.setAttribute('aria-label', val);
+  });
+  // Re-render dynamic Getting Started progress text in current language
+  if (window.Dashboard && Dashboard.updateGettingStartedProgress) {
+    Dashboard.updateGettingStartedProgress();
+  }
 }
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() {
