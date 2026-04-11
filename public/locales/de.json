@@ -1099,7 +1099,8 @@
     "passwordMinPlaceholder": "Passwort (mind. 8 Zeichen)",
     "passwordPlaceholder": "Passwort",
     "signInBtn": "Anmelden",
-    "signInLink": "Anmelden"
+    "signInLink": "Anmelden",
+    "untitled": "Ohne Titel"
   },
   "pricing": {
     "badge": "Flexible Plane",
@@ -1325,7 +1326,13 @@
       "failedText": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
       "retry": "Erneut versuchen",
       "protected": "Dokument geschutzt",
-      "viewInDocs": "In Dokumenten anzeigen"
+      "viewInDocs": "In Dokumenten anzeigen",
+      "encrypting": "Verschlüsseln...",
+      "failedPrefix": "Fehlgeschlagen",
+      "viewDocument": "Dokument ansehen",
+      "encryptedLink": "Verschlüsselter Link",
+      "copyLink": "Link kopieren",
+      "saveLinkWarning": "Speichern Sie diesen Link! Ohne ihn kann das Dokument nicht angezeigt werden. Vertifile kann ihn nicht wiederherstellen."
     },
     "documents": {
       "title": "Documents",
@@ -1354,7 +1361,8 @@
       "cryptoProof": "Kryptografischer Nachweis",
       "algorithm": "Algorithmus",
       "keyId": "Schlussel-ID",
-      "status": "Status"
+      "status": "Status",
+      "selectedSuffix": "ausgewählt"
     },
     "stamp": {
       "title": "My Stamp",
@@ -1589,11 +1597,79 @@
     "verifiedBy": "VERIFIZIERT VON VERTIFILE",
     "approved": "DOKUMENT GENEHMIGT",
     "secured": "BLOCKCHAIN GESICHERT",
-    "customLogo": "Benutzerdefiniertes Logo"
+    "customLogo": "Benutzerdefiniertes Logo",
+    "defaultLogo": "Vertifile-Schild (Standard)"
   },
   "plan": {
     "documents": "Dokumente",
     "used": "verwendet",
-    "unlimited": "Unbegrenzt"
+    "unlimited": "Unbegrenzt",
+    "free": "Kostenlos",
+    "pro": "Pro",
+    "proPlus": "Pro+",
+    "enterprise": "Enterprise",
+    "planWord": "PLAN"
+  },
+  "preview": {
+    "pvfDocument": "PVF-DOKUMENT",
+    "openDocument": "Dokument öffnen",
+    "hmacOnly": "Nur HMAC",
+    "hmacOnlyTitle": "Dieses Dokument wurde signiert, bevor die Ed25519-Doppelsignatur aktiviert wurde."
+  },
+  "toast": {
+    "shareLinkCopied": "Freigabelink kopiert!",
+    "docDeleted": "Dokument gelöscht",
+    "deleteFailed": "Löschen fehlgeschlagen",
+    "error": "Fehler",
+    "noDocsSelected": "Keine Dokumente ausgewählt",
+    "deletingDocs": "{n} Dokument(e) werden gelöscht...",
+    "bulkDeletePartial": "{d} gelöscht, {f} fehlgeschlagen",
+    "bulkDeleteDone": "{d} Dokument(e) gelöscht",
+    "stampSaved": "Stempel gespeichert — wird auf alle Ihre Dokumente angewendet",
+    "stampSaveFailed": "Stempel konnte nicht gespeichert werden",
+    "logoTooLarge": "Logo muss kleiner als 2 MB sein",
+    "brandingSaved": "Branding erfolgreich gespeichert!",
+    "brandingSaveFailed": "Branding konnte nicht gespeichert werden",
+    "brandingReset": "Branding auf Standard zurückgesetzt",
+    "nameEmpty": "Name darf nicht leer sein",
+    "profileSaved": "Profil gespeichert!",
+    "profileSaveFailed": "Profil konnte nicht gespeichert werden",
+    "apiKeyGenerated": "API-Schlüssel generiert! Kopieren Sie ihn jetzt — er wird nicht erneut vollständig angezeigt.",
+    "apiKeyFailed": "API-Schlüssel konnte nicht generiert werden",
+    "apiKeyCopied": "API-Schlüssel kopiert!",
+    "apiKeyDemo": "API-Schlüssel generiert (Demo-Modus)",
+    "copyFailed": "Kopieren fehlgeschlagen",
+    "fillPasswordFields": "Bitte füllen Sie alle Passwortfelder aus",
+    "passwordsNoMatch": "Passwörter stimmen nicht überein",
+    "passwordMin8": "Passwort muss mindestens 8 Zeichen lang sein",
+    "passwordUpdated": "Passwort aktualisiert!",
+    "passwordChangeFailed": "Passwortänderung fehlgeschlagen",
+    "accountDeleted": "Konto gelöscht.",
+    "accountDeleteFailed": "Konto konnte nicht gelöscht werden",
+    "cannotPrint": "Drucken nicht möglich — kein Freigabelink",
+    "cannotExtractPrint": "Dokument kann nicht zum Drucken extrahiert werden",
+    "printLoadFailed": "Dokument konnte nicht zum Drucken geladen werden",
+    "docProtected": "Dokument geschützt!",
+    "docProtectedShort": "Dokument geschützt",
+    "copiedToClipboard": "In die Zwischenablage kopiert!",
+    "copied": "Kopiert!",
+    "allNotifRead": "Alle Benachrichtigungen als gelesen markiert",
+    "passwordUpdatedSignIn": "Passwort aktualisiert! Sie können sich jetzt anmelden.",
+    "resetFailed": "Zurücksetzen fehlgeschlagen",
+    "somethingWrong": "Etwas ist schiefgelaufen",
+    "encryptionModuleError": "Verschlüsselungsmodul nicht geladen. Bitte laden Sie die Seite neu.",
+    "enterEmailFirst": "Bitte geben Sie zuerst Ihre E-Mail-Adresse ein",
+    "resetLinkSent": "Wenn diese E-Mail existiert, wurde ein Link zum Zurücksetzen gesendet"
+  },
+  "confirm": {
+    "deleteDocument": "Sind Sie sicher, dass Sie dieses Dokument löschen möchten?",
+    "deleteAccount": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteAccountFinal": "Dies wird alle Ihre Dokumente und Daten dauerhaft löschen. Sind Sie absolut sicher?"
+  },
+  "password": {
+    "weak": "Schwach",
+    "fair": "Mittel",
+    "good": "Gut",
+    "strong": "Stark"
   }
 }

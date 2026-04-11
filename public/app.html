@@ -1707,15 +1707,16 @@ function showRegister() {
 function showForgotPassword(e) {
   e.preventDefault();
   const email = document.getElementById('loginEmail').value.trim();
-  if (!email) { toast('Please enter your email address first'); return; }
+  var _tfp = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+  if (!email) { toast(_tfp('toast.enterEmailFirst') || 'Please enter your email address first'); return; }
   fetch('/auth/forgot-password', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email }),
     credentials: 'same-origin'
   }).then(r => r.json()).then(d => {
-    toast(d.message || 'If this email exists, a reset link has been sent');
-  }).catch(() => toast('Something went wrong'));
+    toast(d.message || (_tfp('toast.resetLinkSent') || 'If this email exists, a reset link has been sent'));
+  }).catch(() => toast(_tfp('toast.somethingWrong') || 'Something went wrong'));
 }
 
 // Check for reset token in URL
@@ -2574,13 +2575,14 @@ window.Dashboard = {
     var used = currentUser.documentsUsed || documents.length;
     var limit = currentUser.documentsLimit || 5;
     var plan = currentUser.plan || 'free';
+    var _tpl = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
     var planNames = {
-      free: 'Free',
-      pro: 'Pro',
-      professional: 'Pro',
-      pro_plus: 'Pro+',
-      proplus: 'Pro+',
-      enterprise: 'Enterprise'
+      free: _tpl('plan.free') || 'Free',
+      pro: _tpl('plan.pro') || 'Pro',
+      professional: _tpl('plan.pro') || 'Pro',
+      pro_plus: _tpl('plan.proPlus') || 'Pro+',
+      proplus: _tpl('plan.proPlus') || 'Pro+',
+      enterprise: _tpl('plan.enterprise') || 'Enterprise'
     };
     var planPrices = {
       free: '$0/month',
@@ -2599,7 +2601,8 @@ window.Dashboard = {
     var usageText = isUnlimited ? (used + ' ' + docsWord) : (used + ' ' + ofWord + ' ' + limit + ' ' + docsWord);
 
     // Sidebar plan badge
-    var pl = document.getElementById('planLabel'); if(pl) pl.textContent = (planNames[plan] || 'Free').toUpperCase() + ' PLAN';
+    var _planWord = (_tpl('plan.planWord') || 'PLAN');
+    var pl = document.getElementById('planLabel'); if(pl) pl.textContent = (planNames[plan] || 'Free').toUpperCase() + ' ' + _planWord;
     var pu = document.getElementById('planUsed'); if(pu) pu.textContent = used;
     var plim = document.getElementById('planLimit'); if(plim) plim.textContent = limitDisplay;
     var pf = document.getElementById('planBarFill'); if(pf) pf.style.width = isUnlimited ? '0%' : Math.min((used/limit)*100, 100) + '%';

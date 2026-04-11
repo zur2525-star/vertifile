@@ -1099,7 +1099,8 @@
     "passwordMinPlaceholder": "Contraseña (mín. 8 caracteres)",
     "passwordPlaceholder": "Contraseña",
     "signInBtn": "Iniciar sesión",
-    "signInLink": "Iniciar sesión"
+    "signInLink": "Iniciar sesión",
+    "untitled": "Sin título"
   },
   "pricing": {
     "badge": "Planes flexibles",
@@ -1325,7 +1326,13 @@
       "failedText": "Algo salio mal. Por favor intenta de nuevo.",
       "retry": "Reintentar",
       "protected": "Documento Protegido",
-      "viewInDocs": "Ver en Documentos"
+      "viewInDocs": "Ver en Documentos",
+      "encrypting": "Cifrando...",
+      "failedPrefix": "Falló",
+      "viewDocument": "Ver documento",
+      "encryptedLink": "Enlace cifrado",
+      "copyLink": "Copiar enlace",
+      "saveLinkWarning": "¡Guarda este enlace! Sin él, el documento no se puede ver. Vertifile no puede recuperarlo."
     },
     "documents": {
       "title": "Documents",
@@ -1354,7 +1361,8 @@
       "cryptoProof": "Prueba Criptografica",
       "algorithm": "Algoritmo",
       "keyId": "ID de Clave",
-      "status": "Estado"
+      "status": "Estado",
+      "selectedSuffix": "seleccionados"
     },
     "stamp": {
       "title": "My Stamp",
@@ -1589,11 +1597,79 @@
     "verifiedBy": "VERIFICADO POR VERTIFILE",
     "approved": "DOCUMENTO APROBADO",
     "secured": "BLOCKCHAIN ASEGURADO",
-    "customLogo": "Logo personalizado"
+    "customLogo": "Logo personalizado",
+    "defaultLogo": "Escudo Vertifile (predeterminado)"
   },
   "plan": {
     "documents": "documentos",
     "used": "usados",
-    "unlimited": "Ilimitado"
+    "unlimited": "Ilimitado",
+    "free": "Gratis",
+    "pro": "Pro",
+    "proPlus": "Pro+",
+    "enterprise": "Empresarial",
+    "planWord": "PLAN"
+  },
+  "preview": {
+    "pvfDocument": "DOCUMENTO PVF",
+    "openDocument": "Abrir documento",
+    "hmacOnly": "Solo HMAC",
+    "hmacOnlyTitle": "Este documento fue firmado antes de que se habilitara la firma dual Ed25519."
+  },
+  "toast": {
+    "shareLinkCopied": "¡Enlace copiado!",
+    "docDeleted": "Documento eliminado",
+    "deleteFailed": "Error al eliminar",
+    "error": "Error",
+    "noDocsSelected": "No se seleccionaron documentos",
+    "deletingDocs": "Eliminando {n} documento(s)...",
+    "bulkDeletePartial": "{d} eliminados, {f} fallidos",
+    "bulkDeleteDone": "{d} documento(s) eliminados",
+    "stampSaved": "Sello guardado — aplicándose a todos tus documentos",
+    "stampSaveFailed": "Error al guardar el sello",
+    "logoTooLarge": "El logo debe ser menor a 2MB",
+    "brandingSaved": "¡Marca guardada con éxito!",
+    "brandingSaveFailed": "Error al guardar la marca",
+    "brandingReset": "Marca restablecida a valores predeterminados",
+    "nameEmpty": "El nombre no puede estar vacío",
+    "profileSaved": "¡Perfil guardado!",
+    "profileSaveFailed": "Error al guardar el perfil",
+    "apiKeyGenerated": "¡Clave API generada! Cópiala ahora — no se mostrará completa de nuevo.",
+    "apiKeyFailed": "Error al generar clave API",
+    "apiKeyCopied": "¡Clave API copiada!",
+    "apiKeyDemo": "Clave API generada (modo demo)",
+    "copyFailed": "Error al copiar",
+    "fillPasswordFields": "Por favor, completa todos los campos de contraseña",
+    "passwordsNoMatch": "Las contraseñas no coinciden",
+    "passwordMin8": "La contraseña debe tener al menos 8 caracteres",
+    "passwordUpdated": "¡Contraseña actualizada!",
+    "passwordChangeFailed": "Error al cambiar la contraseña",
+    "accountDeleted": "Cuenta eliminada.",
+    "accountDeleteFailed": "Error al eliminar la cuenta",
+    "cannotPrint": "No se puede imprimir — sin enlace de compartir",
+    "cannotExtractPrint": "No se puede extraer el documento para imprimir",
+    "printLoadFailed": "Error al cargar el documento para imprimir",
+    "docProtected": "¡Documento protegido!",
+    "docProtectedShort": "Documento protegido",
+    "copiedToClipboard": "¡Copiado al portapapeles!",
+    "copied": "¡Copiado!",
+    "allNotifRead": "Todas las notificaciones marcadas como leídas",
+    "passwordUpdatedSignIn": "¡Contraseña actualizada! Ya puedes iniciar sesión.",
+    "resetFailed": "Restablecimiento fallido",
+    "somethingWrong": "Algo salió mal",
+    "encryptionModuleError": "Módulo de cifrado no cargado. Por favor, recarga la página.",
+    "enterEmailFirst": "Por favor, ingresa tu dirección de correo primero",
+    "resetLinkSent": "Si este correo existe, se ha enviado un enlace de restablecimiento"
+  },
+  "confirm": {
+    "deleteDocument": "¿Estás seguro de que deseas eliminar este documento?",
+    "deleteAccount": "¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.",
+    "deleteAccountFinal": "Esto eliminará permanentemente todos tus documentos y datos. ¿Estás absolutamente seguro?"
+  },
+  "password": {
+    "weak": "Débil",
+    "fair": "Regular",
+    "good": "Buena",
+    "strong": "Fuerte"
   }
 }

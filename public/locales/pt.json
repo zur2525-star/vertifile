@@ -1099,7 +1099,8 @@
     "passwordMinPlaceholder": "Senha (mín. 8 caracteres)",
     "passwordPlaceholder": "Senha",
     "signInBtn": "Entrar",
-    "signInLink": "Entrar"
+    "signInLink": "Entrar",
+    "untitled": "Sem título"
   },
   "pricing": {
     "badge": "Planos flexiveis",
@@ -1325,7 +1326,13 @@
       "failedText": "Algo deu errado. Por favor, tente novamente.",
       "retry": "Tentar Novamente",
       "protected": "Documento Protegido",
-      "viewInDocs": "Ver em Documentos"
+      "viewInDocs": "Ver em Documentos",
+      "encrypting": "Criptografando...",
+      "failedPrefix": "Falhou",
+      "viewDocument": "Ver documento",
+      "encryptedLink": "Link criptografado",
+      "copyLink": "Copiar link",
+      "saveLinkWarning": "Salve este link! Sem ele, o documento não pode ser visualizado. O Vertifile não pode recuperá-lo."
     },
     "documents": {
       "title": "Documents",
@@ -1354,7 +1361,8 @@
       "cryptoProof": "Prova Criptografica",
       "algorithm": "Algoritmo",
       "keyId": "ID da Chave",
-      "status": "Status"
+      "status": "Status",
+      "selectedSuffix": "selecionados"
     },
     "stamp": {
       "title": "My Stamp",
@@ -1589,11 +1597,79 @@
     "verifiedBy": "VERIFICADO PELA VERTIFILE",
     "approved": "DOCUMENTO APROVADO",
     "secured": "BLOCKCHAIN PROTEGIDO",
-    "customLogo": "Logo personalizado"
+    "customLogo": "Logo personalizado",
+    "defaultLogo": "Escudo Vertifile (padrão)"
   },
   "plan": {
     "documents": "documentos",
     "used": "usados",
-    "unlimited": "Ilimitado"
+    "unlimited": "Ilimitado",
+    "free": "Grátis",
+    "pro": "Pro",
+    "proPlus": "Pro+",
+    "enterprise": "Empresarial",
+    "planWord": "PLANO"
+  },
+  "preview": {
+    "pvfDocument": "DOCUMENTO PVF",
+    "openDocument": "Abrir documento",
+    "hmacOnly": "Apenas HMAC",
+    "hmacOnlyTitle": "Este documento foi assinado antes da assinatura dupla Ed25519 ser habilitada."
+  },
+  "toast": {
+    "shareLinkCopied": "Link de compartilhamento copiado!",
+    "docDeleted": "Documento excluído",
+    "deleteFailed": "Falha ao excluir",
+    "error": "Erro",
+    "noDocsSelected": "Nenhum documento selecionado",
+    "deletingDocs": "Excluindo {n} documento(s)...",
+    "bulkDeletePartial": "{d} excluídos, {f} falharam",
+    "bulkDeleteDone": "{d} documento(s) excluído(s)",
+    "stampSaved": "Carimbo salvo — aplicando a todos os seus documentos",
+    "stampSaveFailed": "Falha ao salvar o carimbo",
+    "logoTooLarge": "O logo deve ter menos de 2MB",
+    "brandingSaved": "Marca salva com sucesso!",
+    "brandingSaveFailed": "Falha ao salvar a marca",
+    "brandingReset": "Marca redefinida para o padrão",
+    "nameEmpty": "O nome não pode estar vazio",
+    "profileSaved": "Perfil salvo!",
+    "profileSaveFailed": "Falha ao salvar o perfil",
+    "apiKeyGenerated": "Chave API gerada! Copie agora — ela não será exibida novamente por completo.",
+    "apiKeyFailed": "Falha ao gerar chave API",
+    "apiKeyCopied": "Chave API copiada!",
+    "apiKeyDemo": "Chave API gerada (modo demo)",
+    "copyFailed": "Falha ao copiar",
+    "fillPasswordFields": "Por favor, preencha todos os campos de senha",
+    "passwordsNoMatch": "As senhas não coincidem",
+    "passwordMin8": "A senha deve ter pelo menos 8 caracteres",
+    "passwordUpdated": "Senha atualizada!",
+    "passwordChangeFailed": "Falha ao alterar a senha",
+    "accountDeleted": "Conta excluída.",
+    "accountDeleteFailed": "Falha ao excluir a conta",
+    "cannotPrint": "Não é possível imprimir — sem link de compartilhamento",
+    "cannotExtractPrint": "Não é possível extrair o documento para impressão",
+    "printLoadFailed": "Falha ao carregar documento para impressão",
+    "docProtected": "Documento protegido!",
+    "docProtectedShort": "Documento protegido",
+    "copiedToClipboard": "Copiado para a área de transferência!",
+    "copied": "Copiado!",
+    "allNotifRead": "Todas as notificações marcadas como lidas",
+    "passwordUpdatedSignIn": "Senha atualizada! Agora você pode entrar.",
+    "resetFailed": "Redefinição falhou",
+    "somethingWrong": "Algo deu errado",
+    "encryptionModuleError": "Módulo de criptografia não carregado. Por favor, recarregue a página.",
+    "enterEmailFirst": "Por favor, insira seu endereço de e-mail primeiro",
+    "resetLinkSent": "Se este e-mail existir, um link de redefinição foi enviado"
+  },
+  "confirm": {
+    "deleteDocument": "Tem certeza de que deseja excluir este documento?",
+    "deleteAccount": "Tem certeza de que deseja excluir sua conta? Esta ação não pode ser desfeita.",
+    "deleteAccountFinal": "Isso excluirá permanentemente todos os seus documentos e dados. Tem certeza absoluta?"
+  },
+  "password": {
+    "weak": "Fraca",
+    "fair": "Regular",
+    "good": "Boa",
+    "strong": "Forte"
   }
 }

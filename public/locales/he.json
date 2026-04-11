@@ -1099,7 +1099,8 @@
     "passwordMinPlaceholder": "סיסמא (8 תווים לפחות)",
     "passwordPlaceholder": "סיסמא",
     "signInBtn": "כניסה",
-    "signInLink": "התחברות"
+    "signInLink": "התחברות",
+    "untitled": "ללא שם"
   },
   "pricing": {
     "badge": "תוכניות גמישות",
@@ -1325,7 +1326,13 @@
       "failedText": "משהו השתבש. אנא נסה שוב.",
       "retry": "נסה שוב",
       "protected": "המסמך מוגן",
-      "viewInDocs": "צפה במסמכים"
+      "viewInDocs": "צפה במסמכים",
+      "encrypting": "מצפין...",
+      "failedPrefix": "נכשל",
+      "viewDocument": "צפה במסמך",
+      "encryptedLink": "קישור מוצפן",
+      "copyLink": "העתק קישור",
+      "saveLinkWarning": "שמור את הקישור הזה! בלעדיו לא ניתן לצפות במסמך. Vertifile לא יכול לשחזר אותו."
     },
     "documents": {
       "title": "מסמכים",
@@ -1354,7 +1361,8 @@
       "cryptoProof": "הוכחה קריפטוגרפית",
       "algorithm": "אלגוריתם",
       "keyId": "מזהה מפתח",
-      "status": "סטטוס"
+      "status": "סטטוס",
+      "selectedSuffix": "נבחרו"
     },
     "stamp": {
       "title": "החותמת שלי",
@@ -1588,11 +1596,79 @@
     "verifiedBy": "מאומת על-ידי VERTIFILE",
     "approved": "מסמך מאושר",
     "secured": "מאובטח בבלוקצ׳יין",
-    "customLogo": "לוגו מותאם"
+    "customLogo": "לוגו מותאם",
+    "defaultLogo": "מגן Vertifile (ברירת מחדל)"
   },
   "plan": {
     "documents": "מסמכים",
     "used": "בשימוש",
-    "unlimited": "ללא הגבלה"
+    "unlimited": "ללא הגבלה",
+    "free": "חינם",
+    "pro": "Pro",
+    "proPlus": "Pro+",
+    "enterprise": "ארגוני",
+    "planWord": "תוכנית"
+  },
+  "preview": {
+    "pvfDocument": "מסמך PVF",
+    "openDocument": "פתח מסמך",
+    "hmacOnly": "HMAC בלבד",
+    "hmacOnlyTitle": "מסמך זה נחתם לפני שחתימה כפולה עם Ed25519 הופעלה."
+  },
+  "toast": {
+    "shareLinkCopied": "קישור שיתוף הועתק!",
+    "docDeleted": "המסמך נמחק",
+    "deleteFailed": "המחיקה נכשלה",
+    "error": "שגיאה",
+    "noDocsSelected": "לא נבחרו מסמכים",
+    "deletingDocs": "מוחק {n} מסמכים...",
+    "bulkDeletePartial": "{d} נמחקו, {f} נכשלו",
+    "bulkDeleteDone": "{d} מסמכים נמחקו",
+    "stampSaved": "החותמת נשמרה — מוחלת על כל המסמכים שלך",
+    "stampSaveFailed": "שמירת החותמת נכשלה",
+    "logoTooLarge": "הלוגו חייב להיות פחות מ-2MB",
+    "brandingSaved": "המיתוג נשמר בהצלחה!",
+    "brandingSaveFailed": "שמירת המיתוג נכשלה",
+    "brandingReset": "המיתוג אופס לברירת מחדל",
+    "nameEmpty": "השם לא יכול להיות ריק",
+    "profileSaved": "הפרופיל נשמר!",
+    "profileSaveFailed": "שמירת הפרופיל נכשלה",
+    "apiKeyGenerated": "מפתח API נוצר! העתק אותו עכשיו — הוא לא יוצג שוב במלואו.",
+    "apiKeyFailed": "יצירת מפתח API נכשלה",
+    "apiKeyCopied": "מפתח API הועתק!",
+    "apiKeyDemo": "מפתח API נוצר (מצב הדגמה)",
+    "copyFailed": "ההעתקה נכשלה",
+    "fillPasswordFields": "אנא מלא את כל שדות הסיסמה",
+    "passwordsNoMatch": "הסיסמאות אינן תואמות",
+    "passwordMin8": "הסיסמה חייבת להיות 8 תווים לפחות",
+    "passwordUpdated": "הסיסמה עודכנה!",
+    "passwordChangeFailed": "שינוי הסיסמה נכשל",
+    "accountDeleted": "החשבון נמחק.",
+    "accountDeleteFailed": "מחיקת החשבון נכשלה",
+    "cannotPrint": "לא ניתן להדפיס — אין קישור שיתוף",
+    "cannotExtractPrint": "לא ניתן לחלץ את המסמך להדפסה",
+    "printLoadFailed": "טעינת המסמך להדפסה נכשלה",
+    "docProtected": "המסמך מוגן!",
+    "docProtectedShort": "מסמך מוגן",
+    "copiedToClipboard": "הועתק ללוח!",
+    "copied": "הועתק!",
+    "allNotifRead": "כל ההתראות סומנו כנקראו",
+    "passwordUpdatedSignIn": "הסיסמה עודכנה! כעת ניתן להתחבר.",
+    "resetFailed": "האיפוס נכשל",
+    "somethingWrong": "משהו השתבש",
+    "encryptionModuleError": "מודול ההצפנה לא נטען. אנא רענן את הדף.",
+    "enterEmailFirst": "אנא הזן את כתובת האימייל שלך תחילה",
+    "resetLinkSent": "אם אימייל זה קיים, נשלח קישור לאיפוס"
+  },
+  "confirm": {
+    "deleteDocument": "האם אתה בטוח שברצונך למחוק מסמך זה?",
+    "deleteAccount": "האם אתה בטוח שברצונך למחוק את החשבון? פעולה זו לא ניתנת לביטול.",
+    "deleteAccountFinal": "פעולה זו תמחק לצמיתות את כל המסמכים והנתונים שלך. האם אתה בטוח לחלוטין?"
+  },
+  "password": {
+    "weak": "חלשה",
+    "fair": "סבירה",
+    "good": "טובה",
+    "strong": "חזקה"
   }
 }

@@ -1099,7 +1099,8 @@
     "passwordMinPlaceholder": "كلمة المرور (8 أحرف على الأقل)",
     "passwordPlaceholder": "كلمة المرور",
     "signInBtn": "تسجيل الدخول",
-    "signInLink": "تسجيل الدخول"
+    "signInLink": "تسجيل الدخول",
+    "untitled": "بدون عنوان"
   },
   "pricing": {
     "badge": "خطط مرنة",
@@ -1325,7 +1326,13 @@
       "failedText": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
       "retry": "إعادة المحاولة",
       "protected": "تمت حماية المستند",
-      "viewInDocs": "عرض في المستندات"
+      "viewInDocs": "عرض في المستندات",
+      "encrypting": "جارٍ التشفير...",
+      "failedPrefix": "فشل",
+      "viewDocument": "عرض المستند",
+      "encryptedLink": "رابط مشفر",
+      "copyLink": "نسخ الرابط",
+      "saveLinkWarning": "احفظ هذا الرابط! بدونه لا يمكن عرض المستند. لا يستطيع Vertifile استعادته."
     },
     "documents": {
       "title": "Documents",
@@ -1354,7 +1361,8 @@
       "cryptoProof": "الإثبات التشفيري",
       "algorithm": "الخوارزمية",
       "keyId": "معرّف المفتاح",
-      "status": "الحالة"
+      "status": "الحالة",
+      "selectedSuffix": "محدد"
     },
     "stamp": {
       "title": "My Stamp",
@@ -1589,11 +1597,79 @@
     "verifiedBy": "تم التحقق بواسطة VERTIFILE",
     "approved": "الوثيقة معتمدة",
     "secured": "مؤمن بالبلوكتشين",
-    "customLogo": "شعار مخصص"
+    "customLogo": "شعار مخصص",
+    "defaultLogo": "درع Vertifile (افتراضي)"
   },
   "plan": {
     "documents": "مستندات",
     "used": "مستخدم",
-    "unlimited": "غير محدود"
+    "unlimited": "غير محدود",
+    "free": "مجاني",
+    "pro": "Pro",
+    "proPlus": "Pro+",
+    "enterprise": "مؤسسات",
+    "planWord": "خطة"
+  },
+  "preview": {
+    "pvfDocument": "مستند PVF",
+    "openDocument": "فتح المستند",
+    "hmacOnly": "HMAC فقط",
+    "hmacOnlyTitle": "تم توقيع هذا المستند قبل تفعيل التوقيع المزدوج Ed25519."
+  },
+  "toast": {
+    "shareLinkCopied": "تم نسخ رابط المشاركة!",
+    "docDeleted": "تم حذف المستند",
+    "deleteFailed": "فشل الحذف",
+    "error": "خطأ",
+    "noDocsSelected": "لم يتم تحديد مستندات",
+    "deletingDocs": "جارٍ حذف {n} مستند(ات)...",
+    "bulkDeletePartial": "تم حذف {d}، فشل {f}",
+    "bulkDeleteDone": "تم حذف {d} مستند(ات)",
+    "stampSaved": "تم حفظ الختم — يتم تطبيقه على جميع مستنداتك",
+    "stampSaveFailed": "فشل حفظ الختم",
+    "logoTooLarge": "يجب أن يكون الشعار أقل من 2 ميجابايت",
+    "brandingSaved": "تم حفظ العلامة التجارية بنجاح!",
+    "brandingSaveFailed": "فشل حفظ العلامة التجارية",
+    "brandingReset": "تمت إعادة تعيين العلامة التجارية",
+    "nameEmpty": "لا يمكن أن يكون الاسم فارغاً",
+    "profileSaved": "تم حفظ الملف الشخصي!",
+    "profileSaveFailed": "فشل حفظ الملف الشخصي",
+    "apiKeyGenerated": "تم إنشاء مفتاح API! انسخه الآن — لن يُعرض بالكامل مرة أخرى.",
+    "apiKeyFailed": "فشل إنشاء مفتاح API",
+    "apiKeyCopied": "تم نسخ مفتاح API!",
+    "apiKeyDemo": "تم إنشاء مفتاح API (وضع تجريبي)",
+    "copyFailed": "فشل النسخ",
+    "fillPasswordFields": "يرجى ملء جميع حقول كلمة المرور",
+    "passwordsNoMatch": "كلمات المرور غير متطابقة",
+    "passwordMin8": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "passwordUpdated": "تم تحديث كلمة المرور!",
+    "passwordChangeFailed": "فشل تغيير كلمة المرور",
+    "accountDeleted": "تم حذف الحساب.",
+    "accountDeleteFailed": "فشل حذف الحساب",
+    "cannotPrint": "لا يمكن الطباعة — لا يوجد رابط مشاركة",
+    "cannotExtractPrint": "لا يمكن استخراج المستند للطباعة",
+    "printLoadFailed": "فشل تحميل المستند للطباعة",
+    "docProtected": "تمت حماية المستند!",
+    "docProtectedShort": "مستند محمي",
+    "copiedToClipboard": "تم النسخ إلى الحافظة!",
+    "copied": "تم النسخ!",
+    "allNotifRead": "تم تحديد جميع الإشعارات كمقروءة",
+    "passwordUpdatedSignIn": "تم تحديث كلمة المرور! يمكنك تسجيل الدخول الآن.",
+    "resetFailed": "فشلت إعادة التعيين",
+    "somethingWrong": "حدث خطأ ما",
+    "encryptionModuleError": "لم يتم تحميل وحدة التشفير. يرجى إعادة تحميل الصفحة.",
+    "enterEmailFirst": "يرجى إدخال عنوان بريدك الإلكتروني أولاً",
+    "resetLinkSent": "إذا كان هذا البريد موجوداً، فقد تم إرسال رابط إعادة التعيين"
+  },
+  "confirm": {
+    "deleteDocument": "هل أنت متأكد أنك تريد حذف هذا المستند؟",
+    "deleteAccount": "هل أنت متأكد أنك تريد حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء.",
+    "deleteAccountFinal": "سيؤدي هذا إلى حذف جميع مستنداتك وبياناتك نهائياً. هل أنت متأكد تماماً؟"
+  },
+  "password": {
+    "weak": "ضعيفة",
+    "fair": "مقبولة",
+    "good": "جيدة",
+    "strong": "قوية"
   }
 }

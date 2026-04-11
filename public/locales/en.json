@@ -1099,7 +1099,8 @@
     "passwordMinPlaceholder": "Password (min 8 characters)",
     "passwordPlaceholder": "Password",
     "signInBtn": "Sign In",
-    "signInLink": "Sign in"
+    "signInLink": "Sign in",
+    "untitled": "Untitled"
   },
   "pricing": {
     "badge": "Flexible Plans",
@@ -1325,7 +1326,13 @@
       "failedText": "Something went wrong. Please try again.",
       "retry": "Retry Upload",
       "protected": "Document Protected",
-      "viewInDocs": "View in Documents"
+      "viewInDocs": "View in Documents",
+      "encrypting": "Encrypting...",
+      "failedPrefix": "Failed",
+      "viewDocument": "View document",
+      "encryptedLink": "Encrypted link",
+      "copyLink": "Copy link",
+      "saveLinkWarning": "Save this link! Without it, the document cannot be viewed. Vertifile cannot recover it."
     },
     "documents": {
       "title": "Documents",
@@ -1341,6 +1348,7 @@
       "emptyDesc": "Upload your first document to get started with Vertifile protection.",
       "uploadFirst": "Upload your first document",
       "selected": "0 selected",
+      "selectedSuffix": "selected",
       "downloadAll": "Download All",
       "delete": "Delete",
       "deselect": "Deselect",
@@ -1588,11 +1596,79 @@
     "verifiedBy": "VERIFIED BY VERTIFILE",
     "approved": "DOCUMENT APPROVED",
     "secured": "BLOCKCHAIN SECURED",
-    "customLogo": "Custom logo"
+    "customLogo": "Custom logo",
+    "defaultLogo": "Vertifile Shield (default)"
   },
   "plan": {
     "documents": "documents",
     "used": "used",
-    "unlimited": "Unlimited"
+    "unlimited": "Unlimited",
+    "free": "Free",
+    "pro": "Pro",
+    "proPlus": "Pro+",
+    "enterprise": "Enterprise",
+    "planWord": "PLAN"
+  },
+  "preview": {
+    "pvfDocument": "PVF DOCUMENT",
+    "openDocument": "Open document",
+    "hmacOnly": "HMAC-only",
+    "hmacOnlyTitle": "This document was signed before Ed25519 dual-signing was enabled."
+  },
+  "toast": {
+    "shareLinkCopied": "Share link copied!",
+    "docDeleted": "Document deleted",
+    "deleteFailed": "Failed to delete",
+    "error": "Error",
+    "noDocsSelected": "No documents selected",
+    "deletingDocs": "Deleting {n} document(s)...",
+    "bulkDeletePartial": "{d} deleted, {f} failed",
+    "bulkDeleteDone": "{d} document(s) deleted",
+    "stampSaved": "Stamp saved — applying to all your documents",
+    "stampSaveFailed": "Failed to save stamp",
+    "logoTooLarge": "Logo must be under 2MB",
+    "brandingSaved": "Branding saved successfully!",
+    "brandingSaveFailed": "Failed to save branding",
+    "brandingReset": "Branding reset to default",
+    "nameEmpty": "Name cannot be empty",
+    "profileSaved": "Profile saved!",
+    "profileSaveFailed": "Failed to save profile",
+    "apiKeyGenerated": "API key generated! Copy it now — it won't be shown again in full.",
+    "apiKeyFailed": "Failed to generate API key",
+    "apiKeyCopied": "API key copied!",
+    "apiKeyDemo": "API key generated (demo mode)",
+    "copyFailed": "Copy failed",
+    "fillPasswordFields": "Please fill in all password fields",
+    "passwordsNoMatch": "Passwords do not match",
+    "passwordMin8": "Password must be at least 8 characters",
+    "passwordUpdated": "Password updated!",
+    "passwordChangeFailed": "Failed to change password",
+    "accountDeleted": "Account deleted.",
+    "accountDeleteFailed": "Failed to delete account",
+    "cannotPrint": "Cannot print — no share link",
+    "cannotExtractPrint": "Cannot extract document for printing",
+    "printLoadFailed": "Failed to load document for printing",
+    "docProtected": "Document protected!",
+    "docProtectedShort": "Document protected",
+    "copiedToClipboard": "Copied to clipboard!",
+    "copied": "Copied!",
+    "allNotifRead": "All notifications marked as read",
+    "passwordUpdatedSignIn": "Password updated! You can now sign in.",
+    "resetFailed": "Reset failed",
+    "somethingWrong": "Something went wrong",
+    "encryptionModuleError": "Encryption module not loaded. Please reload the page.",
+    "enterEmailFirst": "Please enter your email address first",
+    "resetLinkSent": "If this email exists, a reset link has been sent"
+  },
+  "confirm": {
+    "deleteDocument": "Are you sure you want to delete this document?",
+    "deleteAccount": "Are you sure you want to delete your account? This action cannot be undone.",
+    "deleteAccountFinal": "This will permanently delete all your documents and data. Are you absolutely sure?"
+  },
+  "password": {
+    "weak": "Weak",
+    "fair": "Fair",
+    "good": "Good",
+    "strong": "Strong"
   }
 }

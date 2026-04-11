@@ -1099,7 +1099,8 @@
     "passwordMinPlaceholder": "Пароль (мин. 8 символов)",
     "passwordPlaceholder": "Пароль",
     "signInBtn": "Войти",
-    "signInLink": "Войти"
+    "signInLink": "Войти",
+    "untitled": "Без названия"
   },
   "pricing": {
     "badge": "Гибкие тарифы",
@@ -1325,7 +1326,13 @@
       "failedText": "Что-то пошло не так. Пожалуйста, попробуйте снова.",
       "retry": "Повторить",
       "protected": "Документ защищен",
-      "viewInDocs": "Просмотреть в документах"
+      "viewInDocs": "Просмотреть в документах",
+      "encrypting": "Шифрование...",
+      "failedPrefix": "Ошибка",
+      "viewDocument": "Просмотреть документ",
+      "encryptedLink": "Зашифрованная ссылка",
+      "copyLink": "Копировать ссылку",
+      "saveLinkWarning": "Сохраните эту ссылку! Без неё документ невозможно просмотреть. Vertifile не сможет её восстановить."
     },
     "documents": {
       "title": "Documents",
@@ -1354,7 +1361,8 @@
       "cryptoProof": "Криптографическое доказательство",
       "algorithm": "Алгоритм",
       "keyId": "ID ключа",
-      "status": "Статус"
+      "status": "Статус",
+      "selectedSuffix": "выбрано"
     },
     "stamp": {
       "title": "My Stamp",
@@ -1589,11 +1597,79 @@
     "verifiedBy": "ПОДТВЕРЖДЕНО VERTIFILE",
     "approved": "ДОКУМЕНТ ОДОБРЕН",
     "secured": "БЛОКЧЕЙН ЗАЩИЩЕН",
-    "customLogo": "Пользовательский логотип"
+    "customLogo": "Пользовательский логотип",
+    "defaultLogo": "Щит Vertifile (по умолчанию)"
   },
   "plan": {
     "documents": "документов",
     "used": "использовано",
-    "unlimited": "Безлимитно"
+    "unlimited": "Безлимитно",
+    "free": "Бесплатный",
+    "pro": "Pro",
+    "proPlus": "Pro+",
+    "enterprise": "Корпоративный",
+    "planWord": "ПЛАН"
+  },
+  "preview": {
+    "pvfDocument": "ДОКУМЕНТ PVF",
+    "openDocument": "Открыть документ",
+    "hmacOnly": "Только HMAC",
+    "hmacOnlyTitle": "Этот документ был подписан до включения двойной подписи Ed25519."
+  },
+  "toast": {
+    "shareLinkCopied": "Ссылка скопирована!",
+    "docDeleted": "Документ удалён",
+    "deleteFailed": "Не удалось удалить",
+    "error": "Ошибка",
+    "noDocsSelected": "Документы не выбраны",
+    "deletingDocs": "Удаление {n} документов...",
+    "bulkDeletePartial": "{d} удалено, {f} не удалось",
+    "bulkDeleteDone": "{d} документов удалено",
+    "stampSaved": "Штамп сохранён — применяется ко всем вашим документам",
+    "stampSaveFailed": "Не удалось сохранить штамп",
+    "logoTooLarge": "Логотип должен быть менее 2 МБ",
+    "brandingSaved": "Брендинг успешно сохранён!",
+    "brandingSaveFailed": "Не удалось сохранить брендинг",
+    "brandingReset": "Брендинг сброшен по умолчанию",
+    "nameEmpty": "Имя не может быть пустым",
+    "profileSaved": "Профиль сохранён!",
+    "profileSaveFailed": "Не удалось сохранить профиль",
+    "apiKeyGenerated": "API-ключ сгенерирован! Скопируйте его сейчас — полностью он больше не будет показан.",
+    "apiKeyFailed": "Не удалось сгенерировать API-ключ",
+    "apiKeyCopied": "API-ключ скопирован!",
+    "apiKeyDemo": "API-ключ сгенерирован (демо-режим)",
+    "copyFailed": "Копирование не удалось",
+    "fillPasswordFields": "Пожалуйста, заполните все поля пароля",
+    "passwordsNoMatch": "Пароли не совпадают",
+    "passwordMin8": "Пароль должен содержать не менее 8 символов",
+    "passwordUpdated": "Пароль обновлён!",
+    "passwordChangeFailed": "Не удалось изменить пароль",
+    "accountDeleted": "Аккаунт удалён.",
+    "accountDeleteFailed": "Не удалось удалить аккаунт",
+    "cannotPrint": "Печать невозможна — нет ссылки для обмена",
+    "cannotExtractPrint": "Невозможно извлечь документ для печати",
+    "printLoadFailed": "Не удалось загрузить документ для печати",
+    "docProtected": "Документ защищён!",
+    "docProtectedShort": "Документ защищён",
+    "copiedToClipboard": "Скопировано в буфер обмена!",
+    "copied": "Скопировано!",
+    "allNotifRead": "Все уведомления отмечены как прочитанные",
+    "passwordUpdatedSignIn": "Пароль обновлён! Теперь вы можете войти.",
+    "resetFailed": "Сброс не удался",
+    "somethingWrong": "Что-то пошло не так",
+    "encryptionModuleError": "Модуль шифрования не загружен. Пожалуйста, перезагрузите страницу.",
+    "enterEmailFirst": "Сначала введите ваш адрес электронной почты",
+    "resetLinkSent": "Если этот email существует, ссылка для сброса б��ла отправлена"
+  },
+  "confirm": {
+    "deleteDocument": "Вы уверены, что хотите удалить этот документ?",
+    "deleteAccount": "Вы уверены, что хотите удалить свой аккаунт? Это действие нельзя отменить.",
+    "deleteAccountFinal": "Это навсегда удалит все ваши документы и данные. Вы абсолютно уверены?"
+  },
+  "password": {
+    "weak": "Слабый",
+    "fair": "Средний",
+    "good": "Хороший",
+    "strong": "Надёжный"
   }
 }

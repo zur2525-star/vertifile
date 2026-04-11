@@ -1099,7 +1099,8 @@
     "passwordMinPlaceholder": "密码（至少8个字符）",
     "passwordPlaceholder": "密码",
     "signInBtn": "登录",
-    "signInLink": "登录"
+    "signInLink": "登录",
+    "untitled": "未命名"
   },
   "pricing": {
     "badge": "灵活方案",
@@ -1325,7 +1326,13 @@
       "failedText": "出了点问题，请重试。",
       "retry": "重新上传",
       "protected": "文档已保护",
-      "viewInDocs": "在文档中查看"
+      "viewInDocs": "在文档中查看",
+      "encrypting": "加密中...",
+      "failedPrefix": "失败",
+      "viewDocument": "查看文档",
+      "encryptedLink": "加密链接",
+      "copyLink": "复制链接",
+      "saveLinkWarning": "请保存此链接！没有它将无法查看文档。Vertifile 无法恢复。"
     },
     "documents": {
       "title": "Documents",
@@ -1354,7 +1361,8 @@
       "cryptoProof": "加密证明",
       "algorithm": "算法",
       "keyId": "密钥ID",
-      "status": "状态"
+      "status": "状态",
+      "selectedSuffix": "已选择"
     },
     "stamp": {
       "title": "My Stamp",
@@ -1589,11 +1597,79 @@
     "verifiedBy": "由VERTIFILE验证",
     "approved": "文件已批准",
     "secured": "区块链保护",
-    "customLogo": "自定义logo"
+    "customLogo": "自定义logo",
+    "defaultLogo": "Vertifile 盾牌（默认）"
   },
   "plan": {
     "documents": "文档",
     "used": "已使用",
-    "unlimited": "无限制"
+    "unlimited": "无限制",
+    "free": "免费",
+    "pro": "Pro",
+    "proPlus": "Pro+",
+    "enterprise": "企业版",
+    "planWord": "计划"
+  },
+  "preview": {
+    "pvfDocument": "PVF 文档",
+    "openDocument": "打开文档",
+    "hmacOnly": "仅 HMAC",
+    "hmacOnlyTitle": "此文档在启用 Ed25519 双重签名之前签署。"
+  },
+  "toast": {
+    "shareLinkCopied": "分享链接已复制！",
+    "docDeleted": "文档已删除",
+    "deleteFailed": "删除失败",
+    "error": "错误",
+    "noDocsSelected": "未选择文档",
+    "deletingDocs": "正在删除 {n} 个文档...",
+    "bulkDeletePartial": "已删除 {d} 个，{f} 个失败",
+    "bulkDeleteDone": "已删除 {d} 个文档",
+    "stampSaved": "印章已保存 — 正在应用到您的所有文档",
+    "stampSaveFailed": "保存印章失败",
+    "logoTooLarge": "Logo 必须小于 2MB",
+    "brandingSaved": "品牌设置保存成功！",
+    "brandingSaveFailed": "保存品牌设置失败",
+    "brandingReset": "品牌设置已重置为默认",
+    "nameEmpty": "名称不能为空",
+    "profileSaved": "个人资料已保存！",
+    "profileSaveFailed": "保存个人资料失败",
+    "apiKeyGenerated": "API 密钥已生成！请立即复制 — 之后将不再完整显示。",
+    "apiKeyFailed": "生成 API 密钥失败",
+    "apiKeyCopied": "API 密钥已复制！",
+    "apiKeyDemo": "API 密钥已生成（演示模式）",
+    "copyFailed": "复制失败",
+    "fillPasswordFields": "请填写所有密码字段",
+    "passwordsNoMatch": "密码不匹配",
+    "passwordMin8": "密码至少需要8个字符",
+    "passwordUpdated": "密码已更新！",
+    "passwordChangeFailed": "更改密码失败",
+    "accountDeleted": "账户已删除。",
+    "accountDeleteFailed": "删除账户失败",
+    "cannotPrint": "无法打印 — 没有分享链接",
+    "cannotExtractPrint": "无法提取文档进行打印",
+    "printLoadFailed": "加载打印文档失败",
+    "docProtected": "文档已保护！",
+    "docProtectedShort": "文档已保护",
+    "copiedToClipboard": "已复制到剪贴板！",
+    "copied": "已复制！",
+    "allNotifRead": "所有通知已标记为已读",
+    "passwordUpdatedSignIn": "密码已更新！您现在可以登录了。",
+    "resetFailed": "重置失败",
+    "somethingWrong": "出了点问题",
+    "encryptionModuleError": "加密模块未加载。请重新加载页面。",
+    "enterEmailFirst": "请先输入您的电子邮件地址",
+    "resetLinkSent": "如果此邮箱存在，重置链接已发送"
+  },
+  "confirm": {
+    "deleteDocument": "您确定要删除此文档吗？",
+    "deleteAccount": "您确定要删除您的账户吗？此操作无法撤消。",
+    "deleteAccountFinal": "这将永久删除您的所有文档和数据。您确定吗？"
+  },
+  "password": {
+    "weak": "弱",
+    "fair": "一般",
+    "good": "好",
+    "strong": "强"
   }
 }

@@ -1099,7 +1099,8 @@
     "passwordMinPlaceholder": "パスワード（8文字以上）",
     "passwordPlaceholder": "パスワード",
     "signInBtn": "サインイン",
-    "signInLink": "サインイン"
+    "signInLink": "サインイン",
+    "untitled": "無題"
   },
   "pricing": {
     "badge": "柔軟なプラン",
@@ -1325,7 +1326,13 @@
       "failedText": "問題が発生しました。もう一度お試しください。",
       "retry": "再試行",
       "protected": "ドキュメント保護済み",
-      "viewInDocs": "ドキュメントで表示"
+      "viewInDocs": "ドキュメントで表示",
+      "encrypting": "暗号化中...",
+      "failedPrefix": "失敗",
+      "viewDocument": "ドキュメントを表示",
+      "encryptedLink": "暗号化リンク",
+      "copyLink": "リンクをコピー",
+      "saveLinkWarning": "このリンクを保存してください！これがないとドキュメントを表示できません。Vertifileでは復元できません。"
     },
     "documents": {
       "title": "Documents",
@@ -1354,7 +1361,8 @@
       "cryptoProof": "暗号化証明",
       "algorithm": "アルゴリズム",
       "keyId": "キーID",
-      "status": "ステータス"
+      "status": "ステータス",
+      "selectedSuffix": "件選択中"
     },
     "stamp": {
       "title": "My Stamp",
@@ -1589,11 +1597,79 @@
     "verifiedBy": "VERTIFILEにより検証済み",
     "approved": "ドキュメント承認済み",
     "secured": "ブロックチェーン保護",
-    "customLogo": "カスタムロゴ"
+    "customLogo": "カスタムロゴ",
+    "defaultLogo": "Vertifileシールド（デフォルト）"
   },
   "plan": {
     "documents": "ドキュメント",
     "used": "使用済み",
-    "unlimited": "無制限"
+    "unlimited": "無制限",
+    "free": "無料",
+    "pro": "Pro",
+    "proPlus": "Pro+",
+    "enterprise": "エンタープライズ",
+    "planWord": "プラン"
+  },
+  "preview": {
+    "pvfDocument": "PVF ドキュメント",
+    "openDocument": "ドキュメントを開く",
+    "hmacOnly": "HMACのみ",
+    "hmacOnlyTitle": "このドキュメントはEd25519デュアル署名が有効になる前に署名されました。"
+  },
+  "toast": {
+    "shareLinkCopied": "共有リンクをコピーしました！",
+    "docDeleted": "ドキュメントを削除しました",
+    "deleteFailed": "削除に失敗しました",
+    "error": "エラー",
+    "noDocsSelected": "ドキュメントが選択されていません",
+    "deletingDocs": "{n}件のドキュメントを削除中...",
+    "bulkDeletePartial": "{d}件削除、{f}件失敗",
+    "bulkDeleteDone": "{d}件のドキュメントを削除しました",
+    "stampSaved": "スタンプを保存しました — すべてのドキュメントに適用されます",
+    "stampSaveFailed": "スタンプの保存に失敗しました",
+    "logoTooLarge": "ロゴは2MB以下にしてください",
+    "brandingSaved": "ブランディングを保存しました！",
+    "brandingSaveFailed": "ブランディングの保存に失敗しました",
+    "brandingReset": "ブランディングをデフォルトにリセットしました",
+    "nameEmpty": "名前を入力してください",
+    "profileSaved": "プロフィールを保存しました！",
+    "profileSaveFailed": "プロフィールの保存に失敗しました",
+    "apiKeyGenerated": "APIキーが生成されました！今すぐコピーしてください — 再度完全には表示されません。",
+    "apiKeyFailed": "APIキーの生成に失敗しました",
+    "apiKeyCopied": "APIキーをコピーしました！",
+    "apiKeyDemo": "APIキーが生成されました（デモモード）",
+    "copyFailed": "コピーに失敗しました",
+    "fillPasswordFields": "すべてのパスワード欄を入力してください",
+    "passwordsNoMatch": "パスワードが一致しません",
+    "passwordMin8": "パスワードは8文字以上にしてください",
+    "passwordUpdated": "パスワードを更新しました！",
+    "passwordChangeFailed": "パスワードの変更に失敗しました",
+    "accountDeleted": "アカウントが削除されました。",
+    "accountDeleteFailed": "アカウントの削除に失敗しました",
+    "cannotPrint": "印刷できません — 共有リンクがありません",
+    "cannotExtractPrint": "印刷用にドキュメントを抽出できません",
+    "printLoadFailed": "印刷用ドキュメントの読み込みに失敗しました",
+    "docProtected": "ドキュメントが保護されました！",
+    "docProtectedShort": "ドキュメント保護済み",
+    "copiedToClipboard": "クリップボードにコピーしました！",
+    "copied": "コピーしました！",
+    "allNotifRead": "すべての通知を既読にしました",
+    "passwordUpdatedSignIn": "パスワードが更新されました！サインインできます。",
+    "resetFailed": "リセットに失敗しました",
+    "somethingWrong": "エラーが発生しました",
+    "encryptionModuleError": "暗号化モジュールが読み込まれていません。ページを再読み込みしてください。",
+    "enterEmailFirst": "まずメールアドレスを入力してください",
+    "resetLinkSent": "このメールアドレスが存在する場合、リセットリンクが送信されました"
+  },
+  "confirm": {
+    "deleteDocument": "このドキュメントを削除してもよろしいですか？",
+    "deleteAccount": "アカウントを削除してもよろしいですか？この操作は取り消せません。",
+    "deleteAccountFinal": "すべてのドキュメントとデータが完全に削除されます。本当によろしいですか？"
+  },
+  "password": {
+    "weak": "弱い",
+    "fair": "普通",
+    "good": "良い",
+    "strong": "強い"
   }
 }

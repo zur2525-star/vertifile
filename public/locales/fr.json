@@ -1099,7 +1099,8 @@
     "passwordMinPlaceholder": "Mot de passe (8 caractères min.)",
     "passwordPlaceholder": "Mot de passe",
     "signInBtn": "Se connecter",
-    "signInLink": "Se connecter"
+    "signInLink": "Se connecter",
+    "untitled": "Sans titre"
   },
   "pricing": {
     "badge": "Plans flexibles",
@@ -1325,7 +1326,13 @@
       "failedText": "Une erreur s'est produite. Veuillez reessayer.",
       "retry": "Reessayer",
       "protected": "Document Protege",
-      "viewInDocs": "Voir dans les Documents"
+      "viewInDocs": "Voir dans les Documents",
+      "encrypting": "Chiffrement...",
+      "failedPrefix": "Échec",
+      "viewDocument": "Voir le document",
+      "encryptedLink": "Lien chiffré",
+      "copyLink": "Copier le lien",
+      "saveLinkWarning": "Sauvegardez ce lien ! Sans lui, le document ne peut pas être consulté. Vertifile ne peut pas le récupérer."
     },
     "documents": {
       "title": "Documents",
@@ -1354,7 +1361,8 @@
       "cryptoProof": "Preuve Cryptographique",
       "algorithm": "Algorithme",
       "keyId": "ID de Cle",
-      "status": "Statut"
+      "status": "Statut",
+      "selectedSuffix": "sélectionnés"
     },
     "stamp": {
       "title": "My Stamp",
@@ -1589,11 +1597,79 @@
     "verifiedBy": "VERIFIE PAR VERTIFILE",
     "approved": "DOCUMENT APPROUVE",
     "secured": "SECURISE PAR BLOCKCHAIN",
-    "customLogo": "Logo personnalise"
+    "customLogo": "Logo personnalise",
+    "defaultLogo": "Bouclier Vertifile (par défaut)"
   },
   "plan": {
     "documents": "documents",
     "used": "utilises",
-    "unlimited": "Illimite"
+    "unlimited": "Illimite",
+    "free": "Gratuit",
+    "pro": "Pro",
+    "proPlus": "Pro+",
+    "enterprise": "Entreprise",
+    "planWord": "PLAN"
+  },
+  "preview": {
+    "pvfDocument": "DOCUMENT PVF",
+    "openDocument": "Ouvrir le document",
+    "hmacOnly": "HMAC uniquement",
+    "hmacOnlyTitle": "Ce document a été signé avant l'activation de la double signature Ed25519."
+  },
+  "toast": {
+    "shareLinkCopied": "Lien de partage copié !",
+    "docDeleted": "Document supprimé",
+    "deleteFailed": "Échec de la suppression",
+    "error": "Erreur",
+    "noDocsSelected": "Aucun document sélectionné",
+    "deletingDocs": "Suppression de {n} document(s)...",
+    "bulkDeletePartial": "{d} supprimés, {f} échoués",
+    "bulkDeleteDone": "{d} document(s) supprimé(s)",
+    "stampSaved": "Tampon enregistré — appliqué à tous vos documents",
+    "stampSaveFailed": "Échec de l'enregistrement du tampon",
+    "logoTooLarge": "Le logo doit faire moins de 2 Mo",
+    "brandingSaved": "Branding enregistré avec succès !",
+    "brandingSaveFailed": "Échec de l'enregistrement du branding",
+    "brandingReset": "Branding réinitialisé par défaut",
+    "nameEmpty": "Le nom ne peut pas être vide",
+    "profileSaved": "Profil enregistré !",
+    "profileSaveFailed": "Échec de l'enregistrement du profil",
+    "apiKeyGenerated": "Clé API générée ! Copiez-la maintenant — elle ne sera plus affichée intégralement.",
+    "apiKeyFailed": "Échec de la génération de la clé API",
+    "apiKeyCopied": "Clé API copiée !",
+    "apiKeyDemo": "Clé API générée (mode démo)",
+    "copyFailed": "Échec de la copie",
+    "fillPasswordFields": "Veuillez remplir tous les champs de mot de passe",
+    "passwordsNoMatch": "Les mots de passe ne correspondent pas",
+    "passwordMin8": "Le mot de passe doit contenir au moins 8 caractères",
+    "passwordUpdated": "Mot de passe mis à jour !",
+    "passwordChangeFailed": "Échec du changement de mot de passe",
+    "accountDeleted": "Compte supprimé.",
+    "accountDeleteFailed": "Échec de la suppression du compte",
+    "cannotPrint": "Impression impossible — pas de lien de partage",
+    "cannotExtractPrint": "Impossible d'extraire le document pour l'impression",
+    "printLoadFailed": "Échec du chargement du document pour l'impression",
+    "docProtected": "Document protégé !",
+    "docProtectedShort": "Document protégé",
+    "copiedToClipboard": "Copié dans le presse-papiers !",
+    "copied": "Copié !",
+    "allNotifRead": "Toutes les notifications marquées comme lues",
+    "passwordUpdatedSignIn": "Mot de passe mis à jour ! Vous pouvez maintenant vous connecter.",
+    "resetFailed": "Échec de la réinitialisation",
+    "somethingWrong": "Quelque chose s'est mal passé",
+    "encryptionModuleError": "Module de chiffrement non chargé. Veuillez recharger la page.",
+    "enterEmailFirst": "Veuillez d'abord saisir votre adresse e-mail",
+    "resetLinkSent": "Si cet e-mail existe, un lien de réinitialisation a été envoyé"
+  },
+  "confirm": {
+    "deleteDocument": "Êtes-vous sûr de vouloir supprimer ce document ?",
+    "deleteAccount": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+    "deleteAccountFinal": "Cela supprimera définitivement tous vos documents et données. Êtes-vous absolument sûr ?"
+  },
+  "password": {
+    "weak": "Faible",
+    "fair": "Moyen",
+    "good": "Bon",
+    "strong": "Fort"
   }
 }
