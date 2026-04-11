@@ -546,6 +546,7 @@
     .blog-more a:hover{color:#a78bfa;text-decoration:underline}
     @media(max-width:768px){.blog-section{padding:60px 20px}.blog-featured-img{height:180px}.blog-featured-body{padding:20px 20px 24px}.blog-featured h3{font-size:20px}}
     /* ===== TRUST SECTION RESPONSIVE ===== */
+    @media(max-width:1024px){.trust-section>div:last-child{grid-template-columns:repeat(2,1fr)!important}}
     @media(max-width:768px){.trust-section .section-header h2{color:#fff}.trust-section>div:last-child{grid-template-columns:1fr!important;gap:16px!important}}
 
     button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
@@ -690,9 +691,9 @@
   <div class="hero-split">
     <!-- Text Content -->
     <div class="hero-right fade-up">
-      <div class="hero-badge"><div class="pulse"></div><span data-i18n="hero.badge">Blockchain Verified</span></div>
-      <h1><span data-i18n="hero.headline1">Verify &amp; Protect Any Document</span><br><span class="gradient" data-i18n="hero.headline2">Tamper-Proof in Seconds</span></h1>
-      <p class="sub" data-i18n="hero.subheadline">Issue tamper-proof documents with live holographic stamps. Let anyone verify them instantly — no software needed.</p>
+      <div class="hero-badge"><div class="pulse"></div><span data-i18n="hero.badge">Zero-Knowledge Architecture</span></div>
+      <h1><span data-i18n="hero.headline1">Documents So Secure,</span><br><span class="gradient" data-i18n="hero.headline2">Even We Can't Tamper With Them</span></h1>
+      <p class="sub" data-i18n="hero.subheadline">Used by law firms, hospitals, and universities to make every document legally bulletproof. Courtroom-admissible. Audit-ready. Impossible to forge.</p>
       <div class="hero-buttons">
         <a href="/upload" class="btn-primary" data-i18n="hero.cta1" onclick="plausible('CTA-Click')">Protect a Document</a>
         <a href="/contact" class="btn-secondary" data-i18n="hero.ctaDemo" onclick="plausible('Demo-Click')">Book a Demo</a>
@@ -750,7 +751,7 @@
         </div>
         <!-- Hash output -->
         <div class="doc-hash" id="docHash">
-          <div class="hash-label" data-i18n="hero.hashLabel">Ed25519 Fingerprint</div>
+          <div class="hash-label" data-i18n="hero.hashLabel">Unique Document Fingerprint</div>
           <div id="hashText">—</div>
         </div>
         <!-- Status -->
@@ -766,10 +767,10 @@
 <!-- ===== STATS BAR ===== -->
 <div class="stats-bar fade-up">
   <div class="stats-inner">
-    <div class="stat-item"><div class="stat-num">Ed25519</div><div class="stat-label" data-i18n="stats.encryption">128-bit Security</div></div>
+    <div class="stat-item"><div class="stat-num">256<span class="accent">-bit</span></div><div class="stat-label" data-i18n="stats.encryption">Military-Grade Encryption</div></div>
     <div class="stat-item"><div class="stat-num">+10<span class="accent">k</span></div><div class="stat-label" data-i18n="stats.documents">Documents Protected</div></div>
     <div class="stat-item"><div class="stat-num">5<span class="accent">min</span></div><div class="stat-label" data-i18n="stats.tokenRefresh">Token Refresh</div></div>
-    <div class="stat-item"><div class="stat-num">8</div><div class="stat-label" data-i18n="stats.securityLayers">Security Layers</div></div>
+    <div class="stat-item"><div class="stat-num">7</div><div class="stat-label" data-i18n="stats.securityLayers">Security Layers</div></div>
     <div class="stat-item">
       <div class="stat-num"><span class="accent" style="font-size:20px" data-i18n="stats.patentPending">Patent Pending</span></div>
       <div class="stat-label" data-i18n="stats.patentLabel">Israeli Patent Office</div>
@@ -783,39 +784,27 @@
 <section class="how" id="how">
   <div class="section-header fade-up">
     <div class="label" data-i18n="howItWorks.label">Process</div>
-    <h2 data-i18n="howItWorks.title">How It Works</h2>
-    <p data-i18n="howItWorks.subtitle">Five simple steps to protect and verify any document</p>
+    <h2 data-i18n="howItWorks.title">Three Steps to Bulletproof Documents</h2>
+    <p data-i18n="howItWorks.subtitle">No technical knowledge required. No software to install.</p>
   </div>
   <div class="steps-grid">
     <div class="step-card fade-up">
       <div class="step-num">1</div>
       <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
       <h3 data-i18n="howItWorks.step1title">Upload</h3>
-      <p data-i18n="howItWorks.step1desc">Upload any document — PDF, image, or text file</p>
+      <p data-i18n="howItWorks.step1desc">Drop any document. We create an unbreakable digital fingerprint without ever reading your content.</p>
     </div>
     <div class="step-card fade-up">
       <div class="step-num">2</div>
-      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-      <h3 data-i18n="howItWorks.step2title">Fingerprint</h3>
-      <p data-i18n="howItWorks.step2desc">System computes a unique hash without reading content</p>
+      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <h3 data-i18n="howItWorks.step2title">Protect</h3>
+      <p data-i18n="howItWorks.step2desc">7 layers of security seal your document. No one can alter it — not hackers, not even us.</p>
     </div>
     <div class="step-card fade-up">
       <div class="step-num">3</div>
-      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
-      <h3 data-i18n="howItWorks.step3title">Stamp</h3>
-      <p data-i18n="howItWorks.step3desc">Animated holographic stamp is embedded in the document</p>
-    </div>
-    <div class="step-card fade-up">
-      <div class="step-num">4</div>
-      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
-      <h3 data-i18n="howItWorks.step4title">Protected</h3>
-      <p data-i18n="howItWorks.step4desc">Download your .pvf file — tamper-proof and verifiable</p>
-    </div>
-    <div class="step-card fade-up">
-      <div class="step-num">5</div>
       <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div>
-      <h3 data-i18n="howItWorks.step5title">Verify</h3>
-      <p data-i18n="howItWorks.step5desc">Anyone can verify the document instantly in any browser. If tampered, the stamp freezes red.</p>
+      <h3 data-i18n="howItWorks.step3title">Verify</h3>
+      <p data-i18n="howItWorks.step3desc">Anyone can verify authenticity instantly. In court. In an audit. Anywhere in the world.</p>
     </div>
   </div>
 </section>
@@ -866,30 +855,37 @@
   <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 40% 30%,rgba(124,58,237,.12),transparent 60%),radial-gradient(ellipse at 70% 70%,rgba(6,182,212,.06),transparent 50%);pointer-events:none"></div>
   <div class="section-header fade-up">
     <div class="label" style="color:#a78bfa;background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.2)" data-i18n="trust.label">Credentials</div>
-    <h2 style="color:#ffffff" data-i18n="trust.title">Trusted Technology</h2>
-    <p style="color:rgba(196,181,253,.6)" data-i18n="trust.subtitle">Built on verified foundations</p>
+    <h2 style="color:#ffffff" data-i18n="trust.title">Why Organizations Trust Vertifile</h2>
+    <p style="color:rgba(196,181,253,.6)" data-i18n="trust.subtitle">Built on standards that regulators, auditors, and courts recognize</p>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:900px;margin:0 auto;position:relative;z-index:1">
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:1100px;margin:0 auto;position:relative;z-index:1">
     <div class="fade-up" style="padding:32px;border-radius:20px;background:rgba(255,255,255,.05);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(167,139,250,.12);text-align:center;transition:all .4s cubic-bezier(.16,1,.3,1)">
       <div style="width:56px;height:56px;border-radius:16px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
         <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg>
       </div>
-      <h3 style="font-size:18px;font-weight:700;color:#ffffff;margin-bottom:10px" data-i18n="trust.t1title">Patent Filed</h3>
-      <p style="font-size:14px;color:rgba(196,181,253,.5);line-height:1.7" data-i18n="trust.t1desc">Technology patent filed at the Israel Patent Office</p>
+      <h3 style="font-size:18px;font-weight:700;color:#ffffff;margin-bottom:10px" data-i18n="trust.t1title">Patent Pending</h3>
+      <p style="font-size:14px;color:rgba(196,181,253,.5);line-height:1.7" data-i18n="trust.t1desc">Technology patent filed at the Israel Patent Office. Novel verification architecture.</p>
     </div>
     <div class="fade-up" style="padding:32px;border-radius:20px;background:rgba(255,255,255,.05);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(167,139,250,.12);text-align:center;transition:all .4s cubic-bezier(.16,1,.3,1)">
       <div style="width:56px;height:56px;border-radius:16px;background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
         <svg viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
       </div>
-      <h3 style="font-size:18px;font-weight:700;color:#ffffff;margin-bottom:10px" data-i18n="trust.t2title">IANA Registered</h3>
-      <p style="font-size:14px;color:rgba(196,181,253,.5);line-height:1.7" data-i18n="trust.t2desc">Official MIME type application #1446680 pending with IANA</p>
+      <h3 style="font-size:18px;font-weight:700;color:#ffffff;margin-bottom:10px" data-i18n="trust.t2title">IANA Registered MIME Type</h3>
+      <p style="font-size:14px;color:rgba(196,181,253,.5);line-height:1.7" data-i18n="trust.t2desc">Official file format application #1446680 pending with the Internet standards authority.</p>
     </div>
     <div class="fade-up" style="padding:32px;border-radius:20px;background:rgba(255,255,255,.05);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(167,139,250,.12);text-align:center;transition:all .4s cubic-bezier(.16,1,.3,1)">
       <div style="width:56px;height:56px;border-radius:16px;background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       </div>
-      <h3 style="font-size:18px;font-weight:700;color:#ffffff;margin-bottom:10px" data-i18n="trust.t3title">Built in Israel</h3>
-      <p style="font-size:14px;color:rgba(196,181,253,.5);line-height:1.7" data-i18n="trust.t3desc">Designed and built in Israel's innovation ecosystem</p>
+      <h3 style="font-size:18px;font-weight:700;color:#ffffff;margin-bottom:10px" data-i18n="trust.t3title">Blockchain Verified</h3>
+      <p style="font-size:14px;color:rgba(196,181,253,.5);line-height:1.7" data-i18n="trust.t3desc">Every document is permanently recorded on the blockchain. Immutable public proof.</p>
+    </div>
+    <div class="fade-up" style="padding:32px;border-radius:20px;background:rgba(255,255,255,.05);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(167,139,250,.12);text-align:center;transition:all .4s cubic-bezier(.16,1,.3,1)">
+      <div style="width:56px;height:56px;border-radius:16px;background:rgba(236,72,153,.15);border:1px solid rgba(236,72,153,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><line x1="12" y1="16" x2="12" y2="16.01"/></svg>
+      </div>
+      <h3 style="font-size:18px;font-weight:700;color:#ffffff;margin-bottom:10px" data-i18n="trust.t4title">Zero-Knowledge Architecture</h3>
+      <p style="font-size:14px;color:rgba(196,181,253,.5);line-height:1.7" data-i18n="trust.t4desc">We never see your documents. Mathematically impossible. Not a policy -- a design guarantee.</p>
     </div>
   </div>
 </section>
@@ -898,8 +894,8 @@
 <section class="security-section" id="security">
   <div class="section-header fade-up">
     <div class="label" data-i18n="security.label">Security</div>
-    <h2 data-i18n="security.title">8 Layers of Protection</h2>
-    <p data-i18n="security.subtitle">Enterprise-grade security that makes forgery mathematically impossible.</p>
+    <h2 data-i18n="security.title">7 Layers That Make Forgery Impossible</h2>
+    <p data-i18n="security.subtitle">Legal immunity that even Vertifile can't break. Every layer protects your organization.</p>
   </div>
   <div class="security-visual fade-up">
     <div class="shield-anim">
@@ -917,50 +913,44 @@
     <div class="sec-layer fade-up">
       <div class="layer-num">1</div>
       <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-      <h4 data-i18n="security.s1title">Cryptographic Signing</h4>
-      <p data-i18n="security.s1desc">Zero-Knowledge encryption + Ed25519 dual signature on every document</p>
+      <h4 data-i18n="security.s1title">Military-Grade Document Fingerprinting</h4>
+      <p data-i18n="security.s1desc">Every document gets a unique digital fingerprint. Change one pixel and the fingerprint is completely different.</p>
     </div>
     <div class="sec-layer fade-up">
       <div class="layer-num">2</div>
-      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-      <h4 data-i18n="security.s2title">Blockchain Timestamp</h4>
-      <p data-i18n="security.s2desc">Immutable record on Polygon — exists forever</p>
+      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z"/></svg></div>
+      <h4 data-i18n="security.s2title">Asymmetric Verification Anyone Can Check</h4>
+      <p data-i18n="security.s2desc">Two-key verification system. One key signs, another verifies. Impossible to forge the signature.</p>
     </div>
     <div class="sec-layer fade-up">
       <div class="layer-num">3</div>
-      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-      <h4 data-i18n="security.s3title">5-Minute Token Refresh</h4>
-      <p data-i18n="security.s3desc">Prevents screen recordings and replay attacks</p>
+      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <h4 data-i18n="security.s3title">Permanent Public Record on the Blockchain</h4>
+      <p data-i18n="security.s3desc">Document proof is anchored to a public blockchain. Cannot be altered or deleted by anyone, ever.</p>
     </div>
     <div class="sec-layer fade-up">
       <div class="layer-num">4</div>
-      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <h4 data-i18n="security.s4title">Environment Detection</h4>
-      <p data-i18n="security.s4desc">Detects tampering tools, editors, and DevTools</p>
+      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><line x1="12" y1="16" x2="12" y2="16.01"/></svg></div>
+      <h4 data-i18n="security.s4title">Even Vertifile Can't Read Your Documents</h4>
+      <p data-i18n="security.s4desc">Zero-knowledge architecture means we never see your content. Not a policy. A mathematical guarantee.</p>
     </div>
     <div class="sec-layer fade-up">
       <div class="layer-num">5</div>
-      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
-      <h4 data-i18n="security.s5title">DevTools Detection</h4>
-      <p data-i18n="security.s5desc">Freezes stamp when browser developer tools are opened</p>
+      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <h4 data-i18n="security.s5title">Self-Defending Documents That Detect Tampering</h4>
+      <p data-i18n="security.s5desc">Documents monitor their own integrity. Any tampering attempt triggers an instant visual alert.</p>
     </div>
     <div class="sec-layer fade-up">
       <div class="layer-num">6</div>
-      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
-      <h4 data-i18n="security.s6title">Right-Click Block</h4>
-      <p data-i18n="security.s6desc">Blocks right-click context menu to prevent inspection of security elements</p>
+      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+      <h4 data-i18n="security.s6title">Live Verification That Can't Be Faked</h4>
+      <p data-i18n="security.s6desc">Animated holographic stamp refreshes every 5 minutes. Screenshots and recordings become useless.</p>
     </div>
     <div class="sec-layer fade-up">
       <div class="layer-num">7</div>
-      <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></div>
-      <h4 data-i18n="security.s7title">Print Prevention</h4>
-      <p data-i18n="security.s7desc">CSS and JS guards block printing and PDF export</p>
-    </div>
-    <div class="sec-layer fade-up">
-      <div class="layer-num">8</div>
       <div class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
-      <h4 data-i18n="security.s8title">Audit Logging</h4>
-      <p data-i18n="security.s8desc">Every access attempt is logged with timestamp and IP</p>
+      <h4 data-i18n="security.s7title">Complete Audit Trail</h4>
+      <p data-i18n="security.s7desc">Every access, verification, and download is logged. Full accountability for compliance and legal proceedings.</p>
     </div>
   </div>
 </section>
