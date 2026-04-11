@@ -1261,6 +1261,7 @@
       "recentActivity": "النشاط الأخير",
       "noActivity": "لا يوجد نشاط بعد",
       "welcomeHeading": "مرحباً بك في Vertifile",
+      "welcomeBack": "مرحباً مجدداً، {name}",
       "tipText": "احمِ العقود والاتفاقيات قبل إرسالها للعملاء. المستند الموثق يحمل وزناً أكبر في المحكمة."
     },
     "upload": {
@@ -1514,5 +1515,29 @@
     "closeModal": "إغلاق النافذة/اللوحة",
     "showShortcuts": "إظهار الاختصارات",
     "close": "إغلاق"
+  },
+  "status": {
+    "verified": "تم التحقق",
+    "pending": "قيد الانتظار",
+    "failed": "فشل",
+    "forged": "مزور"
+  },
+  "time": {
+    "justNow": "الآن",
+    "minutesAgo": "منذ {n} دقائق",
+    "hoursAgo": "منذ {n} ساعات",
+    "daysAgo": "منذ {n} أيام",
+    "yesterday": "أمس"
+  },
+  "stamp": {
+    "verifiedBy": "تم التحقق بواسطة VERTIFILE",
+    "approved": "الوثيقة معتمدة",
+    "secured": "مؤمن بالبلوكتشين",
+    "customLogo": "شعار مخصص"
+  },
+  "plan": {
+    "documents": "مستندات",
+    "used": "مستخدم",
+    "unlimited": "غير محدود"
   }
 }

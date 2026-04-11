@@ -1261,6 +1261,7 @@
       "recentActivity": "Atividade Recente",
       "noActivity": "Nenhuma atividade ainda",
       "welcomeHeading": "Bem-vindo ao Vertifile",
+      "welcomeBack": "Bem-vindo de volta, {name}",
       "tipText": "Proteja contratos e acordos antes de enviar aos clientes. Um documento verificado tem mais peso em tribunal."
     },
     "upload": {
@@ -1514,5 +1515,29 @@
     "closeModal": "Fechar janela/painel",
     "showShortcuts": "Mostrar atalhos",
     "close": "Fechar"
+  },
+  "status": {
+    "verified": "Verificado",
+    "pending": "Pendente",
+    "failed": "Falhou",
+    "forged": "Falsificado"
+  },
+  "time": {
+    "justNow": "agora mesmo",
+    "minutesAgo": "ha {n}m",
+    "hoursAgo": "ha {n}h",
+    "daysAgo": "ha {n}d",
+    "yesterday": "ontem"
+  },
+  "stamp": {
+    "verifiedBy": "VERIFICADO PELA VERTIFILE",
+    "approved": "DOCUMENTO APROVADO",
+    "secured": "BLOCKCHAIN PROTEGIDO",
+    "customLogo": "Logo personalizado"
+  },
+  "plan": {
+    "documents": "documentos",
+    "used": "usados",
+    "unlimited": "Ilimitado"
   }
 }

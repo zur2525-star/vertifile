@@ -1648,7 +1648,8 @@ function applyStampConfigToUI(cfg) {
   }
   // Custom logo
   if (cfg.customLogo && typeof cfg.customLogo === 'string' && cfg.customLogo.startsWith('data:image/')) {
-    window.__customLogo = '<img src="' + cfg.customLogo + '" alt="Custom logo"/>';
+    var _clAlt = (typeof vfGetTranslation === 'function' && vfGetTranslation('stamp.customLogo')) || 'Custom logo';
+    window.__customLogo = '<img src="' + cfg.customLogo + '" alt="' + _clAlt + '"/>';
     window.__customLogoDataUrl = cfg.customLogo;
     var cur = document.getElementById('logoCurrent');
     var area = document.getElementById('logoUploadArea');
@@ -1888,12 +1889,14 @@ window.Dashboard = {
     // Welcome date
     var d = new Date();
     var dateEl = document.getElementById('welcomeDate');
-    if (dateEl) dateEl.textContent = d.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    var lang = (typeof vfGetLang === 'function') ? vfGetLang() : 'en';
+    if (dateEl) dateEl.textContent = d.toLocaleDateString(lang, {weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
     // Welcome heading
     var wh = document.getElementById('welcomeHeading');
     if (wh && currentUser) {
-      wh.textContent = 'Welcome back, ' + (currentUser.name || currentUser.email || 'User');
+      var _wb = (typeof vfGetTranslation === 'function' && vfGetTranslation('tab.overview.welcomeBack')) || 'Welcome back, {name}';
+      wh.textContent = _wb.replace('{name}', currentUser.name || currentUser.email || 'User');
     }
 
     // Check URL hash for tab
@@ -2082,6 +2085,9 @@ window.Dashboard = {
     else if (sortVal === 'oldest') filtered.sort(function(a,b){ return new Date(a.timestamp || a.createdAt || 0) - new Date(b.timestamp || b.createdAt || 0); });
     else if (sortVal === 'name') filtered.sort(function(a,b){ return (a.originalName || a.original_name || '').localeCompare(b.originalName || b.original_name || ''); });
 
+    var _t = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+    var _sV = _t('status.verified') || 'Verified';
+    var _sU = _t('status.pending') || 'Unverified';
     container.innerHTML = filtered.map(function(d, i){
       var id = d.id || d._id || d.hash;
       var rawName = d.originalName || d.original_name || 'Untitled';
@@ -2097,7 +2103,7 @@ window.Dashboard = {
         '<div class="col-star"><button class="' + (starred ? 'starred' : '') + '" onclick="event.stopPropagation();toggleStar(\'' + escHtml(id) + '\');Dashboard.renderDocRows()" aria-label="Star">' + (starred ? '<svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>' : '<svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>') + '</button></div>' +
         '<div class="doc-type-icon doc-type-other">' + getTypeIcon('pvf') + '</div>' +
         '<div class="col-name">' + escHtml(name) + '</div>' +
-        '<div class="col-status"><span class="doc-status ' + (verified ? 'verified' : 'unverified') + '">' + (verified ? '<svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verified' : '<svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Unverified') + '</span></div>' +
+        '<div class="col-status"><span class="doc-status ' + (verified ? 'verified' : 'unverified') + '">' + (verified ? '<svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ' + _sV : '<svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> ' + _sU) + '</span></div>' +
         '<div class="col-date">' + date + '</div>' +
         '<div class="col-size">' + size + '</div>' +
         '<div class="col-actions" style="position:relative"><button class="doc-actions-btn" onclick="event.stopPropagation();Dashboard.toggleDocMenu(this)" aria-label="Actions">&#8943;</button><div class="doc-actions-menu"><a onclick="event.stopPropagation();Dashboard.downloadDoc(' + i + ')"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PVF</a><a onclick="event.stopPropagation();Dashboard.shareDoc(' + i + ')"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg> Copy Share Link</a><a class="danger" onclick="event.stopPropagation();Dashboard.deleteDocAtIndex(' + i + ')"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg> Delete</a></div></div>' +
@@ -2144,7 +2150,10 @@ window.Dashboard = {
       var verified = d.verified !== false;
       var date = formatDate(d.timestamp || d.createdAt || d.created_at || d.created);
       var size = formatSize(d.fileSize || d.file_size || 0);
-      return '<div class="recent-doc-row"><div class="doc-type-icon doc-type-other">' + getTypeIcon('pvf') + '</div><span class="doc-name">' + escHtml(name) + '</span><span class="doc-status ' + (verified ? 'verified' : 'pending') + '">' + (verified ? '<svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verified' : '&#9200; Pending') + '</span><span class="doc-date">' + date + '</span><span class="doc-size">' + size + '</span></div>';
+      var _t = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+      var statusVerified = _t('status.verified') || 'Verified';
+      var statusPending = _t('status.pending') || 'Pending';
+      return '<div class="recent-doc-row"><div class="doc-type-icon doc-type-other">' + getTypeIcon('pvf') + '</div><span class="doc-name">' + escHtml(name) + '</span><span class="doc-status ' + (verified ? 'verified' : 'pending') + '">' + (verified ? '<svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ' + statusVerified : '&#9200; ' + statusPending) + '</span><span class="doc-date">' + date + '</span><span class="doc-size">' + size + '</span></div>';
     }).join('');
   },
 
@@ -2157,7 +2166,8 @@ window.Dashboard = {
     document.getElementById('previewTitle').textContent = pvfName;
     document.getElementById('previewHash').textContent = (selectedDoc.hash || '--').substring(0, 16) + '...';
     document.getElementById('previewCreated').textContent = formatDate(selectedDoc.timestamp || selectedDoc.createdAt || selectedDoc.created_at || selectedDoc.created);
-    document.getElementById('previewStatus').textContent = selectedDoc.verified !== false ? 'Verified' : 'Unverified';
+    var _t = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+    document.getElementById('previewStatus').textContent = selectedDoc.verified !== false ? (_t('status.verified') || 'Verified') : (_t('status.pending') || 'Unverified');
 
     // ---- Cryptographic Proof accordion (Phase 2E dual-signing) ----
     // The API strips the raw signature blob — we only get is_dual_signed + ed25519_key_id.
@@ -2175,10 +2185,11 @@ window.Dashboard = {
         keyEl.textContent = keyId;
         keyEl.classList.add('mono', 'copyable');
         keyEl.onclick = function(){ copyToClipboard(keyId); };
+        var _tv = (typeof vfGetTranslation === 'function' ? vfGetTranslation('status.verified') : null) || 'Verified';
         statusEl.innerHTML =
-          '<span class="cpe-pill cpe-pill-verified" role="status" aria-label="Verified">' +
+          '<span class="cpe-pill cpe-pill-verified" role="status" aria-label="' + _tv + '">' +
             checkSvg +
-            '<span>Verified</span>' +
+            '<span>' + _tv + '</span>' +
           '</span>';
       } else {
         // Legacy HMAC-only (pre-Phase-2B) docs get a neutral grey trust badge.
@@ -2475,7 +2486,13 @@ window.Dashboard = {
     var stampSize = sizeMap[sizeName] || 120;
     // Read custom logo if uploaded
     var customIcon = window.__customLogo || null;
-    var opts = {size: stampSize, waveCount: 7};
+    // Build i18n-aware rotating text
+    var _t = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+    var _svb = _t('stamp.verifiedBy') || 'VERIFIED BY VERTIFILE';
+    var _sap = _t('stamp.approved') || 'DOCUMENT APPROVED';
+    var _ssc = _t('stamp.secured') || 'BLOCKCHAIN SECURED';
+    var i18nRotText = _svb + ' \u2022 ' + _sap + ' \u2022 ' + _ssc + ' \u2022';
+    var opts = {size: stampSize, waveCount: 7, rotatingText: i18nRotText};
     if (waveColors.length > 0) opts.waveColors = waveColors;
     if (accentColor) opts.brandColor = accentColor;
     if (customIcon) opts.customIcon = customIcon;
@@ -2565,9 +2582,13 @@ window.Dashboard = {
       proplus: '$79/month',
       enterprise: 'Custom'
     };
+    var _t = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+    var docsWord = _t('plan.documents') || 'documents';
+    var ofWord = _t('sidebar.of') || 'of';
+    var usedWord = _t('plan.used') || 'used';
     var isUnlimited = limit >= 999000;
-    var limitDisplay = isUnlimited ? 'Unlimited' : limit;
-    var usageText = isUnlimited ? (used + ' documents') : (used + ' of ' + limit + ' documents');
+    var limitDisplay = isUnlimited ? (_t('plan.unlimited') || 'Unlimited') : limit;
+    var usageText = isUnlimited ? (used + ' ' + docsWord) : (used + ' ' + ofWord + ' ' + limit + ' ' + docsWord);
 
     // Sidebar plan badge
     var pl = document.getElementById('planLabel'); if(pl) pl.textContent = (planNames[plan] || 'Free').toUpperCase() + ' PLAN';
@@ -2578,16 +2599,16 @@ window.Dashboard = {
     // Stats on overview
     var sp = document.getElementById('statDocsProtected'); if(sp) sp.textContent = used;
     var spn = document.getElementById('statPlanName'); if(spn) spn.textContent = planNames[plan] || 'Free';
-    var spu = document.getElementById('statPlanUsage'); if(spu) spu.textContent = isUnlimited ? (used + ' documents') : (used + '/' + limit + ' documents');
+    var spu = document.getElementById('statPlanUsage'); if(spu) spu.textContent = isUnlimited ? (used + ' ' + docsWord) : (used + '/' + limit + ' ' + docsWord);
 
     // Settings plan
     var spn2 = document.getElementById('settingsPlanName'); if(spn2) spn2.textContent = planNames[plan] || 'Free';
     var spp = document.getElementById('settingsPlanPrice'); if(spp) spp.textContent = planPrices[plan] || '$0/month';
-    var spu2 = document.getElementById('settingsPlanUsage'); if(spu2) spu2.textContent = usageText + ' used';
+    var spu2 = document.getElementById('settingsPlanUsage'); if(spu2) spu2.textContent = usageText + ' ' + usedWord;
     var spb = document.getElementById('settingsPlanBar'); if(spb) spb.style.width = isUnlimited ? '0%' : Math.min((used/limit)*100, 100) + '%';
 
     // Upload quota
-    var uqi = document.getElementById('uploadQuotaInfo'); if(uqi) uqi.textContent = usageText + ' used this month.';
+    var uqi = document.getElementById('uploadQuotaInfo'); if(uqi) uqi.textContent = usageText + ' ' + usedWord + '.';
     // Doc count badge
     var dcb = document.getElementById('docCountBadge'); if(dcb) dcb.textContent = documents.length;
 
@@ -2684,7 +2705,7 @@ async function loadBranding() {
       if (data.customIcon) {
         document.getElementById('brandIconUrl').value = data.customIcon;
         if (data.customIcon.startsWith('data:image/')) {
-          document.getElementById('brandLogoFileName').textContent = 'Custom logo (saved)';
+          document.getElementById('brandLogoFileName').textContent = ((typeof vfGetTranslation === 'function' && vfGetTranslation('stamp.customLogo')) || 'Custom logo') + ' (saved)';
           document.getElementById('brandLogoRemoveBtn').style.display = 'inline-block';
           document.getElementById('bpStampLogo').innerHTML = '<img src="' + data.customIcon + '" style="width:56px;height:56px;border-radius:50%;object-fit:cover" alt="logo">';
           document.getElementById('brandLogoThumb').innerHTML = '<img src="' + data.customIcon + '" style="width:36px;height:36px;border-radius:50%;object-fit:cover" alt="logo">';
@@ -2728,8 +2749,12 @@ function updateBrandPreview() {
   // Update org name label
   const orgName = document.getElementById('brandOrgName').value.trim() || 'Vertifile';
   document.getElementById('bpOrgLabel').textContent = orgName;
-  // Update rotating text
-  const rotLabel = 'VERIFIED BY ' + orgName.toUpperCase() + ' \u2022 ';
+  // Update rotating text (i18n-aware)
+  var _t = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+  var stampVerified = _t('stamp.verifiedBy') || ('VERIFIED BY ' + orgName.toUpperCase());
+  var stampApproved = _t('stamp.approved') || 'DOCUMENT APPROVED';
+  var stampSecured = _t('stamp.secured') || 'BLOCKCHAIN SECURED';
+  const rotLabel = stampVerified + ' \u2022 ' + stampApproved + ' \u2022 ' + stampSecured + ' \u2022 ';
   const repeatCount = Math.max(2, Math.ceil(60 / rotLabel.length));
   document.getElementById('bpRotatingLabel').textContent = rotLabel.repeat(repeatCount);
   // Update stamp border color from first wave color
@@ -2924,7 +2949,8 @@ function handleLogoUpload(e) {
     if (fname) fname.textContent = file.name;
     // Save logo as raw <img> — VertifileStamp.renderStamp wraps it in
     // .vfs-custom-logo which fills the entire inner circle and replaces text
-    window.__customLogo = '<img src="' + dataUrl + '" alt="Custom logo"/>';
+    var _clAlt2 = (typeof vfGetTranslation === 'function' && vfGetTranslation('stamp.customLogo')) || 'Custom logo';
+    window.__customLogo = '<img src="' + dataUrl + '" alt="' + _clAlt2 + '"/>';
     // Save raw dataURL too for sending to backend (saveStamp)
     window.__customLogoDataUrl = dataUrl;
     // Update stamp preview
@@ -3491,13 +3517,15 @@ function formatDate(dateStr) {
   const diffMin = Math.floor(diffMs / 60000);
   const diffHr = Math.floor(diffMs / 3600000);
   const diffDay = Math.floor(diffMs / 86400000);
+  var t = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+  var lang = (typeof vfGetLang === 'function') ? vfGetLang() : 'en';
 
-  if (diffMin < 1) return 'just now';
-  if (diffMin < 60) return diffMin + 'm ago';
-  if (diffHr < 24) return diffHr + 'h ago';
-  if (diffDay === 1) return 'yesterday';
-  if (diffDay < 7) return diffDay + 'd ago';
-  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  if (diffMin < 1) return t('time.justNow') || 'just now';
+  if (diffMin < 60) return (t('time.minutesAgo') || '{n}m ago').replace('{n}', diffMin);
+  if (diffHr < 24) return (t('time.hoursAgo') || '{n}h ago').replace('{n}', diffHr);
+  if (diffDay === 1) return t('time.yesterday') || 'yesterday';
+  if (diffDay < 7) return (t('time.daysAgo') || '{n}d ago').replace('{n}', diffDay);
+  return d.toLocaleDateString(lang, { day: 'numeric', month: 'short' });
 }
 
 function getInitials(name) {
@@ -3599,10 +3627,14 @@ checkAuth();
   // Update the stamp org label in new dashboard
   var orgLabel = document.getElementById('stampOrgLabel');
   if(orgLabel && d.orgName) orgLabel.textContent = d.orgName.toUpperCase();
-  // Legacy: update old rotating text if element exists
+  // Legacy: update old rotating text if element exists (i18n-aware)
   var rotLabel = document.getElementById('bpRotatingLabel');
   if(rotLabel) {
-    var text = 'VERIFIED BY ' + d.orgName + ' \u2022 ';
+    var _t = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+    var stampVB = _t('stamp.verifiedBy') || ('VERIFIED BY ' + d.orgName);
+    var stampAP = _t('stamp.approved') || 'DOCUMENT APPROVED';
+    var stampSC = _t('stamp.secured') || 'BLOCKCHAIN SECURED';
+    var text = stampVB + ' \u2022 ' + stampAP + ' \u2022 ' + stampSC + ' \u2022 ';
     var repeatCount = Math.max(2, Math.ceil(60 / text.length));
     rotLabel.textContent = text.repeat(repeatCount);
   }

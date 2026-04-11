@@ -1261,6 +1261,7 @@
       "recentActivity": "Activite Recente",
       "noActivity": "Aucune activite pour l'instant",
       "welcomeHeading": "Bienvenue sur Vertifile",
+      "welcomeBack": "Bon retour, {name}",
       "tipText": "Protegez les contrats et accords avant de les envoyer aux clients. Un document verifie a plus de poids devant un tribunal."
     },
     "upload": {
@@ -1514,5 +1515,29 @@
     "closeModal": "Fermer la fenêtre/le panneau",
     "showShortcuts": "Afficher les raccourcis",
     "close": "Fermer"
+  },
+  "status": {
+    "verified": "Verifie",
+    "pending": "En attente",
+    "failed": "Echoue",
+    "forged": "Falsifie"
+  },
+  "time": {
+    "justNow": "a l'instant",
+    "minutesAgo": "il y a {n}m",
+    "hoursAgo": "il y a {n}h",
+    "daysAgo": "il y a {n}j",
+    "yesterday": "hier"
+  },
+  "stamp": {
+    "verifiedBy": "VERIFIE PAR VERTIFILE",
+    "approved": "DOCUMENT APPROUVE",
+    "secured": "SECURISE PAR BLOCKCHAIN",
+    "customLogo": "Logo personnalise"
+  },
+  "plan": {
+    "documents": "documents",
+    "used": "utilises",
+    "unlimited": "Illimite"
   }
 }

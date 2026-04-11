@@ -1261,6 +1261,7 @@
       "recentActivity": "פעילות אחרונה",
       "noActivity": "אין פעילות עדיין",
       "welcomeHeading": "ברוכים הבאים ל-Vertifile",
+      "welcomeBack": "שוב פה, {name}",
       "tipText": "הגנו על חוזים והסכמים לפני שליחתם ללקוחות. מסמך מאומת נושא משקל רב יותר בבית המשפט."
     },
     "upload": {
@@ -1513,5 +1514,29 @@
     "closeModal": "סגירת חלון/פנל",
     "showShortcuts": "הצגת קיצורים",
     "close": "סגירה"
+  },
+  "status": {
+    "verified": "מאומת",
+    "pending": "ממתין",
+    "failed": "נכשל",
+    "forged": "מזויף"
+  },
+  "time": {
+    "justNow": "עכשיו",
+    "minutesAgo": "לפני {n} דקות",
+    "hoursAgo": "לפני {n} שעות",
+    "daysAgo": "לפני {n} ימים",
+    "yesterday": "אתמול"
+  },
+  "stamp": {
+    "verifiedBy": "מאומת על-ידי VERTIFILE",
+    "approved": "מסמך מאושר",
+    "secured": "מאובטח בבלוקצ׳יין",
+    "customLogo": "לוגו מותאם"
+  },
+  "plan": {
+    "documents": "מסמכים",
+    "used": "בשימוש",
+    "unlimited": "ללא הגבלה"
   }
 }

@@ -1261,6 +1261,7 @@
       "recentActivity": "Recent Activity",
       "noActivity": "No activity yet",
       "welcomeHeading": "Welcome to Vertifile",
+      "welcomeBack": "Welcome back, {name}",
       "tipText": "Protect contracts and agreements before sending to clients. A verified document carries more weight in court."
     },
     "upload": {
@@ -1513,5 +1514,29 @@
     "closeModal": "Close modal/panel",
     "showShortcuts": "Show shortcuts",
     "close": "Close"
+  },
+  "status": {
+    "verified": "Verified",
+    "pending": "Pending",
+    "failed": "Failed",
+    "forged": "Forged"
+  },
+  "time": {
+    "justNow": "just now",
+    "minutesAgo": "{n}m ago",
+    "hoursAgo": "{n}h ago",
+    "daysAgo": "{n}d ago",
+    "yesterday": "yesterday"
+  },
+  "stamp": {
+    "verifiedBy": "VERIFIED BY VERTIFILE",
+    "approved": "DOCUMENT APPROVED",
+    "secured": "BLOCKCHAIN SECURED",
+    "customLogo": "Custom logo"
+  },
+  "plan": {
+    "documents": "documents",
+    "used": "used",
+    "unlimited": "Unlimited"
   }
 }

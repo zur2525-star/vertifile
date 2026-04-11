@@ -1261,6 +1261,7 @@
       "recentActivity": "最近のアクティビティ",
       "noActivity": "まだアクティビティがありません",
       "welcomeHeading": "Vertifileへようこそ",
+      "welcomeBack": "おかえりなさい、{name}",
       "tipText": "クライアントに送信する前に契約書や合意書を保護しましょう。検証済みドキュメントは法廷でより重みを持ちます。"
     },
     "upload": {
@@ -1514,5 +1515,29 @@
     "closeModal": "モーダル/パネルを閉じる",
     "showShortcuts": "ショートカットを表示",
     "close": "閉じる"
+  },
+  "status": {
+    "verified": "検証済み",
+    "pending": "保留中",
+    "failed": "失敗",
+    "forged": "偽造"
+  },
+  "time": {
+    "justNow": "たった今",
+    "minutesAgo": "{n}分前",
+    "hoursAgo": "{n}時間前",
+    "daysAgo": "{n}日前",
+    "yesterday": "昨日"
+  },
+  "stamp": {
+    "verifiedBy": "VERTIFILEにより検証済み",
+    "approved": "ドキュメント承認済み",
+    "secured": "ブロックチェーン保護",
+    "customLogo": "カスタムロゴ"
+  },
+  "plan": {
+    "documents": "ドキュメント",
+    "used": "使用済み",
+    "unlimited": "無制限"
   }
 }
