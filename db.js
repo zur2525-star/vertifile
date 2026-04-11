@@ -288,6 +288,29 @@ const _ready = (async () => {
   // ================================================================
   // END ZERO-KNOWLEDGE SCHEMA
   // ================================================================
+
+  // ================================================================
+  // OVERAGE TRACKING — per-user monthly usage & overage billing
+  // ================================================================
+  try {
+    await pool.query(`CREATE TABLE IF NOT EXISTS overage_log (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL,
+      month VARCHAR(7) NOT NULL,
+      documents_used INTEGER DEFAULT 0,
+      documents_limit INTEGER DEFAULT 500,
+      overage_count INTEGER DEFAULT 0,
+      overage_rate DECIMAL(10,4) DEFAULT 0.15,
+      overage_charge DECIMAL(10,2) DEFAULT 0.00,
+      updated_at TIMESTAMPTZ DEFAULT NOW(),
+      UNIQUE(user_id, month)
+    )`);
+    await pool.query('CREATE INDEX IF NOT EXISTS idx_overage_log_month ON overage_log(month)');
+    await pool.query('CREATE INDEX IF NOT EXISTS idx_overage_log_user ON overage_log(user_id)');
+  } catch (_) { /* already exists */ }
+  // ================================================================
+  // END OVERAGE TRACKING
+  // ================================================================
 })();
 
 // ================================================================
@@ -1708,6 +1731,224 @@ async function getCodeSendCount(email, minutesWindow = 60) {
 }
 
 // ================================================================
+// REVENUE & OVERAGE TRACKING
+// ================================================================
+
+// Plan pricing map — monthly base price per plan
+const PLAN_PRICES = { pro: 49, business: 79, enterprise: 0 };
+const PLAN_LIMITS = { pro: 500, business: 1000, enterprise: Infinity };
+const OVERAGE_RATES = { pro: 0.15, business: 0.10, enterprise: 0 };
+
+/**
+ * Track a single document upload in the overage_log.
+ * Called after every successful upload. Uses UPSERT to increment counters.
+ * Returns overageInfo if the user is now over their plan limit.
+ */
+async function trackOverage(userId, plan) {
+  const month = new Date().toISOString().slice(0, 7); // '2026-04'
+  const limit = PLAN_LIMITS[plan] || 500;
+  const rate = OVERAGE_RATES[plan] || 0.15;
+
+  // Upsert: increment documents_used, recalculate overage
+  const { rows } = await pool.query(
+    `INSERT INTO overage_log (user_id, month, documents_used, documents_limit, overage_rate)
+     VALUES ($1, $2, 1, $3, $4)
+     ON CONFLICT (user_id, month) DO UPDATE SET
+       documents_used = overage_log.documents_used + 1,
+       documents_limit = $3,
+       overage_rate = $4,
+       overage_count = GREATEST(overage_log.documents_used + 1 - $3, 0),
+       overage_charge = GREATEST(overage_log.documents_used + 1 - $3, 0) * $4,
+       updated_at = NOW()
+     RETURNING documents_used, documents_limit, overage_count, overage_charge`,
+    [userId, month, limit, rate]
+  );
+
+  const row = rows[0];
+  if (!row) return null;
+
+  return {
+    documentsUsed: row.documents_used,
+    documentsLimit: row.documents_limit,
+    overageCount: row.overage_count,
+    overageCharge: parseFloat(row.overage_charge)
+  };
+}
+
+/**
+ * Revenue overview for admin dashboard.
+ * Aggregates users by plan, calculates MRR + overage revenue for a given month.
+ */
+async function getRevenueOverview(month) {
+  if (!month) month = new Date().toISOString().slice(0, 7);
+
+  // Count users by plan
+  const planCounts = await pool.query(
+    `SELECT plan, COUNT(*)::int AS count FROM users GROUP BY plan`
+  );
+  const byPlan = {};
+  let totalUsers = 0;
+  for (const row of planCounts.rows) {
+    byPlan[row.plan] = row.count;
+    totalUsers += row.count;
+  }
+
+  // Calculate MRR from plan base prices
+  let mrr = 0;
+  for (const [plan, count] of Object.entries(byPlan)) {
+    mrr += (PLAN_PRICES[plan] || 0) * count;
+  }
+
+  // Total overage revenue for the month
+  const overageResult = await pool.query(
+    `SELECT COALESCE(SUM(overage_charge), 0)::numeric AS total_overage,
+            COALESCE(SUM(overage_count), 0)::int AS total_overage_docs
+     FROM overage_log WHERE month = $1`,
+    [month]
+  );
+  const overageRevenue = parseFloat(overageResult.rows[0].total_overage);
+  const documentsOverage = overageResult.rows[0].total_overage_docs;
+
+  // Total documents created this month
+  const docsResult = await pool.query(
+    `SELECT COALESCE(SUM(documents_used), 0)::int AS total_docs
+     FROM overage_log WHERE month = $1`,
+    [month]
+  );
+  const documentsCreated = docsResult.rows[0].total_docs;
+
+  return {
+    period: month,
+    totalUsers,
+    byPlan,
+    mrr,
+    overageRevenue,
+    totalRevenue: mrr + overageRevenue,
+    documentsCreated,
+    documentsOverage
+  };
+}
+
+/**
+ * List all users who exceeded their plan limit for a given month.
+ */
+async function getOverageUsers(month) {
+  if (!month) month = new Date().toISOString().slice(0, 7);
+
+  const { rows } = await pool.query(
+    `SELECT ol.user_id, u.email, u.plan,
+            ol.documents_used, ol.documents_limit,
+            ol.overage_count, ol.overage_charge
+     FROM overage_log ol
+     JOIN users u ON u.id = ol.user_id
+     WHERE ol.month = $1 AND ol.overage_count > 0
+     ORDER BY ol.overage_count DESC`,
+    [month]
+  );
+
+  const users = rows.map(r => ({
+    id: r.user_id,
+    email: r.email,
+    plan: r.plan,
+    used: r.documents_used,
+    limit: r.documents_limit,
+    overage: r.overage_count,
+    overageCharge: parseFloat(r.overage_charge)
+  }));
+
+  const totalOverage = users.reduce((sum, u) => sum + u.overageCharge, 0);
+
+  return { users, totalOverage: Math.round(totalOverage * 100) / 100 };
+}
+
+/**
+ * Monthly usage trends for the last N months. Used by admin charts.
+ */
+async function getUsageTrends(numMonths) {
+  if (!numMonths || numMonths < 1) numMonths = 6;
+
+  const { rows } = await pool.query(
+    `SELECT
+       ol.month,
+       COUNT(DISTINCT ol.user_id)::int AS users,
+       COALESCE(SUM(ol.documents_used), 0)::int AS documents,
+       COALESCE(SUM(ol.overage_charge), 0)::numeric AS overage_revenue
+     FROM overage_log ol
+     WHERE ol.month >= TO_CHAR(NOW() - ($1 || ' months')::INTERVAL, 'YYYY-MM')
+     GROUP BY ol.month
+     ORDER BY ol.month ASC`,
+    [String(numMonths)]
+  );
+
+  // Add base MRR per month from user plan counts
+  const months = [];
+  for (const row of rows) {
+    // Approximate MRR based on active users that month
+    const planCountsForMonth = await pool.query(
+      `SELECT u.plan, COUNT(*)::int AS count
+       FROM users u
+       JOIN overage_log ol ON ol.user_id = u.id AND ol.month = $1
+       GROUP BY u.plan`,
+      [row.month]
+    );
+    let monthMrr = 0;
+    for (const pc of planCountsForMonth.rows) {
+      monthMrr += (PLAN_PRICES[pc.plan] || 0) * pc.count;
+    }
+
+    months.push({
+      month: row.month,
+      users: row.users,
+      documents: row.documents,
+      revenue: monthMrr + parseFloat(row.overage_revenue)
+    });
+  }
+
+  return { months };
+}
+
+/**
+ * Single user usage for a specific month — for billing detail views.
+ */
+async function getUserMonthlyUsage(userId, month) {
+  if (!month) month = new Date().toISOString().slice(0, 7);
+
+  const { rows } = await pool.query(
+    `SELECT ol.*, u.email, u.plan, u.name
+     FROM overage_log ol
+     JOIN users u ON u.id = ol.user_id
+     WHERE ol.user_id = $1 AND ol.month = $2`,
+    [userId, month]
+  );
+
+  if (!rows.length) {
+    return {
+      userId,
+      month,
+      documentsUsed: 0,
+      documentsLimit: 0,
+      overageCount: 0,
+      overageCharge: 0,
+      overageRate: 0
+    };
+  }
+
+  const r = rows[0];
+  return {
+    userId: r.user_id,
+    email: r.email,
+    name: r.name,
+    plan: r.plan,
+    month: r.month,
+    documentsUsed: r.documents_used,
+    documentsLimit: r.documents_limit,
+    overageCount: r.overage_count,
+    overageCharge: parseFloat(r.overage_charge),
+    overageRate: parseFloat(r.overage_rate)
+  };
+}
+
+// ================================================================
 // EXPORTS
 // ================================================================
 module.exports = {
@@ -1800,6 +2041,15 @@ module.exports = {
   markCodeUsed,
   cleanExpiredCodes,
   getCodeSendCount,
+  // Revenue & overage tracking
+  trackOverage,
+  getRevenueOverview,
+  getOverageUsers,
+  getUsageTrends,
+  getUserMonthlyUsage,
+  PLAN_PRICES,
+  PLAN_LIMITS,
+  OVERAGE_RATES,
   query: queryWithRetry,
   close,
   _db: pool,

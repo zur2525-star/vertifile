@@ -162,6 +162,14 @@ router.post('/upload', requireLogin, uploadLimiter, (req, res, next) => {
       throw err;
     }
 
+    // Track overage in overage_log (non-blocking — never fail the upload)
+    let overageInfo = null;
+    try {
+      overageInfo = await db.trackOverage(req.user.id, req.user.plan || 'pro');
+    } catch (trackErr) {
+      logger.error('[OVERAGE TRACK]', trackErr.message);
+    }
+
     // Build response — match the legacy two-shape contract exactly
     if (result.preview) {
       return res.json({
@@ -175,7 +183,8 @@ router.post('/upload', requireLogin, uploadLimiter, (req, res, next) => {
         upgradeUrl: '/pricing',
         documentsUsed: req.user.documents_used + 1,
         documentsLimit: req.user.documents_limit,
-        overage: overageFlag
+        overage: overageFlag,
+        overageInfo
       });
     }
 
@@ -186,7 +195,8 @@ router.post('/upload', requireLogin, uploadLimiter, (req, res, next) => {
       fileName: req.file.originalname,
       documentsUsed: req.user.documents_used + 1,
       documentsLimit: req.user.documents_limit,
-      overage: overageFlag
+      overage: overageFlag,
+      overageInfo
     });
   } catch(e) {
     logger.error('[USER UPLOAD]', e.message);
@@ -287,6 +297,14 @@ router.post('/upload-encrypted', requireLogin, uploadLimiter, (req, res, next) =
       throw err;
     }
 
+    // Track overage in overage_log (non-blocking)
+    let encOverageInfo = null;
+    try {
+      encOverageInfo = await db.trackOverage(req.user.id, req.user.plan || 'pro');
+    } catch (trackErr) {
+      logger.error('[OVERAGE TRACK]', trackErr.message);
+    }
+
     // Build response
     if (result.preview) {
       return res.json({
@@ -302,7 +320,8 @@ router.post('/upload-encrypted', requireLogin, uploadLimiter, (req, res, next) =
         upgradeUrl: '/pricing',
         documentsUsed: req.user.documents_used + 1,
         documentsLimit: req.user.documents_limit,
-        overage: encOverageFlag
+        overage: encOverageFlag,
+        overageInfo: encOverageInfo
       });
     }
 
@@ -315,7 +334,8 @@ router.post('/upload-encrypted', requireLogin, uploadLimiter, (req, res, next) =
       fileName: (req.body.originalName || req.file.originalname || 'document').replace(/\.[^.]+$/, '') + '.pvf',
       documentsUsed: req.user.documents_used + 1,
       documentsLimit: req.user.documents_limit,
-      overage: encOverageFlag
+      overage: encOverageFlag,
+      overageInfo: encOverageInfo
     });
   } catch (e) {
     logger.error('[ENCRYPTED UPLOAD]', e.message);
@@ -418,6 +438,14 @@ async function uploadLegacy(req, res) {
     const isAdmin = adminEmails.has((req.user.email || '').toLowerCase());
     const isPaidPlan = isAdmin || (req.user.plan && !['free', 'trial'].includes(req.user.plan));
 
+    // Track overage in overage_log (non-blocking)
+    let legacyOverageInfo = null;
+    try {
+      legacyOverageInfo = await db.trackOverage(req.user.id, req.user.plan || 'pro');
+    } catch (trackErr) {
+      logger.error('[OVERAGE TRACK]', trackErr.message);
+    }
+
     if (!isPaidPlan) {
       // Unpaid/trial: create PVF but return preview-only response
       await db.markDocumentPreviewOnly(fileHash, true);
@@ -432,7 +460,8 @@ async function uploadLegacy(req, res) {
         upgradeUrl: '/pricing',
         documentsUsed: req.user.documents_used + 1,
         documentsLimit: req.user.documents_limit,
-        overage: legacyOverageFlag
+        overage: legacyOverageFlag,
+        overageInfo: legacyOverageInfo
       });
     }
 
@@ -443,7 +472,8 @@ async function uploadLegacy(req, res) {
       fileName: file.originalname,
       documentsUsed: req.user.documents_used + 1,
       documentsLimit: req.user.documents_limit,
-      overage: legacyOverageFlag
+      overage: legacyOverageFlag,
+      overageInfo: legacyOverageInfo
     });
   } catch(e) {
     logger.error('[USER UPLOAD]', e.message);

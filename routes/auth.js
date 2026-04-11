@@ -9,6 +9,7 @@ const { sendPasswordResetEmail } = require('../services/email');
 const rateLimit = require('express-rate-limit');
 const { authLimiter, signupLimiter, getClientIP } = require('../middleware/auth');
 const requireAuth = require('../middleware/requireAuth');
+const { scheduleOnboardingEmails } = require('../services/onboarding-emails');
 
 const router = express.Router();
 
@@ -147,6 +148,11 @@ router.get('/google/callback',
 
       // Issue #14: Enforce session limit per user
       await enforceSessionLimit(db, req.user.id);
+
+      // Schedule onboarding emails for new Google signups (idempotent -- skips if already scheduled)
+      try {
+        await scheduleOnboardingEmails(req.user.id, req.user.email, req.user.name);
+      } catch (_) { /* best effort */ }
     } catch (e) {
       logger.warn({ err: e, userId: req.user?.id }, 'Failed to update last_login on Google callback');
     }
@@ -207,6 +213,11 @@ router.post('/register', signupLimiter, async (req, res) => {
 
       // Issue #14: Enforce session limit per user
       try { await enforceSessionLimit(db, user.id); } catch (_) { /* best effort */ }
+
+      // Schedule onboarding email sequence (best effort -- never blocks signup)
+      try {
+        await scheduleOnboardingEmails(user.id, user.email, user.name);
+      } catch (_) { /* best effort */ }
 
       res.json({
         success: true,

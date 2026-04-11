@@ -210,6 +210,66 @@ router.get('/self-check', authenticateAdmin, async (req, res) => {
 });
 
 // ================================================================
+// REVENUE & OVERAGE MONITORING
+// ================================================================
+
+// Revenue overview — MRR, overage, documents, plan breakdown
+router.get('/revenue', authenticateAdmin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const month = req.query.month || undefined; // defaults to current month
+    const overview = await db.getRevenueOverview(month);
+    res.json({ success: true, ...overview });
+  } catch (e) {
+    logger.error({ err: e }, 'Admin revenue overview error');
+    res.status(500).json({ success: false, error: 'Failed to load revenue overview' });
+  }
+});
+
+// Overage details — users who exceeded their plan limit
+router.get('/overage', authenticateAdmin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const month = req.query.month || undefined;
+    const overage = await db.getOverageUsers(month);
+    res.json({ success: true, ...overage });
+  } catch (e) {
+    logger.error({ err: e }, 'Admin overage details error');
+    res.status(500).json({ success: false, error: 'Failed to load overage details' });
+  }
+});
+
+// Usage trends — monthly aggregation for charts
+router.get('/usage-trends', authenticateAdmin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const numMonths = Math.min(parseInt(req.query.months) || 6, 24);
+    const trends = await db.getUsageTrends(numMonths);
+    res.json({ success: true, ...trends });
+  } catch (e) {
+    logger.error({ err: e }, 'Admin usage trends error');
+    res.status(500).json({ success: false, error: 'Failed to load usage trends' });
+  }
+});
+
+// Single user monthly usage (for billing detail view)
+router.get('/user/:userId/usage', authenticateAdmin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const userId = parseInt(req.params.userId);
+    if (!userId || isNaN(userId)) {
+      return res.status(400).json({ success: false, error: 'Invalid user ID' });
+    }
+    const month = req.query.month || undefined;
+    const usage = await db.getUserMonthlyUsage(userId, month);
+    res.json({ success: true, ...usage });
+  } catch (e) {
+    logger.error({ err: e }, 'Admin user usage error');
+    res.status(500).json({ success: false, error: 'Failed to load user usage' });
+  }
+});
+
+// ================================================================
 // DASHBOARD ENDPOINTS
 // ================================================================
 
