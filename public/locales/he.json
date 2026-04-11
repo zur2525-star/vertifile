@@ -1030,7 +1030,16 @@
     "slideVerified": "מאומת",
     "slideForged": "מזויף",
     "darkMode": "מצב כהה",
-    "lightMode": "מצב בהיר"
+    "lightMode": "מצב בהיר",
+    "createAccount": "צור חשבון",
+    "signInBtn": "התחבר",
+    "createAccountBtn": "צור חשבון",
+    "forgotPassword": "שכחת סיסמה?",
+    "haveAccount": "כבר יש לך חשבון?",
+    "signInLink": "התחבר",
+    "uploadDocument": "העלאת מסמך",
+    "dropFiles": "גרור קבצים לכאן או לחץ לעיון",
+    "contactUs": "צור קשר"
   },
   "pricing": {
     "badge": "תוכניות גמישות",
@@ -1242,7 +1251,11 @@
       "colSize": "גודל",
       "empty": "אין עדיין מסמכים",
       "emptyDesc": "העלה את המסמך הראשון שלך כדי להתחיל.",
-      "uploadFirst": "העלה את המסמך הראשון שלך"
+      "uploadFirst": "העלה את המסמך הראשון שלך",
+      "cryptoProof": "הוכחה קריפטוגרפית",
+      "algorithm": "אלגוריתם",
+      "keyId": "מזהה מפתח",
+      "status": "סטטוס"
     },
     "stamp": {
       "title": "החותמת שלי",

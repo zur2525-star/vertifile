@@ -1030,7 +1030,16 @@
     "slideVerified": "已验证",
     "slideForged": "伪造",
     "darkMode": "深色模式",
-    "lightMode": "浅色模式"
+    "lightMode": "浅色模式",
+    "createAccount": "创建账户",
+    "signInBtn": "登录",
+    "createAccountBtn": "创建账户",
+    "forgotPassword": "忘记密码？",
+    "haveAccount": "已有账户？",
+    "signInLink": "登录",
+    "uploadDocument": "上传文档",
+    "dropFiles": "将文件拖到此处或点击浏览",
+    "contactUs": "联系我们"
   },
   "pricing": {
     "badge": "灵活方案",
@@ -1242,7 +1251,11 @@
       "colSize": "Size",
       "empty": "No documents yet",
       "emptyDesc": "Upload your first document to get started.",
-      "uploadFirst": "Upload your first document"
+      "uploadFirst": "Upload your first document",
+      "cryptoProof": "密码学证明",
+      "algorithm": "算法",
+      "keyId": "密钥 ID",
+      "status": "状态"
     },
     "stamp": {
       "title": "My Stamp",

@@ -1030,7 +1030,16 @@
     "slideVerified": "Vérifié",
     "slideForged": "Falsifié",
     "darkMode": "Mode sombre",
-    "lightMode": "Mode clair"
+    "lightMode": "Mode clair",
+    "createAccount": "Créer un compte",
+    "signInBtn": "Se connecter",
+    "createAccountBtn": "Créer un compte",
+    "forgotPassword": "Mot de passe oublié ?",
+    "haveAccount": "Vous avez déjà un compte ?",
+    "signInLink": "Se connecter",
+    "uploadDocument": "Téléverser un document",
+    "dropFiles": "Déposez les fichiers ici ou cliquez pour parcourir",
+    "contactUs": "Nous contacter"
   },
   "pricing": {
     "badge": "Plans flexibles",
@@ -1242,7 +1251,11 @@
       "colSize": "Size",
       "empty": "No documents yet",
       "emptyDesc": "Upload your first document to get started.",
-      "uploadFirst": "Upload your first document"
+      "uploadFirst": "Upload your first document",
+      "cryptoProof": "Preuve cryptographique",
+      "algorithm": "Algorithme",
+      "keyId": "ID de clé",
+      "status": "Statut"
     },
     "stamp": {
       "title": "My Stamp",

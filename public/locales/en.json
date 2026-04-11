@@ -1030,7 +1030,16 @@
     "slideVerified": "Verified",
     "slideForged": "Forged",
     "darkMode": "Dark Mode",
-    "lightMode": "Light Mode"
+    "lightMode": "Light Mode",
+    "createAccount": "Create Account",
+    "signInBtn": "Sign In",
+    "createAccountBtn": "Create Account",
+    "forgotPassword": "Forgot password?",
+    "haveAccount": "Already have an account?",
+    "signInLink": "Sign in",
+    "uploadDocument": "Upload Document",
+    "dropFiles": "Drop files here or click to browse",
+    "contactUs": "Contact Us"
   },
   "pricing": {
     "badge": "Flexible Plans",
@@ -1242,7 +1251,11 @@
       "colSize": "Size",
       "empty": "No documents yet",
       "emptyDesc": "Upload your first document to get started.",
-      "uploadFirst": "Upload your first document"
+      "uploadFirst": "Upload your first document",
+      "cryptoProof": "Cryptographic Proof",
+      "algorithm": "Algorithm",
+      "keyId": "Key ID",
+      "status": "Status"
     },
     "stamp": {
       "title": "My Stamp",

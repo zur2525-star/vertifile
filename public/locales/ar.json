@@ -1030,7 +1030,16 @@
     "slideVerified": "موثّق",
     "slideForged": "مزوّر",
     "darkMode": "الوضع الداكن",
-    "lightMode": "الوضع الفاتح"
+    "lightMode": "الوضع الفاتح",
+    "createAccount": "إنشاء حساب",
+    "signInBtn": "تسجيل الدخول",
+    "createAccountBtn": "إنشاء حساب",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "haveAccount": "لديك حساب بالفعل؟",
+    "signInLink": "تسجيل الدخول",
+    "uploadDocument": "رفع مستند",
+    "dropFiles": "أفلت الملفات هنا أو انقر للتصفح",
+    "contactUs": "اتصل بنا"
   },
   "pricing": {
     "badge": "خطط مرنة",
@@ -1242,7 +1251,11 @@
       "colSize": "Size",
       "empty": "No documents yet",
       "emptyDesc": "Upload your first document to get started.",
-      "uploadFirst": "Upload your first document"
+      "uploadFirst": "Upload your first document",
+      "cryptoProof": "إثبات تشفيري",
+      "algorithm": "الخوارزمية",
+      "keyId": "معرّف المفتاح",
+      "status": "الحالة"
     },
     "stamp": {
       "title": "My Stamp",

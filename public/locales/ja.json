@@ -1030,7 +1030,16 @@
     "slideVerified": "検証済み",
     "slideForged": "偽造",
     "darkMode": "ダークモード",
-    "lightMode": "ライトモード"
+    "lightMode": "ライトモード",
+    "createAccount": "アカウント作成",
+    "signInBtn": "サインイン",
+    "createAccountBtn": "アカウント作成",
+    "forgotPassword": "パスワードをお忘れですか？",
+    "haveAccount": "すでにアカウントをお持ちですか？",
+    "signInLink": "サインイン",
+    "uploadDocument": "ドキュメントをアップロード",
+    "dropFiles": "ここにファイルをドロップするかクリックして参照",
+    "contactUs": "お問い合わせ"
   },
   "pricing": {
     "badge": "柔軟なプラン",
@@ -1242,7 +1251,11 @@
       "colSize": "Size",
       "empty": "No documents yet",
       "emptyDesc": "Upload your first document to get started.",
-      "uploadFirst": "Upload your first document"
+      "uploadFirst": "Upload your first document",
+      "cryptoProof": "暗号証明",
+      "algorithm": "アルゴリズム",
+      "keyId": "キー ID",
+      "status": "ステータス"
     },
     "stamp": {
       "title": "My Stamp",

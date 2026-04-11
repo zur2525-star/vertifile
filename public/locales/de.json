@@ -1030,7 +1030,16 @@
     "slideVerified": "Verifiziert",
     "slideForged": "Gefälscht",
     "darkMode": "Dunkelmodus",
-    "lightMode": "Hellmodus"
+    "lightMode": "Hellmodus",
+    "createAccount": "Konto erstellen",
+    "signInBtn": "Anmelden",
+    "createAccountBtn": "Konto erstellen",
+    "forgotPassword": "Passwort vergessen?",
+    "haveAccount": "Sie haben bereits ein Konto?",
+    "signInLink": "Anmelden",
+    "uploadDocument": "Dokument hochladen",
+    "dropFiles": "Dateien hier ablegen oder klicken zum Durchsuchen",
+    "contactUs": "Kontaktieren Sie uns"
   },
   "pricing": {
     "badge": "Flexible Plane",
@@ -1242,7 +1251,11 @@
       "colSize": "Size",
       "empty": "No documents yet",
       "emptyDesc": "Upload your first document to get started.",
-      "uploadFirst": "Upload your first document"
+      "uploadFirst": "Upload your first document",
+      "cryptoProof": "Kryptografischer Nachweis",
+      "algorithm": "Algorithmus",
+      "keyId": "Schlüssel-ID",
+      "status": "Status"
     },
     "stamp": {
       "title": "My Stamp",

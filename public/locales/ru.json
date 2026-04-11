@@ -1030,7 +1030,16 @@
     "slideVerified": "Проверен",
     "slideForged": "Подделан",
     "darkMode": "Тёмная тема",
-    "lightMode": "Светлая тема"
+    "lightMode": "Светлая тема",
+    "createAccount": "Создать аккаунт",
+    "signInBtn": "Войти",
+    "createAccountBtn": "Создать аккаунт",
+    "forgotPassword": "Забыли пароль?",
+    "haveAccount": "Уже есть аккаунт?",
+    "signInLink": "Войти",
+    "uploadDocument": "Загрузить документ",
+    "dropFiles": "Перетащите файлы сюда или нажмите для обзора",
+    "contactUs": "Связаться с нами"
   },
   "pricing": {
     "badge": "Гибкие тарифы",
@@ -1242,7 +1251,11 @@
       "colSize": "Size",
       "empty": "No documents yet",
       "emptyDesc": "Upload your first document to get started.",
-      "uploadFirst": "Upload your first document"
+      "uploadFirst": "Upload your first document",
+      "cryptoProof": "Криптографическое доказательство",
+      "algorithm": "Алгоритм",
+      "keyId": "ID ключа",
+      "status": "Статус"
     },
     "stamp": {
       "title": "My Stamp",
