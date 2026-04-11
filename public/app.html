@@ -2450,6 +2450,7 @@ window.Dashboard = {
         if (res.ok) {
           if (currentUser) currentUser.stampConfig = res.data.stampConfig;
           self.showToast('Stamp saved — applying to all your documents');
+          self.updateGettingStartedProgress();
         } else {
           self.showToast(res.data.error || 'Failed to save stamp');
         }
@@ -2588,6 +2589,56 @@ window.Dashboard = {
     var uqi = document.getElementById('uploadQuotaInfo'); if(uqi) uqi.textContent = usageText + ' used this month.';
     // Doc count badge
     var dcb = document.getElementById('docCountBadge'); if(dcb) dcb.textContent = documents.length;
+
+    // Update Getting Started checklist based on actual data
+    this.updateGettingStartedProgress();
+  },
+
+  // Getting Started progress — marks checklist items as done and updates counters
+  updateGettingStartedProgress: function(){
+    var used = (currentUser && currentUser.documentsUsed) || documents.length;
+    var hasStamp = currentUser && currentUser.stampConfig && typeof currentUser.stampConfig === 'object' && Object.keys(currentUser.stampConfig).length > 0;
+    var hasShared = documents.some(function(d){ return d.shareId || d.slug; });
+    var hasVerified = false;
+    var svEl = document.getElementById('statVerified');
+    if (svEl && parseInt(svEl.textContent, 10) > 0) hasVerified = true;
+
+    // cl1: uploaded at least one document
+    var cl1 = document.getElementById('cl1'); var cl1t = document.getElementById('cl1t');
+    if (cl1 && used > 0) { cl1.classList.add('done'); if(cl1t) cl1t.classList.add('done'); }
+    // cl2: customized stamp
+    var cl2 = document.getElementById('cl2'); var cl2t = document.getElementById('cl2t');
+    if (cl2 && hasStamp) { cl2.classList.add('done'); if(cl2t) cl2t.classList.add('done'); }
+    // cl3: shared a document
+    var cl3 = document.getElementById('cl3'); var cl3t = document.getElementById('cl3t');
+    if (cl3 && hasShared) { cl3.classList.add('done'); if(cl3t) cl3t.classList.add('done'); }
+    // cl4: first external verification
+    var cl4 = document.getElementById('cl4'); var cl4t = document.getElementById('cl4t');
+    if (cl4 && hasVerified) { cl4.classList.add('done'); if(cl4t) cl4t.classList.add('done'); }
+
+    // Count completed items
+    var completed = document.querySelectorAll('.checklist-check.done').length;
+    var total = 4;
+
+    // Update checklist card progress
+    var cpt = document.getElementById('checklistProgressText');
+    if (cpt) cpt.textContent = completed + ' of ' + total + ' complete';
+    var cbf = document.getElementById('checklistBarFill');
+    if (cbf) cbf.style.width = (completed / total * 100) + '%';
+
+    // Update sidebar summary
+    var sql = document.querySelector('.sidebar-qs-label');
+    if (sql) sql.textContent = 'Getting Started: ' + completed + '/' + total;
+    var sqb = document.querySelector('.sidebar-qs-bar-fill');
+    if (sqb) sqb.style.width = (completed / total * 100) + '%';
+
+    // Hide Getting Started card and sidebar summary when all done
+    if (completed >= total) {
+      var sqs = document.getElementById('sidebarSummary');
+      if (sqs) sqs.style.display = 'none';
+      var cc = document.getElementById('checklistCard');
+      if (cc) cc.style.display = 'none';
+    }
   },
 
   showToast: function(msg){ toast(msg); },

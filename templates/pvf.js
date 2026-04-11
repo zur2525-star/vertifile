@@ -322,7 +322,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
       <svg class="wave-svg" viewBox="0 0 2400 200" preserveAspectRatio="none">
         ${(function(){
           var waveColors;
-          try { waveColors = JSON.parse('${waveColor || "null"}'); } catch(e) { waveColors = null; }
+          try { waveColors = waveColor ? JSON.parse(waveColor) : null; } catch(e) { waveColors = null; }
           if (typeof waveColors === 'string') {
             // Single hex color — generate 7-wave gradient
             var base = waveColors;

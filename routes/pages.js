@@ -246,14 +246,18 @@ async function injectStampConfig(req, shareId, pvfContent, db) {
   }
 }
 
-// Download route — /d/:shareId/download
-router.get('/d/:shareId/download', async (req, res) => {
+// Download route — /d/:identifier/download (supports both shareId and slug)
+router.get('/d/:identifier/download', async (req, res) => {
   try {
     const db = req.app.get('db');
-    const { shareId } = req.params;
-    if (!shareId || !/^[a-zA-Z0-9_-]+$/.test(shareId)) return res.status(404).json({ success: false, error: 'Invalid link' });
+    const identifier = req.params.identifier;
+    if (!identifier || identifier.length < 3 || identifier.length > 80 || !/^[a-zA-Z0-9_-]+$/.test(identifier)) return res.status(404).json({ success: false, error: 'Invalid link' });
 
-    const doc = await db.getDocumentByShareId(shareId);
+    // Try slug first (PVF 2.0), then fall back to shareId (PVF 1.0)
+    let doc = await db.getDocumentBySlug(identifier);
+    if (!doc) {
+      doc = await db.getDocumentByShareId(identifier);
+    }
     if (!doc) {
       return res.status(404).json({ success: false, error: 'Document not found' });
     }
@@ -272,14 +276,14 @@ router.get('/d/:shareId/download', async (req, res) => {
       }
     }
 
-    let pvfContent = await db.getPvfContent(shareId);
+    let pvfContent = await db.getPvfContent(doc.shareId);
     if (!pvfContent) {
       return res.status(404).json({ success: false, error: 'Document file not available' });
     }
 
     // Layer 2 — apply current owner stamp config to the downloaded snapshot
     // so the user gets a fresh copy with their latest stamp branding
-    pvfContent = await injectStampConfig(req, shareId, pvfContent, db);
+    pvfContent = await injectStampConfig(req, doc.shareId, pvfContent, db);
 
     const pvfFileName = (doc.originalName || 'document').replace(/\.[^.]+$/, '') + '.pvf';
     res.setHeader('Content-Type', 'application/vnd.vertifile.pvf; charset=utf-8');
