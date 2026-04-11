@@ -149,7 +149,6 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 .pdf-thumb.current{border-color:#7c3aed;box-shadow:0 0 0 1px #7c3aed, 0 2px 8px rgba(124,58,237,.5)}
 .pdf-thumb-label{font-size:10px;color:rgba(196,181,253,.55);text-align:center;margin:0 0 10px 0;font-family:'Heebo',sans-serif;letter-spacing:.05em}
 @media(max-width:900px){.pdf-thumbs{display:none!important}}
-.desktop-viewer .pdf-thumbs{display:none!important}
 
 @media(max-width:660px){
 .page-wrap{width:calc(100vw - 24px)}
@@ -482,6 +481,7 @@ var __devToolsOpen = false;
   // Skip this check when embedded in a same-origin iframe (outerWidth reflects main window, not iframe)
   function checkWindowSize() {
     if (window.self !== window.top) return;
+    if (window.__pvfDesktopViewer) return;  // Desktop viewer has its own protections
     var widthDiff = window.outerWidth - window.innerWidth > 160;
     var heightDiff = window.outerHeight - window.innerHeight > 160;
     if (widthDiff || heightDiff) {
@@ -1032,10 +1032,13 @@ function buildThumbnailsSidebar(){
   var sidebar = document.getElementById("pdfThumbs");
   if(!sidebar || !__pdfDoc) return;
 
-  // Hide in desktop viewer and iframe embed — they provide their own nav
-  if(__isDesktopViewer || __isIframe) return;
+  if(__isIframe) return;  // Skip in iframe embeds only — desktop viewer SHOULD show thumbnails
 
   sidebar.classList.add("active");
+  if(__isDesktopViewer) {
+    sidebar.style.top = "20px";
+    sidebar.style.maxHeight = "calc(100vh - 30px)";
+  }
 
   // Build thumbnails upfront — small canvases (~111 KB RGBA each at 140x198),
   // so 50 pages is roughly 5.5 MB of canvas memory. Well within budget.
