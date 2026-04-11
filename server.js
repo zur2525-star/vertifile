@@ -203,6 +203,9 @@ app.use(express.static(path.join(__dirname, 'public'), {
       res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
       res.setHeader('X-Content-Type-Options', 'nosniff');
       res.setHeader('X-Frame-Options', 'DENY');
+    } else if (fp.endsWith('.json') && fp.includes('locales')) {
+      // Locale JSON: short cache so translations update quickly
+      res.setHeader('Cache-Control', 'public, max-age=300, must-revalidate');
     } else if (fp.endsWith('.js') || fp.endsWith('.css')) {
       // JS/CSS: 1 hour cache with revalidation (short, since no hash in filename)
       res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate');
