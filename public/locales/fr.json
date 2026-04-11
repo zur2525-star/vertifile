@@ -1205,8 +1205,8 @@
       "layers": "Hash SHA-256 (empreinte du document), signature HMAC-SHA256 (signée par le serveur), rafraîchissement de jeton toutes les 5 minutes, hash d'intégrité du code, jeton chaîné (lie tous les paramètres), détection des outils de développement, obfuscation JavaScript, tampon holographique animé, ancrage blockchain Polygon.",
       "dataStored": "Les empreintes cryptographiques sont stockées sur une infrastructure cloud aux États-Unis/UE (Render + Neon PostgreSQL). Le contenu des documents n'est jamais stocké sur nos serveurs. Les enregistrements blockchain sont sur Polygon (décentralisé).",
       "shutdown": "Vos fichiers .pvf restent fonctionnels — ce sont des documents HTML autonomes. Les enregistrements blockchain sur Polygon restent accessibles en permanence. Nous nous engageons à donner un préavis de 90 jours.",
-      "cost": "Gratuit : 0$/mois — 1 document. Pro : 29$/mois — 100 documents. Entreprise : tarification personnalisée — documents illimités, marque blanche, SLA.",
-      "trial": "Oui ! Le plan gratuit vous permet de protéger 1 document sans frais. Le plan Pro inclut un essai gratuit de 14 jours.",
+      "cost": "Gratuit : $0/mois -- 25 documents, telechargement, partage et verification inclus. Pro : $19/mois -- 500 documents, marque personnalisee. Business : $12/siege/mois -- documents illimites, gestion d'equipe. Entreprise : tarification personnalisee.",
+      "trial": "Oui ! Le plan gratuit vous permet de telecharger jusqu'a 25 documents par mois, de les partager et verifier sans frais.",
       "cancel": "Oui. Pas de contrats à long terme. Annulez à tout moment depuis votre tableau de bord.",
       "formats": "PDF, PNG, JPG/JPEG, TXT. Jusqu'à 50 Mo par fichier.",
       "api": "Consultez notre documentation API. Démarrage rapide : envoyez une requête POST à /api/create-pvf avec votre clé API et le fichier à protéger.",
@@ -1226,7 +1226,7 @@
     "watermark": "APERCU\nAbonnez-vous pour debloquer",
     "ctaTitle": "Pret a telecharger et partager ?",
     "ctaDesc": "Passez a Pro pour debloquer le telechargement, le partage et la verification complete.",
-    "ctaBtn": "Passer a Pro — 29$/mois",
+    "ctaBtn": "Passer a Pro — 19$/mois",
     "ctaNote": "Inclut 100 documents/mois, branding personnalise, acces API",
     "uploadAnother": "Telecharger un autre document",
     "dashboardTitle": "Passez a la version superieure pour telecharger et partager",
@@ -1622,8 +1622,8 @@
     "planWord": "PLAN",
     "price": {
       "free": "0$/mois",
-      "pro": "29$/mois",
-      "proPlus": "79$/mois",
+      "pro": "19$/mois",
+      "proPlus": "12$/siege/mois",
       "enterprise": "Personnalisé"
     }
   },

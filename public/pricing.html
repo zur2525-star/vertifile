@@ -8,14 +8,14 @@
   <meta name="keywords" content="vertifile pricing, document verification plans, pvf pricing, document protection cost">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
   <meta property="og:title" content="Pricing — Vertifile">
-  <meta property="og:description" content="Simple, transparent pricing. Pro, Pro+, and Enterprise plans for every team.">
+  <meta property="og:description" content="Simple, transparent pricing. Free, Pro, Business, and Enterprise plans for every team.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vertifile.com/pricing">
   <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
   <link rel="canonical" href="https://vertifile.com/pricing">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Pricing — Vertifile">
-  <meta name="twitter:description" content="Simple, transparent pricing. Pro, Pro+, and Enterprise plans for every team.">
+  <meta name="twitter:description" content="Simple, transparent pricing. Free, Pro, Business, and Enterprise plans for every team.">
   <meta name="theme-color" content="#ffffff">
   <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -105,7 +105,7 @@
     /* ===== PRICING CARDS ===== */
     .pricing-section{background:linear-gradient(180deg,#ffffff 0%,#f8f7ff 50%,#ffffff 100%);position:relative;overflow:hidden}
     .pricing-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 70%,rgba(124,58,237,.03),transparent 50%),radial-gradient(ellipse at 70% 30%,rgba(6,182,212,.02),transparent 50%);pointer-events:none}
-    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1060px;margin:0 auto;position:relative;z-index:1;align-items:stretch}
+    .pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1200px;margin:0 auto;position:relative;z-index:1;align-items:stretch}
     .pricing-card{padding:40px 32px;border-radius:24px;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.06);transition:all .4s cubic-bezier(.16,1,.3,1);box-shadow:0 2px 8px rgba(124,58,237,.04);display:flex;flex-direction:column}
     .pricing-card:hover{transform:translateY(-8px);background:rgba(255,255,255,.95);border-color:rgba(124,58,237,.18);box-shadow:0 12px 40px rgba(124,58,237,.12),0 0 0 1px rgba(124,58,237,.05)}
     .pricing-card.recommended{border:2px solid #7c3aed;background:rgba(255,255,255,.95);box-shadow:0 8px 40px rgba(124,58,237,.15),0 0 0 1px rgba(124,58,237,.08);position:relative}
@@ -125,7 +125,9 @@
     .plan-cta.secondary{background:transparent;color:#374151;border:1px solid rgba(0,0,0,.15)}
     .plan-cta.secondary:hover{border-color:rgba(0,0,0,.3);background:rgba(0,0,0,.02);transform:translateY(-2px)}
 
-    @media(max-width:900px){.pricing-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}}
+    .plan-price .per-seat{font-size:13px;font-weight:500;color:#6b7280;display:block;margin-top:2px}
+    @media(max-width:1100px){.pricing-grid{grid-template-columns:repeat(2,1fr);max-width:780px;margin:0 auto}}
+    @media(max-width:600px){.pricing-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}}
 
     /* ===== FAQ ===== */
     .faq-section{background:#ffffff;position:relative;overflow:hidden}
@@ -287,52 +289,63 @@
 <section class="pricing-section" id="plans">
   <div class="pricing-grid">
 
-    <!-- PRO -->
+    <!-- FREE -->
     <div class="pricing-card fade-up">
-      <div class="plan-name" data-i18n="pricing.proName">Pro</div>
-      <div class="plan-price">$29<span> /</span><span data-i18n="pricing.perMonth">month</span></div>
-      <div class="plan-desc" data-i18n="pricing.proDesc">Everything you need to protect and verify your documents.</div>
+      <div class="plan-name" data-i18n="pricing.freeName">Free</div>
+      <div class="plan-price">$0<span> /</span><span data-i18n="pricing.perMonth">month</span></div>
+      <div class="plan-desc" data-i18n="pricing.freeDesc">For individuals. Upload, download, share, and verify at no cost.</div>
       <ul class="plan-features">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF1">100 documents/month</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF2">SHA-256 verification</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF3">Live holographic stamp</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF4">Blockchain anchoring</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF5">Browser-based verification</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF6">Email support</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.freeF1">25 documents/month</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.freeF2">Basic verification stamp (Vertifile branding)</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.freeF3">Share &amp; verify unlimited</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.freeF4">1 user</span></li>
       </ul>
-      <a href="/app" class="plan-cta secondary" data-i18n="pricing.proCta">Start Pro</a>
+      <a href="/app" class="plan-cta secondary" data-i18n="pricing.freeCta">Get Started Free</a>
     </div>
 
-    <!-- PRO+ (RECOMMENDED) -->
+    <!-- PRO (RECOMMENDED) -->
     <div class="pricing-card recommended fade-up">
-      <div class="recommended-badge" data-i18n="pricing.recommended">Recommended</div>
-      <div class="plan-name" data-i18n="pricing.proPlusName">Pro+</div>
-      <div class="plan-price">$79<span> /</span><span data-i18n="pricing.perMonth">month</span></div>
-      <div class="plan-desc" data-i18n="pricing.proPlusDesc">For professionals and teams who need more power and customization.</div>
+      <div class="recommended-badge" data-i18n="pricing.recommended">Most Popular</div>
+      <div class="plan-name" data-i18n="pricing.proName">Pro</div>
+      <div class="plan-price">$19<span> /</span><span data-i18n="pricing.perMonth">month</span></div>
+      <div class="plan-desc" data-i18n="pricing.proDesc">For professionals and freelancers who need their own branding.</div>
       <ul class="plan-features">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proPlusF1">1,000 documents/month</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proPlusF2">Everything in Pro</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proPlusF3">Custom branding (logo + colors)</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proPlusF4">API access</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proPlusF5">Priority support</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proPlusF6">Advanced analytics</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF1">500 documents/month</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF2">Custom stamp (your logo, colors, waves)</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF3">Zero-Knowledge encryption</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF4">Priority support</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.proF5">API access (100 calls/day)</span></li>
       </ul>
-      <a href="/app" class="plan-cta primary" data-i18n="pricing.proPlusCta">Start Pro+</a>
+      <a href="/app" class="plan-cta primary" data-i18n="pricing.proCta">Start Pro</a>
+    </div>
+
+    <!-- BUSINESS -->
+    <div class="pricing-card fade-up">
+      <div class="plan-name" data-i18n="pricing.businessName">Business</div>
+      <div class="plan-price">$12<span> /</span><span data-i18n="pricing.perSeat">seat/month</span><span class="per-seat" data-i18n="pricing.seatMin">5-seat minimum</span></div>
+      <div class="plan-desc" data-i18n="pricing.businessDesc">For teams and organizations that need shared workflows.</div>
+      <ul class="plan-features">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.bizF1">Unlimited documents</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.bizF2">Team management</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.bizF3">Custom branding</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.bizF4">Dedicated account manager</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.bizF5">Advanced API (10K calls/day)</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.bizF6">Audit trail &amp; compliance reports</span></li>
+      </ul>
+      <a href="/app" class="plan-cta secondary" data-i18n="pricing.businessCta">Start Business</a>
     </div>
 
     <!-- ENTERPRISE -->
     <div class="pricing-card fade-up">
       <div class="plan-name" data-i18n="pricing.enterpriseName">Enterprise</div>
       <div class="plan-price-custom" data-i18n="pricing.enterprisePrice">Custom</div>
-      <div class="plan-desc" data-i18n="pricing.enterpriseDesc">For organizations that need unlimited scale, compliance, and dedicated support.</div>
+      <div class="plan-desc" data-i18n="pricing.enterpriseDesc">For large organizations needing compliance, SLA, and on-premise deployment.</div>
       <ul class="plan-features">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF1">Unlimited documents</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF2">Everything in Pro+</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF3">SSO/SAML</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF4">On-premise option</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF5">SLA 99.9%</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF6">Dedicated account manager</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF7">Custom integrations</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF1">Everything in Business</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF2">On-premise deployment option</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF3">SLA guarantee</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF4">Custom integrations</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.entF5">Dedicated infrastructure</span></li>
       </ul>
       <a href="/contact" class="plan-cta secondary" data-i18n="pricing.enterpriseCta">Contact Sales</a>
     </div>
@@ -355,7 +368,7 @@
         <span data-i18n="pricing.faq1q">Can I try before I buy?</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
-      <div class="faq-answer"><p data-i18n="pricing.faq1a">Yes! You can start with the Pro plan and cancel anytime within the first 14 days. No long-term commitment required.</p></div>
+      <div class="faq-answer"><p data-i18n="pricing.faq1a">Yes! Our Free plan lets you upload up to 25 documents per month, download, share, and verify at no cost. The stamp carries Vertifile branding on the Free tier. Upgrade to Pro or Business for custom branding and higher limits.</p></div>
     </div>
     <div class="faq-item fade-up">
       <button class="faq-question" onclick="toggleFaq(this)">
@@ -369,7 +382,7 @@
         <span data-i18n="pricing.faq3q">How does billing work?</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
-      <div class="faq-answer"><p data-i18n="pricing.faq3a">Pro plans are billed monthly. You can cancel at any time with no cancellation fees. Enterprise plans are billed annually with custom terms tailored to your organization.</p></div>
+      <div class="faq-answer"><p data-i18n="pricing.faq3a">Free is always free. Pro ($19/mo) and Business ($12/seat/mo) are billed monthly or annually (17% off). Cancel anytime, no fees. Enterprise plans are billed annually with custom terms.</p></div>
     </div>
     <div class="faq-item fade-up">
       <button class="faq-question" onclick="toggleFaq(this)">
@@ -427,6 +440,7 @@
   </div>
   <div class="footer-bottom">
     <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
+    <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(196,181,253,.5);letter-spacing:.3px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;opacity:.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span data-i18n="footer.patentPending">Patent Pending</span></span>
     <span data-i18n="footer.enterpriseDocProtection">Enterprise Document Protection</span>
   </div>
 </footer>
