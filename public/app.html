@@ -1305,7 +1305,7 @@
         <div class="uz-text" data-i18n="tab.upload.dropZone">Drag &amp; drop your file here</div>
         <div class="uz-hint" data-i18n="tab.upload.dropHint">or click to browse. PDF, images, text files accepted. Max 50MB.</div>
       </div>
-      <!-- fileInput removed here — duplicate of line 1526. Two inputs with same ID caused double encryption with different AES keys, breaking ZK decryption -->
+      <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.gif,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.odt,.ods,.odp" style="display:none">
       <div class="upload-progress" id="uploadProgress"><div class="up-filename" id="upFilename"></div><div class="up-bar"><div class="up-bar-fill" id="upBarFill"></div></div><div class="up-status" id="upStatus">Uploading...</div><div class="up-actions" id="upActions"><button class="up-cancel" onclick="Dashboard.cancelUpload()">Cancel</button></div></div>
       <div class="upload-error-card" id="uploadError"><div class="ue-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div class="ue-heading">Upload Failed</div><div class="ue-text" id="ueText">Something went wrong. Please try again.</div><div class="btn-row" style="justify-content:center"><button class="btn btn-primary" onclick="Dashboard.retryUpload()">Retry Upload</button></div></div>
       <div class="upload-complete" id="uploadComplete"><div class="uc-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><h3>Document Protected</h3><div class="uc-details" id="ucDetails"></div><div class="uc-hash" id="ucHash"></div><div class="btn-row" style="justify-content:center"><button class="btn btn-primary" onclick="Dashboard.switchTab('documents')">View in Documents</button></div></div>
@@ -1514,35 +1514,6 @@
   </div>
 </div>
 
-<!-- Upload Modal -->
-<div class="modal-overlay" id="uploadModal">
-  <div class="modal">
-    <h3 data-i18n="app.uploadDocument">Upload Document</h3>
-    <p class="modal-subtitle" data-i18n="app.uploadDesc">Drag and drop files or click to browse. PDF, images, and text files are supported.</p>
-
-    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-      <div class="uz-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
-      <div class="uz-text" data-i18n="app.dropFiles">Drop files here or click to browse</div>
-      <div class="uz-hint">PDF, PNG, JPG, TXT</div>
-    </div>
-    <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.txt,.doc,.docx" style="display:none">
-
-    <div class="upload-progress" id="uploadProgress">
-      <div class="up-filename" id="upFilename"></div>
-      <div class="up-bar"><div class="up-bar-fill" id="upBarFill"></div></div>
-      <div class="up-status" id="upStatus" data-i18n="app.uploading">Uploading...</div>
-    </div>
-
-    <div class="upload-limit" id="uploadLimit">
-      <p data-i18n="app.limitReached">You've reached the free document limit. Contact us for more.</p>
-      <a href="/contact" data-i18n="app.contactUs">Contact Us</a>
-    </div>
-
-    <div class="modal-actions">
-      <button style="background:rgba(124,58,237,.08);color:#8b89a6;border:1px solid rgba(124,58,237,.12)" onclick="hideUploadModal()" data-i18n="app.cancel">Cancel</button>
-    </div>
-  </div>
-</div>
 
 <!-- Paywall Overlay -->
 <div class="paywall-overlay" id="paywallOverlay" onclick="if(event.target===this)closePaywall()">
@@ -2269,7 +2240,7 @@ window.Dashboard = {
       } else {
         // Normal non-encrypted doc
         ctaHtml = shareId
-          ? '<a class="dpc-cta" href="/d/' + escHtml(shareId) + '" target="_blank" rel="noopener">' + openCtaSvg + '<span>Open document</span></a>'
+          ? '<a class="dpc-cta" href="/d/' + escHtml(selectedDoc.slug || shareId) + '" target="_blank" rel="noopener">' + openCtaSvg + '<span>Open document</span></a>'
           : '';
       }
 
@@ -2301,7 +2272,7 @@ window.Dashboard = {
     if (!selectedDoc) return;
     if (isFreePlan()) { showPaywall(); return; }
     var shareId = selectedDoc.shareId || selectedDoc.share_id;
-    if (shareId) window.open('/d/' + shareId + '/download', '_blank');
+    if (shareId) window.open('/d/' + (selectedDoc.slug || shareId) + '/download', '_blank');
   },
   shareCurrentDoc: function(){
     if (!selectedDoc) return;
