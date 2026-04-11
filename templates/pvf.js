@@ -273,6 +273,44 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
   <div class="sp"></div>
 </div>
 
+<!-- Top Toolbar (Gmail-style) -->
+<div class="pvf-toolbar hide" id="toolbar">
+  <!-- Left: Logo + Share + Download -->
+  <div class="tb-section">
+    <div class="tb-logo">
+      <div class="tb-logo-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2l7 4v5c0 5-3 9.5-7 11-4-1.5-7-6-7-11V6l7-4z" stroke="#fff" stroke-width="1.5"/></svg></div>
+    </div>
+    <div class="tb-divider"></div>
+    <button class="tb-btn" id="tbShare" title="Share">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M18 8a3 3 0 100-6 3 3 0 000 6zM6 15a3 3 0 100-6 3 3 0 000 6zM18 22a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.5"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" stroke="currentColor" stroke-width="1.5"/></svg>
+    </button>
+    <button class="tb-btn" id="tbDownload" title="Download">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="tb-btn" title="Print" onclick="printDoc()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
+  </div>
+  <!-- Center: Filename -->
+  <div class="tb-filename" id="tbName">
+    <span class="vf-badge">${isEncryptedMode ? 'PVF 2.0' : 'PVF'}</span>
+    <span id="tbNameText">${safeOriginalName.replace(/\.[^.]+$/, '')}.pvf</span>
+  </div>
+  <!-- Right: Zoom -->
+  <div class="tb-section">
+    <button class="tb-btn" id="tbZoomOut" title="Zoom out">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M21 21l-4.35-4.35M8 11h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <span class="tb-zoom-label" id="tbZoomLbl">100%</span>
+    <button class="tb-btn" id="tbZoomIn" title="Zoom in">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <div class="tb-divider"></div>
+    <button class="tb-btn" id="tbFit" title="Fit to page">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+<div class="tb-toast" id="tbToast"></div>
+
 <!-- Document -->
 <div class="page-wrap" id="wrap">
   <div class="page-bg" id="pg">
@@ -744,7 +782,6 @@ async function decryptAndDisplay() {
 
     return true; // encrypted doc handled
   } catch(err) {
-    if (loadingDiv.parentNode) loadingDiv.parentNode.removeChild(loadingDiv);
     var errDiv2 = document.createElement('div');
     errDiv2.className = 'zk-error';
     // Distinguish wrong-key (GCM auth failure) from hash mismatch
@@ -811,7 +848,11 @@ async function init(){
 function showLocal(){
   document.getElementById("ld").classList.add("hide");
   document.getElementById("wrap").style.display="block";
-  document.getElementById("wrap").style.marginTop="20px";
+  if(__isDesktopViewer || __isIframe){
+    document.getElementById("wrap").style.marginTop="20px";
+  } else {
+    document.getElementById("toolbar").classList.remove("hide");
+  }
   fitToPage();
   setOk();
   activateWaves();
@@ -1054,10 +1095,15 @@ function buildThumbnailsSidebar(){
 function show(ok){
   document.getElementById("ld").classList.add("hide");
   document.getElementById("wrap").style.display="block";
-  document.getElementById("wrap").style.marginTop="20px";
-  // Show "Protected by Vertifile" footer
-  var pvfFt = document.getElementById("pvf-footer");
-  if(pvfFt) pvfFt.style.display="block";
+  if(__isDesktopViewer || __isIframe){
+    // Hide PVF toolbar entirely — Viewer has its own native bar
+    document.getElementById("wrap").style.marginTop="20px";
+  } else {
+    document.getElementById("toolbar").classList.remove("hide");
+    // Show "Protected by Vertifile" footer in browser only
+    var pvfFt = document.getElementById("pvf-footer");
+    if(pvfFt) pvfFt.style.display="block";
+  }
   if(ok){setOk();activateWaves()}else setFk();
   setTimeout(triggerFlip,400);
   fitToPage();
@@ -1110,8 +1156,7 @@ var __zoomSteps = [0.5, 0.67, 0.75, 0.9, 1, 1.1, 1.25, 1.5, 2];
 function setZoom(z) {
   __zoom = Math.max(0.25, Math.min(3, z));
   document.getElementById("wrap").style.transform = "scale(" + __zoom + ")";
-  var zoomLbl = document.getElementById("tbZoomLbl");
-  if (zoomLbl) zoomLbl.textContent = Math.round(__zoom * 100) + "%";
+  document.getElementById("tbZoomLbl").textContent = Math.round(__zoom * 100) + "%";
 }
 function stepZoom(dir) {
   var idx = 0;
@@ -1136,6 +1181,53 @@ function fitToPage() {
     setZoom(Math.round(scale * 100) / 100);
   }
 }
+document.getElementById("tbZoomIn").addEventListener("click", function() { stepZoom(1); });
+document.getElementById("tbZoomOut").addEventListener("click", function() { stepZoom(-1); });
+document.getElementById("tbFit").addEventListener("click", fitToPage);
+
+// ===== TOOLBAR: Download =====
+document.getElementById("tbDownload").addEventListener("click", function() {
+  // Encrypted PVF: download the decrypted original document (not the PVF wrapper)
+  if (typeof ENCRYPTED !== 'undefined' && ENCRYPTED && window.__zkDecryptedBytes) {
+    var blob = new Blob([window.__zkDecryptedBytes], { type: window.__zkMimeType || 'application/octet-stream' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = window.__zkFileName || 'document';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    // P0 Security fix: zero out decrypted bytes after download
+    delete window.__zkDecryptedBytes;
+    delete window.__zkDecryptedPdfBytes;
+    return;
+  }
+  // v1.0 PVF: download the PVF wrapper as HTML
+  var html = document.documentElement.outerHTML;
+  var blob = new Blob([html], { type: "text/html" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.getElementById("tbNameText").textContent || "document") + ".pvf";
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+// ===== TOOLBAR: Share =====
+document.getElementById("tbShare").addEventListener("click", function() {
+  var url = window.location.href;
+  if (navigator.share) {
+    navigator.share({ title: document.getElementById("tbNameText").textContent, url: url }).catch(function(){});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() {
+      var t = document.getElementById("tbToast");
+      t.textContent = "Link copied!";
+      t.classList.add("show");
+      setTimeout(function() { t.classList.remove("show"); }, 2000);
+    });
+  }
+});
+
 // ===== TOOLBAR: Print =====
 function printDoc(){
   var pg = document.getElementById("pg");
