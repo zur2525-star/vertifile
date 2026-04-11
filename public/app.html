@@ -748,6 +748,7 @@
     .doc-actions-menu a:hover{background:var(--hover-bg)}
     .doc-actions-menu a.danger{color:#dc2626}
     .doc-actions-menu a.danger:hover{background:rgba(220,38,38,.06)}
+    .doc-actions-menu svg.icon-sm{width:16px;height:16px;display:inline;vertical-align:-2px;flex-shrink:0}
     .docs-grid{display:none;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
     .docs-grid.active{display:grid}
     .docs-list.hidden{display:none}
@@ -1969,6 +1970,13 @@ window.Dashboard = {
       document.querySelectorAll('.doc-actions-menu.show').forEach(function(m){
         if(!e.target.closest('.col-actions')) m.classList.remove('show');
       });
+      // Close doc-preview sidebar on outside click
+      var dp = document.getElementById('docPreview');
+      if(dp && dp.classList.contains('open')){
+        if(!dp.contains(e.target) && !e.target.closest('.doc-row')){
+          Dashboard.closePreview();
+        }
+      }
     });
 
     // Keyboard shortcuts
