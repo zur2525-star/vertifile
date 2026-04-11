@@ -87,7 +87,8 @@ router.get('/documents', authenticateAdmin, async (req, res) => {
     const docs = await db.getAllDocuments({ limit, offset, search });
     res.json({ success: true, documents: docs, limit, offset });
   } catch (e) {
-    res.json({ success: true, documents: [], limit, offset });
+    logger.error({ err: e }, 'Admin documents listing error');
+    res.status(500).json({ success: false, error: 'Failed to list documents' });
   }
 });
 
@@ -230,6 +231,10 @@ router.get('/overview', authenticateAdmin, async (req, res) => {
 router.get('/org/:orgId', authenticateAdmin, async (req, res) => {
   try {
     const db = req.app.get('db');
+    // Security: validate orgId format (alphanumeric + underscore, reasonable length)
+    if (!req.params.orgId || req.params.orgId.length > 100 || !/^[a-zA-Z0-9_-]+$/.test(req.params.orgId)) {
+      return res.status(400).json({ success: false, error: 'Invalid organization ID' });
+    }
     const org = await db.getApiKeyByOrgId(req.params.orgId);
     if (!org) return res.status(404).json({ success: false, error: 'Organization not found' });
     const docs = await db.getDocumentsByOrg(req.params.orgId);
@@ -258,6 +263,10 @@ router.get('/alerts', authenticateAdmin, async (req, res) => {
 router.post('/org/:orgId/plan', authenticateAdmin, async (req, res) => {
   try {
     const db = req.app.get('db');
+    // Security: validate orgId format
+    if (!req.params.orgId || req.params.orgId.length > 100 || !/^[a-zA-Z0-9_-]+$/.test(req.params.orgId)) {
+      return res.status(400).json({ success: false, error: 'Invalid organization ID' });
+    }
     const { plan } = req.body;
     if (!['free', 'pro', 'enterprise'].includes(plan)) return res.status(400).json({ success: false, error: 'Invalid plan' });
     await db.updateOrgPlan(req.params.orgId, plan);
@@ -274,6 +283,10 @@ router.get('/export/:type', authenticateAdmin, async (req, res) => {
   try {
     const db = req.app.get('db');
     const { type } = req.params;
+    // Security: strictly validate export type against allowlist
+    if (!['documents', 'keys', 'audit'].includes(type)) {
+      return res.status(400).json({ success: false, error: 'Invalid export type. Allowed: documents, keys, audit' });
+    }
     let data, filename;
     if (type === 'documents') {
       data = await db.getAllDocumentsForExport();
@@ -289,7 +302,14 @@ router.get('/export/:type', authenticateAdmin, async (req, res) => {
     }
     if (!data.length) return res.status(404).json({ success: false, error: 'No data' });
     const headers = Object.keys(data[0]).join(',');
-    const rows = data.map(r => Object.values(r).map(v => '"' + String(v || '').replace(/"/g, '""') + '"').join(',')).join('\n');
+    // Security: CSV injection prevention — prefix cells starting with =, +, -, @, \t, \r
+    // with a single quote so spreadsheet apps don't interpret them as formulas.
+    function csvSafe(v) {
+      let s = String(v || '').replace(/"/g, '""');
+      if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+      return '"' + s + '"';
+    }
+    const rows = data.map(r => Object.values(r).map(csvSafe).join(',')).join('\n');
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.send(headers + '\n' + rows);

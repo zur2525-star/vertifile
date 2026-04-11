@@ -3,7 +3,12 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
+const rateLimit = require('express-rate-limit');
 const logger = require('../services/logger');
+
+// Configurable bcrypt rounds (floor of 12) — match auth.js convention
+const BCRYPT_ROUNDS = Math.max(12, parseInt(process.env.BCRYPT_ROUNDS) || 12);
+
 const { requireLogin } = require('../middleware/auth');
 const { hashBytes, signHash, fixFilename, HMAC_SECRET } = require('../services/pvf-generator');
 const { generatePvfHtml } = require('../templates/pvf');
@@ -12,6 +17,15 @@ const { obfuscatePvf } = require('../obfuscate');
 // handler so the legacy code path keeps working unchanged when the feature
 // flag is off.
 const pvfPipeline = require('../services/pvf-pipeline');
+
+// Rate limiter for upload endpoints — 30 uploads per hour per IP
+const uploadLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 30,
+  message: { success: false, error: 'Upload limit reached. Try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
 
 const router = express.Router();
 
@@ -90,7 +104,7 @@ router.get('/documents', requireLogin, async (req, res) => {
 //   - PVF_PIPELINE_V2 === '0'  → legacy 121-line per-endpoint path (rollback)
 // The legacy implementation is preserved verbatim as `uploadLegacy` below.
 // ============================================================================
-router.post('/upload', requireLogin, (req, res, next) => {
+router.post('/upload', requireLogin, uploadLimiter, (req, res, next) => {
   const upload = req.app.get('upload');
   upload.single('file')(req, res, (err) => {
     if (err) return res.status(400).json({ success: false, error: err.message });
@@ -189,7 +203,7 @@ router.post('/upload', requireLogin, (req, res, next) => {
 //   mimeType      - original MIME type
 //   originalName  - original filename
 // ============================================================================
-router.post('/upload-encrypted', requireLogin, (req, res, next) => {
+router.post('/upload-encrypted', requireLogin, uploadLimiter, (req, res, next) => {
   const upload = req.app.get('upload');
   upload.single('file')(req, res, (err) => {
     if (err) return res.status(400).json({ success: false, error: err.message });
@@ -430,6 +444,10 @@ async function uploadLegacy(req, res) {
 router.post('/documents/:hash/star', requireLogin, async (req, res) => {
   try {
     const db = req.app.get('db');
+    // Security: validate hash format before DB lookup
+    if (!req.params.hash || !/^[a-f0-9]{64}$/.test(req.params.hash)) {
+      return res.status(400).json({ success: false, error: 'Invalid document hash' });
+    }
     const doc = await db.getDocument(req.params.hash);
     if (!doc || doc.user_id !== req.user.id) {
       return res.status(404).json({ success: false, error: 'Document not found' });
@@ -444,6 +462,10 @@ router.post('/documents/:hash/star', requireLogin, async (req, res) => {
 router.delete('/documents/:hash', requireLogin, async (req, res) => {
   try {
     const db = req.app.get('db');
+    // Security: validate hash format before DB lookup
+    if (!req.params.hash || !/^[a-f0-9]{64}$/.test(req.params.hash)) {
+      return res.status(400).json({ success: false, error: 'Invalid document hash' });
+    }
     const deleted = await db.deleteDocument(req.params.hash, req.user.id);
     if (!deleted) return res.status(404).json({ success: false, error: 'Document not found' });
     // Also remove PVF file from disk if it exists
@@ -480,7 +502,7 @@ router.post('/change-password', requireLogin, async (req, res) => {
     if (!user || !user.password_hash) return res.status(400).json({ success: false, error: 'Cannot change password for OAuth accounts' });
     const valid = await bcrypt.compare(currentPassword, user.password_hash);
     if (!valid) return res.status(401).json({ success: false, error: 'Current password is incorrect' });
-    const hash = await bcrypt.hash(newPassword, 12);
+    const hash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
     // Issue #5: Pass current session ID to preserve it, invalidate all others
     await db.changeUserPassword(req.user.id, hash, req.sessionID);
     await db.log('password_changed', { userId: req.user.id });

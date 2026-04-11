@@ -76,14 +76,15 @@ Your .pvf files remain functional — they're self-contained HTML documents. Blo
 ## Pricing
 
 **How much does it cost?**
-- Free: $0/month — 1 document
-- Pro: $49/month — 500 documents
-- Enterprise: Custom pricing — unlimited documents, white-label, SLA
+- Free: $0/month — 25 documents/month, Vertifile-branded stamp, unlimited download/share/verify
+- Pro: $19/month — 500 documents/month, custom branding, 1-year audit trail, API access
+- Business: $12/seat/month (5-seat min) — 5,000 docs/seat/month, team accounts, SSO, custom domain
+- Enterprise: Custom pricing — unlimited documents, white-label, on-prem, dedicated CSM
 
 ---
 
 **Is there a free trial?**
-Yes! The Free plan lets you protect 1 document at no cost. Pro plan includes a 14-day free trial.
+Yes! The Free plan lets you protect up to 25 documents per month at no cost, with unlimited download, share, and verification. Pro plan includes a 14-day free trial.
 
 ---
 

@@ -595,7 +595,7 @@
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Vertifile","url":"https://vertifile.com","logo":"https://vertifile.com/images/logo-icon.png","description":"Document verification and anti-forgery platform","foundingDate":"2026","foundingLocation":"Israel","contactPoint":{"@type":"ContactPoint","email":"info@vertifile.com","contactType":"customer service"}}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Vertifile","applicationCategory":"SecurityApplication","operatingSystem":"Web, macOS, Windows","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Protect any document from forgery with cryptographic verification"}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a PVF file?","acceptedAnswer":{"@type":"Answer","text":"A PVF is a tamper-proof document file format developed by Vertifile. It wraps your original document with cryptographic verification and a live holographic stamp that proves authenticity in real-time."}},{"@type":"Question","name":"How do I open a PVF file?","acceptedAnswer":{"@type":"Answer","text":"PVF files open directly in any modern web browser — Chrome, Safari, Firefox, or Edge. No special software or plugins required."}},{"@type":"Question","name":"Can you see my document content?","acceptedAnswer":{"@type":"Answer","text":"No. Vertifile uses BLIND processing — we only see a cryptographic hash of your document. Your content is never read, stored, or transmitted to our servers."}},{"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes, Vertifile is free for individuals. Enterprise plans are available for organizations that need bulk processing, API access, and custom branding."}},{"@type":"Question","name":"How long does it take?","acceptedAnswer":{"@type":"Answer","text":"Protection takes seconds. Upload your document and get a tamper-proof PVF file instantly."}},{"@type":"Question","name":"What document types are supported?","acceptedAnswer":{"@type":"Answer","text":"PDF, images (JPEG, PNG), and text files. We are continuously expanding supported formats."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a PVF file?","acceptedAnswer":{"@type":"Answer","text":"A PVF is a tamper-proof document file format developed by Vertifile. It wraps your original document with cryptographic verification and a live holographic stamp that proves authenticity in real-time."}},{"@type":"Question","name":"How do I open a PVF file?","acceptedAnswer":{"@type":"Answer","text":"PVF files open directly in any modern web browser — Chrome, Safari, Firefox, or Edge. No special software or plugins required."}},{"@type":"Question","name":"Can you see my document content?","acceptedAnswer":{"@type":"Answer","text":"No. Vertifile uses BLIND processing — we only see a cryptographic hash of your document. Your content is never read, stored, or transmitted to our servers."}},{"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes. The Free plan includes up to 25 documents per month with unlimited download, share, and verification. Pro ($19/month) adds custom branding and API access. Business ($12/seat/month) adds team accounts and SSO. Enterprise plans are custom-priced."}},{"@type":"Question","name":"How long does it take?","acceptedAnswer":{"@type":"Answer","text":"Protection takes seconds. Upload your document and get a tamper-proof PVF file instantly."}},{"@type":"Question","name":"What document types are supported?","acceptedAnswer":{"@type":"Answer","text":"PDF, images (JPEG, PNG), and text files. We are continuously expanding supported formats."}}]}</script>
 </head>
 <body>
 <a href="#main" class="skip-link" style="position:absolute;top:-40px;left:0;background:#4f46e5;color:#fff;padding:8px 16px;z-index:9999;transition:top .3s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>
@@ -621,12 +621,12 @@
       <a href="/contact" data-i18n="nav.contact">Contact</a>
     </div>
     <div class="nav-actions">
-      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()" aria-label="Change language" aria-expanded="false" aria-haspopup="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
         <span id="langLabel">EN</span>
       </button>
-      <div class="lang-dropdown" id="langDropdown">
-        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+      <div class="lang-dropdown" id="langDropdown" role="menu" aria-label="Language selection">
+        <a href="?lang=en" onclick="switchLang('en',event)" role="menuitem">English</a>
         <a href="?lang=he" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
         <a href="?lang=ar" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
         <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
@@ -697,11 +697,11 @@
         <a href="/contact" class="btn-secondary" data-i18n="hero.ctaDemo">Book a Demo</a>
       </div>
       <div class="trust-line" style="display:flex;align-items:center;gap:16px;justify-content:center;margin-top:20px;opacity:.7;font-size:13px;color:#9ca3af">
-        <span><svg style="width:16px;height:16px;display:inline;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Patent Pending</span>
-        <span>•</span>
-        <span><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/></svg> IANA MIME Type Registered</span>
-        <span>•</span>
-        <span><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg> Blockchain Verified</span>
+        <span><svg style="width:16px;height:16px;display:inline;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> <span data-i18n="hero.trustPatent">Patent Pending</span></span>
+        <span aria-hidden="true">•</span>
+        <span><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/></svg> <span data-i18n="hero.trustIANA">IANA MIME Type Registered</span></span>
+        <span aria-hidden="true">•</span>
+        <span><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg> <span data-i18n="hero.trustBlockchain">Blockchain Verified</span></span>
       </div>
     </div>
     <!-- Document Scanning Animation -->
@@ -749,7 +749,7 @@
         </div>
         <!-- Hash output -->
         <div class="doc-hash" id="docHash">
-          <div class="hash-label">Ed25519 Fingerprint</div>
+          <div class="hash-label" data-i18n="hero.hashLabel">Ed25519 Fingerprint</div>
           <div id="hashText">—</div>
         </div>
         <!-- Status -->
@@ -770,7 +770,7 @@
     <div class="stat-item"><div class="stat-num">5<span class="accent">min</span></div><div class="stat-label" data-i18n="stats.tokenRefresh">Token Refresh</div></div>
     <div class="stat-item"><div class="stat-num">8</div><div class="stat-label" data-i18n="stats.securityLayers">Security Layers</div></div>
     <div class="stat-item">
-      <div class="stat-num"><span class="accent" style="font-size:20px">Patent Pending</span></div>
+      <div class="stat-num"><span class="accent" style="font-size:20px" data-i18n="stats.patentPending">Patent Pending</span></div>
       <div class="stat-label" data-i18n="stats.patentLabel">Israeli Patent Office</div>
     </div>
   </div>
@@ -1037,18 +1037,18 @@
         </div>
         <div class="demo-status verified-status">
           <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" width="14" height="14"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
-          <span>Document Verified — Authentic</span>
+          <span data-i18n="demo.statusVerified">Document Verified -- Authentic</span>
         </div>
         <div class="demo-body">
           <div class="demo-a4 verified-page">
             <div class="doc-line"></div>
-            <div class="doc-title">TEL AVIV UNIVERSITY</div>
-            <div class="doc-subtitle">Faculty of Engineering</div>
+            <div class="doc-title" data-i18n="demo.docUni">TEL AVIV UNIVERSITY</div>
+            <div class="doc-subtitle" data-i18n="demo.docFaculty">Faculty of Engineering</div>
             <div class="doc-line"></div>
-            <div class="doc-heading">CERTIFICATE OF DEGREE</div>
-            <div class="doc-text">This is to certify that</div>
+            <div class="doc-heading" data-i18n="demo.docCertTitle">CERTIFICATE OF DEGREE</div>
+            <div class="doc-text" data-i18n="demo.docCertify">This is to certify that</div>
             <div class="doc-name">YOSSI COHEN</div>
-            <div class="doc-text">has successfully completed the requirements for the degree of</div>
+            <div class="doc-text" data-i18n="demo.docCompleted">has successfully completed the requirements for the degree of</div>
             <div class="doc-degree">Bachelor of Science (B.Sc.)</div>
             <div class="doc-field">in Computer Science</div>
             <div class="doc-avg">with a cumulative average of 92.4</div>
@@ -1082,15 +1082,15 @@
         </div>
         <div class="demo-status forged-status">
           <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
-          <span>Verification Failed — Document Tampered</span>
+          <span data-i18n="demo.statusForged">Verification Failed -- Document Tampered</span>
         </div>
         <div class="demo-body">
           <div class="demo-a4 forged-page">
             <div class="doc-line"></div>
-            <div class="doc-title">TEL AVIV UNIVERSITY</div>
-            <div class="doc-subtitle">Faculty of Engineering</div>
+            <div class="doc-title" data-i18n="demo.docUni">TEL AVIV UNIVERSITY</div>
+            <div class="doc-subtitle" data-i18n="demo.docFaculty">Faculty of Engineering</div>
             <div class="doc-line"></div>
-            <div class="doc-heading">CERTIFICATE OF DEGREE</div>
+            <div class="doc-heading" data-i18n="demo.docCertTitle">CERTIFICATE OF DEGREE</div>
             <div class="doc-text">This is to certify that</div>
             <div class="doc-name" style="color:#b91c1c">DAVID LEVI <span style="font-size:8px;color:#dc2626;font-weight:400">(name changed)</span></div>
             <div class="doc-text">has successfully completed the requirements for the degree of</div>
@@ -1200,37 +1200,37 @@
   </div>
   <div class="faq-list">
     <div class="faq-item fade-up">
-      <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q1">What is a PVF file?
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}" data-i18n="faq.q1">What is a PVF file?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="faq-a"><p data-i18n="faq.a1">A PVF is a tamper-proof document file format developed by Vertifile. It wraps your original document with cryptographic verification and a live holographic stamp that proves authenticity in real-time.</p></div>
     </div>
     <div class="faq-item fade-up">
-      <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q2">How do I open a PVF file?
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}" data-i18n="faq.q2">How do I open a PVF file?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="faq-a"><p data-i18n="faq.a2">PVF files open directly in any modern web browser — Chrome, Safari, Firefox, or Edge. No special software or plugins required.</p></div>
     </div>
     <div class="faq-item fade-up">
-      <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q3">Can you see my document content?
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}" data-i18n="faq.q3">Can you see my document content?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="faq-a"><p data-i18n="faq.a3">No. Vertifile is a Zero-Knowledge platform — your documents are encrypted in the browser before they ever leave your device. We cannot read your content even if we wanted to. Only a cryptographic fingerprint is processed on our servers.</p></div>
     </div>
     <div class="faq-item fade-up">
-      <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q4">Is it free?
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}" data-i18n="faq.q4">Is it free?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="faq-a"><p data-i18n="faq.a4">Vertifile offers a Free plan ($0) for individuals, a Pro plan ($19/month) for professionals, and a Business plan ($12/user/month) for organizations. The Free plan includes basic document protection with no credit card required.</p></div>
     </div>
     <div class="faq-item fade-up">
-      <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q5">How long does it take?
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}" data-i18n="faq.q5">How long does it take?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="faq-a"><p data-i18n="faq.a5">Protection takes seconds. Upload your document and get a tamper-proof PVF file instantly.</p></div>
     </div>
     <div class="faq-item fade-up">
-      <div class="faq-q" onclick="toggleFaq(this)" data-i18n="faq.q6">What document types are supported?
+      <div class="faq-q" role="button" tabindex="0" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this)}" data-i18n="faq.q6">What document types are supported?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="faq-a"><p data-i18n="faq.a6">PDF, images (JPEG, PNG), and text files. We are continuously expanding supported formats.</p></div>

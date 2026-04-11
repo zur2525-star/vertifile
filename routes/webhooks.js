@@ -35,18 +35,27 @@ async function fireWebhooks(db, orgId, event, data) {
 // Validate webhook URL to prevent SSRF attacks
 function isValidWebhookUrl(urlStr) {
   try {
+    if (typeof urlStr !== 'string' || urlStr.length > 2048) return false;
     const parsed = new URL(urlStr);
     if (parsed.protocol !== 'https:') return false;
     if (parsed.port && parsed.port !== '443') return false;
+    // Reject credentials in URL
+    if (parsed.username || parsed.password) return false;
     const host = parsed.hostname.toLowerCase();
+    // Block all loopback and private ranges
     if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return false;
+    if (host === '[::1]') return false;
     if (/^10\./.test(host)) return false;
     const m172 = host.match(/^172\.(\d+)\./);
     if (m172 && parseInt(m172[1]) >= 16 && parseInt(m172[1]) <= 31) return false;
     if (/^192\.168\./.test(host)) return false;
     if (/^169\.254\./.test(host)) return false;
-    if (host.endsWith('.internal') || host.endsWith('.local')) return false;
+    if (host.endsWith('.internal') || host.endsWith('.local') || host.endsWith('.localhost')) return false;
     if (/^0\./.test(host) || /^127\./.test(host)) return false;
+    // Block IPv6 link-local (fe80::), loopback (::1), and unique-local (fc00::/fd00::)
+    if (/^(\[)?fe80/i.test(host) || /^(\[)?fc00/i.test(host) || /^(\[)?fd/i.test(host)) return false;
+    // Must have a proper TLD (at least one dot in hostname)
+    if (!host.includes('.')) return false;
     return true;
   } catch { return false; }
 }

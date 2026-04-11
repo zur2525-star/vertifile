@@ -13,8 +13,19 @@ const router = express.Router();
 // Map<email, { code, createdAt, expiresAt, attempts, used }>
 const pendingCodes = new Map();
 
-// Map<email, { count, windowStart }>  — rate limit: 3 sends per hour per email
+// Map<email, { count, windowStart }>  -- rate limit: 3 sends per hour per email
 const sendRateMap = new Map();
+
+// Periodic cleanup of expired entries to prevent memory leaks (every 10 min)
+setInterval(() => {
+  const now = Date.now();
+  for (const [email, entry] of pendingCodes) {
+    if (now > entry.expiresAt) pendingCodes.delete(email);
+  }
+  for (const [email, entry] of sendRateMap) {
+    if (now - entry.windowStart > 60 * 60 * 1000) sendRateMap.delete(email);
+  }
+}, 10 * 60 * 1000).unref();
 
 // ---------------------------------------------------------------------------
 // Helpers

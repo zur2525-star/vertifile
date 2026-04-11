@@ -75,10 +75,29 @@ const forgotPasswordLimiter = rateLimit({
 // ---------------------------------------------------------------------------
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const MAX_SESSIONS_PER_USER = 5;
 
 function sanitizeEmail(raw) {
   if (!raw || typeof raw !== 'string') return null;
   return raw.toLowerCase().trim();
+}
+
+/**
+ * Enforce maximum concurrent sessions per user. Deletes the oldest sessions
+ * when the count exceeds MAX_SESSIONS_PER_USER. Best-effort — failures are
+ * swallowed so login/register flows are never blocked by session cleanup.
+ */
+async function enforceSessionLimit(db, userId) {
+  const activeSessions = await db.query(
+    `SELECT sid FROM sessions WHERE sess::jsonb->'passport'->>'user' = $1 ORDER BY expire ASC`,
+    [String(userId)]
+  );
+  if (activeSessions.rows.length > MAX_SESSIONS_PER_USER) {
+    const toDelete = activeSessions.rows.slice(0, activeSessions.rows.length - MAX_SESSIONS_PER_USER);
+    for (const s of toDelete) {
+      await db.query('DELETE FROM sessions WHERE sid = $1', [s.sid]);
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -125,17 +144,8 @@ router.get('/google/callback',
       // Issue #22: Audit log for OAuth login
       await db.log('login_success', { userId: req.user.id, ip: getClientIP(req), provider: 'google', userAgent: req.get('user-agent') });
 
-      // Issue #14: Enforce session limit per user (max 5)
-      const activeSessions = await db.query(
-        `SELECT sid FROM sessions WHERE sess::jsonb->'passport'->>'user' = $1 ORDER BY expire ASC`,
-        [String(req.user.id)]
-      );
-      if (activeSessions.rows.length > 5) {
-        const toDelete = activeSessions.rows.slice(0, activeSessions.rows.length - 5);
-        for (const s of toDelete) {
-          await db.query('DELETE FROM sessions WHERE sid = $1', [s.sid]);
-        }
-      }
+      // Issue #14: Enforce session limit per user
+      await enforceSessionLimit(db, req.user.id);
     } catch (e) {
       logger.warn({ err: e, userId: req.user?.id }, 'Failed to update last_login on Google callback');
     }
@@ -194,19 +204,8 @@ router.post('/register', signupLimiter, async (req, res) => {
       req.session.createdAt = Date.now();
       try { await db.updateLastLogin(user.id); } catch (_) { /* best effort */ }
 
-      // Issue #14: Enforce session limit per user (max 5)
-      try {
-        const activeSessions = await db.query(
-          `SELECT sid FROM sessions WHERE sess::jsonb->'passport'->>'user' = $1 ORDER BY expire ASC`,
-          [String(user.id)]
-        );
-        if (activeSessions.rows.length > 5) {
-          const toDelete = activeSessions.rows.slice(0, activeSessions.rows.length - 5);
-          for (const s of toDelete) {
-            await db.query('DELETE FROM sessions WHERE sid = $1', [s.sid]);
-          }
-        }
-      } catch (_) { /* best effort */ }
+      // Issue #14: Enforce session limit per user
+      try { await enforceSessionLimit(db, user.id); } catch (_) { /* best effort */ }
 
       res.json({
         success: true,
@@ -255,19 +254,10 @@ router.post('/login', authLimiter, (req, res, next) => {
         await db.log('login_success', { userId: user.id, ip: getClientIP(req), provider: 'email', userAgent: req.get('user-agent') });
       } catch (_) { /* best effort */ }
 
-      // Issue #14: Enforce session limit per user (max 5)
+      // Issue #14: Enforce session limit per user
       try {
         const db = req.app.get('db');
-        const activeSessions = await db.query(
-          `SELECT sid FROM sessions WHERE sess::jsonb->'passport'->>'user' = $1 ORDER BY expire ASC`,
-          [String(user.id)]
-        );
-        if (activeSessions.rows.length > 5) {
-          const toDelete = activeSessions.rows.slice(0, activeSessions.rows.length - 5);
-          for (const s of toDelete) {
-            await db.query('DELETE FROM sessions WHERE sid = $1', [s.sid]);
-          }
-        }
+        await enforceSessionLimit(db, user.id);
       } catch (_) { /* best effort */ }
 
       res.json({
@@ -315,7 +305,6 @@ router.post('/forgot-password', forgotPasswordLimiter, async (req, res) => {
       return res.json({ success: true, message: 'If this email exists, a reset link has been sent' });
     }
 
-    const crypto = require('crypto');
     const token = crypto.randomBytes(32).toString('hex');
     const expires = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
     await db.saveResetToken(user.id, token, expires);

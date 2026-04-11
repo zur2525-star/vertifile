@@ -83,9 +83,10 @@ app.set('authenticateAdmin', createAuthenticateAdmin(db));
 app.set('trust proxy', 1);
 
 // Stamp config in-memory cache (Layer 2 visual wrapper)
-// userId → { config, expiresAt }
-// TTL 5 min. Invalidated on POST /api/user/stamp.
+// userId -> { config, expiresAt }
+// TTL 5 min. Invalidated on POST /api/user/stamp. Max 10k entries.
 const STAMP_CACHE_TTL_MS = 5 * 60 * 1000;
+const STAMP_CACHE_MAX_SIZE = 10000;
 const stampCache = new Map();
 stampCache._get = function(userId) {
   const e = this.get(userId);
@@ -94,6 +95,18 @@ stampCache._get = function(userId) {
   return e.config;
 };
 stampCache._set = function(userId, config) {
+  // Evict expired entries if cache is at capacity
+  if (this.size >= STAMP_CACHE_MAX_SIZE) {
+    const now = Date.now();
+    for (const [key, val] of this) {
+      if (now > val.expiresAt) this.delete(key);
+    }
+    // If still at capacity after expiry sweep, drop oldest 20%
+    if (this.size >= STAMP_CACHE_MAX_SIZE) {
+      const keysToDelete = Array.from(this.keys()).slice(0, Math.floor(STAMP_CACHE_MAX_SIZE * 0.2));
+      for (const k of keysToDelete) this.delete(k);
+    }
+  }
   this.set(userId, { config, expiresAt: Date.now() + STAMP_CACHE_TTL_MS });
 };
 app.set('stampCache', stampCache);
@@ -105,6 +118,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"], imgSrc: ["'self'", "data:", "https:"],
       connectSrc: ["'self'", "https://api.vertifile.com", "https://vertifile.com"], frameSrc: ["'self'", "data:", "blob:"],
+      objectSrc: ["'none'"],  // Block <object>/<embed>/<applet>
     }
   },
   crossOriginEmbedderPolicy: false,

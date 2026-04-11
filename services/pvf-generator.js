@@ -35,28 +35,47 @@ function loadOrCreateHmacSecret() {
 }
 const HMAC_SECRET = loadOrCreateHmacSecret();
 
-// Hash raw bytes — BLIND (never reads document content)
+/**
+ * Compute SHA-256 hash of raw bytes. BLIND -- never reads document content semantics.
+ * @param {Buffer} buffer - Raw file bytes to hash
+ * @returns {string} Hex-encoded SHA-256 hash (64 characters)
+ */
 function hashBytes(buffer) {
   return crypto.createHash('sha256').update(buffer).digest('hex');
 }
 
-// HMAC signature — proves hash was registered by our server
+/**
+ * HMAC-SHA256 sign a hash string. Proves the hash was registered by our server.
+ * @param {string} hash - Hex-encoded hash to sign
+ * @returns {string} Hex-encoded HMAC signature (64 characters)
+ */
 function signHash(hash) {
   return crypto.createHmac('sha256', HMAC_SECRET).update(hash).digest('hex');
 }
 
-// Verify HMAC signature
+/**
+ * Verify an HMAC-SHA256 signature using constant-time comparison.
+ * @param {string} hash - Hex-encoded hash
+ * @param {string} signature - Hex-encoded HMAC signature to verify
+ * @returns {boolean} True if signature is valid
+ */
 function verifySignature(hash, signature) {
   const expected = signHash(hash);
   return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
 }
 
-// Generate random token for session verification
+/**
+ * Generate a cryptographically random token for session/document verification.
+ * @returns {string} Hex-encoded 32-byte random token (64 characters)
+ */
 function generateToken() {
   return crypto.randomBytes(32).toString('hex');
 }
 
-// Content Security Policy for PVF files
+/**
+ * Set Content-Security-Policy and security headers for PVF file responses.
+ * @param {import('express').Response} res - Express response object
+ */
 function setPvfSecurityHeaders(res) {
   res.setHeader('Content-Security-Policy', [
     "default-src 'none'",
@@ -67,6 +86,7 @@ function setPvfSecurityHeaders(res) {
     "img-src data: blob:",
     "connect-src 'self'",                               // Allow API calls back to origin
     "frame-src data:",                                  // Allow PDF iframe with data: URI
+    "object-src 'none'",                                // Block <object>/<embed>/<applet> — no Flash, no plugin content
     "base-uri 'none'",
     "form-action 'none'",
     "frame-ancestors 'self'"                            // Prevent embedding in foreign iframes
@@ -76,7 +96,13 @@ function setPvfSecurityHeaders(res) {
   res.setHeader('Referrer-Policy', 'no-referrer');
 }
 
-// Fix multer Latin1 filename encoding — decode to UTF-8
+/**
+ * Fix multer Latin1 filename encoding -- decode to UTF-8.
+ * Multer encodes filenames as Latin1 by default; this restores UTF-8 for
+ * non-ASCII filenames (Hebrew, Arabic, CJK, etc.).
+ * @param {Object} file - Multer file object with originalname property
+ * @returns {Object} The same file object with corrected originalname
+ */
 function fixFilename(file) {
   if (file && file.originalname) {
     try {

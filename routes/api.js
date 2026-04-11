@@ -48,6 +48,14 @@ const demoLimiter = rateLimit({
 // Daily signup tracking per IP
 const _dailySignups = new Map(); // IP -> { count, resetAt }
 
+// Periodic cleanup of expired daily signup entries (every 30 min)
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of _dailySignups) {
+    if (entry.resetAt <= now) _dailySignups.delete(ip);
+  }
+}, 30 * 60 * 1000).unref();
+
 // ================================================================
 // API: SIGNUP
 // ================================================================
@@ -638,11 +646,12 @@ router.post('/token/refresh', verifyLimiter, async (req, res) => {
 });
 
 // ===== API: Health =====
+const _pkgVersion = require('../package.json').version;
 router.get('/health', (req, res) => {
   res.json({
     status: 'online',
     service: 'Vertifile',
-    version: '4.1.0',
+    version: _pkgVersion,
     uptime: process.uptime(),
     timestamp: new Date().toISOString()
   });

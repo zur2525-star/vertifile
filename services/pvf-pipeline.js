@@ -58,6 +58,13 @@ const { getClientIP } = require('../middleware/auth');
 // ----------------------------------------------------------------------------
 // Allowed MIME types — superset of the API allowlist (8 types) and the
 // dashboard upload allowlist (5 types). Both endpoints now share this list.
+// Admin bypass emails for preview-only gating. These accounts always get full
+// access regardless of plan. Extracted as a constant so they're declared once.
+const ADMIN_BYPASS_EMAILS = new Set([
+  'zur2525@gmail.com',
+  'info@vertifile.com'
+]);
+
 // ----------------------------------------------------------------------------
 const ALLOWED_MIME_TYPES = [
   'application/pdf',
@@ -502,7 +509,7 @@ async function createPvf(opts) {
   let preview = false;
   if (owner.type === 'user') {
     const isAdmin =
-      owner.email === 'zur2525@gmail.com' || owner.email === 'info@vertifile.com';
+      ADMIN_BYPASS_EMAILS.has(owner.email);
     const isPaidPlan = isAdmin || (owner.plan && owner.plan !== 'free');
     if (!isPaidPlan) {
       await db.markDocumentPreviewOnly(fileHash, true);
@@ -1012,7 +1019,7 @@ async function createPvfEncrypted(opts) {
   let preview = false;
   if (owner.type === 'user') {
     const isAdmin =
-      owner.email === 'zur2525@gmail.com' || owner.email === 'info@vertifile.com';
+      ADMIN_BYPASS_EMAILS.has(owner.email);
     const isPaidPlan = isAdmin || (owner.plan && owner.plan !== 'free');
     if (!isPaidPlan) {
       await db.markDocumentPreviewOnly(fileHash, true);

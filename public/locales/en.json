@@ -33,7 +33,12 @@
     "subheadline": "Vertifile creates tamper-proof digital documents with live animated verification stamps. Zero access to your content — total privacy.",
     "cta1": "Protect a Document",
     "cta2": "See How It Works",
-    "badge": "Blockchain Verified"
+    "badge": "Blockchain Verified",
+    "trustPatent": "Patent Pending",
+    "trustIANA": "IANA MIME Type Registered",
+    "trustBlockchain": "Blockchain Verified",
+    "hashLabel": "Ed25519 Fingerprint",
+    "ctaDemo": "Book a Demo"
   },
   "stats": {
     "encryption": "SHA-256 Encryption",
@@ -156,7 +161,14 @@
     "ctaTitle": "Ready to Try It?",
     "ctaSubtitle": "Protect your first document for free. See the live verification stamp in action.",
     "ctaProtect": "Protect a Document",
-    "ctaVerify": "Verify a Document"
+    "ctaVerify": "Verify a Document",
+    "statusVerified": "Document Verified -- Authentic",
+    "statusForged": "Verification Failed -- Document Tampered",
+    "docUni": "TEL AVIV UNIVERSITY",
+    "docFaculty": "Faculty of Engineering",
+    "docCertTitle": "CERTIFICATE OF DEGREE",
+    "docCertify": "This is to certify that",
+    "docCompleted": "has successfully completed the requirements for the degree of"
   },
   "industries": {
     "title": "Built for Every Industry",
@@ -195,7 +207,7 @@
     "contact": "Contact",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "copyright": "© 2024 Vertifile. All rights reserved.",
+    "copyright": "© 2026 Vertifile. All rights reserved.",
     "security": "Security",
     "compliance": "Compliance",
     "integrationGuide": "Integration Guide",
@@ -743,7 +755,7 @@
     "faq1q": "What is a PVF file?",
     "faq1a": "A PVF (Protected Vertifile) is a tamper-proof document format that embeds a cryptographic signature and a live animated holographic stamp. It opens in any browser and can be verified by anyone without special software or an account.",
     "faq2q": "Is Vertifile free to use?",
-    "faq2a": "You can try Vertifile with our free demo that allows up to 5 documents per hour. For unlimited access, API integration, and enterprise features, contact us for custom pricing based on your organization's needs.",
+    "faq2a": "Yes. The Free plan includes up to 25 documents per month with unlimited download, share, and verification. Paid plans (Pro at $19/month, Business at $12/seat/month) add custom branding, larger limits, team accounts, and API access. Enterprise plans are custom-priced.",
     "faq3q": "Do you have an API?",
     "faq3a": "Yes. Vertifile provides a RESTful API with SDKs for Node.js, Python, Java, and Go. You can protect and verify documents programmatically, set up webhooks, and integrate with your existing systems. Visit our developer documentation for details.",
     "faq4q": "Can you see the content of my documents?",
@@ -1070,7 +1082,7 @@
     "faqTitle": "Frequently Asked Questions",
     "faqSubtitle": "Everything you need to know about Vertifile pricing and plans.",
     "faq1q": "Can I try before I buy?",
-    "faq1a": "Yes! Our Free plan lets you upload a document and preview how it looks with Vertifile's tamper-proof stamp. To download and share protected documents, upgrade to Pro or Enterprise.",
+    "faq1a": "Yes! Our Free plan lets you upload up to 25 documents per month, download, share, and verify them -- all at no cost. The stamp carries Vertifile branding on the free tier. Upgrade to Pro or Business for custom branding and higher limits.",
     "faq2q": "What file types are supported?",
     "faq2a": "Vertifile supports PDF, JPEG, PNG, and text files. Any document you upload is converted into a tamper-proof .pvf file that can be viewed in any modern browser.",
     "faq3q": "How does billing work?",

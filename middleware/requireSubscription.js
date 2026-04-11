@@ -17,6 +17,7 @@ function requireSubscription(req, res, next) {
   }
 
   return res.status(403).json({
+    success: false,
     error: 'subscription_required',
     plan: req.user.selected_plan || null,
     message: 'Activate your plan to start protecting documents'

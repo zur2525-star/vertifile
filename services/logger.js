@@ -1,3 +1,14 @@
+/**
+ * Vertifile structured logger (Pino).
+ *
+ * Production: JSON output (machine-parseable for Render/Railway log aggregation).
+ * Development: pretty-printed with timestamps and colors via pino-pretty.
+ *
+ * Configure log level via LOG_LEVEL env var (default: 'info' in prod, 'debug' in dev).
+ *
+ * @module services/logger
+ */
+
 const pino = require('pino');
 
 const isProduction = process.env.NODE_ENV === 'production' || !!process.env.RENDER;

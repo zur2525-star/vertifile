@@ -75,7 +75,17 @@ router.get('/blog', (req, res) => {
 
 // Blog post routes
 router.get('/blog/:slug', (req, res) => {
-  const slugFile = path.join(__dirname, '..', 'public', 'blog', req.params.slug + '.html');
+  const slug = req.params.slug;
+  // Security: reject path traversal attempts (../, encoded variants, null bytes)
+  if (!slug || /[\/\\]|\.\.|\x00/.test(slug) || slug.length > 100 || !/^[a-zA-Z0-9_-]+$/.test(slug)) {
+    return res.status(404).send(notFoundPage('Blog post not found'));
+  }
+  const slugFile = path.join(__dirname, '..', 'public', 'blog', slug + '.html');
+  // Double-check resolved path stays within the blog directory
+  const blogDir = path.resolve(path.join(__dirname, '..', 'public', 'blog'));
+  if (!path.resolve(slugFile).startsWith(blogDir + path.sep)) {
+    return res.status(404).send(notFoundPage('Blog post not found'));
+  }
   if (fs.existsSync(slugFile)) {
     res.sendFile(slugFile);
   } else {
@@ -91,6 +101,10 @@ router.get('/blog/:slug', (req, res) => {
 router.get('/view-by-hash/:hash', async (req, res) => {
   try {
     const db = req.app.get('db');
+    // Security: validate hash format before DB lookup
+    if (!req.params.hash || !/^[a-f0-9]{64}$/.test(req.params.hash)) {
+      return res.status(404).send(notFoundPage('Invalid document link'));
+    }
     const doc = await db.getDocument(req.params.hash);
     if (doc && doc.shareId) return res.redirect('/d/' + doc.shareId);
     return res.status(404).send(notFoundPage('Document not found'));
@@ -158,6 +172,7 @@ router.get('/d/:shareId/raw', async (req, res) => {
       "img-src 'self' data: blob: https:",
       "connect-src 'self'",
       "frame-src 'self' data: blob:",
+      "object-src 'none'",
       "base-uri 'none'",
       "form-action 'none'",
       "frame-ancestors 'self'"
@@ -285,9 +300,11 @@ router.get('/d/:identifier/download', async (req, res) => {
     // so the user gets a fresh copy with their latest stamp branding
     pvfContent = await injectStampConfig(req, doc.shareId, pvfContent, db);
 
-    const pvfFileName = (doc.originalName || 'document').replace(/\.[^.]+$/, '') + '.pvf';
+    // Security: sanitize filename for Content-Disposition header to prevent header injection
+    const rawName = (doc.originalName || 'document').replace(/\.[^.]+$/, '');
+    const pvfFileName = rawName.replace(/[^\w\s.-]/g, '_').substring(0, 200) + '.pvf';
     res.setHeader('Content-Type', 'application/vnd.vertifile.pvf; charset=utf-8');
-    res.setHeader('Content-Disposition', `attachment; filename="${pvfFileName}"`);
+    res.setHeader('Content-Disposition', `attachment; filename="${pvfFileName.replace(/"/g, '\\"')}"`);
     res.send(pvfContent);
   } catch(e) { return res.status(500).json({ success: false, error: 'Server error' }); }
 });
@@ -333,17 +350,21 @@ router.get('/demo-pvf', (req, res) => {
   }
 });
 
+// Cache the forged demo PVF in memory to avoid synchronous file reads on every request
+let _forgedDemoCache = null;
 router.get('/demo-forged-pvf', (req, res) => {
-  const p = path.join(__dirname, '..', 'demo.pvf');
-  if (fs.existsSync(p)) {
-    setPvfSecurityHeaders(res);
-    res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    let content = fs.readFileSync(p, 'utf8');
-    content = content.replace(/var SIG="([a-f0-9]+)"/, 'var SIG="0000000000000000000000000000000000000000000000000000000000000000"');
-    res.send(content);
-  } else {
-    res.status(404).send('demo.pvf not found');
+  if (!_forgedDemoCache) {
+    const p = path.join(__dirname, '..', 'demo.pvf');
+    try {
+      const content = fs.readFileSync(p, 'utf8');
+      _forgedDemoCache = content.replace(/var SIG="([a-f0-9]+)"/, 'var SIG="0000000000000000000000000000000000000000000000000000000000000000"');
+    } catch (e) {
+      return res.status(404).send('demo.pvf not found');
+    }
   }
+  setPvfSecurityHeaders(res);
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(_forgedDemoCache);
 });
 
 // 404 handler for unknown routes
