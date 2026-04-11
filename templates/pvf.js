@@ -140,7 +140,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 .decrypt-error{padding:40px;text-align:center;color:#c62828;font-family:'Heebo',sans-serif;font-size:13px}
 
 /* ===== PDF thumbnails sidebar — right side, only for multi-page PDFs ===== */
-.pdf-thumbs{display:none;position:fixed;top:68px;left:calc(50% + 318px);width:156px;max-height:calc(100vh - 88px);overflow-y:auto;overflow-x:hidden;padding:10px 8px;background:rgba(15,14,23,.8);border:1px solid rgba(124,58,237,.18);border-left:1px solid rgba(124,58,237,.15);border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.35);z-index:40;scrollbar-width:thin;scrollbar-color:rgba(124,58,237,.4) transparent}
+.pdf-thumbs{display:none;position:fixed;top:68px;left:calc(50% + 318px);width:156px;max-height:calc(100vh - 78px);overflow-y:auto;overflow-x:hidden;padding:0 8px 10px;background:none;border:none;border-radius:0;box-shadow:none;z-index:40;scrollbar-width:thin;scrollbar-color:rgba(124,58,237,.4) transparent}
 .pdf-thumbs.active{display:block}
 .pdf-thumbs::-webkit-scrollbar{width:6px}
 .pdf-thumbs::-webkit-scrollbar-thumb{background:rgba(124,58,237,.4);border-radius:3px}
