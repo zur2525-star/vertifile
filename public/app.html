@@ -2307,8 +2307,15 @@ window.Dashboard = {
     if (!selectedDoc) return;
     if (isFreePlan()) { showPaywall(); return; }
     var shareId = selectedDoc.shareId || selectedDoc.share_id;
-    if (shareId) {
-      copyToClipboard(window.location.origin + '/d/' + shareId);
+    var identifier = selectedDoc.slug || shareId;
+    if (identifier) {
+      var baseUrl = window.location.origin + '/d/' + identifier;
+      var savedKey = null;
+      if (selectedDoc.encrypted === true) {
+        try { savedKey = localStorage.getItem('vf_key_' + identifier); } catch(e) {}
+      }
+      var shareUrl = (savedKey) ? (baseUrl + '#key=' + savedKey) : baseUrl;
+      copyToClipboard(shareUrl);
       toast('Share link copied!');
     }
   },
@@ -2321,8 +2328,17 @@ window.Dashboard = {
   shareDoc: function(idx){
     if (isFreePlan()) { showPaywall(); return; }
     var d = documents[idx]; if (!d) return;
-    var sid = d.shareId || d.share_id;
-    if (sid) { copyToClipboard(window.location.origin + '/d/' + sid); toast('Share link copied!'); }
+    var identifier = d.slug || d.shareId || d.share_id;
+    if (identifier) {
+      var baseUrl = window.location.origin + '/d/' + identifier;
+      var savedKey = null;
+      if (d.encrypted === true) {
+        try { savedKey = localStorage.getItem('vf_key_' + identifier); } catch(e) {}
+      }
+      var shareUrl = (savedKey) ? (baseUrl + '#key=' + savedKey) : baseUrl;
+      copyToClipboard(shareUrl);
+      toast('Share link copied!');
+    }
   },
   deleteDocAtIndex: function(idx){
     var d = documents[idx]; if (!d) return;
@@ -3210,7 +3226,7 @@ async function handleUploadFile(file) {
             'Encrypted link' +
           '</div>' +
           '<div class="up-share-url-field">' +
-            '<input type="text" id="upShareUrlInput" value="' + fullShareUrl.split('#')[0].replace(/"/g, '&quot;') + '" readonly onclick="this.select()">' +
+            '<input type="text" id="upShareUrlInput" value="' + fullShareUrl.replace(/"/g, '&quot;') + '" readonly onclick="this.select()">' +
             '<button class="up-share-url-copy" id="upShareUrlCopy" type="button">' +
               '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
                 '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>' +
