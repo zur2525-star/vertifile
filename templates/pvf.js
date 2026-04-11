@@ -56,7 +56,7 @@ function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature
 <meta name="pvf:share-id" content="${shareId || ''}">
 ${isEncryptedMode ? '<meta name="pvf:encrypted" content="true">' : ''}
 ${recipientHash ? `<meta name="pvf:recipient-hash" content="${recipientHash}">` : ''}
-<title>PVF ${isEncryptedMode ? '--' : '\u2014'} ${safeOriginalName}</title>
+<title>PVF ${isEncryptedMode ? '\u2014' : '\u2014'} ${safeOriginalName}</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
@@ -398,7 +398,7 @@ ${isPdf ? `<aside class="pdf-thumbs" id="pdfThumbs" aria-label="Page thumbnails"
 <div id="pvf-footer" style="display:none;text-align:center;padding:16px;margin-top:24px;border-top:1px solid rgba(0,0,0,0.06)">
   <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#9ca3af">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    Protected by Vertifile ${isEncryptedMode ? '--' : '\u2014'} Make your documents tamper-proof at <a href="https://vertifile.com" target="_blank" rel="noopener" style="color:#7c3aed;text-decoration:none">vertifile.com</a>
+    Protected by Vertifile ${isEncryptedMode ? '\u2014' : '\u2014'} Make your documents tamper-proof at <a href="https://vertifile.com" target="_blank" rel="noopener" style="color:#7c3aed;text-decoration:none">vertifile.com</a>
   </span>
 </div>
 ${isEncryptedMode ? `<script type="application/octet-stream" id="encryptedDoc" data-vf-bundle="encrypted-doc">${encryptedOpts.encryptedBase64}</scr` + `ipt>
