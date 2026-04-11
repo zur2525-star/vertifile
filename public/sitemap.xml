@@ -32,7 +32,7 @@
   </url>
   <url>
     <loc>https://vertifile.com/blog</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -141,6 +141,18 @@
   <url>
     <loc>https://vertifile.com/blog/why-pdf-signatures-fail</loc>
     <lastmod>2026-04-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vertifile.com/blog/7-layers-of-document-security</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vertifile.com/blog/why-pvf-beats-pdf-signatures</loc>
+    <lastmod>2026-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

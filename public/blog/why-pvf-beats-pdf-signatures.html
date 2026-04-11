@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why PDF Signatures Failed -- And What Replaced Them | Vertifile Blog</title>
+  <meta name="description" content="PDF digital signatures verify who signed a document, not whether it was changed after. Learn how Vertifile PVF replaces the broken architecture entirely with tamper-proof verification.">
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <meta property="og:title" content="Why PDF Signatures Failed -- And What Replaced Them">
+  <meta property="og:description" content="PDF signatures protect who signed, not what was signed. Vertifile PVF wraps the entire document in verification -- the protection IS the document.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://vertifile.com/blog/why-pvf-beats-pdf-signatures">
+  <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
+  <meta property="article:published_time" content="2026-04-11">
+  <meta property="article:author" content="Vertifile Team">
+  <link rel="canonical" href="https://vertifile.com/blog/why-pvf-beats-pdf-signatures">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Why PDF Signatures Failed -- And What Replaced Them">
+  <meta name="twitter:description" content="PDF signatures protect who signed, not what was signed. Vertifile PVF wraps the entire document in verification -- the protection IS the document.">
+  <meta name="twitter:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
+  <meta name="theme-color" content="#0f0e17">
+  <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Why PDF Signatures Failed -- And What Replaced Them",
+    "description": "PDF digital signatures verify who signed a document, not whether it was changed after. Learn how Vertifile PVF replaces the broken architecture entirely.",
+    "url": "https://vertifile.com/blog/why-pvf-beats-pdf-signatures",
+    "datePublished": "2026-04-11",
+    "author": { "@type": "Organization", "name": "Vertifile Team" },
+    "publisher": { "@type": "Organization", "name": "Vertifile", "url": "https://vertifile.com", "logo": { "@type": "ImageObject", "url": "https://vertifile.com/images/logo-horizontal.png" } }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;overflow-x:hidden}
+    body{font-family:'Inter','Heebo',sans-serif;color:#e2e0f0;background:#0f0e17;overflow-x:hidden}
+    [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
+    a{text-decoration:none;color:inherit}
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;background:rgba(15,14,23,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 3px rgba(0,0,0,.2);border-bottom:1px solid rgba(124,58,237,.08)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:100%;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo img{height:28px;filter:brightness(0) invert(1)}
+    .nav-center{display:flex;gap:28px;position:absolute;left:50%;transform:translateX(-50%)}
+    .nav-center a{font-size:14px;font-weight:500;color:rgba(196,181,253,.7);text-decoration:none;transition:.2s}
+    .nav-center a:hover{color:#c4b5fd}
+    [dir="rtl"] .nav-center{direction:rtl}
+    .nav-actions{display:flex;align-items:center;gap:12px}
+    .nav-user{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.35);background:transparent;cursor:pointer;transition:.2s;text-decoration:none;color:rgba(196,181,253,.6)}
+    .nav-user:hover{border-color:rgba(124,58,237,.6);color:#c4b5fd;background:rgba(124,58,237,.1)}
+    .nav-user svg{width:18px;height:18px}
+    .nav-verify{font-size:13px;font-weight:500;color:#a78bfa;text-decoration:none}
+    .nav-cta{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
+    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.4)}
+    .lang-btn{display:flex;align-items:center;gap:5px;cursor:pointer;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:rgba(196,181,253,.6);border:1px solid rgba(124,58,237,.2);background:transparent;position:relative;transition:.2s}
+    .lang-btn:hover{border-color:rgba(124,58,237,.4);color:#c4b5fd}
+    .lang-btn svg{width:16px;height:16px}
+    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#1a1929;border:1px solid rgba(124,58,237,.15);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.4);min-width:160px;padding:4px 0;display:none;z-index:100}
+    [dir="rtl"] .lang-dropdown{right:auto;left:0}
+    .lang-dropdown.show{display:block}
+    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:rgba(196,181,253,.6);transition:.15s}
+    .lang-dropdown a:hover{background:rgba(124,58,237,.08);color:#c4b5fd}
+    .lang-dropdown a.active{color:#a78bfa;font-weight:600}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px}
+    .hamburger span{display:block;width:20px;height:2px;background:#c4b5fd;margin:4px 0;border-radius:2px}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#1a1929;border-bottom:1px solid rgba(124,58,237,.1);padding:16px 24px;z-index:999;flex-direction:column;gap:12px}
+    .mobile-menu.show{display:flex}
+    .mobile-menu a{font-size:15px;color:rgba(196,181,253,.7);text-decoration:none;padding:8px 0}
+    .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(124,58,237,.1)}
+    @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
+    .article-hero{padding:130px 32px 60px;position:relative;overflow:hidden;text-align:center}
+    .article-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.12),transparent 60%)}
+    .article-hero-inner{position:relative;z-index:1;max-width:720px;margin:0 auto}
+    .article-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,.12);color:#a78bfa;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:20px;border:1px solid rgba(124,58,237,.15)}
+    .article-hero h1{font-size:42px;font-weight:900;color:#fff;letter-spacing:-2px;line-height:1.15;margin-bottom:20px}
+    .article-meta{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+    .article-author{display:flex;align-items:center;gap:10px}
+    .article-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+    .article-author-info{display:flex;flex-direction:column;text-align:left}
+    .article-author-name{font-size:14px;font-weight:600;color:#e2e0f0}
+    .article-author-role{font-size:12px;color:rgba(196,181,253,.4)}
+    .meta-sep{width:4px;height:4px;border-radius:50%;background:rgba(196,181,253,.25);flex-shrink:0}
+    .article-date,.article-readtime{font-size:13px;color:rgba(196,181,253,.45)}
+    .article-divider{width:60px;height:3px;background:linear-gradient(90deg,#4f46e5,#7c3aed);margin:40px auto 0;border-radius:2px}
+    .article-body{max-width:720px;margin:0 auto;padding:60px 32px 80px}
+    .article-body p{font-size:17px;color:rgba(226,224,240,.8);line-height:1.9;margin-bottom:24px}
+    .article-body h2{font-size:26px;font-weight:800;color:#fff;margin:48px 0 16px;letter-spacing:-.5px}
+    .article-body h3{font-size:20px;font-weight:700;color:#e2e0f0;margin:36px 0 12px}
+    .article-body ul,.article-body ol{margin:0 0 24px 24px;color:rgba(226,224,240,.8);line-height:1.9;font-size:17px}
+    .article-body li{margin-bottom:8px}
+    .article-body strong{color:#fff;font-weight:700}
+    .article-body blockquote{border-left:3px solid #7c3aed;padding:16px 24px;margin:32px 0;background:rgba(124,58,237,.06);border-radius:0 12px 12px 0;font-style:italic;color:rgba(196,181,253,.7)}
+    .article-body .highlight-box{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.15);border-radius:16px;padding:28px;margin:32px 0}
+    .article-body .highlight-box h4{font-size:16px;font-weight:700;color:#a78bfa;margin-bottom:10px}
+    .article-body .highlight-box p{font-size:15px;margin-bottom:0}
+    .article-body .comparison-table{width:100%;border-collapse:collapse;margin:32px 0;font-size:14px}
+    .article-body .comparison-table th{text-align:left;padding:12px 16px;background:rgba(124,58,237,.12);color:#a78bfa;font-weight:700;border-bottom:2px solid rgba(124,58,237,.2);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+    .article-body .comparison-table td{padding:12px 16px;border-bottom:1px solid rgba(124,58,237,.06);color:rgba(226,224,240,.7);vertical-align:top}
+    .article-body .comparison-table td:first-child{font-weight:600;color:#e2e0f0;white-space:nowrap}
+    .article-body .comparison-table tr:hover td{background:rgba(124,58,237,.04)}
+    .article-body .comparison-table .cell-bad{color:rgba(248,113,113,.7)}
+    .article-body .comparison-table .cell-good{color:rgba(167,139,250,.9)}
+    .article-body .scenario-box{background:rgba(26,25,41,.6);border:1px solid rgba(124,58,237,.12);border-radius:16px;padding:28px;margin:24px 0}
+    .article-body .scenario-box h4{font-size:16px;font-weight:700;color:#e2e0f0;margin-bottom:12px}
+    .article-body .scenario-box .scenario-label{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 8px;border-radius:4px;margin-bottom:6px}
+    .article-body .scenario-box .label-pdf{background:rgba(248,113,113,.15);color:rgba(248,113,113,.8)}
+    .article-body .scenario-box .label-pvf{background:rgba(124,58,237,.15);color:#a78bfa}
+    .article-body .scenario-box p{font-size:15px;margin-bottom:8px;line-height:1.7}
+    .article-body .scenario-box p:last-child{margin-bottom:0}
+    @media(max-width:640px){.article-body .comparison-table{font-size:12px}.article-body .comparison-table th,.article-body .comparison-table td{padding:8px 10px}}
+    .article-cta{max-width:720px;margin:0 auto;padding:0 32px 80px}
+    .cta-card{background:rgba(26,25,41,.6);border:1px solid rgba(124,58,237,.15);border-radius:24px;padding:48px;text-align:center;position:relative;overflow:hidden;backdrop-filter:blur(20px)}
+    .cta-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.1),transparent 60%)}
+    .cta-inner{position:relative;z-index:1}
+    .cta-card h2{font-size:28px;font-weight:800;color:#fff;margin-bottom:12px;letter-spacing:-.5px}
+    .cta-card p{font-size:16px;color:rgba(196,181,253,.5);margin-bottom:28px;line-height:1.7;max-width:500px;margin-left:auto;margin-right:auto}
+    .cta-buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+    .cta-btn-primary{padding:14px 32px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:12px;font-size:15px;font-weight:600;transition:.3s;text-decoration:none}
+    .cta-btn-primary:hover{box-shadow:0 8px 24px rgba(124,58,237,.3);transform:translateY(-2px)}
+    .cta-btn-secondary{padding:14px 32px;background:transparent;color:#a78bfa;border:1px solid rgba(124,58,237,.25);border-radius:12px;font-size:15px;font-weight:600;transition:.3s;text-decoration:none}
+    .cta-btn-secondary:hover{border-color:rgba(124,58,237,.5);background:rgba(124,58,237,.06);transform:translateY(-2px)}
+    .back-to-blog{max-width:720px;margin:0 auto;padding:0 32px 60px;text-align:center}
+    .back-to-blog a{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#a78bfa;transition:.2s}
+    .back-to-blog a:hover{color:#c4b5fd;gap:12px}
+    .back-to-blog a svg{width:16px;height:16px}
+    footer{background:linear-gradient(180deg,#0f0e17 0%,#1e1b4b 100%);color:#e2e0f0;padding:80px 32px 30px;border-top:1px solid rgba(124,58,237,.08);position:relative;overflow:hidden}
+    footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;background:radial-gradient(ellipse at 30% 80%,rgba(124,58,237,.1),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.05),transparent 50%);pointer-events:none}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;max-width:1000px;margin:0 auto;position:relative;z-index:2}
+    .footer-brand .f-logo{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:10px;letter-spacing:-.5px;color:#fff}
+    .footer-brand .f-logo img{height:28px;width:auto;filter:brightness(0) invert(1)}
+    .footer-brand p{font-size:13px;color:rgba(196,181,253,.4);line-height:1.8;max-width:280px}
+    .footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(167,139,250,.5);margin-bottom:16px}
+    .footer-col a{display:block;font-size:14px;color:rgba(196,181,253,.4);padding:5px 0;transition:.2s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{max-width:1000px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(124,58,237,.1);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.3);position:relative;z-index:2}
+    .footer-lang{display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(196,181,253,.4);font-size:12px;transition:.2s}
+    .footer-lang:hover{color:#fff}
+    .patent-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(196,181,253,.35);border:1px solid rgba(124,58,237,.1);padding:4px 10px;border-radius:6px;margin-top:12px}
+    @media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr;gap:30px}.footer-bottom{flex-direction:column;gap:10px;text-align:center}}
+    @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+    @media(max-width:768px){
+      .article-hero{padding:110px 20px 40px}
+      .article-hero h1{font-size:30px;letter-spacing:-1px}
+      .article-body{padding:40px 20px 60px}
+      .article-body h2{font-size:22px}
+      .article-cta{padding:0 20px 60px}
+      .cta-card{padding:32px 20px}
+      footer{padding:60px 20px 24px}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
+    <div class="nav-center">
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/pricing" data-i18n="nav.pricing">Pricing</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
+      <a href="/blog" data-i18n="nav.blog">Blog</a>
+      <a href="/contact" data-i18n="nav.contact">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#31616;&#20307;&#20013;&#25991;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
+      <a href="/app" class="nav-user" title="My Account" data-i18n-title="nav.account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+    </div>
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/pricing" onclick="closeMobile()" data-i18n="nav.pricing">Pricing</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <a href="/blog" onclick="closeMobile()" data-i18n="nav.blog">Blog</a>
+  <a href="/contact" onclick="closeMobile()" data-i18n="nav.contact">Contact</a>
+  <a href="/app" onclick="closeMobile()" data-i18n="nav.account">My Account</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
+
+<!-- ===== BREADCRUMBS ===== -->
+<nav style="max-width:1200px;margin:0 auto;padding:80px 32px 0;font-size:13px;color:#8b89a6">
+  <a href="/" style="color:#7c3aed;text-decoration:none" data-i18n="blog.breadcrumbHome">Home</a> /
+  <a href="/blog" style="color:#7c3aed;text-decoration:none" data-i18n="blog.breadcrumbBlog">Blog</a> /
+  <span data-i18n="blog.post.pvfbeats.breadcrumb">Why PVF Beats PDF Signatures</span>
+</nav>
+
+<div class="article-hero">
+  <div class="article-hero-inner">
+    <span class="article-tag" data-i18n="blog.tag.security">Security</span>
+    <h1 data-i18n="blog.post.pvfbeats.title">Why PDF Signatures Failed &mdash; And What Replaced Them</h1>
+    <div class="article-meta">
+      <div class="article-author">
+        <div class="article-avatar">VT</div>
+        <div class="article-author-info">
+          <span class="article-author-name" data-i18n="blog.post.pvfbeats.author">Vertifile Team</span>
+          <span class="article-author-role" data-i18n="blog.post.pvfbeats.authorRole">Document Security</span>
+        </div>
+      </div>
+      <span class="meta-sep"></span>
+      <span class="article-date" data-i18n="blog.post.pvfbeats.date">Apr 11, 2026</span>
+      <span class="meta-sep"></span>
+      <span class="article-readtime" data-i18n="blog.post.pvfbeats.readTime">7 min read</span>
+    </div>
+    <div class="article-divider"></div>
+  </div>
+</div>
+
+<article class="article-body">
+
+  <h2 data-i18n="blog.post.pvfbeats.h2.promise">PDF Signatures: The Promise vs. The Reality</h2>
+
+  <p>When PDF digital signatures were introduced, they promised a simple solution to document fraud. Sign a document, and the recipient knows it is authentic. Problem solved.</p>
+
+  <p>Except it was not.</p>
+
+  <p>In practice, PDF digital signatures have a fundamental weakness: they protect <strong>who signed</strong>, not <strong>what was signed</strong>. The signature is a layer added on top of the document. And layers can be removed, bypassed, or ignored entirely.</p>
+
+  <p>Security researchers have demonstrated that the overwhelming majority of popular PDF viewers are vulnerable to signature bypass attacks. An attacker can modify the visible content of a signed PDF while leaving the signature technically valid. The viewer shows a green checkmark. The document is forged.</p>
+
+  <p>This is not a theoretical risk. Document fraud is a multi-billion-dollar problem that grows every year.</p>
+
+  <h2 data-i18n="blog.post.pvfbeats.h2.breakdown">Why PDF Signatures Break Down</h2>
+
+  <h3>1. Signatures Can Be Stripped</h3>
+  <p>A PDF signature is metadata attached to the document. It can be removed without altering the visible content. Many organizations receive documents and simply ignore whether signatures are present.</p>
+
+  <h3>2. Content Can Change While Signature Stays "Valid"</h3>
+  <p>Shadow attacks and incremental save attacks allow modifying the visible content of a PDF after signing, while keeping the cryptographic signature technically valid. The viewer shows "signed" while displaying forged content.</p>
+
+  <h3>3. Not All Viewers Verify the Same Way</h3>
+  <p>Different PDF readers handle signatures differently. A document that shows "valid" in one viewer may show "unknown signer" in another. There is no universal, consistent verification standard.</p>
+
+  <h3>4. No Tamper Evidence</h3>
+  <p>If someone removes a signature, there is no trace. The document looks the same &mdash; unsigned but otherwise normal. There is no alarm, no visual change, no indication that something was removed.</p>
+
+  <h3>5. Signatures Do Not Prove Timing</h3>
+  <p>A PDF signature shows <strong>when it was signed</strong>, but that timestamp comes from the signer's machine. It can be backdated. There is no independent, immutable proof of when the document existed.</p>
+
+  <h2 data-i18n="blog.post.pvfbeats.h2.pvf">What PVF Does Differently</h2>
+
+  <p>Vertifile's PVF (Protected Verifiable File) format takes a fundamentally different approach. Instead of adding a signature layer, PVF wraps the entire document in verification. The protection is not on top of the document. It IS the document.</p>
+
+  <h2 data-i18n="blog.post.pvfbeats.h2.comparison">Head-to-Head Comparison</h2>
+
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>PDF Digital Signature</th>
+        <th>Vertifile PVF</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Protection scope</td>
+        <td class="cell-bad">Signature layer only</td>
+        <td class="cell-good">Entire document wrapped in verification</td>
+      </tr>
+      <tr>
+        <td>Can signature be stripped?</td>
+        <td class="cell-bad">Yes &mdash; metadata can be removed</td>
+        <td class="cell-good">No &mdash; removing verification destroys the file</td>
+      </tr>
+      <tr>
+        <td>Tamper detection</td>
+        <td class="cell-bad">Depends on viewer implementation</td>
+        <td class="cell-good">Built into the document itself</td>
+      </tr>
+      <tr>
+        <td>Visual verification</td>
+        <td class="cell-bad">Small icon in PDF viewer toolbar</td>
+        <td class="cell-good">Live animated holographic stamp</td>
+      </tr>
+      <tr>
+        <td>Forgery visibility</td>
+        <td class="cell-bad">Forged docs often show "valid"</td>
+        <td class="cell-good">Stamp instantly freezes red on any tampering</td>
+      </tr>
+      <tr>
+        <td>Timing proof</td>
+        <td class="cell-bad">Signer's local clock (can be faked)</td>
+        <td class="cell-good">Blockchain timestamp (immutable, public)</td>
+      </tr>
+      <tr>
+        <td>Privacy</td>
+        <td class="cell-bad">Signer's certificate is exposed</td>
+        <td class="cell-good">Zero-knowledge &mdash; Vertifile never sees content</td>
+      </tr>
+      <tr>
+        <td>Viewer required</td>
+        <td class="cell-bad">Specific PDF reader with sig support</td>
+        <td class="cell-good">Any web browser</td>
+      </tr>
+      <tr>
+        <td>Offline verification</td>
+        <td class="cell-bad">Requires cert chain validation</td>
+        <td class="cell-good">Built-in self-verification</td>
+      </tr>
+      <tr>
+        <td>Audit trail</td>
+        <td class="cell-bad">None built-in</td>
+        <td class="cell-good">Full access log with timestamps and IPs</td>
+      </tr>
+      <tr>
+        <td>Independent verification</td>
+        <td class="cell-bad">Requires trust in certificate authority</td>
+        <td class="cell-good">Blockchain-anchored &mdash; anyone can verify</td>
+      </tr>
+      <tr>
+        <td>Screenshot resistance</td>
+        <td class="cell-bad">None &mdash; screenshot looks identical</td>
+        <td class="cell-good">Live animation cannot be captured statically</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 data-i18n="blog.post.pvfbeats.h2.core">The Core Difference: Architecture vs. Feature</h2>
+
+  <p>PDF signatures are a <strong>feature</strong> added to an existing format. They depend on the viewer implementing them correctly, the signer configuring them properly, and the recipient knowing how to check them.</p>
+
+  <p>PVF verification is an <strong>architecture</strong>. The document cannot exist without its verification. There is no "unsigned" version. There is no way to view the content without the integrity check running. The protection is not a layer &mdash; it is the foundation.</p>
+
+  <div class="highlight-box">
+    <h4>Think of it this way:</h4>
+    <p>A PDF signature is like a padlock on a gate. Remove the padlock, and the gate still opens. A PVF document is like a vault built around the contents. Remove the vault, and the contents do not exist.</p>
+  </div>
+
+  <h2 data-i18n="blog.post.pvfbeats.h2.scenarios">Real-World Scenarios</h2>
+
+  <div class="scenario-box">
+    <h4>Scenario 1: University Diploma</h4>
+    <div class="scenario-label label-pdf">PDF Signature</div>
+    <p>A diploma is signed with the university's certificate. A student modifies their grade using an incremental save attack. The signature still shows as valid.</p>
+    <div class="scenario-label label-pvf">PVF</div>
+    <p>The diploma's entire content is fingerprinted and sealed. Changing any character produces a completely different hash. The stamp freezes red. The document screams "forged."</p>
+  </div>
+
+  <div class="scenario-box">
+    <h4>Scenario 2: Medical Record Transfer</h4>
+    <div class="scenario-label label-pdf">PDF Signature</div>
+    <p>A hospital sends signed medical records to an insurance company. The records pass through email, file shares, and portals. At any point, the signature could be stripped, and no one would notice.</p>
+    <div class="scenario-label label-pvf">PVF</div>
+    <p>The medical record is a self-verifying file. At every step, anyone who opens it sees either a live green stamp (authentic) or a frozen red stamp (tampered). There is no ambiguity.</p>
+  </div>
+
+  <div class="scenario-box">
+    <h4>Scenario 3: Insurance Claim Document</h4>
+    <div class="scenario-label label-pdf">PDF Signature</div>
+    <p>An insurance claim is submitted with a signed PDF. The adjuster's viewer does not fully support signature verification and shows "unknown signer." The document is accepted anyway.</p>
+    <div class="scenario-label label-pvf">PVF</div>
+    <p>The claim document opens in any browser. The animated stamp is either live and green (authentic) or frozen and red (forged). No special viewer needed. No ambiguity.</p>
+  </div>
+
+  <div class="scenario-box">
+    <h4>Scenario 4: Court Filing</h4>
+    <div class="scenario-label label-pdf">PDF Signature</div>
+    <p>An attorney submits a signed PDF as evidence. The opposing counsel questions when the document was actually created. The timestamp comes from the signer's machine and cannot be independently verified.</p>
+    <div class="scenario-label label-pvf">PVF</div>
+    <p>The document's fingerprint is permanently anchored to a public blockchain with an immutable timestamp. Any party can independently verify when the document was registered, without relying on either side's claim.</p>
+  </div>
+
+  <h2 data-i18n="blog.post.pvfbeats.h2.bottom">The Bottom Line</h2>
+
+  <p>PDF digital signatures were a good idea in 2000. The document security landscape has changed. Attacks are more sophisticated. The stakes are higher. And the solution needs to match.</p>
+
+  <p>Vertifile PVF does not patch the problems of PDF signatures. It replaces the architecture entirely:</p>
+
+  <ul>
+    <li><strong>Not a signature</strong> &mdash; a complete verification wrapper</li>
+    <li><strong>Not dependent on the viewer</strong> &mdash; works in any browser</li>
+    <li><strong>Not removable</strong> &mdash; the protection IS the document</li>
+    <li><strong>Not trust-based</strong> &mdash; blockchain-anchored, independently verifiable</li>
+    <li><strong>Not visible to the platform</strong> &mdash; zero-knowledge by design</li>
+  </ul>
+
+</article>
+
+<div class="article-cta">
+  <div class="cta-card">
+    <div class="cta-inner">
+      <h2 data-i18n="blog.cta.moveBeyond">Ready to Move Beyond PDF Signatures?</h2>
+      <p data-i18n="blog.cta.seeItYourself">Protect your first document with Vertifile and see the difference yourself. Try to tamper with it.</p>
+      <div class="cta-buttons">
+        <a href="/upload" class="cta-btn-primary" data-i18n="blog.cta.protect">Protect a Document</a>
+        <a href="/demo" class="cta-btn-secondary" data-i18n="blog.cta.demo">See the Demo</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="back-to-blog">
+  <a href="/blog">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span data-i18n="blog.backToBlog">Back to Blog</span>
+  </a>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="f-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile"></div>
+      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+      <div class="patent-badge" data-i18n="footer.patent">Patent Pending</div>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="/#how" data-i18n="nav.howItWorks">How It Works</a>
+      <a href="/#features" data-i18n="nav.features">Features</a>
+      <a href="/upload" data-i18n="nav.upload">Protect a Document</a>
+      <a href="/enterprise" data-i18n="footer.enterprise">Enterprise</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.developers">Developers</h4>
+      <a href="/integration" data-i18n="footer.integrationGuide">Integration Guide</a>
+      <a href="/api/docs" data-i18n="footer.apiDocumentation">API Documentation</a>
+      <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.company">Company</h4>
+      <a href="/about" data-i18n="footer.about">About</a>
+      <a href="/blog" data-i18n="nav.blog">Blog</a>
+      <a href="/contact" data-i18n="footer.contact">Contact</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
+    <div class="footer-lang" onclick="toggleLangDropdown()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+      <span id="footerLangLabel">English</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/i18n.js"></script>
+<script src="/js/nav-user.js"></script>
+<script>
+(function(){
+  window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
+  window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
+  window.toggleLangDropdown=function(){document.getElementById('langDropdown').classList.toggle('show')};
+})();
+</script>
+</body>
+</html>
