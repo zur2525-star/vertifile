@@ -1615,6 +1615,10 @@ function showApp() {
   // Initialize the new dashboard
   Dashboard.init();
   loadDocuments();
+
+  // i18n: translations are already loaded but the dashboard DOM was just created,
+  // so re-apply translations now that all elements exist
+  if (typeof appI18nPatch === 'function') setTimeout(appI18nPatch, 50);
 }
 
 // Restore saved stamp config to the customizer UI on /app#stamp
@@ -2009,6 +2013,9 @@ window.Dashboard = {
 
     // Load data for specific tabs
     if (tab === 'documents') { this.renderDocRows(); }
+
+    // i18n: re-apply translations to newly-visible tab content
+    if (typeof appI18nPatch === 'function') setTimeout(appI18nPatch, 30);
   },
 
   goOverview: function(){
@@ -3672,6 +3679,11 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(patchAndHook, 200);
   setTimeout(appI18nPatch, 500);
   setTimeout(appI18nPatch, 1000);
+
+  // Listen for i18n-ready event (fired by i18n.js after every loadLang completes)
+  document.addEventListener('vf-i18n-ready', function() {
+    if (typeof appI18nPatch === 'function') appI18nPatch();
+  });
 });
 
 // ===== Init =====

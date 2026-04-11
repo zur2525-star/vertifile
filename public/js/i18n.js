@@ -97,13 +97,15 @@
   }
 
   function loadLang(lang){
-    fetch('/locales/'+lang+'.json?v=20260411f').then(function(r){
+    fetch('/locales/'+lang+'.json?v=20260411g').then(function(r){
       if(!r.ok) throw new Error();
       return r.json();
     }).then(function(d){
       translations = d; currentLang = lang;
       localStorage.setItem('vf-lang', lang);
       setDirection(lang); applyTranslations(); updateLabels(lang);
+      // Notify app-level i18n patch (dashboard elements created after initial load)
+      document.dispatchEvent(new CustomEvent('vf-i18n-ready', {detail:{lang:lang}}));
     }).catch(function(){ if(lang!=='en') loadLang('en'); });
   }
 
