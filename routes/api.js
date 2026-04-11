@@ -645,6 +645,82 @@ router.post('/token/refresh', verifyLimiter, async (req, res) => {
   }
 });
 
+// ===== API: URI Status =====
+// Public endpoint — returns operational status of all critical service URIs.
+// Useful for uptime monitors, status pages, and integration health checks.
+const statusLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 30,
+  message: { success: false, error: 'Too many status requests. Try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+router.get('/status', statusLimiter, async (req, res) => {
+  const db = req.app.get('db');
+  const chain = req.app.get('chain');
+  const timestamp = new Date().toISOString();
+
+  // Check database
+  let dbStatus = { status: 'down', responseMs: null };
+  try {
+    const dbHealth = await db.healthCheck();
+    dbStatus = {
+      status: dbHealth.ok ? 'operational' : 'degraded',
+      responseMs: dbHealth.responseMs
+    };
+  } catch (_) {
+    dbStatus = { status: 'down', responseMs: null };
+  }
+
+  // Check blockchain
+  let blockchainStatus = 'disabled';
+  try {
+    blockchainStatus = chain.isConnected() ? 'operational' : 'disabled';
+  } catch (_) {
+    blockchainStatus = 'error';
+  }
+
+  // Check Ed25519 signing
+  let signingStatus = 'disabled';
+  try {
+    const primaryKeyId = keyManager.getPrimaryKeyId();
+    signingStatus = primaryKeyId ? 'operational' : 'disabled';
+  } catch (_) {
+    signingStatus = 'error';
+  }
+
+  // Determine overall status
+  const overall = dbStatus.status === 'operational' ? 'operational'
+    : dbStatus.status === 'degraded' ? 'degraded'
+    : 'partial_outage';
+
+  // Critical URIs and their statuses
+  const uris = {
+    'POST /api/create-pvf': dbStatus.status === 'operational' ? 'operational' : 'degraded',
+    'POST /api/verify': dbStatus.status === 'operational' ? 'operational' : 'degraded',
+    'GET  /api/verify-public': dbStatus.status === 'operational' ? 'operational' : 'degraded',
+    'GET  /api/health': 'operational',
+    'GET  /api/health/deep': dbStatus.status === 'operational' ? 'operational' : 'degraded',
+    'POST /api/token/refresh': dbStatus.status === 'operational' ? 'operational' : 'degraded',
+    'POST /api/demo/create-pvf': dbStatus.status === 'operational' ? 'operational' : 'degraded'
+  };
+
+  res.json({
+    status: overall,
+    service: 'Vertifile',
+    version: '4.5.0',
+    timestamp,
+    uptime: process.uptime(),
+    components: {
+      database: dbStatus,
+      blockchain: blockchainStatus,
+      signing: signingStatus
+    },
+    endpoints: uris
+  });
+});
+
 // ===== API: Health =====
 const _pkgVersion = require('../package.json').version;
 router.get('/health', (req, res) => {
