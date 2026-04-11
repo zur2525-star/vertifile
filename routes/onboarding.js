@@ -2,51 +2,31 @@ const express = require('express');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const logger = require('../services/logger');
+const db = require('../db');
 const { requireLogin } = require('../middleware/auth');
 
 const router = express.Router();
 
 // ---------------------------------------------------------------------------
-// In-memory stores (TODO: migrate to DB — verification_codes table)
+// Periodic cleanup of expired verification codes (every hour)
 // ---------------------------------------------------------------------------
-
-// Map<email, { code, createdAt, expiresAt, attempts, used }>
-const pendingCodes = new Map();
-
-// Map<email, { count, windowStart }>  -- rate limit: 3 sends per hour per email
-const sendRateMap = new Map();
-
-// Periodic cleanup of expired entries to prevent memory leaks (every 10 min)
-setInterval(() => {
-  const now = Date.now();
-  for (const [email, entry] of pendingCodes) {
-    if (now > entry.expiresAt) pendingCodes.delete(email);
+setInterval(async () => {
+  try {
+    const deleted = await db.cleanExpiredCodes();
+    if (deleted > 0) logger.info({ deleted }, 'Cleaned expired verification codes');
+  } catch (e) {
+    logger.error({ err: e }, 'Failed to clean expired verification codes');
   }
-  for (const [email, entry] of sendRateMap) {
-    if (now - entry.windowStart > 60 * 60 * 1000) sendRateMap.delete(email);
-  }
-}, 10 * 60 * 1000).unref();
+}, 60 * 60 * 1000).unref();
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
 const SEND_LIMIT = 3;
-const SEND_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const CODE_TTL_MS = 10 * 60 * 1000;    // 10 minutes
+const SEND_WINDOW_MINUTES = 60; // 1 hour
+const CODE_TTL_MINUTES = 10;    // 10 minutes
 const MAX_ATTEMPTS = 5;
-
-function isRateLimited(email) {
-  const now = Date.now();
-  const entry = sendRateMap.get(email);
-  if (!entry || now - entry.windowStart > SEND_WINDOW_MS) {
-    sendRateMap.set(email, { count: 1, windowStart: now });
-    return false;
-  }
-  if (entry.count >= SEND_LIMIT) return true;
-  entry.count += 1;
-  return false;
-}
 
 function generateCode() {
   // crypto.randomInt(min, max) — max exclusive, so 1000000 gives 000000–999999
@@ -80,7 +60,9 @@ router.post('/auth/send-code', sendCodeLimiter, async (req, res) => {
 
     const normalizedEmail = email.toLowerCase().trim();
 
-    if (isRateLimited(normalizedEmail)) {
+    // Per-email rate limit: max 3 sends per hour (checked in DB)
+    const sendCount = await db.getCodeSendCount(normalizedEmail, SEND_WINDOW_MINUTES);
+    if (sendCount >= SEND_LIMIT) {
       return res.status(429).json({
         success: false,
         error: 'Too many codes sent. Please wait before requesting another.'
@@ -88,21 +70,7 @@ router.post('/auth/send-code', sendCodeLimiter, async (req, res) => {
     }
 
     const code = generateCode();
-    const now = Date.now();
-    pendingCodes.set(normalizedEmail, {
-      code,
-      createdAt: now,
-      expiresAt: now + CODE_TTL_MS,
-      attempts: 0,
-      used: false
-    });
-
-    // TODO: replace with DB insert into verification_codes table:
-    // await db.query(
-    //   `INSERT INTO verification_codes (user_id, code, expires_at)
-    //    VALUES ((SELECT id FROM users WHERE email = $1), $2, NOW() + INTERVAL '10 minutes')`,
-    //   [normalizedEmail, code]
-    // );
+    await db.createVerificationCode(normalizedEmail, code, 'onboarding', CODE_TTL_MINUTES);
 
     // TODO: send email via email service (e.g. services/email.js)
     // await emailService.sendVerificationCode(normalizedEmail, code);
@@ -136,23 +104,17 @@ router.post('/auth/verify-code', async (req, res) => {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
-    const entry = pendingCodes.get(normalizedEmail);
+
+    // Look up the latest non-expired, non-used code for this email
+    const entry = await db.getLatestVerificationCode(normalizedEmail);
 
     if (!entry) {
       return res.status(400).json({ success: false, error: 'No verification code found for this email' });
     }
 
-    if (entry.used) {
-      return res.status(400).json({ success: false, error: 'Code already used' });
-    }
-
-    if (Date.now() > entry.expiresAt) {
-      pendingCodes.delete(normalizedEmail);
-      return res.status(400).json({ success: false, error: 'Code expired. Please request a new one.' });
-    }
-
     if (entry.attempts >= MAX_ATTEMPTS) {
-      pendingCodes.delete(normalizedEmail);
+      // Mark exhausted code as used to prevent further attempts
+      await db.markCodeUsed(normalizedEmail, entry.code);
       return res.status(400).json({ success: false, error: 'Too many failed attempts. Please request a new code.' });
     }
 
@@ -162,8 +124,8 @@ router.post('/auth/verify-code', async (req, res) => {
     const match = provided.length === expected.length && crypto.timingSafeEqual(provided, expected);
 
     if (!match) {
-      entry.attempts += 1;
-      const remaining = MAX_ATTEMPTS - entry.attempts;
+      await db.incrementCodeAttempts(entry.id);
+      const remaining = MAX_ATTEMPTS - (entry.attempts + 1);
       return res.status(400).json({
         success: false,
         error: 'Incorrect code',
@@ -172,19 +134,7 @@ router.post('/auth/verify-code', async (req, res) => {
     }
 
     // Success — mark as used and verify user's email
-    entry.used = true;
-    pendingCodes.delete(normalizedEmail);
-
-    // TODO: update DB:
-    // await db.query(
-    //   `UPDATE users SET email_verified = TRUE WHERE email = $1`,
-    //   [normalizedEmail]
-    // );
-    // await db.query(
-    //   `UPDATE verification_codes SET used = TRUE WHERE user_id =
-    //    (SELECT id FROM users WHERE email = $1) ORDER BY created_at DESC LIMIT 1`,
-    //   [normalizedEmail]
-    // );
+    await db.markCodeUsed(normalizedEmail, entry.code);
 
     // If user is authenticated in session, update req.user too
     if (req.user) {

@@ -196,6 +196,21 @@ const _ready = (async () => {
       created_at TIMESTAMPTZ DEFAULT NOW()
     )`);
   } catch (_) { /* already exists */ }
+  // Verification codes table (email verification for onboarding)
+  try {
+    await pool.query(`CREATE TABLE IF NOT EXISTS verification_codes (
+      id SERIAL PRIMARY KEY,
+      email VARCHAR(255) NOT NULL,
+      code VARCHAR(10) NOT NULL,
+      type VARCHAR(50) DEFAULT 'onboarding',
+      attempts INTEGER DEFAULT 0,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      expires_at TIMESTAMPTZ NOT NULL,
+      used BOOLEAN DEFAULT false
+    )`);
+    await pool.query('CREATE INDEX IF NOT EXISTS idx_verification_codes_email ON verification_codes(email)');
+    await pool.query('CREATE INDEX IF NOT EXISTS idx_verification_codes_expires ON verification_codes(expires_at)');
+  } catch (_) { /* already exists */ }
   // Preview-only column for freemium paywall
   try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS preview_only BOOLEAN DEFAULT FALSE'); } catch (_) {}
   // Ed25519 dual-signature columns (Phase 2A) — populated by Phase 2B
@@ -1600,6 +1615,97 @@ async function updateUserPassword(userId, passwordHash) {
 }
 
 // ================================================================
+// VERIFICATION CODES (email verification for onboarding)
+// ================================================================
+
+/**
+ * Insert a new verification code for the given email.
+ * @param {string} email - normalised email address
+ * @param {string} code  - the 6-digit code
+ * @param {string} type  - code purpose, default 'onboarding'
+ * @param {number} expiresInMinutes - TTL in minutes (default 10)
+ */
+async function createVerificationCode(email, code, type = 'onboarding', expiresInMinutes = 10) {
+  await pool.query(
+    `INSERT INTO verification_codes (email, code, type, expires_at)
+     VALUES ($1, $2, $3, NOW() + ($4 || ' minutes')::INTERVAL)`,
+    [email, code, type, String(expiresInMinutes)]
+  );
+}
+
+/**
+ * Retrieve a valid (not expired, not used) verification code.
+ * Returns the row or null.
+ */
+async function getVerificationCode(email, code) {
+  const { rows } = await pool.query(
+    `SELECT * FROM verification_codes
+     WHERE email = $1 AND code = $2 AND used = false AND expires_at > NOW()
+     ORDER BY created_at DESC LIMIT 1`,
+    [email, code]
+  );
+  return rows[0] || null;
+}
+
+/**
+ * Get the most recent non-used, non-expired code for an email (any code).
+ * Used to check attempts count.
+ */
+async function getLatestVerificationCode(email) {
+  const { rows } = await pool.query(
+    `SELECT * FROM verification_codes
+     WHERE email = $1 AND used = false AND expires_at > NOW()
+     ORDER BY created_at DESC LIMIT 1`,
+    [email]
+  );
+  return rows[0] || null;
+}
+
+/**
+ * Increment the attempts counter on a verification code row.
+ */
+async function incrementCodeAttempts(id) {
+  await pool.query(
+    'UPDATE verification_codes SET attempts = attempts + 1 WHERE id = $1',
+    [id]
+  );
+}
+
+/**
+ * Mark a verification code as used.
+ */
+async function markCodeUsed(email, code) {
+  await pool.query(
+    `UPDATE verification_codes SET used = true
+     WHERE email = $1 AND code = $2`,
+    [email, code]
+  );
+}
+
+/**
+ * Delete all expired codes (housekeeping).
+ */
+async function cleanExpiredCodes() {
+  const result = await pool.query(
+    'DELETE FROM verification_codes WHERE expires_at < NOW()'
+  );
+  return result.rowCount;
+}
+
+/**
+ * Count how many codes were sent to this email within the given window.
+ * Used for per-email rate limiting (e.g. max 3 per hour).
+ */
+async function getCodeSendCount(email, minutesWindow = 60) {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*)::int AS cnt FROM verification_codes
+     WHERE email = $1 AND created_at > NOW() - ($2 || ' minutes')::INTERVAL`,
+    [email, String(minutesWindow)]
+  );
+  return rows[0].cnt;
+}
+
+// ================================================================
 // EXPORTS
 // ================================================================
 module.exports = {
@@ -1684,6 +1790,14 @@ module.exports = {
   listRotationLog,
   insertRotationLog,
   countEd25519KeysByState,
+  // Verification codes (onboarding email verification)
+  createVerificationCode,
+  getVerificationCode,
+  getLatestVerificationCode,
+  incrementCodeAttempts,
+  markCodeUsed,
+  cleanExpiredCodes,
+  getCodeSendCount,
   query: queryWithRetry,
   close,
   _db: pool,
