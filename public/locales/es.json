@@ -1106,8 +1106,6 @@
     "heroTitle2": "y transparentes",
     "heroSubtitle": "Comienza gratis. Escala a tu ritmo. Sin costos ocultos, sin sorpresas.",
     "perMonth": "mes",
-    "perSeat": "puesto/mes",
-    "seatMin": "Minimo 5 puestos",
     "recommended": "Mas popular",
     "proName": "Pro",
     "proDesc": "Para profesionales y freelancers que necesitan su propia marca.",
@@ -1119,7 +1117,7 @@
     "proCta": "Iniciar Pro",
     "businessName": "Business",
     "businessDesc": "Para equipos y organizaciones que necesitan flujos de trabajo compartidos.",
-    "bizF1": "Documentos ilimitados",
+    "bizF1": "1,000 documentos/mes",
     "bizF2": "Gestion de equipo",
     "bizF3": "Marca personalizada",
     "bizF4": "Gerente de cuenta dedicado",
@@ -1139,17 +1137,20 @@
     "faqTitle": "Preguntas frecuentes",
     "faqSubtitle": "Todo lo que necesitas saber sobre los precios y planes de Vertifile.",
     "faq1q": "Puedo probar antes de comprar?",
-    "faq1a": "Por supuesto! Nuestro plan gratuito te permite subir hasta 25 documentos por mes, descargar, compartir y verificar sin costo. El sello lleva la marca Vertifile en el plan gratuito. Actualiza a Pro o Business para marca personalizada y limites mayores.",
+    "faq1a": "Si! Cada plan Pro incluye una prueba de 14 dias. Sin tarjeta de credito necesaria. Actualiza a Business para 1,000 documentos/mes y funciones de equipo.",
     "faq2q": "Que tipos de archivos son compatibles?",
     "faq2a": "Vertifile admite archivos PDF, JPEG, PNG y texto. Cada documento se convierte en un archivo .pvf a prueba de manipulaciones.",
     "faq3q": "Como funciona la facturacion?",
-    "faq3a": "Gratis es siempre gratis. Pro ($19/mes) y Business ($12/puesto/mes) se facturan mensual o anualmente (17% de descuento). Cancela en cualquier momento, sin cargos. Los planes empresariales se facturan anualmente con terminos personalizados.",
+    "faq3a": "Pro ($49/mes) incluye 500 documentos con $0.15/doc de excedente. Business ($79/mes) incluye 1,000 documentos con $0.10/doc de excedente. Enterprise con precio personalizado y documentos ilimitados. Cancela en cualquier momento, sin cargos.",
     "faq4q": "Puedo cambiar de plan en cualquier momento?",
     "faq4a": "Si! Puedes cambiar tu plan en cualquier momento desde la configuracion de tu cuenta. Los cambios se aplican al inicio del siguiente ciclo de facturacion.",
     "faq5q": "Estan seguros mis datos?",
     "faq5a": "La seguridad es nuestra maxima prioridad. Vertifile utiliza procesamiento ciego, lo que significa que nunca leemos ni almacenamos el contenido de tus documentos.",
     "bottomCtaTitle": "Listo para proteger tus documentos?",
-    "bottomCtaSubtitle": "Comienza a proteger tus documentos con Vertifile hoy."
+    "bottomCtaSubtitle": "Comienza a proteger tus documentos con Vertifile hoy.",
+    "proOverage": "Excedente: $0.15 por documento adicional",
+    "bizOverage": "Excedente: $0.10 por documento adicional",
+    "overageExplanation": "Excediste tu limite? No hay problema -- los documentos adicionales se cobran a la tarifa de excedente. Tu flujo de trabajo nunca se detiene."
   },
   "faq": {
     "heroTitle": "Preguntas frecuentes",
@@ -1193,7 +1194,7 @@
       "layers": "Hash SHA-256 (huella del documento), firma HMAC-SHA256 (firmada por el servidor), actualizacion de token cada 5 minutos, hash de integridad del codigo, token encadenado (vincula todos los parametros), deteccion de herramientas de desarrollo, ofuscacion JavaScript, sello holografico animado, anclaje blockchain Polygon.",
       "dataStored": "Las huellas criptograficas se almacenan en infraestructura en la nube de EE.UU./UE (Render + Neon PostgreSQL). El contenido de los documentos nunca se almacena en nuestros servidores. Los registros blockchain estan en Polygon (descentralizado).",
       "shutdown": "Tus archivos .pvf siguen funcionando: son documentos HTML independientes. Los registros blockchain en Polygon permanecen accesibles permanentemente. Nos comprometemos a dar un aviso previo de 90 dias.",
-      "cost": "Gratis: $0/mes — 1 documento. Pro: $19/mes — 100 documentos. Enterprise: precios personalizados — documentos ilimitados, marca blanca, SLA.",
+      "cost": "Pro: $49/mes -- 500 documentos, $0.15/doc excedente. Business: $79/mes -- 1,000 documentos, $0.10/doc excedente. Enterprise: precio personalizado, documentos ilimitados.",
       "trial": "Si! El plan gratuito te permite proteger 1 documento sin costo. El plan Pro incluye una prueba gratuita de 14 dias.",
       "cancel": "Si. Sin contratos a largo plazo. Cancela en cualquier momento desde tu panel de control.",
       "formats": "PDF, PNG, JPG/JPEG, TXT. Hasta 50MB por archivo.",
@@ -1214,8 +1215,8 @@
     "watermark": "VISTA PREVIA\nSuscribete para desbloquear",
     "ctaTitle": "Listo para descargar y compartir?",
     "ctaDesc": "Suscribete a Pro para desbloquear descargas, uso compartido y verificacion completa.",
-    "ctaBtn": "Actualizar a Pro — $19/mes",
-    "ctaNote": "Incluye 100 documentos/mes, marca personalizada, acceso API",
+    "ctaBtn": "Actualizar a Pro -- $49/mes",
+    "ctaNote": "Incluye 500 documentos/mes, marca personalizada, acceso API",
     "uploadAnother": "Subir otro documento",
     "dashboardTitle": "Actualiza para descargar y compartir",
     "dashboardSubtitle": "Tu documento esta protegido, pero la descarga y el uso compartido requieren un plan Pro o Enterprise."
@@ -1608,10 +1609,15 @@
     "enterprise": "Empresarial",
     "planWord": "PLAN",
     "price": {
-      "pro": "$19/mes",
-      "proPlus": "$12/puesto/mes",
-      "enterprise": "Personalizado"
-    }
+      "pro": "$49/mes",
+      "enterprise": "Personalizado",
+      "business": "$79/mes"
+    },
+    "overageLabel": "Excedente",
+    "extraDocs": "Documentos adicionales",
+    "each": "cada uno",
+    "perAdditionalDoc": "por documento adicional",
+    "noOverage": "Sin cargos de excedente"
   },
   "preview": {
     "pvfDocument": "DOCUMENTO PVF",

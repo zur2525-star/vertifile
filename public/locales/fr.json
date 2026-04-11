@@ -1106,8 +1106,6 @@
     "heroTitle2": "et transparente",
     "heroSubtitle": "Commencez gratuitement. Evoluez a votre rythme. Sans frais caches, sans surprises.",
     "perMonth": "mois",
-    "perSeat": "siege/mois",
-    "seatMin": "Minimum 5 sieges",
     "recommended": "Le plus populaire",
     "proName": "Pro",
     "proDesc": "Pour les professionnels et independants qui veulent leur propre marque.",
@@ -1119,7 +1117,7 @@
     "proCta": "Commencer Pro",
     "businessName": "Business",
     "businessDesc": "Pour les equipes et organisations qui ont besoin de flux de travail partages.",
-    "bizF1": "Documents illimites",
+    "bizF1": "1 000 documents/mois",
     "bizF2": "Gestion d'equipe",
     "bizF3": "Marque personnalisee",
     "bizF4": "Gestionnaire de compte dedie",
@@ -1139,17 +1137,20 @@
     "faqTitle": "Questions frequemment posees",
     "faqSubtitle": "Tout ce que vous devez savoir sur les tarifs et les plans Vertifile.",
     "faq1q": "Puis-je essayer avant d'acheter ?",
-    "faq1a": "Absolument ! Notre plan gratuit vous permet de telecharger jusqu'a 25 documents par mois, de les partager et de les verifier sans frais. Le tampon porte la marque Vertifile en version gratuite. Passez a Pro ou Business pour une marque personnalisee et des limites plus elevees.",
+    "faq1a": "Oui ! Chaque plan Pro inclut un essai de 14 jours. Aucune carte de credit requise. Passez a Business pour 1 000 documents/mois et les fonctionnalites d'equipe.",
     "faq2q": "Quels types de fichiers sont pris en charge ?",
     "faq2a": "Vertifile prend en charge les fichiers PDF, JPEG, PNG et texte. Chaque document est converti en fichier .pvf inviolable.",
     "faq3q": "Comment fonctionne la facturation ?",
-    "faq3a": "Gratuit est toujours gratuit. Pro (19$/mois) et Business (12$/siege/mois) sont factures mensuellement ou annuellement (17% de remise). Annulation a tout moment, sans frais. Les plans Entreprise sont factures annuellement avec des conditions personnalisees.",
+    "faq3a": "Pro (49$/mois) comprend 500 documents avec 0,15$/doc de depassement. Business (79$/mois) comprend 1 000 documents avec 0,10$/doc de depassement. Enterprise a tarif personnalise avec documents illimites. Annulez a tout moment, sans frais.",
     "faq4q": "Puis-je changer de plan a tout moment ?",
     "faq4a": "Oui ! Vous pouvez changer de plan a tout moment depuis les parametres de votre compte. Les changements prennent effet au debut du prochain cycle de facturation.",
     "faq5q": "Mes donnees sont-elles securisees ?",
     "faq5a": "La securite est notre priorite absolue. Vertifile utilise le traitement aveugle, ce qui signifie que nous ne lisons ni ne stockons jamais le contenu de vos documents.",
     "bottomCtaTitle": "Pret a proteger vos documents ?",
-    "bottomCtaSubtitle": "Commencez a proteger vos documents avec Vertifile des aujourd'hui."
+    "bottomCtaSubtitle": "Commencez a proteger vos documents avec Vertifile des aujourd'hui.",
+    "proOverage": "Depassement: 0,15$ par document supplementaire",
+    "bizOverage": "Depassement: 0,10$ par document supplementaire",
+    "overageExplanation": "Vous avez depasse votre limite? Pas de probleme -- les documents supplementaires sont factures au tarif de depassement. Votre flux de travail ne s'arrete jamais."
   },
   "faq": {
     "heroTitle": "Questions fréquentes",
@@ -1193,7 +1194,7 @@
       "layers": "Hash SHA-256 (empreinte du document), signature HMAC-SHA256 (signée par le serveur), rafraîchissement de jeton toutes les 5 minutes, hash d'intégrité du code, jeton chaîné (lie tous les paramètres), détection des outils de développement, obfuscation JavaScript, tampon holographique animé, ancrage blockchain Polygon.",
       "dataStored": "Les empreintes cryptographiques sont stockées sur une infrastructure cloud aux États-Unis/UE (Render + Neon PostgreSQL). Le contenu des documents n'est jamais stocké sur nos serveurs. Les enregistrements blockchain sont sur Polygon (décentralisé).",
       "shutdown": "Vos fichiers .pvf restent fonctionnels — ce sont des documents HTML autonomes. Les enregistrements blockchain sur Polygon restent accessibles en permanence. Nous nous engageons à donner un préavis de 90 jours.",
-      "cost": "Gratuit : $0/mois -- 25 documents, telechargement, partage et verification inclus. Pro : $19/mois -- 500 documents, marque personnalisee. Business : $12/siege/mois -- documents illimites, gestion d'equipe. Entreprise : tarification personnalisee.",
+      "cost": "Pro: 49$/mois -- 500 documents, 0,15$/doc depassement. Business: 79$/mois -- 1 000 documents, 0,10$/doc depassement. Enterprise: tarif personnalise, documents illimites.",
       "trial": "Oui ! Le plan gratuit vous permet de telecharger jusqu'a 25 documents par mois, de les partager et verifier sans frais.",
       "cancel": "Oui. Pas de contrats à long terme. Annulez à tout moment depuis votre tableau de bord.",
       "formats": "PDF, PNG, JPG/JPEG, TXT. Jusqu'à 50 Mo par fichier.",
@@ -1214,8 +1215,8 @@
     "watermark": "APERCU\nAbonnez-vous pour debloquer",
     "ctaTitle": "Pret a telecharger et partager ?",
     "ctaDesc": "Passez a Pro pour debloquer le telechargement, le partage et la verification complete.",
-    "ctaBtn": "Passer a Pro — 19$/mois",
-    "ctaNote": "Inclut 100 documents/mois, branding personnalise, acces API",
+    "ctaBtn": "Passer a Pro -- 49$/mois",
+    "ctaNote": "Comprend 500 documents/mois, marque personnalisee, acces API",
     "uploadAnother": "Telecharger un autre document",
     "dashboardTitle": "Passez a la version superieure pour telecharger et partager",
     "dashboardSubtitle": "Votre document est protege, mais le telechargement et le partage necessitent un plan Pro ou Enterprise."
@@ -1608,10 +1609,15 @@
     "enterprise": "Entreprise",
     "planWord": "PLAN",
     "price": {
-      "pro": "19$/mois",
-      "proPlus": "12$/siege/mois",
-      "enterprise": "Personnalisé"
-    }
+      "pro": "49$/mois",
+      "enterprise": "Personnalisé",
+      "business": "79$/mois"
+    },
+    "overageLabel": "Depassement",
+    "extraDocs": "Documents supplementaires",
+    "each": "chacun",
+    "perAdditionalDoc": "par document supplementaire",
+    "noOverage": "Pas de frais de depassement"
   },
   "preview": {
     "pvfDocument": "DOCUMENT PVF",

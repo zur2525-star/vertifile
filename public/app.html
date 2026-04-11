@@ -1197,7 +1197,7 @@
     <!-- Plan Badge -->
     <div class="plan-badge" id="planBadge">
       <div class="plan-label" id="planLabel" data-i18n="sidebar.currentPlan">PRO PLAN</div>
-      <div class="plan-usage"><span id="planUsed">0</span> <span data-i18n="sidebar.of">of</span> <span id="planLimit">5</span> <span data-i18n="sidebar.docsUsed">documents used</span></div>
+      <div class="plan-usage"><span id="planUsed">0</span> <span data-i18n="sidebar.of">of</span> <span id="planLimit">500</span> <span data-i18n="sidebar.docsUsed">documents used</span></div>
       <div class="plan-bar"><div class="plan-bar-fill" id="planBarFill" style="width:0%"></div></div>
     </div>
   </nav>
@@ -1234,7 +1234,7 @@
         <div class="stat-icon" style="background:rgba(202,138,4,.08)"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2 4 4-1-1 5 4 1-3 3 3 3H5l3-3-3-3 4-1-1-5 4 1z"/></svg></div>
         <div class="stat-label" data-i18n="tab.overview.yourPlan">Your Plan</div>
         <div class="stat-value" id="statPlanName">Pro</div>
-        <div class="stat-sub" id="statPlanUsage">0/5 documents</div>
+        <div class="stat-sub" id="statPlanUsage">0/500 documents</div>
       </div>
     </div>
 
@@ -1434,7 +1434,7 @@
 
       <!-- Plan & Billing -->
       <div class="card" id="planBilling"><h3 data-i18n="tab.settings.planBilling">Plan &amp; Billing</h3><p class="card-sub" data-i18n="tab.settings.planBillingDesc">Manage your subscription and view usage</p>
-        <div class="plan-current"><div class="pc-name" id="settingsPlanName">Pro</div><div class="pc-price" id="settingsPlanPrice">$19/month</div><div class="pc-usage" id="settingsPlanUsage">0 of 500 documents used</div><div class="plan-bar" style="margin-top:8px"><div class="plan-bar-fill" id="settingsPlanBar" style="width:0%"></div></div></div>
+        <div class="plan-current"><div class="pc-name" id="settingsPlanName">Pro</div><div class="pc-price" id="settingsPlanPrice">$49/month</div><div class="pc-usage" id="settingsPlanUsage">0 of 500 documents used</div><div class="plan-bar" style="margin-top:8px"><div class="plan-bar-fill" id="settingsPlanBar" style="width:0%"></div></div><div class="pc-overage" id="settingsOverageInfo" style="font-size:12px;color:var(--text-2);margin-top:6px">Overage: $0.15 per additional document</div></div>
         <div class="btn-row"><button class="btn btn-secondary" onclick="window.location.href='/pricing'" data-i18n="tab.settings.changePlan">Change Plan</button></div>
       </div>
 
@@ -1525,8 +1525,8 @@
     <div class="paywall-cta">
       <h3 data-i18n="paywall.ctaTitle">Ready to download and share?</h3>
       <p data-i18n="paywall.ctaDesc">Subscribe to Pro to unlock downloading, sharing, and full verification.</p>
-      <a href="/pricing" class="btn-primary" data-i18n="paywall.ctaBtn">Upgrade to Pro — $29/mo</a>
-      <p class="paywall-note" data-i18n="paywall.ctaNote">Includes 100 documents/month, custom branding, API access</p>
+      <a href="/pricing" class="btn-primary" data-i18n="paywall.ctaBtn">Upgrade to Pro -- $49/mo</a>
+      <p class="paywall-note" data-i18n="paywall.ctaNote">Includes 500 documents/month, custom branding, API access</p>
     </div>
   </div>
 </div>
@@ -2579,25 +2579,22 @@ window.Dashboard = {
   updatePlanDisplay: function(){
     if (!currentUser) return;
     var used = currentUser.documentsUsed || documents.length;
-    var limit = currentUser.documentsLimit || 5;
+    var limit = currentUser.documentsLimit || 500;
     var plan = currentUser.plan || 'pro';
     var _tpl = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
     var planNames = {
       pro: _tpl('plan.pro') || 'Pro',
       professional: _tpl('plan.pro') || 'Pro',
       business: _tpl('plan.business') || 'Business',
-      pro_plus: _tpl('plan.proPlus') || 'Pro+',
-      proplus: _tpl('plan.proPlus') || 'Pro+',
       enterprise: _tpl('plan.enterprise') || 'Enterprise'
     };
     var planPrices = {
-      pro: _t('plan.price.pro', '$19/month'),
-      professional: _t('plan.price.pro', '$19/month'),
-      business: _t('plan.price.business', '$12/seat/month'),
-      pro_plus: _t('plan.price.proPlus', '$79/month'),
-      proplus: _t('plan.price.proPlus', '$79/month'),
+      pro: _t('plan.price.pro', '$49/month'),
+      professional: _t('plan.price.pro', '$49/month'),
+      business: _t('plan.price.business', '$79/month'),
       enterprise: _t('plan.price.enterprise', 'Custom')
     };
+    var planOverageRates = { pro: 0.15, professional: 0.15, business: 0.10 };
     var _t = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
     var docsWord = _t('plan.documents') || 'documents';
     var ofWord = _t('sidebar.of') || 'of';
@@ -2620,12 +2617,36 @@ window.Dashboard = {
 
     // Settings plan
     var spn2 = document.getElementById('settingsPlanName'); if(spn2) spn2.textContent = planNames[plan] || 'Pro';
-    var spp = document.getElementById('settingsPlanPrice'); if(spp) spp.textContent = planPrices[plan] || '$19/month';
+    var spp = document.getElementById('settingsPlanPrice'); if(spp) spp.textContent = planPrices[plan] || '$49/month';
     var spu2 = document.getElementById('settingsPlanUsage'); if(spu2) spu2.textContent = usageText + ' ' + usedWord;
     var spb = document.getElementById('settingsPlanBar'); if(spb) spb.style.width = isUnlimited ? '0%' : Math.min((used/limit)*100, 100) + '%';
 
-    // Upload quota
-    var uqi = document.getElementById('uploadQuotaInfo'); if(uqi) uqi.textContent = usageText + ' ' + usedWord + '.';
+    // Upload quota — show overage info when approaching/exceeding limit
+    var uqi = document.getElementById('uploadQuotaInfo');
+    if(uqi) {
+      var overageRate = planOverageRates[plan];
+      if (!isUnlimited && overageRate && used > limit) {
+        var overCount = used - limit;
+        var overCost = (overCount * overageRate).toFixed(2);
+        uqi.textContent = used + '/' + limit + ' ' + docsWord + ' ' + usedWord + '. ' + (_t('plan.overageLabel') || 'Overage') + ': ' + overCount + ' x $' + overageRate.toFixed(2) + ' = $' + overCost;
+      } else if (!isUnlimited && overageRate && used >= limit * 0.9) {
+        uqi.textContent = used + '/' + limit + ' ' + docsWord + ' ' + usedWord + '. ' + (_t('plan.extraDocs') || 'Extra documents') + ': $' + overageRate.toFixed(2) + ' ' + (_t('plan.each') || 'each') + '.';
+      } else {
+        uqi.textContent = usageText + ' ' + usedWord + '.';
+      }
+    }
+    // Overage info in settings
+    var soi = document.getElementById('settingsOverageInfo');
+    if(soi) {
+      var settingsRate = planOverageRates[plan];
+      if (settingsRate) {
+        soi.textContent = (_t('plan.overageLabel') || 'Overage') + ': $' + settingsRate.toFixed(2) + ' ' + (_t('plan.perAdditionalDoc') || 'per additional document');
+        soi.style.display = '';
+      } else {
+        soi.textContent = _t('plan.noOverage') || 'No overage fees';
+        soi.style.display = '';
+      }
+    }
     // Doc count badge
     var dcb = document.getElementById('docCountBadge'); if(dcb) dcb.textContent = documents.length;
 
@@ -3512,7 +3533,7 @@ async function loadApiInfo() {
   // Show user's plan info
   const used = currentUser?.documentsUsed ?? documents.length;
   const plan = currentUser?.plan || 'pro';
-  const limit = currentUser?.documentsLimit || 500;
+  const limit = currentUser?.documentsLimit || (plan === 'business' ? 1000 : 500);
   var _ta = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
   var _apiPlanNames = {
     pro: _ta('plan.pro') || 'Pro',

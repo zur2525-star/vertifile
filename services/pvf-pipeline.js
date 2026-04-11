@@ -513,6 +513,9 @@ async function createPvf(opts) {
       await db.markDocumentPreviewOnly(fileHash, true);
       preview = true;
     }
+    // Note: No hard document limit enforcement here. Overage is tracked
+    // at the route layer and billed automatically. The pipeline never
+    // blocks document creation based on quota.
   }
 
   // -----------------------------------------------------------------
@@ -1026,6 +1029,9 @@ async function createPvfEncrypted(opts) {
       await db.markDocumentPreviewOnly(fileHash, true);
       preview = true;
     }
+    // Note: No hard document limit enforcement here. Overage is tracked
+    // at the route layer and billed automatically. The pipeline never
+    // blocks document creation based on quota.
   }
 
   // -----------------------------------------------------------------

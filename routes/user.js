@@ -124,10 +124,9 @@ router.post('/upload', requireLogin, uploadLimiter, (req, res, next) => {
     const db = req.app.get('db');
 
     if (req.file) fixFilename(req.file);
-    // Check document limit (preserved from legacy)
-    if (req.user.documents_used >= req.user.documents_limit) {
-      return res.status(403).json({ success: false, error: 'Document limit reached. Upgrade your plan for more.' });
-    }
+    // Overage tracking — never block uploads, charge overage instead
+    const overLimit = req.user.documents_used >= req.user.documents_limit;
+    const overageFlag = overLimit && req.user.plan !== 'enterprise';
     if (!req.file) {
       return res.status(400).json({ success: false, error: 'No file uploaded' });
     }
@@ -175,7 +174,8 @@ router.post('/upload', requireLogin, uploadLimiter, (req, res, next) => {
         message: 'Document protected! Subscribe to download.',
         upgradeUrl: '/pricing',
         documentsUsed: req.user.documents_used + 1,
-        documentsLimit: req.user.documents_limit
+        documentsLimit: req.user.documents_limit,
+        overage: overageFlag
       });
     }
 
@@ -185,7 +185,8 @@ router.post('/upload', requireLogin, uploadLimiter, (req, res, next) => {
       shareId: result.shareId,
       fileName: req.file.originalname,
       documentsUsed: req.user.documents_used + 1,
-      documentsLimit: req.user.documents_limit
+      documentsLimit: req.user.documents_limit,
+      overage: overageFlag
     });
   } catch(e) {
     logger.error('[USER UPLOAD]', e.message);
@@ -217,10 +218,9 @@ router.post('/upload-encrypted', requireLogin, uploadLimiter, (req, res, next) =
   try {
     const db = req.app.get('db');
 
-    // Check document limit
-    if (req.user.documents_used >= req.user.documents_limit) {
-      return res.status(403).json({ success: false, error: 'Document limit reached. Upgrade your plan for more.' });
-    }
+    // Overage tracking — never block uploads, charge overage instead
+    const encOverLimit = req.user.documents_used >= req.user.documents_limit;
+    const encOverageFlag = encOverLimit && req.user.plan !== 'enterprise';
     if (!req.file) {
       return res.status(400).json({ success: false, error: 'No file uploaded' });
     }
@@ -301,7 +301,8 @@ router.post('/upload-encrypted', requireLogin, uploadLimiter, (req, res, next) =
         message: 'Document protected! Subscribe to download.',
         upgradeUrl: '/pricing',
         documentsUsed: req.user.documents_used + 1,
-        documentsLimit: req.user.documents_limit
+        documentsLimit: req.user.documents_limit,
+        overage: encOverageFlag
       });
     }
 
@@ -313,7 +314,8 @@ router.post('/upload-encrypted', requireLogin, uploadLimiter, (req, res, next) =
       shareUrl: '/d/' + result.slug,
       fileName: (req.body.originalName || req.file.originalname || 'document').replace(/\.[^.]+$/, '') + '.pvf',
       documentsUsed: req.user.documents_used + 1,
-      documentsLimit: req.user.documents_limit
+      documentsLimit: req.user.documents_limit,
+      overage: encOverageFlag
     });
   } catch (e) {
     logger.error('[ENCRYPTED UPLOAD]', e.message);
@@ -333,10 +335,9 @@ async function uploadLegacy(req, res) {
     const db = req.app.get('db');
 
     if (req.file) fixFilename(req.file);
-    // Check document limit
-    if (req.user.documents_used >= req.user.documents_limit) {
-      return res.status(403).json({ success: false, error: 'Document limit reached. Upgrade your plan for more.' });
-    }
+    // Overage tracking — never block uploads, charge overage instead
+    const legacyOverLimit = req.user.documents_used >= req.user.documents_limit;
+    const legacyOverageFlag = legacyOverLimit && req.user.plan !== 'enterprise';
     // Reuse existing PVF creation logic - set req.org for handleCreatePvf
     req.org = { orgId: 'user_' + req.user.id, orgName: req.user.name || req.user.email.split('@')[0] };
     const file = req.file;
@@ -430,7 +431,8 @@ async function uploadLegacy(req, res) {
         message: 'Document protected! Subscribe to download.',
         upgradeUrl: '/pricing',
         documentsUsed: req.user.documents_used + 1,
-        documentsLimit: req.user.documents_limit
+        documentsLimit: req.user.documents_limit,
+        overage: legacyOverageFlag
       });
     }
 
@@ -440,7 +442,8 @@ async function uploadLegacy(req, res) {
       shareId,
       fileName: file.originalname,
       documentsUsed: req.user.documents_used + 1,
-      documentsLimit: req.user.documents_limit
+      documentsLimit: req.user.documents_limit,
+      overage: legacyOverageFlag
     });
   } catch(e) {
     logger.error('[USER UPLOAD]', e.message);

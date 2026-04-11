@@ -76,9 +76,12 @@ Your .pvf files remain functional — they're self-contained HTML documents. Blo
 ## Pricing
 
 **How much does it cost?**
-- Pro: $19/month — 500 documents/month, custom branding, 1-year audit trail, API access
-- Business: $12/seat/month (5-seat min) — unlimited documents, team accounts, SSO, custom domain
-- Enterprise: Custom pricing — unlimited documents, white-label, on-prem, dedicated CSM
+- Pro: $49/month -- 500 documents/month, custom branding, 1-year audit trail, API access. Overage: $0.15/doc
+- Business: $79/month -- 1,000 documents/month, team accounts, SSO, custom domain. Overage: $0.10/doc
+- Enterprise: Custom pricing -- unlimited documents, no overage, white-label, on-prem, dedicated CSM
+
+**What happens if I exceed my document limit?**
+Your workflow never stops. Extra documents beyond your plan limit are automatically billed at the overage rate (Pro: $0.15/doc, Business: $0.10/doc). Enterprise plans have unlimited documents with no overage.
 
 ---
 

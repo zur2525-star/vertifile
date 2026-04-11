@@ -170,8 +170,10 @@ const _ready = (async () => {
   try { await pool.query('ALTER TABLE documents ADD COLUMN pvf_content TEXT'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE documents ADD COLUMN code_integrity TEXT'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE documents ADD COLUMN chained_token TEXT'); } catch (_) { /* already exists */ }
-  // Migrate legacy free plan users to pro
+  // Migrate legacy free plan users to pro (no free plan exists)
   try { await pool.query("UPDATE users SET plan = 'pro', documents_limit = 500 WHERE plan = 'free'"); } catch (_) { /* ok */ }
+  // Migrate business plan users to new 1000-doc limit
+  try { await pool.query("UPDATE users SET documents_limit = 1000 WHERE plan = 'business' AND documents_limit < 1000"); } catch (_) { /* ok */ }
   // Performance indexes
   try { await pool.query('CREATE INDEX IF NOT EXISTS idx_docs_user_id ON documents(user_id)'); } catch (_) { /* already exists */ }
   try { await pool.query('CREATE INDEX IF NOT EXISTS idx_users_provider ON users(provider, provider_id)'); } catch (_) { /* already exists */ }

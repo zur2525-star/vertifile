@@ -1106,8 +1106,6 @@
     "heroTitle2": "Preise",
     "heroSubtitle": "Starten Sie kostenlos. Skalieren Sie mit Ihrem Wachstum. Keine versteckten Gebuehren, keine Ueberraschungen.",
     "perMonth": "Monat",
-    "perSeat": "Platz/Monat",
-    "seatMin": "Mindestens 5 Plaetze",
     "recommended": "Am beliebtesten",
     "proName": "Pro",
     "proDesc": "Fuer Profis und Freiberufler, die ihr eigenes Branding benoetigen.",
@@ -1119,7 +1117,7 @@
     "proCta": "Pro starten",
     "businessName": "Business",
     "businessDesc": "Fuer Teams und Organisationen, die gemeinsame Workflows benoetigen.",
-    "bizF1": "Unbegrenzte Dokumente",
+    "bizF1": "1.000 Dokumente/Monat",
     "bizF2": "Team-Verwaltung",
     "bizF3": "Individuelles Branding",
     "bizF4": "Dedizierter Account-Manager",
@@ -1139,17 +1137,20 @@
     "faqTitle": "Haeufig gestellte Fragen",
     "faqSubtitle": "Alles, was Sie ueber Vertifile-Preise und -Plaene wissen muessen.",
     "faq1q": "Kann ich es vor dem Kauf testen?",
-    "faq1a": "Auf jeden Fall! Unser kostenloser Plan ermoeglicht bis zu 25 Dokumente pro Monat, mit unbegrenztem Download, Teilen und Verifizieren -- kostenlos. Der Stempel traegt das Vertifile-Branding im kostenlosen Plan. Upgraden Sie auf Pro oder Business fuer individuelles Branding und hoehere Limits.",
+    "faq1a": "Ja! Jeder Pro-Plan beinhaltet eine 14-taegige Testphase. Keine Kreditkarte erforderlich. Upgraden Sie auf Business fuer 1.000 Dokumente/Monat und Teamfunktionen.",
     "faq2q": "Welche Dateitypen werden unterstuetzt?",
     "faq2a": "Vertifile unterstuetzt PDF-, JPEG-, PNG- und Textdateien. Jedes Dokument wird in eine manipulationssichere .pvf-Datei umgewandelt.",
     "faq3q": "Wie funktioniert die Abrechnung?",
-    "faq3a": "Kostenlos ist immer kostenlos. Pro (19$/Monat) und Business (12$/Platz/Monat) werden monatlich oder jaehrlich (17% Rabatt) abgerechnet. Jederzeit kuendbar, ohne Gebuehren. Enterprise-Plaene werden jaehrlich mit individuellen Konditionen abgerechnet.",
+    "faq3a": "Pro ($49/Monat) beinhaltet 500 Dokumente mit $0.15/Dok. Zusatzkosten. Business ($79/Monat) beinhaltet 1.000 Dokumente mit $0.10/Dok. Zusatzkosten. Enterprise mit individueller Preisgestaltung und unbegrenzten Dokumenten. Jederzeit kuendbar, keine Gebuehren.",
     "faq4q": "Kann ich jederzeit upgraden oder downgraden?",
     "faq4a": "Ja! Sie koennen Ihren Plan jederzeit in Ihren Kontoeinstellungen aendern. Aenderungen treten zu Beginn des naechsten Abrechnungszyklus in Kraft.",
     "faq5q": "Sind meine Daten sicher?",
     "faq5a": "Sicherheit hat bei uns hoechste Prioritaet. Vertifile verwendet Blindverarbeitung, d.h. wir lesen oder speichern niemals Ihre Dokumenteninhalte.",
     "bottomCtaTitle": "Bereit, Ihre Dokumente zu schuetzen?",
-    "bottomCtaSubtitle": "Beginnen Sie noch heute, Ihre Dokumente mit Vertifile zu schuetzen."
+    "bottomCtaSubtitle": "Beginnen Sie noch heute, Ihre Dokumente mit Vertifile zu schuetzen.",
+    "proOverage": "Zusatzkosten: $0.15 pro zusaetzliches Dokument",
+    "bizOverage": "Zusatzkosten: $0.10 pro zusaetzliches Dokument",
+    "overageExplanation": "Limit ueberschritten? Kein Problem -- zusaetzliche Dokumente werden zum Zusatztarif abgerechnet. Ihr Workflow stoppt nie."
   },
   "faq": {
     "heroTitle": "Haeufig gestellte Fragen",
@@ -1193,7 +1194,7 @@
       "layers": "SHA-256-Hash (Dokument-Fingerabdruck), HMAC-SHA256-Signatur (serverseitig signiert), 5-Minuten-Token-Aktualisierung, Code-Integritaets-Hash, verketteter Token (bindet alle Parameter), Anti-DevTools-Erkennung, JavaScript-Verschleierung, holografischer animierter Stempel, Polygon-Blockchain-Verankerung.",
       "dataStored": "Kryptografische Hashes werden auf Cloud-Infrastruktur in den USA/EU gespeichert (Render + Neon PostgreSQL). Dokumentinhalte werden niemals auf unseren Servern gespeichert. Blockchain-Eintraege befinden sich auf Polygon (dezentralisiert).",
       "shutdown": "Ihre .pvf-Dateien bleiben funktionsfaehig — sie sind eigenstaendige HTML-Dokumente. Blockchain-Eintraege auf Polygon bleiben dauerhaft zugaenglich. Wir verpflichten uns zu einer 90-taegigen Vorankaendigung.",
-      "cost": "Kostenlos: $0/Monat -- 25 Dokumente, Download, Teilen und Verifizieren inklusive. Pro: $19/Monat -- 500 Dokumente, eigenes Branding. Business: $12/Platz/Monat -- unbegrenzte Dokumente, Teamverwaltung. Enterprise: individuelle Preise.",
+      "cost": "Pro: $49/Monat -- 500 Dokumente, $0.15/Dok. Zusatzkosten. Business: $79/Monat -- 1.000 Dokumente, $0.10/Dok. Zusatzkosten. Enterprise: individuelle Preise, unbegrenzte Dokumente.",
       "trial": "Ja! Der kostenlose Plan erlaubt bis zu 25 Dokumente pro Monat, mit Download, Teilen und Verifizieren kostenlos.",
       "cancel": "Ja. Keine langfristigen Vertraege. Kuendigen Sie jederzeit ueber Ihr Dashboard.",
       "formats": "PDF, PNG, JPG/JPEG, TXT. Bis zu 50 MB pro Datei.",
@@ -1214,8 +1215,8 @@
     "watermark": "VORSCHAU\nAbonnieren zum Freischalten",
     "ctaTitle": "Bereit zum Herunterladen und Teilen?",
     "ctaDesc": "Abonnieren Sie Pro, um Downloads, Teilen und vollstandige Verifizierung freizuschalten.",
-    "ctaBtn": "Auf Pro upgraden — $19/Monat",
-    "ctaNote": "Beinhaltet 100 Dokumente/Monat, eigenes Branding, API-Zugang",
+    "ctaBtn": "Auf Pro upgraden -- $49/Monat",
+    "ctaNote": "Beinhaltet 500 Dokumente/Monat, eigenes Branding, API-Zugang",
     "uploadAnother": "Ein weiteres Dokument hochladen",
     "dashboardTitle": "Upgraden Sie zum Herunterladen und Teilen",
     "dashboardSubtitle": "Ihr Dokument ist geschutzt, aber zum Herunterladen und Teilen ist ein Pro- oder Enterprise-Plan erforderlich."
@@ -1608,10 +1609,15 @@
     "enterprise": "Unternehmen",
     "planWord": "PLAN",
     "price": {
-      "pro": "$19/Monat",
-      "proPlus": "$12/Platz/Monat",
-      "enterprise": "Individuell"
-    }
+      "pro": "$49/Monat",
+      "enterprise": "Individuell",
+      "business": "$79/Monat"
+    },
+    "overageLabel": "Zusatzkosten",
+    "extraDocs": "Zusaetzliche Dokumente",
+    "each": "pro Stueck",
+    "perAdditionalDoc": "pro zusaetzliches Dokument",
+    "noOverage": "Keine Zusatzkosten"
   },
   "preview": {
     "pvfDocument": "PVF-DOKUMENT",

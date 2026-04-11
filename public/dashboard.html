@@ -920,8 +920,8 @@ body.light .shortcuts-card{background:#fff}
 
     <!-- Plan & Billing -->
     <div class="card" id="planBilling"><h3>Plan &amp; Billing</h3><p class="card-sub">Manage your subscription and view usage</p>
-      <div class="plan-current"><div class="pc-name">Pro</div><div class="pc-price">$29/month</div><div class="pc-usage">3 of 100 documents used this month</div><div class="plan-bar" style="margin-top:8px"><div class="plan-bar-fill" style="width:3%"></div></div></div>
-      <ul class="plan-features"><li>Up to 100 documents per month</li><li>Custom stamp branding</li><li>Share links with tracking</li><li>Email notifications</li><li>Priority support</li></ul>
+      <div class="plan-current"><div class="pc-name">Pro</div><div class="pc-price">$49/month</div><div class="pc-usage">3 of 500 documents used this month</div><div class="plan-bar" style="margin-top:8px"><div class="plan-bar-fill" style="width:0.6%"></div></div></div>
+      <ul class="plan-features"><li>500 documents/month ($0.15/doc overage)</li><li>Custom stamp branding</li><li>Share links with tracking</li><li>Email notifications</li><li>Priority support</li></ul>
       <div class="btn-row"><button class="btn btn-secondary">Change Plan</button><span style="font-size:12px;color:#dc2626;cursor:pointer;align-self:center;margin-left:8px">Cancel Plan</span></div>
     </div>
 
@@ -1318,7 +1318,7 @@ body.light .shortcuts-card{background:#fff}
     checkDeleteEmail: function(){
       var v = document.getElementById('daEmailInput').value.trim();
       var btn = document.getElementById('daStep2Btn');
-      var match = v === 'zur2525@gmail.com';
+      var match = currentUser && v === currentUser.email;
       btn.disabled = !match;
       btn.style.opacity = match ? '1' : '.5';
     },
