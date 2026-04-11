@@ -1032,8 +1032,8 @@
 
       <div class="login-divider" data-i18n="app.or">or</div>
 
-      <input type="email" class="login-input" id="loginEmail" placeholder="Email address" data-i18n-placeholder="app.emailPlaceholder">
-      <input type="password" class="login-input" id="loginPassword" placeholder="Password" data-i18n-placeholder="app.passwordPlaceholder">
+      <input type="email" class="login-input" id="loginEmail" placeholder="Email address" data-i18n-placeholder="app.emailPlaceholder" aria-label="Email address" autocomplete="email">
+      <input type="password" class="login-input" id="loginPassword" placeholder="Password" data-i18n-placeholder="app.passwordPlaceholder" aria-label="Password" autocomplete="current-password">
       <a href="#" onclick="showForgotPassword(event)" style="display:block;text-align:right;font-size:13px;color:#a78bfa;margin:-8px 0 12px;text-decoration:none;" data-i18n="app.forgotPassword">Forgot password?</a>
       <button class="login-submit" onclick="doLogin()" data-i18n="app.signInBtn">Sign In</button>
 
@@ -1053,9 +1053,9 @@
 
       <div class="login-divider" data-i18n="app.or">or</div>
 
-      <input type="text" class="login-input" id="regName" placeholder="Full name" data-i18n-placeholder="app.namePlaceholder">
-      <input type="email" class="login-input" id="regEmail" placeholder="Email address" data-i18n-placeholder="app.emailPlaceholder">
-      <input type="password" class="login-input" id="regPassword" placeholder="Password (min 8 characters)" data-i18n-placeholder="app.passwordMinPlaceholder" onkeydown="if(event.key==='Enter')doRegister()">
+      <input type="text" class="login-input" id="regName" placeholder="Full name" data-i18n-placeholder="app.namePlaceholder" aria-label="Full name" autocomplete="name">
+      <input type="email" class="login-input" id="regEmail" placeholder="Email address" data-i18n-placeholder="app.emailPlaceholder" aria-label="Email address" autocomplete="email">
+      <input type="password" class="login-input" id="regPassword" placeholder="Password (min 8 characters)" data-i18n-placeholder="app.passwordMinPlaceholder" aria-label="Password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()">
       <button class="login-submit" onclick="doRegister()" data-i18n="app.createAccountBtn">Create Account</button>
 
       <div class="login-error" id="regError">Registration failed</div>
@@ -1422,12 +1422,12 @@
 
       <!-- Security -->
       <div class="card"><h3>Security</h3><p class="card-sub">Manage your password and security settings</p>
-        <label class="form-label">Current Password</label><input type="password" class="form-input" id="currentPassword" placeholder="Enter current password">
-        <label class="form-label">New Password</label><input type="password" class="form-input" id="newPassword" placeholder="Enter new password" oninput="Dashboard.checkPasswordStrength(this.value)">
+        <label class="form-label" for="currentPassword">Current Password</label><input type="password" class="form-input" id="currentPassword" placeholder="Enter current password" autocomplete="current-password">
+        <label class="form-label" for="newPassword">New Password</label><input type="password" class="form-input" id="newPassword" placeholder="Enter new password" autocomplete="new-password" oninput="Dashboard.checkPasswordStrength(this.value)">
         <p class="password-requirements">Password must be at least 8 characters, with one uppercase letter, one number, and one special character.</p>
         <div class="strength-bar" id="strengthBar"><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
         <div class="strength-label" id="strengthLabel"></div>
-        <label class="form-label">Confirm New Password</label><input type="password" class="form-input" id="confirmPassword" placeholder="Confirm new password">
+        <label class="form-label" for="confirmPassword">Confirm New Password</label><input type="password" class="form-input" id="confirmPassword" placeholder="Confirm new password" autocomplete="new-password">
         <div class="btn-row"><button class="btn btn-primary" onclick="changePassword()">Update Password</button></div>
       </div>
 
