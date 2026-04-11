@@ -1318,7 +1318,7 @@
     <div class="docs-toolbar">
       <input type="text" class="filter-input" id="docFilterInput" placeholder="Filter documents..." data-i18n-placeholder="tab.documents.filter" aria-label="Filter documents" oninput="Dashboard.filterDocs()">
       <select aria-label="Sort order" id="docSortSelect" onchange="Dashboard.filterDocs()"><option value="newest" data-i18n="tab.documents.newest">Newest</option><option value="oldest" data-i18n="tab.documents.oldest">Oldest</option><option value="name" data-i18n="tab.documents.nameAZ">Name A-Z</option></select>
-      <div class="view-toggle"><button id="viewGrid" aria-label="Grid view" onclick="Dashboard.setView('grid')"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button><button class="active" id="viewList" aria-label="List view" onclick="Dashboard.setView('list')"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button></div>
+      <div class="view-toggle"><button class="active" id="viewList" aria-label="List view" onclick="Dashboard.setView('list')"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button><button id="viewGrid" aria-label="Grid view" onclick="Dashboard.setView('grid')"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button><button class="active" id="viewList" aria-label="List view" onclick="Dashboard.setView('list')"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button></div>
     </div>
     <div class="bulk-bar" id="bulkBar"><span id="bulkCount">0 selected</span><button class="btn btn-secondary" style="padding:6px 14px;font-size:12px"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download All</button><button class="btn btn-danger" style="padding:6px 14px;font-size:12px" onclick="Dashboard.showDeleteModal()"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg> Delete</button><button class="bulk-deselect" onclick="Dashboard.deselectAll()">Deselect</button></div>
 
@@ -2251,14 +2251,27 @@ window.Dashboard = {
       // export window.applyTranslations, and call it on the #docPreview subtree after innerHTML.
       var openCtaSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
       var isEncDoc = selectedDoc.encrypted === true;
-      var ctaHtml = isEncDoc
-        ? '<div class="dpc-cta-encrypted">' +
+      var savedKey = null;
+      if (isEncDoc) {
+        try { savedKey = localStorage.getItem('vf_key_' + (selectedDoc.slug || shareId)); } catch(e) {}
+      }
+      var ctaHtml;
+      if (isEncDoc && savedKey) {
+        // This browser has the key — show normal "Open document" link with full URL
+        var fullUrl = '/d/' + escHtml(selectedDoc.slug || shareId) + '#key=' + savedKey;
+        ctaHtml = '<a class="dpc-cta" href="' + fullUrl + '" target="_blank" rel="noopener">' + openCtaSvg + '<span>Open document</span></a>';
+      } else if (isEncDoc) {
+        // Different browser — no key available
+        ctaHtml = '<div class="dpc-cta-encrypted">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;vertical-align:-3px;margin-inline-end:6px;opacity:.7"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>' +
             '<span>\u05DE\u05E1\u05DE\u05DA \u05DE\u05D5\u05E6\u05E4\u05DF \u2014 \u05D4\u05E9\u05EA\u05DE\u05E9 \u05D1\u05E7\u05D9\u05E9\u05D5\u05E8 \u05D4\u05E9\u05D9\u05EA\u05D5\u05E3</span>' +
-          '</div>'
-        : shareId
+          '</div>';
+      } else {
+        // Normal non-encrypted doc
+        ctaHtml = shareId
           ? '<a class="dpc-cta" href="/d/' + escHtml(shareId) + '" target="_blank" rel="noopener">' + openCtaSvg + '<span>Open document</span></a>'
           : '';
+      }
 
       previewEl.innerHTML =
         '<div class="doc-preview-card" role="group" aria-label="Document preview">' +
@@ -3160,6 +3173,11 @@ async function handleUploadFile(file) {
     var fullShareUrl = keyFragment
       ? (window.location.origin + '/d/' + encodeURIComponent(identifier) + '#key=' + keyFragment)
       : '';
+
+    // Save key locally so this browser can reopen the document from dashboard
+    if (keyFragment && identifier) {
+      try { localStorage.setItem('vf_key_' + identifier, keyFragment); } catch(e) {}
+    }
 
     if (actions) {
       // Success row with checkmark
