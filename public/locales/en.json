@@ -219,7 +219,8 @@
     "backToMainSite": "Back to main site",
     "builtWithPrivacy": "Built with privacy in mind",
     "enterpriseDocProtection": "Enterprise Document Protection",
-    "enterprise": "Enterprise"
+    "enterprise": "Enterprise",
+    "helpCenter": "Help Center"
   },
   "upload": {
     "pageTitle": "Vertifile — Secure Document Issuance",
@@ -1340,5 +1341,53 @@
     "after3": "Dual signature detects any change instantly",
     "after4": "The encryption key never leaves the browser",
     "after5": "Even in a breach — there is nothing to steal"
+  },
+  "support": {
+    "breadcrumb": "Help Center",
+    "heroTitle": "Help Center",
+    "heroSub": "Find answers, guides, and resources to help you get the most out of Vertifile document protection.",
+    "searchPlaceholder": "Search for help topics...",
+    "quickLinksTitle": "Quick Links",
+    "quickLinksSub": "Jump straight to what you need.",
+    "cardStartTitle": "Getting Started",
+    "cardStartDesc": "Set up your account and protect your first document.",
+    "cardFaqTitle": "FAQ",
+    "cardFaqDesc": "Answers to the most common questions.",
+    "cardContactTitle": "Contact Us",
+    "cardContactDesc": "Reach our team for personalized help.",
+    "cardApiTitle": "API Documentation",
+    "cardApiDesc": "Integrate Vertifile into your workflow.",
+    "topicsTitle": "Common Topics",
+    "topicsSub": "Browse our most popular help articles.",
+    "topic1q": "How to upload and protect a document",
+    "topic1a": "Go to <a href=\"/upload\">Upload</a>, sign in to your account, then drag and drop your file (PDF, image, or text). The system will compute a cryptographic fingerprint, embed a holographic stamp, and generate your .pvf file in seconds. You can then download or share the protected document.",
+    "topic2q": "Understanding your PVF stamp",
+    "topic2a": "The PVF stamp is an animated holographic element embedded in every protected document. When the stamp rotates with green waves, the document is verified as authentic. If the stamp freezes and turns red, it means the document has been tampered with. Learn more on our <a href=\"/demo\">demo page</a>.",
+    "topic3q": "Customizing your stamp (logo, colors, waves)",
+    "topic3a": "Pro and Enterprise users can customize the verification stamp with their organization's logo, brand colors, and wave patterns. Go to your <a href=\"/app\">Dashboard</a> and navigate to the \"My Stamp\" section to configure your branding. Changes apply to all future documents automatically.",
+    "topic4q": "Sharing encrypted documents (Zero-Knowledge)",
+    "topic4a": "Vertifile uses BLIND processing, meaning the server never reads or stores your document content. When you share a .pvf file, only the cryptographic fingerprint is verified server-side. The document content remains encrypted and visible only to the recipient who opens the file in their browser.",
+    "topic5q": "Verifying a document's authenticity",
+    "topic5a": "To verify a document, go to <a href=\"/verify\">Verify</a> and drag the .pvf file into the upload zone. The system will check the cryptographic signature against the blockchain registry. A green spinning stamp means authentic; a frozen red stamp means the document was tampered with.",
+    "topic6q": "Managing your account and settings",
+    "topic6a": "Access your account settings from the <a href=\"/app\">Dashboard</a>. You can update your profile, change your password, manage your subscription plan, view usage statistics, and configure API keys. Enterprise users can also manage team members and organization settings.",
+    "topic7q": "API integration guide",
+    "topic7a": "Integrate Vertifile into your application using our REST API. Send a POST request to /api/create-pvf with your API key and file to protect. See the full <a href=\"/integration\">API documentation</a> for endpoints, authentication, rate limits, and code examples.",
+    "ctaTitle": "Still need help?",
+    "ctaDesc": "Our team is here to help. Reach out via email or our contact form and we will get back to you within 24 hours.",
+    "ctaContact": "Contact Us",
+    "ctaFaq": "Browse FAQ"
+  },
+  "resetPassword": {
+    "title": "Set New Password",
+    "subtitle": "Enter your new password below.",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "rules": "At least 8 characters, one uppercase, one lowercase, one digit, one special character.",
+    "submit": "Reset Password",
+    "backToLogin": "Back to Sign In",
+    "successTitle": "Password Updated",
+    "successDesc": "Your password has been reset successfully. You can now sign in with your new password.",
+    "signIn": "Sign In"
   }
 }

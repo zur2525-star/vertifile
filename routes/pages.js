@@ -69,6 +69,14 @@ router.get('/pricing', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'pricing.html'));
 });
 
+router.get('/support', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'support.html'));
+});
+
+router.get('/reset-password', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'reset-password.html'));
+});
+
 router.get('/blog', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'blog.html'));
 });

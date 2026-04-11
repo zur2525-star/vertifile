@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const passport = require('passport');
 const logger = require('../services/logger');
+const { sendPasswordResetEmail } = require('../services/email');
 const rateLimit = require('express-rate-limit');
 const { authLimiter, signupLimiter, getClientIP } = require('../middleware/auth');
 const requireAuth = require('../middleware/requireAuth');
@@ -309,11 +310,11 @@ router.post('/forgot-password', forgotPasswordLimiter, async (req, res) => {
     const expires = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
     await db.saveResetToken(user.id, token, expires);
 
-    const resetUrl = `${req.protocol}://${req.get('host')}/app?reset=${token}`;
-    logger.info({ email, resetUrl }, 'Password reset requested');
+    const resetUrl = `${req.protocol}://${req.get('host')}/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
+    logger.info({ email }, 'Password reset requested');
 
-    // TODO: send email via email service
-    // await emailService.sendResetEmail(email, resetUrl);
+    // Send password reset email (fails gracefully if SMTP not configured)
+    await sendPasswordResetEmail(email, resetUrl, 30);
 
     await db.log('password_reset_requested', { email });
 

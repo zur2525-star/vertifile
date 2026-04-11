@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Center — Vertifile Document Verification</title>
+  <meta name="description" content="Vertifile Help Center — find guides on uploading documents, understanding PVF stamps, customizing branding, sharing encrypted files, API integration, and more.">
+  <meta name="keywords" content="vertifile help, vertifile support, pvf guide, document verification help, vertifile FAQ">
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <meta property="og:title" content="Help Center — Vertifile">
+  <meta property="og:description" content="Find guides and answers about Vertifile document protection, PVF stamps, API integration, and account management.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vertifile.com/support">
+  <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
+  <link rel="canonical" href="https://vertifile.com/support">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Help Center — Vertifile">
+  <meta name="twitter:description" content="Find guides and answers about Vertifile document protection, PVF stamps, API integration, and account management.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;overflow-x:hidden}
+    body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden}
+    [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
+    a{text-decoration:none;color:inherit}
+
+    /* ===== NAVBAR ===== */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:100%;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo img{height:28px}
+    .nav-center{display:flex;gap:28px;position:absolute;left:50%;transform:translateX(-50%)}
+    .nav-center a{font-size:14px;font-weight:500;color:#374151;text-decoration:none;transition:.2s}
+    .nav-center a:hover{color:#7c3aed}
+    [dir="rtl"] .nav-center{direction:rtl}
+    .nav-actions{display:flex;align-items:center;gap:12px}
+    .nav-user{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.25);background:transparent;cursor:pointer;transition:.2s;text-decoration:none;color:#6b7280}
+    .nav-user:hover{border-color:rgba(124,58,237,.5);color:#7c3aed;background:rgba(124,58,237,.05)}
+    .nav-user svg{width:18px;height:18px}
+    .nav-verify{font-size:13px;font-weight:500;color:#4f46e5;text-decoration:none}
+    .nav-cta{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
+    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.3)}
+    .lang-btn{display:flex;align-items:center;gap:5px;cursor:pointer;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#4b5563;border:1px solid rgba(0,0,0,.12);background:transparent;position:relative;transition:.2s}
+    .lang-btn:hover{border-color:rgba(0,0,0,.3);color:#111827}
+    .lang-btn svg{width:16px;height:16px}
+    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.1);min-width:160px;padding:4px 0;display:none;z-index:100}
+    [dir="rtl"] .lang-dropdown{right:auto;left:0}
+    .lang-dropdown.show{display:block}
+    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:#4b5563;transition:.15s}
+    .lang-dropdown a:hover{background:rgba(0,0,0,.03);color:#111827}
+    .lang-dropdown a.active{color:#7c3aed;font-weight:600}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px}
+    .hamburger span{display:block;width:20px;height:2px;background:#111827;margin:4px 0;border-radius:2px}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;border-bottom:1px solid rgba(0,0,0,.06);padding:16px 24px;z-index:999;flex-direction:column;gap:12px}
+    .mobile-menu.show{display:flex}
+    .mobile-menu a{font-size:15px;color:#374151;text-decoration:none;padding:8px 0}
+    .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06)}
+    @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
+
+    /* ===== HERO ===== */
+    .hero{padding:140px 60px 80px;position:relative;overflow:hidden;background:linear-gradient(180deg,#1e1b4b 0%,#312e81 30%,#4c1d95 60%,#5b21b6 80%,#6d28d9 100%)}
+    .hero-bg{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
+    .hero-bg .glow-1{position:absolute;top:-15%;left:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(139,92,246,.25),transparent 70%);filter:blur(80px)}
+    .hero-bg .glow-2{position:absolute;bottom:-25%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(168,85,247,.18),transparent 70%);filter:blur(80px)}
+    .hero-content{max-width:800px;margin:0 auto;text-align:center;position:relative;z-index:1}
+    .hero h1{font-size:48px;font-weight:900;color:#ffffff;line-height:1.1;margin-bottom:20px;letter-spacing:-2px}
+    .hero h1 .gradient{background:linear-gradient(135deg,#c4b5fd,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p.sub{font-size:18px;color:rgba(196,181,253,.8);line-height:1.8;max-width:600px;margin:0 auto 32px;font-weight:400}
+    @media(max-width:900px){.hero{padding:120px 24px 60px}.hero h1{font-size:36px}}
+    @media(max-width:600px){.hero{padding:100px 20px 50px}.hero h1{font-size:28px;letter-spacing:-1px}.hero p.sub{font-size:15px}}
+
+    /* ===== SEARCH BAR ===== */
+    .search-wrap{max-width:520px;margin:0 auto;position:relative}
+    .search-wrap input{width:100%;padding:16px 20px 16px 50px;border:2px solid rgba(255,255,255,.15);border-radius:14px;background:rgba(255,255,255,.08);backdrop-filter:blur(12px);font-size:15px;color:#fff;font-family:inherit;outline:none;transition:.3s}
+    .search-wrap input::placeholder{color:rgba(196,181,253,.5)}
+    .search-wrap input:focus{border-color:rgba(167,139,250,.5);background:rgba(255,255,255,.12)}
+    .search-wrap svg{position:absolute;left:18px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:rgba(196,181,253,.5);pointer-events:none}
+    [dir="rtl"] .search-wrap svg{left:auto;right:18px}
+    [dir="rtl"] .search-wrap input{padding:16px 50px 16px 20px}
+
+    /* ===== QUICK LINKS ===== */
+    .quick-links{padding:80px 32px;max-width:1000px;margin:0 auto}
+    .quick-links .section-title{text-align:center;font-size:28px;font-weight:800;color:#1e1b4b;margin-bottom:12px;letter-spacing:-.5px}
+    .quick-links .section-sub{text-align:center;font-size:15px;color:#6b7280;margin-bottom:48px}
+    .links-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+    .link-card{background:#fff;border:1px solid rgba(124,58,237,.1);border-radius:18px;padding:32px 24px;text-align:center;transition:.3s;cursor:pointer;text-decoration:none;display:block}
+    .link-card:hover{border-color:rgba(124,58,237,.25);transform:translateY(-4px);box-shadow:0 12px 40px rgba(124,58,237,.08)}
+    .link-card .card-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+    .link-card .card-icon svg{width:26px;height:26px}
+    .link-card .card-icon.start{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2)}
+    .link-card .card-icon.start svg{color:#34d399}
+    .link-card .card-icon.faq{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.15)}
+    .link-card .card-icon.faq svg{color:#a78bfa}
+    .link-card .card-icon.contact{background:rgba(79,70,229,.08);border:1px solid rgba(79,70,229,.15)}
+    .link-card .card-icon.contact svg{color:#818cf8}
+    .link-card .card-icon.api{background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.15)}
+    .link-card .card-icon.api svg{color:#22d3ee}
+    .link-card h3{font-size:16px;font-weight:700;color:#1e1b4b;margin-bottom:8px}
+    .link-card p{font-size:13px;color:#6b7280;line-height:1.6}
+    @media(max-width:768px){.links-grid{grid-template-columns:1fr 1fr;gap:14px}.link-card{padding:24px 18px}}
+    @media(max-width:480px){.links-grid{grid-template-columns:1fr}}
+
+    /* ===== TOPICS ===== */
+    .topics-section{padding:0 32px 80px;max-width:800px;margin:0 auto}
+    .topics-section .section-title{text-align:center;font-size:28px;font-weight:800;color:#1e1b4b;margin-bottom:12px;letter-spacing:-.5px}
+    .topics-section .section-sub{text-align:center;font-size:15px;color:#6b7280;margin-bottom:48px}
+    .topic-item{border:1px solid rgba(124,58,237,.08);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:.3s;background:rgba(255,255,255,.9)}
+    .topic-item:hover{border-color:rgba(124,58,237,.18)}
+    .topic-item.open{border-color:rgba(124,58,237,.2);box-shadow:0 4px 20px rgba(124,58,237,.06)}
+    .topic-question{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;cursor:pointer;font-size:15px;font-weight:600;color:#111827;line-height:1.5;gap:16px;user-select:none}
+    .topic-question:hover{color:#7c3aed}
+    .topic-icon{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:rgba(124,58,237,.08);display:flex;align-items:center;justify-content:center;transition:.3s}
+    .topic-item.open .topic-icon{background:rgba(124,58,237,.15);transform:rotate(180deg)}
+    .topic-icon svg{width:14px;height:14px;stroke:#7c3aed;stroke-width:2.5;fill:none}
+    .topic-answer{max-height:0;overflow:hidden;transition:max-height .35s ease}
+    .topic-item.open .topic-answer{max-height:500px}
+    .topic-answer-inner{padding:0 24px 20px;font-size:14px;color:#6b7280;line-height:1.9}
+    .topic-answer-inner a{color:#7c3aed;font-weight:500;text-decoration:underline}
+
+    /* ===== CONTACT CTA ===== */
+    .contact-cta{padding:80px 32px;background:linear-gradient(180deg,#fff,#f5f3ff)}
+    .contact-cta-inner{max-width:700px;margin:0 auto;text-align:center;padding:56px 40px;border-radius:24px;background:rgba(255,255,255,.6);backdrop-filter:blur(20px);border:1px solid rgba(124,58,237,.12);box-shadow:0 8px 40px rgba(124,58,237,.06)}
+    .contact-cta h2{font-size:28px;font-weight:800;color:#1e1b4b;margin-bottom:12px;letter-spacing:-.5px}
+    .contact-cta p{font-size:15px;color:#6b7280;line-height:1.7;margin-bottom:28px}
+    .contact-cta .email-link{display:inline-flex;align-items:center;gap:8px;color:#7c3aed;font-weight:600;font-size:15px;transition:.2s}
+    .contact-cta .email-link:hover{color:#4f46e5}
+    .contact-cta .email-link svg{width:18px;height:18px}
+    .cta-buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+    .btn-primary{padding:14px 32px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:12px;font-weight:700;font-size:15px;transition:.3s;border:none;cursor:pointer;font-family:inherit;box-shadow:0 4px 24px rgba(79,70,229,.3);display:inline-block}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 36px rgba(79,70,229,.5)}
+    .btn-secondary{padding:14px 32px;background:transparent;color:#4f46e5;border-radius:12px;font-weight:600;font-size:15px;transition:.3s;border:1px solid rgba(124,58,237,.25);cursor:pointer;font-family:inherit;display:inline-block}
+    .btn-secondary:hover{background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.4);transform:translateY(-2px)}
+
+    /* ===== FOOTER ===== */
+    footer{background:linear-gradient(180deg,#f8f7ff 0%,#1e1b4b 30%,#1e1b4b 100%);color:#e2e0f0;padding:100px 32px 30px;border-top:none;position:relative;overflow:hidden}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(180deg,#f8f7ff,transparent);pointer-events:none;z-index:1}
+    footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;background:radial-gradient(ellipse at 30% 80%,rgba(124,58,237,.15),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.08),transparent 50%);pointer-events:none}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;max-width:1000px;margin:0 auto;position:relative;z-index:2}
+    .footer-brand .f-logo{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:10px;letter-spacing:-.5px;color:#fff}
+    .footer-brand .f-logo img{height:28px;width:auto;filter:brightness(0) invert(1)}
+    .footer-brand p{font-size:13px;color:rgba(196,181,253,.6);line-height:1.8;max-width:280px}
+    .footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(167,139,250,.7);margin-bottom:16px}
+    .footer-col a{display:block;font-size:14px;color:rgba(196,181,253,.5);padding:5px 0;transition:.2s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{max-width:1000px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.4);position:relative;z-index:2}
+    .footer-lang{display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(196,181,253,.5);font-size:12px;transition:.2s}
+    .footer-lang:hover{color:#fff}
+    .footer-lang svg{stroke:rgba(196,181,253,.5)}
+    .footer-lang:hover svg{stroke:#fff}
+    @media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr;gap:30px}.footer-bottom{flex-direction:column;gap:10px;text-align:center}}
+    @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+    button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+    input:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+
+    /* ===== MOBILE FIXES ===== */
+    @media(max-width:768px){
+      .topics-section{padding:0 16px 60px}
+      .quick-links{padding:60px 16px}
+      .topic-question{padding:14px 16px;font-size:14px;min-height:48px}
+      .topic-answer-inner{padding:0 16px 16px;font-size:13px}
+      .topic-icon{width:28px;height:28px;min-width:28px}
+      .contact-cta{padding:60px 20px}
+      .contact-cta-inner{padding:40px 24px}
+      footer{padding:80px 20px 24px}
+    }
+    @media(max-width:480px){
+      .topics-section{padding:0 12px 48px}
+      .quick-links{padding:48px 12px}
+      .quick-links .section-title,.topics-section .section-title{font-size:22px}
+      .topic-question{font-size:13px;padding:12px 14px}
+      .contact-cta h2{font-size:22px}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
+    <div class="nav-center">
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/pricing" data-i18n="nav.pricing">Pricing</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
+      <a href="/blog" data-i18n="nav.blog">Blog</a>
+      <a href="/contact" data-i18n="nav.contact">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#31616;&#20307;&#20013;&#25991;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
+      <a href="/app" class="nav-user" title="My Account" data-i18n-title="nav.account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+    </div>
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/pricing" onclick="closeMobile()" data-i18n="nav.pricing">Pricing</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <a href="/blog" onclick="closeMobile()" data-i18n="nav.blog">Blog</a>
+  <a href="/contact" onclick="closeMobile()" data-i18n="nav.contact">Contact</a>
+  <a href="/app" onclick="closeMobile()" data-i18n="nav.account">My Account</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
+
+<!-- ===== BREADCRUMBS ===== -->
+<nav class="breadcrumbs" style="max-width:1200px;margin:0 auto;padding:80px 32px 0;font-size:13px;color:#8b89a6">
+  <a href="/" style="color:#7c3aed;text-decoration:none">Home</a> /
+  <span data-i18n="support.breadcrumb">Help Center</span>
+</nav>
+
+<!-- ===== HERO ===== -->
+<div class="hero" id="main">
+  <div class="hero-bg">
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+  </div>
+  <div class="hero-content">
+    <h1 data-i18n="support.heroTitle">Help <span class="gradient">Center</span></h1>
+    <p class="sub" data-i18n="support.heroSub">Find answers, guides, and resources to help you get the most out of Vertifile document protection.</p>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" data-i18n-placeholder="support.searchPlaceholder" placeholder="Search for help topics..." autocomplete="off">
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUICK LINKS ===== -->
+<div class="quick-links" id="quickLinks">
+  <h2 class="section-title" data-i18n="support.quickLinksTitle">Quick Links</h2>
+  <p class="section-sub" data-i18n="support.quickLinksSub">Jump straight to what you need.</p>
+
+  <div class="links-grid">
+    <a href="/app" class="link-card">
+      <div class="card-icon start">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h3 data-i18n="support.cardStartTitle">Getting Started</h3>
+      <p data-i18n="support.cardStartDesc">Set up your account and protect your first document.</p>
+    </a>
+    <a href="/faq" class="link-card">
+      <div class="card-icon faq">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <h3 data-i18n="support.cardFaqTitle">FAQ</h3>
+      <p data-i18n="support.cardFaqDesc">Answers to the most common questions.</p>
+    </a>
+    <a href="/contact" class="link-card">
+      <div class="card-icon contact">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <h3 data-i18n="support.cardContactTitle">Contact Us</h3>
+      <p data-i18n="support.cardContactDesc">Reach our team for personalized help.</p>
+    </a>
+    <a href="/integration" class="link-card">
+      <div class="card-icon api">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <h3 data-i18n="support.cardApiTitle">API Documentation</h3>
+      <p data-i18n="support.cardApiDesc">Integrate Vertifile into your workflow.</p>
+    </a>
+  </div>
+</div>
+
+<!-- ===== COMMON TOPICS ===== -->
+<div class="topics-section" id="topicsSection">
+  <h2 class="section-title" data-i18n="support.topicsTitle">Common Topics</h2>
+  <p class="section-sub" data-i18n="support.topicsSub">Browse our most popular help articles.</p>
+
+  <div class="topic-item" data-search="upload protect document how to">
+    <div class="topic-question" onclick="toggleTopic(this)" data-i18n="support.topic1q">
+      How to upload and protect a document
+      <span class="topic-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="topic-answer"><div class="topic-answer-inner" data-i18n="support.topic1a">
+      Go to <a href="/upload">Upload</a>, sign in to your account, then drag and drop your file (PDF, image, or text). The system will compute a cryptographic fingerprint, embed a holographic stamp, and generate your .pvf file in seconds. You can then download or share the protected document.
+    </div></div>
+  </div>
+
+  <div class="topic-item" data-search="stamp pvf verification holographic green red">
+    <div class="topic-question" onclick="toggleTopic(this)" data-i18n="support.topic2q">
+      Understanding your PVF stamp
+      <span class="topic-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="topic-answer"><div class="topic-answer-inner" data-i18n="support.topic2a">
+      The PVF stamp is an animated holographic element embedded in every protected document. When the stamp rotates with green waves, the document is verified as authentic. If the stamp freezes and turns red, it means the document has been tampered with. Learn more on our <a href="/demo">demo page</a>.
+    </div></div>
+  </div>
+
+  <div class="topic-item" data-search="customize stamp branding logo colors waves">
+    <div class="topic-question" onclick="toggleTopic(this)" data-i18n="support.topic3q">
+      Customizing your stamp (logo, colors, waves)
+      <span class="topic-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="topic-answer"><div class="topic-answer-inner" data-i18n="support.topic3a">
+      Pro and Enterprise users can customize the verification stamp with their organization's logo, brand colors, and wave patterns. Go to your <a href="/app">Dashboard</a> and navigate to the "My Stamp" section to configure your branding. Changes apply to all future documents automatically.
+    </div></div>
+  </div>
+
+  <div class="topic-item" data-search="share encrypted zero knowledge privacy">
+    <div class="topic-question" onclick="toggleTopic(this)" data-i18n="support.topic4q">
+      Sharing encrypted documents (Zero-Knowledge)
+      <span class="topic-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="topic-answer"><div class="topic-answer-inner" data-i18n="support.topic4a">
+      Vertifile uses BLIND processing, meaning the server never reads or stores your document content. When you share a .pvf file, only the cryptographic fingerprint is verified server-side. The document content remains encrypted and visible only to the recipient who opens the file in their browser.
+    </div></div>
+  </div>
+
+  <div class="topic-item" data-search="verify authenticity check document real forged">
+    <div class="topic-question" onclick="toggleTopic(this)" data-i18n="support.topic5q">
+      Verifying a document's authenticity
+      <span class="topic-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="topic-answer"><div class="topic-answer-inner" data-i18n="support.topic5a">
+      To verify a document, go to <a href="/verify">Verify</a> and drag the .pvf file into the upload zone. The system will check the cryptographic signature against the blockchain registry. A green spinning stamp means authentic; a frozen red stamp means the document was tampered with.
+    </div></div>
+  </div>
+
+  <div class="topic-item" data-search="account settings profile password plan subscription">
+    <div class="topic-question" onclick="toggleTopic(this)" data-i18n="support.topic6q">
+      Managing your account and settings
+      <span class="topic-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="topic-answer"><div class="topic-answer-inner" data-i18n="support.topic6a">
+      Access your account settings from the <a href="/app">Dashboard</a>. You can update your profile, change your password, manage your subscription plan, view usage statistics, and configure API keys. Enterprise users can also manage team members and organization settings.
+    </div></div>
+  </div>
+
+  <div class="topic-item" data-search="api integration developer sdk webhook endpoint">
+    <div class="topic-question" onclick="toggleTopic(this)" data-i18n="support.topic7q">
+      API integration guide
+      <span class="topic-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="topic-answer"><div class="topic-answer-inner" data-i18n="support.topic7a">
+      Integrate Vertifile into your application using our REST API. Send a POST request to <code style="background:rgba(124,58,237,.06);padding:2px 6px;border-radius:4px;font-size:13px">/api/create-pvf</code> with your API key and file to protect. See the full <a href="/integration">API documentation</a> for endpoints, authentication, rate limits, and code examples.
+    </div></div>
+  </div>
+</div>
+
+<!-- ===== CONTACT CTA ===== -->
+<div class="contact-cta">
+  <div class="contact-cta-inner">
+    <h2 data-i18n="support.ctaTitle">Still need help?</h2>
+    <p data-i18n="support.ctaDesc">Our team is here to help. Reach out via email or our contact form and we will get back to you within 24 hours.</p>
+    <a href="mailto:support@vertifile.com" class="email-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      support@vertifile.com
+    </a>
+    <div class="cta-buttons">
+      <a href="/contact" class="btn-primary" data-i18n="support.ctaContact">Contact Us</a>
+      <a href="/faq" class="btn-secondary" data-i18n="support.ctaFaq">Browse FAQ</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="f-logo">
+        <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
+      </div>
+      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="#how" data-i18n="nav.howItWorks">How It Works</a>
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="/upload" data-i18n="nav.upload">Protect a Document</a>
+      <a href="/enterprise" data-i18n="footer.enterprise">Enterprise</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.developers">Developers</h4>
+      <a href="/integration" data-i18n="footer.integrationGuide">Integration Guide</a>
+      <a href="/api/docs" data-i18n="footer.apiDocumentation">API Documentation</a>
+      <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.company">Company</h4>
+      <a href="/about" data-i18n="footer.about">About</a>
+      <a href="/blog" data-i18n="nav.blog">Blog</a>
+      <a href="/faq" data-i18n="nav.faq">FAQ</a>
+      <a href="/contact" data-i18n="footer.contact">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.legal">Legal</h4>
+      <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
+      <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
+    <div class="footer-lang" onclick="toggleLangDropdown()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+      <span id="footerLangLabel">English</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/i18n.js"></script>
+<script src="/js/nav-user.js"></script>
+<script>
+(function(){
+  window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
+  window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
+  window.toggleTopic=function(el){
+    var item=el.parentElement;
+    var wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.topic-item').forEach(function(t){t.classList.remove('open')});
+    if(!wasOpen) item.classList.add('open');
+  };
+
+  // Client-side search filter
+  var searchInput=document.getElementById('searchInput');
+  if(searchInput){
+    searchInput.addEventListener('input',function(){
+      var q=this.value.toLowerCase().trim();
+      var topics=document.querySelectorAll('.topic-item');
+      var cards=document.querySelectorAll('.link-card');
+      if(!q){
+        topics.forEach(function(t){t.style.display=''});
+        cards.forEach(function(c){c.style.display=''});
+        document.getElementById('quickLinks').style.display='';
+        return;
+      }
+      topics.forEach(function(t){
+        var text=(t.textContent||'').toLowerCase();
+        var data=(t.getAttribute('data-search')||'').toLowerCase();
+        t.style.display=(text.indexOf(q)!==-1||data.indexOf(q)!==-1)?'':'none';
+      });
+      var anyCardMatch=false;
+      cards.forEach(function(c){
+        var text=(c.textContent||'').toLowerCase();
+        var match=text.indexOf(q)!==-1;
+        c.style.display=match?'':'none';
+        if(match) anyCardMatch=true;
+      });
+      document.getElementById('quickLinks').style.display=anyCardMatch?'':'none';
+    });
+  }
+})();
+</script>
+<script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
+</body>
+</html>
