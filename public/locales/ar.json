@@ -1044,7 +1044,17 @@
     "slideForged": "مزوّر",
     "darkMode": "الوضع الداكن",
     "lightMode": "الوضع الفاتح",
-    "regFailed": "فشل التسجيل"
+    "regFailed": "فشل التسجيل",
+    "createAccount": "إنشاء حساب",
+    "createAccountBtn": "إنشاء حساب",
+    "emailPlaceholder": "عنوان البريد الإلكتروني",
+    "forgotPassword": "هل نسيت كلمة المرور؟",
+    "haveAccount": "هل لديك حساب بالفعل؟",
+    "namePlaceholder": "الاسم الكامل",
+    "passwordMinPlaceholder": "كلمة المرور (8 أحرف على الأقل)",
+    "passwordPlaceholder": "كلمة المرور",
+    "signInBtn": "تسجيل الدخول",
+    "signInLink": "تسجيل الدخول"
   },
   "pricing": {
     "badge": "خطط مرنة",
@@ -1488,5 +1498,21 @@
     "successTitle": "تم تحديث كلمة المرور",
     "successDesc": "تمت إعادة تعيين كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.",
     "signIn": "تسجيل الدخول"
+  },
+  "modal": {
+    "deleteTitle": "حذف المستند؟",
+    "deleteConfirm": "هل أنت متأكد من حذف هذا المستند؟",
+    "cancel": "إلغاء",
+    "delete": "حذف"
+  },
+  "shortcuts": {
+    "title": "اختصارات لوحة المفاتيح",
+    "search": "بحث شامل",
+    "upload": "رفع مستند",
+    "overview": "نظرة عامة",
+    "documents": "المستندات",
+    "closeModal": "إغلاق النافذة/اللوحة",
+    "showShortcuts": "إظهار الاختصارات",
+    "close": "إغلاق"
   }
 }

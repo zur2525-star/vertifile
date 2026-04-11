@@ -1044,7 +1044,17 @@
     "slideVerified": "Verified",
     "slideForged": "Forged",
     "darkMode": "Dark Mode",
-    "lightMode": "Light Mode"
+    "lightMode": "Light Mode",
+    "createAccount": "Create Account",
+    "createAccountBtn": "Create Account",
+    "emailPlaceholder": "Email address",
+    "forgotPassword": "Forgot password?",
+    "haveAccount": "Already have an account?",
+    "namePlaceholder": "Full name",
+    "passwordMinPlaceholder": "Password (min 8 characters)",
+    "passwordPlaceholder": "Password",
+    "signInBtn": "Sign In",
+    "signInLink": "Sign in"
   },
   "pricing": {
     "badge": "Flexible Plans",
@@ -1487,5 +1497,21 @@
     "successTitle": "Password Updated",
     "successDesc": "Your password has been reset successfully. You can now sign in with your new password.",
     "signIn": "Sign In"
+  },
+  "modal": {
+    "deleteTitle": "Delete Document?",
+    "deleteConfirm": "Are you sure you want to delete this document?",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "search": "Global search",
+    "upload": "Upload document",
+    "overview": "Overview",
+    "documents": "Documents",
+    "closeModal": "Close modal/panel",
+    "showShortcuts": "Show shortcuts",
+    "close": "Close"
   }
 }

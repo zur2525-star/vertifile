@@ -1044,7 +1044,17 @@
     "slideForged": "Подделан",
     "darkMode": "Тёмная тема",
     "lightMode": "Светлая тема",
-    "regFailed": "Ошибка регистрации"
+    "regFailed": "Ошибка регистрации",
+    "createAccount": "Создать аккаунт",
+    "createAccountBtn": "Создать аккаунт",
+    "emailPlaceholder": "Адрес электронной почты",
+    "forgotPassword": "Забыли пароль?",
+    "haveAccount": "Уже есть аккаунт?",
+    "namePlaceholder": "Полное имя",
+    "passwordMinPlaceholder": "Пароль (мин. 8 символов)",
+    "passwordPlaceholder": "Пароль",
+    "signInBtn": "Войти",
+    "signInLink": "Войти"
   },
   "pricing": {
     "badge": "Гибкие тарифы",
@@ -1488,5 +1498,21 @@
     "successTitle": "Пароль обновлен",
     "successDesc": "Ваш пароль успешно сброшен. Теперь вы можете войти с новым паролем.",
     "signIn": "Войти"
+  },
+  "modal": {
+    "deleteTitle": "Удалить документ?",
+    "deleteConfirm": "Вы уверены, что хотите удалить этот документ?",
+    "cancel": "Отмена",
+    "delete": "Удалить"
+  },
+  "shortcuts": {
+    "title": "Горячие клавиши",
+    "search": "Глобальный поиск",
+    "upload": "Загрузить документ",
+    "overview": "Обзор",
+    "documents": "Документы",
+    "closeModal": "Закрыть окно/панель",
+    "showShortcuts": "Показать сочетания клавиш",
+    "close": "Закрыть"
   }
 }

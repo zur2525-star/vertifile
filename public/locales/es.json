@@ -1044,7 +1044,17 @@
     "slideForged": "Falsificado",
     "darkMode": "Modo oscuro",
     "lightMode": "Modo claro",
-    "regFailed": "Error en el registro"
+    "regFailed": "Error en el registro",
+    "createAccount": "Crear cuenta",
+    "createAccountBtn": "Crear cuenta",
+    "emailPlaceholder": "Correo electrónico",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "namePlaceholder": "Nombre completo",
+    "passwordMinPlaceholder": "Contraseña (mín. 8 caracteres)",
+    "passwordPlaceholder": "Contraseña",
+    "signInBtn": "Iniciar sesión",
+    "signInLink": "Iniciar sesión"
   },
   "pricing": {
     "badge": "Planes flexibles",
@@ -1488,5 +1498,21 @@
     "successTitle": "Contrasena Actualizada",
     "successDesc": "Tu contrasena se restablecio correctamente. Ahora puedes iniciar sesion con tu nueva contrasena.",
     "signIn": "Iniciar Sesion"
+  },
+  "modal": {
+    "deleteTitle": "¿Eliminar documento?",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar este documento?",
+    "cancel": "Cancelar",
+    "delete": "Eliminar"
+  },
+  "shortcuts": {
+    "title": "Atajos de teclado",
+    "search": "Búsqueda global",
+    "upload": "Subir documento",
+    "overview": "Resumen",
+    "documents": "Documentos",
+    "closeModal": "Cerrar ventana/panel",
+    "showShortcuts": "Mostrar atajos",
+    "close": "Cerrar"
   }
 }

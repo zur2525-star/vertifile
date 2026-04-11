@@ -1044,7 +1044,17 @@
     "slideVerified": "מאומת",
     "slideForged": "מזויף",
     "darkMode": "מצב כהה",
-    "lightMode": "מצב בהיר"
+    "lightMode": "מצב בהיר",
+    "createAccount": "צור חשבון",
+    "createAccountBtn": "צור חשבון",
+    "emailPlaceholder": "כתובת אימייל",
+    "forgotPassword": "שכחת סיסמא?",
+    "haveAccount": "כבר יש לך חשבון?",
+    "namePlaceholder": "שם מלא",
+    "passwordMinPlaceholder": "סיסמא (8 תווים לפחות)",
+    "passwordPlaceholder": "סיסמא",
+    "signInBtn": "כניסה",
+    "signInLink": "התחברות"
   },
   "pricing": {
     "badge": "תוכניות גמישות",
@@ -1487,5 +1497,21 @@
     "successTitle": "הסיסמה עודכנה",
     "successDesc": "הסיסמה שלכם אופסה בהצלחה. כעת תוכלו להתחבר עם הסיסמה החדשה.",
     "signIn": "התחברות"
+  },
+  "modal": {
+    "deleteTitle": "מחיקת מסמך?",
+    "deleteConfirm": "האם אתה בטוח שברצונך למחוק מסמך זה?",
+    "cancel": "ביטול",
+    "delete": "מחיקה"
+  },
+  "shortcuts": {
+    "title": "קיצורי מקלדת",
+    "search": "חיפוש כללי",
+    "upload": "העלאת מסמך",
+    "overview": "סקירה כללית",
+    "documents": "מסמכים",
+    "closeModal": "סגירת חלון/פנל",
+    "showShortcuts": "הצגת קיצורים",
+    "close": "סגירה"
   }
 }

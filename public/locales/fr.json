@@ -1044,7 +1044,17 @@
     "slideForged": "Falsifié",
     "darkMode": "Mode sombre",
     "lightMode": "Mode clair",
-    "regFailed": "Echec de l'inscription"
+    "regFailed": "Echec de l'inscription",
+    "createAccount": "Créer un compte",
+    "createAccountBtn": "Créer un compte",
+    "emailPlaceholder": "Adresse e-mail",
+    "forgotPassword": "Mot de passe oublié ?",
+    "haveAccount": "Vous avez déjà un compte ?",
+    "namePlaceholder": "Nom complet",
+    "passwordMinPlaceholder": "Mot de passe (8 caractères min.)",
+    "passwordPlaceholder": "Mot de passe",
+    "signInBtn": "Se connecter",
+    "signInLink": "Se connecter"
   },
   "pricing": {
     "badge": "Plans flexibles",
@@ -1488,5 +1498,21 @@
     "successTitle": "Mot de Passe Mis a Jour",
     "successDesc": "Votre mot de passe a ete reinitialise avec succes. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
     "signIn": "Se Connecter"
+  },
+  "modal": {
+    "deleteTitle": "Supprimer le document ?",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce document ?",
+    "cancel": "Annuler",
+    "delete": "Supprimer"
+  },
+  "shortcuts": {
+    "title": "Raccourcis clavier",
+    "search": "Recherche globale",
+    "upload": "Téléverser un document",
+    "overview": "Vue d'ensemble",
+    "documents": "Documents",
+    "closeModal": "Fermer la fenêtre/le panneau",
+    "showShortcuts": "Afficher les raccourcis",
+    "close": "Fermer"
   }
 }

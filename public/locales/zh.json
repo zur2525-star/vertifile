@@ -1044,7 +1044,17 @@
     "slideForged": "伪造",
     "darkMode": "深色模式",
     "lightMode": "浅色模式",
-    "regFailed": "注册失败"
+    "regFailed": "注册失败",
+    "createAccount": "创建账户",
+    "createAccountBtn": "创建账户",
+    "emailPlaceholder": "电子邮件地址",
+    "forgotPassword": "忘记密码？",
+    "haveAccount": "已有账户？",
+    "namePlaceholder": "姓名",
+    "passwordMinPlaceholder": "密码（至少8个字符）",
+    "passwordPlaceholder": "密码",
+    "signInBtn": "登录",
+    "signInLink": "登录"
   },
   "pricing": {
     "badge": "灵活方案",
@@ -1488,5 +1498,21 @@
     "successTitle": "密码已更新",
     "successDesc": "您的密码已成功重置。现在可以使用新密码登录。",
     "signIn": "登录"
+  },
+  "modal": {
+    "deleteTitle": "删除文档？",
+    "deleteConfirm": "您确定要删除此文档吗？",
+    "cancel": "取消",
+    "delete": "删除"
+  },
+  "shortcuts": {
+    "title": "键盘快捷键",
+    "search": "全局搜索",
+    "upload": "上传文档",
+    "overview": "概览",
+    "documents": "文档",
+    "closeModal": "关闭窗口/面板",
+    "showShortcuts": "显示快捷键",
+    "close": "关闭"
   }
 }

@@ -1044,7 +1044,17 @@
     "slideForged": "偽造",
     "darkMode": "ダークモード",
     "lightMode": "ライトモード",
-    "regFailed": "登録に失敗しました"
+    "regFailed": "登録に失敗しました",
+    "createAccount": "アカウント作成",
+    "createAccountBtn": "アカウント作成",
+    "emailPlaceholder": "メールアドレス",
+    "forgotPassword": "パスワードをお忘れですか？",
+    "haveAccount": "既にアカウントをお持ちですか？",
+    "namePlaceholder": "氏名",
+    "passwordMinPlaceholder": "パスワード（8文字以上）",
+    "passwordPlaceholder": "パスワード",
+    "signInBtn": "サインイン",
+    "signInLink": "サインイン"
   },
   "pricing": {
     "badge": "柔軟なプラン",
@@ -1488,5 +1498,21 @@
     "successTitle": "パスワードが更新されました",
     "successDesc": "パスワードが正常にリセットされました。新しいパスワードでサインインできます。",
     "signIn": "サインイン"
+  },
+  "modal": {
+    "deleteTitle": "ドキュメントを削除しますか？",
+    "deleteConfirm": "このドキュメントを削除してもよろしいですか？",
+    "cancel": "キャンセル",
+    "delete": "削除"
+  },
+  "shortcuts": {
+    "title": "キーボードショートカット",
+    "search": "グローバル検索",
+    "upload": "ドキュメントをアップロード",
+    "overview": "概要",
+    "documents": "ドキュメント",
+    "closeModal": "モーダル/パネルを閉じる",
+    "showShortcuts": "ショートカットを表示",
+    "close": "閉じる"
   }
 }

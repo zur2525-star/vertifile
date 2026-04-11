@@ -1044,7 +1044,17 @@
     "slideForged": "Gefälscht",
     "darkMode": "Dunkelmodus",
     "lightMode": "Hellmodus",
-    "regFailed": "Registrierung fehlgeschlagen"
+    "regFailed": "Registrierung fehlgeschlagen",
+    "createAccount": "Konto erstellen",
+    "createAccountBtn": "Konto erstellen",
+    "emailPlaceholder": "E-Mail-Adresse",
+    "forgotPassword": "Passwort vergessen?",
+    "haveAccount": "Haben Sie bereits ein Konto?",
+    "namePlaceholder": "Vollständiger Name",
+    "passwordMinPlaceholder": "Passwort (mind. 8 Zeichen)",
+    "passwordPlaceholder": "Passwort",
+    "signInBtn": "Anmelden",
+    "signInLink": "Anmelden"
   },
   "pricing": {
     "badge": "Flexible Plane",
@@ -1488,5 +1498,21 @@
     "successTitle": "Passwort aktualisiert",
     "successDesc": "Ihr Passwort wurde erfolgreich zuruckgesetzt. Sie konnen sich jetzt mit Ihrem neuen Passwort anmelden.",
     "signIn": "Anmelden"
+  },
+  "modal": {
+    "deleteTitle": "Dokument löschen?",
+    "deleteConfirm": "Sind Sie sicher, dass Sie dieses Dokument löschen möchten?",
+    "cancel": "Abbrechen",
+    "delete": "Löschen"
+  },
+  "shortcuts": {
+    "title": "Tastenkombinationen",
+    "search": "Globale Suche",
+    "upload": "Dokument hochladen",
+    "overview": "Übersicht",
+    "documents": "Dokumente",
+    "closeModal": "Fenster/Panel schließen",
+    "showShortcuts": "Tastenkombinationen anzeigen",
+    "close": "Schließen"
   }
 }

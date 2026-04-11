@@ -1492,11 +1492,11 @@
 <div class="modal-overlay" id="deleteModal">
   <div class="modal" role="alertdialog" aria-label="Delete confirmation">
     <div style="font-size:40px;color:#dc2626;margin-bottom:12px"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
-    <h3>Delete Document?</h3>
-    <p>Are you sure you want to delete this document?</p>
+    <h3 data-i18n="modal.deleteTitle">Delete Document?</h3>
+    <p data-i18n="modal.deleteConfirm">Are you sure you want to delete this document?</p>
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="Dashboard.closeModal('deleteModal')">Cancel</button>
-      <button class="btn-danger-solid" onclick="Dashboard.confirmDelete()">Delete</button>
+      <button class="btn btn-secondary" onclick="Dashboard.closeModal('deleteModal')" data-i18n="modal.cancel">Cancel</button>
+      <button class="btn-danger-solid" onclick="Dashboard.confirmDelete()" data-i18n="modal.delete">Delete</button>
     </div>
   </div>
 </div>
@@ -1504,14 +1504,14 @@
 <!-- ===== KEYBOARD SHORTCUTS OVERLAY ===== -->
 <div class="shortcuts-overlay" id="shortcutsOverlay" role="dialog" aria-label="Keyboard shortcuts">
   <div class="shortcuts-card">
-    <h3>Keyboard Shortcuts</h3>
-    <div class="shortcut-row"><span class="sc-desc">Global search</span><kbd>Cmd+K</kbd></div>
-    <div class="shortcut-row"><span class="sc-desc">Upload document</span><kbd>Cmd+U</kbd></div>
-    <div class="shortcut-row"><span class="sc-desc">Overview</span><kbd>Cmd+1</kbd></div>
-    <div class="shortcut-row"><span class="sc-desc">Documents</span><kbd>Cmd+3</kbd></div>
-    <div class="shortcut-row"><span class="sc-desc">Close modal/panel</span><kbd>Esc</kbd></div>
-    <div class="shortcut-row"><span class="sc-desc">Show shortcuts</span><kbd>?</kbd></div>
-    <div style="text-align:center;margin-top:16px"><button class="btn btn-secondary" onclick="Dashboard.closeShortcuts()">Close</button></div>
+    <h3 data-i18n="shortcuts.title">Keyboard Shortcuts</h3>
+    <div class="shortcut-row"><span class="sc-desc" data-i18n="shortcuts.search">Global search</span><kbd>Cmd+K</kbd></div>
+    <div class="shortcut-row"><span class="sc-desc" data-i18n="shortcuts.upload">Upload document</span><kbd>Cmd+U</kbd></div>
+    <div class="shortcut-row"><span class="sc-desc" data-i18n="shortcuts.overview">Overview</span><kbd>Cmd+1</kbd></div>
+    <div class="shortcut-row"><span class="sc-desc" data-i18n="shortcuts.documents">Documents</span><kbd>Cmd+3</kbd></div>
+    <div class="shortcut-row"><span class="sc-desc" data-i18n="shortcuts.closeModal">Close modal/panel</span><kbd>Esc</kbd></div>
+    <div class="shortcut-row"><span class="sc-desc" data-i18n="shortcuts.showShortcuts">Show shortcuts</span><kbd>?</kbd></div>
+    <div style="text-align:center;margin-top:16px"><button class="btn btn-secondary" onclick="Dashboard.closeShortcuts()" data-i18n="shortcuts.close">Close</button></div>
   </div>
 </div>
 
