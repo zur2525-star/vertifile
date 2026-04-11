@@ -1303,5 +1303,30 @@
     "newDoc": "New Document",
     "notifications": "Notifications",
     "markAllRead": "Mark all read"
+  },
+  "zk": {
+    "label": "Zero-Knowledge",
+    "title": "Zero Knowledge. Full Control.",
+    "subtitle": "Vertifile is Zero-Knowledge — we cannot read your documents even if we wanted to. Even if forced to.",
+    "card1title": "Full Encryption Before Upload",
+    "card1desc": "Your documents are encrypted with AES-256-GCM directly in the browser, before they ever leave your computer. What reaches our servers is unreadable code.",
+    "card2title": "The Key Stays With You — Always",
+    "card2desc": "The encryption key is transmitted only via URL Fragment — a part of the address that is never sent to the server. No one besides you and the recipient can open the document.",
+    "card3title": "Dual Signature for Absolute Verification",
+    "card3desc": "Every document is signed with a dual digital signature: Ed25519 for sender identity and HMAC for content integrity. Any change, no matter how small, is detected instantly.",
+    "card4title": "Legal-Grade Privacy",
+    "card4desc": "Compliant with GDPR, HIPAA and international privacy standards. When the server cannot read — there is nothing to leak, nothing to breach, nothing to expose.",
+    "beforeTitle": "Before Vertifile",
+    "before1": "Documents sent via email with no protection",
+    "before2": "Every server that relays the file can read it",
+    "before3": "No way to know if someone altered the content",
+    "before4": "Cloud platforms keep a readable copy",
+    "before5": "Data leak = business and legal disaster",
+    "afterTitle": "With Vertifile",
+    "after1": "Full end-to-end encryption, before upload",
+    "after2": "The server relays — but cannot read",
+    "after3": "Dual signature detects any change instantly",
+    "after4": "The encryption key never leaves the browser",
+    "after5": "Even in a breach — there is nothing to steal"
   }
 }
