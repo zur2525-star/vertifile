@@ -1,107 +1,100 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 240" width="880" height="240">
   <defs>
-    <linearGradient id="indBg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#fafafa"/>
-      <stop offset="100%" stop-color="#f5f3ff"/>
-    </linearGradient>
     <filter id="indShadow">
-      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#7c3aed" flood-opacity="0.06"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#7c3aed" flood-opacity="0.15"/>
     </filter>
   </defs>
 
-  <!-- Background -->
-  <rect width="880" height="240" fill="url(#indBg)" rx="16"/>
-
   <!-- CARD 1: Legal -->
   <g transform="translate(20, 20)">
-    <rect width="196" height="200" rx="12" fill="#ffffff" stroke="rgba(124,58,237,0.1)" stroke-width="1" filter="url(#indShadow)"/>
+    <rect width="196" height="200" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5" filter="url(#indShadow)"/>
     <!-- Accent bar top -->
-    <rect width="196" height="4" rx="2" fill="#7c3aed" opacity="0.8"/>
+    <rect width="196" height="4" rx="2" fill="#7c3aed"/>
     <!-- Icon circle -->
-    <circle cx="98" cy="60" r="28" fill="#f5f3ff" stroke="#ede9fe" stroke-width="1"/>
+    <circle cx="98" cy="60" r="28" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.5"/>
     <!-- Gavel icon -->
     <g transform="translate(98, 60)" stroke="#7c3aed" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path d="M-8-10l6 6M2-4l6 6M-6-2l14-4M-2 2l-4 14M-12 8l20 6"/>
-      <rect x="-12" y="12" width="24" height="4" rx="2" fill="#7c3aed" opacity="0.15"/>
+      <rect x="-12" y="12" width="24" height="4" rx="2" fill="#7c3aed" opacity="0.3"/>
     </g>
     <!-- Text -->
-    <text x="98" y="108" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" fill="#1e1b2e" font-weight="700">Legal</text>
-    <text x="98" y="128" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">Contracts, court filings,</text>
-    <text x="98" y="142" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">notarizations. Tamper-proof</text>
-    <text x="98" y="156" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">evidence for litigation.</text>
+    <text x="98" y="108" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" fill="#4c1d95" font-weight="700">Legal</text>
+    <text x="98" y="128" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6d28d9">Contracts, court filings,</text>
+    <text x="98" y="142" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6d28d9">notarizations. Tamper-proof</text>
+    <text x="98" y="156" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6d28d9">evidence for litigation.</text>
     <!-- Badge -->
-    <rect x="56" y="170" width="84" height="20" rx="10" fill="#f5f3ff" stroke="#ede9fe" stroke-width="0.8"/>
-    <text x="98" y="184" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#7c3aed" font-weight="600">Court-Ready</text>
+    <rect x="56" y="170" width="84" height="20" rx="10" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1"/>
+    <text x="98" y="184" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4c1d95" font-weight="600">Court-Ready</text>
   </g>
 
   <!-- CARD 2: Healthcare -->
   <g transform="translate(232, 20)">
-    <rect width="196" height="200" rx="12" fill="#ffffff" stroke="rgba(16,185,129,0.1)" stroke-width="1" filter="url(#indShadow)"/>
+    <rect width="196" height="200" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5" filter="url(#indShadow)"/>
     <!-- Accent bar top -->
-    <rect width="196" height="4" rx="2" fill="#10b981" opacity="0.8"/>
+    <rect width="196" height="4" rx="2" fill="#10b981"/>
     <!-- Icon circle -->
-    <circle cx="98" cy="60" r="28" fill="#ecfdf5" stroke="#d1fae5" stroke-width="1"/>
+    <circle cx="98" cy="60" r="28" fill="#a7f3d0" stroke="#10b981" stroke-width="1.5"/>
     <!-- Medical cross + heart icon -->
-    <g transform="translate(98, 60)" stroke="#10b981" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(98, 60)" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path d="M0-12v24M-12 0h24"/>
-      <path d="M-4 -3C-4-7 -8-9 -10-6c-2 3 6 10 10 14 4-4 12-11 10-14-2-3-6-1-6 3" fill="#10b981" opacity="0.15" stroke="none"/>
+      <path d="M-4 -3C-4-7 -8-9 -10-6c-2 3 6 10 10 14 4-4 12-11 10-14-2-3-6-1-6 3" fill="#10b981" opacity="0.3" stroke="none"/>
     </g>
     <!-- Text -->
-    <text x="98" y="108" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" fill="#1e1b2e" font-weight="700">Healthcare</text>
-    <text x="98" y="128" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">Medical records, prescriptions,</text>
-    <text x="98" y="142" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">lab results. HIPAA-ready</text>
-    <text x="98" y="156" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">document protection.</text>
+    <text x="98" y="108" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" fill="#065f46" font-weight="700">Healthcare</text>
+    <text x="98" y="128" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#047857">Medical records, prescriptions,</text>
+    <text x="98" y="142" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#047857">lab results. HIPAA-ready</text>
+    <text x="98" y="156" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#047857">document protection.</text>
     <!-- Badge -->
-    <rect x="48" y="170" width="100" height="20" rx="10" fill="#ecfdf5" stroke="#d1fae5" stroke-width="0.8"/>
-    <text x="98" y="184" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#10b981" font-weight="600">HIPAA-Compliant</text>
+    <rect x="48" y="170" width="100" height="20" rx="10" fill="#a7f3d0" stroke="#10b981" stroke-width="1"/>
+    <text x="98" y="184" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#065f46" font-weight="600">HIPAA-Compliant</text>
   </g>
 
   <!-- CARD 3: Education -->
   <g transform="translate(444, 20)">
-    <rect width="196" height="200" rx="12" fill="#ffffff" stroke="rgba(99,102,241,0.1)" stroke-width="1" filter="url(#indShadow)"/>
+    <rect width="196" height="200" rx="12" fill="#eef2ff" stroke="#6366f1" stroke-width="1.5" filter="url(#indShadow)"/>
     <!-- Accent bar top -->
-    <rect width="196" height="4" rx="2" fill="#6366f1" opacity="0.8"/>
+    <rect width="196" height="4" rx="2" fill="#6366f1"/>
     <!-- Icon circle -->
-    <circle cx="98" cy="60" r="28" fill="#eef2ff" stroke="#e0e7ff" stroke-width="1"/>
+    <circle cx="98" cy="60" r="28" fill="#c7d2fe" stroke="#6366f1" stroke-width="1.5"/>
     <!-- Graduation cap icon -->
-    <g transform="translate(98, 60)" stroke="#6366f1" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="0,-10 14,0 0,6 -14,0" fill="#6366f1" opacity="0.15" stroke="#6366f1"/>
+    <g transform="translate(98, 60)" stroke="#4338ca" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="0,-10 14,0 0,6 -14,0" fill="#6366f1" opacity="0.3" stroke="#4338ca"/>
       <path d="M-10 2v8c0 2 4 5 10 5s10-3 10-5V2"/>
       <line x1="14" y1="0" x2="14" y2="10"/>
     </g>
     <!-- Text -->
-    <text x="98" y="108" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" fill="#1e1b2e" font-weight="700">Education</text>
-    <text x="98" y="128" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">Diplomas, transcripts,</text>
-    <text x="98" y="142" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">certificates. Unforgeable</text>
-    <text x="98" y="156" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">academic credentials.</text>
+    <text x="98" y="108" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" fill="#3730a3" font-weight="700">Education</text>
+    <text x="98" y="128" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#4338ca">Diplomas, transcripts,</text>
+    <text x="98" y="142" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#4338ca">certificates. Unforgeable</text>
+    <text x="98" y="156" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#4338ca">academic credentials.</text>
     <!-- Badge -->
-    <rect x="50" y="170" width="96" height="20" rx="10" fill="#eef2ff" stroke="#e0e7ff" stroke-width="0.8"/>
-    <text x="98" y="184" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#6366f1" font-weight="600">Fraud-Proof</text>
+    <rect x="50" y="170" width="96" height="20" rx="10" fill="#c7d2fe" stroke="#6366f1" stroke-width="1"/>
+    <text x="98" y="184" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#3730a3" font-weight="600">Fraud-Proof</text>
   </g>
 
   <!-- CARD 4: Finance -->
   <g transform="translate(656, 20)">
-    <rect width="196" height="200" rx="12" fill="#ffffff" stroke="rgba(245,158,11,0.1)" stroke-width="1" filter="url(#indShadow)"/>
+    <rect width="196" height="200" rx="12" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5" filter="url(#indShadow)"/>
     <!-- Accent bar top -->
-    <rect width="196" height="4" rx="2" fill="#f59e0b" opacity="0.8"/>
+    <rect width="196" height="4" rx="2" fill="#f59e0b"/>
     <!-- Icon circle -->
-    <circle cx="98" cy="60" r="28" fill="#fffbeb" stroke="#fef3c7" stroke-width="1"/>
+    <circle cx="98" cy="60" r="28" fill="#fde68a" stroke="#f59e0b" stroke-width="1.5"/>
     <!-- Chart/finance icon -->
-    <g transform="translate(98, 60)" stroke="#f59e0b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(98, 60)" stroke="#b45309" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="-12,8 -4,0 4,4 12,-8"/>
       <line x1="-12" y1="12" x2="12" y2="12"/>
-      <circle cx="12" cy="-8" r="3" fill="#f59e0b" opacity="0.25"/>
-      <line x1="-8" y1="12" x2="-8" y2="6" stroke-width="3" opacity="0.3"/>
-      <line x1="0" y1="12" x2="0" y2="2" stroke-width="3" opacity="0.3"/>
-      <line x1="8" y1="12" x2="8" y2="-2" stroke-width="3" opacity="0.3"/>
+      <circle cx="12" cy="-8" r="3" fill="#f59e0b" opacity="0.4"/>
+      <line x1="-8" y1="12" x2="-8" y2="6" stroke-width="3" opacity="0.5"/>
+      <line x1="0" y1="12" x2="0" y2="2" stroke-width="3" opacity="0.5"/>
+      <line x1="8" y1="12" x2="8" y2="-2" stroke-width="3" opacity="0.5"/>
     </g>
     <!-- Text -->
-    <text x="98" y="108" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" fill="#1e1b2e" font-weight="700">Finance</text>
-    <text x="98" y="128" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">Invoices, bank statements,</text>
-    <text x="98" y="142" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">audit reports. Immutable</text>
-    <text x="98" y="156" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6b7280">financial records.</text>
+    <text x="98" y="108" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" fill="#92400e" font-weight="700">Finance</text>
+    <text x="98" y="128" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#b45309">Invoices, bank statements,</text>
+    <text x="98" y="142" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#b45309">audit reports. Immutable</text>
+    <text x="98" y="156" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#b45309">financial records.</text>
     <!-- Badge -->
-    <rect x="48" y="170" width="100" height="20" rx="10" fill="#fffbeb" stroke="#fef3c7" stroke-width="0.8"/>
-    <text x="98" y="184" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#f59e0b" font-weight="600">Audit-Ready</text>
+    <rect x="48" y="170" width="100" height="20" rx="10" fill="#fde68a" stroke="#f59e0b" stroke-width="1"/>
+    <text x="98" y="184" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#92400e" font-weight="600">Audit-Ready</text>
   </g>
 </svg>

@@ -1,54 +1,35 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" width="800" height="420">
   <defs>
-    <linearGradient id="leftBg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#fef2f2"/>
-      <stop offset="100%" stop-color="#fee2e2"/>
-    </linearGradient>
-    <linearGradient id="rightBg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#f5f3ff"/>
-      <stop offset="100%" stop-color="#ede9fe"/>
-    </linearGradient>
-    <linearGradient id="redDoc" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="100%" stop-color="#fef2f2"/>
-    </linearGradient>
-    <linearGradient id="purpleDoc" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="100%" stop-color="#f5f3ff"/>
-    </linearGradient>
     <linearGradient id="shieldFill" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#7c3aed"/>
       <stop offset="100%" stop-color="#6d28d9"/>
     </linearGradient>
     <filter id="cardShadowL">
-      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#ef4444" flood-opacity="0.08"/>
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#ef4444" flood-opacity="0.15"/>
     </filter>
     <filter id="cardShadowR">
-      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#7c3aed" flood-opacity="0.1"/>
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#7c3aed" flood-opacity="0.2"/>
     </filter>
   </defs>
 
-  <!-- Full background -->
-  <rect width="800" height="420" fill="#ffffff" rx="16"/>
-
   <!-- LEFT SIDE: Vulnerable PDF -->
-  <rect x="16" y="16" width="376" height="388" rx="12" fill="url(#leftBg)" filter="url(#cardShadowL)"/>
+  <rect x="16" y="16" width="376" height="388" rx="12" fill="#fef2f2" stroke="#fca5a5" stroke-width="1" filter="url(#cardShadowL)"/>
 
   <!-- Left header label -->
-  <rect x="138" y="30" width="140" height="28" rx="14" fill="#fecaca" opacity="0.6"/>
+  <rect x="138" y="30" width="140" height="28" rx="14" fill="#fecaca"/>
   <text x="208" y="49" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#dc2626" font-weight="700" letter-spacing="0.5">STANDARD PDF</text>
 
   <!-- Left document icon -->
   <g transform="translate(166, 72)">
-    <rect x="0" y="0" width="76" height="96" rx="4" fill="url(#redDoc)" stroke="#fca5a5" stroke-width="1.5"/>
-    <path d="M56 0v16h20" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
-    <line x1="14" y1="28" x2="54" y2="28" stroke="#fecaca" stroke-width="2" stroke-linecap="round"/>
-    <line x1="14" y1="38" x2="62" y2="38" stroke="#fecaca" stroke-width="2" stroke-linecap="round"/>
-    <line x1="14" y1="48" x2="48" y2="48" stroke="#fecaca" stroke-width="1.5" stroke-linecap="round"/>
-    <line x1="14" y1="56" x2="42" y2="56" stroke="#fecaca" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="0" y="0" width="76" height="96" rx="4" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+    <path d="M56 0v16h20" fill="#fecaca" stroke="#ef4444" stroke-width="1"/>
+    <line x1="14" y1="28" x2="54" y2="28" stroke="#ef4444" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <line x1="14" y1="38" x2="62" y2="38" stroke="#ef4444" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <line x1="14" y1="48" x2="48" y2="48" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+    <line x1="14" y1="56" x2="42" y2="56" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
     <!-- Warning triangle -->
     <g transform="translate(38, 64)">
-      <polygon points="16,2 30,28 2,28" fill="#fbbf24" stroke="#f59e0b" stroke-width="1" stroke-linejoin="round"/>
+      <polygon points="16,2 30,28 2,28" fill="#f59e0b" stroke="#b45309" stroke-width="1" stroke-linejoin="round"/>
       <text x="16" y="24" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#ffffff" font-weight="900">!</text>
     </g>
   </g>
@@ -56,57 +37,57 @@
   <!-- Left list items -->
   <g transform="translate(50, 192)">
     <!-- Item 1 -->
-    <circle cx="14" cy="14" r="10" fill="#fee2e2" stroke="#fca5a5" stroke-width="1"/>
-    <line x1="9" y1="9" x2="19" y2="19" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
-    <line x1="19" y1="9" x2="9" y2="19" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="14" cy="14" r="10" fill="#fecaca" stroke="#ef4444" stroke-width="1.5"/>
+    <line x1="9" y1="9" x2="19" y2="19" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
+    <line x1="19" y1="9" x2="9" y2="19" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
     <text x="32" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#991b1b" font-weight="600">No tamper detection</text>
-    <text x="32" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#b91c1c" opacity="0.7">Content can be changed after signing</text>
+    <text x="32" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#b91c1c">Content can be changed after signing</text>
 
     <!-- Item 2 -->
-    <circle cx="14" cy="62" r="10" fill="#fee2e2" stroke="#fca5a5" stroke-width="1"/>
-    <line x1="9" y1="57" x2="19" y2="67" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
-    <line x1="19" y1="57" x2="9" y2="67" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="14" cy="62" r="10" fill="#fecaca" stroke="#ef4444" stroke-width="1.5"/>
+    <line x1="9" y1="57" x2="19" y2="67" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
+    <line x1="19" y1="57" x2="9" y2="67" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
     <text x="32" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#991b1b" font-weight="600">Signature can be stripped</text>
-    <text x="32" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#b91c1c" opacity="0.7">Remove the signature, document remains</text>
+    <text x="32" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#b91c1c">Remove the signature, document remains</text>
 
     <!-- Item 3 -->
-    <circle cx="14" cy="110" r="10" fill="#fee2e2" stroke="#fca5a5" stroke-width="1"/>
-    <line x1="9" y1="105" x2="19" y2="115" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
-    <line x1="19" y1="105" x2="9" y2="115" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="14" cy="110" r="10" fill="#fecaca" stroke="#ef4444" stroke-width="1.5"/>
+    <line x1="9" y1="105" x2="19" y2="115" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
+    <line x1="19" y1="105" x2="9" y2="115" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
     <text x="32" y="114" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#991b1b" font-weight="600">No independent verification</text>
-    <text x="32" y="128" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#b91c1c" opacity="0.7">Trust relies on signer's machine</text>
+    <text x="32" y="128" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#b91c1c">Trust relies on signer's machine</text>
 
     <!-- Item 4 -->
-    <circle cx="14" cy="158" r="10" fill="#fee2e2" stroke="#fca5a5" stroke-width="1"/>
-    <line x1="9" y1="153" x2="19" y2="163" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
-    <line x1="19" y1="153" x2="9" y2="163" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="14" cy="158" r="10" fill="#fecaca" stroke="#ef4444" stroke-width="1.5"/>
+    <line x1="9" y1="153" x2="19" y2="163" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
+    <line x1="19" y1="153" x2="9" y2="163" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
     <text x="32" y="162" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#991b1b" font-weight="600">Timestamps are forgeable</text>
-    <text x="32" y="176" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#b91c1c" opacity="0.7">Date comes from signer's clock</text>
+    <text x="32" y="176" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#b91c1c">Date comes from signer's clock</text>
   </g>
 
   <!-- CENTER DIVIDER -->
-  <line x1="400" y1="40" x2="400" y2="380" stroke="#e5e7eb" stroke-width="1.5" stroke-dasharray="6 4"/>
-  <circle cx="400" cy="210" r="16" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
-  <text x="400" y="214" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#9ca3af" font-weight="700">VS</text>
+  <line x1="400" y1="40" x2="400" y2="380" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <circle cx="400" cy="210" r="16" fill="#7c3aed" stroke="#4c1d95" stroke-width="1.5"/>
+  <text x="400" y="214" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#ffffff" font-weight="700">VS</text>
 
   <!-- RIGHT SIDE: Protected PVF -->
-  <rect x="408" y="16" width="376" height="388" rx="12" fill="url(#rightBg)" filter="url(#cardShadowR)"/>
+  <rect x="408" y="16" width="376" height="388" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="1" filter="url(#cardShadowR)"/>
 
   <!-- Right header label -->
-  <rect x="530" y="30" width="140" height="28" rx="14" fill="#ede9fe" opacity="0.8"/>
-  <text x="600" y="49" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#7c3aed" font-weight="700" letter-spacing="0.5">VERTIFILE PVF</text>
+  <rect x="530" y="30" width="140" height="28" rx="14" fill="#c4b5fd"/>
+  <text x="600" y="49" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#4c1d95" font-weight="700" letter-spacing="0.5">VERTIFILE PVF</text>
 
   <!-- Right document icon with shield -->
   <g transform="translate(558, 72)">
-    <rect x="0" y="0" width="76" height="96" rx="4" fill="url(#purpleDoc)" stroke="#c4b5fd" stroke-width="1.5"/>
-    <path d="M56 0v16h20" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1"/>
-    <line x1="14" y1="28" x2="54" y2="28" stroke="#ddd6fe" stroke-width="2" stroke-linecap="round"/>
-    <line x1="14" y1="38" x2="62" y2="38" stroke="#ddd6fe" stroke-width="2" stroke-linecap="round"/>
-    <line x1="14" y1="48" x2="48" y2="48" stroke="#ddd6fe" stroke-width="1.5" stroke-linecap="round"/>
-    <line x1="14" y1="56" x2="42" y2="56" stroke="#ddd6fe" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="0" y="0" width="76" height="96" rx="4" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.5"/>
+    <path d="M56 0v16h20" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1"/>
+    <line x1="14" y1="28" x2="54" y2="28" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <line x1="14" y1="38" x2="62" y2="38" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <line x1="14" y1="48" x2="48" y2="48" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+    <line x1="14" y1="56" x2="42" y2="56" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
     <!-- Shield overlay -->
     <g transform="translate(36, 58)">
-      <path d="M16 2l14 6v10c0 9-5.5 16.5-14 19C7.5 34.5 2 27 2 18V8L16 2z" fill="url(#shieldFill)" opacity="0.9"/>
+      <path d="M16 2l14 6v10c0 9-5.5 16.5-14 19C7.5 34.5 2 27 2 18V8L16 2z" fill="url(#shieldFill)"/>
       <path d="M11 18l4 4 7-7" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     </g>
   </g>
@@ -114,27 +95,27 @@
   <!-- Right list items -->
   <g transform="translate(442, 192)">
     <!-- Item 1 -->
-    <circle cx="14" cy="14" r="10" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
-    <path d="M9 14l3 3 6-6" stroke="#7c3aed" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="14" cy="14" r="10" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1.5"/>
+    <path d="M9 14l3 3 6-6" stroke="#4c1d95" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     <text x="32" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#4c1d95" font-weight="600">7-layer security fortress</text>
-    <text x="32" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#6d28d9" opacity="0.7">From HMAC to blockchain anchoring</text>
+    <text x="32" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#6d28d9">From HMAC to blockchain anchoring</text>
 
     <!-- Item 2 -->
-    <circle cx="14" cy="62" r="10" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
-    <path d="M9 62l3 3 6-6" stroke="#7c3aed" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="14" cy="62" r="10" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1.5"/>
+    <path d="M9 62l3 3 6-6" stroke="#4c1d95" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     <text x="32" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#4c1d95" font-weight="600">Self-verifying document</text>
-    <text x="32" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#6d28d9" opacity="0.7">Protection IS the document</text>
+    <text x="32" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#6d28d9">Protection IS the document</text>
 
     <!-- Item 3 -->
-    <circle cx="14" cy="110" r="10" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
-    <path d="M9 110l3 3 6-6" stroke="#7c3aed" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="14" cy="110" r="10" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1.5"/>
+    <path d="M9 110l3 3 6-6" stroke="#4c1d95" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     <text x="32" y="114" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#4c1d95" font-weight="600">Blockchain sealed</text>
-    <text x="32" y="128" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#6d28d9" opacity="0.7">Immutable public timestamp</text>
+    <text x="32" y="128" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#6d28d9">Immutable public timestamp</text>
 
     <!-- Item 4 -->
-    <circle cx="14" cy="158" r="10" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
-    <path d="M9 158l3 3 6-6" stroke="#7c3aed" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="14" cy="158" r="10" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1.5"/>
+    <path d="M9 158l3 3 6-6" stroke="#4c1d95" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     <text x="32" y="162" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#4c1d95" font-weight="600">Zero-knowledge privacy</text>
-    <text x="32" y="176" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#6d28d9" opacity="0.7">Even Vertifile cannot read your data</text>
+    <text x="32" y="176" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#6d28d9">Even Vertifile cannot read your data</text>
   </g>
 </svg>

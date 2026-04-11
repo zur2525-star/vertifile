@@ -1,13 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
   <defs>
-    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#f5f3ff"/>
-      <stop offset="100%" stop-color="#ede9fe"/>
-    </linearGradient>
-    <linearGradient id="docGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="100%" stop-color="#f5f3ff"/>
-    </linearGradient>
     <linearGradient id="stampGrad" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#7c3aed"/>
       <stop offset="100%" stop-color="#6d28d9"/>
@@ -17,81 +9,77 @@
       <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
     <filter id="docShadow">
-      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#7c3aed" flood-opacity="0.15"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#7c3aed" flood-opacity="0.3"/>
     </filter>
   </defs>
 
-  <!-- Background -->
-  <rect width="600" height="600" fill="url(#bgGrad)" rx="20"/>
-
   <!-- Title -->
-  <text x="300" y="36" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#6d28d9" font-weight="700" letter-spacing="0.5">PVF SECURITY FORTRESS</text>
-  <text x="300" y="54" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#a78bfa" font-weight="500">7 layers of tamper-proof protection</text>
+  <text x="300" y="36" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#4c1d95" font-weight="700" letter-spacing="0.5">PVF SECURITY FORTRESS</text>
+  <text x="300" y="54" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#6d28d9" font-weight="500">7 layers of tamper-proof protection</text>
 
   <!-- Layer 7 (outermost): Transport Security -->
-  <circle cx="300" cy="310" r="248" fill="none" stroke="#e9e5f5" stroke-width="1.2" stroke-dasharray="6 4" opacity="0.7"/>
-  <rect x="176" y="68" width="130" height="22" rx="11" fill="#f5f3ff" stroke="#e9e5f5" stroke-width="0.8"/>
-  <text x="241" y="83" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#a78bfa" font-weight="600">Transport Security</text>
-  <circle cx="209" y="83" r="7" fill="#e9e5f5" cx="209" cy="83"/>
-  <text x="209" y="86" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" fill="#a78bfa" font-weight="700">7</text>
+  <circle cx="300" cy="310" r="248" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <rect x="176" y="68" width="130" height="22" rx="11" fill="#ede9fe" stroke="#a78bfa" stroke-width="1"/>
+  <text x="241" y="83" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#4c1d95" font-weight="600">Transport Security</text>
+  <circle cx="209" cy="83" r="7" fill="#a78bfa"/>
+  <text x="209" y="86" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" fill="#ffffff" font-weight="700">7</text>
 
   <!-- Layer 6: Zero-Knowledge -->
-  <circle cx="300" cy="310" r="213" fill="none" stroke="#ddd6fe" stroke-width="1.4" opacity="0.7"/>
-  <rect x="440" y="128" width="112" height="22" rx="11" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="0.8"/>
-  <text x="496" y="143" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#a78bfa" font-weight="600">Zero-Knowledge</text>
-  <circle cx="456" cy="143" r="7" fill="#ddd6fe"/>
-  <text x="456" y="146" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" fill="#7c3aed" font-weight="700">6</text>
+  <circle cx="300" cy="310" r="213" fill="none" stroke="#8b5cf6" stroke-width="1.8"/>
+  <rect x="440" y="128" width="112" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1"/>
+  <text x="496" y="143" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#4c1d95" font-weight="600">Zero-Knowledge</text>
+  <circle cx="456" cy="143" r="7" fill="#8b5cf6"/>
+  <text x="456" y="146" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" fill="#ffffff" font-weight="700">6</text>
 
   <!-- Layer 5: Blockchain -->
-  <circle cx="300" cy="310" r="178" fill="none" stroke="#c4b5fd" stroke-width="1.6" opacity="0.7"/>
-  <rect x="56" y="178" width="86" height="22" rx="11" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="0.8"/>
-  <text x="99" y="193" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#8b5cf6" font-weight="600">Blockchain</text>
-  <circle cx="72" cy="193" r="7" fill="#c4b5fd"/>
-  <text x="72" y="196" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" fill="#6d28d9" font-weight="700">5</text>
+  <circle cx="300" cy="310" r="178" fill="none" stroke="#7c3aed" stroke-width="2"/>
+  <rect x="56" y="178" width="86" height="22" rx="11" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+  <text x="99" y="193" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#4c1d95" font-weight="600">Blockchain</text>
+  <circle cx="72" cy="193" r="7" fill="#7c3aed"/>
+  <text x="72" y="196" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" fill="#ffffff" font-weight="700">5</text>
 
   <!-- Layer 4: Chained Token -->
-  <circle cx="300" cy="310" r="143" fill="none" stroke="#a78bfa" stroke-width="1.8" opacity="0.65"/>
-  <rect x="415" y="238" width="110" height="22" rx="11" fill="#ede9fe" stroke="#a78bfa" stroke-width="0.8"/>
-  <text x="470" y="253" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#7c3aed" font-weight="600">Chained Token</text>
-  <circle cx="430" cy="253" r="7" fill="#a78bfa"/>
+  <circle cx="300" cy="310" r="143" fill="none" stroke="#7c3aed" stroke-width="2.2"/>
+  <rect x="415" y="238" width="110" height="22" rx="11" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1"/>
+  <text x="470" y="253" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#4c1d95" font-weight="600">Chained Token</text>
+  <circle cx="430" cy="253" r="7" fill="#7c3aed"/>
   <text x="430" y="256" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" fill="#ffffff" font-weight="700">4</text>
 
   <!-- Layer 3: Code Integrity -->
-  <circle cx="300" cy="310" r="108" fill="none" stroke="#8b5cf6" stroke-width="2" opacity="0.6"/>
-  <rect x="82" y="308" width="104" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-width="0.8"/>
-  <text x="134" y="323" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#7c3aed" font-weight="600">Code Integrity</text>
-  <circle cx="97" cy="323" r="7" fill="#8b5cf6"/>
+  <circle cx="300" cy="310" r="108" fill="none" stroke="#6d28d9" stroke-width="2.5"/>
+  <rect x="82" y="308" width="104" height="22" rx="11" fill="#ddd6fe" stroke="#6d28d9" stroke-width="1"/>
+  <text x="134" y="323" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#4c1d95" font-weight="600">Code Integrity</text>
+  <circle cx="97" cy="323" r="7" fill="#6d28d9"/>
   <text x="97" y="326" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" fill="#ffffff" font-weight="700">3</text>
 
   <!-- Layer 2: Ed25519 -->
-  <circle cx="300" cy="310" r="73" fill="none" stroke="#7c3aed" stroke-width="2.2" opacity="0.55"/>
-  <rect x="378" y="358" width="82" height="22" rx="11" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.8"/>
-  <text x="419" y="373" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#6d28d9" font-weight="600">Ed25519</text>
-  <circle cx="392" cy="373" r="7" fill="#7c3aed"/>
+  <circle cx="300" cy="310" r="73" fill="none" stroke="#5b21b6" stroke-width="2.8"/>
+  <rect x="378" y="358" width="82" height="22" rx="11" fill="#ddd6fe" stroke="#5b21b6" stroke-width="1"/>
+  <text x="419" y="373" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#4c1d95" font-weight="600">Ed25519</text>
+  <circle cx="392" cy="373" r="7" fill="#5b21b6"/>
   <text x="392" y="376" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" fill="#ffffff" font-weight="700">2</text>
 
   <!-- Layer 1 (innermost): HMAC-SHA256 -->
-  <circle cx="300" cy="310" r="46" fill="rgba(124,58,237,0.06)" stroke="#6d28d9" stroke-width="2.5" opacity="0.6"/>
-  <rect x="128" y="398" width="110" height="22" rx="11" fill="#ede9fe" stroke="#6d28d9" stroke-width="0.8"/>
-  <text x="183" y="413" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#6d28d9" font-weight="600">HMAC-SHA256</text>
-  <circle cx="143" cy="413" r="7" fill="#6d28d9"/>
+  <circle cx="300" cy="310" r="46" fill="rgba(124,58,237,0.15)" stroke="#4c1d95" stroke-width="3"/>
+  <rect x="128" y="398" width="110" height="22" rx="11" fill="#c4b5fd" stroke="#4c1d95" stroke-width="1"/>
+  <text x="183" y="413" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#4c1d95" font-weight="600">HMAC-SHA256</text>
+  <circle cx="143" cy="413" r="7" fill="#4c1d95"/>
   <text x="143" y="416" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" fill="#ffffff" font-weight="700">1</text>
 
   <!-- Connecting lines from labels to rings -->
-  <line x1="209" y1="90" x2="209" y2="98" stroke="#e9e5f5" stroke-width="0.8" stroke-dasharray="2 2"/>
-  <line x1="496" y1="150" x2="496" y2="168" stroke="#ddd6fe" stroke-width="0.8" stroke-dasharray="2 2"/>
-  <line x1="99" y1="200" x2="128" y2="230" stroke="#c4b5fd" stroke-width="0.8" stroke-dasharray="2 2"/>
-  <line x1="470" y1="260" x2="440" y2="280" stroke="#a78bfa" stroke-width="0.8" stroke-dasharray="2 2"/>
-  <line x1="134" y1="330" x2="196" y2="330" stroke="#8b5cf6" stroke-width="0.8" stroke-dasharray="2 2"/>
-  <line x1="378" y1="370" x2="368" y2="356" stroke="#7c3aed" stroke-width="0.8" stroke-dasharray="2 2"/>
-  <line x1="183" y1="398" x2="260" y2="340" stroke="#6d28d9" stroke-width="0.8" stroke-dasharray="2 2"/>
+  <line x1="209" y1="90" x2="209" y2="98" stroke="#a78bfa" stroke-width="1" stroke-dasharray="2 2"/>
+  <line x1="496" y1="150" x2="496" y2="168" stroke="#8b5cf6" stroke-width="1" stroke-dasharray="2 2"/>
+  <line x1="99" y1="200" x2="128" y2="230" stroke="#7c3aed" stroke-width="1" stroke-dasharray="2 2"/>
+  <line x1="470" y1="260" x2="440" y2="280" stroke="#7c3aed" stroke-width="1" stroke-dasharray="2 2"/>
+  <line x1="134" y1="330" x2="196" y2="330" stroke="#6d28d9" stroke-width="1" stroke-dasharray="2 2"/>
+  <line x1="378" y1="370" x2="368" y2="356" stroke="#5b21b6" stroke-width="1" stroke-dasharray="2 2"/>
+  <line x1="183" y1="398" x2="260" y2="340" stroke="#4c1d95" stroke-width="1" stroke-dasharray="2 2"/>
 
   <!-- Center: Document icon with stamp -->
   <g filter="url(#docShadow)">
-    <rect x="274" y="280" width="52" height="64" rx="4" fill="url(#docGrad)" stroke="#7c3aed" stroke-width="1.5"/>
+    <rect x="274" y="280" width="52" height="64" rx="4" fill="#7c3aed" stroke="#4c1d95" stroke-width="1.5"/>
     <!-- Folded corner -->
-    <path d="M314 280v12h12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1"/>
-    <path d="M314 280l12 12" fill="none" stroke="#7c3aed" stroke-width="0.5" opacity="0.3"/>
+    <path d="M314 280v12h12" fill="#6d28d9" stroke="#4c1d95" stroke-width="1"/>
     <!-- Document lines -->
     <line x1="284" y1="300" x2="310" y2="300" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round"/>
     <line x1="284" y1="308" x2="316" y2="308" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round"/>
@@ -104,11 +92,11 @@
   <path d="M310 335l4 4 8-8" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 
   <!-- Bottom legend -->
-  <text x="300" y="576" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#a78bfa" font-weight="500">Innermost = strongest protection</text>
+  <text x="300" y="576" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#6d28d9" font-weight="500">Innermost = strongest protection</text>
   <!-- Arrow from inner to outer -->
-  <line x1="210" y1="560" x2="390" y2="560" stroke="#c4b5fd" stroke-width="0.8"/>
-  <polygon points="206,560 214,556 214,564" fill="#c4b5fd"/>
-  <polygon points="394,560 386,556 386,564" fill="#c4b5fd"/>
-  <text x="180" y="556" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#c4b5fd">Inner</text>
-  <text x="420" y="556" text-anchor="start" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#c4b5fd">Outer</text>
+  <line x1="210" y1="560" x2="390" y2="560" stroke="#7c3aed" stroke-width="1"/>
+  <polygon points="206,560 214,556 214,564" fill="#7c3aed"/>
+  <polygon points="394,560 386,556 386,564" fill="#7c3aed"/>
+  <text x="180" y="556" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#7c3aed">Inner</text>
+  <text x="420" y="556" text-anchor="start" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#7c3aed">Outer</text>
 </svg>
