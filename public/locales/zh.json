@@ -1349,6 +1349,8 @@
       "uploadFirst": "Upload your first document",
       "selected": "已选择0个",
       "downloadAll": "全部下载",
+      "downloadPvf": "下载PVF",
+      "copyShareLink": "复制分享链接",
       "delete": "删除",
       "deselect": "取消选择",
       "previewTitle": "文档",

@@ -1350,6 +1350,8 @@
       "selected": "0 selected",
       "selectedSuffix": "selected",
       "downloadAll": "Download All",
+      "downloadPvf": "Download PVF",
+      "copyShareLink": "Copy Share Link",
       "delete": "Delete",
       "deselect": "Deselect",
       "previewTitle": "Document",

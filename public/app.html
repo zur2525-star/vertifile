@@ -1889,18 +1889,11 @@ window.Dashboard = {
     // Theme: use existing light-mode class approach
     this.updateThemeIcon();
 
-    // Welcome date
-    var d = new Date();
-    var dateEl = document.getElementById('welcomeDate');
-    var lang = (typeof vfGetLang === 'function') ? vfGetLang() : 'en';
-    if (dateEl) dateEl.textContent = d.toLocaleDateString(lang, {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    // Welcome date (locale-aware via BCP47 tags)
+    this.renderWelcomeDate();
 
-    // Welcome heading
-    var wh = document.getElementById('welcomeHeading');
-    if (wh && currentUser) {
-      var _wb = (typeof vfGetTranslation === 'function' && vfGetTranslation('tab.overview.welcomeBack')) || 'Welcome back, {name}';
-      wh.textContent = _wb.replace('{name}', currentUser.name || currentUser.email || 'User');
-    }
+    // Welcome heading (locale-aware)
+    this.renderWelcomeHeading();
 
     // Check URL hash for tab
     var hash = location.hash.replace('#','');
@@ -2091,9 +2084,12 @@ window.Dashboard = {
     var _t = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
     var _sV = _t('status.verified') || 'Verified';
     var _sU = _t('status.pending') || 'Unverified';
+    var _dlPvf = _t('tab.documents.downloadPvf') || 'Download PVF';
+    var _copyShare = _t('tab.documents.copyShareLink') || 'Copy Share Link';
+    var _delLabel = _t('tab.documents.delete') || 'Delete';
     container.innerHTML = filtered.map(function(d, i){
       var id = d.id || d._id || d.hash;
-      var rawName = d.originalName || d.original_name || ((typeof vfGetTranslation === 'function' && vfGetTranslation('app.untitled')) || 'Untitled');
+      var rawName = d.originalName || d.original_name || (_t('app.untitled') || 'Untitled');
       var name = rawName.replace(/\.[^.]+$/, '') + '.pvf';
       var size = formatSize(d.fileSize || d.file_size || 0);
       var date = formatDate(d.timestamp || d.createdAt || d.created_at || d.created);
@@ -2109,7 +2105,7 @@ window.Dashboard = {
         '<div class="col-status"><span class="doc-status ' + (verified ? 'verified' : 'unverified') + '">' + (verified ? '<svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ' + _sV : '<svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> ' + _sU) + '</span></div>' +
         '<div class="col-date">' + date + '</div>' +
         '<div class="col-size">' + size + '</div>' +
-        '<div class="col-actions" style="position:relative"><button class="doc-actions-btn" onclick="event.stopPropagation();Dashboard.toggleDocMenu(this)" aria-label="Actions">&#8943;</button><div class="doc-actions-menu"><a onclick="event.stopPropagation();Dashboard.downloadDoc(' + i + ')"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PVF</a><a onclick="event.stopPropagation();Dashboard.shareDoc(' + i + ')"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg> Copy Share Link</a><a class="danger" onclick="event.stopPropagation();Dashboard.deleteDocAtIndex(' + i + ')"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg> Delete</a></div></div>' +
+        '<div class="col-actions" style="position:relative"><button class="doc-actions-btn" onclick="event.stopPropagation();Dashboard.toggleDocMenu(this)" aria-label="Actions">&#8943;</button><div class="doc-actions-menu"><a onclick="event.stopPropagation();Dashboard.downloadDoc(' + i + ')"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> ' + _dlPvf + '</a><a onclick="event.stopPropagation();Dashboard.shareDoc(' + i + ')"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg> ' + _copyShare + '</a><a class="danger" onclick="event.stopPropagation();Dashboard.deleteDocAtIndex(' + i + ')"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg> ' + _delLabel + '</a></div></div>' +
         '</div>';
     }).join('');
 
@@ -2117,7 +2113,7 @@ window.Dashboard = {
     var gridContainer = document.getElementById('docsGridView');
     if (gridContainer) {
       gridContainer.innerHTML = filtered.map(function(d, i){
-        var name = (d.originalName || d.original_name || 'Untitled').replace(/\.[^.]+$/, '') + '.pvf';
+        var name = (d.originalName || d.original_name || (_t('app.untitled') || 'Untitled')).replace(/\.[^.]+$/, '') + '.pvf';
         var size = formatSize(d.fileSize || d.file_size || 0);
         var date = formatDate(d.timestamp || d.createdAt || d.created_at || d.created);
         return '<div class="grid-card" onclick="Dashboard.previewDoc(' + i + ')">' +
@@ -2677,6 +2673,27 @@ window.Dashboard = {
       if (sqs) sqs.style.display = 'none';
       var cc = document.getElementById('checklistCard');
       if (cc) cc.style.display = 'none';
+    }
+  },
+
+  // BCP47 locale map for proper date/number formatting
+  _localeMap: {en:'en-US',he:'he-IL',ar:'ar-SA',de:'de-DE',es:'es-ES',fr:'fr-FR',ja:'ja-JP',pt:'pt-BR',ru:'ru-RU',zh:'zh-CN'},
+
+  // Locale-aware welcome date
+  renderWelcomeDate: function(){
+    var dateEl = document.getElementById('welcomeDate');
+    if (!dateEl) return;
+    var lang = (typeof vfGetLang === 'function') ? vfGetLang() : 'en';
+    var locale = this._localeMap[lang] || lang;
+    dateEl.textContent = new Date().toLocaleDateString(locale, {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  },
+
+  // Locale-aware welcome heading
+  renderWelcomeHeading: function(){
+    var wh = document.getElementById('welcomeHeading');
+    if (wh && currentUser) {
+      var _wb = (typeof vfGetTranslation === 'function' && vfGetTranslation('tab.overview.welcomeBack')) || 'Welcome back, {name}';
+      wh.textContent = _wb.replace('{name}', currentUser.name || currentUser.email || 'User');
     }
   },
 
@@ -3484,8 +3501,17 @@ async function loadApiInfo() {
   const used = currentUser?.documentsUsed ?? documents.length;
   const plan = currentUser?.plan || 'free';
   const limit = currentUser?.documentsLimit || 1;
+  var _ta = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+  var _apiPlanNames = {
+    free: _ta('plan.free') || 'Free',
+    pro: _ta('plan.pro') || 'Pro',
+    professional: _ta('plan.pro') || 'Pro',
+    pro_plus: _ta('plan.proPlus') || 'Pro+',
+    proplus: _ta('plan.proPlus') || 'Pro+',
+    enterprise: _ta('plan.enterprise') || 'Enterprise'
+  };
   document.getElementById('apiStatDocs').textContent = used;
-  document.getElementById('apiStatPlan').textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
+  document.getElementById('apiStatPlan').textContent = _apiPlanNames[plan] || plan.charAt(0).toUpperCase() + plan.slice(1);
   document.getElementById('apiStatRate').textContent = { free: '5/day', professional: '100/day', enterprise: '10K/day' }[plan] || '5/day';
 
   // Check if user has an API key stored
@@ -3537,13 +3563,15 @@ function formatDate(dateStr) {
   const diffDay = Math.floor(diffMs / 86400000);
   var t = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
   var lang = (typeof vfGetLang === 'function') ? vfGetLang() : 'en';
+  var _lm = {en:'en-US',he:'he-IL',ar:'ar-SA',de:'de-DE',es:'es-ES',fr:'fr-FR',ja:'ja-JP',pt:'pt-BR',ru:'ru-RU',zh:'zh-CN'};
+  var locale = _lm[lang] || lang;
 
   if (diffMin < 1) return t('time.justNow') || 'just now';
   if (diffMin < 60) return (t('time.minutesAgo') || '{n}m ago').replace('{n}', diffMin);
   if (diffHr < 24) return (t('time.hoursAgo') || '{n}h ago').replace('{n}', diffHr);
   if (diffDay === 1) return t('time.yesterday') || 'yesterday';
   if (diffDay < 7) return (t('time.daysAgo') || '{n}d ago').replace('{n}', diffDay);
-  return d.toLocaleDateString(lang, { day: 'numeric', month: 'short' });
+  return d.toLocaleDateString(locale, { day: 'numeric', month: 'short' });
 }
 
 function getInitials(name) {
@@ -3611,9 +3639,17 @@ function appI18nPatch() {
     var val = typeof vfGetTranslation === 'function' ? vfGetTranslation(el.getAttribute('data-i18n-aria')) : null;
     if (val) el.setAttribute('aria-label', val);
   });
-  // Re-render dynamic Getting Started progress text in current language
-  if (window.Dashboard && Dashboard.updateGettingStartedProgress) {
-    Dashboard.updateGettingStartedProgress();
+  // Re-render ALL dynamic content with the current language
+  if (window.Dashboard) {
+    // Welcome date (locale-aware)
+    if (Dashboard.renderWelcomeDate) Dashboard.renderWelcomeDate();
+    // Welcome heading (translated template)
+    if (Dashboard.renderWelcomeHeading) Dashboard.renderWelcomeHeading();
+    // Plan display — stat cards, sidebar badge, settings plan info
+    // (also calls updateGettingStartedProgress internally)
+    if (Dashboard.updatePlanDisplay) Dashboard.updatePlanDisplay();
+    // Document rows — status labels, action menu text, time-ago strings
+    if (Dashboard.renderDocRows) Dashboard.renderDocRows();
   }
 }
 document.addEventListener('DOMContentLoaded', function() {

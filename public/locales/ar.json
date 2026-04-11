@@ -1349,6 +1349,8 @@
       "uploadFirst": "Upload your first document",
       "selected": "0 محدد",
       "downloadAll": "تنزيل الكل",
+      "downloadPvf": "تنزيل PVF",
+      "copyShareLink": "نسخ رابط المشاركة",
       "delete": "حذف",
       "deselect": "إلغاء التحديد",
       "previewTitle": "مستند",

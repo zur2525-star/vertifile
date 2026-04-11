@@ -1349,6 +1349,8 @@
       "uploadFirst": "Upload your first document",
       "selected": "0件選択",
       "downloadAll": "すべてダウンロード",
+      "downloadPvf": "PVFをダウンロード",
+      "copyShareLink": "共有リンクをコピー",
       "delete": "削除",
       "deselect": "選択解除",
       "previewTitle": "ドキュメント",

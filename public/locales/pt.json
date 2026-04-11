@@ -1349,6 +1349,8 @@
       "uploadFirst": "Upload your first document",
       "selected": "0 selecionado(s)",
       "downloadAll": "Baixar Tudo",
+      "downloadPvf": "Baixar PVF",
+      "copyShareLink": "Copiar link de compartilhamento",
       "delete": "Excluir",
       "deselect": "Desmarcar",
       "previewTitle": "Documento",
