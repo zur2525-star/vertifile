@@ -1725,18 +1725,20 @@ function showForgotPassword(e) {
   if (!token) return;
   var loginCard = document.querySelector('.login-card') || document.querySelector('.auth-card');
   if (!loginCard) return;
-  loginCard.innerHTML = '<h2 style="margin-bottom:8px">Set New Password</h2>' +
-    '<p style="color:#8b89a6;margin-bottom:20px;font-size:13px">Enter your new password below</p>' +
-    '<input type="password" id="resetPassword" placeholder="New password (min 8 chars)" style="width:100%;padding:12px 16px;border:1px solid rgba(124,58,237,.2);border-radius:10px;font-size:14px;font-family:inherit;background:rgba(26,24,48,.5);color:#e2e0f0;outline:none;margin-bottom:12px">' +
-    '<input type="password" id="resetPasswordConfirm" placeholder="Confirm password" style="width:100%;padding:12px 16px;border:1px solid rgba(124,58,237,.2);border-radius:10px;font-size:14px;font-family:inherit;background:rgba(26,24,48,.5);color:#e2e0f0;outline:none;margin-bottom:16px">' +
-    '<button onclick="doResetPassword(\'' + token + '\')" style="width:100%;padding:14px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer">Update Password</button>';
+  var _rt = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+  loginCard.innerHTML = '<h2 style="margin-bottom:8px">' + (_rt('resetPassword.title') || 'Set New Password') + '</h2>' +
+    '<p style="color:#8b89a6;margin-bottom:20px;font-size:13px">' + (_rt('resetPassword.subtitle') || 'Enter your new password below.') + '</p>' +
+    '<input type="password" id="resetPassword" placeholder="' + (_rt('resetPassword.newPassword') || 'New password (min 8 chars)') + '" style="width:100%;padding:12px 16px;border:1px solid rgba(124,58,237,.2);border-radius:10px;font-size:14px;font-family:inherit;background:rgba(26,24,48,.5);color:#e2e0f0;outline:none;margin-bottom:12px">' +
+    '<input type="password" id="resetPasswordConfirm" placeholder="' + (_rt('resetPassword.confirmPassword') || 'Confirm password') + '" style="width:100%;padding:12px 16px;border:1px solid rgba(124,58,237,.2);border-radius:10px;font-size:14px;font-family:inherit;background:rgba(26,24,48,.5);color:#e2e0f0;outline:none;margin-bottom:16px">' +
+    '<button onclick="doResetPassword(\'' + token + '\')" style="width:100%;padding:14px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer">' + (_rt('resetPassword.submit') || 'Update Password') + '</button>';
 })();
 
 function doResetPassword(token) {
   var pw = document.getElementById('resetPassword').value;
   var pw2 = document.getElementById('resetPasswordConfirm').value;
-  if (pw.length < 8) { toast('Password must be at least 8 characters'); return; }
-  if (pw !== pw2) { toast('Passwords do not match'); return; }
+  var _rpt = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+  if (pw.length < 8) { toast(_rpt('toast.passwordMin8') || 'Password must be at least 8 characters'); return; }
+  if (pw !== pw2) { toast(_rpt('toast.passwordsNoMatch') || 'Passwords do not match'); return; }
   fetch('/auth/reset-password', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1744,13 +1746,13 @@ function doResetPassword(token) {
     credentials: 'same-origin'
   }).then(function(r) { return r.json(); }).then(function(d) {
     if (d.success) {
-      toast('Password updated! You can now sign in.');
+      toast(_rpt('toast.passwordUpdatedSignIn') || 'Password updated! You can now sign in.');
       window.history.replaceState({}, '', '/app');
       setTimeout(function() { location.reload(); }, 1500);
     } else {
-      toast(d.error || 'Reset failed');
+      toast(d.error || (_rpt('toast.resetFailed') || 'Reset failed'));
     }
-  }).catch(function() { toast('Something went wrong'); });
+  }).catch(function() { toast(_rpt('toast.somethingWrong') || 'Something went wrong'); });
 }
 
 async function doLogin() {
@@ -2031,7 +2033,7 @@ window.Dashboard = {
   markAllRead: function(){
     document.querySelectorAll('.notif-item.unread').forEach(function(n){ n.classList.remove('unread'); });
     var dot = document.getElementById('notifDot'); if(dot) dot.style.display = 'none';
-    this.showToast('All notifications marked as read');
+    this.showToast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.allNotifRead')) || 'All notifications marked as read');
   },
   toggleUserMenu: function(){ var ud = document.getElementById('userDropdown'); if(ud) ud.classList.toggle('show'); },
 
@@ -2090,7 +2092,7 @@ window.Dashboard = {
     var _sU = _t('status.pending') || 'Unverified';
     container.innerHTML = filtered.map(function(d, i){
       var id = d.id || d._id || d.hash;
-      var rawName = d.originalName || d.original_name || 'Untitled';
+      var rawName = d.originalName || d.original_name || ((typeof vfGetTranslation === 'function' && vfGetTranslation('app.untitled')) || 'Untitled');
       var name = rawName.replace(/\.[^.]+$/, '') + '.pvf';
       var size = formatSize(d.fileSize || d.file_size || 0);
       var date = formatDate(d.timestamp || d.createdAt || d.created_at || d.created);
@@ -2141,11 +2143,11 @@ window.Dashboard = {
     if (!el) return;
     var recent = (docs || documents).slice(0, 3);
     if (recent.length === 0) {
-      el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-2);font-size:13px">No documents yet</div>';
+      el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-2);font-size:13px">' + ((typeof vfGetTranslation === 'function' && vfGetTranslation('tab.overview.noDocsYet')) || 'No documents yet') + '</div>';
       return;
     }
     el.innerHTML = recent.map(function(d){
-      var rawName = d.originalName || d.original_name || 'Untitled';
+      var rawName = d.originalName || d.original_name || ((typeof vfGetTranslation === 'function' && vfGetTranslation('app.untitled')) || 'Untitled');
       var name = rawName.replace(/\.[^.]+$/, '') + '.pvf';
       var verified = d.verified !== false;
       var date = formatDate(d.timestamp || d.createdAt || d.created_at || d.created);
@@ -2161,7 +2163,7 @@ window.Dashboard = {
     var filtered = documents;
     if (idx < 0 || idx >= filtered.length) return;
     selectedDoc = filtered[idx];
-    var rawName = selectedDoc.originalName || selectedDoc.original_name || 'Untitled';
+    var rawName = selectedDoc.originalName || selectedDoc.original_name || ((typeof vfGetTranslation === 'function' && vfGetTranslation('app.untitled')) || 'Untitled');
     var pvfName = rawName.replace(/\.[^.]+$/, '') + '.pvf';
     document.getElementById('previewTitle').textContent = pvfName;
     document.getElementById('previewHash').textContent = (selectedDoc.hash || '--').substring(0, 16) + '...';
@@ -2197,9 +2199,11 @@ window.Dashboard = {
         keyEl.textContent = 'n/a';
         keyEl.classList.remove('copyable');
         keyEl.onclick = null;
+        var _hmacTitle = (typeof vfGetTranslation === 'function' && vfGetTranslation('preview.hmacOnlyTitle')) || 'This document was signed before Ed25519 dual-signing was enabled.';
+        var _hmacLabel = (typeof vfGetTranslation === 'function' && vfGetTranslation('preview.hmacOnly')) || 'HMAC-only';
         statusEl.innerHTML =
-          '<span class="cpe-pill cpe-pill-legacy" role="status" title="This document was signed before Ed25519 dual-signing was enabled." aria-label="HMAC-only legacy document">' +
-            '<span>HMAC-only</span>' +
+          '<span class="cpe-pill cpe-pill-legacy" role="status" title="' + _hmacTitle + '" aria-label="' + _hmacLabel + '">' +
+            '<span>' + _hmacLabel + '</span>' +
           '</span>';
       }
     }
@@ -2211,7 +2215,7 @@ window.Dashboard = {
     var previewEl = document.getElementById('previewContent');
     var shareId = selectedDoc.shareId || selectedDoc.share_id;
     if (previewEl) {
-      var rawNameForCard = selectedDoc.originalName || selectedDoc.original_name || 'Untitled';
+      var rawNameForCard = selectedDoc.originalName || selectedDoc.original_name || ((typeof vfGetTranslation === 'function' && vfGetTranslation('app.untitled')) || 'Untitled');
       var sizeStr = formatSize(selectedDoc.fileSize || selectedDoc.file_size || 0);
 
       // Single universal document icon (96x96, currentColor — picks up the purple via .dpc-icon).
@@ -2224,7 +2228,8 @@ window.Dashboard = {
         '<line x1="9" y1="17" x2="15" y2="17"/>' +
         '<line x1="9" y1="9" x2="13" y2="9"/>' +
         '</svg>';
-      var metaText = 'PVF DOCUMENT' + (sizeStr && sizeStr !== '0 B' ? ' \u00b7 ' + sizeStr : '');
+      var _pvfDocLabel = (typeof vfGetTranslation === 'function' && vfGetTranslation('preview.pvfDocument')) || 'PVF DOCUMENT';
+      var metaText = _pvfDocLabel + (sizeStr && sizeStr !== '0 B' ? ' \u00b7 ' + sizeStr : '');
 
       // NOTE (i18n follow-up — Phase 4): the "PVF DOCUMENT" meta label and the "Open document"
       // CTA text are NOT wired up to i18n here. Prior data-i18n attributes were removed because
@@ -2242,7 +2247,7 @@ window.Dashboard = {
       if (isEncDoc && savedKey) {
         // This browser has the key — show normal "Open document" link with full URL
         var fullUrl = '/d/' + escHtml(selectedDoc.slug || shareId) + '#key=' + savedKey;
-        ctaHtml = '<a class="dpc-cta" href="' + fullUrl + '" target="_blank" rel="noopener">' + openCtaSvg + '<span>Open document</span></a>';
+        ctaHtml = '<a class="dpc-cta" href="' + fullUrl + '" target="_blank" rel="noopener">' + openCtaSvg + '<span>' + ((typeof vfGetTranslation === 'function' && vfGetTranslation('preview.openDocument')) || 'Open document') + '</span></a>';
       } else if (isEncDoc) {
         // Different browser — no key available
         ctaHtml = '<div class="dpc-cta-encrypted">' +
@@ -2252,7 +2257,7 @@ window.Dashboard = {
       } else {
         // Normal non-encrypted doc
         ctaHtml = shareId
-          ? '<a class="dpc-cta" href="/d/' + escHtml(selectedDoc.slug || shareId) + '" target="_blank" rel="noopener">' + openCtaSvg + '<span>Open document</span></a>'
+          ? '<a class="dpc-cta" href="/d/' + escHtml(selectedDoc.slug || shareId) + '" target="_blank" rel="noopener">' + openCtaSvg + '<span>' + ((typeof vfGetTranslation === 'function' && vfGetTranslation('preview.openDocument')) || 'Open document') + '</span></a>'
           : '';
       }
 
@@ -2299,7 +2304,7 @@ window.Dashboard = {
       }
       var shareUrl = (savedKey) ? (baseUrl + '#key=' + savedKey) : baseUrl;
       copyToClipboard(shareUrl);
-      toast('Share link copied!');
+      toast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.shareLinkCopied')) || 'Share link copied!');
     }
   },
   downloadDoc: function(idx){
@@ -2320,16 +2325,17 @@ window.Dashboard = {
       }
       var shareUrl = (savedKey) ? (baseUrl + '#key=' + savedKey) : baseUrl;
       copyToClipboard(shareUrl);
-      toast('Share link copied!');
+      toast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.shareLinkCopied')) || 'Share link copied!');
     }
   },
   deleteDocAtIndex: function(idx){
     var d = documents[idx]; if (!d) return;
-    if (!confirm('Are you sure you want to delete this document?')) return;
+    var _td = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+    if (!confirm(_td('confirm.deleteDocument') || 'Are you sure you want to delete this document?')) return;
     var id = d.id || d._id || d.hash;
     fetch('/api/user/documents/' + id, { method: 'DELETE', credentials: 'same-origin' })
-      .then(function(r){ if(r.ok){ toast('Document deleted'); loadDocuments(); } else { toast('Failed to delete'); } })
-      .catch(function(e){ toast('Error: ' + e.message); });
+      .then(function(r){ if(r.ok){ toast(_td('toast.docDeleted') || 'Document deleted'); loadDocuments(); } else { toast(_td('toast.deleteFailed') || 'Failed to delete'); } })
+      .catch(function(e){ toast((_td('toast.error') || 'Error') + ': ' + e.message); });
   },
 
   // View toggle
@@ -2352,7 +2358,7 @@ window.Dashboard = {
   updateBulk: function(){
     var checked = document.querySelectorAll('#docRows .doc-row input[type="checkbox"]:checked');
     var bar = document.getElementById('bulkBar');
-    if(checked.length > 0){ if(bar) bar.classList.add('show'); var bc = document.getElementById('bulkCount'); if(bc) bc.textContent = checked.length + ' selected'; }
+    if(checked.length > 0){ if(bar) bar.classList.add('show'); var bc = document.getElementById('bulkCount'); if(bc) bc.textContent = checked.length + ' ' + ((typeof vfGetTranslation === 'function' && vfGetTranslation('tab.documents.selectedSuffix')) || 'selected'); }
     else { if(bar) bar.classList.remove('show'); }
   },
   toggleDocMenu: function(btn){
@@ -2365,11 +2371,12 @@ window.Dashboard = {
     this.closeModal('deleteModal');
     // Delete all selected docs
     var checked = document.querySelectorAll('#docRows .doc-row input[type="checkbox"]:checked');
-    if (checked.length === 0) { toast('No documents selected'); return; }
+    var _tb = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+    if (checked.length === 0) { toast(_tb('toast.noDocsSelected') || 'No documents selected'); return; }
     var ids = [];
     checked.forEach(function(c){ var docId = c.getAttribute('data-doc-id'); if(docId) ids.push(docId); });
-    if (ids.length === 0) { toast('No documents selected'); return; }
-    toast('Deleting ' + ids.length + ' document(s)...');
+    if (ids.length === 0) { toast(_tb('toast.noDocsSelected') || 'No documents selected'); return; }
+    toast((_tb('toast.deletingDocs') || 'Deleting {n} document(s)...').replace('{n}', ids.length));
     var done = 0, failed = 0, total = ids.length;
     ids.forEach(function(id){
       fetch('/api/user/documents/' + encodeURIComponent(id), { method: 'DELETE', credentials: 'same-origin' })
@@ -2377,8 +2384,8 @@ window.Dashboard = {
         .catch(function(){ failed++; })
         .finally(function(){
           if(done + failed === total){
-            if(failed > 0) toast(done + ' deleted, ' + failed + ' failed');
-            else toast(done + ' document(s) deleted');
+            if(failed > 0) toast((_tb('toast.bulkDeletePartial') || '{d} deleted, {f} failed').replace('{d}', done).replace('{f}', failed));
+            else toast((_tb('toast.bulkDeleteDone') || '{d} document(s) deleted').replace('{d}', done));
             loadDocuments();
           }
         });
@@ -2461,13 +2468,13 @@ window.Dashboard = {
       .then(function(res) {
         if (res.ok) {
           if (currentUser) currentUser.stampConfig = res.data.stampConfig;
-          self.showToast('Stamp saved — applying to all your documents');
+          self.showToast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.stampSaved')) || 'Stamp saved — applying to all your documents');
           self.updateGettingStartedProgress();
         } else {
-          self.showToast(res.data.error || 'Failed to save stamp');
+          self.showToast(res.data.error || ((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.stampSaveFailed')) || 'Failed to save stamp'));
         }
       })
-      .catch(function(e) { self.showToast('Error: ' + e.message); });
+      .catch(function(e) { self.showToast(((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.error')) || 'Error') + ': ' + e.message); });
   },
   renderStamps: function(){
     if(!window.VertifileStamp) return;
@@ -2554,7 +2561,8 @@ window.Dashboard = {
     if(/[A-Z]/.test(val)) score++;
     if(/[0-9]/.test(val)) score++;
     if(/[^A-Za-z0-9]/.test(val)) score++;
-    var levels = ['','Weak','Fair','Good','Strong'];
+    var _tpw = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+    var levels = ['', _tpw('password.weak') || 'Weak', _tpw('password.fair') || 'Fair', _tpw('password.good') || 'Good', _tpw('password.strong') || 'Strong'];
     var classes = ['','weak','fair','good','strong'];
     segs.forEach(function(s,i){ s.className = 'seg'; if(i < score) s.classList.add(classes[score]); });
     if(label) { label.textContent = val.length > 0 ? levels[score] : ''; label.className = 'strength-label ' + (val.length > 0 ? classes[score] : ''); }
@@ -2670,7 +2678,7 @@ window.Dashboard = {
   },
 
   showToast: function(msg){ toast(msg); },
-  shareLastDoc: function(){ this.showToast('Share link copied to clipboard'); },
+  shareLastDoc: function(){ this.showToast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.shareLinkCopied')) || 'Share link copied!'); },
   dismissTip: function(){
     var tc = document.getElementById('tipCard'); if(tc) tc.style.display = 'none';
     localStorage.setItem('vertifile-tip-dismissed','1');
@@ -2805,8 +2813,9 @@ function updateWaveCount(count) {
   let html = '';
   for (let i = 0; i < count; i++) {
     const color = existing[i] || generateGradientColor('#7c3aed', i, count);
+    var _waveLabel = (typeof vfGetTranslation === 'function' && vfGetTranslation('tab.stamp.wave' + (i + 1))) || ('Wave ' + (i + 1));
     html += '<div class="wave-color-row">' +
-      '<span>Wave ' + (i + 1) + ':</span>' +
+      '<span>' + _waveLabel + ':</span>' +
       '<input type="color" value="' + color + '" onchange="updateWavePreview()">' +
       '</div>';
   }
@@ -2935,7 +2944,7 @@ function compressStampLogo(dataUri, maxSize) {
 function handleLogoUpload(e) {
   var file = e.target.files[0];
   if (!file) return;
-  if (file.size > 2 * 1024 * 1024) { toast('Logo must be under 2MB'); return; }
+  if (file.size > 2 * 1024 * 1024) { toast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.logoTooLarge')) || 'Logo must be under 2MB'); return; }
   var reader = new FileReader();
   reader.onload = async function(ev) {
     var dataUrl = await compressStampLogo(ev.target.result);
@@ -2962,7 +2971,7 @@ function handleLogoUpload(e) {
 function removeLogo() {
   document.getElementById('brandIconUrl').value = '';
   document.getElementById('brandLogoFile').value = '';
-  document.getElementById('brandLogoFileName').textContent = 'Vertifile Shield (default)';
+  document.getElementById('brandLogoFileName').textContent = (typeof vfGetTranslation === 'function' && vfGetTranslation('stamp.defaultLogo')) || 'Vertifile Shield (default)';
   document.getElementById('brandLogoRemoveBtn').style.display = 'none';
   const defaultShield = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(124,58,237,.15)" stroke="rgba(124,58,237,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="rgba(124,58,237,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   document.getElementById('bpStampLogo').innerHTML = defaultShield;
@@ -2983,12 +2992,12 @@ async function saveBranding() {
       credentials: 'same-origin'
     });
     if (r.ok) {
-      toast('Branding saved successfully!');
+      toast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.brandingSaved')) || 'Branding saved successfully!');
     } else {
       const data = await r.json();
-      toast(data.error || 'Failed to save branding');
+      toast(data.error || ((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.brandingSaveFailed')) || 'Failed to save branding'));
     }
-  } catch(e) { toast('Error: ' + e.message); }
+  } catch(e) { toast(((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.error')) || 'Error') + ': ' + e.message); }
 }
 
 function resetBranding() {
@@ -2999,13 +3008,14 @@ function resetBranding() {
   document.getElementById('brandIconUrl').value = '';
   removeLogo();
   updateBrandPreview();
-  toast('Branding reset to default');
+  toast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.brandingReset')) || 'Branding reset to default');
 }
 
 // ===== Settings Actions =====
 async function saveProfile() {
   const name = document.getElementById('settingsName').value.trim();
-  if (!name) { toast('Name cannot be empty'); return; }
+  var _ts = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+  if (!name) { toast(_ts('toast.nameEmpty') || 'Name cannot be empty'); return; }
   try {
     const r = await fetch('/api/user/profile', {
       method: 'PUT',
@@ -3017,12 +3027,12 @@ async function saveProfile() {
       if (currentUser) currentUser.name = name;
       document.getElementById('userName').textContent = name;
       document.getElementById('userAvatar').textContent = getInitials(name);
-      toast('Profile saved!');
+      toast(_ts('toast.profileSaved') || 'Profile saved!');
     } else {
       const data = await r.json();
-      toast(data.error || 'Failed to save profile');
+      toast(data.error || (_ts('toast.profileSaveFailed') || 'Failed to save profile'));
     }
-  } catch(e) { toast('Error: ' + e.message); }
+  } catch(e) { toast((_ts('toast.error') || 'Error') + ': ' + e.message); }
 }
 
 async function generateApiKey() {
@@ -3041,15 +3051,15 @@ async function generateApiKey() {
       document.getElementById('apiKeyEmpty').style.display = 'none';
       // Also update settings panel
       document.getElementById('apiKeyDisplay2').textContent = data.apiKey;
-      showToast('API key generated! Copy it now — it won\'t be shown again in full.');
+      showToast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.apiKeyGenerated')) || 'API key generated! Copy it now — it won\'t be shown again in full.');
     } else {
-      showToast(data.error || 'Failed to generate API key', true);
+      showToast(data.error || ((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.apiKeyFailed')) || 'Failed to generate API key'), true);
     }
   } catch (e) {
     // Generate a demo key locally
     const demoKey = 'vf_' + Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b => b.toString(16).padStart(2, '0')).join('');
     document.getElementById('apiKeyDisplay2').textContent = demoKey;
-    toast('API key generated (demo mode)');
+    toast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.apiKeyDemo')) || 'API key generated (demo mode)');
   }
 }
 
@@ -3063,16 +3073,17 @@ function copyApiKey() {
 function copyApiKeyApp() {
   const keyEl = document.getElementById('apiKeyValue');
   const text = userApiKey || keyEl.textContent;
-  navigator.clipboard.writeText(text).then(() => showToast('API key copied!')).catch(() => showToast('Copy failed', true));
+  navigator.clipboard.writeText(text).then(() => showToast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.apiKeyCopied')) || 'API key copied!')).catch(() => showToast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.copyFailed')) || 'Copy failed', true));
 }
 
 async function changePassword() {
   const curr = document.getElementById('currentPassword').value;
   const newP = document.getElementById('newPassword').value;
   const conf = document.getElementById('confirmPassword').value;
-  if (!curr || !newP) { toast('Please fill in all password fields'); return; }
-  if (newP !== conf) { toast('New passwords do not match'); return; }
-  if (newP.length < 8) { toast('Password must be at least 8 characters'); return; }
+  var _tcp = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+  if (!curr || !newP) { toast(_tcp('toast.fillPasswordFields') || 'Please fill in all password fields'); return; }
+  if (newP !== conf) { toast(_tcp('toast.passwordsNoMatch') || 'New passwords do not match'); return; }
+  if (newP.length < 8) { toast(_tcp('toast.passwordMin8') || 'Password must be at least 8 characters'); return; }
   try {
     const r = await fetch('/api/user/change-password', {
       method: 'POST',
@@ -3085,25 +3096,26 @@ async function changePassword() {
       document.getElementById('currentPassword').value = '';
       document.getElementById('newPassword').value = '';
       document.getElementById('confirmPassword').value = '';
-      toast('Password updated!');
+      toast(_tcp('toast.passwordUpdated') || 'Password updated!');
     } else {
-      toast(data.error || 'Failed to change password');
+      toast(data.error || (_tcp('toast.passwordChangeFailed') || 'Failed to change password'));
     }
-  } catch(e) { toast('Error: ' + e.message); }
+  } catch(e) { toast((_tcp('toast.error') || 'Error') + ': ' + e.message); }
 }
 
 async function deleteAccount() {
-  if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) return;
-  if (!confirm('This will permanently delete all your documents and data. Are you absolutely sure?')) return;
+  var _tda = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+  if (!confirm(_tda('confirm.deleteAccount') || 'Are you sure you want to delete your account? This action cannot be undone.')) return;
+  if (!confirm(_tda('confirm.deleteAccountFinal') || 'This will permanently delete all your documents and data. Are you absolutely sure?')) return;
   try {
     const r = await fetch('/api/user/account', { method: 'DELETE', credentials: 'same-origin' });
     if (r.ok) {
-      toast('Account deleted.');
+      toast(_tda('toast.accountDeleted') || 'Account deleted.');
       setTimeout(() => { window.location.href = '/'; }, 1500);
     } else {
-      toast('Failed to delete account');
+      toast(_tda('toast.accountDeleteFailed') || 'Failed to delete account');
     }
-  } catch(e) { toast('Error: ' + e.message); }
+  } catch(e) { toast((_tda('toast.error') || 'Error') + ': ' + e.message); }
 }
 
 // ===== Paywall =====
@@ -3139,7 +3151,7 @@ function shareDoc() {
   if (shareId) {
     const url = window.location.origin + '/d/' + shareId;
     copyToClipboard(url);
-    toast('Share link copied to clipboard!');
+    toast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.shareLinkCopied')) || 'Share link copied!');
   }
 }
 
@@ -3147,7 +3159,7 @@ function printDoc() {
   if (!selectedDoc) return;
   // Fetch the PVF content and extract the original document for printing
   var shareId = selectedDoc.share_id || selectedDoc.shareId;
-  if (!shareId) { toast('Cannot print — no share link'); return; }
+  if (!shareId) { toast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.cannotPrint')) || 'Cannot print — no share link'); return; }
   fetch('/d/' + shareId + '/raw', { credentials: 'same-origin' })
     .then(function(r) { return r.text(); })
     .then(function(html) {
@@ -3178,28 +3190,29 @@ function printDoc() {
           w.document.close();
           setTimeout(function() { w.print(); }, 300);
         } else {
-          toast('Cannot extract document for printing');
+          toast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.cannotExtractPrint')) || 'Cannot extract document for printing');
         }
       }
     })
-    .catch(function() { toast('Failed to load document for printing'); });
+    .catch(function() { toast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.printLoadFailed')) || 'Failed to load document for printing'); });
 }
 
 async function deleteDoc() {
   if (!selectedDoc) return;
-  if (!confirm('Are you sure you want to delete this document?')) return;
+  var _tdd = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+  if (!confirm(_tdd('confirm.deleteDocument') || 'Are you sure you want to delete this document?')) return;
   try {
     const id = selectedDoc.id || selectedDoc._id || selectedDoc.hash;
     const r = await fetch('/api/user/documents/' + id, { method: 'DELETE', credentials: 'same-origin' });
     if (r.ok) {
-      toast('Document deleted');
+      toast(_tdd('toast.docDeleted') || 'Document deleted');
       closePreview();
       loadDocuments();
     } else {
-      toast('Failed to delete document');
+      toast(_tdd('toast.deleteFailed') || 'Failed to delete document');
     }
   } catch (e) {
-    toast('Error: ' + e.message);
+    toast((_tdd('toast.error') || 'Error') + ': ' + e.message);
   }
 }
 
@@ -3235,9 +3248,10 @@ async function handleUploadFile(file) {
   if (oldShareWrap) oldShareWrap.remove();
   progress.style.display = 'block';
   barFill.style.width = '0%';
-  status.textContent = 'Uploading...';
+  var _tu = typeof vfGetTranslation === 'function' ? vfGetTranslation : function(){return null;};
+  status.textContent = _tu('tab.upload.uploading') || 'Uploading...';
   if (actions) {
-    actions.innerHTML = '<button class="up-cancel" onclick="Dashboard.cancelUpload()">Cancel</button>';
+    actions.innerHTML = '<button class="up-cancel" onclick="Dashboard.cancelUpload()">' + (_tu('tab.upload.cancel') || 'Cancel') + '</button>';
   }
 
   // Simulate progress
@@ -3253,7 +3267,7 @@ async function handleUploadFile(file) {
     // Success: pin to 100%, show green checkmark + share URL with key fragment.
     barFill.style.width = '100%';
     progress.classList.add('is-success');
-    status.textContent = 'Protected';
+    status.textContent = _tu('tab.upload.protected') || 'Protected';
 
     // Construct the full share URL with encryption key in the fragment.
     // The key fragment is NEVER sent to the server (per HTTP spec).
@@ -3278,13 +3292,13 @@ async function handleUploadFile(file) {
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
             '<polyline points="20 6 9 17 4 12"/>' +
           '</svg>' +
-          '<span>Document protected</span>' +
+          '<span>' + (_tu('tab.upload.protected') || 'Document Protected') + '</span>' +
         '</span>';
 
       // View link uses the full URL with key fragment
       if (identifier) {
         var linkHref = fullShareUrl || viewHref;
-        html += '<a class="up-view-link" href="' + linkHref + '" target="_blank" rel="noopener">View document</a>';
+        html += '<a class="up-view-link" href="' + linkHref + '" target="_blank" rel="noopener">' + (_tu('tab.upload.viewDocument') || 'View document') + '</a>';
       }
 
       actions.innerHTML = html;
@@ -3299,7 +3313,7 @@ async function handleUploadFile(file) {
               '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>' +
               '<path d="M7 11V7a5 5 0 0110 0v4"/>' +
             '</svg>' +
-            'Encrypted link' +
+            (_tu('tab.upload.encryptedLink') || 'Encrypted link') +
           '</div>' +
           '<div class="up-share-url-field">' +
             '<input type="text" id="upShareUrlInput" value="' + fullShareUrl.replace(/"/g, '&quot;') + '" readonly onclick="this.select()">' +
@@ -3308,7 +3322,7 @@ async function handleUploadFile(file) {
                 '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>' +
                 '<path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>' +
               '</svg>' +
-              'Copy link' +
+              (_tu('tab.upload.copyLink') || 'Copy link') +
             '</button>' +
           '</div>' +
           '<div class="up-share-url-warning">' +
@@ -3317,7 +3331,7 @@ async function handleUploadFile(file) {
               '<line x1="12" y1="9" x2="12" y2="13"/>' +
               '<line x1="12" y1="17" x2="12.01" y2="17"/>' +
             '</svg>' +
-            'Save this link! Without it, the document cannot be viewed. Vertifile cannot recover it.' +
+            (_tu('tab.upload.saveLinkWarning') || 'Save this link! Without it, the document cannot be viewed. Vertifile cannot recover it.') +
           '</div>';
         actions.parentNode.appendChild(shareBlock);
 
@@ -3330,7 +3344,7 @@ async function handleUploadFile(file) {
               '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
                 '<polyline points="20 6 9 17 4 12"/>' +
               '</svg>' +
-              'Copied!';
+              (_tu('toast.copied') || 'Copied!');
             var btn = this;
             setTimeout(function() {
               btn.innerHTML =
@@ -3338,7 +3352,7 @@ async function handleUploadFile(file) {
                   '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>' +
                   '<path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>' +
                 '</svg>' +
-                'Copy link';
+                (_tu('tab.upload.copyLink') || 'Copy link');
             }, 2000);
           });
         }
@@ -3351,10 +3365,10 @@ async function handleUploadFile(file) {
     clearInterval(interval);
     barFill.style.width = '0%';
     progress.classList.add('is-error');
-    status.textContent = 'Failed: ' + (e && e.message ? e.message : 'Upload failed');
+    status.textContent = (_tu('tab.upload.failedPrefix') || 'Failed') + ': ' + (e && e.message ? e.message : (_tu('tab.upload.failed') || 'Upload failed'));
     // Keep Cancel link visible so the user can dismiss the failed entry.
     if (actions) {
-      actions.innerHTML = '<button class="up-cancel" onclick="Dashboard.cancelUpload()">Cancel</button>';
+      actions.innerHTML = '<button class="up-cancel" onclick="Dashboard.cancelUpload()">' + (_tu('tab.upload.cancel') || 'Cancel') + '</button>';
     }
   }
 }
@@ -3362,17 +3376,17 @@ async function handleUploadFile(file) {
 async function uploadFile(file) {
   // --- Zero-Knowledge: encrypt client-side before upload ---
   if (!window.VertifileCrypto) {
-    throw new Error('Encryption module not loaded. Please reload the page.');
+    throw new Error((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.encryptionModuleError')) || 'Encryption module not loaded. Please reload the page.');
   }
 
   // Update status to show encryption phase
   var upStatus = document.getElementById('upStatus');
-  if (upStatus) upStatus.textContent = 'Encrypting...';
+  if (upStatus) upStatus.textContent = (typeof vfGetTranslation === 'function' && vfGetTranslation('tab.upload.encrypting')) || 'Encrypting...';
 
   // Encrypt the file: generates AES-256 key, encrypts content, computes SHA-256 hash
   var encrypted = await VertifileCrypto.encryptFile(file);
 
-  if (upStatus) upStatus.textContent = 'Uploading...';
+  if (upStatus) upStatus.textContent = (typeof vfGetTranslation === 'function' && vfGetTranslation('tab.upload.uploading')) || 'Uploading...';
 
   // Build FormData with encrypted data (NOT the original file content)
   const form = new FormData();
@@ -3402,7 +3416,7 @@ async function uploadFile(file) {
   data._keyBase64url = encrypted.keyBase64url;
 
   loadDocuments();
-  toast('Document protected!');
+  toast((typeof vfGetTranslation === 'function' && vfGetTranslation('toast.docProtected')) || 'Document protected!');
   return data;
 }
 
@@ -3424,7 +3438,8 @@ function toggleAppLang(e) {
 }
 
 function copyToClipboard(text) {
-  navigator.clipboard.writeText(text).then(() => toast('Copied to clipboard!')).catch(() => {
+  var _copiedMsg = (typeof vfGetTranslation === 'function' && vfGetTranslation('toast.copiedToClipboard')) || 'Copied to clipboard!';
+  navigator.clipboard.writeText(text).then(() => toast(_copiedMsg)).catch(() => {
     // Fallback
     const ta = document.createElement('textarea');
     ta.value = text;
@@ -3432,7 +3447,7 @@ function copyToClipboard(text) {
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    toast('Copied to clipboard!');
+    toast(_copiedMsg);
   });
 }
 

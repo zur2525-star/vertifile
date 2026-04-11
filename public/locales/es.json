@@ -24,7 +24,8 @@
     "documents": "Documents",
     "stamp": "My Stamp",
     "settings": "Settings",
-    "help": "Help"
+    "help": "Help",
+    "skipToContent": "Ir al contenido"
   },
   "hero": {
     "headline": "Protege cualquier documento contra la falsificación",
@@ -243,7 +244,28 @@
     "another": "Subir otro documento",
     "shareLabel": "Enlace para compartir (sin instalación):",
     "copyBtn": "Copiar",
-    "copiedBtn": "¡Copiado!"
+    "copiedBtn": "¡Copiado!",
+    "shareLabel2": "Enlace para compartir (sin instalacion):",
+    "authRequired": "Inicio de sesion requerido",
+    "authDesc": "Debes iniciar sesion o crear una cuenta para emitir documentos PVF protegidos.",
+    "authBtn": "Iniciar sesion / Crear cuenta",
+    "signInTitle": "Iniciar sesion",
+    "signInDesc": "Inicia sesion para emitir documentos PVF protegidos",
+    "signInBtn": "Iniciar sesion",
+    "continueGoogle": "Continuar con Google",
+    "signUpGoogle": "Registrarse con Google",
+    "or": "o",
+    "emailPlaceholder": "Direccion de correo",
+    "passwordPlaceholder": "Contrasena",
+    "noAccount": "No tienes cuenta?",
+    "createOne": "Crea una",
+    "createAccountTitle": "Crear cuenta",
+    "createAccountDesc": "Crea una cuenta gratis para comenzar a proteger documentos",
+    "createAccountBtn": "Crear cuenta",
+    "fullNamePlaceholder": "Nombre completo",
+    "passwordMinPlaceholder": "Contrasena (minimo 8 caracteres)",
+    "alreadyHaveAccount": "Ya tienes cuenta?",
+    "signIn": "Iniciar sesion"
   },
   "verify": {
     "pageTitle": "Verificar un documento",
@@ -264,7 +286,12 @@
     "sampleBtn": "Ver documento protegido de ejemplo",
     "sampleDesc": "Este es un archivo .pvf real — mira el sello de verificación en vivo",
     "pvfExplainer": "Un archivo .pvf es un documento a prueba de manipulaciones creado por Vertifile. Arrastra uno aquí para comprobar si es auténtico.",
-    "wrongFileType": "Esto no parece ser un archivo .pvf. Solo los documentos protegidos por Vertifile pueden verificarse aquí."
+    "wrongFileType": "Esto no parece ser un archivo .pvf. Solo los documentos protegidos por Vertifile pueden verificarse aquí.",
+    "detailDoc": "Documento",
+    "detailHash": "Hash",
+    "detailRegistered": "Registrado",
+    "detailOrg": "Organizacion",
+    "detailStatus": "Estado"
   },
   "enterprise": {
     "badge": "Seguridad de nivel empresarial",
@@ -446,7 +473,16 @@
     "keyWarning": "Guarda esta clave — no se mostrará de nuevo. Almacénala de forma segura en las variables de entorno de tu aplicación.",
     "quickStartLabel": "Inicio rápido",
     "readIntegrationGuide": "Leer guía de integración",
-    "goToUpload": "Ir a subir"
+    "goToUpload": "Ir a subir",
+    "termsConsent": "Al crear una clave API, aceptas nuestros",
+    "termsLink": "Terminos de servicio",
+    "privacyLink": "Politica de privacidad",
+    "alreadyHaveAccount": "Ya tienes cuenta?",
+    "logIn": "Iniciar sesion",
+    "passwordLabel": "Contrasena",
+    "passwordPlaceholder": "Minimo 8 caracteres",
+    "confirmLabel": "Confirmar contrasena",
+    "confirmPlaceholder": "Re-ingrese la contrasena"
   },
   "open": {
     "badge": "Visor en el navegador",
@@ -650,7 +686,16 @@
   "notFound": {
     "title": "Página no encontrada",
     "message": "La página que buscas no existe o ha sido movida.",
-    "backHome": "Volver al inicio"
+    "backHome": "Volver al inicio",
+    "goHome": "Volver al inicio",
+    "contactUs": "Contactenos",
+    "suggestionsTitle": "Quizas buscabas",
+    "suggestVerify": "Verificar un documento",
+    "suggestVerifyDesc": "Comprueba si un archivo .pvf es autentico o fue alterado",
+    "suggestDemo": "Ver la demo",
+    "suggestDemoDesc": "Mira como funciona la verificacion a prueba de manipulacion",
+    "suggestPricing": "Ver precios",
+    "suggestPricingDesc": "Planes Gratis, Pro y Enterprise para cada necesidad"
   },
   "about": {
     "heroBadge": "Fundada en Israel, 2026",
@@ -1161,7 +1206,9 @@
       "legalRecognition": "El formato .pvf tiene una patente pendiente en la Oficina de Patentes de Israel y un registro de tipo MIME de IANA pendiente. Aunque ningun tribunal israeli ha dictaminado sobre .pvf especificamente, proporciona evidencia criptografica solida de la autenticidad del documento.",
       "gdpr": "Si. Procesamos datos bajo el Articulo 6 del RGPD (ejecucion del contrato, interes legitimo, consentimiento). Ofrecemos acuerdos DPA para clientes Enterprise.",
       "dpa": "Si. Los clientes Enterprise pueden solicitar un DPA en privacy@vertifile.com."
-    }
+    },
+    "breadcrumbHome": "Inicio",
+    "breadcrumbFaq": "Preguntas frecuentes"
   },
   "paywall": {
     "title": "Tu documento esta protegido!",
@@ -1226,7 +1273,9 @@
       "placeholder": "tu@correo.com",
       "cta": "Suscribirse",
       "note": "Sin spam. Cancela en cualquier momento."
-    }
+    },
+    "breadcrumbHome": "Inicio",
+    "breadcrumbBlog": "Blog"
   },
   "tab": {
     "overview": {
@@ -1486,19 +1535,26 @@
     "ctaTitle": "Aun necesitas ayuda?",
     "ctaDesc": "Nuestro equipo esta aqui para ayudarte. Contactanos por correo o formulario y te responderemos en 24 horas.",
     "ctaContact": "Contactanos",
-    "ctaFaq": "Ver Preguntas Frecuentes"
+    "ctaFaq": "Ver Preguntas Frecuentes",
+    "breadcrumbHome": "Inicio"
   },
   "resetPassword": {
-    "title": "Establecer Nueva Contrasena",
+    "title": "Establecer nueva contrasena",
     "subtitle": "Ingresa tu nueva contrasena a continuacion.",
-    "newPassword": "Nueva Contrasena",
-    "confirmPassword": "Confirmar Contrasena",
-    "rules": "Minimo 8 caracteres, una mayuscula, una minuscula, un digito y un caracter especial.",
-    "submit": "Restablecer Contrasena",
-    "backToLogin": "Volver a Iniciar Sesion",
-    "successTitle": "Contrasena Actualizada",
+    "newPassword": "Nueva contrasena",
+    "confirmPassword": "Confirmar contrasena",
+    "rules": "Al menos 8 caracteres, una mayuscula, una minuscula, un digito y un caracter especial.",
+    "submit": "Restablecer contrasena",
+    "backToLogin": "Volver al inicio de sesion",
+    "successTitle": "Contrasena actualizada",
     "successDesc": "Tu contrasena se restablecio correctamente. Ahora puedes iniciar sesion con tu nueva contrasena.",
-    "signIn": "Iniciar Sesion"
+    "signIn": "Iniciar sesion",
+    "invalidLink": "Enlace de restablecimiento invalido o faltante.",
+    "mismatch": "Las contrasenas no coinciden.",
+    "tooShort": "La contrasena debe tener al menos 8 caracteres.",
+    "resetting": "Restableciendo...",
+    "genericError": "Algo salio mal. Intenta de nuevo.",
+    "networkError": "Error de red. Verifica tu conexion e intenta de nuevo."
   },
   "modal": {
     "deleteTitle": "¿Eliminar documento?",

@@ -24,7 +24,8 @@
     "documents": "Documents",
     "stamp": "My Stamp",
     "settings": "Settings",
-    "help": "Help"
+    "help": "Help",
+    "skipToContent": "Skip to content"
   },
   "hero": {
     "headline": "Protect Any Document From Forgery",
@@ -243,7 +244,28 @@
     "another": "Upload another document",
     "shareLabel": "Share Link (no installation needed):",
     "copyBtn": "Copy",
-    "copiedBtn": "Copied!"
+    "copiedBtn": "Copied!",
+    "shareLabel2": "Share Link (no installation needed):",
+    "authRequired": "Sign in required",
+    "authDesc": "You need to sign in or create an account to issue protected PVF documents.",
+    "authBtn": "Sign In / Create Account",
+    "signInTitle": "Sign In",
+    "signInDesc": "Sign in to issue protected PVF documents",
+    "signInBtn": "Sign In",
+    "continueGoogle": "Continue with Google",
+    "signUpGoogle": "Sign up with Google",
+    "or": "or",
+    "emailPlaceholder": "Email address",
+    "passwordPlaceholder": "Password",
+    "noAccount": "Don't have an account?",
+    "createOne": "Create one",
+    "createAccountTitle": "Create Account",
+    "createAccountDesc": "Create a free account to start protecting documents",
+    "createAccountBtn": "Create Account",
+    "fullNamePlaceholder": "Full name",
+    "passwordMinPlaceholder": "Password (min 8 characters)",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in"
   },
   "verify": {
     "pageTitle": "Verify a Document",
@@ -264,7 +286,12 @@
     "sampleBtn": "View Sample Protected Document",
     "sampleDesc": "This is a real .pvf file — see the live verification stamp in action",
     "pvfExplainer": "A .pvf file is a tamper-proof document created by Vertifile. Drop one here to check if it's authentic.",
-    "wrongFileType": "This doesn't appear to be a .pvf file. Only documents protected by Vertifile can be verified here."
+    "wrongFileType": "This doesn't appear to be a .pvf file. Only documents protected by Vertifile can be verified here.",
+    "detailDoc": "Document",
+    "detailHash": "Hash",
+    "detailRegistered": "Registered",
+    "detailOrg": "Organization",
+    "detailStatus": "Status"
   },
   "enterprise": {
     "badge": "Enterprise-Grade Security",
@@ -446,7 +473,16 @@
     "keyWarning": "Save this key — it won't be shown again. Store it securely in your application's environment variables.",
     "quickStartLabel": "Quick Start",
     "readIntegrationGuide": "Read Integration Guide",
-    "goToUpload": "Go to Upload"
+    "goToUpload": "Go to Upload",
+    "termsConsent": "By creating an API key, you agree to our",
+    "termsLink": "Terms of Service",
+    "privacyLink": "Privacy Policy",
+    "alreadyHaveAccount": "Already have an account?",
+    "logIn": "Log in",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Minimum 8 characters",
+    "confirmLabel": "Confirm Password",
+    "confirmPlaceholder": "Re-enter password"
   },
   "open": {
     "badge": "Browser-Based Viewer",
@@ -650,7 +686,16 @@
   "notFound": {
     "title": "Page Not Found",
     "message": "The page you're looking for doesn't exist or has been moved.",
-    "backHome": "Back to Home"
+    "backHome": "Back to Home",
+    "goHome": "Go Home",
+    "contactUs": "Contact Us",
+    "suggestionsTitle": "Maybe you were looking for",
+    "suggestVerify": "Verify a Document",
+    "suggestVerifyDesc": "Check if a .pvf file is authentic or tampered with",
+    "suggestDemo": "See the Demo",
+    "suggestDemoDesc": "Watch how tamper-proof verification works in action",
+    "suggestPricing": "View Pricing",
+    "suggestPricingDesc": "Free, Pro, and Enterprise plans for every need"
   },
   "about": {
     "heroBadge": "Founded in Israel, 2026",
@@ -1173,7 +1218,9 @@
       "legalRecognition": "The .pvf format has a patent pending with the Israeli Patent Office and an IANA MIME type registration pending. While no Israeli court has ruled on .pvf specifically, it provides strong cryptographic evidence of document authenticity.",
       "gdpr": "Yes. We process data under GDPR Article 6 legal bases (contract performance, legitimate interest, consent). We offer DPA agreements for Enterprise customers.",
       "dpa": "Yes. Enterprise customers can request a DPA at privacy@vertifile.com."
-    }
+    },
+    "breadcrumbHome": "Home",
+    "breadcrumbFaq": "FAQ"
   },
   "blog": {
     "label": "From Our Blog",
@@ -1226,7 +1273,9 @@
       "placeholder": "your@email.com",
       "cta": "Subscribe",
       "note": "No spam. Unsubscribe anytime."
-    }
+    },
+    "breadcrumbHome": "Home",
+    "breadcrumbBlog": "Blog"
   },
   "tab": {
     "overview": {
@@ -1485,19 +1534,26 @@
     "ctaTitle": "Still need help?",
     "ctaDesc": "Our team is here to help. Reach out via email or our contact form and we will get back to you within 24 hours.",
     "ctaContact": "Contact Us",
-    "ctaFaq": "Browse FAQ"
+    "ctaFaq": "Browse FAQ",
+    "breadcrumbHome": "Home"
   },
   "resetPassword": {
     "title": "Set New Password",
     "subtitle": "Enter your new password below.",
     "newPassword": "New Password",
-    "confirmPassword": "Confirm Password",
     "rules": "At least 8 characters, one uppercase, one lowercase, one digit, one special character.",
+    "confirmPassword": "Confirm Password",
     "submit": "Reset Password",
     "backToLogin": "Back to Sign In",
     "successTitle": "Password Updated",
     "successDesc": "Your password has been reset successfully. You can now sign in with your new password.",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "invalidLink": "Invalid or missing reset link. Please request a new password reset.",
+    "mismatch": "Passwords do not match.",
+    "tooShort": "Password must be at least 8 characters.",
+    "resetting": "Resetting...",
+    "genericError": "Something went wrong. Please try again.",
+    "networkError": "Network error. Please check your connection and try again."
   },
   "modal": {
     "deleteTitle": "Delete Document?",

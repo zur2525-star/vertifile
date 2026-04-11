@@ -24,7 +24,8 @@
     "documents": "Documents",
     "stamp": "My Stamp",
     "settings": "Settings",
-    "help": "Help"
+    "help": "Help",
+    "skipToContent": "跳至内容"
   },
   "hero": {
     "headline": "保护任何文档免受伪造",
@@ -243,7 +244,28 @@
     "another": "上传其他文档",
     "shareLabel": "分享链接（无需安装）：",
     "copyBtn": "复制",
-    "copiedBtn": "已复制！"
+    "copiedBtn": "已复制！",
+    "shareLabel2": "分享链接（无需安装）：",
+    "authRequired": "需要登录",
+    "authDesc": "您需要登录或创建账户才能签发受保护的 PVF 文档。",
+    "authBtn": "登录 / 创建账户",
+    "signInTitle": "登录",
+    "signInDesc": "登录以签发受保护的 PVF 文档",
+    "signInBtn": "登录",
+    "continueGoogle": "使用 Google 继续",
+    "signUpGoogle": "使用 Google 注册",
+    "or": "或",
+    "emailPlaceholder": "电子邮箱",
+    "passwordPlaceholder": "密码",
+    "noAccount": "没有账户？",
+    "createOne": "创建一个",
+    "createAccountTitle": "创建账户",
+    "createAccountDesc": "创建免费账户开始保护文档",
+    "createAccountBtn": "创建账户",
+    "fullNamePlaceholder": "全名",
+    "passwordMinPlaceholder": "密码（至少8个字符）",
+    "alreadyHaveAccount": "已有账户？",
+    "signIn": "登录"
   },
   "verify": {
     "pageTitle": "验证文档",
@@ -264,7 +286,12 @@
     "sampleBtn": "查看受保护的示例文档",
     "sampleDesc": "这是一个真实的 .pvf 文件 — 查看实时验证印章",
     "pvfExplainer": ".pvf 文件是由 Vertifile 创建的防篡改文档。将文件拖放到此处以检查其真实性。",
-    "wrongFileType": "这似乎不是 .pvf 文件。只有受 Vertifile 保护的文档才能在此验证。"
+    "wrongFileType": "这似乎不是 .pvf 文件。只有受 Vertifile 保护的文档才能在此验证。",
+    "detailDoc": "文档",
+    "detailHash": "哈希值",
+    "detailRegistered": "注册时间",
+    "detailOrg": "组织",
+    "detailStatus": "状态"
   },
   "enterprise": {
     "badge": "企业级安全",
@@ -446,7 +473,16 @@
     "keyWarning": "请保存此密钥——它不会再次显示。请将其安全存储在应用的环境变量中。",
     "quickStartLabel": "快速入门",
     "readIntegrationGuide": "阅读集成指南",
-    "goToUpload": "前往上传"
+    "goToUpload": "前往上传",
+    "termsConsent": "创建 API 密钥即表示您同意我们的",
+    "termsLink": "服务条款",
+    "privacyLink": "隐私政策",
+    "alreadyHaveAccount": "已有账户？",
+    "logIn": "登录",
+    "passwordLabel": "密码",
+    "passwordPlaceholder": "至少8个字符",
+    "confirmLabel": "确认密码",
+    "confirmPlaceholder": "重新输入密码"
   },
   "open": {
     "badge": "基于浏览器的查看器",
@@ -650,7 +686,16 @@
   "notFound": {
     "title": "页面未找到",
     "message": "您要查找的页面不存在或已被移动。",
-    "backHome": "返回首页"
+    "backHome": "返回首页",
+    "goHome": "返回首页",
+    "contactUs": "联系我们",
+    "suggestionsTitle": "您可能在寻找",
+    "suggestVerify": "验证文档",
+    "suggestVerifyDesc": "检查 .pvf 文件是否真实或被篡改",
+    "suggestDemo": "查看演示",
+    "suggestDemoDesc": "了解防篡改验证的工作原理",
+    "suggestPricing": "查看定价",
+    "suggestPricingDesc": "适合各种需求的免费、Pro 和企业版计划"
   },
   "about": {
     "heroBadge": "创立于以色列，2026年",
@@ -1161,7 +1206,9 @@
       "legalRecognition": ".pvf格式已在以色列专利局提交专利申请，IANA MIME类型注册也正在进行中。虽然以色列法院尚未对.pvf做出具体裁决，但它提供了文档真实性的强有力加密证据。",
       "gdpr": "是的。我们根据GDPR第6条处理数据（合同履行、合法利益、同意）。我们为Enterprise客户提供DPA协议。",
       "dpa": "是的。Enterprise客户可以在privacy@vertifile.com申请DPA。"
-    }
+    },
+    "breadcrumbHome": "首页",
+    "breadcrumbFaq": "常见问题"
   },
   "paywall": {
     "title": "您的文档已受保护！",
@@ -1226,7 +1273,9 @@
       "placeholder": "您的邮箱地址",
       "cta": "订阅",
       "note": "无垃圾邮件，随时退订。"
-    }
+    },
+    "breadcrumbHome": "首页",
+    "breadcrumbBlog": "博客"
   },
   "tab": {
     "overview": {
@@ -1486,11 +1535,12 @@
     "ctaTitle": "还需要帮助吗？",
     "ctaDesc": "我们的团队随时为您服务。通过电子邮件或联系表格联系我们，我们将在24小时内回复。",
     "ctaContact": "联系我们",
-    "ctaFaq": "浏览常见问题"
+    "ctaFaq": "浏览常见问题",
+    "breadcrumbHome": "首页"
   },
   "resetPassword": {
     "title": "设置新密码",
-    "subtitle": "请在下方输入您的新密码。",
+    "subtitle": "在下方输入您的新密码。",
     "newPassword": "新密码",
     "confirmPassword": "确认密码",
     "rules": "至少8个字符，包含一个大写字母、一个小写字母、一个数字和一个特殊字符。",
@@ -1498,7 +1548,13 @@
     "backToLogin": "返回登录",
     "successTitle": "密码已更新",
     "successDesc": "您的密码已成功重置。现在可以使用新密码登录。",
-    "signIn": "登录"
+    "signIn": "登录",
+    "invalidLink": "无效或缺失的重置链接。请重新申请密码重置。",
+    "mismatch": "两次密码不匹配。",
+    "tooShort": "密码至少需要8个字符。",
+    "resetting": "正在重置...",
+    "genericError": "出了点问题。请重试。",
+    "networkError": "网络错误。请检查连接后重试。"
   },
   "modal": {
     "deleteTitle": "删除文档？",

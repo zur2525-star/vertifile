@@ -24,7 +24,8 @@
     "documents": "Documents",
     "stamp": "My Stamp",
     "settings": "Settings",
-    "help": "Help"
+    "help": "Help",
+    "skipToContent": "Zum Inhalt springen"
   },
   "hero": {
     "headline": "Schützen Sie jedes Dokument vor Fälschung",
@@ -243,7 +244,28 @@
     "another": "Weiteres Dokument hochladen",
     "shareLabel": "Freigabelink (keine Installation nötig):",
     "copyBtn": "Kopieren",
-    "copiedBtn": "Kopiert!"
+    "copiedBtn": "Kopiert!",
+    "shareLabel2": "Freigabelink (keine Installation erforderlich):",
+    "authRequired": "Anmeldung erforderlich",
+    "authDesc": "Sie mussen sich anmelden oder ein Konto erstellen, um geschutzte PVF-Dokumente auszustellen.",
+    "authBtn": "Anmelden / Konto erstellen",
+    "signInTitle": "Anmelden",
+    "signInDesc": "Melden Sie sich an, um geschutzte PVF-Dokumente auszustellen",
+    "signInBtn": "Anmelden",
+    "continueGoogle": "Weiter mit Google",
+    "signUpGoogle": "Registrieren mit Google",
+    "or": "oder",
+    "emailPlaceholder": "E-Mail-Adresse",
+    "passwordPlaceholder": "Passwort",
+    "noAccount": "Kein Konto?",
+    "createOne": "Konto erstellen",
+    "createAccountTitle": "Konto erstellen",
+    "createAccountDesc": "Erstellen Sie ein kostenloses Konto, um Dokumente zu schutzen",
+    "createAccountBtn": "Konto erstellen",
+    "fullNamePlaceholder": "Vollstandiger Name",
+    "passwordMinPlaceholder": "Passwort (mindestens 8 Zeichen)",
+    "alreadyHaveAccount": "Bereits ein Konto?",
+    "signIn": "Anmelden"
   },
   "verify": {
     "pageTitle": "Dokument verifizieren",
@@ -264,7 +286,12 @@
     "sampleBtn": "Geschütztes Beispieldokument ansehen",
     "sampleDesc": "Dies ist eine echte .pvf-Datei — sehen Sie den Live-Verifizierungsstempel in Aktion",
     "pvfExplainer": "Eine .pvf-Datei ist ein manipulationssicheres Dokument, das von Vertifile erstellt wurde. Ziehen Sie eine hierher, um die Echtheit zu überprüfen.",
-    "wrongFileType": "Dies scheint keine .pvf-Datei zu sein. Nur von Vertifile geschützte Dokumente können hier verifiziert werden."
+    "wrongFileType": "Dies scheint keine .pvf-Datei zu sein. Nur von Vertifile geschützte Dokumente können hier verifiziert werden.",
+    "detailDoc": "Dokument",
+    "detailHash": "Hash",
+    "detailRegistered": "Registriert",
+    "detailOrg": "Organisation",
+    "detailStatus": "Status"
   },
   "enterprise": {
     "badge": "Sicherheit auf Enterprise-Niveau",
@@ -446,7 +473,16 @@
     "keyWarning": "Speichern Sie diesen Schlüssel — er wird nicht erneut angezeigt. Bewahren Sie ihn sicher in den Umgebungsvariablen Ihrer Anwendung auf.",
     "quickStartLabel": "Schnellstart",
     "readIntegrationGuide": "Integrationsleitfaden lesen",
-    "goToUpload": "Zum Upload"
+    "goToUpload": "Zum Upload",
+    "termsConsent": "Mit der Erstellung eines API-Schlussels stimmen Sie unseren",
+    "termsLink": "Nutzungsbedingungen",
+    "privacyLink": "Datenschutzrichtlinie",
+    "alreadyHaveAccount": "Bereits ein Konto?",
+    "logIn": "Anmelden",
+    "passwordLabel": "Passwort",
+    "passwordPlaceholder": "Mindestens 8 Zeichen",
+    "confirmLabel": "Passwort bestatigen",
+    "confirmPlaceholder": "Passwort erneut eingeben"
   },
   "open": {
     "badge": "Browserbasierter Viewer",
@@ -650,7 +686,16 @@
   "notFound": {
     "title": "Seite nicht gefunden",
     "message": "Die gesuchte Seite existiert nicht oder wurde verschoben.",
-    "backHome": "Zurück zur Startseite"
+    "backHome": "Zurück zur Startseite",
+    "goHome": "Zur Startseite",
+    "contactUs": "Kontakt",
+    "suggestionsTitle": "Vielleicht suchten Sie nach",
+    "suggestVerify": "Dokument verifizieren",
+    "suggestVerifyDesc": "Prufen Sie, ob eine .pvf-Datei authentisch oder manipuliert ist",
+    "suggestDemo": "Demo ansehen",
+    "suggestDemoDesc": "Sehen Sie, wie manipulationssichere Verifizierung funktioniert",
+    "suggestPricing": "Preise ansehen",
+    "suggestPricingDesc": "Kostenlose, Pro- und Enterprise-Plane fur jeden Bedarf"
   },
   "about": {
     "heroBadge": "Gegründet in Israel, 2026",
@@ -1161,7 +1206,9 @@
       "legalRecognition": "Das .pvf-Format hat ein angemeldetes Patent beim Israelischen Patentamt und eine ausstehende IANA-MIME-Typ-Registrierung. Obwohl kein israelisches Gericht speziell ueber .pvf entschieden hat, bietet es starke kryptografische Beweise fuer die Authentizitaet eines Dokuments.",
       "gdpr": "Ja. Wir verarbeiten Daten gemaess Artikel 6 der DSGVO (Vertragserfullung, berechtigtes Interesse, Einwilligung). Wir bieten AVV-Vereinbarungen fuer Enterprise-Kunden an.",
       "dpa": "Ja. Enterprise-Kunden koennen einen AVV unter privacy@vertifile.com anfordern."
-    }
+    },
+    "breadcrumbHome": "Startseite",
+    "breadcrumbFaq": "Haufige Fragen"
   },
   "paywall": {
     "title": "Ihr Dokument ist geschutzt!",
@@ -1226,7 +1273,9 @@
       "placeholder": "ihre@email.com",
       "cta": "Abonnieren",
       "note": "Kein Spam. Jederzeit abmeldbar."
-    }
+    },
+    "breadcrumbHome": "Startseite",
+    "breadcrumbBlog": "Blog"
   },
   "tab": {
     "overview": {
@@ -1486,19 +1535,26 @@
     "ctaTitle": "Noch Hilfe benotigt?",
     "ctaDesc": "Unser Team ist fur Sie da. Kontaktieren Sie uns per E-Mail oder Kontaktformular und wir melden uns innerhalb von 24 Stunden.",
     "ctaContact": "Kontakt",
-    "ctaFaq": "FAQ durchsuchen"
+    "ctaFaq": "FAQ durchsuchen",
+    "breadcrumbHome": "Startseite"
   },
   "resetPassword": {
     "title": "Neues Passwort festlegen",
-    "subtitle": "Geben Sie unten Ihr neues Passwort ein.",
+    "subtitle": "Geben Sie Ihr neues Passwort unten ein.",
     "newPassword": "Neues Passwort",
     "confirmPassword": "Passwort bestatigen",
-    "rules": "Mindestens 8 Zeichen, ein Grossbuchstabe, ein Kleinbuchstabe, eine Ziffer, ein Sonderzeichen.",
+    "rules": "Mindestens 8 Zeichen, ein Grossbuchstabe, ein Kleinbuchstabe, eine Ziffer und ein Sonderzeichen.",
     "submit": "Passwort zurucksetzen",
     "backToLogin": "Zuruck zur Anmeldung",
     "successTitle": "Passwort aktualisiert",
     "successDesc": "Ihr Passwort wurde erfolgreich zuruckgesetzt. Sie konnen sich jetzt mit Ihrem neuen Passwort anmelden.",
-    "signIn": "Anmelden"
+    "signIn": "Anmelden",
+    "invalidLink": "Ungueltiger oder fehlender Zurucksetzungslink.",
+    "mismatch": "Die Passworter stimmen nicht uberein.",
+    "tooShort": "Das Passwort muss mindestens 8 Zeichen enthalten.",
+    "resetting": "Wird zuruckgesetzt...",
+    "genericError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "networkError": "Netzwerkfehler. Uberprufen Sie Ihre Verbindung und versuchen Sie es erneut."
   },
   "modal": {
     "deleteTitle": "Dokument löschen?",

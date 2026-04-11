@@ -392,7 +392,7 @@
 <div class="pvf-viewer-overlay" id="pvfViewer" onclick="if(event.target===this)closePvfViewer()">
   <div class="pvf-viewer">
     <div class="pvf-viewer-toolbar">
-      <span class="pvt-title" id="pvtTitle">Document</span>
+      <span class="pvt-title" id="pvtTitle" data-i18n="verify.detailDoc">Document</span>
       <span class="pvt-badge"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verified</span>
       <button onclick="downloadPvf()"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg> Download</button>
       <button class="pvt-close" onclick="closePvfViewer()">&times;</button>
@@ -489,10 +489,16 @@ async function verifyFile(){
 
     if(data.verified){
       var meta=document.getElementById('metaOk');
-      meta.innerHTML='<div class="row"><span class="label">Hash</span><span class="val" style="font-family:monospace;font-size:12px">'+hash.substring(0,20)+'...</span></div>'
-        +'<div class="row"><span class="label">Registered</span><span class="val">'+new Date(data.timestamp).toLocaleDateString()+'</span></div>'
-        +'<div class="row"><span class="label">Organization</span><span class="val">'+(data.orgName||'Vertifile')+'</span></div>'
-        +'<div class="row"><span class="label">Status</span><span class="val verified"><span class="dot"></span> Verified</span></div>';
+      var t=window._i18n||{};
+      var lHash=t['verify.detailHash']||'Hash';
+      var lReg=t['verify.detailRegistered']||'Registered';
+      var lOrg=t['verify.detailOrg']||'Organization';
+      var lStat=t['verify.detailStatus']||'Status';
+      var lVerified=t['verify.verified']||'Verified';
+      meta.innerHTML='<div class="row"><span class="label">'+lHash+'</span><span class="val" style="font-family:monospace;font-size:12px">'+hash.substring(0,20)+'...</span></div>'
+        +'<div class="row"><span class="label">'+lReg+'</span><span class="val">'+new Date(data.timestamp).toLocaleDateString()+'</span></div>'
+        +'<div class="row"><span class="label">'+lOrg+'</span><span class="val">'+(data.orgName||'Vertifile')+'</span></div>'
+        +'<div class="row"><span class="label">'+lStat+'</span><span class="val verified"><span class="dot"></span> '+lVerified+'</span></div>';
       document.getElementById('resultOk').classList.add('show');
     }else{
       var failEl=document.getElementById('resultFail');

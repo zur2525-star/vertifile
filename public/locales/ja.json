@@ -24,7 +24,8 @@
     "documents": "Documents",
     "stamp": "My Stamp",
     "settings": "Settings",
-    "help": "Help"
+    "help": "Help",
+    "skipToContent": "コンテンツにスキップ"
   },
   "hero": {
     "headline": "あらゆるドキュメントを偽造から守る",
@@ -243,7 +244,28 @@
     "another": "別のドキュメントをアップロード",
     "shareLabel": "共有リンク（インストール不要）：",
     "copyBtn": "コピー",
-    "copiedBtn": "コピーしました！"
+    "copiedBtn": "コピーしました！",
+    "shareLabel2": "共有リンク（インストール不要）：",
+    "authRequired": "ログインが必要です",
+    "authDesc": "保護されたPVF文書を発行するには、ログインまたはアカウント作成が必要です。",
+    "authBtn": "ログイン / アカウント作成",
+    "signInTitle": "ログイン",
+    "signInDesc": "保護されたPVF文書を発行するにはログインしてください",
+    "signInBtn": "ログイン",
+    "continueGoogle": "Googleで続行",
+    "signUpGoogle": "Googleで登録",
+    "or": "または",
+    "emailPlaceholder": "メールアドレス",
+    "passwordPlaceholder": "パスワード",
+    "noAccount": "アカウントをお持ちでない方",
+    "createOne": "作成する",
+    "createAccountTitle": "アカウント作成",
+    "createAccountDesc": "無料アカウントを作成して文書の保護を開始",
+    "createAccountBtn": "アカウント作成",
+    "fullNamePlaceholder": "氏名",
+    "passwordMinPlaceholder": "パスワード（8文字以上）",
+    "alreadyHaveAccount": "アカウントをお持ちの方",
+    "signIn": "ログイン"
   },
   "verify": {
     "pageTitle": "ドキュメントを検証",
@@ -264,7 +286,12 @@
     "sampleBtn": "保護されたサンプル文書を見る",
     "sampleDesc": "これは本物の .pvf ファイルです — 認証スタンプの動作をご覧ください",
     "pvfExplainer": ".pvf ファイルは Vertifile が作成した改ざん防止文書です。ここにドロップして真正性を確認してください。",
-    "wrongFileType": "これは .pvf ファイルではないようです。Vertifile で保護された文書のみここで検証できます。"
+    "wrongFileType": "これは .pvf ファイルではないようです。Vertifile で保護された文書のみここで検証できます。",
+    "detailDoc": "文書",
+    "detailHash": "ハッシュ",
+    "detailRegistered": "登録日",
+    "detailOrg": "組織",
+    "detailStatus": "ステータス"
   },
   "enterprise": {
     "badge": "エンタープライズグレードセキュリティ",
@@ -446,7 +473,16 @@
     "keyWarning": "このキーを保存してください — 再度表示されません。アプリケーションの環境変数に安全に保存してください。",
     "quickStartLabel": "クイックスタート",
     "readIntegrationGuide": "統合ガイドを読む",
-    "goToUpload": "アップロードへ"
+    "goToUpload": "アップロードへ",
+    "termsConsent": "APIキーを作成することにより、以下に同意したものとみなされます：",
+    "termsLink": "利用規約",
+    "privacyLink": "プライバシーポリシー",
+    "alreadyHaveAccount": "アカウントをお持ちの方",
+    "logIn": "ログイン",
+    "passwordLabel": "パスワード",
+    "passwordPlaceholder": "8文字以上",
+    "confirmLabel": "パスワード確認",
+    "confirmPlaceholder": "パスワードを再入力"
   },
   "open": {
     "badge": "ブラウザベースビューアー",
@@ -650,7 +686,16 @@
   "notFound": {
     "title": "ページが見つかりません",
     "message": "お探しのページは存在しないか、移動された可能性があります。",
-    "backHome": "ホームに戻る"
+    "backHome": "ホームに戻る",
+    "goHome": "ホームに戻る",
+    "contactUs": "お問い合わせ",
+    "suggestionsTitle": "お探しのページ",
+    "suggestVerify": "文書を検証",
+    "suggestVerifyDesc": ".pvf ファイルが本物か改ざんされたかを確認",
+    "suggestDemo": "デモを見る",
+    "suggestDemoDesc": "改ざん防止検証の動作を確認",
+    "suggestPricing": "料金を見る",
+    "suggestPricingDesc": "あらゆるニーズに対応する無料、Pro、Enterpriseプラン"
   },
   "about": {
     "heroBadge": "イスラエルで設立、2026年",
@@ -1161,7 +1206,9 @@
       "legalRecognition": ".pvf形式はイスラエル特許庁に特許出願中であり、IANAのMIMEタイプ登録も申請中です。イスラエルの裁判所が.pvfについて具体的に判断を下したことはありませんが、ドキュメントの真正性に関する強力な暗号学的証拠を提供します。",
       "gdpr": "はい。GDPR第6条に基づいてデータを処理しています（契約の履行、正当な利益、同意）。Enterpriseのお客様にはDPA契約を提供しています。",
       "dpa": "はい。Enterpriseのお客様はprivacy@vertifile.comでDPAをリクエストできます。"
-    }
+    },
+    "breadcrumbHome": "ホーム",
+    "breadcrumbFaq": "よくある質問"
   },
   "paywall": {
     "title": "ドキュメントは保護されています！",
@@ -1226,7 +1273,9 @@
       "placeholder": "メールアドレス",
       "cta": "登録する",
       "note": "スパムなし。いつでも解除可能。"
-    }
+    },
+    "breadcrumbHome": "ホーム",
+    "breadcrumbBlog": "ブログ"
   },
   "tab": {
     "overview": {
@@ -1486,19 +1535,26 @@
     "ctaTitle": "まだお困りですか？",
     "ctaDesc": "チームがお手伝いします。メールまたはお問い合わせフォームからご連絡いただければ、24時間以内に返信いたします。",
     "ctaContact": "お問い合わせ",
-    "ctaFaq": "FAQを見る"
+    "ctaFaq": "FAQを見る",
+    "breadcrumbHome": "ホーム"
   },
   "resetPassword": {
     "title": "新しいパスワードを設定",
-    "subtitle": "以下に新しいパスワードを入力してください。",
+    "subtitle": "新しいパスワードを入力してください。",
     "newPassword": "新しいパスワード",
-    "confirmPassword": "パスワードの確認",
-    "rules": "8文字以上、大文字1つ、小文字1つ、数字1つ、特殊文字1つが必要です。",
+    "confirmPassword": "パスワード確認",
+    "rules": "8文字以上、大文字、小文字、数字、特殊文字を各1つ以上含む。",
     "submit": "パスワードをリセット",
-    "backToLogin": "サインインに戻る",
+    "backToLogin": "ログインに戻る",
     "successTitle": "パスワードが更新されました",
-    "successDesc": "パスワードが正常にリセットされました。新しいパスワードでサインインできます。",
-    "signIn": "サインイン"
+    "successDesc": "パスワードが正常にリセットされました。新しいパスワードでログインできます。",
+    "signIn": "ログイン",
+    "invalidLink": "無効またはリセットリンクが見つかりません。",
+    "mismatch": "パスワードが一致しません。",
+    "tooShort": "パスワードは8文字以上必要です。",
+    "resetting": "リセット中...",
+    "genericError": "エラーが発生しました。もう一度お試しください。",
+    "networkError": "ネットワークエラー。接続を確認して再試行してください。"
   },
   "modal": {
     "deleteTitle": "ドキュメントを削除しますか？",

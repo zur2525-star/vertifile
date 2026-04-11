@@ -24,7 +24,8 @@
     "documents": "Documents",
     "stamp": "My Stamp",
     "settings": "Settings",
-    "help": "Help"
+    "help": "Help",
+    "skipToContent": "Aller au contenu"
   },
   "hero": {
     "headline": "Protégez tout document contre la falsification",
@@ -243,7 +244,28 @@
     "another": "Téléverser un autre document",
     "shareLabel": "Lien de partage (aucune installation requise) :",
     "copyBtn": "Copier",
-    "copiedBtn": "Copié !"
+    "copiedBtn": "Copié !",
+    "shareLabel2": "Lien de partage (aucune installation requise) :",
+    "authRequired": "Connexion requise",
+    "authDesc": "Vous devez vous connecter ou creer un compte pour emettre des documents PVF proteges.",
+    "authBtn": "Se connecter / Creer un compte",
+    "signInTitle": "Connexion",
+    "signInDesc": "Connectez-vous pour emettre des documents PVF proteges",
+    "signInBtn": "Se connecter",
+    "continueGoogle": "Continuer avec Google",
+    "signUpGoogle": "S'inscrire avec Google",
+    "or": "ou",
+    "emailPlaceholder": "Adresse email",
+    "passwordPlaceholder": "Mot de passe",
+    "noAccount": "Pas de compte ?",
+    "createOne": "Creer un compte",
+    "createAccountTitle": "Creer un compte",
+    "createAccountDesc": "Creez un compte gratuit pour proteger vos documents",
+    "createAccountBtn": "Creer un compte",
+    "fullNamePlaceholder": "Nom complet",
+    "passwordMinPlaceholder": "Mot de passe (8 caracteres minimum)",
+    "alreadyHaveAccount": "Deja un compte ?",
+    "signIn": "Se connecter"
   },
   "verify": {
     "pageTitle": "Vérifier un document",
@@ -264,7 +286,12 @@
     "sampleBtn": "Voir un document protégé exemple",
     "sampleDesc": "C'est un vrai fichier .pvf — voyez le cachet de vérification en direct",
     "pvfExplainer": "Un fichier .pvf est un document inviolable créé par Vertifile. Déposez-en un ici pour vérifier son authenticité.",
-    "wrongFileType": "Ceci ne semble pas être un fichier .pvf. Seuls les documents protégés par Vertifile peuvent être vérifiés ici."
+    "wrongFileType": "Ceci ne semble pas être un fichier .pvf. Seuls les documents protégés par Vertifile peuvent être vérifiés ici.",
+    "detailDoc": "Document",
+    "detailHash": "Hachage",
+    "detailRegistered": "Enregistre",
+    "detailOrg": "Organisation",
+    "detailStatus": "Statut"
   },
   "enterprise": {
     "badge": "Sécurité de niveau entreprise",
@@ -446,7 +473,16 @@
     "keyWarning": "Enregistrez cette clé — elle ne sera plus affichée. Stockez-la en toute sécurité dans les variables d'environnement de votre application.",
     "quickStartLabel": "Démarrage rapide",
     "readIntegrationGuide": "Lire le guide d'intégration",
-    "goToUpload": "Aller à la page de téléversement"
+    "goToUpload": "Aller à la page de téléversement",
+    "termsConsent": "En creant une cle API, vous acceptez nos",
+    "termsLink": "Conditions d'utilisation",
+    "privacyLink": "Politique de confidentialite",
+    "alreadyHaveAccount": "Deja un compte ?",
+    "logIn": "Se connecter",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "8 caracteres minimum",
+    "confirmLabel": "Confirmer le mot de passe",
+    "confirmPlaceholder": "Re-saisir le mot de passe"
   },
   "open": {
     "badge": "Visionneuse en ligne",
@@ -650,7 +686,16 @@
   "notFound": {
     "title": "Page introuvable",
     "message": "La page que vous recherchez n'existe pas ou a été déplacée.",
-    "backHome": "Retour à l'accueil"
+    "backHome": "Retour à l'accueil",
+    "goHome": "Retour a l'accueil",
+    "contactUs": "Nous contacter",
+    "suggestionsTitle": "Peut-etre cherchiez-vous",
+    "suggestVerify": "Verifier un document",
+    "suggestVerifyDesc": "Verifiez si un fichier .pvf est authentique ou falsifie",
+    "suggestDemo": "Voir la demo",
+    "suggestDemoDesc": "Decouvrez comment fonctionne la verification inviolable",
+    "suggestPricing": "Voir les tarifs",
+    "suggestPricingDesc": "Plans Gratuit, Pro et Enterprise pour chaque besoin"
   },
   "about": {
     "heroBadge": "Fondée en Israël, 2026",
@@ -1161,7 +1206,9 @@
       "legalRecognition": "Le format .pvf a un brevet en instance auprès de l'Office des brevets israélien et un enregistrement de type MIME IANA en attente. Bien qu'aucun tribunal israélien n'ait statué spécifiquement sur le .pvf, il fournit une preuve cryptographique solide de l'authenticité du document.",
       "gdpr": "Oui. Nous traitons les données selon l'article 6 du RGPD (exécution du contrat, intérêt légitime, consentement). Nous proposons des accords DPA pour les clients Entreprise.",
       "dpa": "Oui. Les clients Entreprise peuvent demander un DPA à privacy@vertifile.com."
-    }
+    },
+    "breadcrumbHome": "Accueil",
+    "breadcrumbFaq": "FAQ"
   },
   "paywall": {
     "title": "Votre document est protege !",
@@ -1226,7 +1273,9 @@
       "placeholder": "votre@email.com",
       "cta": "S'abonner",
       "note": "Pas de spam. Desabonnement a tout moment."
-    }
+    },
+    "breadcrumbHome": "Accueil",
+    "breadcrumbBlog": "Blog"
   },
   "tab": {
     "overview": {
@@ -1486,19 +1535,26 @@
     "ctaTitle": "Besoin d'aide supplementaire ?",
     "ctaDesc": "Notre equipe est la pour vous aider. Contactez-nous par e-mail ou formulaire et nous vous repondrons sous 24 heures.",
     "ctaContact": "Nous Contacter",
-    "ctaFaq": "Parcourir la FAQ"
+    "ctaFaq": "Parcourir la FAQ",
+    "breadcrumbHome": "Accueil"
   },
   "resetPassword": {
-    "title": "Definir un Nouveau Mot de Passe",
+    "title": "Definir un nouveau mot de passe",
     "subtitle": "Entrez votre nouveau mot de passe ci-dessous.",
-    "newPassword": "Nouveau Mot de Passe",
-    "confirmPassword": "Confirmer le Mot de Passe",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
     "rules": "Au moins 8 caracteres, une majuscule, une minuscule, un chiffre et un caractere special.",
-    "submit": "Reinitialiser le Mot de Passe",
-    "backToLogin": "Retour a la Connexion",
-    "successTitle": "Mot de Passe Mis a Jour",
+    "submit": "Reinitialiser le mot de passe",
+    "backToLogin": "Retour a la connexion",
+    "successTitle": "Mot de passe mis a jour",
     "successDesc": "Votre mot de passe a ete reinitialise avec succes. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
-    "signIn": "Se Connecter"
+    "signIn": "Se connecter",
+    "invalidLink": "Lien de reinitialisation invalide ou manquant.",
+    "mismatch": "Les mots de passe ne correspondent pas.",
+    "tooShort": "Le mot de passe doit contenir au moins 8 caracteres.",
+    "resetting": "Reinitialisation...",
+    "genericError": "Une erreur est survenue. Veuillez reessayer.",
+    "networkError": "Erreur reseau. Verifiez votre connexion et reessayez."
   },
   "modal": {
     "deleteTitle": "Supprimer le document ?",

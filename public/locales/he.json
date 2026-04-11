@@ -24,7 +24,8 @@
     "documents": "מסמכים",
     "stamp": "החותמת שלי",
     "settings": "הגדרות",
-    "help": "עזרה"
+    "help": "עזרה",
+    "skipToContent": "דלג לתוכן"
   },
   "hero": {
     "headline": "הגנו על כל מסמך מפני זיופים",
@@ -243,7 +244,28 @@
     "another": "העלאת מסמך נוסף",
     "shareLabel": "קישור לשיתוף (לא צריך התקנה):",
     "copyBtn": "העתק",
-    "copiedBtn": "הועתק!"
+    "copiedBtn": "הועתק!",
+    "shareLabel2": "קישור לשיתוף (ללא התקנה):",
+    "authRequired": "נדרשת כניסה",
+    "authDesc": "עליך להיכנס או ליצור חשבון כדי להנפיק מסמכי PVF מוגנים.",
+    "authBtn": "כניסה / יצירת חשבון",
+    "signInTitle": "כניסה",
+    "signInDesc": "היכנס כדי להנפיק מסמכי PVF מוגנים",
+    "signInBtn": "כניסה",
+    "continueGoogle": "המשך עם Google",
+    "signUpGoogle": "הרשמה עם Google",
+    "or": "או",
+    "emailPlaceholder": "כתובת אימייל",
+    "passwordPlaceholder": "סיסמה",
+    "noAccount": "אין לך חשבון?",
+    "createOne": "צור חשבון",
+    "createAccountTitle": "יצירת חשבון",
+    "createAccountDesc": "צור חשבון חינם כדי להתחיל להגן על מסמכים",
+    "createAccountBtn": "יצירת חשבון",
+    "fullNamePlaceholder": "שם מלא",
+    "passwordMinPlaceholder": "סיסמה (מינימום 8 תווים)",
+    "alreadyHaveAccount": "כבר יש לך חשבון?",
+    "signIn": "כניסה"
   },
   "verify": {
     "pageTitle": "אימות מסמך",
@@ -264,7 +286,12 @@
     "sampleBtn": "צפה במסמך מוגן לדוגמה",
     "sampleDesc": "זהו קובץ pvf. אמיתי — ראה את חותמת האימות בפעולה",
     "pvfExplainer": "קובץ pvf. הוא מסמך מוגן מפני זיוף שנוצר על ידי Vertifile. גרור אחד לכאן כדי לבדוק אם הוא אותנטי.",
-    "wrongFileType": "נראה שזה לא קובץ pvf. רק מסמכים שמוגנים על ידי Vertifile ניתנים לאימות כאן."
+    "wrongFileType": "נראה שזה לא קובץ pvf. רק מסמכים שמוגנים על ידי Vertifile ניתנים לאימות כאן.",
+    "detailDoc": "מסמך",
+    "detailHash": "חתימה",
+    "detailRegistered": "נרשם",
+    "detailOrg": "ארגון",
+    "detailStatus": "סטטוס"
   },
   "enterprise": {
     "badge": "אבטחה ברמה ארגונית",
@@ -446,7 +473,16 @@
     "keyWarning": "שמרו מפתח זה — הוא לא יוצג שוב. אחסנו אותו בבטחה במשתני הסביבה של האפליקציה שלכם.",
     "quickStartLabel": "התחלה מהירה",
     "readIntegrationGuide": "קראו את מדריך האינטגרציה",
-    "goToUpload": "למעבר להעלאה"
+    "goToUpload": "למעבר להעלאה",
+    "termsConsent": "ביצירת מפתח API, אתה מסכים ל",
+    "termsLink": "תנאי שימוש",
+    "privacyLink": "מדיניות פרטיות",
+    "alreadyHaveAccount": "כבר יש לך חשבון?",
+    "logIn": "כניסה",
+    "passwordLabel": "סיסמה",
+    "passwordPlaceholder": "מינימום 8 תווים",
+    "confirmLabel": "אישור סיסמה",
+    "confirmPlaceholder": "הזן סיסמה שוב"
   },
   "open": {
     "badge": "מציג מבוסס דפדפן",
@@ -650,7 +686,16 @@
   "notFound": {
     "title": "הדף לא נמצא",
     "message": "הדף שחיפשת אינו קיים או שהועבר למיקום אחר.",
-    "backHome": "חזרה לדף הבית"
+    "backHome": "חזרה לדף הבית",
+    "goHome": "חזרה לדף הבית",
+    "contactUs": "צור קשר",
+    "suggestionsTitle": "אולי חיפשת",
+    "suggestVerify": "אימות מסמך",
+    "suggestVerifyDesc": "בדיקה אם קובץ .pvf אותנטי או שונה",
+    "suggestDemo": "צפה בהדגמה",
+    "suggestDemoDesc": "צפה כיצד אימות חסין-זיוף עובד בפעולה",
+    "suggestPricing": "צפה בתמחור",
+    "suggestPricingDesc": "תוכניות חינם, Pro ו-Enterprise לכל צורך"
   },
   "about": {
     "heroBadge": "נוסדה בישראל, 2026",
@@ -1161,7 +1206,9 @@
       "legalRecognition": "לפורמט .pvf יש פטנט בהמתנה במשרד הפטנטים הישראלי ורישום סוג MIME ב-IANA בהמתנה. למרות שאף בית משפט ישראלי לא פסק לגבי .pvf ספציפית, הוא מספק ראיה קריפטוגרפית חזקה לאותנטיות מסמך.",
       "gdpr": "כן. אנו מעבדים נתונים לפי סעיף 6 של GDPR (ביצוע חוזה, אינטרס לגיטימי, הסכמה). אנו מציעים הסכמי DPA ללקוחות Enterprise.",
       "dpa": "כן. לקוחות Enterprise יכולים לבקש DPA ב-privacy@vertifile.com."
-    }
+    },
+    "breadcrumbHome": "דף הבית",
+    "breadcrumbFaq": "שאלות נפוצות"
   },
   "paywall": {
     "title": "המסמך שלך מוגן!",
@@ -1226,7 +1273,9 @@
       "placeholder": "האימייל שלכם",
       "cta": "הרשמה",
       "note": "ללא ספאם. ביטול בכל עת."
-    }
+    },
+    "breadcrumbHome": "דף הבית",
+    "breadcrumbBlog": "בלוג"
   },
   "tab": {
     "overview": {
@@ -1485,19 +1534,26 @@
     "ctaTitle": "עדיין צריכים עזרה?",
     "ctaDesc": "הצוות שלנו כאן כדי לעזור. פנו אלינו באימייל או דרך טופס יצירת הקשר ונחזור אליכם תוך 24 שעות.",
     "ctaContact": "צרו קשר",
-    "ctaFaq": "עיינו בשאלות נפוצות"
+    "ctaFaq": "עיינו בשאלות נפוצות",
+    "breadcrumbHome": "דף הבית"
   },
   "resetPassword": {
     "title": "הגדרת סיסמה חדשה",
-    "subtitle": "הזינו את הסיסמה החדשה שלכם למטה.",
+    "subtitle": "הזן את הסיסמה החדשה שלך למטה.",
     "newPassword": "סיסמה חדשה",
     "confirmPassword": "אישור סיסמה",
     "rules": "לפחות 8 תווים, אות גדולה, אות קטנה, ספרה ותו מיוחד.",
     "submit": "איפוס סיסמה",
-    "backToLogin": "חזרה להתחברות",
+    "backToLogin": "חזרה לכניסה",
     "successTitle": "הסיסמה עודכנה",
-    "successDesc": "הסיסמה שלכם אופסה בהצלחה. כעת תוכלו להתחבר עם הסיסמה החדשה.",
-    "signIn": "התחברות"
+    "successDesc": "הסיסמה שלך אופסה בהצלחה. כעת תוכל להיכנס עם הסיסמה החדשה.",
+    "signIn": "כניסה",
+    "invalidLink": "קישור איפוס לא תקין או חסר. בקש איפוס סיסמה חדש.",
+    "mismatch": "הסיסמאות אינן תואמות.",
+    "tooShort": "הסיסמה חייבת להכיל לפחות 8 תווים.",
+    "resetting": "מאפס...",
+    "genericError": "משהו השתבש. נסה שוב.",
+    "networkError": "שגיאת רשת. בדוק את החיבור ונסה שוב."
   },
   "modal": {
     "deleteTitle": "מחיקת מסמך?",

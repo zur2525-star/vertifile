@@ -24,7 +24,8 @@
     "documents": "Documents",
     "stamp": "My Stamp",
     "settings": "Settings",
-    "help": "Help"
+    "help": "Help",
+    "skipToContent": "Ir para o conteudo"
   },
   "hero": {
     "headline": "Proteja qualquer documento contra falsificação",
@@ -243,7 +244,28 @@
     "another": "Enviar outro documento",
     "shareLabel": "Link de compartilhamento (sem instalação):",
     "copyBtn": "Copiar",
-    "copiedBtn": "Copiado!"
+    "copiedBtn": "Copiado!",
+    "shareLabel2": "Link de compartilhamento (sem instalacao):",
+    "authRequired": "Login necessario",
+    "authDesc": "Voce precisa fazer login ou criar uma conta para emitir documentos PVF protegidos.",
+    "authBtn": "Entrar / Criar conta",
+    "signInTitle": "Entrar",
+    "signInDesc": "Entre para emitir documentos PVF protegidos",
+    "signInBtn": "Entrar",
+    "continueGoogle": "Continuar com Google",
+    "signUpGoogle": "Cadastrar com Google",
+    "or": "ou",
+    "emailPlaceholder": "Endereco de email",
+    "passwordPlaceholder": "Senha",
+    "noAccount": "Nao tem uma conta?",
+    "createOne": "Criar uma",
+    "createAccountTitle": "Criar conta",
+    "createAccountDesc": "Crie uma conta gratuita para comecar a proteger documentos",
+    "createAccountBtn": "Criar conta",
+    "fullNamePlaceholder": "Nome completo",
+    "passwordMinPlaceholder": "Senha (minimo 8 caracteres)",
+    "alreadyHaveAccount": "Ja tem uma conta?",
+    "signIn": "Entrar"
   },
   "verify": {
     "pageTitle": "Verificar um documento",
@@ -264,7 +286,12 @@
     "sampleBtn": "Ver documento protegido de exemplo",
     "sampleDesc": "Este é um arquivo .pvf real — veja o selo de verificação ao vivo",
     "pvfExplainer": "Um arquivo .pvf é um documento à prova de adulteração criado pelo Vertifile. Arraste um aqui para verificar sua autenticidade.",
-    "wrongFileType": "Este arquivo não parece ser um .pvf. Apenas documentos protegidos pelo Vertifile podem ser verificados aqui."
+    "wrongFileType": "Este arquivo não parece ser um .pvf. Apenas documentos protegidos pelo Vertifile podem ser verificados aqui.",
+    "detailDoc": "Documento",
+    "detailHash": "Hash",
+    "detailRegistered": "Registrado",
+    "detailOrg": "Organizacao",
+    "detailStatus": "Status"
   },
   "enterprise": {
     "badge": "Segurança de nível empresarial",
@@ -446,7 +473,16 @@
     "keyWarning": "Salve esta chave — ela não será exibida novamente. Armazene-a com segurança nas variáveis de ambiente do seu aplicativo.",
     "quickStartLabel": "Início rápido",
     "readIntegrationGuide": "Ler guia de integração",
-    "goToUpload": "Ir para upload"
+    "goToUpload": "Ir para upload",
+    "termsConsent": "Ao criar uma chave API, voce concorda com nossos",
+    "termsLink": "Termos de servico",
+    "privacyLink": "Politica de privacidade",
+    "alreadyHaveAccount": "Ja tem uma conta?",
+    "logIn": "Entrar",
+    "passwordLabel": "Senha",
+    "passwordPlaceholder": "Minimo 8 caracteres",
+    "confirmLabel": "Confirmar senha",
+    "confirmPlaceholder": "Redigite a senha"
   },
   "open": {
     "badge": "Visualizador no navegador",
@@ -650,7 +686,16 @@
   "notFound": {
     "title": "Página não encontrada",
     "message": "A página que você procura não existe ou foi movida.",
-    "backHome": "Voltar ao início"
+    "backHome": "Voltar ao início",
+    "goHome": "Voltar ao inicio",
+    "contactUs": "Fale conosco",
+    "suggestionsTitle": "Talvez voce estivesse procurando",
+    "suggestVerify": "Verificar um documento",
+    "suggestVerifyDesc": "Verifique se um arquivo .pvf e autentico ou foi alterado",
+    "suggestDemo": "Ver a demo",
+    "suggestDemoDesc": "Veja como funciona a verificacao a prova de adulteracao",
+    "suggestPricing": "Ver precos",
+    "suggestPricingDesc": "Planos Gratis, Pro e Enterprise para cada necessidade"
   },
   "about": {
     "heroBadge": "Fundada em Israel, 2026",
@@ -1161,7 +1206,9 @@
       "legalRecognition": "O formato .pvf tem uma patente pendente no Escritorio de Patentes de Israel e um registro de tipo MIME da IANA pendente. Embora nenhum tribunal israelense tenha decidido especificamente sobre .pvf, ele fornece forte evidencia criptografica da autenticidade do documento.",
       "gdpr": "Sim. Processamos dados sob o Artigo 6 do GDPR (execucao de contrato, interesse legitimo, consentimento). Oferecemos acordos DPA para clientes Enterprise.",
       "dpa": "Sim. Clientes Enterprise podem solicitar um DPA em privacy@vertifile.com."
-    }
+    },
+    "breadcrumbHome": "Inicio",
+    "breadcrumbFaq": "Perguntas frequentes"
   },
   "paywall": {
     "title": "Seu documento esta protegido!",
@@ -1226,7 +1273,9 @@
       "placeholder": "seu@email.com",
       "cta": "Assinar",
       "note": "Sem spam. Cancele quando quiser."
-    }
+    },
+    "breadcrumbHome": "Inicio",
+    "breadcrumbBlog": "Blog"
   },
   "tab": {
     "overview": {
@@ -1486,19 +1535,26 @@
     "ctaTitle": "Ainda precisa de ajuda?",
     "ctaDesc": "Nossa equipe esta aqui para ajudar. Entre em contato por e-mail ou formulario e responderemos em 24 horas.",
     "ctaContact": "Fale Conosco",
-    "ctaFaq": "Ver Perguntas Frequentes"
+    "ctaFaq": "Ver Perguntas Frequentes",
+    "breadcrumbHome": "Inicio"
   },
   "resetPassword": {
-    "title": "Definir Nova Senha",
+    "title": "Definir nova senha",
     "subtitle": "Digite sua nova senha abaixo.",
-    "newPassword": "Nova Senha",
-    "confirmPassword": "Confirmar Senha",
-    "rules": "Minimo 8 caracteres, uma maiuscula, uma minuscula, um digito e um caractere especial.",
-    "submit": "Redefinir Senha",
-    "backToLogin": "Voltar ao Login",
-    "successTitle": "Senha Atualizada",
+    "newPassword": "Nova senha",
+    "confirmPassword": "Confirmar senha",
+    "rules": "Pelo menos 8 caracteres, uma maiuscula, uma minuscula, um digito e um caractere especial.",
+    "submit": "Redefinir senha",
+    "backToLogin": "Voltar ao login",
+    "successTitle": "Senha atualizada",
     "successDesc": "Sua senha foi redefinida com sucesso. Agora voce pode fazer login com sua nova senha.",
-    "signIn": "Entrar"
+    "signIn": "Entrar",
+    "invalidLink": "Link de redefinicao invalido ou ausente.",
+    "mismatch": "As senhas nao coincidem.",
+    "tooShort": "A senha deve ter pelo menos 8 caracteres.",
+    "resetting": "Redefinindo...",
+    "genericError": "Algo deu errado. Tente novamente.",
+    "networkError": "Erro de rede. Verifique sua conexao e tente novamente."
   },
   "modal": {
     "deleteTitle": "Excluir documento?",

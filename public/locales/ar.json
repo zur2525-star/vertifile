@@ -24,7 +24,8 @@
     "documents": "Documents",
     "stamp": "My Stamp",
     "settings": "Settings",
-    "help": "Help"
+    "help": "Help",
+    "skipToContent": "انتقل الى المحتوى"
   },
   "hero": {
     "headline": "احمِ أي مستند من التزوير",
@@ -243,7 +244,28 @@
     "another": "رفع مستند آخر",
     "shareLabel": "رابط المشاركة (لا حاجة للتثبيت):",
     "copyBtn": "نسخ",
-    "copiedBtn": "تم النسخ!"
+    "copiedBtn": "تم النسخ!",
+    "shareLabel2": "رابط المشاركة (لا يحتاج تثبيت):",
+    "authRequired": "تسجيل الدخول مطلوب",
+    "authDesc": "يجب تسجيل الدخول او انشاء حساب لاصدار مستندات PVF محمية.",
+    "authBtn": "تسجيل الدخول / انشاء حساب",
+    "signInTitle": "تسجيل الدخول",
+    "signInDesc": "سجل دخولك لاصدار مستندات PVF محمية",
+    "signInBtn": "تسجيل الدخول",
+    "continueGoogle": "المتابعة مع Google",
+    "signUpGoogle": "التسجيل مع Google",
+    "or": "او",
+    "emailPlaceholder": "عنوان البريد الالكتروني",
+    "passwordPlaceholder": "كلمة المرور",
+    "noAccount": "ليس لديك حساب؟",
+    "createOne": "انشئ حساب",
+    "createAccountTitle": "انشاء حساب",
+    "createAccountDesc": "انشئ حساب مجاني لبدء حماية المستندات",
+    "createAccountBtn": "انشاء حساب",
+    "fullNamePlaceholder": "الاسم الكامل",
+    "passwordMinPlaceholder": "كلمة المرور (8 احرف على الاقل)",
+    "alreadyHaveAccount": "لديك حساب بالفعل؟",
+    "signIn": "تسجيل الدخول"
   },
   "verify": {
     "pageTitle": "التحقق من مستند",
@@ -264,7 +286,12 @@
     "sampleBtn": "عرض مستند محمي كنموذج",
     "sampleDesc": "هذا ملف pvf. حقيقي — شاهد ختم التحقق المباشر",
     "pvfExplainer": "ملف pvf. هو مستند مقاوم للتلاعب تم إنشاؤه بواسطة Vertifile. اسحب ملفًا هنا للتحقق من أصالته.",
-    "wrongFileType": "لا يبدو أن هذا ملف pvf. يمكن التحقق فقط من المستندات المحمية بواسطة Vertifile هنا."
+    "wrongFileType": "لا يبدو أن هذا ملف pvf. يمكن التحقق فقط من المستندات المحمية بواسطة Vertifile هنا.",
+    "detailDoc": "المستند",
+    "detailHash": "التجزئة",
+    "detailRegistered": "مسجل",
+    "detailOrg": "المنظمة",
+    "detailStatus": "الحالة"
   },
   "enterprise": {
     "badge": "أمان بمستوى المؤسسات",
@@ -446,7 +473,16 @@
     "keyWarning": "احفظ هذا المفتاح — لن يظهر مرة أخرى. خزّنه بأمان في متغيرات بيئة تطبيقك.",
     "quickStartLabel": "بداية سريعة",
     "readIntegrationGuide": "اقرأ دليل التكامل",
-    "goToUpload": "انتقل إلى الرفع"
+    "goToUpload": "انتقل إلى الرفع",
+    "termsConsent": "بانشاء مفتاح API، فانت توافق على",
+    "termsLink": "شروط الخدمة",
+    "privacyLink": "سياسة الخصوصية",
+    "alreadyHaveAccount": "لديك حساب بالفعل؟",
+    "logIn": "تسجيل الدخول",
+    "passwordLabel": "كلمة المرور",
+    "passwordPlaceholder": "8 احرف على الاقل",
+    "confirmLabel": "تاكيد كلمة المرور",
+    "confirmPlaceholder": "اعد ادخال كلمة المرور"
   },
   "open": {
     "badge": "عارض في المتصفح",
@@ -650,7 +686,16 @@
   "notFound": {
     "title": "الصفحة غير موجودة",
     "message": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
-    "backHome": "العودة إلى الرئيسية"
+    "backHome": "العودة إلى الرئيسية",
+    "goHome": "العودة للرئيسية",
+    "contactUs": "اتصل بنا",
+    "suggestionsTitle": "ربما كنت تبحث عن",
+    "suggestVerify": "التحقق من مستند",
+    "suggestVerifyDesc": "تحقق مما اذا كان ملف .pvf اصلي ام تم التلاعب به",
+    "suggestDemo": "شاهد العرض التوضيحي",
+    "suggestDemoDesc": "شاهد كيف يعمل التحقق المقاوم للتلاعب",
+    "suggestPricing": "عرض الاسعار",
+    "suggestPricingDesc": "خطط مجانية و Pro و Enterprise لكل حاجة"
   },
   "about": {
     "heroBadge": "تأسست في إسرائيل، 2026",
@@ -1161,7 +1206,9 @@
       "legalRecognition": "تنسيق .pvf له براءة اختراع معلقة في مكتب براءات الاختراع الإسرائيلي وتسجيل نوع MIME لدى IANA معلق. على الرغم من عدم صدور حكم من أي محكمة إسرائيلية بخصوص .pvf تحديداً، إلا أنه يوفر دليلاً تشفيرياً قوياً على أصالة المستند.",
       "gdpr": "نعم. نعالج البيانات وفقاً للمادة 6 من GDPR (تنفيذ العقد، المصلحة المشروعة، الموافقة). نقدم اتفاقيات DPA لعملاء Enterprise.",
       "dpa": "نعم. يمكن لعملاء Enterprise طلب DPA على privacy@vertifile.com."
-    }
+    },
+    "breadcrumbHome": "الرئيسية",
+    "breadcrumbFaq": "الاسئلة الشائعة"
   },
   "paywall": {
     "title": "مستندك محمي!",
@@ -1226,7 +1273,9 @@
       "placeholder": "بريدك الإلكتروني",
       "cta": "اشترك",
       "note": "بدون إزعاج. إلغاء الاشتراك في أي وقت."
-    }
+    },
+    "breadcrumbHome": "الرئيسية",
+    "breadcrumbBlog": "المدونة"
   },
   "tab": {
     "overview": {
@@ -1486,19 +1535,26 @@
     "ctaTitle": "هل ما زلت بحاجة إلى مساعدة؟",
     "ctaDesc": "فريقنا هنا للمساعدة. تواصل عبر البريد الإلكتروني أو نموذج الاتصال وسنرد عليك خلال 24 ساعة.",
     "ctaContact": "اتصل بنا",
-    "ctaFaq": "تصفح الأسئلة الشائعة"
+    "ctaFaq": "تصفح الأسئلة الشائعة",
+    "breadcrumbHome": "الرئيسية"
   },
   "resetPassword": {
     "title": "تعيين كلمة مرور جديدة",
-    "subtitle": "أدخل كلمة المرور الجديدة أدناه.",
+    "subtitle": "ادخل كلمة المرور الجديدة ادناه.",
     "newPassword": "كلمة المرور الجديدة",
-    "confirmPassword": "تأكيد كلمة المرور",
-    "rules": "8 أحرف على الأقل، حرف كبير، حرف صغير، رقم، وحرف خاص.",
-    "submit": "إعادة تعيين كلمة المرور",
-    "backToLogin": "العودة إلى تسجيل الدخول",
+    "confirmPassword": "تاكيد كلمة المرور",
+    "rules": "8 احرف على الاقل، حرف كبير، حرف صغير، رقم وحرف خاص.",
+    "submit": "اعادة تعيين كلمة المرور",
+    "backToLogin": "العودة لتسجيل الدخول",
     "successTitle": "تم تحديث كلمة المرور",
-    "successDesc": "تمت إعادة تعيين كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.",
-    "signIn": "تسجيل الدخول"
+    "successDesc": "تم اعادة تعيين كلمة المرور بنجاح. يمكنك الان تسجيل الدخول بكلمة المرور الجديدة.",
+    "signIn": "تسجيل الدخول",
+    "invalidLink": "رابط اعادة التعيين غير صالح او مفقود.",
+    "mismatch": "كلمات المرور غير متطابقة.",
+    "tooShort": "يجب ان تحتوي كلمة المرور على 8 احرف على الاقل.",
+    "resetting": "جاري اعادة التعيين...",
+    "genericError": "حدث خطا. يرجى المحاولة مرة اخرى.",
+    "networkError": "خطا في الشبكة. تحقق من الاتصال وحاول مرة اخرى."
   },
   "modal": {
     "deleteTitle": "حذف المستند؟",
