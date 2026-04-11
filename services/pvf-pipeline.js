@@ -322,6 +322,37 @@ async function createPvf(opts) {
   }
 
   // -----------------------------------------------------------------
+  // 8b. MERGE USER STAMP CONFIG (Layer 2 — visual customization)
+  // The "My Stamp" tab saves to users.stamp_config (JSONB) with keys:
+  //   waveColors, accentColor, customLogo, orgName, brandText, size
+  // The legacy branding lives in api_keys (custom_icon, brand_color, wave_color).
+  // Stamp config takes precedence when present — it's the newer, richer UI.
+  // -----------------------------------------------------------------
+  if (owner && owner.type === 'user' && owner.id) {
+    try {
+      const stampResult = await db.getUserStampConfig(owner.id);
+      if (stampResult && stampResult.config && typeof stampResult.config === 'object') {
+        const sc = stampResult.config;
+        // customLogo → custom_icon (data: URL)
+        if (sc.customLogo) {
+          branding.custom_icon = sc.customLogo;
+        }
+        // accentColor → brand_color (hex)
+        if (sc.accentColor) {
+          branding.brand_color = sc.accentColor;
+        }
+        // waveColors → wave_color (JSON string of hex array)
+        if (Array.isArray(sc.waveColors) && sc.waveColors.length > 0) {
+          branding.wave_color = JSON.stringify(sc.waveColors);
+        }
+      }
+    } catch (e) {
+      // Non-fatal — fall back to legacy branding
+      logger.warn('[pvf-pipeline] Failed to load stamp config for user %s: %s', owner.id, e.message);
+    }
+  }
+
+  // -----------------------------------------------------------------
   // 9. GENERATE shareId BEFORE generatePvfHtml (THE SHAREID FIX)
   // -----------------------------------------------------------------
   const shareId = crypto.randomBytes(8).toString('base64url');
@@ -815,6 +846,30 @@ async function createPvfEncrypted(opts) {
   }
   if (!branding) {
     branding = { custom_icon: null, brand_color: null, wave_color: null };
+  }
+
+  // -----------------------------------------------------------------
+  // 8b. MERGE USER STAMP CONFIG (Layer 2 — visual customization)
+  // Same logic as createPvf() step 8b — stamp_config overrides legacy branding.
+  // -----------------------------------------------------------------
+  if (owner && owner.type === 'user' && owner.id) {
+    try {
+      const stampResult = await db.getUserStampConfig(owner.id);
+      if (stampResult && stampResult.config && typeof stampResult.config === 'object') {
+        const sc = stampResult.config;
+        if (sc.customLogo) {
+          branding.custom_icon = sc.customLogo;
+        }
+        if (sc.accentColor) {
+          branding.brand_color = sc.accentColor;
+        }
+        if (Array.isArray(sc.waveColors) && sc.waveColors.length > 0) {
+          branding.wave_color = JSON.stringify(sc.waveColors);
+        }
+      }
+    } catch (e) {
+      logger.warn('[pvf-pipeline] Failed to load stamp config for user %s: %s', owner.id, e.message);
+    }
   }
 
   // -----------------------------------------------------------------
