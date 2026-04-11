@@ -3143,10 +3143,10 @@ async function handleUploadFile(file) {
               '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>' +
               '<path d="M7 11V7a5 5 0 0110 0v4"/>' +
             '</svg>' +
-            'Encrypted share link' +
+            'Encrypted link' +
           '</div>' +
           '<div class="up-share-url-field">' +
-            '<input type="text" id="upShareUrlInput" value="' + fullShareUrl.replace(/"/g, '&quot;') + '" readonly onclick="this.select()">' +
+            '<input type="text" id="upShareUrlInput" value="' + fullShareUrl.split('#')[0].replace(/"/g, '&quot;') + '" readonly onclick="this.select()">' +
             '<button class="up-share-url-copy" id="upShareUrlCopy" type="button">' +
               '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
                 '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>' +

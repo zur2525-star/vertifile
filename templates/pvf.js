@@ -725,6 +725,7 @@ async function decryptAndDisplay() {
     // Read encrypted data from embedded script tags
     var encDocEl = document.getElementById('encryptedDoc');
     var encMetaEl = document.getElementById('encryptionMeta');
+    if (console && console.warn) console.warn('[PVF] ZK decrypt: encDocEl=' + !!encDocEl + ', encMetaEl=' + !!encMetaEl);
     if (!encDocEl || !encMetaEl) throw new Error('Encrypted payload missing from document');
 
     var encBase64 = (encDocEl.textContent || '').trim();
@@ -743,6 +744,8 @@ async function decryptAndDisplay() {
     if (computedHash !== HASH) {
       throw new Error('Hash mismatch after decryption — document may be tampered');
     }
+
+    if (console && console.warn) console.warn('[PVF] ZK decrypt: hash verified, mimeType=' + mimeType + ', bytes=' + decrypted.byteLength);
 
     // Store decrypted bytes + metadata globally for the download handler (H1)
     window.__zkDecryptedBytes = new Uint8Array(decrypted);
@@ -814,7 +817,14 @@ async function init(){
 
   // Zero-Knowledge: decrypt encrypted content before verification
   var isEncrypted = await decryptAndDisplay();
-  if (isEncrypted && !__zkKey) return; // No key — error already shown, don't continue
+  // decryptAndDisplay() returns true for BOTH success AND error (key-missing / decrypt-failed).
+  // On success it zeroes __zkKey and sets __isPdf / stores decrypted bytes — we must continue.
+  // On error (no key or failed decrypt) it renders an error UI and we should stop.
+  // Detect the error case by checking if the error UI was rendered.
+  if (isEncrypted) {
+    var zkErrorShown = document.querySelector('.zk-error');
+    if (zkErrorShown) return; // Error already displayed — don't continue to verification
+  }
 
   // Determine the verification API URL
   var apiUrl=isLocal?VERIFY_URL:API;
