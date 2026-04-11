@@ -31,12 +31,16 @@ const router = express.Router();
 
 router.get('/me', (req, res) => {
   if (!req.user) return res.status(401).json({ success: false, error: 'Not authenticated' });
+  const adminEmails = new Set(
+    (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase()).filter(Boolean)
+  );
   res.json({ success: true, user: {
     id: req.user.id,
     email: req.user.email,
     name: req.user.name,
     avatar: req.user.avatar_url,
     plan: req.user.plan,
+    isAdmin: adminEmails.has((req.user.email || '').toLowerCase()),
     documentsUsed: req.user.documents_used,
     documentsLimit: req.user.documents_limit,
     stampConfig: req.user.stamp_config || {},
@@ -406,12 +410,15 @@ async function uploadLegacy(req, res) {
 
     await db.savePvfContent(fileHash, pvfHtml);
 
-    // Admin/owner bypass — zur2525@gmail.com always has full access
-    const isAdmin = req.user.email === 'zur2525@gmail.com' || req.user.email === 'info@vertifile.com';
-    const isPaidPlan = isAdmin || (req.user.plan && req.user.plan !== 'free');
+    // Admin bypass — loaded from ADMIN_EMAILS env var (no hardcoded emails)
+    const adminEmails = new Set(
+      (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase()).filter(Boolean)
+    );
+    const isAdmin = adminEmails.has((req.user.email || '').toLowerCase());
+    const isPaidPlan = isAdmin || (req.user.plan && !['free', 'trial'].includes(req.user.plan));
 
     if (!isPaidPlan) {
-      // Free plan: create PVF but return preview-only response
+      // Unpaid/trial: create PVF but return preview-only response
       await db.markDocumentPreviewOnly(fileHash, true);
       return res.json({
         success: true,
@@ -607,7 +614,7 @@ router.post('/api-key', requireLogin, async (req, res) => {
       return res.json({ success: true, apiKey: existing.api_key });
     }
     const apiKey = 'vf_live_' + crypto.randomBytes(24).toString('hex');
-    await db.createApiKey({ apiKey, orgId, orgName, plan: req.user.plan || 'free', rateLimit: 5 });
+    await db.createApiKey({ apiKey, orgId, orgName, plan: req.user.plan || 'pro', rateLimit: 100 });
     res.json({ success: true, apiKey });
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to generate API key' }); }
 });

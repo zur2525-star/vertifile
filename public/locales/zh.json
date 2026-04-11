@@ -873,7 +873,6 @@
     "noWebhooks": "未配置 Webhook",
     "ipWhitelist": "IP 白名单",
     "ipWhitelistDesc": "允许访问 API 的 IP 地址",
-    "free": "免费版",
     "professional": "专业版",
     "enterprise": "企业版",
     "totalProtected": "受保护文件总数",
@@ -938,7 +937,6 @@
     "createKeyTitle": "创建 API 密钥",
     "cancel": "取消",
     "close": "关闭",
-    "planFree": "免费版（5份/天）",
     "planPro": "专业版（100份/天）",
     "planEnterprise": "企业版（10,000份/天）",
     "noData": "暂无数据",
@@ -1053,7 +1051,6 @@
     "limitDesc": "升级到专业版获取无限文档保护",
     "upgrade": "升级到专业版",
     "plan": "方案",
-    "free": "免费版",
     "pro": "专业版",
     "docsUsed": "已使用文档数",
     "shareLink": "分享链接",
@@ -1108,16 +1105,9 @@
     "heroTitle1": "简单透明的",
     "heroTitle2": "定价",
     "heroSubtitle": "免费开始。随增长扩展。无隐藏费用，无意外。",
-    "freeName": "免费",
     "perMonth": "月",
     "perSeat": "席位/月",
     "seatMin": "最少5个席位",
-    "freeDesc": "适合个人用户。免费上传、下载、分享和验证。",
-    "freeF1": "每月25个文档",
-    "freeF2": "基础验证印章（Vertifile品牌）",
-    "freeF3": "无限分享和验证",
-    "freeF4": "1个用户",
-    "freeCta": "免费开始",
     "recommended": "最受欢迎",
     "proName": "专业版",
     "proDesc": "适合需要自有品牌的专业人士和自由职业者。",
@@ -1159,9 +1149,7 @@
     "faq5q": "我的数据安全吗？",
     "faq5a": "安全是我们的首要任务。Vertifile使用盲处理技术，意味着我们从不读取或存储您的文档内容。",
     "bottomCtaTitle": "准备好保护您的文档了吗？",
-    "bottomCtaSubtitle": "立即使用Vertifile保护您的文档。",
-    "bottomCtaBtn": "免费开始",
-    "proTrialNote": "14天免费试用 -- 无需信用卡"
+    "bottomCtaSubtitle": "立即使用Vertifile保护您的文档。"
   },
   "faq": {
     "heroTitle": "常见问题",
@@ -1516,9 +1504,9 @@
     "after5": "即使在泄露中 -- 也没有什么可偷的"
   },
   "sidebar": {
-    "freePlan": "免费计划",
     "of": "/",
-    "docsUsed": "文档已使用"
+    "docsUsed": "文档已使用",
+    "currentPlan": "免费计划"
   },
   "support": {
     "breadcrumb": "帮助中心",
@@ -1615,13 +1603,11 @@
     "documents": "文档",
     "used": "已使用",
     "unlimited": "无限制",
-    "free": "免费",
     "pro": "专业版",
     "proPlus": "专业版+",
     "enterprise": "企业版",
     "planWord": "计划",
     "price": {
-      "free": "$0/月",
       "pro": "$19/月",
       "business": "$12/席位/月",
       "enterprise": "定制"
@@ -1702,7 +1688,6 @@
   },
   "api": {
     "rate": {
-      "free": "5/天",
       "pro": "100/天",
       "enterprise": "10K/天"
     }

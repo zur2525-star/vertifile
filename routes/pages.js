@@ -303,7 +303,7 @@ router.get('/d/:identifier/download', async (req, res) => {
 
     // Check if document is preview-only (legacy gating)
     if (doc.preview_only) {
-      const isPaidUser = req.user && req.user.plan && req.user.plan !== 'free';
+      const isPaidUser = req.user && req.user.plan && !['free', 'trial'].includes(req.user.plan);
       if (!isPaidUser) {
         return res.status(403).json({
           success: false,

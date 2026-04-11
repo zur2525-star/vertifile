@@ -85,11 +85,11 @@ const SCHEMA_SQL = `
     api_key TEXT PRIMARY KEY,
     org_id TEXT UNIQUE NOT NULL,
     org_name TEXT NOT NULL,
-    plan TEXT DEFAULT 'free',
+    plan TEXT DEFAULT 'pro',
     created_at TEXT DEFAULT (now() AT TIME ZONE 'UTC'),
     documents_created INTEGER DEFAULT 0,
     active INTEGER DEFAULT 1,
-    rate_limit INTEGER DEFAULT 5,
+    rate_limit INTEGER DEFAULT 100,
     allowed_ips TEXT
   );
 
@@ -119,8 +119,8 @@ const SCHEMA_SQL = `
     provider_id TEXT,
     avatar_url TEXT,
     documents_used INT DEFAULT 0,
-    documents_limit INT DEFAULT 1,
-    plan TEXT DEFAULT 'free',
+    documents_limit INT DEFAULT 500,
+    plan TEXT DEFAULT 'pro',
     created_at TIMESTAMPTZ DEFAULT NOW()
   );
 
@@ -170,8 +170,8 @@ const _ready = (async () => {
   try { await pool.query('ALTER TABLE documents ADD COLUMN pvf_content TEXT'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE documents ADD COLUMN code_integrity TEXT'); } catch (_) { /* already exists */ }
   try { await pool.query('ALTER TABLE documents ADD COLUMN chained_token TEXT'); } catch (_) { /* already exists */ }
-  // Update free plan limit from 5 to 1
-  try { await pool.query("UPDATE users SET documents_limit = 1 WHERE plan = 'free' AND documents_limit = 5"); } catch (_) { /* ok */ }
+  // Migrate legacy free plan users to pro
+  try { await pool.query("UPDATE users SET plan = 'pro', documents_limit = 500 WHERE plan = 'free'"); } catch (_) { /* ok */ }
   // Performance indexes
   try { await pool.query('CREATE INDEX IF NOT EXISTS idx_docs_user_id ON documents(user_id)'); } catch (_) { /* already exists */ }
   try { await pool.query('CREATE INDEX IF NOT EXISTS idx_users_provider ON users(provider, provider_id)'); } catch (_) { /* already exists */ }
@@ -211,7 +211,7 @@ const _ready = (async () => {
     await pool.query('CREATE INDEX IF NOT EXISTS idx_verification_codes_email ON verification_codes(email)');
     await pool.query('CREATE INDEX IF NOT EXISTS idx_verification_codes_expires ON verification_codes(expires_at)');
   } catch (_) { /* already exists */ }
-  // Preview-only column for freemium paywall
+  // Preview-only column for paywall
   try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS preview_only BOOLEAN DEFAULT FALSE'); } catch (_) {}
   // Ed25519 dual-signature columns (Phase 2A) — populated by Phase 2B
   try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS ed25519_signature TEXT'); } catch (_) {}
@@ -525,7 +525,7 @@ async function getOrgByOrgId(orgId) {
   return rows.length ? rows[0] : null;
 }
 
-async function createApiKey({ apiKey, orgId, orgName, plan = 'free', rateLimit = 5, allowedIPs }) {
+async function createApiKey({ apiKey, orgId, orgName, plan = 'pro', rateLimit = 100, allowedIPs }) {
   await pool.query(
     `INSERT INTO api_keys (api_key, org_id, org_name, plan, created_at, documents_created, active, rate_limit, allowed_ips)
      VALUES ($1,$2,$3,$4,$5,0,1,$6,$7)`,
@@ -859,7 +859,7 @@ async function getApiKeyByOrgId(orgId) {
 }
 
 async function updateOrgPlan(orgId, plan) {
-  const limits = { free: 1, pro: 500, enterprise: 100000 };
+  const limits = { pro: 500, business: 10000, enterprise: 100000 };
   await pool.query('UPDATE api_keys SET plan = $1, rate_limit = $2 WHERE org_id = $3', [plan, limits[plan], orgId]);
 }
 
@@ -1542,7 +1542,7 @@ async function getUptimeStats(days = 30) {
 }
 
 // ================================================================
-// FREEMIUM PAYWALL
+// PAYWALL
 // ================================================================
 async function markDocumentPreviewOnly(hash, previewOnly) {
   await pool.query('UPDATE documents SET preview_only = $1 WHERE hash = $2', [previewOnly, hash]);

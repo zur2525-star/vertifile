@@ -54,12 +54,12 @@ router.post('/keys', authenticateAdmin, async (req, res) => {
 
     const orgId = 'org_' + orgName.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 30) + '_' + crypto.randomBytes(4).toString('hex');
     const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
-    const rateLimitVal = plan === 'enterprise' ? 10000 : plan === 'professional' ? 100 : 5;
+    const rateLimitVal = plan === 'enterprise' ? 10000 : plan === 'business' ? 1000 : 100;
 
-    await db.createApiKey({ apiKey, orgId, orgName, plan: plan || 'free', rateLimit: rateLimitVal });
+    await db.createApiKey({ apiKey, orgId, orgName, plan: plan || 'pro', rateLimit: rateLimitVal });
     await db.log('api_key_created', { orgId, orgName, plan, ip: getClientIP(req) });
 
-    res.json({ success: true, apiKey, orgId, orgName, plan: plan || 'free' });
+    res.json({ success: true, apiKey, orgId, orgName, plan: plan || 'pro' });
   } catch (e) { logger.error({ err: e }, 'Admin create key error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
@@ -119,20 +119,20 @@ router.post('/keys-legacy/create', authenticateAdmin, async (req, res) => {
 
     const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
     const orgId = 'org_' + uuidv4().split('-')[0];
-    const rateLimitVal = plan === 'enterprise' ? 10000 : plan === 'professional' ? 100 : 5;
+    const rateLimitVal = plan === 'enterprise' ? 10000 : plan === 'business' ? 1000 : 100;
 
     await db.createApiKey({
       apiKey,
       orgId,
       orgName,
-      plan: plan || 'free',
+      plan: plan || 'pro',
       rateLimit: rateLimitVal,
       allowedIPs: (allowedIPs && Array.isArray(allowedIPs) && allowedIPs.length > 0) ? allowedIPs : undefined
     });
 
-    await db.log('api_key_created', { orgId, orgName, plan: plan || 'free', ip: getClientIP(req), hasIpWhitelist: !!(allowedIPs && allowedIPs.length) });
-    logger.info({ event: 'api_key_created', orgName, plan: plan || 'free' }, `API Key created for ${orgName}`);
-    res.json({ success: true, apiKey, orgId, orgName, plan: plan || 'free' });
+    await db.log('api_key_created', { orgId, orgName, plan: plan || 'pro', ip: getClientIP(req), hasIpWhitelist: !!(allowedIPs && allowedIPs.length) });
+    logger.info({ event: 'api_key_created', orgName, plan: plan || 'pro' }, `API Key created for ${orgName}`);
+    res.json({ success: true, apiKey, orgId, orgName, plan: plan || 'pro' });
   } catch (e) { logger.error({ err: e }, 'Legacy create key error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
 });
 
@@ -269,7 +269,7 @@ router.post('/org/:orgId/plan', authenticateAdmin, async (req, res) => {
       return res.status(400).json({ success: false, error: 'Invalid organization ID' });
     }
     const { plan } = req.body;
-    if (!['free', 'pro', 'enterprise'].includes(plan)) return res.status(400).json({ success: false, error: 'Invalid plan' });
+    if (!['pro', 'business', 'enterprise'].includes(plan)) return res.status(400).json({ success: false, error: 'Invalid plan' });
     await db.updateOrgPlan(req.params.orgId, plan);
     await db.log('plan_changed', { orgId: req.params.orgId, plan, ip: req.ip });
     res.json({ success: true });

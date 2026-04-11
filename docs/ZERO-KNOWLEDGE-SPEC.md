@@ -491,7 +491,7 @@ ALTER TABLE documents ADD COLUMN IF NOT EXISTS pvf_version TEXT DEFAULT '1.0';
 }
 ```
 
-**Response (preview -- free plan):**
+**Response (preview -- unpaid/trial plan):**
 ```json
 {
   "success": true,

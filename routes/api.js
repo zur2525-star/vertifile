@@ -100,8 +100,8 @@ router.post('/signup', signupLimiter, async (req, res) => {
     const orgId = 'org_' + orgName.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 30) + '_' + crypto.randomBytes(4).toString('hex');
     const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');
 
-    const selectedPlan = 'free';
-    const rateLimitVal = 5;
+    const selectedPlan = 'pro';
+    const rateLimitVal = 100;
 
     await db.createApiKey({
       apiKey,
@@ -898,7 +898,7 @@ router.get('/docs', (req, res) => {
         'POST /api/keys/create': {
           description: 'Create a new API key for an organization',
           auth: 'X-Admin-Secret header',
-          body: '{ orgName, plan: "free"|"professional" }'
+          body: '{ orgName, plan: "pro"|"business"|"enterprise" }'
         },
         'GET /api/keys': {
           description: 'List all API keys',

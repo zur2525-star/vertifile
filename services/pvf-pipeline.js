@@ -32,7 +32,7 @@
  *  15. saveCodeIntegrity (with chainedToken)
  *  16. setShareId on documents row
  *  17. savePvfContent (full obfuscated HTML)
- *  18. markDocumentPreviewOnly (free-plan gating, user uploads only)
+ *  18. markDocumentPreviewOnly (unpaid-plan gating, user uploads only)
  *  19. fire-and-forget blockchain registration
  *  20. audit log
  *  21. return structured result
@@ -59,11 +59,10 @@ const { getClientIP } = require('../middleware/auth');
 // Allowed MIME types — superset of the API allowlist (8 types) and the
 // dashboard upload allowlist (5 types). Both endpoints now share this list.
 // Admin bypass emails for preview-only gating. These accounts always get full
-// access regardless of plan. Extracted as a constant so they're declared once.
-const ADMIN_BYPASS_EMAILS = new Set([
-  'zur2525@gmail.com',
-  'info@vertifile.com'
-]);
+// access regardless of plan. Loaded from ADMIN_EMAILS env var (comma-separated).
+const ADMIN_BYPASS_EMAILS = new Set(
+  (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase()).filter(Boolean)
+);
 
 // ----------------------------------------------------------------------------
 const ALLOWED_MIME_TYPES = [
@@ -138,7 +137,7 @@ function sanitizeOriginalName(originalName) {
  * @param {Object} opts.owner
  * @param {'user'|'org'|'demo'} opts.owner.type
  * @param {string|number} opts.owner.id - numeric user.id OR string orgId
- * @param {string} [opts.owner.plan] - 'free'|'starter'|'pro'|'enterprise'
+ * @param {string} [opts.owner.plan] - 'pro'|'business'|'enterprise'
  * @param {string} [opts.owner.email] - optional, for admin bypass
  * @param {string} opts.owner.displayName - human-readable orgName
  * @param {string} [opts.recipient] - optional recipient string for binding
@@ -502,15 +501,14 @@ async function createPvf(opts) {
   await db.savePvfContent(fileHash, pvfHtml);
 
   // -----------------------------------------------------------------
-  // 19. PREVIEW-ONLY GATING (free-plan dashboard users only)
-  // Admin bypass: zur2525@gmail.com always full access.
-  // info@vertifile.com is also bypassed (mirrors routes/user.js:156).
+  // 19. PREVIEW-ONLY GATING (unpaid/trial dashboard users only)
+  // Admin bypass: loaded from ADMIN_EMAILS env var (no hardcoded emails).
   // -----------------------------------------------------------------
   let preview = false;
   if (owner.type === 'user') {
     const isAdmin =
       ADMIN_BYPASS_EMAILS.has(owner.email);
-    const isPaidPlan = isAdmin || (owner.plan && owner.plan !== 'free');
+    const isPaidPlan = isAdmin || (owner.plan && !['free', 'trial'].includes(owner.plan));
     if (!isPaidPlan) {
       await db.markDocumentPreviewOnly(fileHash, true);
       preview = true;
@@ -1017,13 +1015,13 @@ async function createPvfEncrypted(opts) {
   await db.savePvfContent(fileHash, pvfHtml);
 
   // -----------------------------------------------------------------
-  // 20. PREVIEW-ONLY GATING (free-plan dashboard users only)
+  // 20. PREVIEW-ONLY GATING (unpaid/trial dashboard users only)
   // -----------------------------------------------------------------
   let preview = false;
   if (owner.type === 'user') {
     const isAdmin =
       ADMIN_BYPASS_EMAILS.has(owner.email);
-    const isPaidPlan = isAdmin || (owner.plan && owner.plan !== 'free');
+    const isPaidPlan = isAdmin || (owner.plan && !['free', 'trial'].includes(owner.plan));
     if (!isPaidPlan) {
       await db.markDocumentPreviewOnly(fileHash, true);
       preview = true;

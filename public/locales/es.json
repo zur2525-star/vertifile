@@ -873,7 +873,6 @@
     "noWebhooks": "No hay webhooks configurados",
     "ipWhitelist": "Lista blanca de IP",
     "ipWhitelistDesc": "Direcciones IP permitidas para acceso a la API",
-    "free": "Gratuito",
     "professional": "Profesional",
     "enterprise": "Empresarial",
     "totalProtected": "Archivos protegidos en total",
@@ -938,7 +937,6 @@
     "createKeyTitle": "Crear clave API",
     "cancel": "Cancelar",
     "close": "Cerrar",
-    "planFree": "Gratuito (5 docs/día)",
     "planPro": "Profesional (100 docs/día)",
     "planEnterprise": "Empresarial (10.000 docs/día)",
     "noData": "No hay datos disponibles",
@@ -1053,7 +1051,6 @@
     "limitDesc": "Actualiza a Pro para protección de documentos ilimitada",
     "upgrade": "Actualizar a Pro",
     "plan": "Plan",
-    "free": "Gratuito",
     "pro": "Pro",
     "docsUsed": "documentos utilizados",
     "shareLink": "Enlace para compartir",
@@ -1108,16 +1105,9 @@
     "heroTitle1": "Precios simples",
     "heroTitle2": "y transparentes",
     "heroSubtitle": "Comienza gratis. Escala a tu ritmo. Sin costos ocultos, sin sorpresas.",
-    "freeName": "Gratis",
     "perMonth": "mes",
     "perSeat": "puesto/mes",
     "seatMin": "Minimo 5 puestos",
-    "freeDesc": "Para individuos. Sube, descarga, comparte y verifica sin costo.",
-    "freeF1": "25 documentos/mes",
-    "freeF2": "Sello de verificacion basico (marca Vertifile)",
-    "freeF3": "Compartir y verificar ilimitado",
-    "freeF4": "1 usuario",
-    "freeCta": "Comenzar gratis",
     "recommended": "Mas popular",
     "proName": "Pro",
     "proDesc": "Para profesionales y freelancers que necesitan su propia marca.",
@@ -1159,9 +1149,7 @@
     "faq5q": "Estan seguros mis datos?",
     "faq5a": "La seguridad es nuestra maxima prioridad. Vertifile utiliza procesamiento ciego, lo que significa que nunca leemos ni almacenamos el contenido de tus documentos.",
     "bottomCtaTitle": "Listo para proteger tus documentos?",
-    "bottomCtaSubtitle": "Comienza a proteger tus documentos con Vertifile hoy.",
-    "bottomCtaBtn": "Comenzar gratis",
-    "proTrialNote": "Prueba gratuita de 14 dias -- Sin tarjeta de credito"
+    "bottomCtaSubtitle": "Comienza a proteger tus documentos con Vertifile hoy."
   },
   "faq": {
     "heroTitle": "Preguntas frecuentes",
@@ -1516,9 +1504,9 @@
     "after5": "Incluso en una brecha -- no hay nada que robar"
   },
   "sidebar": {
-    "freePlan": "PLAN GRATUITO",
     "of": "de",
-    "docsUsed": "documentos usados"
+    "docsUsed": "documentos usados",
+    "currentPlan": "PLAN GRATUITO"
   },
   "support": {
     "breadcrumb": "Centro de Ayuda",
@@ -1615,13 +1603,11 @@
     "documents": "documentos",
     "used": "usados",
     "unlimited": "Ilimitado",
-    "free": "Gratis",
     "pro": "Pro",
     "proPlus": "Pro+",
     "enterprise": "Empresarial",
     "planWord": "PLAN",
     "price": {
-      "free": "$0/mes",
       "pro": "$19/mes",
       "proPlus": "$12/puesto/mes",
       "enterprise": "Personalizado"
@@ -1702,7 +1688,6 @@
   },
   "api": {
     "rate": {
-      "free": "5/día",
       "pro": "100/día",
       "enterprise": "10K/día"
     }

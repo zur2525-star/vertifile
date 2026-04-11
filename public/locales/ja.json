@@ -873,7 +873,6 @@
     "noWebhooks": "Webhook が設定されていません",
     "ipWhitelist": "IP ホワイトリスト",
     "ipWhitelistDesc": "API アクセスを許可する IP アドレス",
-    "free": "無料",
     "professional": "プロフェッショナル",
     "enterprise": "エンタープライズ",
     "totalProtected": "保護済みファイル合計",
@@ -938,7 +937,6 @@
     "createKeyTitle": "API キーを作成",
     "cancel": "キャンセル",
     "close": "閉じる",
-    "planFree": "無料（5件/日）",
     "planPro": "プロフェッショナル（100件/日）",
     "planEnterprise": "エンタープライズ（10,000件/日）",
     "noData": "データがありません",
@@ -1053,7 +1051,6 @@
     "limitDesc": "無制限のドキュメント保護には Pro にアップグレード",
     "upgrade": "Pro にアップグレード",
     "plan": "プラン",
-    "free": "無料",
     "pro": "プロ",
     "docsUsed": "ドキュメント使用済み",
     "shareLink": "共有リンク",
@@ -1108,16 +1105,9 @@
     "heroTitle1": "シンプルで透明な",
     "heroTitle2": "料金",
     "heroSubtitle": "無料で始めましょう。成長に合わせて拡張。隠れた料金なし、サプライズなし。",
-    "freeName": "無料",
     "perMonth": "月",
     "perSeat": "シート/月",
     "seatMin": "最低5シート",
-    "freeDesc": "個人向け。アップロード、ダウンロード、共有、検証が無料。",
-    "freeF1": "月25文書",
-    "freeF2": "基本検証スタンプ（Vertifileブランド）",
-    "freeF3": "無制限の共有と検証",
-    "freeF4": "1ユーザー",
-    "freeCta": "無料で始める",
     "recommended": "一番人気",
     "proName": "プロ",
     "proDesc": "独自ブランドが必要なプロフェッショナルとフリーランサー向け。",
@@ -1159,9 +1149,7 @@
     "faq5q": "データは安全ですか？",
     "faq5a": "セキュリティは最優先事項です。Vertifileはブラインド処理を使用し、文書の内容を読み取ったり保存したりすることはありません。",
     "bottomCtaTitle": "文書を保護する準備はできましたか？",
-    "bottomCtaSubtitle": "今すぐVertifileで文書の保護を始めましょう。",
-    "bottomCtaBtn": "無料で始める",
-    "proTrialNote": "14日間無料トライアル -- クレジットカード不要"
+    "bottomCtaSubtitle": "今すぐVertifileで文書の保護を始めましょう。"
   },
   "faq": {
     "heroTitle": "よくある質問",
@@ -1516,9 +1504,9 @@
     "after5": "侵害があっても - 盗むものは何もない"
   },
   "sidebar": {
-    "freePlan": "無料プラン",
     "of": "/",
-    "docsUsed": "ドキュメント使用済み"
+    "docsUsed": "ドキュメント使用済み",
+    "currentPlan": "無料プラン"
   },
   "support": {
     "breadcrumb": "ヘルプセンター",
@@ -1615,13 +1603,11 @@
     "documents": "ドキュメント",
     "used": "使用済み",
     "unlimited": "無制限",
-    "free": "無料",
     "pro": "プロ",
     "proPlus": "プロ+",
     "enterprise": "エンタープライズ",
     "planWord": "プラン",
     "price": {
-      "free": "$0/月",
       "pro": "$19/月",
       "business": "$12/シート/月",
       "enterprise": "カスタム"
@@ -1702,7 +1688,6 @@
   },
   "api": {
     "rate": {
-      "free": "5/日",
       "pro": "100/日",
       "enterprise": "10K/日"
     }

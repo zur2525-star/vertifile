@@ -2,7 +2,7 @@
 
 ## Step 1 — Create Your Account
 Go to [vertifile.com/app](https://vertifile.com/app) and sign up with Google or email.
-Free plan includes 1 protected document.
+Pro plan includes 500 protected documents per month.
 
 ## Step 2 — Upload a Document
 1. Click "New Document" in your dashboard

@@ -246,8 +246,8 @@ describe('Signup', () => {
     assert.ok(data.apiKey, 'Should return an API key');
     assert.ok(data.apiKey.startsWith('vf_live_'), 'API key should start with vf_live_');
     assert.ok(data.orgId, 'Should return an org ID');
-    // Handler forces plan='free' on signup — paid upgrades happen separately
-    assert.equal(data.plan, 'free');
+    // Handler assigns plan='pro' on signup — upgrades happen separately
+    assert.equal(data.plan, 'pro');
 
     // Save for use in authenticated tests
     apiKey = data.apiKey;

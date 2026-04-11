@@ -36,7 +36,7 @@
       "post": {
         "tags": ["System"],
         "summary": "Sign up for an API key",
-        "description": "Register a new organization and receive an API key. Free plan allows 5 requests per rate-limit window. Limited to 3 signups per IP per day.",
+        "description": "Register a new organization and receive an API key. Pro plan allows 100 requests per day. Limited to 3 signups per IP per day.",
         "security": [],
         "requestBody": {
           "required": true,
@@ -580,8 +580,8 @@
           "orgName": { "type": "string", "example": "Acme University" },
           "plan": {
             "type": "string",
-            "enum": ["free", "professional"],
-            "example": "free"
+            "enum": ["pro", "business", "enterprise"],
+            "example": "pro"
           },
           "rateLimit": {
             "type": "integer",

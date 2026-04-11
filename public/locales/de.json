@@ -873,7 +873,6 @@
     "noWebhooks": "Keine Webhooks konfiguriert",
     "ipWhitelist": "IP-Whitelist",
     "ipWhitelistDesc": "Erlaubte IP-Adressen für API-Zugang",
-    "free": "Kostenlos",
     "professional": "Professionell",
     "enterprise": "Unternehmen",
     "totalProtected": "Geschützte Dateien insgesamt",
@@ -938,7 +937,6 @@
     "createKeyTitle": "API-Schlüssel erstellen",
     "cancel": "Abbrechen",
     "close": "Schließen",
-    "planFree": "Kostenlos (5 Dok./Tag)",
     "planPro": "Professional (100 Dok./Tag)",
     "planEnterprise": "Enterprise (10.000 Dok./Tag)",
     "noData": "Keine Daten verfügbar",
@@ -1053,7 +1051,6 @@
     "limitDesc": "Upgraden Sie auf Pro für unbegrenzten Dokumentenschutz",
     "upgrade": "Auf Pro upgraden",
     "plan": "Tarif",
-    "free": "Kostenlos",
     "pro": "Pro",
     "docsUsed": "Dokumente verwendet",
     "shareLink": "Freigabelink",
@@ -1108,16 +1105,9 @@
     "heroTitle1": "Einfache, transparente",
     "heroTitle2": "Preise",
     "heroSubtitle": "Starten Sie kostenlos. Skalieren Sie mit Ihrem Wachstum. Keine versteckten Gebuehren, keine Ueberraschungen.",
-    "freeName": "Kostenlos",
     "perMonth": "Monat",
     "perSeat": "Platz/Monat",
     "seatMin": "Mindestens 5 Plaetze",
-    "freeDesc": "Fuer Einzelpersonen. Hochladen, herunterladen, teilen und verifizieren ohne Kosten.",
-    "freeF1": "25 Dokumente/Monat",
-    "freeF2": "Basis-Verifizierungsstempel (Vertifile-Branding)",
-    "freeF3": "Unbegrenztes Teilen und Verifizieren",
-    "freeF4": "1 Benutzer",
-    "freeCta": "Kostenlos starten",
     "recommended": "Am beliebtesten",
     "proName": "Pro",
     "proDesc": "Fuer Profis und Freiberufler, die ihr eigenes Branding benoetigen.",
@@ -1159,9 +1149,7 @@
     "faq5q": "Sind meine Daten sicher?",
     "faq5a": "Sicherheit hat bei uns hoechste Prioritaet. Vertifile verwendet Blindverarbeitung, d.h. wir lesen oder speichern niemals Ihre Dokumenteninhalte.",
     "bottomCtaTitle": "Bereit, Ihre Dokumente zu schuetzen?",
-    "bottomCtaSubtitle": "Beginnen Sie noch heute, Ihre Dokumente mit Vertifile zu schuetzen.",
-    "bottomCtaBtn": "Kostenlos starten",
-    "proTrialNote": "14 Tage kostenlos testen -- Keine Kreditkarte erforderlich"
+    "bottomCtaSubtitle": "Beginnen Sie noch heute, Ihre Dokumente mit Vertifile zu schuetzen."
   },
   "faq": {
     "heroTitle": "Haeufig gestellte Fragen",
@@ -1516,9 +1504,9 @@
     "after5": "Selbst bei einem Einbruch -- es gibt nichts zu stehlen"
   },
   "sidebar": {
-    "freePlan": "KOSTENLOSER PLAN",
     "of": "von",
-    "docsUsed": "Dokumente verwendet"
+    "docsUsed": "Dokumente verwendet",
+    "currentPlan": "KOSTENLOSER PLAN"
   },
   "support": {
     "breadcrumb": "Hilfecenter",
@@ -1615,13 +1603,11 @@
     "documents": "Dokumente",
     "used": "verwendet",
     "unlimited": "Unbegrenzt",
-    "free": "Kostenlos",
     "pro": "Pro",
     "proPlus": "Pro+",
     "enterprise": "Unternehmen",
     "planWord": "PLAN",
     "price": {
-      "free": "$0/Monat",
       "pro": "$19/Monat",
       "proPlus": "$12/Platz/Monat",
       "enterprise": "Individuell"
@@ -1702,7 +1688,6 @@
   },
   "api": {
     "rate": {
-      "free": "5/Tag",
       "pro": "100/Tag",
       "enterprise": "10K/Tag"
     }
