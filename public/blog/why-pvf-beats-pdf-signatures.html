@@ -113,6 +113,9 @@
     .article-body .scenario-box p{font-size:15px;margin-bottom:8px;line-height:1.7}
     .article-body .scenario-box p:last-child{margin-bottom:0}
     @media(max-width:640px){.article-body .comparison-table{font-size:12px}.article-body .comparison-table th,.article-body .comparison-table td{padding:8px 10px}}
+    .blog-visual{max-width:100%;height:auto;border-radius:12px;margin:24px auto;display:block}
+    .patent-badge{display:inline-block;margin-top:12px;opacity:.85}
+    .patent-badge:hover{opacity:1}
     .article-cta{max-width:720px;margin:0 auto;padding:0 32px 80px}
     .cta-card{background:rgba(26,25,41,.6);border:1px solid rgba(124,58,237,.15);border-radius:24px;padding:48px;text-align:center;position:relative;overflow:hidden;backdrop-filter:blur(20px)}
     .cta-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.1),transparent 60%)}
@@ -273,6 +276,8 @@
   <p>Vertifile's PVF (Protected Verifiable File) format takes a fundamentally different approach. Instead of adding a signature layer, PVF wraps the entire document in verification. The protection is not on top of the document. It IS the document.</p>
 
   <h2 data-i18n="blog.post.pvfbeats.h2.comparison">Head-to-Head Comparison</h2>
+
+  <img src="/images/marketing/before-after.png" alt="Vulnerable PDF vs Protected PVF comparison" class="blog-visual" loading="lazy" width="600" height="300">
 
   <table class="comparison-table">
     <thead>
@@ -456,6 +461,7 @@
   </div>
   <div class="footer-bottom">
     <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
+    <img src="/images/marketing/patent-pending-badge.svg" alt="Patent Pending - Israel" class="patent-badge" loading="lazy" width="220" height="36">
     <div class="footer-lang" onclick="toggleLangDropdown()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
       <span id="footerLangLabel">English</span>

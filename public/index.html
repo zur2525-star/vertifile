@@ -11,11 +11,12 @@
   <meta property="og:description" content="Vertifile — Tamper-proof document verification with blockchain-backed digital signatures. Protect and verify any document instantly.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vertifile.com/">
-  <meta property="og:image" content="https://vertifile.com/images/social-21b.png">
+  <meta property="og:image" content="https://vertifile.com/images/marketing/og-social-card.png">
   <link rel="canonical" href="https://vertifile.com/">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Vertifile — Protect Any Document From Forgery">
   <meta name="twitter:description" content="Vertifile — Tamper-proof document verification with blockchain-backed digital signatures. Protect and verify any document instantly.">
+  <meta name="twitter:image" content="https://vertifile.com/images/marketing/og-social-card.png">
   <meta name="theme-color" content="#ffffff">
   <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -363,6 +364,14 @@
     .sec-layer p{font-size:12px;color:#9ca3af;line-height:1.6}
     @media(max-width:768px){.security-layers{grid-template-columns:repeat(2,1fr);gap:12px}}
     @media(max-width:480px){.security-layers{grid-template-columns:1fr}}
+
+    /* ===== MARKETING VISUALS ===== */
+    .security-fortress-img,.process-visual,.blog-visual,.industry-cards-visual{max-width:100%;height:auto;border-radius:12px;margin:24px auto;display:block}
+    .security-fortress-img{margin-top:24px;max-width:400px}
+    .process-visual{max-width:600px}
+    .patent-badge{display:inline-block;margin-top:12px;opacity:.85}
+    .patent-badge:hover{opacity:1}
+    @media(max-width:640px){.security-fortress-img{max-width:280px}.process-visual{max-width:100%}}
 
     /* ===== DEMO ===== */
     .demo-section{background:linear-gradient(180deg,#f8f7ff,#ede9fe 50%,#f8f7ff);position:relative;overflow:hidden}
@@ -807,6 +816,9 @@
       <p data-i18n="howItWorks.step3desc">Anyone can verify authenticity instantly. In court. In an audit. Anywhere in the world.</p>
     </div>
   </div>
+  <div class="process-visual-wrap fade-up" style="text-align:center;margin-top:40px">
+    <img src="/images/marketing/3-step-process.png" alt="Upload, Protect, Verify - 3 simple steps" class="process-visual" loading="lazy" width="600" height="200">
+  </div>
 </section>
 
 <!-- ===== FEATURES ===== -->
@@ -908,6 +920,7 @@
         <defs><linearGradient id="shieldGrad" x1="20" y1="8" x2="80" y2="84"><stop offset="0%" stop-color="rgba(79,70,229,.15)"/><stop offset="100%" stop-color="rgba(124,58,237,.05)"/></linearGradient></defs>
       </svg>
     </div>
+    <img src="/images/marketing/pvf-fortress.png" alt="7 layers of PVF document security" class="security-fortress-img" loading="lazy" width="400" height="400">
   </div>
   <div class="security-layers">
     <div class="sec-layer fade-up">
@@ -1118,6 +1131,9 @@
     <h2 data-i18n="industries.title">Built for Every Industry</h2>
     <p data-i18n="industries.subtitle">Organizations worldwide trust Vertifile</p>
   </div>
+  <div style="text-align:center;margin-bottom:40px" class="fade-up">
+    <img src="/images/marketing/industry-cards.png" alt="Vertifile protects documents across all industries" class="industry-cards-visual" loading="lazy" width="600" height="300" style="max-width:100%;height:auto;border-radius:12px">
+  </div>
   <div class="industries-grid">
     <div class="ind-card fade-up">
       <div class="ind-icon uni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
@@ -1279,6 +1295,7 @@
   </div>
   <div class="footer-bottom">
     <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
+    <img src="/images/marketing/patent-pending-badge.svg" alt="Patent Pending - Israel" class="patent-badge" loading="lazy" width="220" height="36">
     <div class="footer-lang" onclick="toggleLangDropdown()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
       <span id="footerLangLabel">English</span>

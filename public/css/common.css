@@ -92,6 +92,11 @@ footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;backg
 }
 @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
 
+/* ===== MARKETING VISUALS ===== */
+.security-fortress-img,.process-visual,.blog-visual,.industry-cards-visual{max-width:100%;height:auto;border-radius:12px;margin:24px auto;display:block}
+.patent-badge{display:inline-block;margin-top:12px;opacity:.85}
+.patent-badge:hover{opacity:1}
+
 /* ===== FOCUS VISIBLE ===== */
 button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
 input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
