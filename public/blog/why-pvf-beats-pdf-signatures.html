@@ -154,9 +154,10 @@
       .cta-card{padding:32px 20px}
       footer{padding:60px 20px 24px}
     }
-    /* ===== MARKETING VISUALS ===== */
-    .marketing-visual{max-width:100%;height:auto;margin:32px auto;display:block}
-    .marketing-visual.comparison{max-width:700px}
+    /* ===== SVG BACKGROUND DECORATION ===== */
+    .article-body{position:relative}
+    .article-body::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:420px;background:url('/images/marketing/before-after.svg') no-repeat center;background-size:contain;opacity:0.04;pointer-events:none;z-index:0}
+    .article-body>*{position:relative;z-index:1}
   </style>
 </head>
 <body>
@@ -278,8 +279,6 @@
   <p>Vertifile's PVF (Protected Verifiable File) format takes a fundamentally different approach. Instead of adding a signature layer, PVF wraps the entire document in verification. The protection is not on top of the document. It IS the document.</p>
 
   <h2 data-i18n="blog.post.pvfbeats.h2.comparison">Head-to-Head Comparison</h2>
-
-  <img src="/images/marketing/before-after.svg" alt="PDF vs PVF comparison: standard PDF vulnerabilities versus Vertifile PVF protection" data-i18n-alt="blog.post.pvfbeats.comparisonAlt" class="marketing-visual comparison" width="800" height="420" loading="lazy"/>
 
   <table class="comparison-table">
     <thead>
