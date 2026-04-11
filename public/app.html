@@ -647,16 +647,18 @@
     .stat-value{font-size:32px;font-weight:800;background:linear-gradient(135deg,#4f46e5,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:2px}
     .stat-sub{font-size:12px;color:var(--text-2)}
     .checklist-card{border-left:3px solid #7c3aed}
-    .checklist-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-subtle)}
+    .checklist-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-subtle);direction:ltr}
+    [dir="rtl"] .checklist-item{direction:rtl}
     .checklist-item:last-child{border-bottom:none}
-    .checklist-check{width:20px;height:20px;border-radius:6px;border:1px solid rgba(124,58,237,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:transparent;font-size:12px;transition:.2s}
+    .checklist-check{width:22px;height:22px;border-radius:50%;border:2px solid rgba(124,58,237,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:transparent;transition:.2s}
+    .checklist-check svg{width:12px;height:12px}
     .checklist-check.done{background:#7c3aed;border-color:#7c3aed;color:#fff}
     .checklist-text{flex:1;font-size:14px;font-weight:500;color:var(--text-1)}
     .checklist-text.done{text-decoration:line-through;color:var(--text-2)}
-    .checklist-action{font-size:13px;color:#a78bfa;font-weight:500;cursor:pointer;white-space:nowrap}
-    .checklist-action:hover{color:#c4b5fd}
-    .checklist-progress{margin-top:12px}
-    .checklist-progress-text{font-size:12px;color:var(--text-2);margin-bottom:6px}
+    .checklist-action{font-size:12px;color:#7c3aed;font-weight:600;cursor:pointer;white-space:nowrap;padding:4px 10px;border:1px solid rgba(124,58,237,.2);border-radius:6px;transition:.15s}
+    .checklist-action:hover{background:rgba(124,58,237,.06);border-color:rgba(124,58,237,.3)}
+    .checklist-progress{margin-top:14px}
+    .checklist-progress-text{font-size:12px;color:var(--text-2);margin-bottom:6px;text-align:right}
     .quick-actions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
     .quick-action-card{background:var(--card-bg);backdrop-filter:blur(10px);border:1px solid var(--card-border);border-radius:14px;padding:16px;cursor:pointer;transition:.2s;text-align:center}
     .quick-action-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
@@ -1036,7 +1038,7 @@
       <a href="#" onclick="showForgotPassword(event)" style="display:block;text-align:right;font-size:13px;color:#a78bfa;margin:-8px 0 12px;text-decoration:none;" data-i18n="app.forgotPassword">Forgot password?</a>
       <button class="login-submit" onclick="doLogin()" data-i18n="app.signInBtn">Sign In</button>
 
-      <div class="login-error" id="loginError">Invalid email or password</div>
+      <div class="login-error" id="loginError" data-i18n="app.invalidCredentials">Invalid email or password</div>
 
       <div class="login-toggle">
         <span data-i18n="app.noAccount">Don't have an account?</span>
@@ -1057,7 +1059,7 @@
       <input type="password" class="login-input" id="regPassword" placeholder="Password (min 8 characters)" data-i18n-placeholder="app.passwordMinPlaceholder" aria-label="Password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()">
       <button class="login-submit" onclick="doRegister()" data-i18n="app.createAccountBtn">Create Account</button>
 
-      <div class="login-error" id="regError">Registration failed</div>
+      <div class="login-error" id="regError" data-i18n="app.regFailed">Registration failed</div>
 
       <div class="login-toggle">
         <span data-i18n="app.haveAccount">Already have an account?</span>
@@ -1068,7 +1070,7 @@
 </div>
 
 <!-- ===== APP (New Dashboard) ===== -->
-<a href="#main-content" class="skip-link">Skip to main content</a>
+<a href="#main-content" class="skip-link" data-i18n="topbar.skipToContent">Skip to main content</a>
 <div class="app" id="app">
 
   <!-- Top Bar -->
@@ -1080,8 +1082,8 @@
     <div class="search-bar" style="position:relative">
       <input type="text" id="globalSearch" placeholder="Search Vertifile..." data-i18n-placeholder="topbar.search" aria-label="Global search (Cmd+K)">
       <div class="search-results" id="searchResults" role="listbox">
-        <div class="search-group-label">Documents</div>
-        <div class="search-result-item" role="option">No results</div>
+        <div class="search-group-label" data-i18n="topbar.searchDocs">Documents</div>
+        <div class="search-result-item" role="option" data-i18n="topbar.noResults">No results</div>
       </div>
     </div>
 
@@ -1128,17 +1130,17 @@
             <div class="notif-item unread">
               <div class="notif-icon" style="background:rgba(22,163,74,.1);color:#16a34a"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
               <div class="notif-body">
-                <div class="notif-title">Document Verified</div>
-                <div class="notif-text">A document was verified by a third party</div>
-                <div class="notif-time">2 hours ago</div>
+                <div class="notif-title" data-i18n="topbar.notifDocVerified">Document Verified</div>
+                <div class="notif-text" data-i18n="topbar.notifDocVerifiedText">A document was verified by a third party</div>
+                <div class="notif-time" data-i18n="topbar.notifHoursAgo">2 hours ago</div>
               </div>
             </div>
             <div class="notif-item">
               <div class="notif-icon" style="background:rgba(245,158,11,.1);color:#f59e0b"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
               <div class="notif-body">
-                <div class="notif-title">Plan Limit Approaching</div>
-                <div class="notif-text">You've used 80% of your monthly document quota</div>
-                <div class="notif-time">1 day ago</div>
+                <div class="notif-title" data-i18n="topbar.notifPlanLimit">Plan Limit Approaching</div>
+                <div class="notif-text" data-i18n="topbar.notifPlanLimitText">You've used 80% of your monthly document quota</div>
+                <div class="notif-time" data-i18n="topbar.notifTimeAgo">1 day ago</div>
               </div>
             </div>
           </div>
@@ -1149,10 +1151,10 @@
         <div class="user-avatar" id="userAvatar">?</div>
         <span class="user-name" id="userName">User</span>
         <div class="user-dropdown" id="userDropdown">
-          <a onclick="Dashboard.switchTab('settings')"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profile</a>
-          <a onclick="Dashboard.switchTab('settings')"><svg style="width:16px;height:16px;display:inline;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg> Settings</a>
+          <a onclick="Dashboard.switchTab('settings')"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span data-i18n="topbar.profile">Profile</span></a>
+          <a onclick="Dashboard.switchTab('settings')"><svg style="width:16px;height:16px;display:inline;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg> <span data-i18n="topbar.settings">Settings</span></a>
           <div class="dd-divider"></div>
-          <a onclick="doLogout()" style="color:#dc2626">&#8617; Log Out</a>
+          <a onclick="doLogout()" style="color:#dc2626">&#8617; <span data-i18n="topbar.logOut">Log Out</span></a>
         </div>
       </div>
     </div>
@@ -1164,7 +1166,7 @@
 
     <!-- Quick Summary -->
     <div class="sidebar-quick-summary" id="sidebarSummary" onclick="Dashboard.switchTab('overview')">
-      <div class="sidebar-qs-label" id="sidebarGsLabel">Getting Started: 1/4</div>
+      <div class="sidebar-qs-label" id="sidebarGsLabel" data-i18n="tab.overview.gsSidebarLabel">Getting Started: 1/4</div>
       <div class="sidebar-qs-bar"><div class="sidebar-qs-bar-fill" style="width:25%"></div></div>
       <div class="sidebar-qs-text" data-i18n="tab.overview.gsSetupHint">Complete setup to unlock all features</div>
     </div>
@@ -1194,8 +1196,8 @@
 
     <!-- Plan Badge -->
     <div class="plan-badge" id="planBadge">
-      <div class="plan-label" id="planLabel">FREE PLAN</div>
-      <div class="plan-usage"><span id="planUsed">0</span> of <span id="planLimit">5</span> documents used</div>
+      <div class="plan-label" id="planLabel" data-i18n="sidebar.freePlan">FREE PLAN</div>
+      <div class="plan-usage"><span id="planUsed">0</span> <span data-i18n="sidebar.of">of</span> <span id="planLimit">5</span> <span data-i18n="sidebar.docsUsed">documents used</span></div>
       <div class="plan-bar"><div class="plan-bar-fill" id="planBarFill" style="width:0%"></div></div>
     </div>
   </nav>
@@ -1205,32 +1207,32 @@
 
   <!-- ===================== TAB 1: OVERVIEW ===================== -->
   <div class="tab-panel active" id="tab-overview" role="tabpanel" aria-label="Overview">
-    <h1 class="welcome-heading" id="welcomeHeading">Welcome to Vertifile</h1>
+    <h1 class="welcome-heading" id="welcomeHeading" data-i18n="tab.overview.welcomeHeading">Welcome to Vertifile</h1>
     <p class="welcome-date" id="welcomeDate"></p>
 
     <!-- Stats Grid -->
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-icon"><svg style="width:16px;height:16px;display:inline;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <div class="stat-label">Documents Protected</div>
+        <div class="stat-label" data-i18n="tab.overview.docsProtected">Documents Protected</div>
         <div class="stat-value" id="statDocsProtected">0</div>
-        <div class="stat-sub">this month</div>
+        <div class="stat-sub" data-i18n="tab.overview.thisMonth">this month</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon" style="background:rgba(22,163,74,.08)"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="stat-label">Verified by Others</div>
+        <div class="stat-label" data-i18n="tab.overview.verifiedByOthers">Verified by Others</div>
         <div class="stat-value" id="statVerified">0</div>
         <div class="stat-sub">&nbsp;</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon" style="background:rgba(59,130,246,.08)"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></div>
-        <div class="stat-label">Share Link Opens</div>
+        <div class="stat-label" data-i18n="tab.overview.shareLinks">Share Link Opens</div>
         <div class="stat-value" id="statShareOpens">0</div>
         <div class="stat-sub">&nbsp;</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon" style="background:rgba(202,138,4,.08)"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2 4 4-1-1 5 4 1-3 3 3 3H5l3-3-3-3 4-1-1-5 4 1z"/></svg></div>
-        <div class="stat-label">Your Plan</div>
+        <div class="stat-label" data-i18n="tab.overview.yourPlan">Your Plan</div>
         <div class="stat-value" id="statPlanName">Free</div>
         <div class="stat-sub" id="statPlanUsage">0/5 documents</div>
       </div>
@@ -1240,12 +1242,12 @@
     <div class="card checklist-card" id="checklistCard">
       <h3 data-i18n="tab.overview.gettingStarted">Getting Started</h3>
       <p class="card-desc" data-i18n="tab.overview.gsDesc">Complete these steps to get the most out of Vertifile</p>
-      <div class="checklist-item"><div class="checklist-check" id="cl1"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="checklist-text" id="cl1t" data-i18n="tab.overview.gsUpload">Upload your first document</span><span class="checklist-action" onclick="Dashboard.switchTab('upload')" data-i18n="tab.overview.gsAction1">Upload &#8594;</span></div>
-      <div class="checklist-item"><div class="checklist-check" id="cl2"></div><span class="checklist-text" id="cl2t" data-i18n="tab.overview.gsCustomize">Customize your stamp</span><span class="checklist-action" onclick="Dashboard.switchTab('stamp')" data-i18n="tab.overview.gsAction2">Customize &#8594;</span></div>
-      <div class="checklist-item"><div class="checklist-check" id="cl3"></div><span class="checklist-text" id="cl3t" data-i18n="tab.overview.gsShare">Share a document</span><span class="checklist-action" onclick="Dashboard.switchTab('documents')" data-i18n="tab.overview.gsAction3">Share &#8594;</span></div>
-      <div class="checklist-item"><div class="checklist-check" id="cl4"></div><span class="checklist-text" id="cl4t" data-i18n="tab.overview.gsVerify">First external verification</span><span class="checklist-action" style="color:var(--text-2);cursor:default" data-i18n="tab.overview.gsWaiting">Waiting...</span></div>
+      <div class="checklist-item"><div class="checklist-check" id="cl1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="checklist-text" id="cl1t" data-i18n="tab.overview.gsUpload">Upload your first document</span><span class="checklist-action" onclick="Dashboard.switchTab('upload')" data-i18n="tab.overview.gsAction1">Upload</span></div>
+      <div class="checklist-item"><div class="checklist-check" id="cl2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="checklist-text" id="cl2t" data-i18n="tab.overview.gsCustomize">Customize your stamp</span><span class="checklist-action" onclick="Dashboard.switchTab('stamp')" data-i18n="tab.overview.gsAction2">Customize</span></div>
+      <div class="checklist-item"><div class="checklist-check" id="cl3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="checklist-text" id="cl3t" data-i18n="tab.overview.gsShare">Share a document</span><span class="checklist-action" onclick="Dashboard.switchTab('documents')" data-i18n="tab.overview.gsAction3">Share</span></div>
+      <div class="checklist-item"><div class="checklist-check" id="cl4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><span class="checklist-text" id="cl4t" data-i18n="tab.overview.gsVerify">First external verification</span><span class="checklist-action" style="color:var(--text-2);cursor:default;border-color:transparent" data-i18n="tab.overview.gsWaiting">Waiting...</span></div>
       <div class="checklist-progress">
-        <div class="checklist-progress-text" id="checklistProgressText">0 of 4 complete</div>
+        <div class="checklist-progress-text" id="checklistProgressText" data-i18n="tab.overview.gsProgress">0 of 4 complete</div>
         <div class="plan-bar"><div class="plan-bar-fill" id="checklistBarFill" style="width:0%"></div></div>
       </div>
     </div>
@@ -1279,7 +1281,7 @@
         <div class="tip-card">
           <button class="tip-dismiss" onclick="Dashboard.dismissTip()" aria-label="Dismiss tip">&times;</button>
           <div class="tip-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 00-4 12.7V17h8v-2.3A7 7 0 0012 2z"/></svg></div>
-          <div class="tip-text">Protect contracts and agreements before sending to clients. A verified document carries more weight in court.</div>
+          <div class="tip-text" data-i18n="tab.overview.tipText">Protect contracts and agreements before sending to clients. A verified document carries more weight in court.</div>
         </div>
       </div>
     </div>
@@ -1298,16 +1300,16 @@
     <div class="upload-container">
       <h2 data-i18n="tab.upload.title">Upload Document</h2>
       <p class="upload-subtitle" data-i18n="tab.upload.subtitle">Protect your document with tamper-proof verification</p>
-      <div class="quota-info" id="uploadQuotaInfo">Loading quota...</div>
+      <div class="quota-info" id="uploadQuotaInfo" data-i18n="tab.upload.loadingQuota">Loading quota...</div>
       <div class="upload-zone" id="uploadZone" role="button" aria-label="Upload file by drag and drop or click to browse" tabindex="0">
         <div class="uz-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg></div>
         <div class="uz-text" data-i18n="tab.upload.dropZone">Drag &amp; drop your file here</div>
         <div class="uz-hint" data-i18n="tab.upload.dropHint">or click to browse. PDF, images, text files accepted. Max 50MB.</div>
       </div>
       <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.gif,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.odt,.ods,.odp" style="display:none">
-      <div class="upload-progress" id="uploadProgress"><div class="up-filename" id="upFilename"></div><div class="up-bar"><div class="up-bar-fill" id="upBarFill"></div></div><div class="up-status" id="upStatus">Uploading...</div><div class="up-actions" id="upActions"><button class="up-cancel" onclick="Dashboard.cancelUpload()">Cancel</button></div></div>
-      <div class="upload-error-card" id="uploadError"><div class="ue-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div class="ue-heading">Upload Failed</div><div class="ue-text" id="ueText">Something went wrong. Please try again.</div><div class="btn-row" style="justify-content:center"><button class="btn btn-primary" onclick="Dashboard.retryUpload()">Retry Upload</button></div></div>
-      <div class="upload-complete" id="uploadComplete"><div class="uc-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><h3>Document Protected</h3><div class="uc-details" id="ucDetails"></div><div class="uc-hash" id="ucHash"></div><div class="btn-row" style="justify-content:center"><button class="btn btn-primary" onclick="Dashboard.switchTab('documents')">View in Documents</button></div></div>
+      <div class="upload-progress" id="uploadProgress"><div class="up-filename" id="upFilename"></div><div class="up-bar"><div class="up-bar-fill" id="upBarFill"></div></div><div class="up-status" id="upStatus" data-i18n="tab.upload.uploading">Uploading...</div><div class="up-actions" id="upActions"><button class="up-cancel" onclick="Dashboard.cancelUpload()" data-i18n="tab.upload.cancel">Cancel</button></div></div>
+      <div class="upload-error-card" id="uploadError"><div class="ue-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div class="ue-heading" data-i18n="tab.upload.failed">Upload Failed</div><div class="ue-text" id="ueText" data-i18n="tab.upload.failedText">Something went wrong. Please try again.</div><div class="btn-row" style="justify-content:center"><button class="btn btn-primary" onclick="Dashboard.retryUpload()" data-i18n="tab.upload.retry">Retry Upload</button></div></div>
+      <div class="upload-complete" id="uploadComplete"><div class="uc-icon"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><h3 data-i18n="tab.upload.protected">Document Protected</h3><div class="uc-details" id="ucDetails"></div><div class="uc-hash" id="ucHash"></div><div class="btn-row" style="justify-content:center"><button class="btn btn-primary" onclick="Dashboard.switchTab('documents')" data-i18n="tab.upload.viewInDocs">View in Documents</button></div></div>
     </div>
   </div>
 
@@ -1319,11 +1321,11 @@
       <select aria-label="Sort order" id="docSortSelect" onchange="Dashboard.filterDocs()"><option value="newest" data-i18n="tab.documents.newest">Newest</option><option value="oldest" data-i18n="tab.documents.oldest">Oldest</option><option value="name" data-i18n="tab.documents.nameAZ">Name A-Z</option></select>
       <div class="view-toggle" style="direction:ltr"><button id="viewGrid" aria-label="Grid view" onclick="Dashboard.setView('grid')"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button><button class="active" id="viewList" aria-label="List view" onclick="Dashboard.setView('list')"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button></div>
     </div>
-    <div class="bulk-bar" id="bulkBar"><span id="bulkCount">0 selected</span><button class="btn btn-secondary" style="padding:6px 14px;font-size:12px"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download All</button><button class="btn btn-danger" style="padding:6px 14px;font-size:12px" onclick="Dashboard.showDeleteModal()"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg> Delete</button><button class="bulk-deselect" onclick="Dashboard.deselectAll()">Deselect</button></div>
+    <div class="bulk-bar" id="bulkBar"><span id="bulkCount" data-i18n="tab.documents.selected">0 selected</span><button class="btn btn-secondary" style="padding:6px 14px;font-size:12px"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span data-i18n="tab.documents.downloadAll">Download All</span></button><button class="btn btn-danger" style="padding:6px 14px;font-size:12px" onclick="Dashboard.showDeleteModal()"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg> <span data-i18n="tab.documents.delete">Delete</span></button><button class="bulk-deselect" onclick="Dashboard.deselectAll()" data-i18n="tab.documents.deselect">Deselect</button></div>
 
     <!-- List View -->
     <div class="docs-list" id="docsListView" role="table">
-      <div class="doc-table-header" role="row"><div class="col-check"><input type="checkbox" aria-label="Select all" onchange="Dashboard.selectAll(this)"></div><div class="col-star"></div><div style="width:30px"></div><div class="col-name">Name</div><div class="col-status">Status</div><div class="col-date">Date Protected</div><div class="col-size">Size</div><div class="col-actions"></div></div>
+      <div class="doc-table-header" role="row"><div class="col-check"><input type="checkbox" aria-label="Select all" onchange="Dashboard.selectAll(this)"></div><div class="col-star"></div><div style="width:30px"></div><div class="col-name" data-i18n="tab.documents.colName">Name</div><div class="col-status" data-i18n="tab.documents.colStatus">Status</div><div class="col-date" data-i18n="tab.documents.colDate">Date Protected</div><div class="col-size" data-i18n="tab.documents.colSize">Size</div><div class="col-actions"></div></div>
       <div id="docRows">
         <div id="docSkeleton" style="padding:8px 16px"><div class="skeleton" style="height:48px;margin-bottom:8px"></div><div class="skeleton" style="height:48px;margin-bottom:8px"></div><div class="skeleton" style="height:48px;margin-bottom:8px"></div></div>
       </div>
@@ -1335,17 +1337,17 @@
     <!-- Empty State -->
     <div class="empty-state" id="docEmpty" style="display:none">
       <div class="empty-icon"><svg style="width:16px;height:16px;display:inline;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg></div>
-      <h4>No documents yet</h4>
-      <p>Upload your first document to get started with Vertifile protection.</p>
-      <button class="btn btn-primary" onclick="Dashboard.switchTab('upload')">Upload your first document</button>
+      <h4 data-i18n="tab.documents.empty">No documents yet</h4>
+      <p data-i18n="tab.documents.emptyDesc">Upload your first document to get started with Vertifile protection.</p>
+      <button class="btn btn-primary" onclick="Dashboard.switchTab('upload')" data-i18n="tab.documents.uploadFirst">Upload your first document</button>
     </div>
   </div>
 
   <!-- Document Preview Panel -->
   <div class="doc-preview" id="docPreview">
-    <div class="preview-toolbar"><span class="preview-title" id="previewTitle">Document</span><button onclick="Dashboard.downloadCurrentDoc()"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download</button><button onclick="Dashboard.shareCurrentDoc()"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</button><button class="close-preview" onclick="Dashboard.closePreview()" aria-label="Close preview">&times;</button></div>
-    <div class="preview-content" id="previewContent">Select a document to preview</div>
-    <div class="preview-info" id="previewInfo"><div class="info-row"><span class="info-label">Hash</span><span class="info-value" id="previewHash">--</span></div><div class="info-row"><span class="info-label">Created</span><span class="info-value" id="previewCreated">--</span></div><div class="info-row"><span class="info-label">Status</span><span class="info-value" id="previewStatus">--</span></div>
+    <div class="preview-toolbar"><span class="preview-title" id="previewTitle" data-i18n="tab.documents.previewTitle">Document</span><button onclick="Dashboard.downloadCurrentDoc()"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span data-i18n="tab.documents.download">Download</span></button><button onclick="Dashboard.shareCurrentDoc()"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> <span data-i18n="tab.documents.share">Share</span></button><button class="close-preview" onclick="Dashboard.closePreview()" aria-label="Close preview">&times;</button></div>
+    <div class="preview-content" id="previewContent" data-i18n="tab.documents.selectDoc">Select a document to preview</div>
+    <div class="preview-info" id="previewInfo"><div class="info-row"><span class="info-label" data-i18n="tab.documents.hash">Hash</span><span class="info-value" id="previewHash">--</span></div><div class="info-row"><span class="info-label" data-i18n="tab.documents.created">Created</span><span class="info-value" id="previewCreated">--</span></div><div class="info-row"><span class="info-label" data-i18n="tab.documents.statusLabel">Status</span><span class="info-value" id="previewStatus">--</span></div>
       <!-- Cryptographic Proof accordion (Phase 2B/2E dual-signing) -->
       <div class="crypto-proof" id="cryptoProof">
         <button type="button" class="crypto-proof-header" id="cryptoProofToggle" aria-expanded="true" aria-controls="cryptoProofBody" onclick="Dashboard.toggleCryptoProof()">
@@ -1375,13 +1377,13 @@
           <div class="slp-label" data-i18n="tab.stamp.livePreview">Live Preview</div>
           <div class="stamp-wrap-large" id="stampPreviewLarge"></div>
           <div class="stamp-org-name" id="stampOrgLabel">VERTIFILE</div>
-          <div class="stamp-verified">VERIFIED</div>
+          <div class="stamp-verified" data-i18n="tab.stamp.verified">VERIFIED</div>
           <div class="stamp-wave-strip" id="stampWaveStrip"></div>
         </div>
         <div class="stamp-wave-big" id="stampWaveBig">
           <div class="wave-big-label" data-i18n="tab.stamp.wavesPreview">7 Waves Preview</div>
         </div>
-        <div class="card" style="margin-top:20px"><h4 style="font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:12px">Your Stamp in Action</h4><div class="stamp-doc-mock"><div class="mock-lines"><div class="mock-line"></div><div class="mock-line short"></div><div class="mock-line"></div><div class="mock-line med"></div><div class="mock-line"></div><div class="mock-line short"></div></div><div class="stamp-overlay" id="stampDocOverlay"></div></div></div>
+        <div class="card" style="margin-top:20px"><h4 style="font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:12px" data-i18n="tab.stamp.inAction">Your Stamp in Action</h4><div class="stamp-doc-mock"><div class="mock-lines"><div class="mock-line"></div><div class="mock-line short"></div><div class="mock-line"></div><div class="mock-line med"></div><div class="mock-line"></div><div class="mock-line short"></div></div><div class="stamp-overlay" id="stampDocOverlay"></div></div></div>
       </div>
       <div class="stamp-controls-section">
         <h2 data-i18n="tab.stamp.customize">Customize Your Stamp</h2>
@@ -1401,10 +1403,10 @@
             <p class="field-hint" id="stampBrandTextHint" data-i18n="tab.stamp.brandTextHint">Text shown on your document stamp. Max 16 characters.</p>
           </div>
         </div>
-        <div class="control-section"><div class="control-section-title" data-i18n="tab.stamp.waveColors">Wave Colors</div><div id="waveColorPickers" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="wave-color-row"><span style="font-size:12px">Wave 1</span><input type="color" value="#1e0a4a" class="wave-color-input" data-wave="0"></div><div class="wave-color-row"><span style="font-size:12px">Wave 2</span><input type="color" value="#2e1065" class="wave-color-input" data-wave="1"></div><div class="wave-color-row"><span style="font-size:12px">Wave 3</span><input type="color" value="#4c1d95" class="wave-color-input" data-wave="2"></div><div class="wave-color-row"><span style="font-size:12px">Wave 4</span><input type="color" value="#6d28d9" class="wave-color-input" data-wave="3"></div><div class="wave-color-row"><span style="font-size:12px">Wave 5</span><input type="color" value="#7c3aed" class="wave-color-input" data-wave="4"></div><div class="wave-color-row"><span style="font-size:12px">Wave 6</span><input type="color" value="#a78bfa" class="wave-color-input" data-wave="5"></div><div class="wave-color-row"><span style="font-size:12px">Wave 7</span><input type="color" value="#c4b5fd" class="wave-color-input" data-wave="6"></div></div><div style="margin-top:12px"><div class="control-section-title" style="font-size:12px;margin-bottom:8px">Color Palettes</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="color-preset" onclick="Dashboard.setWavePalette('purple')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(124,58,237,.2);background:linear-gradient(90deg,#2e1065,#a78bfa);color:white;border-radius:6px;cursor:pointer">Purple</button><button class="color-preset" onclick="Dashboard.setWavePalette('blue')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(59,130,246,.2);background:linear-gradient(90deg,#1e3a5f,#93c5fd);color:white;border-radius:6px;cursor:pointer">Blue</button><button class="color-preset" onclick="Dashboard.setWavePalette('green')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(34,197,94,.2);background:linear-gradient(90deg,#14532d,#86efac);color:white;border-radius:6px;cursor:pointer">Green</button><button class="color-preset" onclick="Dashboard.setWavePalette('gold')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(234,179,8,.2);background:linear-gradient(90deg,#713f12,#fde68a);color:white;border-radius:6px;cursor:pointer">Gold</button><button class="color-preset" onclick="Dashboard.setWavePalette('red')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(239,68,68,.2);background:linear-gradient(90deg,#7f1d1d,#fca5a5);color:white;border-radius:6px;cursor:pointer">Red</button></div></div></div>
-        <div class="control-section"><div class="control-section-title" data-i18n="tab.stamp.logo">Logo</div><div class="logo-current" id="logoCurrent" style="display:none"><div class="logo-thumb"><img src="" alt="Logo" id="logoThumbImg"></div><div class="logo-info"><div class="logo-name" id="logoFileName">logo.png</div><div class="logo-hint">Center-cropped for stamp</div></div><div class="btn-row"><button class="btn btn-secondary" style="padding:6px 14px;font-size:12px" onclick="document.getElementById('logoInput').click()">Change</button><button class="btn btn-danger" style="padding:6px 14px;font-size:12px" onclick="Dashboard.removeLogo()">Remove</button></div></div><div class="logo-upload-area" id="logoUploadArea" onclick="document.getElementById('logoInput').click()"><div style="font-size:24px;color:var(--text-2);margin-bottom:4px"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></div><div style="font-size:13px;color:var(--text-1);font-weight:500">Drag logo here or click to upload</div><div style="font-size:12px;color:var(--text-2);margin-top:4px">PNG, SVG, JPG. Max 2MB.</div></div><input type="file" id="logoInput" style="display:none" accept=".png,.svg,.jpg,.jpeg"></div>
-        <div class="control-section"><div class="control-section-title">Stamp Size</div><div class="stamp-size-options"><button class="stamp-size-btn" onclick="Dashboard.setStampSize(this)">Small</button><button class="stamp-size-btn active" onclick="Dashboard.setStampSize(this)">Medium</button><button class="stamp-size-btn" onclick="Dashboard.setStampSize(this)">Large</button></div></div>
-        <div class="stamp-save-row"><button class="stamp-reset-link">Reset to Default</button><button class="btn btn-primary" onclick="Dashboard.saveStamp()">Save Changes</button></div>
+        <div class="control-section"><div class="control-section-title" data-i18n="tab.stamp.waveColors">Wave Colors</div><div id="waveColorPickers" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="wave-color-row"><span style="font-size:12px" data-i18n="tab.stamp.wave1">Wave 1</span><input type="color" value="#1e0a4a" class="wave-color-input" data-wave="0"></div><div class="wave-color-row"><span style="font-size:12px" data-i18n="tab.stamp.wave2">Wave 2</span><input type="color" value="#2e1065" class="wave-color-input" data-wave="1"></div><div class="wave-color-row"><span style="font-size:12px" data-i18n="tab.stamp.wave3">Wave 3</span><input type="color" value="#4c1d95" class="wave-color-input" data-wave="2"></div><div class="wave-color-row"><span style="font-size:12px" data-i18n="tab.stamp.wave4">Wave 4</span><input type="color" value="#6d28d9" class="wave-color-input" data-wave="3"></div><div class="wave-color-row"><span style="font-size:12px" data-i18n="tab.stamp.wave5">Wave 5</span><input type="color" value="#7c3aed" class="wave-color-input" data-wave="4"></div><div class="wave-color-row"><span style="font-size:12px" data-i18n="tab.stamp.wave6">Wave 6</span><input type="color" value="#a78bfa" class="wave-color-input" data-wave="5"></div><div class="wave-color-row"><span style="font-size:12px" data-i18n="tab.stamp.wave7">Wave 7</span><input type="color" value="#c4b5fd" class="wave-color-input" data-wave="6"></div></div><div style="margin-top:12px"><div class="control-section-title" style="font-size:12px;margin-bottom:8px" data-i18n="tab.stamp.colorPalettes">Color Palettes</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="color-preset" onclick="Dashboard.setWavePalette('purple')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(124,58,237,.2);background:linear-gradient(90deg,#2e1065,#a78bfa);color:white;border-radius:6px;cursor:pointer" data-i18n="tab.stamp.palPurple">Purple</button><button class="color-preset" onclick="Dashboard.setWavePalette('blue')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(59,130,246,.2);background:linear-gradient(90deg,#1e3a5f,#93c5fd);color:white;border-radius:6px;cursor:pointer" data-i18n="tab.stamp.palBlue">Blue</button><button class="color-preset" onclick="Dashboard.setWavePalette('green')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(34,197,94,.2);background:linear-gradient(90deg,#14532d,#86efac);color:white;border-radius:6px;cursor:pointer" data-i18n="tab.stamp.palGreen">Green</button><button class="color-preset" onclick="Dashboard.setWavePalette('gold')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(234,179,8,.2);background:linear-gradient(90deg,#713f12,#fde68a);color:white;border-radius:6px;cursor:pointer" data-i18n="tab.stamp.palGold">Gold</button><button class="color-preset" onclick="Dashboard.setWavePalette('red')" style="padding:4px 10px;font-size:11px;border:1px solid rgba(239,68,68,.2);background:linear-gradient(90deg,#7f1d1d,#fca5a5);color:white;border-radius:6px;cursor:pointer" data-i18n="tab.stamp.palRed">Red</button></div></div></div>
+        <div class="control-section"><div class="control-section-title" data-i18n="tab.stamp.logo">Logo</div><div class="logo-current" id="logoCurrent" style="display:none"><div class="logo-thumb"><img src="" alt="Logo" id="logoThumbImg"></div><div class="logo-info"><div class="logo-name" id="logoFileName">logo.png</div><div class="logo-hint" data-i18n="tab.stamp.logoCropped">Center-cropped for stamp</div></div><div class="btn-row"><button class="btn btn-secondary" style="padding:6px 14px;font-size:12px" onclick="document.getElementById('logoInput').click()" data-i18n="tab.stamp.changeLogo">Change</button><button class="btn btn-danger" style="padding:6px 14px;font-size:12px" onclick="Dashboard.removeLogo()" data-i18n="tab.stamp.removeLogo">Remove</button></div></div><div class="logo-upload-area" id="logoUploadArea" onclick="document.getElementById('logoInput').click()"><div style="font-size:24px;color:var(--text-2);margin-bottom:4px"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></div><div style="font-size:13px;color:var(--text-1);font-weight:500" data-i18n="tab.stamp.dragLogo">Drag logo here or click to upload</div><div style="font-size:12px;color:var(--text-2);margin-top:4px" data-i18n="tab.stamp.logoHint">PNG, SVG, JPG. Max 2MB.</div></div><input type="file" id="logoInput" style="display:none" accept=".png,.svg,.jpg,.jpeg"></div>
+        <div class="control-section"><div class="control-section-title" data-i18n="tab.stamp.size">Stamp Size</div><div class="stamp-size-options"><button class="stamp-size-btn" onclick="Dashboard.setStampSize(this)" data-i18n="tab.stamp.small">Small</button><button class="stamp-size-btn active" onclick="Dashboard.setStampSize(this)" data-i18n="tab.stamp.medium">Medium</button><button class="stamp-size-btn" onclick="Dashboard.setStampSize(this)" data-i18n="tab.stamp.large">Large</button></div></div>
+        <div class="stamp-save-row"><button class="stamp-reset-link" data-i18n="tab.stamp.resetDefault">Reset to Default</button><button class="btn btn-primary" onclick="Dashboard.saveStamp()" data-i18n="tab.stamp.saveChanges">Save Changes</button></div>
       </div>
     </div>
   </div>
