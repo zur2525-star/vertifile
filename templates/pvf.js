@@ -362,7 +362,6 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
             : `<div class="text-doc">${fileBase64}</div>`
       }
     </div>
-    ${isPdf ? `<aside class="pdf-thumbs" id="pdfThumbs" aria-label="Page thumbnails"></aside>` : ''}
     ${(!isEncryptedMode && isPdf) ? `<script type="application/octet-stream" id="pdfData" data-vf-bundle="pdf-data">${fileBase64}</script>` : ''}
 
     <!-- VERTIFILE STAMP -->
@@ -394,6 +393,7 @@ html{scrollbar-color:rgba(124,58,237,.25) rgba(15,14,23,.5);scrollbar-width:thin
 
   </div>
 </div>
+${isPdf ? `<aside class="pdf-thumbs" id="pdfThumbs" aria-label="Page thumbnails"></aside>` : ''}
 
 <!-- Protected by Vertifile footer (hidden in desktop viewer / iframe) -->
 <div id="pvf-footer" style="display:none;text-align:center;padding:16px;margin-top:24px;border-top:1px solid rgba(0,0,0,0.06)">
