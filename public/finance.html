@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertifile for Finance — Financial Documents with Built-in Proof of Authenticity</title>
+  <meta name="description" content="Financial documents with built-in proof of authenticity. SOX-ready compliance, immutable blockchain audit trail for regulators, and instant counterparty verification.">
+  <meta name="keywords" content="financial document verification, SOX compliance, regulatory audit trail, contract integrity, immutable record, financial compliance">
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <meta property="og:title" content="Vertifile for Finance — Built-in Proof of Authenticity">
+  <meta property="og:description" content="Financial documents with built-in proof of authenticity. SOX compliance, immutable audit trail, and instant verification.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vertifile.com/finance">
+  <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
+  <link rel="canonical" href="https://vertifile.com/finance">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vertifile for Finance — Built-in Proof of Authenticity">
+  <meta name="twitter:description" content="Financial documents with built-in proof of authenticity. SOX compliance, immutable audit trail, and instant verification.">
+  <meta name="theme-color" content="#ffffff">
+  <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;overflow-x:hidden}
+    body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}
+    [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
+
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;transition:.3s}
+    .navbar.scrolled{background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:100%;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo img{height:28px}
+    .nav-center{display:flex;gap:28px;position:absolute;left:50%;transform:translateX(-50%)}
+    .nav-center a{font-size:14px;font-weight:500;color:#374151;text-decoration:none;transition:.2s}
+    .nav-center a:hover{color:#7c3aed}
+    [dir="rtl"] .nav-center{direction:rtl}
+    .nav-actions{display:flex;align-items:center;gap:12px}
+    .nav-verify{font-size:13px;font-weight:500;color:#4f46e5;text-decoration:none}
+    .nav-cta{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
+    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.3)}
+    .lang-btn{position:relative;display:flex;align-items:center;gap:4px;background:none;border:1px solid rgba(0,0,0,.08);border-radius:8px;padding:6px 10px;cursor:pointer;color:#374151;font-size:12px;font-weight:500;font-family:inherit}
+    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;display:none;min-width:140px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.12);padding:6px 0;z-index:1001}
+    [dir="rtl"] .lang-dropdown{right:auto;left:0}
+    .lang-dropdown.show{display:block}
+    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:#374151;text-decoration:none;transition:.15s}
+    .lang-dropdown a:hover{background:rgba(124,58,237,.06);color:#7c3aed}
+    .lang-dropdown a.active{color:#7c3aed;font-weight:600}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px}
+    .hamburger span{display:block;width:20px;height:2px;background:#111827;margin:4px 0;border-radius:2px}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;border-bottom:1px solid rgba(0,0,0,.06);padding:16px 24px;z-index:999;flex-direction:column;gap:12px}
+    .mobile-menu.show{display:flex}
+    .mobile-menu a{font-size:15px;color:#374151;text-decoration:none;padding:8px 0}
+    .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06)}
+    .nav-user{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(124,58,237,.25);background:transparent;cursor:pointer;transition:.2s;text-decoration:none;color:#6b7280}
+    .nav-user:hover{border-color:rgba(124,58,237,.5);color:#7c3aed;background:rgba(124,58,237,.05)}
+    .nav-user svg{width:18px;height:18px}
+    @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
+
+    .hero{padding:140px 60px 100px;position:relative;overflow:hidden;background:linear-gradient(180deg,#fef3c7 0%,#fef9c3 15%,#fffbeb 40%,#ffffff 100%)}
+    .hero-bg{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
+    .hero-bg .grid{position:absolute;top:0;left:50%;transform:translateX(-50%);width:1400px;height:100%;background-image:linear-gradient(rgba(217,119,6,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(217,119,6,.07) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%)}
+    .hero-bg .glow-1{position:absolute;top:-15%;left:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(217,119,6,.12),transparent 70%);filter:blur(80px);animation:nebulaFloat1 20s ease-in-out infinite alternate}
+    .hero-bg .glow-2{position:absolute;bottom:-25%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(168,85,247,.08),transparent 70%);filter:blur(80px);animation:nebulaFloat2 25s ease-in-out infinite alternate}
+    .hero-bg .glow-3{position:absolute;top:20%;right:15%;width:400px;height:400px;background:radial-gradient(circle,rgba(6,182,212,.06),transparent 70%);filter:blur(60px);animation:nebulaFloat3 18s ease-in-out infinite alternate}
+    @keyframes nebulaFloat1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(40px,30px) scale(1.1)}}
+    @keyframes nebulaFloat2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-30px,-40px) scale(1.15)}}
+    @keyframes nebulaFloat3{0%{transform:translate(0,0) scale(1)}100%{transform:translate(25px,-20px) scale(1.08)}}
+    .hero-content{max-width:800px;margin:0 auto;text-align:center;position:relative;z-index:1}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.15);border-radius:24px;font-size:13px;font-weight:600;color:#b45309;margin-bottom:28px;letter-spacing:.3px}
+    .hero-badge .pulse{width:8px;height:8px;border-radius:50%;background:#fbbf24;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+    .hero h1{font-size:48px;font-weight:900;color:#111827;line-height:1.1;margin-bottom:24px;letter-spacing:-2px}
+    .hero h1 .gradient{background:linear-gradient(135deg,#d97706,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p.sub{font-size:18px;color:#6b7280;line-height:1.8;max-width:600px;margin:0 auto 40px;font-weight:400}
+    .hero-buttons{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center}
+    .btn-primary{padding:16px 36px;background:linear-gradient(135deg,#b45309,#d97706);color:#fff;border-radius:14px;font-weight:700;font-size:16px;transition:all .3s;border:none;cursor:pointer;font-family:inherit;letter-spacing:-.2px;box-shadow:0 4px 20px rgba(217,119,6,.3)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(217,119,6,.5)}
+    .btn-secondary{padding:16px 36px;background:transparent;color:#374151;border-radius:14px;font-weight:700;font-size:16px;border:1px solid rgba(0,0,0,.15);transition:all .3s;cursor:pointer;font-family:inherit;letter-spacing:-.2px}
+    .btn-secondary:hover{border-color:rgba(0,0,0,.3);background:rgba(0,0,0,.02);transform:translateY(-2px)}
+    .patent-badge{display:inline-flex;align-items:center;gap:6px;margin-top:32px;font-size:12px;font-weight:600;color:#9ca3af;letter-spacing:.5px}
+    .patent-badge svg{width:16px;height:16px}
+    @media(max-width:900px){.hero{padding:120px 24px 80px}.hero h1{font-size:36px}}
+    @media(max-width:600px){.hero{padding:100px 20px 60px}.hero h1{font-size:28px;letter-spacing:-1px}.hero p.sub{font-size:15px}.btn-primary,.btn-secondary{padding:14px 28px;font-size:14px;width:100%}}
+
+    section{padding:100px 32px}
+    .section-header{text-align:center;max-width:600px;margin:0 auto 60px}
+    .section-header .label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b45309;margin-bottom:16px;background:rgba(217,119,6,.08);padding:6px 16px;border-radius:20px;border:1px solid rgba(217,119,6,.12)}
+    .section-header h2{font-size:40px;font-weight:800;color:#111827;margin-bottom:14px;letter-spacing:-1px}
+    .section-header p{font-size:17px;color:#6b7280;font-weight:400;line-height:1.7}
+    .fade-up{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+    .fade-up.visible{opacity:1;transform:translateY(0)}
+    .fade-up:nth-child(2){transition-delay:.1s}
+    .fade-up:nth-child(3){transition-delay:.2s}
+    .fade-up:nth-child(4){transition-delay:.3s}
+
+    .benefits-section{background:linear-gradient(180deg,#ffffff 0%,#fffbeb 50%,#ffffff 100%);position:relative;overflow:hidden}
+    .benefits-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:900px;margin:0 auto}
+    .benefit-card{padding:36px;border-radius:20px;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);border:1px solid rgba(217,119,6,.06);transition:all .4s cubic-bezier(.16,1,.3,1);box-shadow:0 2px 8px rgba(217,119,6,.04)}
+    .benefit-card:hover{transform:translateY(-8px) scale(1.02);background:rgba(255,255,255,.95);border-color:rgba(217,119,6,.18);box-shadow:0 12px 40px rgba(217,119,6,.12)}
+    .benefit-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+    .benefit-icon svg{width:24px;height:24px}
+    .benefit-icon.sox{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.15)}
+    .benefit-icon.sox svg{color:#d97706}
+    .benefit-icon.contract{background:rgba(79,70,229,.1);border:1px solid rgba(79,70,229,.15)}
+    .benefit-icon.contract svg{color:#818cf8}
+    .benefit-icon.blockchain{background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.15)}
+    .benefit-icon.blockchain svg{color:#06b6d4}
+    .benefit-icon.counterparty{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.15)}
+    .benefit-icon.counterparty svg{color:#34d399}
+    .benefit-card h3{font-size:18px;font-weight:700;color:#111827;margin-bottom:10px}
+    .benefit-card p{font-size:14px;color:#6b7280;line-height:1.8}
+    @media(max-width:768px){.benefits-grid{grid-template-columns:1fr}}
+
+    .usecases-section{background:linear-gradient(180deg,#fffbeb 0%,#ffffff 100%);position:relative;overflow:hidden}
+    .usecases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:900px;margin:0 auto}
+    .usecase-card{padding:32px;border-radius:20px;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);border:1px solid rgba(217,119,6,.06);transition:all .4s;box-shadow:0 2px 8px rgba(217,119,6,.04);text-align:center}
+    .usecase-card:hover{transform:translateY(-6px);border-color:rgba(217,119,6,.18);box-shadow:0 12px 40px rgba(217,119,6,.12)}
+    .usecase-card h3{font-size:17px;font-weight:700;color:#111827;margin-bottom:10px}
+    .usecase-card p{font-size:14px;color:#6b7280;line-height:1.7}
+    .usecase-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.12)}
+    .usecase-icon svg{width:28px;height:28px;color:#b45309}
+    @media(max-width:768px){.usecases-grid{grid-template-columns:1fr}}
+
+    .steps-section{background:#ffffff}
+    .steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:900px;margin:0 auto;position:relative}
+    .steps-row::before{content:'';position:absolute;top:42px;left:16%;right:16%;height:2px;background:linear-gradient(90deg,#d97706,#f59e0b,#fbbf24);opacity:.18;border-radius:2px}
+    .step-item{text-align:center;position:relative;z-index:1;padding:20px 16px;border-radius:20px;transition:all .3s}
+    .step-item:hover{background:rgba(217,119,6,.03)}
+    .step-num{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#b45309,#d97706);color:#fff;font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 4px 20px rgba(217,119,6,.3)}
+    .step-item h3{font-size:17px;font-weight:700;color:#111827;margin-bottom:8px}
+    .step-item p{font-size:13px;color:#6b7280;line-height:1.7}
+    @media(max-width:768px){.steps-row{grid-template-columns:1fr;gap:24px;max-width:400px}.steps-row::before{display:none}}
+
+    .bottom-cta{background:linear-gradient(135deg,#78350f 0%,#b45309 40%,#d97706 100%);padding:100px 32px;text-align:center;position:relative;overflow:hidden;border-radius:32px;max-width:1100px;margin:0 auto 60px}
+    .bottom-cta::before{content:'';position:absolute;top:-50%;left:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(255,255,255,.1),transparent 60%);filter:blur(80px);animation:ctaGlow1 8s ease-in-out infinite alternate}
+    .bottom-cta::after{content:'';position:absolute;bottom:-40%;right:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(251,191,36,.15),transparent 60%);filter:blur(60px);animation:ctaGlow2 10s ease-in-out infinite alternate}
+    @keyframes ctaGlow1{0%{transform:translate(0,0)}100%{transform:translate(40px,30px)}}
+    @keyframes ctaGlow2{0%{transform:translate(0,0)}100%{transform:translate(-30px,-20px)}}
+    .bottom-cta>*{position:relative;z-index:1}
+    .bottom-cta h2{font-size:40px;font-weight:800;margin-bottom:16px;color:#fff;letter-spacing:-1px}
+    .bottom-cta p{font-size:17px;color:rgba(255,255,255,.75);margin-bottom:36px;max-width:500px;margin-left:auto;margin-right:auto;font-weight:400;line-height:1.7}
+    .btn-white{padding:16px 40px;background:#fff;color:#b45309;border-radius:14px;font-weight:800;font-size:16px;border:none;cursor:pointer;transition:all .3s;font-family:inherit;letter-spacing:-.2px;box-shadow:0 4px 20px rgba(0,0,0,.2);display:inline-block;text-decoration:none}
+    .btn-white:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,.3);background:#fffbeb;color:#78350f}
+    @media(max-width:768px){.bottom-cta{padding:60px 24px;border-radius:24px}.bottom-cta h2{font-size:28px}}
+
+    footer{background:linear-gradient(180deg,#f8f7ff 0%,#1e1b4b 30%,#1e1b4b 100%);color:#e2e0f0;padding:100px 32px 30px;border-top:none;position:relative;overflow:hidden}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(180deg,#f8f7ff,transparent);pointer-events:none;z-index:1}
+    footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;background:radial-gradient(ellipse at 30% 80%,rgba(124,58,237,.15),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.08),transparent 50%);pointer-events:none}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;max-width:1000px;margin:0 auto;position:relative;z-index:2}
+    .footer-brand .f-logo{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:10px;letter-spacing:-.5px;color:#fff}
+    .footer-brand .f-logo img{height:28px;width:auto;filter:brightness(0) invert(1)}
+    .footer-brand p{font-size:13px;color:rgba(196,181,253,.6);line-height:1.8;max-width:280px}
+    .footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(167,139,250,.7);margin-bottom:16px}
+    .footer-col a{display:block;font-size:14px;color:rgba(196,181,253,.5);padding:5px 0;transition:.2s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{max-width:1000px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.4);position:relative;z-index:2}
+    @media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr;gap:30px}.footer-bottom{flex-direction:column;gap:10px;text-align:center}}
+    @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
+    <div class="nav-center">
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/pricing" data-i18n="nav.pricing">Pricing</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
+      <a href="/blog" data-i18n="nav.blog">Blog</a>
+      <a href="/contact" data-i18n="nav.contact">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#31616;&#20307;&#20013;&#25991;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
+      <a href="/app" class="nav-user" title="My Account" data-i18n-title="nav.account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+    </div>
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/pricing" onclick="closeMobile()" data-i18n="nav.pricing">Pricing</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <a href="/blog" onclick="closeMobile()" data-i18n="nav.blog">Blog</a>
+  <a href="/contact" onclick="closeMobile()" data-i18n="nav.contact">Contact</a>
+  <a href="/app" onclick="closeMobile()" data-i18n="nav.account">My Account</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-bg">
+    <div class="grid"></div>
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+    <div class="glow-3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="pulse"></span> <span data-i18n="finance.badge">Financial Compliance</span></div>
+    <h1 data-i18n="finance.heroTitle">Financial documents with <span class="gradient">built-in proof of authenticity</span></h1>
+    <p class="sub" data-i18n="finance.heroSubtitle">SOX-ready compliance with immutable blockchain audit trail. Prove contract integrity, satisfy regulatory requirements, and enable instant counterparty verification.</p>
+    <div class="hero-buttons">
+      <a href="/enterprise#contact" class="btn-primary" data-i18n="finance.requestDemo">Request a Demo</a>
+      <a href="/demo" class="btn-secondary" data-i18n="finance.seeItWork">See How It Works</a>
+    </div>
+    <div class="patent-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <span data-i18n="hero.trustPatent">Patent Pending</span>
+    </div>
+  </div>
+</section>
+
+<section class="benefits-section" id="benefits">
+  <div class="section-header fade-up">
+    <span class="label" data-i18n="finance.benefitsLabel">Compliance</span>
+    <h2 data-i18n="finance.benefitsTitle">Built for Financial Compliance</h2>
+    <p data-i18n="finance.benefitsSubtitle">Every feature designed for institutions that need regulatory compliance and immutable document records.</p>
+  </div>
+  <div class="benefits-grid">
+    <div class="benefit-card fade-up">
+      <div class="benefit-icon sox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3 data-i18n="finance.b1title">SOX/Regulatory Compliance Built-In</h3>
+      <p data-i18n="finance.b1desc">Every financial document is timestamped and anchored to an immutable blockchain record. Meet SOX Section 802 record retention and integrity requirements with cryptographic proof that auditors can verify independently.</p>
+    </div>
+    <div class="benefit-card fade-up">
+      <div class="benefit-icon contract">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <h3 data-i18n="finance.b2title">Contract Integrity: Prove No Alterations Since Signing</h3>
+      <p data-i18n="finance.b2desc">Seal contracts at the moment of execution. Any modification after signing — even a single character — triggers an immediate visual forgery alert. Eliminate disputes about contract versions forever.</p>
+    </div>
+    <div class="benefit-card fade-up">
+      <div class="benefit-icon blockchain">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <h3 data-i18n="finance.b3title">Immutable Blockchain Record for Auditors</h3>
+      <p data-i18n="finance.b3desc">Every document hash is permanently anchored on the Polygon blockchain. Auditors can independently verify document authenticity against a public, immutable ledger without relying on your internal systems.</p>
+    </div>
+    <div class="benefit-card fade-up">
+      <div class="benefit-icon counterparty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <h3 data-i18n="finance.b4title">Instant Verification for Counterparties</h3>
+      <p data-i18n="finance.b4desc">Counterparties, regulators, and auditors verify any financial document in seconds. No special software, no account required. Open the .pvf file in any browser and see the verification result immediately.</p>
+    </div>
+  </div>
+</section>
+
+<section class="usecases-section" id="usecases">
+  <div class="section-header fade-up">
+    <span class="label" data-i18n="finance.useCasesLabel">Use Cases</span>
+    <h2 data-i18n="finance.useCasesTitle">Protect Every Financial Document</h2>
+    <p data-i18n="finance.useCasesSubtitle">From contracts to regulatory filings, every financial document benefits from immutable verification.</p>
+  </div>
+  <div class="usecases-grid">
+    <div class="usecase-card fade-up">
+      <div class="usecase-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      </div>
+      <h3 data-i18n="finance.uc1title">Contracts & Agreements</h3>
+      <p data-i18n="finance.uc1desc">Seal contracts at execution. Prove no alterations were made after signing to any counterparty or regulator.</p>
+    </div>
+    <div class="usecase-card fade-up">
+      <div class="usecase-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      </div>
+      <h3 data-i18n="finance.uc2title">Audit Reports & Statements</h3>
+      <p data-i18n="finance.uc2desc">Financial statements and audit reports with built-in proof of integrity. Auditors verify independently against the blockchain.</p>
+    </div>
+    <div class="usecase-card fade-up">
+      <div class="usecase-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <h3 data-i18n="finance.uc3title">Regulatory Filings</h3>
+      <p data-i18n="finance.uc3desc">SOX, Basel III, and regulatory submissions with immutable timestamps and cryptographic proof of submission integrity.</p>
+    </div>
+  </div>
+</section>
+
+<section class="steps-section" id="how">
+  <div class="section-header fade-up">
+    <span class="label" data-i18n="finance.howLabel">Process</span>
+    <h2 data-i18n="finance.howTitle">How It Works for Finance</h2>
+    <p data-i18n="finance.howSubtitle">Protect any financial document in seconds. Regulatory-grade verification built in.</p>
+  </div>
+  <div class="steps-row">
+    <div class="step-item fade-up">
+      <div class="step-num">1</div>
+      <h3 data-i18n="finance.step1title">Upload Document</h3>
+      <p data-i18n="finance.step1desc">Upload any contract, financial statement, or regulatory filing. Content is never read or stored.</p>
+    </div>
+    <div class="step-item fade-up">
+      <div class="step-num">2</div>
+      <h3 data-i18n="finance.step2title">Compliance-Grade Sealing</h3>
+      <p data-i18n="finance.step2desc">SHA-256 fingerprint computed and anchored to an immutable blockchain record with a regulatory-grade timestamp.</p>
+    </div>
+    <div class="step-item fade-up">
+      <div class="step-num">3</div>
+      <h3 data-i18n="finance.step3title">Audit-Ready .pvf</h3>
+      <p data-i18n="finance.step3desc">Download a tamper-evident .pvf file. Auditors and counterparties verify document integrity independently.</p>
+    </div>
+  </div>
+</section>
+
+<div style="padding:0 32px;">
+  <div class="bottom-cta fade-up">
+    <h2 data-i18n="finance.ctaTitle">Ready to Make Financial Documents Tamper-Proof?</h2>
+    <p data-i18n="finance.ctaSubtitle">Join financial institutions that trust Vertifile for regulatory-grade document verification.</p>
+    <a href="/enterprise#contact" class="btn-white" data-i18n="finance.ctaButton">Schedule a Demo</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="f-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile"></div>
+      <p data-i18n="finance.footerDesc">Regulatory-grade financial document verification with immutable blockchain audit trail, SOX compliance, and instant counterparty verification.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/pricing" data-i18n="nav.pricing">Pricing</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.company">Company</h4>
+      <a href="/about" data-i18n="footer.about">About</a>
+      <a href="/blog" data-i18n="footer.blog">Blog</a>
+      <a href="/contact" data-i18n="footer.contact">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.legal">Legal</h4>
+      <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
+      <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
+    <span data-i18n="hero.trustPatent">Patent Pending</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  window.toggleMobile = function(){ document.getElementById('mobileMenu').classList.toggle('show'); };
+  window.closeMobile = function(){ document.getElementById('mobileMenu').classList.remove('show'); };
+  window.toggleLangDropdown = function(){ document.getElementById('langDropdown').classList.toggle('show'); };
+  document.addEventListener('click', function(e){ if(!e.target.closest('.lang-btn')&&!e.target.closest('.lang-dropdown')) document.getElementById('langDropdown').classList.remove('show'); });
+  var fadeEls = document.querySelectorAll('.fade-up');
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){ if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target);} });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    fadeEls.forEach(function(el){ observer.observe(el); });
+  } else { fadeEls.forEach(function(el){ el.classList.add('visible'); }); }
+  window.addEventListener('scroll', function(){ document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20); });
+})();
+</script>
+<script src="/js/i18n.js"></script>
+<script src="/js/nav-user.js"></script>
+</body>
+</html>

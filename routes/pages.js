@@ -73,6 +73,22 @@ router.get('/support', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'support.html'));
 });
 
+router.get('/legal', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'legal.html'));
+});
+
+router.get('/healthcare', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'healthcare.html'));
+});
+
+router.get('/education', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'education.html'));
+});
+
+router.get('/finance', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'finance.html'));
+});
+
 router.get('/reset-password', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'reset-password.html'));
 });
@@ -285,9 +301,8 @@ router.get('/d/:identifier/download', async (req, res) => {
       return res.status(404).json({ success: false, error: 'Document not found' });
     }
 
-    // Check if document is preview-only (free plan) and user hasn't upgraded
+    // Check if document is preview-only (legacy gating)
     if (doc.preview_only) {
-      // Check if the requesting user is on a paid plan
       const isPaidUser = req.user && req.user.plan && req.user.plan !== 'free';
       if (!isPaidUser) {
         return res.status(403).json({

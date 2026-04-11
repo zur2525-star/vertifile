@@ -91,6 +91,30 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://vertifile.com/legal</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vertifile.com/healthcare</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vertifile.com/education</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vertifile.com/finance</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://vertifile.com/blog/document-fraud-21-billion-problem</loc>
     <lastmod>2026-04-06</lastmod>
     <changefreq>monthly</changefreq>
