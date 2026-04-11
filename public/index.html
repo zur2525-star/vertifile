@@ -301,7 +301,7 @@
     .glow-cursor{position:fixed;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(79,70,229,.06) 0%,rgba(124,58,237,.02) 40%,transparent 70%);pointer-events:none;z-index:0;transition:transform .15s ease-out,opacity .3s;will-change:transform;mix-blend-mode:multiply}
 
     /* ===== HOW IT WORKS ===== */
-    .how{background:#ffffff;position:relative;overflow:hidden}
+    .how{background:#ffffff;position:relative;overflow:visible}
     .how::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.03),transparent 50%);pointer-events:none}
     .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:800px;margin:0 auto;position:relative}
     .steps-grid::before{content:'';position:absolute;top:42px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,#4f46e5,#7c3aed,#06b6d4,#34d399);opacity:.18;border-radius:2px}
@@ -345,7 +345,7 @@
     @media(max-width:768px){.features-grid{grid-template-columns:1fr;gap:14px}}
 
     /* ===== SECURITY ===== */
-    .security-section{background:linear-gradient(180deg,#ffffff 0%,#faf8ff 40%,#f5f3ff 70%,#ffffff 100%);border-top:none;position:relative;overflow:hidden}
+    .security-section{background:linear-gradient(180deg,#ffffff 0%,#faf8ff 40%,#f5f3ff 70%,#ffffff 100%);border-top:none;position:relative;overflow:visible}
     .security-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 30%,rgba(79,70,229,.05) 0%,transparent 60%);pointer-events:none}
     .security-visual{text-align:center;margin-bottom:60px}
     .shield-anim{width:180px;height:180px;margin:0 auto;position:relative}
@@ -453,7 +453,7 @@
     .demo-stamp-forged .stamp-label,.demo-stamp-forged .vfs-forged-label{font-size:5.5px;font-weight:700;color:#fff;background:#dc2626;padding:1.5px 6px;border-radius:3px;margin-top:2px;letter-spacing:.5px;line-height:1}
 
     /* ===== INDUSTRIES ===== */
-    .industries-section{background:#ffffff;position:relative;overflow:hidden}
+    .industries-section{background:#ffffff;position:relative;overflow:visible}
     .industries-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 70%,rgba(124,58,237,.03),transparent 50%),radial-gradient(ellipse at 70% 30%,rgba(52,211,153,.02),transparent 50%);pointer-events:none}
     .industries-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:900px;margin:0 auto;position:relative;z-index:1}
     .ind-card{display:flex;align-items:center;gap:16px;padding:22px 24px;border-radius:16px;background:rgba(255,255,255,.8);border:1px solid rgba(124,58,237,.05);transition:all .3s;box-shadow:0 2px 6px rgba(124,58,237,.03)}
@@ -600,11 +600,12 @@
       footer{padding:80px 20px 24px}
     }
     /* ===== SVG BACKGROUND DECORATIONS ===== */
-    .how::after{content:'';position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);width:800px;height:350px;background:url('/images/marketing/3-step-process.svg') no-repeat center;background-size:contain;opacity:0.12;pointer-events:none;z-index:0}
+    .section-bg-decor{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.18;pointer-events:none;z-index:0;height:auto}
+    .how .section-bg-decor{max-width:800px;width:90%;bottom:0;top:auto;transform:translateX(-50%)}
+    .security-section .section-bg-decor{max-width:600px;width:80%}
+    .industries-section .section-bg-decor{max-width:900px;width:95%}
     .how .section-header,.how .steps-grid{position:relative;z-index:1}
-    .security-section::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:url('/images/marketing/pvf-fortress.svg') no-repeat center;background-size:contain;opacity:0.10;pointer-events:none;z-index:0}
     .security-section .section-header,.security-section .security-visual,.security-section .security-layers{position:relative;z-index:1}
-    .industries-section::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:900px;height:280px;background:url('/images/marketing/industry-cards.svg') no-repeat center;background-size:contain;opacity:0.10;pointer-events:none;z-index:0}
     .industries-section .section-header,.industries-section .industries-grid{position:relative;z-index:1}
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Vertifile","url":"https://vertifile.com","logo":"https://vertifile.com/images/logo-icon.png","description":"Document verification and anti-forgery platform","foundingDate":"2026","foundingLocation":"Israel","contactPoint":{"@type":"ContactPoint","email":"info@vertifile.com","contactType":"customer service"}}</script>
@@ -794,6 +795,7 @@
 
 <!-- ===== HOW IT WORKS ===== -->
 <section class="how" id="how">
+  <img src="/images/marketing/3-step-process.svg" class="section-bg-decor" aria-hidden="true" alt="">
   <div class="section-header fade-up">
     <div class="label" data-i18n="howItWorks.label">Process</div>
     <h2 data-i18n="howItWorks.title">Three Steps to Bulletproof Documents</h2>
@@ -904,6 +906,7 @@
 
 <!-- ===== SECURITY ===== -->
 <section class="security-section" id="security">
+  <img src="/images/marketing/pvf-fortress.svg" class="section-bg-decor" aria-hidden="true" alt="">
   <div class="section-header fade-up">
     <div class="label" data-i18n="security.label">Security</div>
     <h2 data-i18n="security.title">7 Layers That Make Forgery Impossible</h2>
@@ -1125,6 +1128,7 @@
 
 <!-- ===== INDUSTRIES ===== -->
 <section class="industries-section" id="industries">
+  <img src="/images/marketing/industry-cards.svg" class="section-bg-decor" aria-hidden="true" alt="">
   <div class="section-header fade-up">
     <div class="label" data-i18n="industries.label">Industries</div>
     <h2 data-i18n="industries.title">Built for Every Industry</h2>
