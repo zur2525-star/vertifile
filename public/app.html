@@ -2857,13 +2857,34 @@ function renderWavePreview(color) {
   renderWavePreviewMulti(colors);
 }
 
+function compressStampLogo(dataUri, maxSize) {
+  maxSize = maxSize || 200;
+  return new Promise(function(resolve) {
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      var w = img.width, h = img.height;
+      if (w > maxSize || h > maxSize) {
+        if (w > h) { h = Math.round(h * maxSize / w); w = maxSize; }
+        else { w = Math.round(w * maxSize / h); h = maxSize; }
+      }
+      canvas.width = w;
+      canvas.height = h;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/png', 0.85));
+    };
+    img.src = dataUri;
+  });
+}
+
 function handleLogoUpload(e) {
   var file = e.target.files[0];
   if (!file) return;
   if (file.size > 2 * 1024 * 1024) { toast('Logo must be under 2MB'); return; }
   var reader = new FileReader();
-  reader.onload = function(ev) {
-    var dataUrl = ev.target.result;
+  reader.onload = async function(ev) {
+    var dataUrl = await compressStampLogo(ev.target.result);
     var cur = document.getElementById('logoCurrent');
     var area = document.getElementById('logoUploadArea');
     var thumb = document.getElementById('logoThumbImg');
