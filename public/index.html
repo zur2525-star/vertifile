@@ -554,6 +554,14 @@
     @media(max-width:1024px){.trust-section>div:last-child{grid-template-columns:repeat(2,1fr)!important}}
     @media(max-width:768px){.trust-section .section-header h2{color:#fff}.trust-section>div:last-child{grid-template-columns:1fr!important;gap:16px!important}}
 
+    /* ===== VIDEO SECTION ===== */
+    .video-section{background:linear-gradient(180deg,#f8f7ff 0%,#f0edff 50%,#f8f7ff 100%);position:relative;overflow:hidden;padding:80px 32px}
+    .video-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 50%,rgba(124,58,237,.06),transparent 60%);pointer-events:none}
+    .video-wrapper{max-width:900px;margin:0 auto;position:relative;border-radius:20px;overflow:hidden;box-shadow:0 8px 40px rgba(124,58,237,.12),0 2px 12px rgba(0,0,0,.06);border:1px solid rgba(124,58,237,.1)}
+    .video-wrapper video{display:block;width:100%;height:auto;background:#0f0e17}
+    @media(max-width:768px){.video-section{padding:60px 20px}.video-wrapper{border-radius:14px}}
+    @media(max-width:480px){.video-section{padding:48px 16px}.video-wrapper{border-radius:10px}}
+
     button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
     input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
 
@@ -813,6 +821,22 @@
     </div>
   </div>
 </section>
+
+<!-- ===== VIDEO ===== -->
+<section class="video-section" id="video">
+  <div class="section-header fade-up">
+    <div class="label" data-i18n="video.label">See It In Action</div>
+    <h2 data-i18n="video.title">Vertifile In 60 Seconds</h2>
+    <p data-i18n="video.subtitle">Watch how documents become tamper-proof with 7 layers of security.</p>
+  </div>
+  <div class="video-wrapper fade-up">
+    <video controls playsinline preload="metadata" poster="">
+      <source src="/videos/promo.mp4" type="video/mp4">
+    </video>
+  </div>
+</section>
+
+<div class="section-divider"></div>
 
 <!-- ===== FEATURES ===== -->
 <section class="features-section" id="features">
