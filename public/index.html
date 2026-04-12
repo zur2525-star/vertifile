@@ -227,8 +227,9 @@
       .hero{padding:100px 20px 40px}
       .hero h1{font-size:32px;letter-spacing:-1px}
       .hero p.sub{font-size:15px}
+      .hero-buttons{flex-direction:column}
       .btn-primary,.btn-secondary{padding:14px 28px;font-size:14px;width:100%}
-      .doc-scene{width:240px;height:310px}
+      .doc-scene{width:240px;height:310px;margin-bottom:90px}
       .doc-header .doc-uni{font-size:11px}
       .doc-body .doc-title{font-size:10px}
       .hero-orbit-1,.hero-orbit-2{display:none}
@@ -246,14 +247,14 @@
     .stat-item .stat-num{font-size:36px;font-weight:800;color:#111827;letter-spacing:-1px}
     .stat-item .stat-num .accent{background:linear-gradient(135deg,#4f46e5,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
     .stat-item .stat-label{font-size:13px;color:#6b7280;margin-top:6px;font-weight:500}
+    @media(max-width:768px){.stats-inner{grid-template-columns:repeat(2,1fr);gap:20px}.stats-inner .stat-item:last-child{grid-column:1/-1;text-align:center}}
     @media(max-width:600px){.stats-inner{grid-template-columns:repeat(2,1fr);gap:20px}.stat-item .stat-num{font-size:28px}}
 
     /* ===== ZERO-KNOWLEDGE SECTION ===== */
     .zk-section{background:linear-gradient(135deg,#1E1B2E 0%,#2D1B4E 100%);color:#fff;padding:100px 32px;font-family:'Heebo','Inter',sans-serif;position:relative;overflow:hidden}
     .zk-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 40% 30%,rgba(124,58,237,.15),transparent 60%),radial-gradient(ellipse at 70% 70%,rgba(6,182,212,.06),transparent 50%);pointer-events:none}
     .zk-container{max-width:1100px;margin:0 auto;position:relative;z-index:1}
-    @media(max-width:768px){.zk-section .section-header h2{font-size:32px}}
-    @media(max-width:600px){.zk-section div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}}
+    @media(max-width:768px){.zk-section .section-header h2{font-size:32px !important}.zk-section div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}}
 
     /* ===== SECTIONS COMMON ===== */
     section{padding:100px 32px}
@@ -315,7 +316,7 @@
     .step-card h3{font-size:16px;font-weight:700;color:#111827;margin-bottom:8px}
     .step-card p{font-size:13px;color:#6b7280;line-height:1.7}
     @media(max-width:768px){
-      .steps-grid{grid-template-columns:repeat(2,1fr);gap:30px}
+      .steps-grid{grid-template-columns:1fr;gap:30px}
       .steps-grid::before{display:none}
     }
     @media(max-width:480px){.steps-grid{grid-template-columns:1fr}}
@@ -362,7 +363,7 @@
     .sec-layer .sec-icon svg{width:22px;height:22px;color:#818cf8}
     .sec-layer h4{font-size:14px;font-weight:700;color:#111827;margin-bottom:6px}
     .sec-layer p{font-size:12px;color:#9ca3af;line-height:1.6}
-    @media(max-width:768px){.sec-layer{width:calc(50% - 10px)}}
+    @media(max-width:768px){.sec-layer{width:calc(50% - 10px)}.security-layers .sec-layer:last-child:nth-child(odd){margin:0 auto}}
     @media(max-width:480px){.sec-layer{width:100%}}
 
     /* ===== MARKETING VISUALS ===== */
@@ -507,7 +508,9 @@
     .footer-lang:hover svg{stroke:#fff}
     @media(max-width:768px){
       .footer-grid{grid-template-columns:1fr 1fr;gap:30px}
+      .footer-brand{grid-column:1/-1}
       .footer-bottom{flex-direction:column;gap:10px;text-align:center}
+      .patent-badge{max-width:100%;height:auto}
     }
     @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
     /* ===== FAQ ===== */
@@ -571,6 +574,14 @@
       .section-header{margin-bottom:36px}
       .section-header h2{font-size:28px}
       .section-header p{font-size:15px}
+      /* Hero decorative stamp — hide on mobile */
+      #heroDecorativeStamp{display:none}
+      /* Decorative backgrounds and glow cursor — save GPU on mobile */
+      .cyber-canvas,.hex-grid,.cyber-floaters,.glow-cursor{display:none}
+      /* Trust-line wrap */
+      .hero .trust-line{flex-wrap:wrap;justify-content:center}
+      /* Bottom CTA outer wrapper padding */
+      .bottom-cta-wrapper{padding:0 16px !important}
       .demo-stamp{width:50px;height:50px}
       .demo-stamp .stamp-center svg,.demo-stamp .vfs-center svg{width:12px;height:12px}
       .demo-stamp .stamp-brand,.demo-stamp .vfs-brand{font-size:4px;letter-spacing:.6px}
@@ -596,10 +607,24 @@
       section{padding:48px 16px}
       .section-header h2{font-size:24px}
       .section-header p{font-size:14px}
-      .hero p.sub{font-size:14px}
+      /* Issue 23 — section label letter-spacing */
+      .section-header .label{letter-spacing:1px;font-size:10px}
+      /* Issue 1 — hero h1 too large on small phones */
+      .hero h1{font-size:26px;letter-spacing:-.5px}
+      /* Issue 2 — hero padding excessive on small phones */
+      .hero{padding:90px 16px 32px}
+      /* Issue 5 — hero p.sub max-width too wide */
+      .hero p.sub{font-size:14px;max-width:100%}
+      /* Issue 4 — trust-line column on narrow phones */
+      .hero .trust-line{flex-direction:column !important;align-items:center !important;gap:8px !important}
       .bottom-cta h2{font-size:24px}
       .bottom-cta p{font-size:14px}
       .bottom-cta .btn-white{padding:14px 28px;font-size:14px;width:100%}
+      /* Issue 19 — secondary CTA button full-width */
+      .btn-secondary-cta{width:100% !important;text-align:center}
+      /* Issue 17 — FAQ padding too large on small phones */
+      .faq-q{padding:16px;font-size:15px}
+      .faq-a p{font-size:14px}
       .feat-card{padding:24px 20px}
       .feat-card h3{font-size:15px}
       .feat-card p{font-size:13px}
@@ -1259,14 +1284,14 @@
 </section>
 
 <!-- ===== BOTTOM CTA ===== -->
-<div style="padding:0 32px;max-width:1200px;margin:60px auto">
+<div class="bottom-cta-wrapper" style="padding:0 32px;max-width:1200px;margin:60px auto">
 <section class="bottom-cta">
   <div class="fade-up">
     <h2 data-i18n="cta.title">Ready to Protect Your Documents?</h2>
     <p data-i18n="cta.subtitle">Start protecting your documents today.</p>
     <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
       <a href="/upload"><button class="btn-white" data-i18n="cta.button">Start Protecting Now</button></a>
-      <a href="/contact" style="padding:16px 40px;background:transparent;color:#fff;border-radius:14px;font-weight:800;font-size:16px;border:2px solid rgba(255,255,255,.35);cursor:pointer;transition:all .3s;font-family:inherit;letter-spacing:-.2px;text-decoration:none;display:inline-block" data-i18n="cta.buttonDemo" onmouseover="this.style.borderColor='rgba(255,255,255,.7)';this.style.background='rgba(255,255,255,.08)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(255,255,255,.35)';this.style.background='transparent';this.style.transform='none'">Talk to Our Team</a>
+      <a href="/contact" class="btn-secondary-cta" style="padding:16px 40px;background:transparent;color:#fff;border-radius:14px;font-weight:800;font-size:16px;border:2px solid rgba(255,255,255,.35);cursor:pointer;transition:all .3s;font-family:inherit;letter-spacing:-.2px;text-decoration:none;display:inline-block" data-i18n="cta.buttonDemo" onmouseover="this.style.borderColor='rgba(255,255,255,.7)';this.style.background='rgba(255,255,255,.08)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(255,255,255,.35)';this.style.background='transparent';this.style.transform='none'">Talk to Our Team</a>
     </div>
   </div>
 </section>
