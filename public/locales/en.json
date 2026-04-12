@@ -1456,7 +1456,21 @@
       "note": "No spam. Unsubscribe anytime."
     },
     "breadcrumbHome": "Home",
-    "breadcrumbBlog": "Blog"
+    "breadcrumbBlog": "Blog",
+    "backToBlog": "Back to Blog",
+    "cta": {
+      "title": "Ready to Protect Your Documents?",
+      "sub": "Try Vertifile. Upload any document and see tamper-proof verification in action.",
+      "protect": "Protect a Document",
+      "demo": "See the Demo",
+      "protectFirst": "Protect Your First Document",
+      "see7layers": "See all 7 layers working together. Upload any document and experience tamper-proof verification in action.",
+      "moveBeyond": "Ready to Move Beyond PDF Signatures?",
+      "seeItYourself": "Protect your first document with Vertifile and see the difference yourself. Try to tamper with it.",
+      "tryTitle": "See It in Action",
+      "tryDesc": "Upload any document and watch Vertifile protect it in real time.",
+      "tryBtn": "Try the Live Demo"
+    }
   },
   "tab": {
     "overview": {
