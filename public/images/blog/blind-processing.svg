@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg-blind" x1="0.2" y1="0" x2="0.8" y2="1">
-      <stop offset="0%" stop-color="#0a0e1e"/>
-      <stop offset="50%" stop-color="#1a1040"/>
-      <stop offset="100%" stop-color="#0f0a2e"/>
+      <stop offset="0%" stop-color="#f5f3ff"/>
+      <stop offset="50%" stop-color="#ede9fe"/>
+      <stop offset="100%" stop-color="#ddd6fe"/>
     </linearGradient>
     <radialGradient id="glow-blind" cx="50%" cy="50%" r="35%">
-      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.3"/>
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.2"/>
       <stop offset="100%" stop-color="#4c1d95" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="data-stream" x1="0" y1="0" x2="0" y2="1">
@@ -15,8 +15,8 @@
       <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
     </linearGradient>
     <pattern id="grid-blind" width="40" height="40" patternUnits="userSpaceOnUse">
-      <line x1="40" y1="0" x2="40" y2="40" stroke="#8b5cf6" stroke-width="0.2" opacity="0.1"/>
-      <line x1="0" y1="40" x2="40" y2="40" stroke="#8b5cf6" stroke-width="0.2" opacity="0.1"/>
+      <line x1="40" y1="0" x2="40" y2="40" stroke="#8b5cf6" stroke-width="0.2" opacity="0.2"/>
+      <line x1="0" y1="40" x2="40" y2="40" stroke="#8b5cf6" stroke-width="0.2" opacity="0.2"/>
     </pattern>
   </defs>
   <rect width="1200" height="630" fill="url(#bg-blind)"/>
@@ -24,19 +24,19 @@
   <!-- Eye shape -->
   <g transform="translate(600,315)">
     <!-- Outer eye shape -->
-    <ellipse rx="140" ry="70" fill="none" stroke="#c4b5fd" stroke-width="1.5" opacity="0.4"/>
+    <ellipse rx="140" ry="70" fill="none" stroke="#7c3aed" stroke-width="1.5" opacity="0.6"/>
     <!-- Inner iris -->
-    <circle r="45" fill="none" stroke="#a78bfa" stroke-width="1.2" opacity="0.35"/>
+    <circle r="45" fill="none" stroke="#7c3aed" stroke-width="1.2" opacity="0.5"/>
     <!-- Pupil -->
-    <circle r="20" fill="#7c3aed" opacity="0.15"/>
-    <circle r="8" fill="#a78bfa" opacity="0.2"/>
+    <circle r="20" fill="#7c3aed" opacity="0.25"/>
+    <circle r="8" fill="#a78bfa" opacity="0.4"/>
     <!-- Strike-through line (privacy) -->
-    <line x1="-180" y1="-90" x2="180" y2="90" stroke="#c4b5fd" stroke-width="2.5" opacity="0.5" stroke-linecap="round"/>
+    <line x1="-180" y1="-90" x2="180" y2="90" stroke="#7c3aed" stroke-width="2.5" opacity="0.7" stroke-linecap="round"/>
     <!-- Second strike line -->
-    <line x1="-170" y1="-85" x2="170" y2="85" stroke="#8b5cf6" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+    <line x1="-170" y1="-85" x2="170" y2="85" stroke="#8b5cf6" stroke-width="1" opacity="0.4" stroke-linecap="round"/>
   </g>
   <!-- Data streams (vertical flowing lines) -->
-  <g opacity="0.25">
+  <g opacity="0.4">
     <rect x="150" y="0" width="1.5" height="630" fill="url(#data-stream)"/>
     <rect x="250" y="50" width="1" height="530" fill="url(#data-stream)"/>
     <rect x="350" y="80" width="1.5" height="470" fill="url(#data-stream)"/>
@@ -47,7 +47,7 @@
     <rect x="1050" y="40" width="1" height="550" fill="url(#data-stream)"/>
   </g>
   <!-- Binary text along data streams -->
-  <g font-family="monospace" font-size="10" fill="#a78bfa" opacity="0.12">
+  <g font-family="monospace" font-size="10" fill="#7c3aed" opacity="0.25">
     <text x="145" y="160">01</text>
     <text x="145" y="280">10</text>
     <text x="145" y="400">01</text>
@@ -63,11 +63,11 @@
     <text x="1045" y="450">10</text>
   </g>
   <!-- Lock symbols on sides -->
-  <g transform="translate(200,315)" opacity="0.2">
+  <g transform="translate(200,315)" opacity="0.5">
     <rect x="-12" y="-5" width="24" height="18" rx="3" fill="none" stroke="#c4b5fd" stroke-width="1.2"/>
     <path d="M-6 -5 L-6 -12 A6 6 0 0 1 6 -12 L6 -5" fill="none" stroke="#c4b5fd" stroke-width="1.2"/>
   </g>
-  <g transform="translate(1000,315)" opacity="0.2">
+  <g transform="translate(1000,315)" opacity="0.5">
     <rect x="-12" y="-5" width="24" height="18" rx="3" fill="none" stroke="#c4b5fd" stroke-width="1.2"/>
     <path d="M-6 -5 L-6 -12 A6 6 0 0 1 6 -12 L6 -5" fill="none" stroke="#c4b5fd" stroke-width="1.2"/>
   </g>

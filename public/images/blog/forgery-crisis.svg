@@ -1,43 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg-forgery" x1="0.5" y1="0" x2="0.5" y2="1">
-      <stop offset="0%" stop-color="#1a0a12"/>
-      <stop offset="40%" stop-color="#1e0e24"/>
-      <stop offset="100%" stop-color="#0f0a1e"/>
+      <stop offset="0%" stop-color="#f5f3ff"/>
+      <stop offset="40%" stop-color="#ede9fe"/>
+      <stop offset="100%" stop-color="#ddd6fe"/>
     </linearGradient>
     <radialGradient id="glow-forgery" cx="50%" cy="50%" r="40%">
-      <stop offset="0%" stop-color="#dc2626" stop-opacity="0.2"/>
-      <stop offset="40%" stop-color="#991b1b" stop-opacity="0.08"/>
+      <stop offset="0%" stop-color="#dc2626" stop-opacity="0.12"/>
+      <stop offset="40%" stop-color="#991b1b" stop-opacity="0.06"/>
       <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="crack-glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.15"/>
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.2"/>
       <stop offset="100%" stop-color="#ef4444" stop-opacity="0"/>
     </radialGradient>
     <pattern id="grid-forgery" width="50" height="50" patternUnits="userSpaceOnUse">
-      <line x1="50" y1="0" x2="50" y2="50" stroke="#dc2626" stroke-width="0.2" opacity="0.06"/>
-      <line x1="0" y1="50" x2="50" y2="50" stroke="#dc2626" stroke-width="0.2" opacity="0.06"/>
+      <line x1="50" y1="0" x2="50" y2="50" stroke="#dc2626" stroke-width="0.2" opacity="0.15"/>
+      <line x1="0" y1="50" x2="50" y2="50" stroke="#dc2626" stroke-width="0.2" opacity="0.15"/>
     </pattern>
   </defs>
   <rect width="1200" height="630" fill="url(#bg-forgery)"/>
   <circle cx="600" cy="315" r="250" fill="url(#glow-forgery)"/>
   <!-- Radiating crack lines from center -->
   <g stroke="#dc2626" stroke-linecap="round">
-    <line x1="600" y1="315" x2="250" y2="80" stroke-width="1.5" opacity="0.3"/>
-    <line x1="600" y1="315" x2="120" y2="315" stroke-width="1.2" opacity="0.25"/>
-    <line x1="600" y1="315" x2="280" y2="560" stroke-width="1" opacity="0.2"/>
-    <line x1="600" y1="315" x2="480" y2="50" stroke-width="1.2" opacity="0.25"/>
-    <line x1="600" y1="315" x2="950" y2="80" stroke-width="1.5" opacity="0.3"/>
-    <line x1="600" y1="315" x2="1080" y2="315" stroke-width="1.2" opacity="0.25"/>
-    <line x1="600" y1="315" x2="920" y2="570" stroke-width="1" opacity="0.2"/>
-    <line x1="600" y1="315" x2="720" y2="50" stroke-width="1.2" opacity="0.25"/>
-    <line x1="600" y1="315" x2="350" y2="580" stroke-width="0.8" opacity="0.18"/>
-    <line x1="600" y1="315" x2="850" y2="590" stroke-width="0.8" opacity="0.18"/>
-    <line x1="600" y1="315" x2="150" y2="180" stroke-width="0.8" opacity="0.15"/>
-    <line x1="600" y1="315" x2="1050" y2="180" stroke-width="0.8" opacity="0.15"/>
+    <line x1="600" y1="315" x2="250" y2="80" stroke-width="1.5" opacity="0.5"/>
+    <line x1="600" y1="315" x2="120" y2="315" stroke-width="1.2" opacity="0.45"/>
+    <line x1="600" y1="315" x2="280" y2="560" stroke-width="1" opacity="0.4"/>
+    <line x1="600" y1="315" x2="480" y2="50" stroke-width="1.2" opacity="0.45"/>
+    <line x1="600" y1="315" x2="950" y2="80" stroke-width="1.5" opacity="0.5"/>
+    <line x1="600" y1="315" x2="1080" y2="315" stroke-width="1.2" opacity="0.45"/>
+    <line x1="600" y1="315" x2="920" y2="570" stroke-width="1" opacity="0.4"/>
+    <line x1="600" y1="315" x2="720" y2="50" stroke-width="1.2" opacity="0.45"/>
+    <line x1="600" y1="315" x2="350" y2="580" stroke-width="0.8" opacity="0.35"/>
+    <line x1="600" y1="315" x2="850" y2="590" stroke-width="0.8" opacity="0.35"/>
+    <line x1="600" y1="315" x2="150" y2="180" stroke-width="0.8" opacity="0.3"/>
+    <line x1="600" y1="315" x2="1050" y2="180" stroke-width="0.8" opacity="0.3"/>
   </g>
   <!-- Secondary crack branches -->
-  <g stroke="#ef4444" stroke-linecap="round" opacity="0.15">
+  <g stroke="#ef4444" stroke-linecap="round" opacity="0.4">
     <line x1="400" y1="180" x2="350" y2="120" stroke-width="0.8"/>
     <line x1="400" y1="180" x2="320" y2="200" stroke-width="0.6"/>
     <line x1="800" y1="180" x2="850" y2="120" stroke-width="0.8"/>
@@ -47,10 +47,10 @@
   </g>
   <!-- Center impact point -->
   <circle cx="600" cy="315" r="50" fill="url(#crack-glow)"/>
-  <circle cx="600" cy="315" r="20" fill="#dc2626" opacity="0.08"/>
-  <circle cx="600" cy="315" r="8" fill="#ef4444" opacity="0.15"/>
+  <circle cx="600" cy="315" r="20" fill="#dc2626" opacity="0.15"/>
+  <circle cx="600" cy="315" r="8" fill="#ef4444" opacity="0.3"/>
   <!-- Fragmented shapes floating -->
-  <g opacity="0.2">
+  <g opacity="0.5">
     <polygon points="350,120 380,100 390,140" fill="#7c3aed" opacity="0.3" transform="rotate(-10,370,120)"/>
     <polygon points="830,110 860,90 870,130" fill="#dc2626" opacity="0.25" transform="rotate(8,850,110)"/>
     <polygon points="200,350 240,340 230,380" fill="#a78bfa" opacity="0.2" transform="rotate(-5,220,360)"/>
@@ -59,9 +59,9 @@
     <polygon points="720,520 750,500 760,540" fill="#ef4444" opacity="0.15"/>
   </g>
   <!-- Pulsing rings at impact -->
-  <circle cx="600" cy="315" r="80" fill="none" stroke="#dc2626" stroke-width="0.5" opacity="0.15"/>
-  <circle cx="600" cy="315" r="120" fill="none" stroke="#dc2626" stroke-width="0.4" opacity="0.1"/>
-  <circle cx="600" cy="315" r="160" fill="none" stroke="#dc2626" stroke-width="0.3" opacity="0.07"/>
+  <circle cx="600" cy="315" r="80" fill="none" stroke="#dc2626" stroke-width="0.5" opacity="0.35"/>
+  <circle cx="600" cy="315" r="120" fill="none" stroke="#dc2626" stroke-width="0.4" opacity="0.25"/>
+  <circle cx="600" cy="315" r="160" fill="none" stroke="#dc2626" stroke-width="0.3" opacity="0.18"/>
   <!-- Grid overlay -->
   <rect width="1200" height="630" fill="url(#grid-forgery)"/>
 </svg>

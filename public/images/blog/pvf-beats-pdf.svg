@@ -1,19 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg-left" x1="0" y1="0" x2="0.5" y2="1">
-      <stop offset="0%" stop-color="#1a0a12"/>
-      <stop offset="100%" stop-color="#1e0e1a"/>
+      <stop offset="0%" stop-color="#fef2f2"/>
+      <stop offset="100%" stop-color="#fee2e2"/>
     </linearGradient>
     <linearGradient id="bg-right" x1="0.5" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0f0a2e"/>
-      <stop offset="100%" stop-color="#1e1b3a"/>
+      <stop offset="0%" stop-color="#ede9fe"/>
+      <stop offset="100%" stop-color="#ddd6fe"/>
     </linearGradient>
     <radialGradient id="glow-left" cx="30%" cy="50%" r="30%">
-      <stop offset="0%" stop-color="#dc2626" stop-opacity="0.15"/>
+      <stop offset="0%" stop-color="#dc2626" stop-opacity="0.1"/>
       <stop offset="100%" stop-color="#dc2626" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="glow-right" cx="70%" cy="50%" r="30%">
-      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.25"/>
+      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.15"/>
       <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="divider-grad" x1="0" y1="0" x2="0" y2="1">
@@ -23,8 +23,8 @@
       <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
     </linearGradient>
     <pattern id="grid-pvf" width="50" height="50" patternUnits="userSpaceOnUse">
-      <line x1="50" y1="0" x2="50" y2="50" stroke="#7c3aed" stroke-width="0.2" opacity="0.08"/>
-      <line x1="0" y1="50" x2="50" y2="50" stroke="#7c3aed" stroke-width="0.2" opacity="0.08"/>
+      <line x1="50" y1="0" x2="50" y2="50" stroke="#7c3aed" stroke-width="0.2" opacity="0.2"/>
+      <line x1="0" y1="50" x2="50" y2="50" stroke="#7c3aed" stroke-width="0.2" opacity="0.2"/>
     </pattern>
   </defs>
   <!-- Split background -->
@@ -38,20 +38,20 @@
   <!-- LEFT SIDE: Broken/Red (PDF) -->
   <g transform="translate(300,315)">
     <!-- Broken document -->
-    <rect x="-70" y="-110" width="140" height="200" rx="6" fill="none" stroke="#dc2626" stroke-width="1" opacity="0.3"/>
+    <rect x="-70" y="-110" width="140" height="200" rx="6" fill="none" stroke="#dc2626" stroke-width="1" opacity="0.5"/>
     <!-- Crack through it -->
-    <path d="M-70 -20 L-30 -40 L10 0 L50 -30 L70 -10" fill="none" stroke="#dc2626" stroke-width="1.5" opacity="0.4"/>
-    <path d="M-40 40 L0 20 L40 50" fill="none" stroke="#dc2626" stroke-width="0.8" opacity="0.3"/>
+    <path d="M-70 -20 L-30 -40 L10 0 L50 -30 L70 -10" fill="none" stroke="#dc2626" stroke-width="1.5" opacity="0.6"/>
+    <path d="M-40 40 L0 20 L40 50" fill="none" stroke="#dc2626" stroke-width="0.8" opacity="0.5"/>
     <!-- Document lines (faded) -->
-    <line x1="-45" y1="-80" x2="45" y2="-80" stroke="#dc2626" stroke-width="0.5" opacity="0.15"/>
-    <line x1="-45" y1="-65" x2="30" y2="-65" stroke="#dc2626" stroke-width="0.4" opacity="0.1"/>
-    <line x1="-45" y1="-50" x2="35" y2="-50" stroke="#dc2626" stroke-width="0.4" opacity="0.1"/>
+    <line x1="-45" y1="-80" x2="45" y2="-80" stroke="#dc2626" stroke-width="0.5" opacity="0.35"/>
+    <line x1="-45" y1="-65" x2="30" y2="-65" stroke="#dc2626" stroke-width="0.4" opacity="0.3"/>
+    <line x1="-45" y1="-50" x2="35" y2="-50" stroke="#dc2626" stroke-width="0.4" opacity="0.3"/>
     <!-- X mark -->
-    <line x1="-15" y1="-15" x2="15" y2="15" stroke="#dc2626" stroke-width="2" opacity="0.4"/>
-    <line x1="15" y1="-15" x2="-15" y2="15" stroke="#dc2626" stroke-width="2" opacity="0.4"/>
+    <line x1="-15" y1="-15" x2="15" y2="15" stroke="#dc2626" stroke-width="2" opacity="0.6"/>
+    <line x1="15" y1="-15" x2="-15" y2="15" stroke="#dc2626" stroke-width="2" opacity="0.6"/>
     <!-- Broken chain link -->
-    <circle cx="-30" cy="80" r="10" fill="none" stroke="#dc2626" stroke-width="1" opacity="0.2"/>
-    <circle cx="30" cy="80" r="10" fill="none" stroke="#dc2626" stroke-width="1" opacity="0.2" stroke-dasharray="3,3"/>
+    <circle cx="-30" cy="80" r="10" fill="none" stroke="#dc2626" stroke-width="1" opacity="0.4"/>
+    <circle cx="30" cy="80" r="10" fill="none" stroke="#dc2626" stroke-width="1" opacity="0.4" stroke-dasharray="3,3"/>
   </g>
   <!-- Scattered red particles on left -->
   <circle cx="150" cy="150" r="2" fill="#dc2626" opacity="0.2"/>
@@ -61,13 +61,13 @@
   <!-- RIGHT SIDE: Protected/Purple (PVF) -->
   <g transform="translate(900,315)">
     <!-- Shield shape -->
-    <path d="M0 -100 L80 -60 L80 30 L0 90 L-80 30 L-80 -60 Z" fill="#7c3aed" opacity="0.06" stroke="#a78bfa" stroke-width="1.2" opacity="0.35"/>
+    <path d="M0 -100 L80 -60 L80 30 L0 90 L-80 30 L-80 -60 Z" fill="#7c3aed" opacity="0.1" stroke="#7c3aed" stroke-width="1.2" opacity="0.6"/>
     <!-- Inner shield -->
-    <path d="M0 -65 L50 -38 L50 18 L0 55 L-50 18 L-50 -38 Z" fill="#7c3aed" opacity="0.08" stroke="#c4b5fd" stroke-width="0.8" opacity="0.25"/>
+    <path d="M0 -65 L50 -38 L50 18 L0 55 L-50 18 L-50 -38 Z" fill="#7c3aed" opacity="0.12" stroke="#7c3aed" stroke-width="0.8" opacity="0.5"/>
     <!-- Checkmark inside -->
-    <path d="M-15 0 L-5 12 L20 -15" fill="none" stroke="#a78bfa" stroke-width="2.5" opacity="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M-15 0 L-5 12 L20 -15" fill="none" stroke="#7c3aed" stroke-width="2.5" opacity="0.7" stroke-linecap="round" stroke-linejoin="round"/>
     <!-- Shield glow -->
-    <circle r="40" fill="#7c3aed" opacity="0.08"/>
+    <circle r="40" fill="#7c3aed" opacity="0.12"/>
     <!-- Orbiting dots -->
     <circle cx="0" cy="-80" r="3" fill="#c4b5fd" opacity="0.4"/>
     <circle cx="70" cy="-20" r="2.5" fill="#a78bfa" opacity="0.35"/>
@@ -81,8 +81,8 @@
   <circle cx="780" cy="500" r="2" fill="#7c3aed" opacity="0.2"/>
   <circle cx="1080" cy="480" r="1.5" fill="#a78bfa" opacity="0.2"/>
   <!-- Connecting rings on right side -->
-  <circle cx="900" cy="315" r="130" fill="none" stroke="#7c3aed" stroke-width="0.5" opacity="0.12"/>
-  <circle cx="900" cy="315" r="160" fill="none" stroke="#5b21b6" stroke-width="0.3" opacity="0.08"/>
+  <circle cx="900" cy="315" r="130" fill="none" stroke="#7c3aed" stroke-width="0.5" opacity="0.3"/>
+  <circle cx="900" cy="315" r="160" fill="none" stroke="#5b21b6" stroke-width="0.3" opacity="0.2"/>
   <!-- Grid overlay -->
   <rect width="1200" height="630" fill="url(#grid-pvf)"/>
 </svg>

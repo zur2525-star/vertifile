@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg-pdffail" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0f0a1e"/>
-      <stop offset="60%" stop-color="#1e1040"/>
-      <stop offset="100%" stop-color="#1a0e28"/>
+      <stop offset="0%" stop-color="#ede9fe"/>
+      <stop offset="60%" stop-color="#ddd6fe"/>
+      <stop offset="100%" stop-color="#f5f3ff"/>
     </linearGradient>
     <radialGradient id="glow-pdffail" cx="50%" cy="45%" r="35%">
-      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.2"/>
+      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.15"/>
       <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="crack-line" x1="0" y1="0" x2="1" y2="0">
@@ -15,7 +15,7 @@
       <stop offset="100%" stop-color="#dc2626" stop-opacity="0"/>
     </linearGradient>
     <pattern id="dots-pdffail" width="28" height="28" patternUnits="userSpaceOnUse">
-      <circle cx="14" cy="14" r="0.7" fill="#7c3aed" opacity="0.1"/>
+      <circle cx="14" cy="14" r="0.7" fill="#7c3aed" opacity="0.2"/>
     </pattern>
   </defs>
   <rect width="1200" height="630" fill="url(#bg-pdffail)"/>
@@ -23,29 +23,29 @@
   <!-- Large document shape with cracks -->
   <g transform="translate(600,310)">
     <!-- Document body -->
-    <rect x="-100" y="-150" width="200" height="280" rx="8" fill="none" stroke="#a78bfa" stroke-width="1.2" opacity="0.3"/>
+    <rect x="-100" y="-150" width="200" height="280" rx="8" fill="none" stroke="#7c3aed" stroke-width="1.2" opacity="0.5"/>
     <!-- Document header bar -->
-    <rect x="-100" y="-150" width="200" height="35" rx="8" fill="#7c3aed" opacity="0.08"/>
-    <text x="-70" y="-126" font-family="monospace" font-size="14" fill="#a78bfa" opacity="0.35">PDF</text>
+    <rect x="-100" y="-150" width="200" height="35" rx="8" fill="#7c3aed" opacity="0.15"/>
+    <text x="-70" y="-126" font-family="monospace" font-size="14" fill="#7c3aed" opacity="0.6">PDF</text>
     <!-- Document lines -->
-    <line x1="-70" y1="-90" x2="70" y2="-90" stroke="#a78bfa" stroke-width="0.7" opacity="0.15"/>
-    <line x1="-70" y1="-70" x2="50" y2="-70" stroke="#a78bfa" stroke-width="0.5" opacity="0.12"/>
-    <line x1="-70" y1="-50" x2="60" y2="-50" stroke="#a78bfa" stroke-width="0.5" opacity="0.12"/>
-    <line x1="-70" y1="-20" x2="70" y2="-20" stroke="#a78bfa" stroke-width="0.7" opacity="0.15"/>
-    <line x1="-70" y1="0" x2="40" y2="0" stroke="#a78bfa" stroke-width="0.5" opacity="0.12"/>
-    <line x1="-70" y1="20" x2="55" y2="20" stroke="#a78bfa" stroke-width="0.5" opacity="0.12"/>
-    <line x1="-70" y1="50" x2="70" y2="50" stroke="#a78bfa" stroke-width="0.7" opacity="0.15"/>
-    <line x1="-70" y1="70" x2="45" y2="70" stroke="#a78bfa" stroke-width="0.5" opacity="0.12"/>
+    <line x1="-70" y1="-90" x2="70" y2="-90" stroke="#7c3aed" stroke-width="0.7" opacity="0.3"/>
+    <line x1="-70" y1="-70" x2="50" y2="-70" stroke="#7c3aed" stroke-width="0.5" opacity="0.25"/>
+    <line x1="-70" y1="-50" x2="60" y2="-50" stroke="#7c3aed" stroke-width="0.5" opacity="0.25"/>
+    <line x1="-70" y1="-20" x2="70" y2="-20" stroke="#7c3aed" stroke-width="0.7" opacity="0.3"/>
+    <line x1="-70" y1="0" x2="40" y2="0" stroke="#7c3aed" stroke-width="0.5" opacity="0.25"/>
+    <line x1="-70" y1="20" x2="55" y2="20" stroke="#7c3aed" stroke-width="0.5" opacity="0.25"/>
+    <line x1="-70" y1="50" x2="70" y2="50" stroke="#7c3aed" stroke-width="0.7" opacity="0.3"/>
+    <line x1="-70" y1="70" x2="45" y2="70" stroke="#7c3aed" stroke-width="0.5" opacity="0.25"/>
     <!-- Major crack through document -->
-    <path d="M-100 -40 L-50 -20 L-30 -50 L20 -10 L50 -40 L80 0 L100 -20" fill="none" stroke="#dc2626" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+    <path d="M-100 -40 L-50 -20 L-30 -50 L20 -10 L50 -40 L80 0 L100 -20" fill="none" stroke="#dc2626" stroke-width="1.5" opacity="0.6" stroke-linecap="round"/>
     <!-- Secondary cracks -->
-    <path d="M-60 60 L-20 80 L30 50 L80 70" fill="none" stroke="#dc2626" stroke-width="0.8" opacity="0.3" stroke-linecap="round"/>
+    <path d="M-60 60 L-20 80 L30 50 L80 70" fill="none" stroke="#dc2626" stroke-width="0.8" opacity="0.5" stroke-linecap="round"/>
     <!-- Signature area at bottom (broken) -->
-    <rect x="-80" y="90" width="160" height="30" rx="4" fill="none" stroke="#dc2626" stroke-width="0.8" opacity="0.2" stroke-dasharray="4,3"/>
-    <path d="M-60 105 C-40 95,-20 115,0 105" fill="none" stroke="#a78bfa" stroke-width="1" opacity="0.2"/>
+    <rect x="-80" y="90" width="160" height="30" rx="4" fill="none" stroke="#dc2626" stroke-width="0.8" opacity="0.4" stroke-dasharray="4,3"/>
+    <path d="M-60 105 C-40 95,-20 115,0 105" fill="none" stroke="#7c3aed" stroke-width="1" opacity="0.4"/>
     <!-- X over signature -->
-    <line x1="-30" y1="95" x2="30" y2="115" stroke="#dc2626" stroke-width="1.2" opacity="0.35"/>
-    <line x1="30" y1="95" x2="-30" y2="115" stroke="#dc2626" stroke-width="1.2" opacity="0.35"/>
+    <line x1="-30" y1="95" x2="30" y2="115" stroke="#dc2626" stroke-width="1.2" opacity="0.5"/>
+    <line x1="30" y1="95" x2="-30" y2="115" stroke="#dc2626" stroke-width="1.2" opacity="0.5"/>
   </g>
   <!-- Red accent lines extending from cracks -->
   <line x1="300" y1="270" x2="500" y2="290" stroke="url(#crack-line)" stroke-width="1"/>
@@ -53,7 +53,7 @@
   <line x1="350" y1="370" x2="500" y2="360" stroke="url(#crack-line)" stroke-width="0.8"/>
   <line x1="700" y1="360" x2="850" y2="370" stroke="url(#crack-line)" stroke-width="0.8"/>
   <!-- Floating broken pieces -->
-  <g opacity="0.15">
+  <g opacity="0.4">
     <rect x="250" y="180" width="40" height="50" rx="4" fill="none" stroke="#a78bfa" stroke-width="0.8" transform="rotate(-15,270,205)"/>
     <rect x="910" y="200" width="35" height="45" rx="4" fill="none" stroke="#a78bfa" stroke-width="0.8" transform="rotate(12,928,222)"/>
     <rect x="300" y="420" width="30" height="40" rx="3" fill="none" stroke="#7c3aed" stroke-width="0.6" transform="rotate(-8,315,440)"/>
