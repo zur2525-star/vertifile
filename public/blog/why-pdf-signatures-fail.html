@@ -10,14 +10,14 @@
   <meta property="og:description" content="PDF digital signatures verify who signed a document, not whether it was changed after. Learn how tamper-proof .pvf files solve document fraud for good.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://vertifile.com/blog/why-pdf-signatures-fail">
-  <meta property="og:image" content="https://vertifile.com/images/blog/pdf-signatures-fail.png">
+  <meta property="og:image" content="https://vertifile.com/images/blog/pdf-signatures-fail.svg">
   <meta property="article:published_time" content="2026-04-01">
   <meta property="article:author" content="Zur Halfon">
   <link rel="canonical" href="https://vertifile.com/blog/why-pdf-signatures-fail">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Why PDF Signatures Are Not Enough — And What Comes Next">
   <meta name="twitter:description" content="PDF digital signatures verify who signed a document, not whether it was changed after. Learn how tamper-proof .pvf files solve document fraud for good.">
-  <meta name="twitter:image" content="https://vertifile.com/images/blog/pdf-signatures-fail.png">
+  <meta name="twitter:image" content="https://vertifile.com/images/blog/pdf-signatures-fail.svg">
   <meta name="theme-color" content="#0f0e17">
   <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
 
@@ -77,7 +77,7 @@
     @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
 
     /* ===== ARTICLE ===== */
-    .article-hero{padding:130px 32px 60px;position:relative;overflow:hidden;text-align:center;background-image:url('/images/blog/pdf-signatures-fail.png');background-size:cover;background-position:center}
+    .article-hero{padding:130px 32px 60px;position:relative;overflow:hidden;text-align:center;background-image:url('/images/blog/pdf-signatures-fail.svg');background-size:cover;background-position:center}
     .article-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(15,14,23,.75) 0%,rgba(15,14,23,.85) 100%)}
     .article-hero-inner{position:relative;z-index:1;max-width:720px;margin:0 auto}
     .article-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,.12);color:#a78bfa;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:20px;border:1px solid rgba(124,58,237,.15)}
@@ -217,26 +217,26 @@
 <nav style="max-width:1200px;margin:0 auto;padding:80px 32px 0;font-size:13px;color:#8b89a6">
   <a href="/" style="color:#7c3aed;text-decoration:none" data-i18n="blog.breadcrumbHome">Home</a> /
   <a href="/blog" style="color:#7c3aed;text-decoration:none" data-i18n="blog.breadcrumbBlog">Blog</a> /
-  <span>Why PDF Signatures Fail</span>
+  <span data-i18n="blog.post.pdffail.breadcrumb">Why PDF Signatures Fail</span>
 </nav>
 
 <!-- ===== ARTICLE HERO ===== -->
 <div class="article-hero">
   <div class="article-hero-inner">
     <span class="article-tag" data-i18n="blog.tag.security">Document Security</span>
-    <h1>Why PDF Signatures Are Not Enough &mdash; And What Comes Next</h1>
+    <h1 data-i18n="blog.post.pdffail.title">Why PDF Signatures Are Not Enough &mdash; And What Comes Next</h1>
     <div class="article-meta">
       <div class="article-author">
         <div class="article-avatar">ZH</div>
         <div class="article-author-info">
-          <span class="article-author-name">Zur Halfon</span>
-          <span class="article-author-role">Founder, Vertifile</span>
+          <span class="article-author-name" data-i18n="blog.post.pdffail.author">Zur Halfon</span>
+          <span class="article-author-role" data-i18n="blog.post.pdffail.authorRole">Founder, Vertifile</span>
         </div>
       </div>
       <span class="meta-sep"></span>
-      <span class="article-date">Apr 1, 2026</span>
+      <span class="article-date" data-i18n="blog.post.pdffail.date">Apr 1, 2026</span>
       <span class="meta-sep"></span>
-      <span class="article-readtime">5 min read</span>
+      <span class="article-readtime" data-i18n="blog.post.pdffail.readTime">5 min read</span>
     </div>
     <div class="article-divider"></div>
   </div>
@@ -249,7 +249,7 @@
 
   <p>But here is the uncomfortable truth: <strong>digital signatures on PDFs only prove who signed the document. They do not prove that the content you are reading is what was originally signed.</strong></p>
 
-  <h2>The Signing vs. Verification Gap</h2>
+  <h2 data-i18n="blog.post.pdffail.h2.gap">The Signing vs. Verification Gap</h2>
 
   <p>When you digitally sign a PDF, the signature is cryptographically tied to the document at the moment of signing. In theory, any modification after signing should invalidate the signature. In practice, the story is far more complicated.</p>
 
@@ -257,7 +257,7 @@
 
   <p>What does this mean in the real world? It means a signed contract could be altered after signing and still show a green checkmark in Adobe Reader. It means a university transcript could be modified by a bad actor while retaining a valid institutional signature.</p>
 
-  <h2>Why Existing PDF Security Falls Short</h2>
+  <h2 data-i18n="blog.post.pdffail.h2.short">Why Existing PDF Security Falls Short</h2>
 
   <p>The core problem is architectural. PDF is a container format designed for visual fidelity, not for tamper-proof verification. Consider the challenges:</p>
 
@@ -268,7 +268,7 @@
     <li><strong>Certificate complexity</strong> &mdash; Certificate chains, revocation lists, and trust stores add layers of confusion that most end users cannot evaluate.</li>
   </ul>
 
-  <h2>What Tamper-Proof Actually Means</h2>
+  <h2 data-i18n="blog.post.pdffail.h2.tamperproof">What Tamper-Proof Actually Means</h2>
 
   <p>True document integrity requires a fundamentally different approach. Instead of asking "who signed this?" the question should be "is this document identical to the original that was issued?"</p>
 
@@ -279,7 +279,7 @@
 
   <p>This is not a layer on top of PDF. It is a new paradigm. The document itself carries its own proof of integrity, and that proof is verified every time the document is opened &mdash; not once at the time of signing.</p>
 
-  <h2>From Signing to Verifying: The Shift Ahead</h2>
+  <h2 data-i18n="blog.post.pdffail.h2.shift">From Signing to Verifying: The Shift Ahead</h2>
 
   <p>The industry is beginning to recognize that signing and verifying are two fundamentally different problems. E-signature platforms like DocuSign, Adobe Sign, and HelloSign solved the problem of remote agreement. But they left a gap: they prove consent, not content integrity.</p>
 

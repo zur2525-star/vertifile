@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg-fraud" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#1a0a1e"/>
+      <stop offset="50%" stop-color="#2d1035"/>
+      <stop offset="100%" stop-color="#1e0a1a"/>
+    </linearGradient>
+    <radialGradient id="glow-fraud" cx="50%" cy="45%" r="35%">
+      <stop offset="0%" stop-color="#dc2626" stop-opacity="0.25"/>
+      <stop offset="60%" stop-color="#7c3aed" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="warn-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots-fraud" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="15" cy="15" r="0.8" fill="#7c3aed" opacity="0.12"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg-fraud)"/>
+  <circle cx="600" cy="290" r="220" fill="url(#glow-fraud)"/>
+  <!-- Shattered document shape -->
+  <g opacity="0.4">
+    <!-- Main document fragment -->
+    <path d="M520 180 L680 180 L680 450 L520 450 Z" fill="none" stroke="#7c3aed" stroke-width="1" opacity="0.3"/>
+    <!-- Crack lines through document -->
+    <line x1="520" y1="280" x2="680" y2="320" stroke="#dc2626" stroke-width="1.2" opacity="0.5"/>
+    <line x1="560" y1="180" x2="620" y2="450" stroke="#dc2626" stroke-width="0.8" opacity="0.4"/>
+    <line x1="520" y1="350" x2="680" y2="250" stroke="#dc2626" stroke-width="0.6" opacity="0.35"/>
+    <!-- Shattered pieces floating away -->
+    <path d="M520 280 L560 180 L620 280 Z" fill="#7c3aed" opacity="0.08" transform="translate(-30,-20) rotate(-8,560,230)"/>
+    <path d="M620 280 L680 180 L680 320 Z" fill="#7c3aed" opacity="0.06" transform="translate(25,-15) rotate(5,650,250)"/>
+    <path d="M520 350 L560 450 L520 450 Z" fill="#7c3aed" opacity="0.07" transform="translate(-20,15) rotate(-5,540,400)"/>
+    <path d="M620 350 L680 450 L680 350 Z" fill="#dc2626" opacity="0.05" transform="translate(20,10) rotate(3,650,400)"/>
+  </g>
+  <!-- Warning triangle -->
+  <g transform="translate(600,300)">
+    <circle r="50" fill="url(#warn-glow)"/>
+    <path d="M0 -35 L30 20 L-30 20 Z" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity="0.5"/>
+    <line x1="0" y1="-15" x2="0" y2="5" stroke="#f59e0b" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+    <circle cx="0" cy="12" r="2" fill="#f59e0b" opacity="0.5"/>
+  </g>
+  <!-- Dollar signs floating -->
+  <text x="180" y="200" font-family="monospace" font-size="24" fill="#dc2626" opacity="0.15" transform="rotate(-15,180,200)">$</text>
+  <text x="950" y="180" font-family="monospace" font-size="20" fill="#dc2626" opacity="0.12" transform="rotate(10,950,180)">$</text>
+  <text x="280" y="480" font-family="monospace" font-size="18" fill="#dc2626" opacity="0.1" transform="rotate(-8,280,480)">$</text>
+  <text x="880" y="470" font-family="monospace" font-size="22" fill="#dc2626" opacity="0.13" transform="rotate(12,880,470)">$</text>
+  <!-- Radiating crack lines from center -->
+  <line x1="600" y1="300" x2="300" y2="100" stroke="#dc2626" stroke-width="0.5" opacity="0.15"/>
+  <line x1="600" y1="300" x2="900" y2="120" stroke="#dc2626" stroke-width="0.5" opacity="0.12"/>
+  <line x1="600" y1="300" x2="250" y2="530" stroke="#dc2626" stroke-width="0.4" opacity="0.1"/>
+  <line x1="600" y1="300" x2="950" y2="500" stroke="#dc2626" stroke-width="0.4" opacity="0.1"/>
+  <!-- Accent dots -->
+  <circle cx="350" cy="150" r="2" fill="#f59e0b" opacity="0.3"/>
+  <circle cx="850" cy="180" r="1.5" fill="#dc2626" opacity="0.25"/>
+  <circle cx="200" cy="400" r="2" fill="#a78bfa" opacity="0.2"/>
+  <circle cx="1000" cy="350" r="1.5" fill="#7c3aed" opacity="0.2"/>
+  <!-- Dot pattern overlay -->
+  <rect width="1200" height="630" fill="url(#dots-fraud)"/>
+</svg>

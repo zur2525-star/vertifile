@@ -10,14 +10,14 @@
   <meta property="og:description" content="Digital signatures prove who signed a document — but not whether it was altered after. Signing and verifying are two different problems.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://vertifile.com/blog/why-digital-signatures-arent-enough">
-  <meta property="og:image" content="https://vertifile.com/images/blog/digital-signatures.png">
+  <meta property="og:image" content="https://vertifile.com/images/blog/digital-signatures.svg">
   <meta property="article:published_time" content="2026-03-25">
   <meta property="article:author" content="Zur Halfon">
   <link rel="canonical" href="https://vertifile.com/blog/why-digital-signatures-arent-enough">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Why Digital Signatures Aren't Enough">
   <meta name="twitter:description" content="Digital signatures prove who signed — but not whether the document was altered after. Signing and verifying are different problems.">
-  <meta name="twitter:image" content="https://vertifile.com/images/blog/digital-signatures.png">
+  <meta name="twitter:image" content="https://vertifile.com/images/blog/digital-signatures.svg">
   <meta name="theme-color" content="#0f0e17">
   <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
 
@@ -72,7 +72,7 @@
     .mobile-menu a{font-size:15px;color:rgba(196,181,253,.7);text-decoration:none;padding:8px 0}
     .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(124,58,237,.1)}
     @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
-    .article-hero{padding:130px 32px 60px;position:relative;overflow:hidden;text-align:center;background-image:url('/images/blog/digital-signatures.png');background-size:cover;background-position:center}
+    .article-hero{padding:130px 32px 60px;position:relative;overflow:hidden;text-align:center;background-image:url('/images/blog/digital-signatures.svg');background-size:cover;background-position:center}
     .article-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(15,14,23,.75) 0%,rgba(15,14,23,.85) 100%)}
     .article-hero-inner{position:relative;z-index:1;max-width:720px;margin:0 auto}
     .article-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,.12);color:#a78bfa;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:20px;border:1px solid rgba(124,58,237,.15)}
@@ -204,25 +204,25 @@
 <nav style="max-width:1200px;margin:0 auto;padding:80px 32px 0;font-size:13px;color:#8b89a6">
   <a href="/" style="color:#7c3aed;text-decoration:none" data-i18n="blog.breadcrumbHome">Home</a> /
   <a href="/blog" style="color:#7c3aed;text-decoration:none" data-i18n="blog.breadcrumbBlog">Blog</a> /
-  <span>Digital Signatures</span>
+  <span data-i18n="blog.post.digsig.breadcrumb">Digital Signatures</span>
 </nav>
 
 <div class="article-hero">
   <div class="article-hero-inner">
     <span class="article-tag" data-i18n="blog.tag.security">Document Security</span>
-    <h1>Why Digital Signatures Aren&rsquo;t Enough</h1>
+    <h1 data-i18n="blog.post.digsig.title">Why Digital Signatures Aren&rsquo;t Enough</h1>
     <div class="article-meta">
       <div class="article-author">
         <div class="article-avatar">ZH</div>
         <div class="article-author-info">
-          <span class="article-author-name">Zur Halfon</span>
-          <span class="article-author-role">Founder, Vertifile</span>
+          <span class="article-author-name" data-i18n="blog.post.digsig.author">Zur Halfon</span>
+          <span class="article-author-role" data-i18n="blog.post.digsig.authorRole">Founder, Vertifile</span>
         </div>
       </div>
       <span class="meta-sep"></span>
-      <span class="article-date">Mar 25, 2026</span>
+      <span class="article-date" data-i18n="blog.post.digsig.date">Mar 25, 2026</span>
       <span class="meta-sep"></span>
-      <span class="article-readtime">5 min read</span>
+      <span class="article-readtime" data-i18n="blog.post.digsig.readTime">5 min read</span>
     </div>
     <div class="article-divider"></div>
   </div>
@@ -234,7 +234,7 @@
 
   <p>But consent and integrity are not the same thing. <strong>A digital signature proves that someone agreed to a document at a specific moment. It does not prove that the document you are looking at right now is the same one they agreed to.</strong></p>
 
-  <h2>Signing vs. Verifying: Two Different Problems</h2>
+  <h2 data-i18n="blog.post.digsig.h2.signingVsVerifying">Signing vs. Verifying: Two Different Problems</h2>
 
   <p>This distinction is critical, and it is one that most organizations overlook. Let us break down what each process actually accomplishes:</p>
 
@@ -251,7 +251,7 @@
 
   <p>These are complementary but fundamentally different capabilities. An e-signature platform excels at the first. It was never designed for the second.</p>
 
-  <h2>The Gap in Practice</h2>
+  <h2 data-i18n="blog.post.digsig.h2.gap">The Gap in Practice</h2>
 
   <p>Consider a real-world scenario. A university issues a diploma as a PDF and digitally signs it. The graduate receives the document and shares it with a potential employer. Here is what can go wrong:</p>
 
@@ -262,7 +262,7 @@
     <li><strong>Time degrades trust</strong> &mdash; Certificates expire. Certificate authorities are decommissioned. A perfectly valid signature today may show as invalid in five years, not because the document was altered, but because the infrastructure that supported it has changed.</li>
   </ol>
 
-  <h2>Why E-Signature Platforms Don't Solve Forgery</h2>
+  <h2 data-i18n="blog.post.digsig.h2.esign">Why E-Signature Platforms Don't Solve Forgery</h2>
 
   <p>E-signature companies solved a real problem: remote agreement. Before DocuSign and its competitors, getting signatures required printing, mailing, and scanning documents. The efficiency gain was enormous.</p>
 
@@ -284,7 +284,7 @@
     <li>Remaining valid as infrastructure changes over time</li>
   </ul>
 
-  <h2>What Verification Actually Requires</h2>
+  <h2 data-i18n="blog.post.digsig.h2.requires">What Verification Actually Requires</h2>
 
   <p>True document verification needs a different architecture. Rather than asking "who approved this document?" it needs to answer "has this document been changed since it was created?"</p>
 
@@ -293,7 +293,7 @@
     <p>Vertifile separates verification from signing entirely. When a document is protected, its cryptographic fingerprint is registered on an immutable ledger. The resulting .pvf file carries a live holographic stamp that verifies against this record every time the document is opened. No certificates to expire, no viewers to trust, no chain of custody to maintain. The document itself is the proof.</p>
   </div>
 
-  <h2>Signing and Verifying Can Coexist</h2>
+  <h2 data-i18n="blog.post.digsig.h2.coexist">Signing and Verifying Can Coexist</h2>
 
   <p>This is not an either-or proposition. Digital signatures and document verification solve different problems and can work together. A contract might be e-signed by all parties (proving consent) and then protected with Vertifile (proving the signed version has not been modified).</p>
 

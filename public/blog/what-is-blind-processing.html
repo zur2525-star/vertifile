@@ -10,14 +10,14 @@
   <meta property="og:description" content="Vertifile never sees your content. BLIND processing means documents are hashed and sealed locally — true privacy-first verification.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://vertifile.com/blog/what-is-blind-processing">
-  <meta property="og:image" content="https://vertifile.com/images/blog/blind-processing.png">
+  <meta property="og:image" content="https://vertifile.com/images/blog/blind-processing.svg">
   <meta property="article:published_time" content="2026-04-02">
   <meta property="article:author" content="Zur Halfon">
   <link rel="canonical" href="https://vertifile.com/blog/what-is-blind-processing">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="What Is BLIND Processing? How Vertifile Protects Your Privacy">
   <meta name="twitter:description" content="Vertifile never sees your content. BLIND processing hashes and seals documents locally — true privacy-first verification.">
-  <meta name="twitter:image" content="https://vertifile.com/images/blog/blind-processing.png">
+  <meta name="twitter:image" content="https://vertifile.com/images/blog/blind-processing.svg">
   <meta name="theme-color" content="#0f0e17">
   <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
 
@@ -73,7 +73,7 @@
     .mobile-menu a{font-size:15px;color:rgba(196,181,253,.7);text-decoration:none;padding:8px 0}
     .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(124,58,237,.1)}
     @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
-    .article-hero{padding:130px 32px 60px;position:relative;overflow:hidden;text-align:center;background-image:url('/images/blog/blind-processing.png');background-size:cover;background-position:center}
+    .article-hero{padding:130px 32px 60px;position:relative;overflow:hidden;text-align:center;background-image:url('/images/blog/blind-processing.svg');background-size:cover;background-position:center}
     .article-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(15,14,23,.75) 0%,rgba(15,14,23,.85) 100%)}
     .article-hero-inner{position:relative;z-index:1;max-width:720px;margin:0 auto}
     .article-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,.12);color:#a78bfa;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:20px;border:1px solid rgba(124,58,237,.15)}
@@ -204,25 +204,25 @@
 <nav style="max-width:1200px;margin:0 auto;padding:80px 32px 0;font-size:13px;color:#8b89a6">
   <a href="/" style="color:#7c3aed;text-decoration:none" data-i18n="blog.breadcrumbHome">Home</a> /
   <a href="/blog" style="color:#7c3aed;text-decoration:none" data-i18n="blog.breadcrumbBlog">Blog</a> /
-  <span>BLIND Processing</span>
+  <span data-i18n="blog.post.blind.breadcrumb">BLIND Processing</span>
 </nav>
 
 <div class="article-hero">
   <div class="article-hero-inner">
     <span class="article-tag" data-i18n="blog.tag.technology">Technology</span>
-    <h1>What Is BLIND Processing? How Vertifile Protects Your Privacy</h1>
+    <h1 data-i18n="blog.post.blind.titleFull">What Is BLIND Processing? How Vertifile Protects Your Privacy</h1>
     <div class="article-meta">
       <div class="article-author">
         <div class="article-avatar">ZH</div>
         <div class="article-author-info">
-          <span class="article-author-name">Zur Halfon</span>
-          <span class="article-author-role">Founder, Vertifile</span>
+          <span class="article-author-name" data-i18n="blog.post.blind.author">Zur Halfon</span>
+          <span class="article-author-role" data-i18n="blog.post.blind.authorRole">Founder, Vertifile</span>
         </div>
       </div>
       <span class="meta-sep"></span>
-      <span class="article-date">Apr 2, 2026</span>
+      <span class="article-date" data-i18n="blog.post.blind.date">Apr 2, 2026</span>
       <span class="meta-sep"></span>
-      <span class="article-readtime">4 min read</span>
+      <span class="article-readtime" data-i18n="blog.post.blind.readTime">4 min read</span>
     </div>
     <div class="article-divider"></div>
   </div>
@@ -234,7 +234,7 @@
 
   <p><strong>BLIND processing means Vertifile never sees, stores, or has access to the content of your documents.</strong> Not during verification, not after, not ever.</p>
 
-  <h2>How BLIND Processing Works</h2>
+  <h2 data-i18n="blog.post.blind.h2.how">How BLIND Processing Works</h2>
 
   <p>The name BLIND is not just a brand. It describes the technical architecture. Here is how it works, step by step:</p>
 
@@ -256,7 +256,7 @@
     </div>
   </div>
 
-  <h2>Why Zero-Knowledge Matters</h2>
+  <h2 data-i18n="blog.post.blind.h2.zk">Why Zero-Knowledge Matters</h2>
 
   <p>Traditional document verification platforms operate like a vault. You hand over your document, they verify it, and they give you a receipt. The problem is that the vault now holds a copy of everything &mdash; your medical records, your contracts, your credentials.</p>
 
@@ -268,7 +268,7 @@
     <li><strong>Regulatory risk</strong> &mdash; Storing documents creates GDPR, HIPAA, and other compliance obligations. Since Vertifile never processes personal data from document content, these risks are architecturally eliminated.</li>
   </ul>
 
-  <h2>The Math Behind the Privacy</h2>
+  <h2 data-i18n="blog.post.blind.h2.math">The Math Behind the Privacy</h2>
 
   <p>At the core of BLIND processing is the SHA-256 hash function. This algorithm takes any input &mdash; a one-page letter or a 500-page report &mdash; and produces a fixed 256-bit output. The critical properties are:</p>
 
@@ -283,7 +283,7 @@
     <p>If an attacker gained full access to every Vertifile server, they would find a database of cryptographic hashes. They would not find a single document, a single name, or a single piece of content. There is nothing to decrypt because nothing was ever encrypted &mdash; the data simply was never there.</p>
   </div>
 
-  <h2>Privacy by Architecture, Not by Policy</h2>
+  <h2 data-i18n="blog.post.blind.h2.architecture">Privacy by Architecture, Not by Policy</h2>
 
   <p>Many companies promise privacy through policies and encryption. Vertifile delivers privacy through architecture. There is no policy to violate because the system is physically incapable of accessing your content.</p>
 
