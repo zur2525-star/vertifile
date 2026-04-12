@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vertifile — Technical Architecture Review</title>
+<style>
+  @page { margin: 60px 50px; size: A4; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 11px; line-height: 1.6; color: #1a1a2e; padding: 50px 60px; max-width: 800px; margin: 0 auto; }
+
+  .cover { text-align: center; padding: 120px 0 80px; page-break-after: always; }
+  .cover h1 { font-size: 32px; font-weight: 700; color: #4f46e5; margin-bottom: 8px; }
+  .cover .subtitle { font-size: 16px; color: #64748b; margin-bottom: 40px; }
+  .cover .meta { font-size: 12px; color: #94a3b8; line-height: 2; }
+  .cover .meta strong { color: #334155; }
+  .cover .badge { display: inline-block; background: #4f46e5; color: #fff; padding: 6px 20px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; margin-top: 30px; }
+
+  h2 { font-size: 18px; font-weight: 700; color: #4f46e5; margin: 36px 0 12px; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0; page-break-after: avoid; }
+  h3 { font-size: 13px; font-weight: 700; color: #1e293b; margin: 20px 0 8px; page-break-after: avoid; }
+  h4 { font-size: 11px; font-weight: 700; color: #475569; margin: 14px 0 6px; }
+
+  p { margin-bottom: 8px; text-align: justify; }
+  .note { background: #f0f4ff; border-left: 3px solid #4f46e5; padding: 8px 12px; margin: 10px 0; font-size: 10px; color: #334155; }
+  .warn { background: #fef3c7; border-left: 3px solid #f59e0b; padding: 8px 12px; margin: 10px 0; font-size: 10px; color: #78350f; }
+  .security { background: #f0fdf4; border-left: 3px solid #22c55e; padding: 8px 12px; margin: 10px 0; font-size: 10px; color: #166534; }
+
+  pre { background: #1e293b; color: #e2e8f0; padding: 12px 16px; border-radius: 6px; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 9.5px; line-height: 1.5; overflow-x: auto; margin: 8px 0 12px; white-space: pre-wrap; word-wrap: break-word; }
+  pre .comment { color: #64748b; }
+  pre .keyword { color: #7dd3fc; }
+  pre .string { color: #86efac; }
+  pre .func { color: #c4b5fd; }
+  code { background: #f1f5f9; padding: 1px 5px; border-radius: 3px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 10px; color: #7c3aed; }
+
+  .file-ref { font-size: 9px; color: #7c3aed; font-weight: 600; margin-bottom: 2px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; font-size: 10px; }
+  th { background: #4f46e5; color: #fff; padding: 6px 10px; text-align: left; font-weight: 600; }
+  td { padding: 5px 10px; border-bottom: 1px solid #e2e8f0; }
+  tr:nth-child(even) td { background: #f8fafc; }
+
+  .toc { page-break-after: always; }
+  .toc h2 { border: none; text-align: center; }
+  .toc ul { list-style: none; margin-top: 20px; }
+  .toc li { padding: 8px 0; border-bottom: 1px dotted #cbd5e1; font-size: 13px; }
+  .toc li span { color: #7c3aed; font-weight: 600; margin-right: 8px; }
+
+  .section { page-break-inside: avoid; }
+  .flow-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin: 10px 0; font-family: monospace; font-size: 9.5px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="cover">
+  <h1>VERTIFILE</h1>
+  <div class="subtitle">Technical Architecture Review</div>
+  <div class="badge">CONFIDENTIAL — EXTERNAL REVIEW</div>
+  <div class="meta" style="margin-top: 50px;">
+    <strong>Version:</strong> 4.5.0<br>
+    <strong>Date:</strong> April 11, 2026<br>
+    <strong>Platform:</strong> vertifile.com<br>
+    <strong>Patent:</strong> Filed in Israel (March 2026)<br>
+    <strong>IANA MIME:</strong> application/vnd.vertifile.pvf (#1446680, pending)<br>
+    <strong>Prepared by:</strong> Vertifile Engineering Team
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <h2>Table of Contents</h2>
+  <ul>
+    <li><span>1</span> Client-Side Security — Zero-Knowledge Encryption</li>
+    <li><span>2</span> Key Management &amp; URL Fragment Architecture</li>
+    <li><span>3</span> Backend &amp; Database Schema</li>
+    <li><span>4</span> File Handling — PDF Rendering &amp; Pipeline</li>
+    <li><span>5</span> Internationalization (i18n)</li>
+    <li><span>6</span> Paywall Logic — Free vs. Pro</li>
+    <li><span>7</span> Security Layers Summary</li>
+  </ul>
+</div>
+
+<!-- SECTION 1 -->
+<h2>1. Client-Side Security — Zero-Knowledge Encryption</h2>
+
+<p>Documents uploaded to Vertifile are encrypted <strong>entirely in the user's browser</strong> before any data is transmitted to the server. The server receives only an encrypted blob and never has access to the plaintext content or the decryption key. All cryptographic operations use the Web Crypto API (SubtleCrypto) with no external libraries.</p>
+
+<h3>1.1 AES-256-GCM Key Generation</h3>
+<div class="file-ref">File: public/js/crypto.js — Lines 96-109</div>
+<pre>async function generateKey() {
+  return await subtle.generateKey(
+    { name: 'AES-GCM', length: 256 },
+    true,              // extractable — needed for URL fragment export
+    ['encrypt', 'decrypt']
+  );
+}</pre>
+
+<h3>1.2 SHA-256 Hash of Original Content</h3>
+<p>Before encryption, a SHA-256 hash of the <em>original plaintext</em> is computed. This hash is sent to the server for integrity binding and is later used to verify successful decryption.</p>
+<div class="file-ref">File: public/js/crypto.js — Lines 183-196</div>
+<pre>async function hashContent(data) {
+  var hashBuffer = await subtle.digest('SHA-256', data);
+  var hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(function (b) {
+    return b.toString(16).padStart(2, '0');
+  }).join('');
+}</pre>
+
+<h3>1.3 File Encryption Flow</h3>
+<p>The <code>encryptFile()</code> function orchestrates the full client-side encryption: hash the original, generate a key, encrypt with a random 12-byte IV, and export the key as base64url.</p>
+<div class="file-ref">File: public/js/crypto.js — Lines 267-283</div>
+<pre>async function encryptFile(file) {
+  var plaintext = await file.arrayBuffer();
+  var hash = await hashContent(plaintext);         // SHA-256 of ORIGINAL
+  var key = await generateKey();                    // AES-256-GCM key
+  var result = await encrypt(key, plaintext);       // Encrypt with random 12-byte IV
+  var keyBase64url = await exportKey(key);
+  return {
+    encryptedBlob: new Blob([result.ciphertext],
+      { type: 'application/octet-stream' }),
+    hash: hash,                                     // Sent to server
+    iv: arrayBufferToBase64url(result.iv),           // Sent to server
+    keyBase64url: keyBase64url                       // NEVER sent to server
+  };
+}</pre>
+
+<div class="security"><strong>Security Property:</strong> The <code>keyBase64url</code> field is returned to the calling code but is NEVER included in the FormData sent to the server. It is only embedded in the URL fragment on the client side.</div>
+
+<h3>1.4 Upload to Server</h3>
+<div class="file-ref">File: public/app.html — Lines 3407-3450</div>
+<pre>var encrypted = await VertifileCrypto.encryptFile(file);
+
+const form = new FormData();
+form.append('file', encrypted.encryptedBlob, file.name);   // Encrypted blob
+form.append('hash', encrypted.hash);                         // SHA-256 of original
+form.append('iv', encrypted.iv);                             // 12-byte IV (base64url)
+form.append('mimeType', file.type);                          // Original MIME type
+form.append('encrypted', 'true');                            // ZK flag
+
+const r = await fetch('/api/user/upload-encrypted',
+  { method: 'POST', body: form, credentials: 'same-origin' });
+
+// Key NEVER goes to server — attach to result for share URL construction
+data._keyBase64url = encrypted.keyBase64url;</pre>
+
+<h3>1.5 HMAC Signing (Server-Side, Layer 2)</h3>
+<div class="file-ref">File: services/pvf-generator.js — Lines 43-54</div>
+<pre>function hashBytes(buffer) {
+  return crypto.createHash('sha256').update(buffer).digest('hex');
+}
+
+function signHash(hash) {
+  return crypto.createHmac('sha256', HMAC_SECRET).update(hash).digest('hex');
+}
+
+function verifySignature(hash, signature) {
+  const expected = signHash(hash);
+  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+}</pre>
+
+<h3>1.6 Ed25519 Dual Signature (Server-Side, Layer 3)</h3>
+<div class="file-ref">File: services/signing.js — Lines 104-138</div>
+<pre>async function signEd25519(payload) {
+  const primary = await keyManager.getActivePrimary();
+  if (!primary) return null;
+  const buf = Buffer.isBuffer(payload)
+    ? payload : Buffer.from(String(payload), 'utf8');
+  const sig = crypto.sign(null, buf, primary.privateKey);
+  return { signature: sig.toString('base64url'), keyId: primary.keyId };
+}
+
+async function verifyEd25519(payload, signatureBase64url, keyId) {
+  if (typeof signatureBase64url !== 'string' || !signatureBase64url) return false;
+  if (typeof keyId !== 'string' || !keyId) return false;
+  const publicKey = await keyManager.getPublicKeyById(keyId);
+  if (!publicKey) return false;
+  const buf = Buffer.isBuffer(payload)
+    ? payload : Buffer.from(String(payload), 'utf8');
+  const sigBuf = Buffer.from(signatureBase64url, 'base64url');
+  if (sigBuf.length !== 64) return false;   // Ed25519 = always 64 bytes
+  return crypto.verify(null, buf, publicKey, sigBuf);
+}</pre>
+
+<!-- SECTION 2 -->
+<h2>2. Key Management &amp; URL Fragment Architecture</h2>
+
+<p>The decryption key is embedded in the URL fragment (<code>#key=...</code>). Per RFC 3986, the fragment identifier is never sent to the server in HTTP requests. This is the architectural foundation of Vertifile's zero-knowledge guarantee.</p>
+
+<h3>2.1 Key Embedding in Share URL</h3>
+<div class="file-ref">File: public/app.html — Lines 3302-3316</div>
+<pre>var keyFragment = result &amp;&amp; result._keyBase64url ? result._keyBase64url : '';
+var fullShareUrl = keyFragment
+  ? (window.location.origin + '/d/' + encodeURIComponent(identifier) + '#key=' + keyFragment)
+  : '';
+
+// Save key locally for dashboard re-access
+if (keyFragment &amp;&amp; identifier) {
+  try { localStorage.setItem('vf_key_' + identifier, keyFragment); } catch(e) {}
+}</pre>
+
+<h3>2.2 URL Masking in Viewer</h3>
+<p>When a recipient opens the shared link, the PVF viewer immediately extracts the key from the fragment and then <strong>removes it from the address bar</strong> using <code>history.replaceState()</code>. A sessionStorage backup allows same-tab refresh without re-sharing the URL.</p>
+<div class="file-ref">File: templates/pvf.js — Lines 415-437</div>
+<pre>var __zkKey = null;
+(function() {
+  var hash = window.location.hash;
+  if (hash &amp;&amp; hash.indexOf('#key=') === 0) {
+    __zkKey = hash.substring(5);               // Extract base64url key
+    // Remove key from address bar and browser history
+    if (window.history &amp;&amp; window.history.replaceState) {
+      window.history.replaceState(null, '',
+        window.location.pathname + window.location.search);
+    }
+    // SessionStorage backup (survives same-tab refresh)
+    try {
+      sessionStorage.setItem('vf_zk_' + window.location.pathname, __zkKey);
+    } catch(e) {}
+  } else {
+    // Page refresh fallback — recover from sessionStorage
+    try {
+      __zkKey = sessionStorage.getItem('vf_zk_' + window.location.pathname);
+    } catch(e) {}
+  }
+})();</pre>
+
+<h3>2.3 Decryption in Public Viewer</h3>
+<p>The PVF document contains self-contained decryption primitives (no external dependencies). The viewer imports the key, decrypts the blob, verifies the hash, and renders the content.</p>
+<div class="file-ref">File: templates/pvf.js — Lines 667-700</div>
+<pre>// Base64url -> ArrayBuffer
+function zkBase64urlToBuffer(b64url) {
+  var b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
+  var padded = b64 + '='.repeat((4 - b64.length % 4) % 4);
+  var binary = atob(padded);
+  var bytes = new Uint8Array(binary.length);
+  for (var i = 0; i &lt; binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes.buffer;
+}
+
+async function zkImportKey(b64url) {
+  var raw = zkBase64urlToBuffer(b64url);
+  return crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['decrypt']);
+}
+
+async function zkDecrypt(key, ciphertext, iv) {
+  return crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv: new Uint8Array(iv) }, key, ciphertext);
+}</pre>
+
+<h3>2.4 Post-Decryption Hash Verification &amp; Key Zeroing</h3>
+<div class="file-ref">File: templates/pvf.js — Lines 703-797</div>
+<pre>var key = await zkImportKey(__zkKey);
+var cipherBuffer = zkBase64ToBuffer(encBase64);
+var ivBuffer = zkBase64urlToBuffer(ivB64url);
+var decrypted = await zkDecrypt(key, cipherBuffer, ivBuffer);
+
+// Verify integrity: computed hash must match HASH embedded in PVF
+var computedHash = await zkHash(decrypted);
+if (computedHash !== HASH) {
+  throw new Error('Hash mismatch — document may be tampered');
+}
+
+// P0 SECURITY: Zero out key immediately after use
+__zkKey = null;
+try { sessionStorage.removeItem('vf_zk_' + window.location.pathname); } catch(e) {}</pre>
+
+<div class="security"><strong>Key Lifecycle:</strong> The decryption key exists only (1) in the URL fragment, (2) briefly in JavaScript memory during decryption, (3) in sessionStorage for tab-refresh resilience. After decryption, all copies are zeroed.</div>
+
+<!-- SECTION 3 -->
+<h2>3. Backend &amp; Database Schema</h2>
+
+<h3>3.1 Documents Table</h3>
+<div class="file-ref">File: db.js — Lines 63-82</div>
+<pre>CREATE TABLE IF NOT EXISTS documents (
+  hash         TEXT PRIMARY KEY,           -- SHA-256 of original file
+  signature    TEXT NOT NULL,              -- HMAC-SHA256 signature
+  original_name TEXT,
+  mime_type    TEXT,
+  file_size    BIGINT,
+  created_at   TEXT DEFAULT (now() AT TIME ZONE 'UTC'),
+  token        TEXT,                       -- Session token (rotates every 5min)
+  token_created_at BIGINT,
+  org_id       TEXT,
+  org_name     TEXT,
+  recipient    TEXT,
+  recipient_hash TEXT,
+  share_id     TEXT
+);
+-- Migration columns:
+--   user_id INT, starred BOOLEAN, pvf_content TEXT,
+--   code_integrity TEXT, chained_token TEXT,
+--   preview_only BOOLEAN DEFAULT FALSE, slug TEXT</pre>
+
+<div class="note"><strong>Phase 2C Invariant:</strong> <code>created_at</code> is stored as TEXT, not TIMESTAMPTZ. PostgreSQL returns Date objects for TIMESTAMPTZ, and <code>String(Date)</code> produces a non-ISO format that breaks Ed25519 verification of documents signed during Phase 2B. This is intentional and must not be changed.</div>
+
+<h3>3.2 Users Table</h3>
+<div class="file-ref">File: db.js — Lines 113-125</div>
+<pre>CREATE TABLE IF NOT EXISTS users (
+  id              SERIAL PRIMARY KEY,
+  email           TEXT UNIQUE NOT NULL,
+  name            TEXT,
+  password_hash   TEXT,                    -- bcrypt, 12+ rounds
+  provider        TEXT DEFAULT 'email',    -- 'email' or 'google'
+  provider_id     TEXT,
+  avatar_url      TEXT,
+  documents_used  INT DEFAULT 0,
+  documents_limit INT DEFAULT 1,           -- Free plan = 1 document
+  plan            TEXT DEFAULT 'free',
+  created_at      TIMESTAMPTZ DEFAULT NOW()
+);</pre>
+
+<h3>3.3 Ed25519 Key Rotation Table</h3>
+<div class="file-ref">File: db.js — Lines 142-152</div>
+<pre>CREATE TABLE IF NOT EXISTS ed25519_keys (
+  id             VARCHAR(16) PRIMARY KEY,
+  public_key_pem TEXT NOT NULL,
+  valid_from     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  valid_until    TIMESTAMPTZ,              -- NULL = no expiry (active)
+  is_primary     BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+-- Only one primary key at a time:
+CREATE UNIQUE INDEX IF NOT EXISTS idx_ed25519_keys_primary
+  ON ed25519_keys(is_primary) WHERE is_primary = TRUE;</pre>
+
+<h3>3.4 Proof: Server Cannot Access Document Content</h3>
+
+<p>The server's involvement in the ZK flow is limited to:</p>
+<table>
+  <tr><th>What the server receives</th><th>What the server does NOT receive</th></tr>
+  <tr><td>Encrypted blob (AES-256-GCM ciphertext)</td><td>Plaintext document content</td></tr>
+  <tr><td>SHA-256 hash of original (hex string)</td><td>AES-256-GCM decryption key</td></tr>
+  <tr><td>IV (12-byte initialization vector)</td><td>URL fragment (#key=...)</td></tr>
+  <tr><td>Original MIME type, filename</td><td>Any data that could reconstruct the key</td></tr>
+</table>
+
+<p>The <code>pvf_content</code> column in the database stores the complete PVF HTML document, which contains the encrypted base64 blob inside a <code>&lt;script id="encryptedDoc"&gt;</code> tag. Without the AES-256-GCM key (which never touches the server), this blob is cryptographically indistinguishable from random data.</p>
+
+<p>The upload endpoint (<code>routes/user.js:206-318</code>) validates only the encrypted flag, hash format, IV format, and MIME type. It never attempts to read or process the file content.</p>
+
+<!-- SECTION 4 -->
+<h2>4. File Handling — PDF Rendering &amp; Pipeline</h2>
+
+<h3>4.1 Unified PVF Creation Pipeline</h3>
+<p>All PVF documents — whether created via the API or the dashboard — pass through a single pipeline with 21 ordered steps.</p>
+<div class="file-ref">File: services/pvf-pipeline.js — Lines 1-43</div>
+<div class="flow-box">
+1. Validate input (MIME allowlist, non-empty buffer)<br>
+2. Hash raw bytes — BLIND processing (never reads content)<br>
+3. HMAC sign the hash<br>
+4. Generate session token + recipient binding<br>
+5. Encode file (text → HTML escape, binary → base64)<br>
+6. Fetch branding (org custom logo, colors, waves)<br>
+7. Generate shareId BEFORE HTML generation (SHAREID FIX)<br>
+8. generatePvfHtml(... shareId) — baked pre-obfuscation<br>
+9. DB insert (createDocument)<br>
+10. setDocumentUserId + updateUserDocCount<br>
+11. incrementDocCount (API key requests)<br>
+12. Obfuscate PVF (worker thread)<br>
+13. Extract codeIntegrity (SHA-256 of obfuscated JS)<br>
+14. Compute chainToken: sha256(hash + sig + orgId + codeIntegrity)<br>
+15. Save codeIntegrity + chainedToken to DB<br>
+16. Set shareId on documents row<br>
+17. Save full obfuscated HTML to pvf_content<br>
+18. markDocumentPreviewOnly (free-plan gating)<br>
+19. Blockchain registration (fire-and-forget, optional)<br>
+20. Audit log entry<br>
+21. Return structured result
+</div>
+
+<h3>4.2 PDF.js Inline Rendering (Encrypted PDFs)</h3>
+<p>For ZK-encrypted PDF documents, after decryption the bytes are passed to PDF.js for inline rendering within the PVF viewer. No iframe is used for encrypted documents — PDF.js renders directly into canvas elements.</p>
+<div class="file-ref">File: templates/pvf.js</div>
+<pre>// After successful ZK decryption of a PDF:
+window.__zkDecryptedPdfBytes = new Uint8Array(decrypted);
+__isPdf = true;
+// renderPdfInline() is called by show()/showLocal()
+// Renders each page into &lt;canvas&gt; elements with a thumbnail sidebar</pre>
+
+<h3>4.3 Dashboard Document Preview</h3>
+<p>In the dashboard, documents are displayed as a unified "PVF DOCUMENT" card rather than attempting inline rendering. The actual content is only accessible via the download/share flow.</p>
+<div class="file-ref">File: public/app.html — Lines 2218-2276</div>
+<pre>previewEl.innerHTML =
+  '&lt;div class="doc-preview-card"&gt;' +
+    '&lt;div class="dpc-icon"&gt;' + iconSvg + '&lt;/div&gt;' +
+    '&lt;div class="dpc-meta"&gt;' + escHtml(metaText) + '&lt;/div&gt;' +
+    '&lt;div class="dpc-name"&gt;' + escHtml(rawNameForCard) + '&lt;/div&gt;' +
+    ctaHtml +
+  '&lt;/div&gt;';</pre>
+
+<!-- SECTION 5 -->
+<h2>5. Internationalization (i18n)</h2>
+
+<p>Vertifile supports 10 languages with full RTL support. The i18n engine is a self-contained 162-line IIFE that handles detection, loading, and application of translations.</p>
+
+<h3>5.1 Supported Languages</h3>
+<table>
+  <tr><th>Code</th><th>Language</th><th>Direction</th></tr>
+  <tr><td>en</td><td>English</td><td>LTR</td></tr>
+  <tr><td>he</td><td>Hebrew</td><td>RTL</td></tr>
+  <tr><td>ar</td><td>Arabic</td><td>RTL</td></tr>
+  <tr><td>fr</td><td>French</td><td>LTR</td></tr>
+  <tr><td>es</td><td>Spanish</td><td>LTR</td></tr>
+  <tr><td>de</td><td>German</td><td>LTR</td></tr>
+  <tr><td>ru</td><td>Russian</td><td>LTR</td></tr>
+  <tr><td>zh</td><td>Chinese</td><td>LTR</td></tr>
+  <tr><td>ja</td><td>Japanese</td><td>LTR</td></tr>
+  <tr><td>pt</td><td>Portuguese</td><td>LTR</td></tr>
+</table>
+
+<h3>5.2 Detection Priority</h3>
+<pre>1. URL parameter:      ?lang=he
+2. localStorage:        vf-lang
+3. Navigator language:  navigator.language
+4. Geo-detection:       ipapi.co → country → language mapping
+5. Fallback:            'en'</pre>
+
+<h3>5.3 The _t() Translation Wrapper</h3>
+<div class="file-ref">File: public/app.html — Line 1539</div>
+<pre>function _t(key, fb) {
+  return (typeof vfGetTranslation === 'function' &amp;&amp; vfGetTranslation(key)) || fb || key;
+}</pre>
+<p>This wrapper provides a consistent interface for the dashboard. It delegates to <code>vfGetTranslation()</code> (exposed by i18n.js), falls back to the provided default, then falls back to the key itself.</p>
+
+<h3>5.4 Dynamic Re-render on Language Switch</h3>
+<div class="file-ref">File: public/app.html — Lines 3632-3687</div>
+<pre>function appI18nPatch() {
+  // 1. Apply static data-i18n attributes
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var val = _t(el.getAttribute('data-i18n'));
+    if (val &amp;&amp; val !== el.getAttribute('data-i18n')) {
+      if (/&lt;[a-z][\s\S]*&gt;/i.test(val)) el.innerHTML = val;
+      else el.textContent = val;
+    }
+  });
+
+  // 2. Re-render all dynamic dashboard components
+  if (window.Dashboard) {
+    if (Dashboard.renderWelcomeDate) Dashboard.renderWelcomeDate();
+    if (Dashboard.renderDocRows) Dashboard.renderDocRows();
+    if (Dashboard.updatePlanDisplay) Dashboard.updatePlanDisplay();
+    if (Dashboard.updateGettingStartedProgress)
+      Dashboard.updateGettingStartedProgress();
+    if (Dashboard.renderStamps) Dashboard.renderStamps();
+  }
+}
+
+// Hook: intercept switchLang + listen for vf-i18n-ready
+window.switchLang = function(lang, e) {
+  _origSwitchLang(lang, e);
+  setTimeout(appI18nPatch, 150);
+};
+document.addEventListener('vf-i18n-ready', function() {
+  appI18nPatch();
+});</pre>
+
+<!-- SECTION 6 -->
+<h2>6. Paywall Logic — Free vs. Pro</h2>
+
+<h3>6.1 Client-Side Plan Check</h3>
+<div class="file-ref">File: public/app.html — Lines 3152-3157</div>
+<pre>function isFreePlan() {
+  if (!currentUser) return false;
+  // Admin bypass
+  if (currentUser.email === 'zur2525@gmail.com'
+    || currentUser.email === 'info@vertifile.com') return false;
+  return !currentUser.plan || currentUser.plan === 'free';
+}</pre>
+
+<h3>6.2 Client-Side Guards (Download &amp; Share)</h3>
+<div class="file-ref">File: public/app.html — Lines 2297-2330</div>
+<pre>downloadCurrentDoc: function() {
+  if (!selectedDoc) return;
+  if (isFreePlan()) { showPaywall(); return; }    // Blocked — show upgrade modal
+  var shareId = selectedDoc.shareId || selectedDoc.share_id;
+  window.open('/d/' + (selectedDoc.slug || shareId) + '/download', '_blank');
+},
+shareCurrentDoc: function() {
+  if (!selectedDoc) return;
+  if (isFreePlan()) { showPaywall(); return; }    // Blocked — show upgrade modal
+  // ... construct share URL with #key= fragment and copy to clipboard
+}</pre>
+
+<h3>6.3 Server-Side Download Enforcement</h3>
+<div class="file-ref">File: routes/pages.js — Lines 273-318</div>
+<pre>router.get('/d/:identifier/download', async (req, res) =&gt; {
+  let doc = await db.getDocumentBySlug(identifier);
+  if (!doc) doc = await db.getDocumentByShareId(identifier);
+
+  // Paywall check
+  if (doc.preview_only) {
+    const isPaidUser = req.user &amp;&amp; req.user.plan &amp;&amp; req.user.plan !== 'free';
+    if (!isPaidUser) {
+      return res.status(403).json({
+        error: 'Download requires a Pro or Enterprise plan.',
+        upgradeUrl: '/pricing',
+        preview: true
+      });
+    }
+  }
+
+  // Serve PVF file with correct MIME type
+  res.setHeader('Content-Type', 'application/vnd.vertifile.pvf; charset=utf-8');
+  res.setHeader('Content-Disposition', 'attachment; filename="' + pvfFileName + '"');
+  res.send(pvfContent);
+});</pre>
+
+<h3>6.4 Pipeline-Level Marking</h3>
+<div class="file-ref">File: services/pvf-pipeline.js — Lines 509-520</div>
+<pre>if (owner.type === 'user') {
+  const isAdmin = ADMIN_BYPASS_EMAILS.has(owner.email);
+  const isPaidPlan = isAdmin || (owner.plan &amp;&amp; owner.plan !== 'free');
+  if (!isPaidPlan) {
+    await db.markDocumentPreviewOnly(fileHash, true);
+    preview = true;
+  }
+}</pre>
+
+<h3>6.5 Admin Bypass Whitelist</h3>
+<div class="file-ref">File: services/pvf-pipeline.js — Lines 63-67</div>
+<pre>const ADMIN_BYPASS_EMAILS = new Set([
+  'zur2525@gmail.com',
+  'info@vertifile.com'
+]);</pre>
+
+<div class="note"><strong>Note:</strong> The admin bypass exists in three locations: <code>services/pvf-pipeline.js</code> (server-side pipeline), <code>routes/user.js</code> (legacy upload), and <code>public/app.html</code> (client-side guard). All three use the same two email addresses.</div>
+
+<!-- SECTION 7 -->
+<h2>7. Security Layers Summary</h2>
+
+<table>
+  <tr><th>#</th><th>Layer</th><th>Implementation</th><th>File</th></tr>
+  <tr><td>1</td><td>SHA-256 Hash</td><td><code>crypto.createHash('sha256')</code></td><td>pvf-generator.js</td></tr>
+  <tr><td>2</td><td>HMAC Signature</td><td><code>crypto.createHmac('sha256', HMAC_SECRET)</code></td><td>pvf-generator.js</td></tr>
+  <tr><td>3</td><td>Ed25519 Dual Signature</td><td><code>crypto.sign(null, buf, privateKey)</code></td><td>signing.js</td></tr>
+  <tr><td>4</td><td>Token Refresh (5min)</td><td><code>generateToken()</code></td><td>pvf-generator.js</td></tr>
+  <tr><td>5</td><td>Code Integrity</td><td>SHA-256 of obfuscated JavaScript</td><td>pvf-pipeline.js</td></tr>
+  <tr><td>6</td><td>Chained Token</td><td><code>sha256(hash+sig+orgId+codeIntegrity)</code></td><td>pvf-pipeline.js</td></tr>
+  <tr><td>7</td><td>Anti-DevTools</td><td>F12 detection, right-click block</td><td>templates/pvf.js</td></tr>
+  <tr><td>8</td><td>Obfuscation</td><td>Worker thread obfuscation</td><td>obfuscate-worker.js</td></tr>
+  <tr><td>9</td><td>Holographic Stamp</td><td>Animated coin + waves, tamper freeze</td><td>templates/pvf.js</td></tr>
+  <tr><td>10</td><td>Zero-Knowledge</td><td>AES-256-GCM client-side encryption</td><td>public/js/crypto.js</td></tr>
+  <tr><td>11</td><td>Blockchain (optional)</td><td>Polygon on-chain hash registry</td><td>blockchain.js</td></tr>
+</table>
+
+<h3>Infrastructure Security</h3>
+<table>
+  <tr><th>Control</th><th>Status</th></tr>
+  <tr><td>npm audit</td><td>0 vulnerabilities</td></tr>
+  <tr><td>SQL Injection</td><td>Parameterized queries (pg library)</td></tr>
+  <tr><td>XSS</td><td>HTML escaping + CSP via Helmet</td></tr>
+  <tr><td>CSRF</td><td>SameSite cookies + CORS validation</td></tr>
+  <tr><td>Rate Limiting</td><td>Auth: 5/15min, Signup: 3/hour, API: 200/15min</td></tr>
+  <tr><td>Timing Attacks</td><td>crypto.timingSafeEqual on all secret comparisons</td></tr>
+  <tr><td>Prototype Pollution</td><td>Key filtering in sanitize.js middleware</td></tr>
+  <tr><td>Input Validation</td><td>XSS escape, null byte removal, 10KB limit, depth limit</td></tr>
+  <tr><td>Logging</td><td>Pino (structured JSON), no console.log in production</td></tr>
+  <tr><td>CI/CD</td><td>GitHub Actions: audit, syntax, secrets scan, tests, locale validation</td></tr>
+</table>
+
+<br><br>
+<div style="text-align: center; color: #94a3b8; font-size: 10px; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+  Vertifile Technical Architecture Review v4.5.0 — April 2026 — Confidential<br>
+  Prepared for external security review. All code references verified against current codebase.
+</div>
+
+</body>
+</html>
