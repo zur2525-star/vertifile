@@ -230,78 +230,78 @@
 
 <article class="article-body">
 
-  <p>Digital signatures are everywhere. Every major e-signature platform &mdash; DocuSign, Adobe Sign, HelloSign, PandaDoc &mdash; has built a business on the premise that a digital signature is all you need to trust a document. And for the narrow problem of proving consent, they are right.</p>
+  <p data-i18n="blog.post.digsig.p1">Digital signatures are everywhere. Every major e-signature platform &mdash; DocuSign, Adobe Sign, HelloSign, PandaDoc &mdash; has built a business on the premise that a digital signature is all you need to trust a document. And for the narrow problem of proving consent, they are right.</p>
 
-  <p>But consent and integrity are not the same thing. <strong>A digital signature proves that someone agreed to a document at a specific moment. It does not prove that the document you are looking at right now is the same one they agreed to.</strong></p>
+  <p data-i18n="blog.post.digsig.p2">But consent and integrity are not the same thing. <strong>A digital signature proves that someone agreed to a document at a specific moment. It does not prove that the document you are looking at right now is the same one they agreed to.</strong></p>
 
   <h2 data-i18n="blog.post.digsig.h2.signingVsVerifying">Signing vs. Verifying: Two Different Problems</h2>
 
-  <p>This distinction is critical, and it is one that most organizations overlook. Let us break down what each process actually accomplishes:</p>
+  <p data-i18n="blog.post.digsig.p3">This distinction is critical, and it is one that most organizations overlook. Let us break down what each process actually accomplishes:</p>
 
   <div class="compare-grid">
     <div class="compare-card signing">
-      <h4>Digital Signing</h4>
-      <p>Answers the question: "Who agreed to this document?" Creates a cryptographic proof that a specific person (identified by a certificate or email) applied their signature at a specific time. The signature is bound to the document state at the time of signing.</p>
+      <h4 data-i18n="blog.post.digsig.cardSignTitle">Digital Signing</h4>
+      <p data-i18n="blog.post.digsig.cardSignDesc">Answers the question: "Who agreed to this document?" Creates a cryptographic proof that a specific person (identified by a certificate or email) applied their signature at a specific time. The signature is bound to the document state at the time of signing.</p>
     </div>
     <div class="compare-card verifying">
-      <h4>Document Verification</h4>
-      <p>Answers the question: "Is this document unchanged from its original form?" Creates a cryptographic proof that the document content is byte-for-byte identical to the version that was originally issued, regardless of who holds it or when it is checked.</p>
+      <h4 data-i18n="blog.post.digsig.cardVerifyTitle">Document Verification</h4>
+      <p data-i18n="blog.post.digsig.cardVerifyDesc">Answers the question: "Is this document unchanged from its original form?" Creates a cryptographic proof that the document content is byte-for-byte identical to the version that was originally issued, regardless of who holds it or when it is checked.</p>
     </div>
   </div>
 
-  <p>These are complementary but fundamentally different capabilities. An e-signature platform excels at the first. It was never designed for the second.</p>
+  <p data-i18n="blog.post.digsig.p4">These are complementary but fundamentally different capabilities. An e-signature platform excels at the first. It was never designed for the second.</p>
 
   <h2 data-i18n="blog.post.digsig.h2.gap">The Gap in Practice</h2>
 
-  <p>Consider a real-world scenario. A university issues a diploma as a PDF and digitally signs it. The graduate receives the document and shares it with a potential employer. Here is what can go wrong:</p>
+  <p data-i18n="blog.post.digsig.p5">Consider a real-world scenario. A university issues a diploma as a PDF and digitally signs it. The graduate receives the document and shares it with a potential employer. Here is what can go wrong:</p>
 
   <ol>
-    <li><strong>The graduate modifies the document</strong> &mdash; They change a grade, a degree title, or a date. Depending on how the PDF is structured and which viewer the employer uses, the signature may or may not be invalidated. Research shows most PDF viewers fail to detect sophisticated modifications.</li>
-    <li><strong>The employer cannot verify the signature</strong> &mdash; Digital signature validation requires the employer to have the correct root certificate, a functioning revocation check, and a PDF viewer that correctly implements signature validation. In practice, most employers see a yellow warning icon and ignore it.</li>
-    <li><strong>The document leaves the digital chain</strong> &mdash; If the PDF is printed, photographed, or converted to another format, the digital signature is lost entirely. The document becomes just pixels on a screen with no verifiable authenticity.</li>
-    <li><strong>Time degrades trust</strong> &mdash; Certificates expire. Certificate authorities are decommissioned. A perfectly valid signature today may show as invalid in five years, not because the document was altered, but because the infrastructure that supported it has changed.</li>
+    <li data-i18n="blog.post.digsig.li1"><strong>The graduate modifies the document</strong> &mdash; They change a grade, a degree title, or a date. Depending on how the PDF is structured and which viewer the employer uses, the signature may or may not be invalidated. Research shows most PDF viewers fail to detect sophisticated modifications.</li>
+    <li data-i18n="blog.post.digsig.li2"><strong>The employer cannot verify the signature</strong> &mdash; Digital signature validation requires the employer to have the correct root certificate, a functioning revocation check, and a PDF viewer that correctly implements signature validation. In practice, most employers see a yellow warning icon and ignore it.</li>
+    <li data-i18n="blog.post.digsig.li3"><strong>The document leaves the digital chain</strong> &mdash; If the PDF is printed, photographed, or converted to another format, the digital signature is lost entirely. The document becomes just pixels on a screen with no verifiable authenticity.</li>
+    <li data-i18n="blog.post.digsig.li4"><strong>Time degrades trust</strong> &mdash; Certificates expire. Certificate authorities are decommissioned. A perfectly valid signature today may show as invalid in five years, not because the document was altered, but because the infrastructure that supported it has changed.</li>
   </ol>
 
   <h2 data-i18n="blog.post.digsig.h2.esign">Why E-Signature Platforms Don't Solve Forgery</h2>
 
-  <p>E-signature companies solved a real problem: remote agreement. Before DocuSign and its competitors, getting signatures required printing, mailing, and scanning documents. The efficiency gain was enormous.</p>
+  <p data-i18n="blog.post.digsig.p6">E-signature companies solved a real problem: remote agreement. Before DocuSign and its competitors, getting signatures required printing, mailing, and scanning documents. The efficiency gain was enormous.</p>
 
-  <p>But the e-signature model has an inherent limitation: <strong>it is designed for bilateral agreements, not for document issuance.</strong> When a company issues a certificate, a credential, or an official document, the recipient does not need to sign it. They need to prove it is real.</p>
+  <p data-i18n="blog.post.digsig.p7">But the e-signature model has an inherent limitation: <strong>it is designed for bilateral agreements, not for document issuance.</strong> When a company issues a certificate, a credential, or an official document, the recipient does not need to sign it. They need to prove it is real.</p>
 
-  <p>E-signatures are optimized for:</p>
+  <p data-i18n="blog.post.digsig.p8">E-signatures are optimized for:</p>
   <ul>
-    <li>Contracts between two or more parties</li>
-    <li>Audit trails showing who signed when</li>
-    <li>Legal enforceability of digital consent</li>
-    <li>Workflow automation for approval processes</li>
+    <li data-i18n="blog.post.digsig.li5">Contracts between two or more parties</li>
+    <li data-i18n="blog.post.digsig.li6">Audit trails showing who signed when</li>
+    <li data-i18n="blog.post.digsig.li7">Legal enforceability of digital consent</li>
+    <li data-i18n="blog.post.digsig.li8">Workflow automation for approval processes</li>
   </ul>
 
-  <p>They are not optimized for:</p>
+  <p data-i18n="blog.post.digsig.p9">They are not optimized for:</p>
   <ul>
-    <li>Detecting post-issuance tampering</li>
-    <li>Providing real-time, visual proof of authenticity</li>
-    <li>Working across different formats and platforms</li>
-    <li>Remaining valid as infrastructure changes over time</li>
+    <li data-i18n="blog.post.digsig.li9">Detecting post-issuance tampering</li>
+    <li data-i18n="blog.post.digsig.li10">Providing real-time, visual proof of authenticity</li>
+    <li data-i18n="blog.post.digsig.li11">Working across different formats and platforms</li>
+    <li data-i18n="blog.post.digsig.li12">Remaining valid as infrastructure changes over time</li>
   </ul>
 
   <h2 data-i18n="blog.post.digsig.h2.requires">What Verification Actually Requires</h2>
 
-  <p>True document verification needs a different architecture. Rather than asking "who approved this document?" it needs to answer "has this document been changed since it was created?"</p>
+  <p data-i18n="blog.post.digsig.p10">True document verification needs a different architecture. Rather than asking "who approved this document?" it needs to answer "has this document been changed since it was created?"</p>
 
   <div class="highlight-box">
-    <h4>How Vertifile Closes the Gap</h4>
-    <p>Vertifile separates verification from signing entirely. When a document is protected, its cryptographic fingerprint is registered on an immutable ledger. The resulting .pvf file carries a live holographic stamp that verifies against this record every time the document is opened. No certificates to expire, no viewers to trust, no chain of custody to maintain. The document itself is the proof.</p>
+    <h4 data-i18n="blog.post.digsig.highlightTitle">How Vertifile Closes the Gap</h4>
+    <p data-i18n="blog.post.digsig.highlightDesc">Vertifile separates verification from signing entirely. When a document is protected, its cryptographic fingerprint is registered on an immutable ledger. The resulting .pvf file carries a live holographic stamp that verifies against this record every time the document is opened. No certificates to expire, no viewers to trust, no chain of custody to maintain. The document itself is the proof.</p>
   </div>
 
   <h2 data-i18n="blog.post.digsig.h2.coexist">Signing and Verifying Can Coexist</h2>
 
-  <p>This is not an either-or proposition. Digital signatures and document verification solve different problems and can work together. A contract might be e-signed by all parties (proving consent) and then protected with Vertifile (proving the signed version has not been modified).</p>
+  <p data-i18n="blog.post.digsig.p11">This is not an either-or proposition. Digital signatures and document verification solve different problems and can work together. A contract might be e-signed by all parties (proving consent) and then protected with Vertifile (proving the signed version has not been modified).</p>
 
-  <p>The key insight is that <strong>signing alone is not enough</strong>. In a world where documents are easily modified and AI can generate convincing forgeries, every important document needs both consent tracking (signing) and integrity verification (tamper-proof protection).</p>
+  <p data-i18n="blog.post.digsig.p12">The key insight is that <strong>signing alone is not enough</strong>. In a world where documents are easily modified and AI can generate convincing forgeries, every important document needs both consent tracking (signing) and integrity verification (tamper-proof protection).</p>
 
-  <blockquote>Digital signatures tell you who agreed. Document verification tells you what they agreed to. Both matter. Most organizations only have one.</blockquote>
+  <blockquote data-i18n="blog.post.digsig.blockquote1">Digital signatures tell you who agreed. Document verification tells you what they agreed to. Both matter. Most organizations only have one.</blockquote>
 
-  <p>The next evolution in document trust is not better signatures. It is adding a verification layer that works independently, visibly, and permanently &mdash; ensuring that what you see is what was originally issued.</p>
+  <p data-i18n="blog.post.digsig.p13">The next evolution in document trust is not better signatures. It is adding a verification layer that works independently, visibly, and permanently &mdash; ensuring that what you see is what was originally issued.</p>
 
 </article>
 

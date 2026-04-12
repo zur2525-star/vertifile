@@ -230,68 +230,68 @@
 
 <article class="article-body">
 
-  <p>When you upload a sensitive document to a cloud service, you are making a trust decision. You are trusting that the provider will not read your content, will not leak it, and will not be breached. Most verification platforms require full access to your files. Vertifile takes a fundamentally different approach.</p>
+  <p data-i18n="blog.post.blind.p1">When you upload a sensitive document to a cloud service, you are making a trust decision. You are trusting that the provider will not read your content, will not leak it, and will not be breached. Most verification platforms require full access to your files. Vertifile takes a fundamentally different approach.</p>
 
-  <p><strong>BLIND processing means Vertifile never sees, stores, or has access to the content of your documents.</strong> Not during verification, not after, not ever.</p>
+  <p data-i18n="blog.post.blind.p2"><strong>BLIND processing means Vertifile never sees, stores, or has access to the content of your documents.</strong> Not during verification, not after, not ever.</p>
 
   <h2 data-i18n="blog.post.blind.h2.how">How BLIND Processing Works</h2>
 
-  <p>The name BLIND is not just a brand. It describes the technical architecture. Here is how it works, step by step:</p>
+  <p data-i18n="blog.post.blind.p3">The name BLIND is not just a brand. It describes the technical architecture. Here is how it works, step by step:</p>
 
   <div class="step-grid">
     <div class="step-card">
       <div class="step-num">1</div>
-      <h4>Local Hashing</h4>
-      <p>Your document is processed entirely in your browser. A SHA-256 cryptographic hash is computed on your device. The hash is a unique digital fingerprint &mdash; a one-way mathematical function that cannot be reversed to reconstruct the original content.</p>
+      <h4 data-i18n="blog.post.blind.step1Title">Local Hashing</h4>
+      <p data-i18n="blog.post.blind.step1Desc">Your document is processed entirely in your browser. A SHA-256 cryptographic hash is computed on your device. The hash is a unique digital fingerprint &mdash; a one-way mathematical function that cannot be reversed to reconstruct the original content.</p>
     </div>
     <div class="step-card">
       <div class="step-num">2</div>
-      <h4>Hash Registration</h4>
-      <p>Only the hash &mdash; not the document &mdash; is sent to the Vertifile server and registered on an immutable ledger. The server never receives, processes, or stores your original file in any form.</p>
+      <h4 data-i18n="blog.post.blind.step2Title">Hash Registration</h4>
+      <p data-i18n="blog.post.blind.step2Desc">Only the hash &mdash; not the document &mdash; is sent to the Vertifile server and registered on an immutable ledger. The server never receives, processes, or stores your original file in any form.</p>
     </div>
     <div class="step-card">
       <div class="step-num">3</div>
-      <h4>PVF Generation</h4>
-      <p>A tamper-proof .pvf file is generated that wraps your document with a live holographic verification stamp. This file is created locally and returned to you. The server only knows the hash exists &mdash; nothing about what it represents.</p>
+      <h4 data-i18n="blog.post.blind.step3Title">PVF Generation</h4>
+      <p data-i18n="blog.post.blind.step3Desc">A tamper-proof .pvf file is generated that wraps your document with a live holographic verification stamp. This file is created locally and returned to you. The server only knows the hash exists &mdash; nothing about what it represents.</p>
     </div>
   </div>
 
   <h2 data-i18n="blog.post.blind.h2.zk">Why Zero-Knowledge Matters</h2>
 
-  <p>Traditional document verification platforms operate like a vault. You hand over your document, they verify it, and they give you a receipt. The problem is that the vault now holds a copy of everything &mdash; your medical records, your contracts, your credentials.</p>
+  <p data-i18n="blog.post.blind.p4">Traditional document verification platforms operate like a vault. You hand over your document, they verify it, and they give you a receipt. The problem is that the vault now holds a copy of everything &mdash; your medical records, your contracts, your credentials.</p>
 
-  <p>This creates three critical risks:</p>
+  <p data-i18n="blog.post.blind.p5">This creates three critical risks:</p>
 
   <ul>
-    <li><strong>Breach exposure</strong> &mdash; If the platform is hacked, every document they have ever processed could be exposed. With BLIND processing, there is nothing to steal. The server holds hashes, not documents.</li>
-    <li><strong>Insider access</strong> &mdash; Employees at traditional platforms could theoretically access your files. With Vertifile, even internal engineers cannot see your content because it never reaches their infrastructure.</li>
-    <li><strong>Regulatory risk</strong> &mdash; Storing documents creates GDPR, HIPAA, and other compliance obligations. Since Vertifile never processes personal data from document content, these risks are architecturally eliminated.</li>
+    <li data-i18n="blog.post.blind.li1"><strong>Breach exposure</strong> &mdash; If the platform is hacked, every document they have ever processed could be exposed. With BLIND processing, there is nothing to steal. The server holds hashes, not documents.</li>
+    <li data-i18n="blog.post.blind.li2"><strong>Insider access</strong> &mdash; Employees at traditional platforms could theoretically access your files. With Vertifile, even internal engineers cannot see your content because it never reaches their infrastructure.</li>
+    <li data-i18n="blog.post.blind.li3"><strong>Regulatory risk</strong> &mdash; Storing documents creates GDPR, HIPAA, and other compliance obligations. Since Vertifile never processes personal data from document content, these risks are architecturally eliminated.</li>
   </ul>
 
   <h2 data-i18n="blog.post.blind.h2.math">The Math Behind the Privacy</h2>
 
-  <p>At the core of BLIND processing is the SHA-256 hash function. This algorithm takes any input &mdash; a one-page letter or a 500-page report &mdash; and produces a fixed 256-bit output. The critical properties are:</p>
+  <p data-i18n="blog.post.blind.p6">At the core of BLIND processing is the SHA-256 hash function. This algorithm takes any input &mdash; a one-page letter or a 500-page report &mdash; and produces a fixed 256-bit output. The critical properties are:</p>
 
   <ul>
-    <li><strong>Irreversibility</strong> &mdash; You cannot reconstruct a document from its hash. It is computationally infeasible, even with unlimited resources.</li>
-    <li><strong>Uniqueness</strong> &mdash; Even a single bit change in the original document produces a completely different hash. This is called the avalanche effect.</li>
-    <li><strong>Determinism</strong> &mdash; The same input always produces the same output, making verification reliable and repeatable.</li>
+    <li data-i18n="blog.post.blind.li4"><strong>Irreversibility</strong> &mdash; You cannot reconstruct a document from its hash. It is computationally infeasible, even with unlimited resources.</li>
+    <li data-i18n="blog.post.blind.li5"><strong>Uniqueness</strong> &mdash; Even a single bit change in the original document produces a completely different hash. This is called the avalanche effect.</li>
+    <li data-i18n="blog.post.blind.li6"><strong>Determinism</strong> &mdash; The same input always produces the same output, making verification reliable and repeatable.</li>
   </ul>
 
   <div class="highlight-box">
-    <h4>What If Vertifile Were Breached?</h4>
-    <p>If an attacker gained full access to every Vertifile server, they would find a database of cryptographic hashes. They would not find a single document, a single name, or a single piece of content. There is nothing to decrypt because nothing was ever encrypted &mdash; the data simply was never there.</p>
+    <h4 data-i18n="blog.post.blind.highlightTitle">What If Vertifile Were Breached?</h4>
+    <p data-i18n="blog.post.blind.highlightDesc">If an attacker gained full access to every Vertifile server, they would find a database of cryptographic hashes. They would not find a single document, a single name, or a single piece of content. There is nothing to decrypt because nothing was ever encrypted &mdash; the data simply was never there.</p>
   </div>
 
   <h2 data-i18n="blog.post.blind.h2.architecture">Privacy by Architecture, Not by Policy</h2>
 
-  <p>Many companies promise privacy through policies and encryption. Vertifile delivers privacy through architecture. There is no policy to violate because the system is physically incapable of accessing your content.</p>
+  <p data-i18n="blog.post.blind.p7">Many companies promise privacy through policies and encryption. Vertifile delivers privacy through architecture. There is no policy to violate because the system is physically incapable of accessing your content.</p>
 
-  <p>This is not encryption that could theoretically be broken with the right key. It is a mathematical guarantee that your document content never leaves your device. The only thing that crosses the network is a hash &mdash; a string of characters that means nothing without the original.</p>
+  <p data-i18n="blog.post.blind.p8">This is not encryption that could theoretically be broken with the right key. It is a mathematical guarantee that your document content never leaves your device. The only thing that crosses the network is a hash &mdash; a string of characters that means nothing without the original.</p>
 
-  <blockquote>The most secure way to protect data is to never have it in the first place.</blockquote>
+  <blockquote data-i18n="blog.post.blind.blockquote1">The most secure way to protect data is to never have it in the first place.</blockquote>
 
-  <p>BLIND processing is the foundation that makes Vertifile possible. It is why organizations handling sensitive documents &mdash; hospitals, law firms, government agencies, universities &mdash; can adopt verification without creating new privacy risks.</p>
+  <p data-i18n="blog.post.blind.p9">BLIND processing is the foundation that makes Vertifile possible. It is why organizations handling sensitive documents &mdash; hospitals, law firms, government agencies, universities &mdash; can adopt verification without creating new privacy risks.</p>
 
 </article>
 

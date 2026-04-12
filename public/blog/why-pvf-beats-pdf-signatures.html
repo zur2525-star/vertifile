@@ -247,36 +247,36 @@
 
   <h2 data-i18n="blog.post.pvfbeats.h2.promise">PDF Signatures: The Promise vs. The Reality</h2>
 
-  <p>When PDF digital signatures were introduced, they promised a simple solution to document fraud. Sign a document, and the recipient knows it is authentic. Problem solved.</p>
+  <p data-i18n="blog.post.pvfbeats.p1">When PDF digital signatures were introduced, they promised a simple solution to document fraud. Sign a document, and the recipient knows it is authentic. Problem solved.</p>
 
-  <p>Except it was not.</p>
+  <p data-i18n="blog.post.pvfbeats.p2">Except it was not.</p>
 
-  <p>In practice, PDF digital signatures have a fundamental weakness: they protect <strong>who signed</strong>, not <strong>what was signed</strong>. The signature is a layer added on top of the document. And layers can be removed, bypassed, or ignored entirely.</p>
+  <p data-i18n="blog.post.pvfbeats.p3">In practice, PDF digital signatures have a fundamental weakness: they protect <strong>who signed</strong>, not <strong>what was signed</strong>. The signature is a layer added on top of the document. And layers can be removed, bypassed, or ignored entirely.</p>
 
-  <p>Security researchers have demonstrated that the overwhelming majority of popular PDF viewers are vulnerable to signature bypass attacks. An attacker can modify the visible content of a signed PDF while leaving the signature technically valid. The viewer shows a green checkmark. The document is forged.</p>
+  <p data-i18n="blog.post.pvfbeats.p4">Security researchers have demonstrated that the overwhelming majority of popular PDF viewers are vulnerable to signature bypass attacks. An attacker can modify the visible content of a signed PDF while leaving the signature technically valid. The viewer shows a green checkmark. The document is forged.</p>
 
-  <p>This is not a theoretical risk. Document fraud is a multi-billion-dollar problem that grows every year.</p>
+  <p data-i18n="blog.post.pvfbeats.p5">This is not a theoretical risk. Document fraud is a multi-billion-dollar problem that grows every year.</p>
 
   <h2 data-i18n="blog.post.pvfbeats.h2.breakdown">Why PDF Signatures Break Down</h2>
 
-  <h3>1. Signatures Can Be Stripped</h3>
-  <p>A PDF signature is metadata attached to the document. It can be removed without altering the visible content. Many organizations receive documents and simply ignore whether signatures are present.</p>
+  <h3 data-i18n="blog.post.pvfbeats.h3_1">1. Signatures Can Be Stripped</h3>
+  <p data-i18n="blog.post.pvfbeats.p6">A PDF signature is metadata attached to the document. It can be removed without altering the visible content. Many organizations receive documents and simply ignore whether signatures are present.</p>
 
-  <h3>2. Content Can Change While Signature Stays "Valid"</h3>
-  <p>Shadow attacks and incremental save attacks allow modifying the visible content of a PDF after signing, while keeping the cryptographic signature technically valid. The viewer shows "signed" while displaying forged content.</p>
+  <h3 data-i18n="blog.post.pvfbeats.h3_2">2. Content Can Change While Signature Stays "Valid"</h3>
+  <p data-i18n="blog.post.pvfbeats.p7">Shadow attacks and incremental save attacks allow modifying the visible content of a PDF after signing, while keeping the cryptographic signature technically valid. The viewer shows "signed" while displaying forged content.</p>
 
-  <h3>3. Not All Viewers Verify the Same Way</h3>
-  <p>Different PDF readers handle signatures differently. A document that shows "valid" in one viewer may show "unknown signer" in another. There is no universal, consistent verification standard.</p>
+  <h3 data-i18n="blog.post.pvfbeats.h3_3">3. Not All Viewers Verify the Same Way</h3>
+  <p data-i18n="blog.post.pvfbeats.p8">Different PDF readers handle signatures differently. A document that shows "valid" in one viewer may show "unknown signer" in another. There is no universal, consistent verification standard.</p>
 
-  <h3>4. No Tamper Evidence</h3>
-  <p>If someone removes a signature, there is no trace. The document looks the same &mdash; unsigned but otherwise normal. There is no alarm, no visual change, no indication that something was removed.</p>
+  <h3 data-i18n="blog.post.pvfbeats.h3_4">4. No Tamper Evidence</h3>
+  <p data-i18n="blog.post.pvfbeats.p9">If someone removes a signature, there is no trace. The document looks the same &mdash; unsigned but otherwise normal. There is no alarm, no visual change, no indication that something was removed.</p>
 
-  <h3>5. Signatures Do Not Prove Timing</h3>
-  <p>A PDF signature shows <strong>when it was signed</strong>, but that timestamp comes from the signer's machine. It can be backdated. There is no independent, immutable proof of when the document existed.</p>
+  <h3 data-i18n="blog.post.pvfbeats.h3_5">5. Signatures Do Not Prove Timing</h3>
+  <p data-i18n="blog.post.pvfbeats.p10">A PDF signature shows <strong>when it was signed</strong>, but that timestamp comes from the signer's machine. It can be backdated. There is no independent, immutable proof of when the document existed.</p>
 
   <h2 data-i18n="blog.post.pvfbeats.h2.pvf">What PVF Does Differently</h2>
 
-  <p>Vertifile's PVF (Protected Verifiable File) format takes a fundamentally different approach. Instead of adding a signature layer, PVF wraps the entire document in verification. The protection is not on top of the document. It IS the document.</p>
+  <p data-i18n="blog.post.pvfbeats.p11">Vertifile's PVF (Protected Verifiable File) format takes a fundamentally different approach. Instead of adding a signature layer, PVF wraps the entire document in verification. The protection is not on top of the document. It IS the document.</p>
 
   <h2 data-i18n="blog.post.pvfbeats.h2.comparison">Head-to-Head Comparison</h2>
 
@@ -354,61 +354,61 @@
 
   <h2 data-i18n="blog.post.pvfbeats.h2.core">The Core Difference: Architecture vs. Feature</h2>
 
-  <p>PDF signatures are a <strong>feature</strong> added to an existing format. They depend on the viewer implementing them correctly, the signer configuring them properly, and the recipient knowing how to check them.</p>
+  <p data-i18n="blog.post.pvfbeats.p12">PDF signatures are a <strong>feature</strong> added to an existing format. They depend on the viewer implementing them correctly, the signer configuring them properly, and the recipient knowing how to check them.</p>
 
-  <p>PVF verification is an <strong>architecture</strong>. The document cannot exist without its verification. There is no "unsigned" version. There is no way to view the content without the integrity check running. The protection is not a layer &mdash; it is the foundation.</p>
+  <p data-i18n="blog.post.pvfbeats.p13">PVF verification is an <strong>architecture</strong>. The document cannot exist without its verification. There is no "unsigned" version. There is no way to view the content without the integrity check running. The protection is not a layer &mdash; it is the foundation.</p>
 
   <div class="highlight-box">
-    <h4>Think of it this way:</h4>
-    <p>A PDF signature is like a padlock on a gate. Remove the padlock, and the gate still opens. A PVF document is like a vault built around the contents. Remove the vault, and the contents do not exist.</p>
+    <h4 data-i18n="blog.post.pvfbeats.highlightTitle">Think of it this way:</h4>
+    <p data-i18n="blog.post.pvfbeats.highlightDesc">A PDF signature is like a padlock on a gate. Remove the padlock, and the gate still opens. A PVF document is like a vault built around the contents. Remove the vault, and the contents do not exist.</p>
   </div>
 
   <h2 data-i18n="blog.post.pvfbeats.h2.scenarios">Real-World Scenarios</h2>
 
   <div class="scenario-box">
-    <h4>Scenario 1: University Diploma</h4>
+    <h4 data-i18n="blog.post.pvfbeats.sc1Title">Scenario 1: University Diploma</h4>
     <div class="scenario-label label-pdf">PDF Signature</div>
-    <p>A diploma is signed with the university's certificate. A student modifies their grade using an incremental save attack. The signature still shows as valid.</p>
+    <p data-i18n="blog.post.pvfbeats.sc1Pdf">A diploma is signed with the university's certificate. A student modifies their grade using an incremental save attack. The signature still shows as valid.</p>
     <div class="scenario-label label-pvf">PVF</div>
-    <p>The diploma's entire content is fingerprinted and sealed. Changing any character produces a completely different hash. The stamp freezes red. The document screams "forged."</p>
+    <p data-i18n="blog.post.pvfbeats.sc1Pvf">The diploma's entire content is fingerprinted and sealed. Changing any character produces a completely different hash. The stamp freezes red. The document screams "forged."</p>
   </div>
 
   <div class="scenario-box">
-    <h4>Scenario 2: Medical Record Transfer</h4>
+    <h4 data-i18n="blog.post.pvfbeats.sc2Title">Scenario 2: Medical Record Transfer</h4>
     <div class="scenario-label label-pdf">PDF Signature</div>
-    <p>A hospital sends signed medical records to an insurance company. The records pass through email, file shares, and portals. At any point, the signature could be stripped, and no one would notice.</p>
+    <p data-i18n="blog.post.pvfbeats.sc2Pdf">A hospital sends signed medical records to an insurance company. The records pass through email, file shares, and portals. At any point, the signature could be stripped, and no one would notice.</p>
     <div class="scenario-label label-pvf">PVF</div>
-    <p>The medical record is a self-verifying file. At every step, anyone who opens it sees either a live green stamp (authentic) or a frozen red stamp (tampered). There is no ambiguity.</p>
+    <p data-i18n="blog.post.pvfbeats.sc2Pvf">The medical record is a self-verifying file. At every step, anyone who opens it sees either a live green stamp (authentic) or a frozen red stamp (tampered). There is no ambiguity.</p>
   </div>
 
   <div class="scenario-box">
-    <h4>Scenario 3: Insurance Claim Document</h4>
+    <h4 data-i18n="blog.post.pvfbeats.sc3Title">Scenario 3: Insurance Claim Document</h4>
     <div class="scenario-label label-pdf">PDF Signature</div>
-    <p>An insurance claim is submitted with a signed PDF. The adjuster's viewer does not fully support signature verification and shows "unknown signer." The document is accepted anyway.</p>
+    <p data-i18n="blog.post.pvfbeats.sc3Pdf">An insurance claim is submitted with a signed PDF. The adjuster's viewer does not fully support signature verification and shows "unknown signer." The document is accepted anyway.</p>
     <div class="scenario-label label-pvf">PVF</div>
-    <p>The claim document opens in any browser. The animated stamp is either live and green (authentic) or frozen and red (forged). No special viewer needed. No ambiguity.</p>
+    <p data-i18n="blog.post.pvfbeats.sc3Pvf">The claim document opens in any browser. The animated stamp is either live and green (authentic) or frozen and red (forged). No special viewer needed. No ambiguity.</p>
   </div>
 
   <div class="scenario-box">
-    <h4>Scenario 4: Court Filing</h4>
+    <h4 data-i18n="blog.post.pvfbeats.sc4Title">Scenario 4: Court Filing</h4>
     <div class="scenario-label label-pdf">PDF Signature</div>
-    <p>An attorney submits a signed PDF as evidence. The opposing counsel questions when the document was actually created. The timestamp comes from the signer's machine and cannot be independently verified.</p>
+    <p data-i18n="blog.post.pvfbeats.sc4Pdf">An attorney submits a signed PDF as evidence. The opposing counsel questions when the document was actually created. The timestamp comes from the signer's machine and cannot be independently verified.</p>
     <div class="scenario-label label-pvf">PVF</div>
-    <p>The document's fingerprint is permanently anchored to a public blockchain with an immutable timestamp. Any party can independently verify when the document was registered, without relying on either side's claim.</p>
+    <p data-i18n="blog.post.pvfbeats.sc4Pvf">The document's fingerprint is permanently anchored to a public blockchain with an immutable timestamp. Any party can independently verify when the document was registered, without relying on either side's claim.</p>
   </div>
 
   <h2 data-i18n="blog.post.pvfbeats.h2.bottom">The Bottom Line</h2>
 
-  <p>PDF digital signatures were a good idea in 2000. The document security landscape has changed. Attacks are more sophisticated. The stakes are higher. And the solution needs to match.</p>
+  <p data-i18n="blog.post.pvfbeats.p14">PDF digital signatures were a good idea in 2000. The document security landscape has changed. Attacks are more sophisticated. The stakes are higher. And the solution needs to match.</p>
 
-  <p>Vertifile PVF does not patch the problems of PDF signatures. It replaces the architecture entirely:</p>
+  <p data-i18n="blog.post.pvfbeats.p15">Vertifile PVF does not patch the problems of PDF signatures. It replaces the architecture entirely:</p>
 
   <ul>
-    <li><strong>Not a signature</strong> &mdash; a complete verification wrapper</li>
-    <li><strong>Not dependent on the viewer</strong> &mdash; works in any browser</li>
-    <li><strong>Not removable</strong> &mdash; the protection IS the document</li>
-    <li><strong>Not trust-based</strong> &mdash; blockchain-anchored, independently verifiable</li>
-    <li><strong>Not visible to the platform</strong> &mdash; zero-knowledge by design</li>
+    <li data-i18n="blog.post.pvfbeats.li1"><strong>Not a signature</strong> &mdash; a complete verification wrapper</li>
+    <li data-i18n="blog.post.pvfbeats.li2"><strong>Not dependent on the viewer</strong> &mdash; works in any browser</li>
+    <li data-i18n="blog.post.pvfbeats.li3"><strong>Not removable</strong> &mdash; the protection IS the document</li>
+    <li data-i18n="blog.post.pvfbeats.li4"><strong>Not trust-based</strong> &mdash; blockchain-anchored, independently verifiable</li>
+    <li data-i18n="blog.post.pvfbeats.li5"><strong>Not visible to the platform</strong> &mdash; zero-knowledge by design</li>
   </ul>
 
 </article>

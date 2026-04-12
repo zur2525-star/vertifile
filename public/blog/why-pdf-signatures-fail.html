@@ -245,51 +245,51 @@
 <!-- ===== ARTICLE BODY ===== -->
 <article class="article-body">
 
-  <p>Every day, billions of PDF documents are exchanged across the globe. Contracts, invoices, medical records, diplomas, government IDs &mdash; all encoded in a format invented over three decades ago. And for the vast majority of them, the only layer of trust is a digital signature.</p>
+  <p data-i18n="blog.post.pdffail.p1">Every day, billions of PDF documents are exchanged across the globe. Contracts, invoices, medical records, diplomas, government IDs &mdash; all encoded in a format invented over three decades ago. And for the vast majority of them, the only layer of trust is a digital signature.</p>
 
-  <p>But here is the uncomfortable truth: <strong>digital signatures on PDFs only prove who signed the document. They do not prove that the content you are reading is what was originally signed.</strong></p>
+  <p data-i18n="blog.post.pdffail.p2">But here is the uncomfortable truth: <strong>digital signatures on PDFs only prove who signed the document. They do not prove that the content you are reading is what was originally signed.</strong></p>
 
   <h2 data-i18n="blog.post.pdffail.h2.gap">The Signing vs. Verification Gap</h2>
 
-  <p>When you digitally sign a PDF, the signature is cryptographically tied to the document at the moment of signing. In theory, any modification after signing should invalidate the signature. In practice, the story is far more complicated.</p>
+  <p data-i18n="blog.post.pdffail.p3">When you digitally sign a PDF, the signature is cryptographically tied to the document at the moment of signing. In theory, any modification after signing should invalidate the signature. In practice, the story is far more complicated.</p>
 
-  <p>Research from Ruhr University Bochum revealed that <strong>21 out of 22 popular PDF viewers</strong> were vulnerable to at least one attack that could modify a signed PDF without breaking the signature. These attacks include incremental saving exploits, signature wrapping, and universal signature forgery.</p>
+  <p data-i18n="blog.post.pdffail.p4">Research from Ruhr University Bochum revealed that <strong>21 out of 22 popular PDF viewers</strong> were vulnerable to at least one attack that could modify a signed PDF without breaking the signature. These attacks include incremental saving exploits, signature wrapping, and universal signature forgery.</p>
 
-  <p>What does this mean in the real world? It means a signed contract could be altered after signing and still show a green checkmark in Adobe Reader. It means a university transcript could be modified by a bad actor while retaining a valid institutional signature.</p>
+  <p data-i18n="blog.post.pdffail.p5">What does this mean in the real world? It means a signed contract could be altered after signing and still show a green checkmark in Adobe Reader. It means a university transcript could be modified by a bad actor while retaining a valid institutional signature.</p>
 
   <h2 data-i18n="blog.post.pdffail.h2.short">Why Existing PDF Security Falls Short</h2>
 
-  <p>The core problem is architectural. PDF is a container format designed for visual fidelity, not for tamper-proof verification. Consider the challenges:</p>
+  <p data-i18n="blog.post.pdffail.p6">The core problem is architectural. PDF is a container format designed for visual fidelity, not for tamper-proof verification. Consider the challenges:</p>
 
   <ul>
-    <li><strong>Incremental updates</strong> &mdash; PDFs allow appending changes to the end of a file without modifying original bytes, which can be exploited to alter visible content while keeping signatures intact.</li>
-    <li><strong>Viewer inconsistency</strong> &mdash; Different PDF readers render and validate signatures differently. A document that shows as tampered in one viewer may appear valid in another.</li>
-    <li><strong>No real-time verification</strong> &mdash; Once a signed PDF is downloaded, there is no live check against the original. The document is entirely self-contained, which is both its strength and its fatal flaw.</li>
-    <li><strong>Certificate complexity</strong> &mdash; Certificate chains, revocation lists, and trust stores add layers of confusion that most end users cannot evaluate.</li>
+    <li data-i18n="blog.post.pdffail.li1"><strong>Incremental updates</strong> &mdash; PDFs allow appending changes to the end of a file without modifying original bytes, which can be exploited to alter visible content while keeping signatures intact.</li>
+    <li data-i18n="blog.post.pdffail.li2"><strong>Viewer inconsistency</strong> &mdash; Different PDF readers render and validate signatures differently. A document that shows as tampered in one viewer may appear valid in another.</li>
+    <li data-i18n="blog.post.pdffail.li3"><strong>No real-time verification</strong> &mdash; Once a signed PDF is downloaded, there is no live check against the original. The document is entirely self-contained, which is both its strength and its fatal flaw.</li>
+    <li data-i18n="blog.post.pdffail.li4"><strong>Certificate complexity</strong> &mdash; Certificate chains, revocation lists, and trust stores add layers of confusion that most end users cannot evaluate.</li>
   </ul>
 
   <h2 data-i18n="blog.post.pdffail.h2.tamperproof">What Tamper-Proof Actually Means</h2>
 
-  <p>True document integrity requires a fundamentally different approach. Instead of asking "who signed this?" the question should be "is this document identical to the original that was issued?"</p>
+  <p data-i18n="blog.post.pdffail.p7">True document integrity requires a fundamentally different approach. Instead of asking "who signed this?" the question should be "is this document identical to the original that was issued?"</p>
 
   <div class="highlight-box">
-    <h4>The Vertifile Approach</h4>
-    <p>Vertifile uses BLIND processing to generate a cryptographic hash of your entire document locally, on your device. This hash is registered on an immutable ledger. The resulting .pvf file contains a live holographic verification stamp that checks against the registered hash in real time. If even a single pixel changes, the stamp freezes red &mdash; instantly and unmistakably.</p>
+    <h4 data-i18n="blog.post.pdffail.highlightTitle">The Vertifile Approach</h4>
+    <p data-i18n="blog.post.pdffail.highlightDesc">Vertifile uses BLIND processing to generate a cryptographic hash of your entire document locally, on your device. This hash is registered on an immutable ledger. The resulting .pvf file contains a live holographic verification stamp that checks against the registered hash in real time. If even a single pixel changes, the stamp freezes red &mdash; instantly and unmistakably.</p>
   </div>
 
-  <p>This is not a layer on top of PDF. It is a new paradigm. The document itself carries its own proof of integrity, and that proof is verified every time the document is opened &mdash; not once at the time of signing.</p>
+  <p data-i18n="blog.post.pdffail.p8">This is not a layer on top of PDF. It is a new paradigm. The document itself carries its own proof of integrity, and that proof is verified every time the document is opened &mdash; not once at the time of signing.</p>
 
   <h2 data-i18n="blog.post.pdffail.h2.shift">From Signing to Verifying: The Shift Ahead</h2>
 
-  <p>The industry is beginning to recognize that signing and verifying are two fundamentally different problems. E-signature platforms like DocuSign, Adobe Sign, and HelloSign solved the problem of remote agreement. But they left a gap: they prove consent, not content integrity.</p>
+  <p data-i18n="blog.post.pdffail.p9">The industry is beginning to recognize that signing and verifying are two fundamentally different problems. E-signature platforms like DocuSign, Adobe Sign, and HelloSign solved the problem of remote agreement. But they left a gap: they prove consent, not content integrity.</p>
 
-  <p>As AI-generated documents become indistinguishable from real ones and as forgery tools become accessible to anyone with a laptop, the need for real-time, visual, and cryptographic verification becomes urgent.</p>
+  <p data-i18n="blog.post.pdffail.p10">As AI-generated documents become indistinguishable from real ones and as forgery tools become accessible to anyone with a laptop, the need for real-time, visual, and cryptographic verification becomes urgent.</p>
 
-  <p>The next generation of document trust will not rely on a small icon in a PDF toolbar. It will rely on visible, live, and unmistakable proof that what you see is what was originally issued.</p>
+  <p data-i18n="blog.post.pdffail.p11">The next generation of document trust will not rely on a small icon in a PDF toolbar. It will rely on visible, live, and unmistakable proof that what you see is what was originally issued.</p>
 
-  <blockquote>The question is no longer "who signed this?" but "is this the document that was originally created?"</blockquote>
+  <blockquote data-i18n="blog.post.pdffail.blockquote1">The question is no longer "who signed this?" but "is this the document that was originally created?"</blockquote>
 
-  <p>PDF signatures served their purpose. But the threat landscape has evolved. It is time for document security to evolve with it.</p>
+  <p data-i18n="blog.post.pdffail.p12">PDF signatures served their purpose. But the threat landscape has evolved. It is time for document security to evolve with it.</p>
 
 </article>
 
