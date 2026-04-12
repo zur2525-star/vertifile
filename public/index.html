@@ -830,7 +830,7 @@
     <p data-i18n="video.subtitle">Watch how documents become tamper-proof with 7 layers of security.</p>
   </div>
   <div class="video-wrapper fade-up">
-    <video autoplay loop muted playsinline preload="auto" style="pointer-events:none">
+    <video loop muted playsinline preload="auto" style="pointer-events:none" id="promoVideo">
       <source src="/videos/promo.mp4" type="video/mp4">
     </video>
   </div>
@@ -1385,6 +1385,19 @@
     entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible')}});
   },{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
   document.querySelectorAll('.fade-up').forEach(function(el){observer.observe(el)});
+
+  // ===== PROMO VIDEO — play on scroll into view =====
+  (function(){
+    var vid=document.getElementById('promoVideo');
+    if(!vid)return;
+    var vidObserver=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){vid.play();vid.currentTime=0;}
+        else{vid.pause();}
+      });
+    },{threshold:0.3});
+    vidObserver.observe(vid);
+  })();
 
   // ===== CYBER NETWORK CANVAS =====
   (function(){
