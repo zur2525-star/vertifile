@@ -788,6 +788,24 @@
     .preview-info .info-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px}
     .preview-info .info-label{color:var(--text-2);font-weight:500}
     .preview-info .info-value{color:var(--text-1);font-family:'SF Mono','Fira Code',monospace;font-size:11px}
+
+    /* Live verification indicator */
+    .vf-live-verify{display:flex;align-items:center;gap:6px;padding:8px 0;margin-top:4px;border-top:1px solid var(--divider);font-size:11px;color:rgba(196,181,253,.5);transition:opacity .3s}
+    .vf-live-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;transition:background .3s}
+    .vf-live-verify.active .vf-live-dot{background:#34d399;box-shadow:0 0 6px rgba(52,211,153,.4)}
+    .vf-live-verify.active .vf-live-text{color:#34d399}
+    .vf-live-verify.expired .vf-live-dot{background:#ef4444;box-shadow:0 0 6px rgba(239,68,68,.4)}
+    .vf-live-verify.expired .vf-live-text{color:#ef4444}
+    .vf-live-verify.loading .vf-live-dot{background:rgba(196,181,253,.3);animation:vfLivePulse 1.2s ease-in-out infinite}
+    @keyframes vfLivePulse{0%,100%{opacity:.4}50%{opacity:1}}
+    .vf-live-ts{font-family:'SF Mono','Fira Code',monospace;font-size:10px;color:rgba(196,181,253,.35);margin-left:auto}
+    body.light-mode .vf-live-verify{border-top-color:rgba(0,0,0,.06);color:rgba(75,85,99,.5)}
+    body.light-mode .vf-live-verify.active .vf-live-text{color:#059669}
+    body.light-mode .vf-live-verify.active .vf-live-dot{background:#059669;box-shadow:0 0 6px rgba(5,150,101,.3)}
+    body.light-mode .vf-live-verify.expired .vf-live-text{color:#dc2626}
+    body.light-mode .vf-live-verify.expired .vf-live-dot{background:#dc2626;box-shadow:0 0 6px rgba(220,38,38,.3)}
+    body.light-mode .vf-live-ts{color:rgba(107,114,128,.5)}
+
     .pagination{display:flex;justify-content:center;gap:4px;margin-top:20px}
     .pagination button{width:32px;height:32px;border-radius:8px;font-size:13px;border:1px solid var(--input-border);background:transparent;color:var(--text-2);cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center}
     .pagination button:hover{background:var(--hover-bg)}
@@ -1364,6 +1382,12 @@
           <div class="info-row"><span class="info-label" data-i18n="tab.documents.keyId">Key ID</span><span class="info-value mono copyable" id="previewKeyId" title="Click to copy">--</span></div>
           <div class="info-row"><span class="info-label" data-i18n="tab.documents.status">Status</span><span class="info-value cpe-status-cell" id="previewStatusPill">--</span></div>
         </div>
+      </div>
+      <!-- Live verification indicator (chained token refresh) -->
+      <div class="vf-live-verify loading" id="liveVerifyIndicator" style="display:none">
+        <span class="vf-live-dot"></span>
+        <span class="vf-live-text">Verifying...</span>
+        <span class="vf-live-ts" id="liveVerifyTs"></span>
       </div>
     </div>
   </div>
@@ -2278,6 +2302,7 @@ window.Dashboard = {
     }
 
     document.getElementById('docPreview').classList.add('open');
+    this.startTokenRefresh(selectedDoc.hash);
     this.renderDocRows();
   },
   toggleCryptoProof: function(){
@@ -2288,10 +2313,91 @@ window.Dashboard = {
     btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
   },
   closePreview: function(){
+    this.stopTokenRefresh();
     document.getElementById('docPreview').classList.remove('open');
     selectedDoc = null;
     this.renderDocRows();
   },
+
+  /* ---- Chained Token Refresh (live verification heartbeat) ---- */
+  _tokenRefreshInterval: null,
+  _tokenRefreshHash: null,
+
+  startTokenRefresh: function(hash) {
+    this.stopTokenRefresh();
+    if (!hash) return;
+    this._tokenRefreshHash = hash;
+    var indicator = document.getElementById('liveVerifyIndicator');
+    if (indicator) {
+      indicator.style.display = 'flex';
+      indicator.className = 'vf-live-verify loading';
+      var textEl = indicator.querySelector('.vf-live-text');
+      if (textEl) textEl.textContent = 'Verifying...';
+      var tsEl = document.getElementById('liveVerifyTs');
+      if (tsEl) tsEl.textContent = '';
+    }
+    // First refresh immediately
+    this._refreshToken(hash);
+    // Then refresh every 5 minutes (300000ms)
+    var self = this;
+    this._tokenRefreshInterval = setInterval(function() {
+      self._refreshToken(self._tokenRefreshHash);
+    }, 300000);
+  },
+
+  stopTokenRefresh: function() {
+    if (this._tokenRefreshInterval) {
+      clearInterval(this._tokenRefreshInterval);
+      this._tokenRefreshInterval = null;
+    }
+    this._tokenRefreshHash = null;
+    var indicator = document.getElementById('liveVerifyIndicator');
+    if (indicator) indicator.style.display = 'none';
+  },
+
+  _refreshToken: function(hash) {
+    if (!hash) return;
+    var indicator = document.getElementById('liveVerifyIndicator');
+    var textEl = indicator ? indicator.querySelector('.vf-live-text') : null;
+    var tsEl = document.getElementById('liveVerifyTs');
+
+    // Show loading state
+    if (indicator) indicator.className = 'vf-live-verify loading';
+    if (textEl) textEl.textContent = 'Verifying...';
+
+    fetch('/api/token/refresh', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ hash: hash })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!indicator) return;
+      if (data.success) {
+        indicator.className = 'vf-live-verify active';
+        if (textEl) textEl.textContent = 'Live verified';
+        if (tsEl) {
+          var now = new Date();
+          var hh = String(now.getHours()).padStart(2, '0');
+          var mm = String(now.getMinutes()).padStart(2, '0');
+          var ss = String(now.getSeconds()).padStart(2, '0');
+          tsEl.textContent = hh + ':' + mm + ':' + ss;
+        }
+      } else {
+        indicator.className = 'vf-live-verify expired';
+        if (textEl) textEl.textContent = 'Verification expired';
+        if (tsEl) tsEl.textContent = '';
+      }
+    })
+    .catch(function() {
+      if (!indicator) return;
+      indicator.className = 'vf-live-verify expired';
+      if (textEl) textEl.textContent = 'Verification expired';
+      if (tsEl) tsEl.textContent = '';
+    });
+  },
+
   downloadCurrentDoc: function(){
     if (!selectedDoc) return;
     if (isFreePlan()) { showPaywall(); return; }

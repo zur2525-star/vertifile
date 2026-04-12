@@ -1,15 +1,44 @@
 'use strict';
 
+// ---------------------------------------------------------------------------
+// Email Setup (Resend -- free tier, 100 emails/day):
+//
+// 1. Sign up at resend.com
+// 2. Add and verify domain vertifile.com (DNS records)
+//    - For testing, use onboarding@resend.dev as the sender
+// 3. Create an API key in the Resend dashboard
+// 4. Set these env vars in .env (or your hosting platform):
+//
+//    SMTP_HOST=smtp.resend.com
+//    SMTP_PORT=465
+//    SMTP_USER=resend
+//    SMTP_PASS=re_YOUR_API_KEY
+//    SMTP_FROM=Vertifile <noreply@vertifile.com>
+//
+// Notes:
+//   - Port 465 uses implicit SSL (nodemailer sets secure:true automatically)
+//   - The SMTP_USER is always the literal string "resend"
+//   - The SMTP_PASS is your Resend API key (starts with re_)
+//   - Free tier: 100 emails/day, 1 custom domain
+//   - If SMTP is not configured, emails are logged to console (no crash)
+// ---------------------------------------------------------------------------
+
 /**
- * Vertifile — Email Service
+ * Vertifile -- Email Service
  *
  * Sends transactional emails via SMTP (nodemailer).
- * Fails gracefully if SMTP is not configured — logs a warning instead of crashing.
+ * Configured for Resend (smtp.resend.com:465) but works with any SMTP provider.
+ * Fails gracefully if SMTP is not configured -- logs a warning instead of crashing.
  *
  * Required env vars:
  *   SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
  * Optional:
- *   SMTP_FROM  (defaults to "Vertifile <no-reply@vertifile.com>")
+ *   SMTP_FROM  (defaults to "Vertifile <noreply@vertifile.com>")
+ *
+ * Resend-specific error handling:
+ *   - 535 / auth failure  -> bad API key
+ *   - 429 / rate limit    -> 100/day cap hit (free tier)
+ *   - domain not verified -> DNS records missing in Resend dashboard
  */
 
 const logger = require('./logger');
@@ -61,7 +90,7 @@ function getTransporter() {
 // Public API
 // ---------------------------------------------------------------------------
 
-const DEFAULT_FROM = process.env.SMTP_FROM || 'Vertifile <no-reply@vertifile.com>';
+const DEFAULT_FROM = process.env.SMTP_FROM || 'Vertifile <noreply@vertifile.com>';
 
 /**
  * Send an email.
@@ -91,7 +120,25 @@ async function sendEmail(to, subject, html, opts = {}) {
     logger.info({ to, subject, messageId: info.messageId }, 'Email sent successfully');
     return true;
   } catch (err) {
-    logger.error({ err, to, subject }, 'Failed to send email');
+    // Detect Resend-specific SMTP errors for clearer logging
+    const msg = (err.message || '').toLowerCase();
+    const code = err.responseCode || err.code;
+
+    if (code === 535 || msg.includes('authentication') || msg.includes('invalid api key')) {
+      logger.error({ err, to, subject },
+        'Email auth failed -- check SMTP_PASS (Resend API key must start with re_)');
+    } else if (code === 429 || msg.includes('rate limit') || msg.includes('too many')) {
+      logger.warn({ err, to, subject },
+        'Email rate-limited -- Resend free tier allows 100 emails/day');
+    } else if (msg.includes('domain') && (msg.includes('not verified') || msg.includes('not found'))) {
+      logger.error({ err, to, subject },
+        'Email rejected -- sender domain not verified in Resend (add vertifile.com DNS records)');
+    } else if (msg.includes('econnrefused') || msg.includes('enotfound') || msg.includes('timeout')) {
+      logger.error({ err, to, subject },
+        'Email connection failed -- check SMTP_HOST and SMTP_PORT');
+    } else {
+      logger.error({ err, to, subject }, 'Failed to send email');
+    }
     return false;
   }
 }
