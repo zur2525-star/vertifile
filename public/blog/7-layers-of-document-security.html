@@ -234,156 +234,69 @@
 
 <article class="article-body">
 
-  <h2 data-i18n="blog.post.7layers.h2.problem">The Problem: Documents Travel Unprotected</h2>
+  <p data-i18n="blog.post.7layers.p1">Most organizations use 2-3 security layers and assume they are protected. They are not. A single signature. A static key. Maybe a timestamp. That is the entire defense standing between a critical document and a forged one. And in a world where AI generates flawless forgeries in minutes, that defense is not just inadequate &mdash; it is negligent.</p>
 
-  <p data-i18n="blog.post.7layers.p1">Every day, millions of critical documents move between organizations. Diplomas are emailed to employers. Medical records are faxed to insurance companies. Court filings are uploaded to portals. And at every step, they are completely vulnerable.</p>
+  <p data-i18n="blog.post.7layers.p2"><strong>Valid does not mean true. Signed does not mean trusted. File does not equal reality.</strong></p>
 
-  <p data-i18n="blog.post.7layers.p2">A forged university diploma takes 15 minutes to create. A modified insurance claim can cost an organization millions. A tampered medical record can endanger lives.</p>
+  <h2 data-i18n="blog.post.7layers.h2.layer1">Layer 1: File Integrity &mdash; The Document Fingerprint</h2>
 
-  <p data-i18n="blog.post.7layers.p3">PDF signatures were supposed to solve this. They did not. Research has shown that the majority of PDF viewers are vulnerable to signature bypass attacks. A digital signature can be stripped, moved, or ignored entirely.</p>
+  <p data-i18n="blog.post.7layers.p5">The first layer answers one question: has this file been modified? A cryptographic hash creates a unique 64-character fingerprint of the entire document. Change a single pixel, and the fingerprint changes completely.</p>
 
-  <p data-i18n="blog.post.7layers.p4">Vertifile takes a fundamentally different approach. Instead of adding a signature layer on top of a document, Vertifile wraps the entire document in <strong>7 independent layers of protection</strong>. If any single layer is compromised, the other six still hold.</p>
+  <p data-i18n="blog.post.7layers.layer1gap"><strong>What it protects:</strong> Detection of any file modification, however small. <strong>What it does NOT protect:</strong> It does not prove who created the file, when it was created, or whether the content was authentic in the first place. A perfectly forged document produces a valid fingerprint too. That is why you need the next layer.</p>
 
-  <blockquote data-i18n="blog.post.7layers.blockquote1">Think of it like a bank vault &mdash; not one lock, but seven, each using a different mechanism.</blockquote>
+  <h2 data-i18n="blog.post.7layers.h2.layer2">Layer 2: Signature &mdash; Asymmetric Verification</h2>
 
-  <h2 data-i18n="blog.post.7layers.h2.layer1">Layer 1: Military-Grade Document Fingerprinting</h2>
+  <p data-i18n="blog.post.7layers.p6">The second layer answers: did this file come from an authorized source? A private key signs the document. A separate public key allows anyone to verify independently &mdash; no Vertifile account needed, any browser, any device.</p>
 
-  <p data-i18n="blog.post.7layers.p5">When you upload a document to Vertifile, the system creates a cryptographic hash &mdash; a unique 64-character digital fingerprint. This fingerprint is so sensitive that changing a single pixel in an image, or a single space in a text document, produces an entirely different result.</p>
+  <p data-i18n="blog.post.7layers.layer2gap"><strong>What it protects:</strong> Source authenticity and non-repudiation. <strong>What it does NOT protect:</strong> It does not prove the document existed at a specific time, or that the signer had the authority to issue it. A stolen key can sign forged documents. That is why you need the next layer.</p>
 
-  <ul>
-    <li data-i18n="blog.post.7layers.li1"><strong>No one can modify</strong> a protected document without detection</li>
-    <li data-i18n="blog.post.7layers.li2">The fingerprint is computed <strong>without reading your content</strong> (zero-knowledge)</li>
-    <li data-i18n="blog.post.7layers.li3">Even Vertifile cannot recreate or reverse-engineer your document from the fingerprint</li>
-  </ul>
+  <h2 data-i18n="blog.post.7layers.h2.layer3">Layer 3: Metadata &mdash; Permanent Public Record</h2>
 
-  <h2 data-i18n="blog.post.7layers.h2.layer2">Layer 2: Asymmetric Verification Anyone Can Check</h2>
+  <p data-i18n="blog.post.7layers.p7">The third layer answers: when did this document exist? Every fingerprint is permanently recorded on a public blockchain. An immutable timestamp that no one can delete, alter, or backdate. Not Vertifile. Not a government. Not anyone.</p>
 
-  <p data-i18n="blog.post.7layers.p6">Vertifile uses a two-key verification system. One private key signs the document (held securely by Vertifile's infrastructure). A separate public key allows anyone to verify the signature independently. The signing key never leaves the secure environment, and the verification key is openly available.</p>
+  <p data-i18n="blog.post.7layers.layer3gap"><strong>What it protects:</strong> Courtroom-admissible proof of existence and timing. <strong>What it does NOT protect:</strong> It does not prove the document content was seen or verified by a human. A timestamp on a forged document still records the forgery's creation time. That is why you need the next layer.</p>
 
-  <ul>
-    <li data-i18n="blog.post.7layers.li4">Recipients verify documents <strong>without needing a Vertifile account</strong></li>
-    <li data-i18n="blog.post.7layers.li5">Verification works in <strong>any web browser</strong> &mdash; no software to install</li>
-    <li data-i18n="blog.post.7layers.li6">The system is independently <strong>auditable by third parties</strong></li>
-  </ul>
+  <h2 data-i18n="blog.post.7layers.h2.layer4">Layer 4: Source &mdash; Zero-Knowledge Privacy</h2>
 
-  <h2 data-i18n="blog.post.7layers.h2.layer3">Layer 3: Permanent Public Record on the Blockchain</h2>
+  <p data-i18n="blog.post.7layers.p8">The fourth layer answers: can this be verified without exposing the content? Vertifile computes the fingerprint without ever reading, storing, or transmitting your content. This is not a privacy policy. It is a mathematical property of the system.</p>
 
-  <p data-i18n="blog.post.7layers.p7">Every document fingerprint is permanently recorded on a public blockchain. This creates an immutable timestamp &mdash; proof that a specific document existed at a specific moment in time. No one can delete, alter, or backdate this record. Not Vertifile. Not a government. Not anyone.</p>
+  <p data-i18n="blog.post.7layers.layer4gap"><strong>What it protects:</strong> HIPAA, GDPR, and data sovereignty compliance by design. Even under a court order, Vertifile cannot produce your document content. <strong>What it does NOT protect:</strong> It does not detect tampering after verification. A document verified once could be altered later. That is why you need the next layer.</p>
 
-  <ul>
-    <li data-i18n="blog.post.7layers.li7"><strong>Courtroom-admissible</strong> proof of document existence and timing</li>
-    <li data-i18n="blog.post.7layers.li8">Survives even if <strong>Vertifile ceases to exist</strong></li>
-    <li data-i18n="blog.post.7layers.li9">Publicly auditable by <strong>regulators, courts, or compliance teams</strong></li>
-  </ul>
+  <h2 data-i18n="blog.post.7layers.h2.layer5">Layer 5: Context &mdash; Self-Defending Documents</h2>
 
-  <h2 data-i18n="blog.post.7layers.h2.layer4">Layer 4: Zero-Knowledge Privacy</h2>
+  <p data-i18n="blog.post.7layers.p9">The fifth layer answers: what happens if someone tries to tamper after protection? Every protected document contains built-in integrity monitoring. If someone opens it in a code editor, modifies its structure, or injects content, the document detects the tampering and triggers an immediate visual alert &mdash; the stamp freezes red.</p>
 
-  <p data-i18n="blog.post.7layers.p8">Vertifile operates on a zero-knowledge architecture. The system computes the document fingerprint without ever reading, storing, or transmitting your content. This is not a privacy policy that could be changed. It is a mathematical property of the system design.</p>
+  <p data-i18n="blog.post.7layers.layer5gap"><strong>What it protects:</strong> Post-issuance tampering detection, even offline. <strong>What it does NOT protect:</strong> It does not prevent someone from sharing a screenshot or static copy of a verified document. That is why you need the next layer.</p>
 
-  <ul>
-    <li data-i18n="blog.post.7layers.li10"><strong>HIPAA, GDPR, and privacy compliance</strong> by design</li>
-    <li data-i18n="blog.post.7layers.li11">Even under a court order, Vertifile <strong>cannot produce your document content</strong></li>
-    <li data-i18n="blog.post.7layers.li12">No data breach risk for document content &mdash; we simply <strong>do not have it</strong></li>
-  </ul>
+  <h2 data-i18n="blog.post.7layers.h2.layer6">Layer 6: Cross-Validation &mdash; Live Verification</h2>
 
-  <h2 data-i18n="blog.post.7layers.h2.layer5">Layer 5: Self-Defending Documents That Detect Tampering</h2>
+  <p data-i18n="blog.post.7layers.p10">The sixth layer answers: is this document authentic right now? The verification stamp is an animated holographic element that refreshes its authentication token continuously. A screenshot, screen recording, or static copy of the stamp is immediately invalid.</p>
 
-  <p data-i18n="blog.post.7layers.p9">Every protected document contains built-in integrity verification code. The document actively monitors itself. If someone opens it in a code editor, tries to modify its structure, or attempts to inject content, the document detects the tampering and triggers an immediate visual alert &mdash; the verification stamp freezes and turns red.</p>
+  <p data-i18n="blog.post.7layers.layer6gap"><strong>What it protects:</strong> Real-time visual proof that anyone can understand without training. Immunity to screenshot-based forgery. <strong>What it does NOT protect:</strong> It does not record who viewed the document or when. That is why you need the final layer.</p>
 
-  <ul>
-    <li data-i18n="blog.post.7layers.li13">Tampered documents <strong>identify themselves</strong> &mdash; no manual inspection needed</li>
-    <li data-i18n="blog.post.7layers.li14">Works even <strong>offline</strong>, without server connectivity</li>
-    <li data-i18n="blog.post.7layers.li15">Forgery detection is <strong>instantaneous and visual</strong></li>
-  </ul>
+  <h2 data-i18n="blog.post.7layers.h2.layer7">Layer 7: Provenance &mdash; Complete Audit Trail</h2>
 
-  <h2 data-i18n="blog.post.7layers.h2.layer6">Layer 6: Live Verification That Cannot Be Faked</h2>
+  <p data-i18n="blog.post.7layers.p11">The seventh layer answers: who touched this document and what happened? Every interaction is logged: who opened it, when, from where, and whether verification passed or failed. A complete chain of custody for the most demanding compliance and legal requirements.</p>
 
-  <p data-i18n="blog.post.7layers.p10">The Vertifile verification stamp is an animated holographic element that continuously rotates and updates. It refreshes its authentication token every 5 minutes. This means a screenshot, screen recording, or static copy of the stamp is immediately invalid. You cannot fake a live, breathing animation.</p>
+  <p data-i18n="blog.post.7layers.layer7gap"><strong>What it protects:</strong> Full accountability, evidence trails for legal proceedings, and real-time access monitoring. This is the layer that closes every remaining gap in the chain.</p>
 
-  <ul>
-    <li data-i18n="blog.post.7layers.li16"><strong>Visual verification</strong> anyone can understand &mdash; no training required</li>
-    <li data-i18n="blog.post.7layers.li17">Immune to <strong>screenshot-based forgery</strong></li>
-    <li data-i18n="blog.post.7layers.li18">Real-time confirmation that the document is <strong>authentic right now</strong></li>
-  </ul>
+  <h2 data-i18n="blog.post.7layers.h2.chain">The Chain of Trust</h2>
 
-  <h2 data-i18n="blog.post.7layers.h2.layer7">Layer 7: Complete Audit Trail</h2>
+  <p data-i18n="blog.post.7layers.chain1">These layers do not just accumulate. They <strong>depend on each other</strong>. This is not 7 independent locks. It is 7 interlocked gears.</p>
 
-  <p data-i18n="blog.post.7layers.p11">Every interaction with a protected document is logged: who opened it, when, from where, and whether verification passed or failed. This creates a complete chain of custody that satisfies the most demanding compliance and legal requirements.</p>
+  <p data-i18n="blog.post.7layers.chain2">At the center is the <strong>Chained Token</strong> &mdash; a cryptographic hash that binds all seven layers into a single verification structure. Each layer is signed inside the next. Change any single layer and the entire structure collapses &mdash; a domino effect that makes partial tampering impossible.</p>
 
-  <ul>
-    <li data-i18n="blog.post.7layers.li19"><strong>Full accountability</strong> for compliance audits</li>
-    <li data-i18n="blog.post.7layers.li20"><strong>Evidence trail</strong> for legal proceedings</li>
-    <li data-i18n="blog.post.7layers.li21">Real-time <strong>monitoring of document access patterns</strong></li>
-  </ul>
-
-  <h2 data-i18n="blog.post.7layers.h2.together">How the Layers Work Together</h2>
-
-  <div class="highlight-box">
-    <h4 data-i18n="blog.post.7layers.highlightTitle">No single layer makes Vertifile secure. It is the combination that makes forgery mathematically impossible.</h4>
-    <p data-i18n="blog.post.7layers.highlightDesc">An attacker would need to simultaneously defeat all seven layers. The probability of that happening is not just low &mdash; it is, by design, mathematically negligible.</p>
-  </div>
-
-  <div class="layer-grid">
-    <div class="layer-card">
-      <div class="layer-num">1</div>
-      <h4 data-i18n="blog.post.7layers.card1Title">Fingerprinting</h4>
-      <p data-i18n="blog.post.7layers.card1Desc">Ensures the document has not been modified</p>
-    </div>
-    <div class="layer-card">
-      <div class="layer-num">2</div>
-      <h4 data-i18n="blog.post.7layers.card2Title">Asymmetric Verification</h4>
-      <p data-i18n="blog.post.7layers.card2Desc">Ensures the document came from an authorized source</p>
-    </div>
-    <div class="layer-card">
-      <div class="layer-num">3</div>
-      <h4 data-i18n="blog.post.7layers.card3Title">Blockchain Record</h4>
-      <p data-i18n="blog.post.7layers.card3Desc">Ensures the document existed at a specific time</p>
-    </div>
-    <div class="layer-card">
-      <div class="layer-num">4</div>
-      <h4 data-i18n="blog.post.7layers.card4Title">Zero-Knowledge</h4>
-      <p data-i18n="blog.post.7layers.card4Desc">Ensures privacy even from Vertifile itself</p>
-    </div>
-    <div class="layer-card">
-      <div class="layer-num">5</div>
-      <h4 data-i18n="blog.post.7layers.card5Title">Self-Defense</h4>
-      <p data-i18n="blog.post.7layers.card5Desc">Ensures the document fights back against tampering</p>
-    </div>
-    <div class="layer-card">
-      <div class="layer-num">6</div>
-      <h4 data-i18n="blog.post.7layers.card6Title">Live Verification</h4>
-      <p data-i18n="blog.post.7layers.card6Desc">Ensures verification is live and cannot be faked</p>
-    </div>
-    <div class="layer-card">
-      <div class="layer-num">7</div>
-      <h4 data-i18n="blog.post.7layers.card7Title">Audit Trail</h4>
-      <p data-i18n="blog.post.7layers.card7Desc">Ensures every action is recorded and accountable</p>
-    </div>
-  </div>
-
-  <h2 data-i18n="blog.post.7layers.h2.chain">Why Breaking One Layer Breaks Everything</h2>
-
-  <p data-i18n="blog.post.7layers.chain1">The 7 layers are not 7 independent locks on a door. They are 7 interlocked gears in a single machine. This is the critical difference that most people miss when they first hear about layered security.</p>
-
-  <p data-i18n="blog.post.7layers.chain2">At the center of this machine is the Chained Token &mdash; Vertifile's secret sauce. Think of it as a signature within a signature. The Chained Token is a cryptographic hash that binds all seven layers together into a single verification structure. If a hacker cracks Layer 1, they immediately hit Layer 2. But because the layers are chained, changing any single layer triggers a domino collapse of the entire verification structure.</p>
-
-  <p data-i18n="blog.post.7layers.chain3">Imagine a chain of dominoes arranged in a circle. Push one, and every domino falls. An attacker cannot surgically modify one layer without invalidating every other layer in the chain. This is not defense-in-depth in the traditional sense &mdash; where each layer is a separate wall. This is defense-by-entanglement, where every layer is cryptographically bonded to every other layer.</p>
-
-  <p data-i18n="blog.post.7layers.chain4">The practical result: there is no "partial compromise." The document is either fully verified across all seven layers, or it fails entirely. There is no middle ground, and there is no way to fake partial validity.</p>
+  <p data-i18n="blog.post.7layers.chain3">An attacker cannot surgically modify one layer without invalidating every other layer in the chain. This is not defense-in-depth, where each layer is a separate wall. This is defense-by-entanglement, where every layer is cryptographically bonded to every other layer. There is no "partial compromise." The document is either fully verified across all seven layers, or it fails entirely.</p>
 
   <h2 data-i18n="blog.post.7layers.h2.dynamic">Dynamic Security: Keys That Expire Before Hackers Can Use Them</h2>
 
-  <p data-i18n="blog.post.7layers.dynamic1">Most document security systems use static keys. A private key is generated once and used indefinitely. If that key is ever compromised &mdash; through a breach, an insider threat, or brute-force computation &mdash; every document ever signed with it becomes suspect.</p>
+  <p data-i18n="blog.post.7layers.dynamic1">Competitors use static keys &mdash; generated once, used indefinitely. If that key is ever compromised, every document ever signed with it becomes suspect. The exposure window is the entire lifetime of the organization.</p>
 
-  <p data-i18n="blog.post.7layers.dynamic2">Vertifile uses a fundamentally different approach: dynamic key rotation. Ed25519 cryptographic keys cycle through a state machine with four phases: pending, active, grace, and expired. Each key is only valid for a limited window. Even in the nearly impossible scenario where a private key is stolen, the damage is contained to a narrow timeframe &mdash; not the entire history of documents.</p>
+  <p data-i18n="blog.post.7layers.dynamic2">Vertifile uses Ed25519 key rotation: dynamic keys with limited time windows that cycle through four phases &mdash; pending, active, grace, and expired. Even if a key were stolen &mdash; and that is nearly impossible &mdash; it is only valid for days, not years. The damage window shrinks from "everything ever signed" to "a narrow timeframe that is already closing."</p>
 
-  <p data-i18n="blog.post.7layers.dynamic3">Think of it like a building where the locks change every week. Even if someone copies a key, by the time they try to use it, the lock has already been replaced. This is "dynamic security" &mdash; a moving target that makes attacks exponentially harder compared to competitors who rely on static keys that never change.</p>
+  <p data-i18n="blog.post.7layers.dynamic3">The locks change before anyone can copy the key. That is what dynamic security means in practice.</p>
 
-  <h2 data-i18n="blog.post.7layers.h2.who">Who Needs 7 Layers?</h2>
-
-  <p data-i18n="blog.post.7layers.p12"><strong>Law firms</strong> that need courtroom-admissible document verification. <strong>Hospitals</strong> that need HIPAA-compliant record exchange. <strong>Universities</strong> that need to stop diploma fraud. <strong>Insurance companies</strong> that need to verify claims document integrity. <strong>Government agencies</strong> that need tamper-proof public records.</p>
-
-  <p data-i18n="blog.post.7layers.p13">Any organization that cannot afford a compromised document.</p>
+  <blockquote data-i18n="blog.post.7layers.blockquote1">Security fails when layers do not communicate. Vertifile creates a system where every layer is cryptographically dependent on the next.</blockquote>
 
   <div class="article-cta-box" style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1px solid rgba(124,58,237,.15);border-radius:16px;padding:32px;text-align:center;margin:40px 0">
     <h3 style="font-size:20px;font-weight:700;color:#1e1b2e;margin-bottom:8px" data-i18n="blog.cta.tryTitle">See It in Action</h3>
@@ -394,9 +307,10 @@
   <h2 data-i18n="blog.post.7layers.h2.glossary">Glossary</h2>
 
   <ul>
-    <li data-i18n="blog.post.7layers.gloss1"><strong>Chained Token</strong> &mdash; A cryptographic hash that binds all seven security layers together into a single verification structure. Changing any layer invalidates the entire chain, making partial tampering impossible.</li>
-    <li data-i18n="blog.post.7layers.gloss2"><strong>Key Rotation</strong> &mdash; The practice of periodically replacing cryptographic keys to limit exposure. If a key is compromised, only documents signed during that key's active window are affected, not the entire archive.</li>
-    <li data-i18n="blog.post.7layers.gloss3"><strong>HMAC-SHA256</strong> &mdash; A keyed hash function that verifies both the integrity and authenticity of a message. It combines a secret key with the SHA-256 algorithm, ensuring that only authorized parties can generate a valid hash.</li>
+    <li data-i18n="blog.post.7layers.gloss1"><strong>Chained Token</strong> &mdash; A cryptographic hash that binds all seven security layers into a single verification structure. Each layer is signed inside the next, creating a domino effect where changing any layer invalidates the entire chain.</li>
+    <li data-i18n="blog.post.7layers.gloss2"><strong>Ed25519 Key Rotation</strong> &mdash; A dynamic key management system where cryptographic keys cycle through timed phases (pending, active, grace, expired). Unlike static keys used by competitors, rotated keys limit exposure windows to days rather than years.</li>
+    <li data-i18n="blog.post.7layers.gloss3"><strong>Defense-by-Entanglement</strong> &mdash; A security architecture where every protection layer is cryptographically bonded to every other layer. Unlike defense-in-depth (separate independent walls), entanglement means compromising any single layer cascades failure across all layers simultaneously.</li>
+    <li data-i18n="blog.post.7layers.gloss4"><strong>Zero-Knowledge Architecture</strong> &mdash; A system design where the service provider verifies document integrity without ever accessing the document content. The data never leaves the user's device; only a mathematical fingerprint is transmitted.</li>
   </ul>
 
 </article>

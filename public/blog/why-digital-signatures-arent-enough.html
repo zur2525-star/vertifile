@@ -230,94 +230,46 @@
 
 <article class="article-body">
 
-  <p data-i18n="blog.post.digsig.p1">Digital signatures are everywhere. Every major e-signature platform &mdash; DocuSign, Adobe Sign, HelloSign, PandaDoc &mdash; has built a business on the premise that a digital signature is all you need to trust a document. And for the narrow problem of proving consent, they are right.</p>
+  <p data-i18n="blog.post.digsig.p1">We trust digital signatures because we lack better systems. Not because they earn that trust. Not because they prove what we need them to prove. But because for two decades, they were the best option available. That era is over.</p>
 
-  <p data-i18n="blog.post.digsig.p2">But consent and integrity are not the same thing. <strong>A digital signature proves that someone agreed to a document at a specific moment. It does not prove that the document you are looking at right now is the same one they agreed to.</strong></p>
+  <p data-i18n="blog.post.digsig.p2"><strong>Signed does not mean trusted. Valid does not mean true. File does not equal reality.</strong> A digital signature proves that someone agreed to a document at a specific moment. It does not prove that the document you are looking at right now is the same one they agreed to. And that gap is where liability lives.</p>
 
-  <h2 data-i18n="blog.post.digsig.h2.signingVsVerifying">Signing vs. Verifying: Two Different Problems</h2>
+  <h2 data-i18n="blog.post.digsig.h2.dontprove">What Signatures Do Not Prove</h2>
 
-  <p data-i18n="blog.post.digsig.p3">This distinction is critical, and it is one that most organizations overlook. Let us break down what each process actually accomplishes:</p>
+  <p data-i18n="blog.post.digsig.dontprove1"><strong>A signature does not prove identity.</strong> It proves that a cryptographic certificate was applied. That certificate might belong to the person it claims to represent, or it might have been stolen, shared, or improperly issued. The signature validates the math. It does not validate the human behind it.</p>
 
-  <div class="compare-grid">
-    <div class="compare-card signing">
-      <h4 data-i18n="blog.post.digsig.cardSignTitle">Digital Signing</h4>
-      <p data-i18n="blog.post.digsig.cardSignDesc">Answers the question: "Who agreed to this document?" Creates a cryptographic proof that a specific person (identified by a certificate or email) applied their signature at a specific time. The signature is bound to the document state at the time of signing.</p>
-    </div>
-    <div class="compare-card verifying">
-      <h4 data-i18n="blog.post.digsig.cardVerifyTitle">Document Verification</h4>
-      <p data-i18n="blog.post.digsig.cardVerifyDesc">Answers the question: "Is this document unchanged from its original form?" Creates a cryptographic proof that the document content is byte-for-byte identical to the version that was originally issued, regardless of who holds it or when it is checked.</p>
-    </div>
-  </div>
+  <p data-i18n="blog.post.digsig.dontprove2"><strong>A signature does not prove authority.</strong> A signed document may come from someone who had no authorization to sign it. An employee who left the company last month may still have an active certificate. A contractor may sign a document that exceeds their authority. The signature confirms a cryptographic operation. It confirms nothing about organizational governance.</p>
 
-  <p data-i18n="blog.post.digsig.p4">These are complementary but fundamentally different capabilities. An e-signature platform excels at the first. It was never designed for the second.</p>
+  <p data-i18n="blog.post.digsig.dontprove3"><strong>A signature does not prove intent.</strong> A person who signs a 50-page contract is attesting to the version they reviewed. If five pages are replaced between their review and the final signed version &mdash; which shadow attacks on PDFs can accomplish &mdash; the signature attests to content the signer never saw. The intent was to sign one document. The signature is on another.</p>
 
-  <h2 data-i18n="blog.post.digsig.h2.gap">The Gap in Practice</h2>
+  <h2 data-i18n="blog.post.digsig.h2.liability">The Liability Gap</h2>
 
-  <p data-i18n="blog.post.digsig.p5">Consider a real-world scenario. A university issues a diploma as a PDF and digitally signs it. The graduate receives the document and shares it with a potential employer. Here is what can go wrong:</p>
+  <p data-i18n="blog.post.digsig.liability1">Two parties enter a contract. Both sign it digitally. Six months later, a dispute arises. Party A presents a signed PDF showing $500,000. Party B presents a signed PDF showing $750,000. Both signatures are technically valid. Both documents appear authentic. Who is liable?</p>
 
-  <ol>
-    <li data-i18n="blog.post.digsig.li1"><strong>The graduate modifies the document</strong> &mdash; They change a grade, a degree title, or a date. Depending on how the PDF is structured and which viewer the employer uses, the signature may or may not be invalidated. Research shows most PDF viewers fail to detect sophisticated modifications.</li>
-    <li data-i18n="blog.post.digsig.li2"><strong>The employer cannot verify the signature</strong> &mdash; Digital signature validation requires the employer to have the correct root certificate, a functioning revocation check, and a PDF viewer that correctly implements signature validation. In practice, most employers see a yellow warning icon and ignore it.</li>
-    <li data-i18n="blog.post.digsig.li3"><strong>The document leaves the digital chain</strong> &mdash; If the PDF is printed, photographed, or converted to another format, the digital signature is lost entirely. The document becomes just pixels on a screen with no verifiable authenticity.</li>
-    <li data-i18n="blog.post.digsig.li4"><strong>Time degrades trust</strong> &mdash; Certificates expire. Certificate authorities are decommissioned. A perfectly valid signature today may show as invalid in five years, not because the document was altered, but because the infrastructure that supported it has changed.</li>
-  </ol>
+  <p data-i18n="blog.post.digsig.liability2">With current digital signature methods, this becomes a credibility contest. The court must decide based on testimony, metadata analysis, and expert witnesses. The outcome is uncertain, expensive, and slow. The legal fees alone can exceed the disputed amount. And neither party has a definitive answer &mdash; because the technology they relied on cannot provide one.</p>
 
-  <h2 data-i18n="blog.post.digsig.h2.liability">When Two Signed PDFs Tell Different Stories</h2>
+  <p data-i18n="blog.post.digsig.liability3">When two signed documents contradict each other, there is no resolution mechanism built into the signature system itself. The signatures are both valid. The documents are both signed. And the truth is somewhere else entirely &mdash; in a place that signatures were never designed to reach.</p>
 
-  <p data-i18n="blog.post.digsig.liability1">Here is a scenario that keeps general counsels awake at night. Two parties enter a contract. Both sign it digitally. Six months later, a dispute arises. Party A presents a signed PDF showing the agreed amount is $500,000. Party B presents a signed PDF showing $750,000. Both signatures are technically valid. Both documents appear authentic.</p>
+  <h2 data-i18n="blog.post.digsig.h2.breaking">The Breaking Point</h2>
 
-  <p data-i18n="blog.post.digsig.liability2">With current digital signature methods, this becomes a credibility contest. The court must decide which party is telling the truth based on testimony, metadata analysis, and expert witnesses. The outcome is uncertain, expensive, and slow.</p>
+  <p data-i18n="blog.post.digsig.breaking1"><strong>Trust must come from an independent, verifiable source &mdash; not from the document itself.</strong> That is the fundamental insight that digital signatures miss. A signature is part of the document. It travels with the document. It can be manipulated alongside the document. It is not an independent witness. It is a co-defendant.</p>
 
-  <p data-i18n="blog.post.digsig.liability3">With Vertifile, the blockchain is the neutral witness. The Chained Token proves which version existed first &mdash; immutably. The document's cryptographic fingerprint was registered at the moment of creation, anchored to a public ledger that neither party controls. There is no ambiguity. There is no "he said, she said." There is a mathematical timestamp that tells the court exactly which version is the original and which is the forgery.</p>
-
-  <h2 data-i18n="blog.post.digsig.h2.analogy">Handshake vs. Blood Oath</h2>
-
-  <p data-i18n="blog.post.digsig.analogy1">A digital signature is like a handshake. It proves you were there. It proves you agreed to something. But it says nothing about what happened after you left the room. The other party could rewrite the terms, swap out pages, or alter numbers &mdash; and your handshake is still on record as if you endorsed the new version.</p>
-
-  <p data-i18n="blog.post.digsig.analogy2">A PVF file is like a signed contract stored in a public vault &mdash; sealed, witnessed, and permanent. You cannot unsign it. You cannot alter it. And everyone with access can verify that the version in the vault is identical to the version they hold. The vault is the blockchain. The seal is the cryptographic hash. The witness is mathematics.</p>
-
-  <p data-i18n="blog.post.digsig.analogy3">For any organization where document integrity has legal or financial consequences &mdash; law firms, financial institutions, healthcare providers, government agencies &mdash; the difference between a handshake and a sealed vault is the difference between liability and protection.</p>
-
-  <h2 data-i18n="blog.post.digsig.h2.esign">Why E-Signature Platforms Don't Solve Forgery</h2>
-
-  <p data-i18n="blog.post.digsig.p6">E-signature companies solved a real problem: remote agreement. Before DocuSign and its competitors, getting signatures required printing, mailing, and scanning documents. The efficiency gain was enormous.</p>
-
-  <p data-i18n="blog.post.digsig.p7">But the e-signature model has an inherent limitation: <strong>it is designed for bilateral agreements, not for document issuance.</strong> When a company issues a certificate, a credential, or an official document, the recipient does not need to sign it. They need to prove it is real.</p>
-
-  <p data-i18n="blog.post.digsig.p8">E-signatures are optimized for:</p>
-  <ul>
-    <li data-i18n="blog.post.digsig.li5">Contracts between two or more parties</li>
-    <li data-i18n="blog.post.digsig.li6">Audit trails showing who signed when</li>
-    <li data-i18n="blog.post.digsig.li7">Legal enforceability of digital consent</li>
-    <li data-i18n="blog.post.digsig.li8">Workflow automation for approval processes</li>
-  </ul>
-
-  <p data-i18n="blog.post.digsig.p9">They are not optimized for:</p>
-  <ul>
-    <li data-i18n="blog.post.digsig.li9">Detecting post-issuance tampering</li>
-    <li data-i18n="blog.post.digsig.li10">Providing real-time, visual proof of authenticity</li>
-    <li data-i18n="blog.post.digsig.li11">Working across different formats and platforms</li>
-    <li data-i18n="blog.post.digsig.li12">Remaining valid as infrastructure changes over time</li>
-  </ul>
-
-  <h2 data-i18n="blog.post.digsig.h2.requires">What Verification Actually Requires</h2>
-
-  <p data-i18n="blog.post.digsig.p10">True document verification needs a different architecture. Rather than asking "who approved this document?" it needs to answer "has this document been changed since it was created?"</p>
+  <p data-i18n="blog.post.digsig.breaking2">True verification requires an external anchor &mdash; a record that exists independently of the document, that neither party controls, and that cannot be altered by anyone. The document must prove itself against this anchor every time it is opened. Not once at signing. Every time.</p>
 
   <div class="highlight-box">
     <h4 data-i18n="blog.post.digsig.highlightTitle">How Vertifile Closes the Gap</h4>
-    <p data-i18n="blog.post.digsig.highlightDesc">Vertifile separates verification from signing entirely. When a document is protected, its cryptographic fingerprint is registered on an immutable ledger. The resulting .pvf file carries a live holographic stamp that verifies against this record every time the document is opened. No certificates to expire, no viewers to trust, no chain of custody to maintain. The document itself is the proof.</p>
+    <p data-i18n="blog.post.digsig.highlightDesc">Vertifile separates verification from signing entirely. When a document is protected, its cryptographic fingerprint is registered on an immutable blockchain ledger &mdash; an independent, neutral witness that neither party controls. The Chained Token proves which version existed first, immutably. There is no ambiguity. There is no credibility contest. There is mathematical proof of which version is the original and which is the forgery.</p>
   </div>
 
-  <h2 data-i18n="blog.post.digsig.h2.coexist">Signing and Verifying Can Coexist</h2>
+  <h2 data-i18n="blog.post.digsig.h2.coexist">Signing and Verifying Are Different Problems</h2>
 
-  <p data-i18n="blog.post.digsig.p11">This is not an either-or proposition. Digital signatures and document verification solve different problems and can work together. A contract might be e-signed by all parties (proving consent) and then protected with Vertifile (proving the signed version has not been modified).</p>
+  <p data-i18n="blog.post.digsig.p11">This is not an either-or proposition. Signatures and verification solve different problems. A contract might be e-signed by all parties (proving consent) and then protected with Vertifile (proving the signed version was never altered). The signing proves agreement. The verification proves the agreement was not tampered with after the fact.</p>
 
-  <p data-i18n="blog.post.digsig.p12">The key insight is that <strong>signing alone is not enough</strong>. In a world where documents are easily modified and AI can generate convincing forgeries, every important document needs both consent tracking (signing) and integrity verification (tamper-proof protection).</p>
+  <p data-i18n="blog.post.digsig.p12">But <strong>signing alone creates a false sense of security</strong>. Organizations that rely exclusively on digital signatures are vulnerable to every attack that exploits the gap between "who signed" and "what was signed." That gap is measured in billions of dollars of annual fraud. It is measured in legal liability that no insurance policy fully covers. It is measured in reputational damage that no PR campaign can undo.</p>
 
   <blockquote data-i18n="blog.post.digsig.blockquote1">Digital signatures tell you who agreed. Document verification tells you what they agreed to. Both matter. Most organizations only have one.</blockquote>
 
-  <p data-i18n="blog.post.digsig.p13">The next evolution in document trust is not better signatures. It is adding a verification layer that works independently, visibly, and permanently &mdash; ensuring that what you see is what was originally issued.</p>
+  <p data-i18n="blog.post.digsig.p13">The next evolution in document trust is not better signatures. It is adding an independent verification layer that works visibly, continuously, and permanently &mdash; ensuring that what you see is what was originally issued. Because the question is no longer "who signed this?" The question is: "Can I trust what I am reading?"</p>
 
   <div class="article-cta-box" style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1px solid rgba(124,58,237,.15);border-radius:16px;padding:32px;text-align:center;margin:40px 0">
     <h3 style="font-size:20px;font-weight:700;color:#1e1b2e;margin-bottom:8px" data-i18n="blog.cta.tryTitle">See It in Action</h3>
@@ -328,9 +280,9 @@
   <h2 data-i18n="blog.post.digsig.h2.glossary">Glossary</h2>
 
   <ul>
-    <li data-i18n="blog.post.digsig.gloss1"><strong>Immutable Record</strong> &mdash; Data that cannot be changed after it has been written. Blockchain entries are the most common example &mdash; once a transaction is recorded, it is permanent and tamper-proof, serving as a neutral source of truth.</li>
-    <li data-i18n="blog.post.digsig.gloss2"><strong>Non-Repudiation</strong> &mdash; The inability to deny having created or signed a document. With cryptographic verification, non-repudiation extends beyond identity to content &mdash; proving not just that someone signed, but exactly what they signed.</li>
-    <li data-i18n="blog.post.digsig.gloss3"><strong>Blockchain Anchor</strong> &mdash; A permanent record on a decentralized ledger that serves as proof of existence at a specific point in time. The anchor cannot be altered by any single party, making it an ideal neutral witness for document disputes.</li>
+    <li data-i18n="blog.post.digsig.gloss1"><strong>Liability Gap</strong> &mdash; The legal exposure created when two or more signed documents contradict each other and the signature technology provides no mechanism to determine which is authentic. This gap results in costly litigation with uncertain outcomes.</li>
+    <li data-i18n="blog.post.digsig.gloss2"><strong>Independent Anchor</strong> &mdash; A verification record that exists outside the document itself, controlled by neither party in a transaction. Blockchain-based anchors serve as neutral witnesses that cannot be altered by any single entity.</li>
+    <li data-i18n="blog.post.digsig.gloss3"><strong>Non-Repudiation</strong> &mdash; The inability to deny having created or signed a document. With cryptographic verification, non-repudiation extends beyond identity to content &mdash; proving not just that someone signed, but exactly what they signed and that it has not changed since.</li>
   </ul>
 
 </article>

@@ -245,69 +245,52 @@
 <!-- ===== ARTICLE BODY ===== -->
 <article class="article-body">
 
-  <p data-i18n="blog.post.pdffail.p1">Every day, billions of PDF documents are exchanged across the globe. Contracts, invoices, medical records, diplomas, government IDs &mdash; all encoded in a format invented over three decades ago. And for the vast majority of them, the only layer of trust is a digital signature.</p>
+  <p data-i18n="blog.post.pdffail.p1">A PDF can be perfectly signed and still be completely fraudulent. That is not a hypothetical scenario. It is the documented reality of how PDF signatures work today. And it means every signed PDF your organization accepts could be a liability waiting to surface.</p>
 
-  <p data-i18n="blog.post.pdffail.p2">But here is the uncomfortable truth: <strong>digital signatures on PDFs only prove who signed the document. They do not prove that the content you are reading is what was originally signed.</strong></p>
+  <p data-i18n="blog.post.pdffail.p2"><strong>Valid does not mean true. Signed does not mean trusted. File does not equal reality.</strong></p>
 
-  <h2 data-i18n="blog.post.pdffail.h2.stack">How PDF Tampering Actually Works</h2>
+  <h2 data-i18n="blog.post.pdffail.h2.systemic">The Systemic Failure</h2>
 
-  <p data-i18n="blog.post.pdffail.stack1">Think of a PDF as a stack of transparent sheets, one on top of the other. The original content sits on the bottom sheet. When someone signs the document, the signature validates that bottom sheet. So far, so good.</p>
+  <p data-i18n="blog.post.pdffail.systemic1">Stop treating this as a technical problem. It is a systemic one. The entire premise of PDF signatures is built on a flawed assumption: that integrity confirmation equals authenticity confirmation. It does not.</p>
 
-  <p data-i18n="blog.post.pdffail.stack2">But PDFs support something called Incremental Updates. This allows new "sheets" to be placed on top of the original without removing anything underneath. The old signature still validates the old bottom sheet. The problem is that the user only sees the top sheet &mdash; the one that may have been tampered with.</p>
+  <p data-i18n="blog.post.pdffail.systemic2">A PDF signature confirms that a file was not modified after a specific cryptographic operation. That is all it does. It does not confirm that the document was authentic in the first place. It does not confirm that the content you see on screen matches what was signed. It does not confirm that the person reading the document is seeing what the signer intended.</p>
 
-  <p data-i18n="blog.post.pdffail.stack3">This is the critical distinction between <strong>Visual Integrity</strong> and <strong>Logical Integrity</strong>. PDF signatures validate the code &mdash; the logical structure. They do not validate what the human eye actually sees when the document is opened. A signature can be technically valid while the visible content has been entirely replaced.</p>
+  <p data-i18n="blog.post.pdffail.systemic3">This gap is not a bug. It is a design limitation that has been known for years, ignored for convenience, and exploited for profit. Every organization that treats a signed PDF as a trusted document is operating on a false premise.</p>
 
-  <p data-i18n="blog.post.pdffail.stack4">Vertifile does not validate layers or code structures. It validates the final render &mdash; the actual content that a human being will read. If a single pixel in the visible output differs from the original, verification fails. No exceptions. No edge cases.</p>
+  <h2 data-i18n="blog.post.pdffail.h2.stack">The Stack</h2>
 
-  <h2 data-i18n="blog.post.pdffail.h2.gap">The Signing vs. Verification Gap</h2>
+  <p data-i18n="blog.post.pdffail.stack1">PDF is built as layers. Think of it as a stack of transparent overlays. The original content sits at the bottom. The signature validates that bottom layer. But PDFs support a mechanism called Incremental Updates, which adds new layers on top without breaking the old signature.</p>
 
-  <p data-i18n="blog.post.pdffail.p3">When you digitally sign a PDF, the signature is cryptographically tied to the document at the moment of signing. In theory, any modification after signing should invalidate the signature. In practice, the story is far more complicated.</p>
+  <p data-i18n="blog.post.pdffail.stack2">The signature remains "valid" &mdash; because it still validates the original bottom layer. But what the user sees is the top layer. The one that was added after signing. The one that may contain completely different content.</p>
 
-  <p data-i18n="blog.post.pdffail.p4">Research from Ruhr University Bochum revealed that <strong>21 out of 22 popular PDF viewers</strong> were vulnerable to at least one attack that could modify a signed PDF without breaking the signature. These attacks include incremental saving exploits, signature wrapping, and universal signature forgery.</p>
+  <p data-i18n="blog.post.pdffail.stack3">This is the critical distinction between <strong>Visual Integrity</strong> and <strong>Logical Integrity</strong>. PDF signatures validate logical integrity &mdash; the code structure. They do not validate visual integrity &mdash; what the human eye actually sees when the document is opened. A contract amount can change from $500,000 to $5,000,000 while the signature stays green. A medical diagnosis can be rewritten while the hospital's seal remains valid.</p>
 
-  <p data-i18n="blog.post.pdffail.p5">What does this mean in the real world? It means a signed contract could be altered after signing and still show a green checkmark in Adobe Reader. It means a university transcript could be modified by a bad actor while retaining a valid institutional signature.</p>
+  <h2 data-i18n="blog.post.pdffail.h2.breaking">The Breaking Point</h2>
+
+  <p data-i18n="blog.post.pdffail.breaking1"><strong>The signature did not fail. It worked exactly as designed.</strong></p>
+
+  <p data-i18n="blog.post.pdffail.breaking2">That is the most dangerous sentence in this article. The PDF signature system is not broken. It is functioning precisely as it was built to function. It validates a mathematical relationship between cryptographic keys applied to a specific byte range at a specific time. Nothing more. Nothing less.</p>
+
+  <p data-i18n="blog.post.pdffail.breaking3">The failure is not in the cryptography. The failure is in what we assumed the cryptography proves. We assumed it proves the document is trustworthy. It proves no such thing. It proves a mathematical operation was performed. The gap between that operation and actual document trustworthiness is where billions of dollars in fraud occur every year.</p>
 
   <h2 data-i18n="blog.post.pdffail.h2.adobetrap">The Adobe Trap</h2>
 
-  <p data-i18n="blog.post.pdffail.adobe1">Everyone trusts the green checkmark. When Adobe Reader displays a green icon next to a signature, most people assume the document is safe. Lawyers file it. Compliance officers approve it. HR departments accept it.</p>
+  <p data-i18n="blog.post.pdffail.adobe1">The green checkmark is a UI recommendation, not proof of truth. When Adobe Reader displays that green icon, it says "this signature is technically valid." It does not say "this document has not been altered." These are fundamentally different claims, and the distinction between them is where organizations lose millions.</p>
 
-  <p data-i18n="blog.post.pdffail.adobe2">But that green checkmark is a recommendation, not mathematical proof. It says "this signature is technically valid" &mdash; it does not say "this document has not been altered." These are fundamentally different claims. A technically valid signature on a tampered document is worse than no signature at all, because it creates false confidence.</p>
+  <p data-i18n="blog.post.pdffail.adobe2">Lawyers file documents with the green checkmark. Compliance officers approve them. CFOs authorize payments based on them. HR departments accept credentials because of them. Every one of these decisions treats a technical validity indicator as a truth indicator. And every one of them is a potential liability event.</p>
 
-  <p data-i18n="blog.post.pdffail.adobe3">Consider what the checkmark actually verifies: that a cryptographic certificate was applied to a specific byte range at a specific time. It does not verify that the visible content matches what the signer intended. It does not verify that new content was not layered on top. It does not verify that the document you are reading is the document that was signed. It verifies a mathematical relationship between keys &mdash; nothing more.</p>
+  <p data-i18n="blog.post.pdffail.adobe3">A technically valid signature on a tampered document is worse than no signature at all. No signature creates caution. A green checkmark creates false confidence. False confidence is where fraud thrives.</p>
 
-  <h2 data-i18n="blog.post.pdffail.h2.short">Why Existing PDF Security Falls Short</h2>
+  <h2 data-i18n="blog.post.pdffail.h2.solution">The Solution: Not a Better Feature &mdash; a Model Replacement</h2>
 
-  <p data-i18n="blog.post.pdffail.p6">The core problem is architectural. PDF is a container format designed for visual fidelity, not for tamper-proof verification. Consider the challenges:</p>
-
-  <ul>
-    <li data-i18n="blog.post.pdffail.li1"><strong>Incremental updates</strong> &mdash; PDFs allow appending changes to the end of a file without modifying original bytes, which can be exploited to alter visible content while keeping signatures intact.</li>
-    <li data-i18n="blog.post.pdffail.li2"><strong>Viewer inconsistency</strong> &mdash; Different PDF readers render and validate signatures differently. A document that shows as tampered in one viewer may appear valid in another.</li>
-    <li data-i18n="blog.post.pdffail.li3"><strong>No real-time verification</strong> &mdash; Once a signed PDF is downloaded, there is no live check against the original. The document is entirely self-contained, which is both its strength and its fatal flaw.</li>
-    <li data-i18n="blog.post.pdffail.li4"><strong>Certificate complexity</strong> &mdash; Certificate chains, revocation lists, and trust stores add layers of confusion that most end users cannot evaluate.</li>
-  </ul>
-
-  <h2 data-i18n="blog.post.pdffail.h2.tamperproof">What Tamper-Proof Actually Means</h2>
-
-  <p data-i18n="blog.post.pdffail.p7">True document integrity requires a fundamentally different approach. Instead of asking "who signed this?" the question should be "is this document identical to the original that was issued?"</p>
+  <p data-i18n="blog.post.pdffail.solution1">What is missing is not a better signature. It is verification of what the user actually sees. The entire approach needs to change: from validating cryptographic operations to validating visible content. From trusting files to verifying reality.</p>
 
   <div class="highlight-box">
     <h4 data-i18n="blog.post.pdffail.highlightTitle">The Vertifile Approach</h4>
-    <p data-i18n="blog.post.pdffail.highlightDesc">Vertifile uses BLIND processing to generate a cryptographic hash of your entire document locally, on your device. This hash is registered on an immutable ledger. The resulting .pvf file contains a live holographic verification stamp that checks against the registered hash in real time. If even a single pixel changes, the stamp freezes red &mdash; instantly and unmistakably.</p>
+    <p data-i18n="blog.post.pdffail.highlightDesc">Vertifile does not validate layers or code structures. It validates the final render &mdash; the actual content a human will read. The document's cryptographic fingerprint is computed locally on your device and registered on an immutable ledger. If a single pixel in the visible output differs from the original, the verification stamp freezes red. No exceptions. No edge cases. No green checkmarks on forged documents.</p>
   </div>
 
-  <p data-i18n="blog.post.pdffail.p8">This is not a layer on top of PDF. It is a new paradigm. The document itself carries its own proof of integrity, and that proof is verified every time the document is opened &mdash; not once at the time of signing.</p>
-
-  <h2 data-i18n="blog.post.pdffail.h2.shift">From Signing to Verifying: The Shift Ahead</h2>
-
-  <p data-i18n="blog.post.pdffail.p9">The industry is beginning to recognize that signing and verifying are two fundamentally different problems. E-signature platforms like DocuSign, Adobe Sign, and HelloSign solved the problem of remote agreement. But they left a gap: they prove consent, not content integrity.</p>
-
-  <p data-i18n="blog.post.pdffail.p10">As AI-generated documents become indistinguishable from real ones and as forgery tools become accessible to anyone with a laptop, the need for real-time, visual, and cryptographic verification becomes urgent.</p>
-
-  <p data-i18n="blog.post.pdffail.p11">The next generation of document trust will not rely on a small icon in a PDF toolbar. It will rely on visible, live, and unmistakable proof that what you see is what was originally issued.</p>
-
-  <blockquote data-i18n="blog.post.pdffail.blockquote1">The question is no longer "who signed this?" but "is this the document that was originally created?"</blockquote>
-
-  <p data-i18n="blog.post.pdffail.p12">PDF signatures served their purpose. But the threat landscape has evolved. It is time for document security to evolve with it.</p>
+  <p data-i18n="blog.post.pdffail.solution2">This is not a patch on top of PDF. It is a paradigm replacement. The document itself carries its own proof of integrity, and that proof is verified every time the document is opened &mdash; not once at the moment of signing, but continuously. Because the question is no longer "who signed this file?" The question is: "Should this document be trusted at all?"</p>
 
   <div class="article-cta-box" style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1px solid rgba(124,58,237,.15);border-radius:16px;padding:32px;text-align:center;margin:40px 0">
     <h3 style="font-size:20px;font-weight:700;color:#1e1b2e;margin-bottom:8px" data-i18n="blog.cta.tryTitle">See It in Action</h3>
@@ -318,9 +301,9 @@
   <h2 data-i18n="blog.post.pdffail.h2.glossary">Glossary</h2>
 
   <ul>
-    <li data-i18n="blog.post.pdffail.gloss1"><strong>Incremental Update</strong> &mdash; A PDF modification method that adds new content on top of existing content without removing the original. This is the mechanism exploited in most PDF signature bypass attacks.</li>
-    <li data-i18n="blog.post.pdffail.gloss2"><strong>Visual Integrity</strong> &mdash; What the human eye sees when viewing a document. Visual integrity is compromised when the displayed content differs from what was originally signed, even if the underlying code structure remains technically valid.</li>
-    <li data-i18n="blog.post.pdffail.gloss3"><strong>Digital Signature</strong> &mdash; A cryptographic stamp that proves who signed a document and when, but does not prove what was changed after signing. It validates the signer's identity, not the document's current state.</li>
+    <li data-i18n="blog.post.pdffail.gloss1"><strong>Incremental Update</strong> &mdash; A PDF modification method that adds new content layers on top of existing content without removing the original. The original signature validates the old layer while the user sees the new, potentially tampered layer.</li>
+    <li data-i18n="blog.post.pdffail.gloss2"><strong>Visual Integrity vs. Logical Integrity</strong> &mdash; Logical integrity confirms the code structure has not changed. Visual integrity confirms what the human eye sees matches what was originally issued. PDF signatures validate only logical integrity. Vertifile validates visual integrity.</li>
+    <li data-i18n="blog.post.pdffail.gloss3"><strong>Signature Bypass</strong> &mdash; A class of attacks that modify a signed PDF's visible content without invalidating the cryptographic signature. Research has demonstrated that the vast majority of PDF viewers are vulnerable to at least one form of signature bypass.</li>
   </ul>
 
 </article>
