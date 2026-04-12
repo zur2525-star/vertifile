@@ -77,8 +77,9 @@
     @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
 
     /* ===== ARTICLE ===== */
-    .article-hero{padding:130px 32px 60px;position:relative;overflow:hidden;text-align:center;background-image:url('/images/blog/pdf-signatures-fail.svg');background-size:cover;background-position:center}
-    .article-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(30,27,46,.85) 0%,rgba(124,58,237,.6) 50%,rgba(30,27,46,.8) 100%)}
+    .article-hero{padding:160px 32px 80px;position:relative;overflow:hidden;text-align:center;background-image:url('/images/blog/pdf-signatures-fail.svg');background-size:cover;background-position:center;min-height:350px}
+    .article-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(30,27,46,.7) 0%,rgba(30,27,46,.5) 50%,rgba(30,27,46,.75) 100%)}
+    .article-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(to bottom,transparent,#ffffff);z-index:1}
     .article-hero-inner{position:relative;z-index:1;max-width:720px;margin:0 auto}
     .article-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,.12);color:#a78bfa;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:20px;border:1px solid rgba(124,58,237,.15)}
     .article-hero h1{font-size:42px;font-weight:900;color:#fff;letter-spacing:-2px;line-height:1.15;margin-bottom:20px}
@@ -144,8 +145,8 @@
     button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
 
     @media(max-width:768px){
-      .article-hero{padding:110px 20px 40px}
-      .article-hero h1{font-size:30px;letter-spacing:-1px}
+      .article-hero{padding:120px 20px 50px;min-height:280px}
+      .article-hero h1{font-size:28px;letter-spacing:-1px}
       .article-body{padding:40px 20px 60px}
       .article-body h2{font-size:22px}
       .article-cta{padding:0 20px 60px}
