@@ -118,6 +118,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"], imgSrc: ["'self'", "data:", "https:"],
       connectSrc: ["'self'", "https://api.vertifile.com", "https://vertifile.com"], frameSrc: ["'self'", "data:", "blob:"],
+      mediaSrc: ["'self'"],   // Allow video/audio from same origin
       objectSrc: ["'none'"],  // Block <object>/<embed>/<applet>
     }
   },
