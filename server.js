@@ -126,11 +126,30 @@ stampCache._set = function(userId, config) {
 };
 app.set('stampCache', stampCache);
 
+// Generate a fresh cryptographic nonce for every request.
+// The nonce is stored on res.locals so it can be referenced both by the
+// helmet CSP config below (via the function form of scriptSrc) and by any
+// server-rendered template that needs to stamp <script nonce="..."> tags.
+// NOTE: static HTML files served by express.static cannot receive a dynamic
+// nonce, so 'unsafe-inline' is retained alongside the nonce directive.
+// Per the CSP spec, browsers that understand nonces IGNORE 'unsafe-inline'
+// and enforce nonce-only execution; older browsers fall back to 'unsafe-inline'.
+// This is the standard progressive-enhancement approach.
+app.use((req, res, next) => {
+  res.locals.cspNonce = crypto.randomBytes(16).toString('base64');
+  next();
+});
+
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://plausible.io"],
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'",                              // fallback for static HTML (ignored by nonce-aware browsers)
+        (req, res) => `'nonce-${res.locals.cspNonce}'`, // per-request nonce for server-rendered scripts
+        "https://plausible.io",
+      ],
       scriptSrcAttr: ["'none'"],  // Block inline event handlers (onclick, onload, etc.)
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
