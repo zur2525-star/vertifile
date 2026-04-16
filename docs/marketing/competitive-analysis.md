@@ -65,5 +65,5 @@ The document verification market is fragmented across e-signature, blockchain ce
 1. **Visual Stamp** — Only Vertifile provides a live animated holographic stamp that freezes red on tampering
 2. **BLIND Processing** — Server never reads, stores, or accesses document content
 3. **Patent** — Patent filed with Israeli Patent Office (pending)
-4. **IANA MIME Type** — Official MIME type registration registered (2026-04-15) for `application/pvf`
+4. **IANA MIME Type** — Official MIME type registration registered (2026-04-15): `application/vnd.vertifile.pvf`
 5. **9 Security Layers** — SHA-256, HMAC, token refresh, code integrity, chained tokens, anti-DevTools, obfuscation, animated stamp, blockchain anchoring
