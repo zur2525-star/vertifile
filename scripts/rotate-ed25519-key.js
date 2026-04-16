@@ -9,7 +9,7 @@
  * endpoint, by design (Phase 3 decision — CLI-only minimizes the attack
  * surface for a "compromised admin pivots to a fresh signing key" scenario).
  *
- * Three subcommands:
+ * Four subcommands:
  *
  *   generate   - Generate a new keypair, INSERT it into ed25519_keys with
  *                state='pending', print the PEM and the env-var snippets
@@ -28,6 +28,13 @@
  *                an audit_log entry. Does NOT write to key_rotation_log
  *                because retiring a pending key is a cancellation event,
  *                not a rotation event.
+ *
+ *   retire-grace  - Retire a key in grace state after the grace window
+ *                expires. Transitions the row from grace -> expired (allowed
+ *                by the Phase 3A trigger). Unlike retire-pending, this DOES
+ *                write to key_rotation_log because the key was active and
+ *                signed real documents — the retirement is a lifecycle event
+ *                that should be publicly visible.
  *
  * USAGE
  *
@@ -153,6 +160,11 @@ function printHelp() {
     '  retire-pending   Cancel a pending key (cannot be used on active/grace keys).',
     '    --key-id=<16hex>         (required) the pending keyId to retire',
     '    --reason=<str>           (required) why we are cancelling',
+    '    --actor=<str>            (optional, default <USER>@<host>)',
+    '',
+    '  retire-grace     Retire a key in grace state (after grace window expires).',
+    '    --key-id=<16hex>         (required) the grace keyId to retire',
+    '    --reason=<str>           (required) why we are retiring',
     '    --actor=<str>            (optional, default <USER>@<host>)',
     '',
     'Environment:',
@@ -632,6 +644,100 @@ async function cmdRetirePending(args) {
 }
 
 // ----------------------------------------------------------------------
+// SUBCOMMAND: retire-grace
+// ----------------------------------------------------------------------
+async function cmdRetireGrace(args) {
+  assertKeyIdFormat(args.keyId, 'retire-grace');
+  assertReason(args.reason, 'retire-grace');
+  const actor = args.actor || defaultActor();
+  if (typeof actor !== 'string' || !actor || actor.length > 255) {
+    throw new Error('retire-grace: --actor must be a non-empty string up to 255 chars');
+  }
+
+  // Pre-flight: verify the key exists and is in state='grace'. retire-grace
+  // is specifically for transitioning grace -> expired after the 90-day grace
+  // window. Active or pending keys must go through the normal rotation or
+  // retire-pending flow.
+  const rowResult = await db.query(
+    'SELECT id, state FROM ed25519_keys WHERE id = $1',
+    [args.keyId]
+  );
+  if (rowResult.rows.length === 0) {
+    throw new Error(`retire-grace: key ${args.keyId} does not exist in ed25519_keys`);
+  }
+  const row = rowResult.rows[0];
+  if (row.state !== 'grace') {
+    throw new Error(
+      `retire-grace: key ${args.keyId} is in state '${row.state}', expected 'grace'. ` +
+      `retire-grace only retires keys that are in the grace state. ` +
+      (row.state === 'pending'
+        ? 'Use retire-pending to cancel a pending key.'
+        : row.state === 'active'
+          ? 'Active keys must go through a normal rotation first.'
+          : 'This key is already expired.')
+    );
+  }
+
+  // grace -> expired is allowed by the Phase 3A state-transition trigger.
+  const client = await db._db.connect();
+  try {
+    await client.query('BEGIN');
+    await db.setEd25519KeyState(client, args.keyId, 'expired', { reason: args.reason });
+    await client.query('COMMIT');
+  } catch (e) {
+    try { await client.query('ROLLBACK'); } catch (_) { /* already aborted */ }
+    throw e;
+  } finally {
+    client.release();
+  }
+
+  // Unlike retire-pending, grace retirement IS a rotation lifecycle event:
+  // the key was active, signed documents, entered grace, and is now being
+  // permanently retired. Write to key_rotation_log for public transparency.
+  // Fingerprint is sha256(public_key_pem), same convention as the activate
+  // command — ed25519_keys does not store fingerprints as a column.
+  const fpResult = await db.query(
+    'SELECT public_key_pem FROM ed25519_keys WHERE id = $1',
+    [args.keyId]
+  );
+  const fingerprint = fpResult.rows.length > 0 && fpResult.rows[0].public_key_pem
+    ? sha256Hex(fpResult.rows[0].public_key_pem)
+    : sha256Hex('unknown');
+
+  await db.insertRotationLog({
+    oldKeyId: args.keyId,
+    newKeyId: args.keyId,
+    oldFingerprint: fingerprint,
+    newFingerprint: fingerprint,
+    graceUntil: null,
+    reason: 'grace-retired: ' + args.reason,
+    actor
+  }).catch((e) => {
+    process.stderr.write('WARN: rotation log write failed: ' + (e && e.message || e) + '\n');
+  });
+
+  // Audit log entry for operational traceability.
+  await db.log('key_grace_retired', {
+    keyId: args.keyId,
+    reason: args.reason,
+    actor
+  }).catch((e) => {
+    process.stderr.write('WARN: audit log write failed: ' + (e && e.message || e) + '\n');
+  });
+
+  process.stdout.write('============================================================\n');
+  process.stdout.write('  GRACE KEY RETIRED — keyId=' + args.keyId + '\n');
+  process.stdout.write('============================================================\n');
+  process.stdout.write('  state:  grace -> expired\n');
+  process.stdout.write('  reason: ' + args.reason + '\n');
+  process.stdout.write('  actor:  ' + actor + '\n\n');
+  process.stdout.write('The key is now permanently expired. Documents signed with this\n');
+  process.stdout.write('key will no longer verify against the active or grace key sets.\n');
+  process.stdout.write('Verification via /.well-known/vertifile-jwks.json will no longer\n');
+  process.stdout.write('include this key.\n');
+}
+
+// ----------------------------------------------------------------------
 // MAIN
 // ----------------------------------------------------------------------
 async function main() {
@@ -656,6 +762,9 @@ async function main() {
       break;
     case 'retire-pending':
       await cmdRetirePending(args);
+      break;
+    case 'retire-grace':
+      await cmdRetireGrace(args);
       break;
     default:
       process.stderr.write('ERROR: unknown subcommand: ' + args.cmd + '\n\n');

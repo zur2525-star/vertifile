@@ -540,4 +540,88 @@ describe('Phase 3B — rotation operational infrastructure', () => {
       client.release();
     }
   });
+
+  // =========================================================================
+  // Phase 3C scenarios — cache invalidation and rotation-log endpoint support
+  // =========================================================================
+
+  // Scenario 10 — invalidateActivePrimaryCache forces the next
+  // getActivePrimary() call to re-query the DB.
+  //
+  // After invalidation, getActivePrimary re-reads the DB's state='active'
+  // row. This is the mechanism the /api/admin/cache/invalidate-keys endpoint
+  // uses to eliminate the 30s cache-tail window after a rotation. We verify
+  // by calling invalidate, then getActivePrimary, and confirming it returns
+  // without throwing (the actual key resolution is covered by Scenarios 3-4;
+  // here we are testing that the cache invalidation path does not error).
+  it('10. invalidateActivePrimaryCache does not throw and getActivePrimary resolves after', async () => {
+    assert.doesNotThrow(() => {
+      keyManager.invalidateActivePrimaryCache();
+    }, 'invalidateActivePrimaryCache must not throw');
+
+    // getActivePrimary should resolve (either to a slot or null, depending
+    // on whether a real active key is loaded). The important thing is it
+    // does not reject due to stale cache state after invalidation.
+    const result = await keyManager.getActivePrimary();
+    assert.ok(
+      result === null || (result && typeof result.keyId === 'string'),
+      'getActivePrimary must return null or a slot with keyId after cache invalidation'
+    );
+  });
+
+  // Scenario 11 — db.listRotationLog() returns the expected shape.
+  //
+  // This validates the contract that the Phase 3C /.well-known/vertifile-
+  // rotation-log endpoint relies on: entries are arrays of objects with the
+  // correct columns, the actor column is excluded, and limit/offset params
+  // are validated. The genesis rotation log row (inserted by Phase 3A
+  // migration) guarantees at least one row exists.
+  it('11. listRotationLog returns expected shape and validates params', async () => {
+    // Default call — should return at least the genesis row.
+    const rows = await db.listRotationLog();
+    assert.ok(Array.isArray(rows), 'listRotationLog must return an array');
+    assert.ok(rows.length >= 1, 'at least the genesis rotation log row must exist');
+
+    // Verify column shape on the first row.
+    const expected = ['id', 'rotated_at', 'old_key_id', 'new_key_id', 'old_fingerprint', 'new_fingerprint', 'grace_until', 'reason'];
+    for (const col of expected) {
+      assert.ok(col in rows[0], `expected column '${col}' missing from listRotationLog output`);
+    }
+    // actor must never appear (DB-only invariant, mirroring rotation-schema Scenario 9e).
+    for (const row of rows) {
+      assert.ok(!('actor' in row), 'actor column must never appear in listRotationLog output');
+    }
+
+    // limit/offset validation — invalid values must throw.
+    await assert.rejects(
+      () => db.listRotationLog({ limit: 0 }),
+      /limit must be an integer between 1 and 1000/,
+      'limit=0 must be rejected'
+    );
+    await assert.rejects(
+      () => db.listRotationLog({ limit: 1001 }),
+      /limit must be an integer between 1 and 1000/,
+      'limit=1001 must be rejected'
+    );
+    await assert.rejects(
+      () => db.listRotationLog({ limit: 'abc' }),
+      /limit must be an integer between 1 and 1000/,
+      'limit=abc must be rejected'
+    );
+    await assert.rejects(
+      () => db.listRotationLog({ offset: -1 }),
+      /offset must be a non-negative integer/,
+      'offset=-1 must be rejected'
+    );
+    await assert.rejects(
+      () => db.listRotationLog({ offset: 'xyz' }),
+      /offset must be a non-negative integer/,
+      'offset=xyz must be rejected'
+    );
+
+    // Valid limit and offset — should not throw.
+    const limited = await db.listRotationLog({ limit: 1, offset: 0 });
+    assert.ok(Array.isArray(limited), 'listRotationLog with limit=1 must return an array');
+    assert.ok(limited.length <= 1, 'limit=1 must return at most 1 row');
+  });
 });

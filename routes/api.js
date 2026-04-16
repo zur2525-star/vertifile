@@ -15,6 +15,10 @@ const keyManager = require('../services/key-manager');
 
 const router = express.Router();
 
+// Phase 3C — tracks when the active-primary cache was last invalidated via
+// the admin endpoint. Surfaced in /health/deep for operator observability.
+let cacheLastInvalidatedAt = null;
+
 // ===== OpenAPI Spec =====
 router.get('/openapi.json', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/api/openapi.json'));
@@ -804,9 +808,39 @@ router.get('/health/deep', async (req, res) => {
       // within 30s of a rotation (the active-primary cache TTL). This is
       // the canonical field to poll during a rotation wet drill to
       // verify the fleet has picked up the new key.
-      ed25519_signing_key_id: ed25519SigningKeyId
+      ed25519_signing_key_id: ed25519SigningKeyId,
+      // Phase 3C observability — when was the active-primary cache last
+      // invalidated via /api/admin/cache/invalidate-keys? null if never.
+      cache_last_invalidated: cacheLastInvalidatedAt
     });
   } catch(e) { res.status(500).json({ status: 'error', error: 'Health check failed' }); }
+});
+
+// ===== Phase 3C: Admin cache invalidation =====
+// POST /api/admin/cache/invalidate-keys
+// Forces the key-manager active-primary cache to expire so all subsequent
+// signing calls in this process resolve against the DB immediately. Used
+// after a rotation to eliminate the 30s cache-tail window.
+router.post('/admin/cache/invalidate-keys', (req, res, next) => {
+  const fn = req.app.get('authenticateAdmin');
+  if (fn) return fn(req, res, next);
+  return res.status(500).json({ success: false, error: 'Admin auth not configured' });
+}, async (req, res) => {
+  try {
+    keyManager.invalidateActivePrimaryCache();
+    cacheLastInvalidatedAt = new Date().toISOString();
+    const active = await keyManager.getActivePrimary();
+    const activeKeyId = active ? active.keyId : null;
+    res.json({
+      success: true,
+      invalidated: true,
+      activeKeyId,
+      timestamp: new Date().toISOString()
+    });
+  } catch (e) {
+    logger.error({ err: e }, '[api] cache invalidate-keys error');
+    res.status(500).json({ success: false, error: 'Cache invalidation failed' });
+  }
 });
 
 // ===== API: Docs =====
@@ -1040,7 +1074,7 @@ router.post('/contact', contactLimiter, async (req, res) => {
     await db.log('contact_form', { name, email, organization, orgType: orgType || 'not specified', message: message || '', ip: getClientIP(req) });
 
     // Send notification email to admin
-    const adminEmail = process.env.ADMIN_EMAILS || 'zur2525@gmail.com';
+    const adminEmail = (process.env.ADMIN_EMAILS || '').split(',')[0].trim();
     const contactHtml = `<h2>New Contact Form Submission</h2>
 <p><strong>Name:</strong> ${escapeHtml(name)}</p>
 <p><strong>Email:</strong> ${escapeHtml(email)}</p>
@@ -1048,7 +1082,9 @@ router.post('/contact', contactLimiter, async (req, res) => {
 <p><strong>Type:</strong> ${escapeHtml(orgType || 'not specified')}</p>
 <p><strong>Message:</strong></p>
 <p>${escapeHtml(message || 'No message provided')}</p>`;
-    sendEmail(adminEmail.split(',')[0].trim(), 'Vertifile Contact: ' + escapeHtml(organization), contactHtml).catch(() => {});
+    if (adminEmail) {
+      sendEmail(adminEmail, 'Vertifile Contact: ' + escapeHtml(organization), contactHtml).catch(() => {});
+    }
 
     // Send confirmation email to the person who submitted the form (best effort)
     sendContactConfirmationEmail(email, name).catch(() => {});

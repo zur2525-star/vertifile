@@ -1,7 +1,7 @@
 # RUNBOOK — Phase 3D — Ed25519 Key Rotation
 
 > **Audience:** Zur at 3am during an incident. Tired-proof. Every command copy-pasteable.
-> **Scope:** Chapters 1 + 2 only. Chapters 3–5 are TODO at the bottom.
+> **Scope:** Chapters 1–5 complete.
 > **Last-built:** Phase 3B (two-slot key manager + rotation CLI + pre-flight). Phase 3C cross-process cache invalidation NOT YET SHIPPED — expect a 30 s per-process signing tail after every `activate`.
 
 ---
@@ -669,12 +669,816 @@ Neon snapshot restoration (from Chapter 1.7) is the absolute last resort and is 
 
 ---
 
-# TODO — remaining chapters
+# CHAPTER 3 — WET DRILL GUIDE (STAGING REHEARSAL)
 
-- **Chapter 3 — Wet drill (next week)**: rehearse the flow against a staging DB + staging Render service. Identify any steps that are ambiguous or slow when sleep-deprived. Goal: every step <2 minutes from read-to-execute.
-- **Chapter 4 — Post-rotation verification & monitoring**: `/.well-known/vertifile-pubkey.pem` fingerprint check, JWKS includes both active+grace keys, downstream verifiers still pass, rotation-log public endpoint (Phase 3C) shows the new event, alerting thresholds on `ed25519_signing_key_id` drift across instances.
-- **Chapter 5 — 90-day retire flow**: the grace-window cleanup. At T+90d, the outgoing `$OLD_KEY` row has `valid_until < NOW()`. The current `retire-pending` CLI only handles `pending → expired`; `grace → expired` is trigger-allowed but needs a new CLI subcommand (`retire-grace` or similar) and a cleanup cron. Until this ships, grace rows accumulate; it is non-urgent (verification still works) but should be in place before year 2.
+Purpose: rehearse the ENTIRE rotation process on a TEST environment before touching production. Every step here mirrors Chapters 1+2 but against a throwaway Neon branch. If you can complete this drill in <20 minutes without errors, you are ready for production.
+
+**Timing target:** each numbered step below should take <2 minutes. Total drill <20 minutes. If any step takes longer, note why and fix the friction before the real rotation.
 
 ---
 
-*End of Phase 3D Chapters 1 + 2. DO NOT commit this file until Zur reviews.*
+### [ ] 3.1 — Create a Neon test branch
+
+Open `https://console.neon.tech` --> your project --> Branches.
+
+```
+Neon console --> Branches --> + New Branch --> from main --> name "wet-drill-<YYYYMMDD>"
+```
+
+Copy the connection string for the new branch. It looks like:
+```
+postgresql://<user>:<pass>@<branch-endpoint>.neon.tech/neondb?sslmode=require
+```
+
+**Expected:** branch created in <10 seconds, connection string available.
+
+**If it fails:** Neon quota hit or project paused. Wake the project (any query to main), retry. If branch limit reached, delete an old drill branch first.
+
+---
+
+### [ ] 3.2 — Set up test environment variables
+
+```bash
+# Point at the TEST branch — NOT production
+export DATABASE_URL="<paste Neon wet-drill branch connection string>"
+
+# Use a throwaway test URL (localhost or a staging deploy)
+export TEST_URL="http://localhost:3000"
+
+# Verify the test branch is reachable
+psql "$DATABASE_URL" -c "SELECT 1 AS ok;"
+```
+
+**Expected (literal):**
+```
+ ok
+----
+  1
+(1 row)
+```
+
+**If it fails:** wrong connection string, or the branch hasn't finished provisioning (wait 5s, retry). Do NOT proceed until `psql` works against the test branch.
+
+**CRITICAL:** run `echo $DATABASE_URL | head -c 50` and confirm you see the wet-drill branch endpoint, NOT the production endpoint. If you see the production endpoint, STOP and re-export.
+
+---
+
+### [ ] 3.3 — Verify test branch has the schema
+
+```bash
+psql "$DATABASE_URL" <<'SQL'
+SELECT tgname FROM pg_trigger WHERE tgname = 'trg_ed25519_keys_enforce_state';
+SELECT indexname FROM pg_indexes
+WHERE tablename='ed25519_keys'
+  AND indexname IN ('idx_ed25519_keys_one_active','idx_ed25519_keys_one_pending');
+SELECT id, state FROM ed25519_keys ORDER BY created_at DESC LIMIT 5;
+SQL
+```
+
+**Expected:** 1 trigger row, 2 index rows, and at least 1 key row (copied from main at branch time). The branch inherits the full schema and data snapshot from main.
+
+**If the trigger or indexes are missing:** the branch was created from a point before Phase 3A migration. Delete this branch, ensure main has the migration applied, then re-create the branch.
+
+---
+
+### [ ] 3.4 — Generate a test key
+
+```bash
+cd /Users/mac/Desktop/pvf-project
+
+DATABASE_URL="$DATABASE_URL" node scripts/rotate-ed25519-key.js generate \
+  --reason="wet-drill-$(date +%Y-%m-%d)"
+```
+
+**Expected output (shape):**
+```
+============================================================
+  Vertifile Ed25519 ROTATION — pending key generated
+  DO NOT COMMIT THE PRIVATE KEY TO GIT.
+============================================================
+
+NEW KEY ID:    <16 hex chars>
+FINGERPRINT:   <64 hex chars>
+STATE:         pending
+
+PUBLIC KEY PEM (already inserted into ed25519_keys):
+-----BEGIN PUBLIC KEY-----
+...
+-----END PUBLIC KEY-----
+
+PRIVATE KEY PEM (multi-line):
+-----BEGIN PRIVATE KEY-----
+...
+-----END PRIVATE KEY-----
+
+PRIVATE KEY (Render-friendly single-line \n format):
+-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n
+
+NEXT STEPS — operator action required
+...
+```
+
+**Capture the key IDs:**
+```bash
+export DRILL_NEW_KEY="<paste the NEW KEY ID line here>"
+echo "DRILL_NEW_KEY=$DRILL_NEW_KEY"
+```
+
+**Verify the pending row landed:**
+```bash
+psql "$DATABASE_URL" -c "SELECT id, state, rotation_reason FROM ed25519_keys WHERE id='$DRILL_NEW_KEY';"
+```
+
+**Expected:**
+```
+        id        |  state  |    rotation_reason
+------------------+---------+-----------------------
+ <DRILL_NEW_KEY>  | pending | wet-drill-2026-04-16
+(1 row)
+```
+
+**If it fails:** same failure modes as STEP 1 in Chapter 2. Check for duplicate pending key errors, retire the stale one, re-run.
+
+---
+
+### [ ] 3.5 — Set test env vars for the next key
+
+In a real rotation, you paste these into Render. For the drill, export them locally:
+
+```bash
+export ED25519_NEXT_PRIVATE_KEY_PEM="<paste the single-line \n-escaped PRIVATE KEY from 3.4>"
+export ED25519_NEXT_KEY_ID="$DRILL_NEW_KEY"
+
+echo "ED25519_NEXT_KEY_ID=$ED25519_NEXT_KEY_ID"
+```
+
+**Expected:** both env vars are set and non-empty. The key ID is 16 lowercase hex chars.
+
+**If using a staging Render service:** paste these into the staging service's Environment tab instead. The rest of this drill works the same way.
+
+---
+
+### [ ] 3.6 — Activate the test key
+
+```bash
+cd /Users/mac/Desktop/pvf-project
+
+# Capture the current active key on the test branch
+export DRILL_OLD_KEY=$(psql "$DATABASE_URL" -t -c "SELECT id FROM ed25519_keys WHERE state='active' LIMIT 1;" | tr -d ' ')
+echo "DRILL_OLD_KEY=$DRILL_OLD_KEY"
+
+DATABASE_URL="$DATABASE_URL" node scripts/rotate-ed25519-key.js activate \
+  --new-key-id="$DRILL_NEW_KEY" \
+  --grace-days=90 \
+  --reason="wet-drill-$(date +%Y-%m-%d)" \
+  --skip-preflight
+```
+
+**NOTE:** `--skip-preflight` is used here because there is no running health endpoint to check against. In the real rotation (Chapter 2, STEP 5), you NEVER use `--skip-preflight`.
+
+**Expected output (shape):**
+```
+Rotation plan:
+  outgoing key:  <DRILL_OLD_KEY>  (active -> grace, retires ...)
+  incoming key:  <DRILL_NEW_KEY>  (pending -> active)
+  reason:        wet-drill-...
+  ...
+
+============================================================
+  ROTATION COMMITTED — rotation_id=<N>
+============================================================
+
+Database state after rotation:
+  <DRILL_OLD_KEY>   state=grace,   valid_until=...
+  <DRILL_NEW_KEY>   state=active  (current signing key)
+```
+
+**If it fails with `Ed25519ForbiddenTransitionError`:** the DB state is not what you expected. Run `SELECT id, state FROM ed25519_keys ORDER BY created_at DESC;` to investigate. The test branch may have stale state from a prior drill.
+
+---
+
+### [ ] 3.7 — Verify post-activation state
+
+```bash
+psql "$DATABASE_URL" <<'SQL'
+SELECT id, state, valid_until, rotation_reason
+FROM ed25519_keys
+ORDER BY created_at DESC
+LIMIT 5;
+SQL
+```
+
+**Expected:**
+```
+        id         |  state  |       valid_until       |    rotation_reason
+-------------------+---------+-------------------------+-----------------------
+ <DRILL_NEW_KEY>   | active  |                         | wet-drill-...
+ <DRILL_OLD_KEY>   | grace   | 2026-07-15 ...          | wet-drill-...
+(... possibly older rows ...)
+```
+
+**MUST BE TRUE:**
+- `$DRILL_NEW_KEY` has `state=active`
+- `$DRILL_OLD_KEY` has `state=grace` with a `valid_until` ~90 days from now
+- No rows have `state=pending`
+
+**If the health endpoint is available** (staging deploy running):
+```bash
+curl -sS "$TEST_URL/api/health/deep" | jq '.ed25519_keys_by_state'
+```
+
+**Expected:**
+```json
+{ "active": 1, "pending": 0, "grace": 1, "expired": 0 }
+```
+
+---
+
+### [ ] 3.8 — Verify new uploads use the new key
+
+**If a staging app is running:**
+```bash
+echo "wet-drill signing test" > /tmp/drill-smoke.txt
+
+curl -sS -X POST "$TEST_URL/api/create-pvf" \
+  -H "X-API-Key: $VERTIFILE_TEST_API_KEY" \
+  -F "file=@/tmp/drill-smoke.txt" \
+  -F "recipient=drill@vertifile.com" \
+  -o /tmp/drill-smoke.pvf -w "HTTP %{http_code}\n"
+```
+
+Open `/tmp/drill-smoke.pvf` in a text editor and search for `keyId`. It should match `$DRILL_NEW_KEY`.
+
+**If no staging app is running:** verify via DB only (the activation committed, the state is correct). Note in the drill log: "signing smoke test skipped — no running staging instance."
+
+**If the keyId in the PVF is still `$DRILL_OLD_KEY`:** the cache hasn't flushed yet. Wait 35 seconds, retry.
+
+---
+
+### [ ] 3.9 — Verify old documents still verify (grace key works)
+
+**If a staging app is running and you created a PVF BEFORE step 3.6** (signed by `$DRILL_OLD_KEY`):
+```bash
+curl -sS -X POST "$TEST_URL/api/verify-pvf" \
+  -F "file=@/tmp/pre-drill-smoke.pvf" \
+  -w "HTTP %{http_code}\n"
+```
+
+**Expected:** `HTTP 200` with verification passing. The grace key is still valid for verification.
+
+**If no pre-drill PVF exists:** this is acceptable for the drill. Note: "grace-key verification skipped — no pre-activation PVF available." In the real rotation, Chapter 4 covers this explicitly.
+
+---
+
+### [ ] 3.10 — Retire the grace key (cleanup)
+
+```bash
+cd /Users/mac/Desktop/pvf-project
+
+DATABASE_URL="$DATABASE_URL" node scripts/rotate-ed25519-key.js retire-grace \
+  --key-id="$DRILL_OLD_KEY" \
+  --reason="wet-drill-cleanup-$(date +%Y-%m-%d)"
+```
+
+**Expected output (shape):**
+```
+Retired key <DRILL_OLD_KEY>: grace -> expired
+```
+
+**Verify:**
+```bash
+psql "$DATABASE_URL" -c "SELECT id, state FROM ed25519_keys WHERE id='$DRILL_OLD_KEY';"
+```
+
+**Expected:**
+```
+        id         |  state
+-------------------+----------
+ <DRILL_OLD_KEY>   | expired
+(1 row)
+```
+
+**If it fails:** `retire-grace` only works on `state='grace'` keys. If the key is in a different state, check what happened in step 3.6.
+
+---
+
+### [ ] 3.11 — Record drill results
+
+```bash
+cat >> /Users/mac/Desktop/pvf-project/ops-log.txt <<EOF
+$(date -u +%Y-%m-%dT%H:%M:%SZ) WET DRILL COMPLETE
+  branch: wet-drill-$(date +%Y%m%d)
+  drill_old_key: $DRILL_OLD_KEY
+  drill_new_key: $DRILL_NEW_KEY
+  total_time: <fill in minutes>
+  slow_steps: <list any step that took >2 min, or "none">
+  issues_found: <list any issues, or "none">
+  operator: $(whoami)@$(hostname)
+EOF
+```
+
+**After the drill:**
+- Delete the Neon test branch (Neon console --> Branches --> select `wet-drill-<YYYYMMDD>` --> Delete). No reason to keep it.
+- Clear env vars: `unset DATABASE_URL DRILL_OLD_KEY DRILL_NEW_KEY ED25519_NEXT_PRIVATE_KEY_PEM ED25519_NEXT_KEY_ID TEST_URL`
+- Clear terminal history if you pasted key material: `history -c && : > ~/.zsh_history`
+
+---
+
+**DRILL COMPLETE. If all 11 steps passed in <20 minutes with no surprises, you are ready for production rotation (Chapters 1+2).**
+
+---
+
+# CHAPTER 4 — POST-ROTATION VERIFICATION (PRODUCTION)
+
+Purpose: after completing Chapter 2 (the actual production rotation), run EVERY check below. This is the verification pass that confirms the rotation landed cleanly across the entire system. Do NOT skip any box.
+
+**When to run this:** immediately after Chapter 2, STEP 10 (rotation marked complete in ops log). If you ran Chapter 2 at 2am, you still run Chapter 4 right now — the 24-hour monitoring window (step 4.7) starts from THIS moment.
+
+---
+
+### [ ] 4.1 — JWKS includes both active + grace keys
+
+```bash
+curl -sS "$PROD_URL/.well-known/vertifile-jwks.json" | jq '.keys[] | {kid, use, kty}'
+```
+
+**Expected (exactly 2 entries):**
+```json
+{ "kid": "<NEW_KEY>", "use": "sig", "kty": "OKP" }
+{ "kid": "<OLD_KEY>", "use": "sig", "kty": "OKP" }
+```
+
+**MUST BE TRUE:**
+- The new active key (`$NEW_KEY`) is present.
+- The old grace key (`$OLD_KEY`) is present. External verifiers need this to validate PVFs signed before the rotation.
+- Both have `kty: "OKP"` (Ed25519 via JOSE).
+
+**If the old key is missing:** the JWKS endpoint may be filtering by `state IN ('active')` only. This is a bug — grace keys MUST be included. Check the JWKS route handler and fix before external verifiers start failing.
+
+**If there are >2 keys:** check for leftover pending or extra grace keys. Not harmful, but unexpected — investigate with `SELECT id, state FROM ed25519_keys ORDER BY created_at DESC;`.
+
+---
+
+### [ ] 4.2 — /api/health/deep shows correct state
+
+```bash
+curl -sS "$PROD_URL/api/health/deep" | jq '{
+  ed25519_signing_key_id,
+  ed25519_keys_by_state,
+  ed25519_loaded_slots,
+  phase2e_active,
+  status
+}'
+```
+
+**Expected:**
+```json
+{
+  "ed25519_signing_key_id": "<NEW_KEY>",
+  "ed25519_keys_by_state": { "active": 1, "pending": 0, "grace": 1, "expired": 0 },
+  "ed25519_loaded_slots": { "primary": "<NEW_KEY>", "next": null },
+  "phase2e_active": true,
+  "status": "online"
+}
+```
+
+**MUST BE TRUE (all five):**
+1. `ed25519_signing_key_id` matches `$NEW_KEY`.
+2. `ed25519_keys_by_state.active === 1` and `grace === 1`.
+3. `ed25519_keys_by_state.pending === 0` (no leftover pending keys).
+4. `ed25519_loaded_slots.primary === $NEW_KEY` (the new key is in the primary slot after STEP 9 env-var promotion).
+5. `ed25519_loaded_slots.next === null` (NEXT env vars were deleted in STEP 9).
+
+**If `loaded_slots.primary` still shows `$OLD_KEY`:** STEP 9 (env-var promotion) was skipped or the redeploy hasn't landed yet. Go back to Chapter 2, STEP 9 and complete it.
+
+**If `loaded_slots.next` is non-null:** the `ED25519_NEXT_*` env vars were not deleted in STEP 9. Go to Render dashboard, delete them, save, wait for redeploy, re-check.
+
+---
+
+### [ ] 4.3 — New uploads are signed with the new key
+
+```bash
+echo "post-rotation verification $(date -u +%Y-%m-%dT%H:%M:%SZ)" > /tmp/verify-new.txt
+
+curl -sS -X POST "$PROD_URL/api/create-pvf" \
+  -H "X-API-Key: $VERTIFILE_TEST_API_KEY" \
+  -F "file=@/tmp/verify-new.txt" \
+  -F "recipient=verify@vertifile.com" \
+  -o /tmp/verify-new.pvf -w "HTTP %{http_code}\n"
+```
+
+**Expected:** `HTTP 200`, `/tmp/verify-new.pvf` is non-empty.
+
+**Verify the keyId in the PVF metadata:**
+
+Open `/tmp/verify-new.pvf` in a text editor and search for the `keyId` field in the manifest header. It MUST be `$NEW_KEY`.
+
+```bash
+# Quick grep to extract keyId from the PVF manifest:
+strings /tmp/verify-new.pvf | grep -o '"keyId":"[a-f0-9]*"' | head -1
+```
+
+**Expected:**
+```
+"keyId":"<NEW_KEY>"
+```
+
+**If the keyId is still `$OLD_KEY`:** a cache is stale or the env-var promotion didn't land. Wait 35 seconds, re-upload, re-check. If it persists after 2 minutes, trigger a manual redeploy from Render dashboard.
+
+---
+
+### [ ] 4.4 — Old documents still verify (grace key is valid)
+
+Use the smoke PVF created BEFORE the rotation (from Chapter 1, step 1.8):
+
+```bash
+curl -sS -X POST "$PROD_URL/api/verify-pvf" \
+  -F "file=@/tmp/smoke.pvf" \
+  -w "HTTP %{http_code}\n"
+```
+
+**Expected:** `HTTP 200` with verification passing. The old PVF was signed by `$OLD_KEY`, which is now in `state='grace'` — the verifier loads grace keys and accepts their signatures.
+
+**If it fails with a signature verification error:** the grace key is not being loaded by the verifier. Check that the JWKS endpoint includes the grace key (step 4.1). Check Render logs for `[key-manager]` messages about grace key loading.
+
+**If you don't have the pre-rotation PVF (`/tmp/smoke.pvf`):** upload a fresh document, then manually edit its manifest to reference `$OLD_KEY` — this is fragile and error-prone. Better: find any existing PVF in the system that was signed before the rotation and verify it through the normal verification flow.
+
+---
+
+### [ ] 4.5 — Rotation log shows the transition entry
+
+```bash
+curl -sS "$PROD_URL/.well-known/vertifile-rotation-log" | jq '.[-1]'
+```
+
+**Expected (shape):**
+```json
+{
+  "rotation_id": <N>,
+  "old_key_id": "<OLD_KEY>",
+  "new_key_id": "<NEW_KEY>",
+  "old_state_transition": "active -> grace",
+  "new_state_transition": "pending -> active",
+  "reason": "scheduled-rotation-...",
+  "grace_days": 90,
+  "grace_until": "2026-07-...",
+  "timestamp": "2026-04-..."
+}
+```
+
+**MUST BE TRUE:**
+- `old_key_id` matches `$OLD_KEY`.
+- `new_key_id` matches `$NEW_KEY`.
+- `grace_days` is 90.
+- The entry is the LAST one in the array (most recent rotation).
+
+**If the endpoint returns 404:** the rotation-log public endpoint may not be shipped yet (Phase 3C). Verify directly from DB instead:
+```bash
+psql "$DATABASE_URL" -c "SELECT * FROM key_rotation_log ORDER BY id DESC LIMIT 1;"
+```
+
+---
+
+### [ ] 4.6 — Cache invalidation (multi-instance)
+
+If Vertifile runs on multiple Render instances (or will in the future), invalidate the key cache on each instance:
+
+```bash
+curl -sS -X POST "$PROD_URL/api/admin/cache/invalidate-keys" \
+  -H "Authorization: Bearer $ADMIN_TOKEN" | jq '.'
+```
+
+**Expected:**
+```json
+{ "invalidated": true }
+```
+
+**If using multiple instances behind a load balancer:** you need to hit each instance directly, or confirm the invalidation endpoint broadcasts to all instances. Poll `/api/health/deep` multiple times (the load balancer will round-robin across instances) and verify ALL responses show `ed25519_signing_key_id === $NEW_KEY`:
+
+```bash
+for i in {1..10}; do
+  sk=$(curl -sS "$PROD_URL/api/health/deep" | jq -r '.ed25519_signing_key_id')
+  echo "[$i] signing_key_id=$sk"
+  sleep 1
+done
+```
+
+**Expected:** all 10 responses show `$NEW_KEY`. If any show `$OLD_KEY`, that instance has a stale cache — wait 30s (TTL) or trigger a redeploy.
+
+**If the invalidation endpoint returns 404 or 401:** the endpoint may not be shipped yet (Phase 3C), or the `$ADMIN_TOKEN` is wrong. This is non-critical — the 30s cache TTL will self-heal. But note it in the ops log.
+
+---
+
+### [ ] 4.7 — 24-hour monitoring window
+
+Set a timer. For the next 24 hours, check these at T+1h, T+4h, T+12h, and T+24h:
+
+**Quick check command (run at each interval):**
+```bash
+echo "=== $(date -u +%Y-%m-%dT%H:%M:%SZ) === POST-ROTATION CHECK ==="
+
+# 1. Health still green
+curl -sS "$PROD_URL/api/health/deep" | jq '{status, ed25519_signing_key_id, ed25519_keys_by_state}'
+
+# 2. Check for verify_fail events in logs
+# (Render dashboard --> Logs --> search for "verify_fail")
+echo "Check Render logs for verify_fail events manually."
+
+# 3. Error rate baseline
+# (Render dashboard --> Metrics --> check HTTP error rate hasn't spiked)
+echo "Check Render metrics for error rate spike manually."
+```
+
+**Expected at every interval:**
+- `status === "online"`
+- `ed25519_signing_key_id === $NEW_KEY`
+- Zero `verify_fail` events in logs
+- Error rate at or below pre-rotation baseline
+
+**If you see `verify_fail` events:** check which `keyId` the failing document references. If it references a key that was expired (not grace, but expired) before this rotation, those documents were already unverifiable — the rotation did not cause the failure. If it references `$OLD_KEY` (now grace), the grace key should still verify — investigate the verifier code path.
+
+**If error rates spike:** do NOT rollback (`grace -> active` is forbidden). If signing is broken, generate a NEW key and rotate again (Chapter 2 Special, Sub-case B2). If verification is broken for grace-key documents, the JWKS endpoint may be misconfigured (step 4.1).
+
+---
+
+### [ ] 4.8 — If anything fails: forward-only recovery
+
+**CRITICAL RULE: do NOT attempt to rollback a committed rotation.** The BEFORE-UPDATE trigger forbids `grace -> active`. This is by design — the rotation is monotonic and permanent.
+
+**If signing is broken with the new key:**
+```bash
+# Generate a BRAND NEW key and rotate again
+cd /Users/mac/Desktop/pvf-project
+
+DATABASE_URL="$DATABASE_URL" node scripts/rotate-ed25519-key.js generate \
+  --reason="recovery-from-failed-rotation-$(date +%Y%m%d)"
+```
+Then follow Chapter 2 from STEP 1 with the new key. The broken `$NEW_KEY` will be demoted to grace when the recovery key activates.
+
+**If verification is broken for old documents:** this means the grace key is not being served in JWKS. Fix the JWKS endpoint code, redeploy, and re-verify step 4.1.
+
+---
+
+**ALL 8 BOXES CHECKED? Post-rotation verification is complete. Set a calendar reminder for Chapter 5 at T+80 days.**
+
+---
+
+# CHAPTER 5 — 90-DAY RETIRE FLOW
+
+Purpose: after the grace period expires, retire the old key and clean up. This is a scheduled maintenance task, not an emergency — run it during business hours with no time pressure.
+
+**When to run this:** at T+90 days after the rotation (the `grace_until` date from the rotation). Start the pre-checks at T+80 days (step 5.1) so you have 10 days of lead time if anything needs attention.
+
+---
+
+### [ ] 5.1 — T+80 calendar reminder (10-day warning)
+
+At T+80 days, verify the grace key is approaching its expiry:
+
+```bash
+psql "$DATABASE_URL" -c "SELECT id, state, valid_until, rotation_reason FROM ed25519_keys WHERE state='grace';"
+```
+
+**Expected:**
+```
+        id         |  state  |       valid_until       |    rotation_reason
+-------------------+---------+-------------------------+-----------------------
+ <OLD_KEY>         | grace   | 2026-07-15 ...          | scheduled-rotation-...
+(1 row)
+```
+
+**Check:** `valid_until` should be ~10 days from now. If it is significantly further out, the 90-day timer hasn't elapsed yet — adjust your calendar reminder.
+
+**If `valid_until` has ALREADY passed (you're late):** proceed directly to step 5.3. The grace key is past its intended lifetime but still marked `state='grace'` in the DB — it won't auto-expire, you must explicitly retire it.
+
+**If there are zero grace rows:** the key was already retired (perhaps during a drill or by another operator). Skip to step 5.5 (env var cleanup) and verify.
+
+---
+
+### [ ] 5.2 — Pre-retire verification
+
+Confirm the system is healthy and the active key is working before retiring the grace key:
+
+```bash
+curl -sS "$PROD_URL/api/health/deep" | jq '{
+  status,
+  ed25519_signing_key_id,
+  ed25519_keys_by_state,
+  ed25519_loaded_slots
+}'
+```
+
+**Expected:**
+```json
+{
+  "status": "online",
+  "ed25519_signing_key_id": "<NEW_KEY>",
+  "ed25519_keys_by_state": { "active": 1, "pending": 0, "grace": 1, "expired": 0 },
+  "ed25519_loaded_slots": { "primary": "<NEW_KEY>", "next": null }
+}
+```
+
+**MUST BE TRUE before retiring:**
+- `status === "online"` (do not retire during an outage)
+- `ed25519_signing_key_id` is the ACTIVE key (not the grace key you are about to retire)
+- `grace === 1` (the key you intend to retire is still in grace)
+- Signing works: run a quick upload smoke test (same as Chapter 1, step 1.8)
+
+**Also confirm the grace period has actually passed:**
+```bash
+psql "$DATABASE_URL" -c "SELECT id, state, valid_until, (valid_until < NOW()) AS grace_expired FROM ed25519_keys WHERE state='grace';"
+```
+
+**Expected:**
+```
+        id         |  state  |       valid_until       | grace_expired
+-------------------+---------+-------------------------+---------------
+ <OLD_KEY>         | grace   | 2026-07-15 ...          | t
+(1 row)
+```
+
+`grace_expired` MUST be `t` (true). If it is `f` (false), the 90-day window has not passed yet. Wait until it has — retiring early is allowed by the DB trigger but reduces the safety window for old documents.
+
+---
+
+### [ ] 5.3 — Retire the grace key
+
+```bash
+cd /Users/mac/Desktop/pvf-project
+
+DATABASE_URL="$DATABASE_URL" node scripts/rotate-ed25519-key.js retire-grace \
+  --key-id="$OLD_KEY" \
+  --reason="grace-period-expired-scheduled-$(date +%Y%m%d)"
+```
+
+**Expected output (shape):**
+```
+Retired key <OLD_KEY>: grace -> expired
+Reason: grace-period-expired-scheduled-...
+```
+
+**Verify the state change:**
+```bash
+psql "$DATABASE_URL" -c "SELECT id, state, valid_until, rotation_reason FROM ed25519_keys WHERE id='$OLD_KEY';"
+```
+
+**Expected:**
+```
+        id         |  state  |       valid_until       |          rotation_reason
+-------------------+---------+-------------------------+--------------------------------------
+ <OLD_KEY>         | expired | 2026-07-15 ...          | grace-period-expired-scheduled-...
+(1 row)
+```
+
+**If it fails with `Ed25519ForbiddenTransitionError`:** the key is not in `state='grace'` (it may have already been expired, or it was somehow re-activated — which should be impossible). Check `SELECT id, state FROM ed25519_keys WHERE id='$OLD_KEY';` to see its actual state.
+
+**If `retire-grace` is not a recognized subcommand:** the CLI may not have been updated for Phase 3D. Check the CLI help: `node scripts/rotate-ed25519-key.js --help`. If the subcommand is missing, run the state transition manually via SQL (the trigger allows `grace -> expired`):
+```bash
+psql "$DATABASE_URL" -c "UPDATE ed25519_keys SET state='expired', rotation_reason='grace-period-expired-scheduled-$(date +%Y%m%d)' WHERE id='$OLD_KEY' AND state='grace';"
+```
+
+---
+
+### [ ] 5.4 — Post-retire verification
+
+#### 5.4a — JWKS no longer includes the retired key
+
+```bash
+curl -sS "$PROD_URL/.well-known/vertifile-jwks.json" | jq '.keys[] | {kid, use, kty}'
+```
+
+**Expected (exactly 1 entry):**
+```json
+{ "kid": "<NEW_KEY>", "use": "sig", "kty": "OKP" }
+```
+
+The retired key (`$OLD_KEY`) MUST NOT appear. If it still appears, the JWKS endpoint is serving expired keys — this is a bug. Check the JWKS route handler's state filter.
+
+#### 5.4b — Health endpoint reflects the retirement
+
+```bash
+curl -sS "$PROD_URL/api/health/deep" | jq '.ed25519_keys_by_state'
+```
+
+**Expected:**
+```json
+{ "active": 1, "pending": 0, "grace": 0, "expired": 1 }
+```
+
+**MUST BE TRUE:**
+- `grace === 0` (the old key was the only grace key, and it just moved to expired)
+- `expired` count incremented by 1 compared to pre-retire
+
+**If `expired` count seems high:** old drill keys or prior rotations accumulated. This is normal and harmless — expired keys are inert.
+
+#### 5.4c — Rotation log shows the transition
+
+```bash
+curl -sS "$PROD_URL/.well-known/vertifile-rotation-log" | jq '.[-1]'
+```
+
+**Expected (shape):**
+```json
+{
+  "key_id": "<OLD_KEY>",
+  "state_transition": "grace -> expired",
+  "reason": "grace-period-expired-scheduled-...",
+  "timestamp": "2026-07-..."
+}
+```
+
+**If the endpoint returns 404:** verify directly from DB:
+```bash
+psql "$DATABASE_URL" -c "SELECT * FROM key_rotation_log ORDER BY id DESC LIMIT 1;"
+```
+
+---
+
+### [ ] 5.5 — Clean up env vars
+
+Check the Render dashboard for leftover rotation env vars:
+
+Open `https://dashboard.render.com` --> `vertifile` service --> **Environment** tab.
+
+**Delete these if they still exist:**
+- `ED25519_NEXT_PRIVATE_KEY_PEM`
+- `ED25519_NEXT_KEY_ID`
+
+These should have been removed in Chapter 2, STEP 9. But if they are still present (operator forgot, or a deploy reverted the change), delete them now. They are stale and will cause confusion during the next rotation.
+
+**Do NOT delete:**
+- `ED25519_PRIVATE_KEY_PEM` (this holds the CURRENT active key)
+- `ED25519_PRIMARY_KEY_ID` (this identifies the current active key)
+
+**If no leftover env vars are found:** good. Note "env vars clean" in the ops log.
+
+---
+
+### [ ] 5.6 — Archive or destroy the old private key PEM
+
+The private key for `$OLD_KEY` is no longer needed for signing (it was the grace key, now expired). You have two options:
+
+**Option A — Archive (recommended if any doubt):**
+1. Open 1Password (or your hardware token / offline vault).
+2. Create an entry labeled: `Vertifile Ed25519 RETIRED — <OLD_KEY> — retired <YYYY-MM-DD>`
+3. Store the private PEM in the entry.
+4. Add a note: "This key was active from <original activation date> to <rotation date>. Grace period expired <today>. State: expired. DO NOT re-activate."
+5. Confirm saved.
+
+**Option B — Destroy (if you are certain):**
+
+Before destroying, verify no documents in the wild still depend on the key for NEW verifications (the key is expired, so the verifier will reject it anyway — but you may want the PEM for forensic analysis):
+
+```bash
+# Check verify logs for any recent verification attempts against the old key
+# (Render dashboard --> Logs --> search for OLD_KEY value)
+echo "Search Render logs for: $OLD_KEY"
+echo "If zero hits in the last 30 days, safe to destroy."
+```
+
+If zero hits: the key is truly dead. Purge it from all locations:
+- Remove from 1Password / vault if previously stored.
+- Confirm it is NOT in any env var on Render (step 5.5 already checked).
+- Confirm it is NOT in any git history: `cd /Users/mac/Desktop/pvf-project && git log --all -p -S "$OLD_KEY" -- '*.pem' '*.key'` should return nothing.
+
+**If in doubt, choose Option A.** Archiving costs nothing. Destroying is irreversible.
+
+---
+
+### [ ] 5.7 — Final sign-off
+
+```bash
+cat >> /Users/mac/Desktop/pvf-project/ops-log.txt <<EOF
+$(date -u +%Y-%m-%dT%H:%M:%SZ) GRACE RETIREMENT COMPLETE
+  retired_key: $OLD_KEY
+  new_state: expired
+  active_key: $(curl -sS "$PROD_URL/api/health/deep" | jq -r '.ed25519_signing_key_id')
+  jwks_keys: $(curl -sS "$PROD_URL/.well-known/vertifile-jwks.json" | jq '[.keys[].kid]')
+  env_vars_cleaned: yes/no
+  old_pem_disposition: archived/destroyed
+  reason: grace-period-expired-scheduled-$(date +%Y%m%d)
+  operator: $(whoami)@$(hostname)
+  one_line_summary: "<write a one-line summary: e.g., 'Retired grace key <OLD_KEY> after 90-day window. No verify_fail events. Clean.'>"
+EOF
+```
+
+**Edit the one-line summary** before pressing enter. This is the human-readable record of what happened. Future-you will thank present-you.
+
+---
+
+**ALL 7 BOXES CHECKED? The 90-day retire flow is complete. The rotation lifecycle for this key pair is finished.**
+
+**Next rotation:** when the next scheduled rotation arrives (or an incident forces one), start again at Chapter 1. If it has been >6 months since your last wet drill, run Chapter 3 first.
+
+---
+
+## Who to call
+
+- **Primary:** Zur is solo operator. Incident owner = Zur.
+- **If totally stuck and need a second pair of eyes:** TODO — Zur, fill in your trusted escalation contact here (a name + phone number or Signal handle). Leave blank if genuinely solo; that is an accepted risk you've documented in the session notes.
+- **Neon support:** `https://neon.tech/docs/introduction/support` — only for DB-layer issues (restore snapshot, unblock paused branch). Do NOT share DB contents with support.
+- **Render support:** dashboard --> Help --> Contact. Only for deploy/boot failures that look like Render infra (not your env var paste).
+
+---
+
+*End of Phase 3D Runbook — Chapters 1–5. DO NOT commit this file until Zur reviews.*

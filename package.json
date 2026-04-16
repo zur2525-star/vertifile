@@ -15,6 +15,7 @@
     "test:rotation-schema": "node tests/rotation-schema.test.js",
     "test:rotation-phase3b": "node tests/rotation-phase3b.test.js",
     "test:pipeline-pvf-roundtrip": "node tests/pipeline-pvf-roundtrip.test.js",
+    "test:e2e-auth": "node --test tests/e2e-auth-onboarding.test.js",
     "migrate": "node scripts/migrate.js",
     "backup": "node scripts/backup-neon.js"
   },

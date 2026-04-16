@@ -77,6 +77,28 @@ router.get('/security.txt', (req, res) => {
   });
 });
 
+// GET /.well-known/vertifile-rotation-log
+// Phase 3C — public, read-only endpoint exposing key rotation history for
+// transparency. Third parties (auditors, verifiers) can inspect when keys
+// were rotated, the grace windows, and the operator-supplied reason. The
+// actor column is deliberately excluded (DB-only invariant, Zur decision).
+router.get('/vertifile-rotation-log', async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const rawLimit = parseInt(req.query.limit, 10);
+    const rawOffset = parseInt(req.query.offset, 10);
+    const limit = Number.isFinite(rawLimit) ? Math.min(Math.max(rawLimit, 1), 1000) : 100;
+    const offset = Number.isFinite(rawOffset) ? Math.max(rawOffset, 0) : 0;
+    const entries = await db.listRotationLog({ limit, offset });
+    res.setHeader('Cache-Control', 'public, max-age=60');
+    setCorsHeaders(res);
+    res.json({ entries, total: entries.length });
+  } catch (e) {
+    logger.warn({ err: e.message }, '[well-known] rotation-log error');
+    res.status(500).json({ error: 'Internal error' });
+  }
+});
+
 // OPTIONS preflight
 router.options('/vertifile-pubkey.pem', (req, res) => {
   setCorsHeaders(res);
