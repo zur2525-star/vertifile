@@ -779,6 +779,13 @@ router.get('/health/deep', async (req, res) => {
     } catch (_) {
       ed25519SigningKeyId = null;
     }
+    // Memory usage metrics
+    const memUsage = process.memoryUsage();
+    const heapUsedMB = Math.round(memUsage.heapUsed / 1024 / 1024);
+    const heapTotalMB = Math.round(memUsage.heapTotal / 1024 / 1024);
+    const heapPercent = Math.round((memUsage.heapUsed / memUsage.heapTotal) * 100);
+    const rssMB = Math.round(memUsage.rss / 1024 / 1024);
+
     res.json({
       status: 'online',
       service: 'Vertifile',
@@ -788,6 +795,18 @@ router.get('/health/deep', async (req, res) => {
       documents: stats.totalDocuments,
       organizations: stats.totalOrganizations,
       blockchain: chain.isConnected() ? 'connected' : 'off-chain',
+      memory: {
+        heap_used_mb: heapUsedMB,
+        heap_total_mb: heapTotalMB,
+        heap_percent: heapPercent,
+        rss_mb: rssMB
+      },
+      db_pool: {
+        total: db._db.totalCount,
+        idle: db._db.idleCount,
+        waiting: db._db.waitingCount
+      },
+      node_version: process.version,
       // Phase 2E observability — lets operators / uptime probes confirm the
       // fail-closed enforcement state without grepping logs. See Ori's cutover
       // smoke test: `curl /api/health/deep | jq '.phase2e_active'`.
@@ -814,6 +833,47 @@ router.get('/health/deep', async (req, res) => {
       cache_last_invalidated: cacheLastInvalidatedAt
     });
   } catch(e) { res.status(500).json({ status: 'error', error: 'Health check failed' }); }
+});
+
+// ===== Prometheus metrics endpoint =====
+router.get('/metrics', (req, res) => {
+  const mem = process.memoryUsage();
+  const pool = req.app.get('db')._db;
+  const uptime = process.uptime();
+
+  const lines = [
+    '# HELP nodejs_heap_bytes_used Current heap used in bytes',
+    '# TYPE nodejs_heap_bytes_used gauge',
+    'nodejs_heap_bytes_used ' + mem.heapUsed,
+    '',
+    '# HELP nodejs_heap_bytes_total Total heap size in bytes',
+    '# TYPE nodejs_heap_bytes_total gauge',
+    'nodejs_heap_bytes_total ' + mem.heapTotal,
+    '',
+    '# HELP nodejs_rss_bytes Resident set size in bytes',
+    '# TYPE nodejs_rss_bytes gauge',
+    'nodejs_rss_bytes ' + mem.rss,
+    '',
+    '# HELP nodejs_uptime_seconds Process uptime in seconds',
+    '# TYPE nodejs_uptime_seconds gauge',
+    'nodejs_uptime_seconds ' + Math.round(uptime),
+    '',
+    '# HELP pg_pool_total Total connections in pool',
+    '# TYPE pg_pool_total gauge',
+    'pg_pool_total ' + pool.totalCount,
+    '',
+    '# HELP pg_pool_idle Idle connections in pool',
+    '# TYPE pg_pool_idle gauge',
+    'pg_pool_idle ' + pool.idleCount,
+    '',
+    '# HELP pg_pool_waiting Waiting queries in pool',
+    '# TYPE pg_pool_waiting gauge',
+    'pg_pool_waiting ' + pool.waitingCount,
+  ];
+
+  res.type('text/plain; version=0.0.4; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.send(lines.join('\n') + '\n');
 });
 
 // ===== Phase 3C: Admin cache invalidation =====

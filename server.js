@@ -35,6 +35,12 @@ const { responseEnvelope } = require('./middleware/response-envelope');
 const { trackError } = require('./middleware/error-alerter');
 const { csrfProtection, csrfTokenEndpoint } = require('./middleware/csrf');
 const { errorHandler } = require('./middleware/error-handler');
+const { validateEnv } = require('./services/env-validator');
+
+// ---- Startup environment validation ----
+// Must run before any middleware or routes so missing vars cause a clear
+// boot-time error rather than a silent runtime failure.
+validateEnv();
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -192,7 +198,25 @@ app.use((req, res, next) => {
 });
 app.use((req, res, next) => { express.json({ limit: '1mb' })(req, res, (err) => { if (err) return res.status(400).json({ success: false, error: 'Invalid JSON body' }); next(); }); });
 app.use(sanitizeBody);
-app.use(compression());
+app.use(compression({
+  // Only compress responses larger than 1KB (small JSON responses are faster uncompressed)
+  threshold: 1024,
+  // Standard compression level (good balance of speed vs ratio)
+  level: 6,
+  // Skip compression for PVF responses (already large HTML, benefit is marginal
+  // vs CPU cost) and for already-compressed formats
+  filter: (req, res) => {
+    const ct = res.getHeader('content-type');
+    if (ct && (
+      ct.includes('application/vnd.vertifile.pvf') ||
+      ct.includes('image/') ||
+      ct.includes('video/')
+    )) {
+      return false;
+    }
+    return compression.filter(req, res);
+  }
+}));
 
 // ---- PDF.js vendor static route (Phase 3 — Option B) ----
 // Serves the pinned pdfjs-dist@4.10.38 worker as a same-origin HTTPS asset.
