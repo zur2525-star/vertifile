@@ -137,18 +137,12 @@ stampCache._set = function(userId, config) {
 app.set('stampCache', stampCache);
 
 // Generate a fresh cryptographic nonce for every request.
-// The nonce is stored on res.locals so it can be referenced both by the
-// helmet CSP config below (via the function form of scriptSrc) and by any
-// server-rendered template that needs to stamp <script nonce="..."> tags.
-// NOTE: static HTML files served by express.static cannot receive a dynamic
-// nonce, so 'unsafe-inline' is retained alongside the nonce directive.
-// Per the CSP spec, browsers that understand nonces IGNORE 'unsafe-inline'
-// and enforce nonce-only execution; older browsers fall back to 'unsafe-inline'.
-// This is the standard progressive-enhancement approach.
-app.use((req, res, next) => {
-  res.locals.cspNonce = crypto.randomBytes(16).toString('base64');
-  next();
-});
+// CSP uses 'unsafe-inline' for scriptSrc. The nonce middleware was removed
+// because the project serves static HTML via express.static, and static files
+// cannot receive a dynamic nonce attribute. Modern browsers ignore
+// 'unsafe-inline' when a nonce source is present in the CSP, which breaks
+// every inline <script> on the static pages (hero animation, FAQ, etc.).
+// If server-side rendering is added in the future, nonces can be reintroduced.
 
 app.use(helmet({
   contentSecurityPolicy: {
@@ -156,8 +150,10 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       scriptSrc: [
         "'self'",
-        "'unsafe-inline'",                              // fallback for static HTML (ignored by nonce-aware browsers)
-        (req, res) => `'nonce-${res.locals.cspNonce}'`, // per-request nonce for server-rendered scripts
+        "'unsafe-inline'", // required for static HTML inline scripts (animations, etc.)
+        // Note: do NOT add a nonce source here — modern browsers IGNORE 'unsafe-inline'
+        // when a nonce source is present, which would break every inline <script>
+        // in the static HTML pages (hero animation, FAQ toggle, scroll reveal, etc.).
         "https://plausible.io",
       ],
       scriptSrcAttr: ["'none'"],  // Block inline event handlers (onclick, onload, etc.)
