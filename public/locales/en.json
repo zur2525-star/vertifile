@@ -105,7 +105,7 @@
     "t1title": "Patent Pending",
     "t1desc": "Technology patent filed at the Israel Patent Office. Novel verification architecture.",
     "t2title": "IANA Registered MIME Type",
-    "t2desc": "Official file format application #1446680 pending with the Internet standards authority.",
+    "t2desc": "Official IANA-registered file format. application/vnd.vertifile.pvf — recognized internet standard.",
     "t3title": "Blockchain Verified",
     "t3desc": "Every document is permanently recorded on the blockchain. Immutable public proof.",
     "t4title": "Zero-Knowledge Architecture",
@@ -1396,7 +1396,7 @@
       "customize": "Yes! Pro and Enterprise users can add their organization logo, brand color, and custom stamp text through the Branding settings.",
       "offline": "The .pvf file displays the document offline. Full verification requires an internet connection to check the server-side hash.",
       "maxSize": "50MB per file.",
-      "legalRecognition": "The .pvf format has a patent pending with the Israeli Patent Office and an IANA MIME type registration pending. While no Israeli court has ruled on .pvf specifically, it provides strong cryptographic evidence of document authenticity.",
+      "legalRecognition": "The .pvf format has a patent pending with the Israeli Patent Office and an IANA-registered MIME type (application/vnd.vertifile.pvf). While no Israeli court has ruled on .pvf specifically, it provides strong cryptographic evidence of document authenticity.",
       "gdpr": "Yes. We process data under GDPR Article 6 legal bases (contract performance, legitimate interest, consent). We offer DPA agreements for Enterprise customers.",
       "dpa": "Yes. Enterprise customers can request a DPA at privacy@vertifile.com."
     },

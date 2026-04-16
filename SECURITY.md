@@ -21,7 +21,7 @@ If anything in this document is unclear, wrong, or missing — email security@ve
 - **How you verify it:** fetch our public key from `https://vertifile.com/.well-known/vertifile-pubkey.pem`, confirm its fingerprint against the one in section 3 of this document, and run `openssl pkeyutl -verify`. No Vertifile API, no SDK, no account.
 - **How much code:** ten lines in Node or Python, or three shell commands. All three are in section 4 and have been wet-tested against production documents.
 
-Vertifile's core signing mechanism is the subject of a pending patent (Israel) and the PVF container uses IANA MIME type `application/vnd.vertifile.pvf` — request #1446680, currently pending. The cryptographic contract in this document is stable regardless of the outcome of either process.
+Vertifile's core signing mechanism is the subject of a pending patent (Israel) and the PVF container uses IANA MIME type `application/vnd.vertifile.pvf` — officially registered (2026-04-15). The cryptographic contract in this document is stable regardless of the outcome of either process.
 
 The rest of this document is the math and the evidence. If you want the 10-second version: open section 4 and copy the `openssl` command.
 

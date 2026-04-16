@@ -2041,7 +2041,7 @@
     "t1title": "Patent angemeldet",
     "t1desc": "Technologiepatent beim israelischen Patentamt eingereicht. Neuartige Verifizierungsarchitektur.",
     "t2title": "IANA-registrierter MIME-Typ",
-    "t2desc": "Offizieller Dateiformatantrag #1446680 bei der Internet-Standardbehoerde haengig.",
+    "t2desc": "Offiziell bei IANA registriertes Dateiformat. application/vnd.vertifile.pvf — anerkannter Internetstandard.",
     "t3title": "Blockchain-verifiziert",
     "t3desc": "Jedes Dokument wird dauerhaft auf der Blockchain gespeichert. Unveraeenderlicher oeffentlicher Nachweis.",
     "t4title": "Zero-Knowledge-Architektur",

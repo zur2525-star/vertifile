@@ -130,7 +130,7 @@ The .pvf file displays the document offline. Full verification requires an inter
 ## Legal
 
 **Is .pvf legally recognized?**
-The .pvf format has a patent pending with the Israeli Patent Office and an IANA MIME type registration pending. While no Israeli court has ruled on .pvf specifically, it provides strong cryptographic evidence of document authenticity.
+The .pvf format has a patent pending with the Israeli Patent Office and an IANA-registered MIME type. While no Israeli court has ruled on .pvf specifically, it provides strong cryptographic evidence of document authenticity.
 
 ---
 

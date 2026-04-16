@@ -36,7 +36,7 @@
 ## Traction
 - 10K+ documents protected
 - Patent filed: Israeli Patent Office (March 2026)
-- IANA MIME type: pending (#1446680)
+- IANA MIME type: registered (2026-04-15)
 - 10 languages, 16 pages, desktop app (Mac + Windows)
 - 9 security layers operational
 

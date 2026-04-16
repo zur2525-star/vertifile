@@ -1,3 +1,6 @@
+> **STATUS: APPROVED AND REGISTERED** -- Registration confirmed by IANA on 2026-04-15.
+> See: https://www.iana.org/assignments/media-types/application/vnd.vertifile.pvf
+
 # IANA Media Type Registration: `application/vnd.vertifile.pvf`
 
 **Document type:** IANA Media Type Registration Application (per RFC 6838)

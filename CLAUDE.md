@@ -2,7 +2,7 @@
 
 ## Overview
 Tamper-proof document verification platform. Creates cryptographically signed .pvf files with BLIND processing (never reads document content). Live at **vertifile.com**.
-Patent filed in Israel (March 2026). IANA MIME type pending: application/vnd.vertifile.pvf (#1446680).
+Patent filed in Israel (March 2026). IANA MIME type registered: application/vnd.vertifile.pvf (approved 2026-04-15).
 
 ## Domain & Hosting
 - **Domain:** vertifile.com (Namecheap)

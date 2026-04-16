@@ -2041,7 +2041,7 @@
     "t1title": "Patente en tramite",
     "t1desc": "Patente tecnologica presentada en la Oficina de Patentes de Israel. Arquitectura de verificacion novedosa.",
     "t2title": "Tipo MIME registrado en IANA",
-    "t2desc": "Solicitud de formato de archivo oficial #1446680 pendiente en la autoridad de estandares de Internet.",
+    "t2desc": "Formato de archivo registrado oficialmente en IANA. application/vnd.vertifile.pvf — estandar de Internet reconocido.",
     "t3title": "Verificado en blockchain",
     "t3desc": "Cada documento queda registrado permanentemente en la blockchain. Prueba publica inmutable.",
     "t4title": "Arquitectura Zero-Knowledge",
