@@ -1,10 +1,20 @@
 const express = require('express');
 const crypto = require('crypto');
 const dns = require('dns').promises;
+const rateLimit = require('express-rate-limit');
 const { getClientIP } = require('../middleware/auth');
 const logger = require('../services/logger');
 
 const router = express.Router();
+
+// Stricter rate limiter for webhook deletion — 10 per hour per IP
+const webhookDestructiveLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  message: { success: false, error: 'Delete limit reached. Try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
 
 // Webhook helper — fire webhooks for an org
 async function fireWebhooks(db, orgId, event, data) {
@@ -145,7 +155,7 @@ router.get('/', (req, res, next) => {
 });
 
 // Delete a webhook
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', webhookDestructiveLimiter, (req, res, next) => {
   req.app.get('authenticateApiKey')(req, res, next);
 }, async (req, res) => {
   try {

@@ -53,6 +53,12 @@ router.post('/keys', authenticateAdmin, async (req, res) => {
     let { orgName, plan } = req.body;
     if (!orgName) return res.status(400).json({ success: false, error: 'orgName required' });
 
+    // Validate plan against allowlist
+    const ALLOWED_PLANS = ['free', 'pro', 'business', 'enterprise'];
+    if (plan && !ALLOWED_PLANS.includes(plan)) {
+      return res.status(400).json({ success: false, error: 'Invalid plan. Must be one of: ' + ALLOWED_PLANS.join(', ') });
+    }
+
     // Sanitize orgName to prevent stored XSS (orgName is rendered in PVF stamps and admin views)
     orgName = escapeHtml(orgName).substring(0, 100);
 
@@ -119,6 +125,13 @@ router.post('/keys-legacy/create', authenticateAdmin, async (req, res) => {
     const { escapeHtml } = require('../templates/pvf');
     let { orgName, plan, allowedIPs } = req.body;
     if (!orgName) return res.status(400).json({ success: false, error: 'orgName required' });
+
+    // Validate plan against allowlist
+    const ALLOWED_PLANS_LEGACY = ['free', 'pro', 'business', 'enterprise'];
+    if (plan && !ALLOWED_PLANS_LEGACY.includes(plan)) {
+      return res.status(400).json({ success: false, error: 'Invalid plan. Must be one of: ' + ALLOWED_PLANS_LEGACY.join(', ') });
+    }
+
     orgName = escapeHtml(orgName).substring(0, 100);
 
     const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');

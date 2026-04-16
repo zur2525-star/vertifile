@@ -28,6 +28,24 @@ const uploadLimiter = rateLimit({
   legacyHeaders: false
 });
 
+// Rate limiter for general user actions (POST/PUT) — 30 per 15 min per IP
+const userActionLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  message: { success: false, error: 'Too many requests. Try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+// Stricter rate limiter for destructive operations (DELETE) — 10 per hour per IP
+const destructiveLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  message: { success: false, error: 'Delete limit reached. Try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
 const router = express.Router();
 
 router.get('/me', (req, res) => {
@@ -58,11 +76,14 @@ router.get('/stamp', requireLogin, async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to load stamp config' }); }
 });
 
-router.post('/stamp', requireLogin, async (req, res) => {
+router.post('/stamp', requireLogin, userActionLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
     if (!req.body || typeof req.body !== 'object') {
       return res.status(400).json({ success: false, error: 'Invalid body' });
+    }
+    if (JSON.stringify(req.body).length > 10000) {
+      return res.status(400).json({ success: false, error: 'Stamp configuration too large' });
     }
     const saved = await db.updateUserStampConfig(req.user.id, req.body);
     // Invalidate cache so next /d/:shareId/raw rebuilds with new stamp
@@ -506,7 +527,7 @@ router.post('/documents/:hash/star', requireLogin, async (req, res) => {
 });
 
 // DELETE user document
-router.delete('/documents/:hash', requireLogin, async (req, res) => {
+router.delete('/documents/:hash', requireLogin, destructiveLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
     // Security: validate hash format before DB lookup
@@ -528,11 +549,14 @@ router.delete('/documents/:hash', requireLogin, async (req, res) => {
 });
 
 // UPDATE user profile
-router.put('/profile', requireLogin, async (req, res) => {
+router.put('/profile', requireLogin, userActionLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
     const { name } = req.body;
     if (!name || !name.trim()) return res.status(400).json({ success: false, error: 'Name is required' });
+    if (name && (typeof name !== 'string' || name.length > 100)) {
+      return res.status(400).json({ success: false, error: 'Name must be 100 characters or less' });
+    }
     // Sanitize name to prevent stored XSS (name is rendered in PVF stamps and dashboard views)
     const sanitizedName = escapeHtml(name.trim()).substring(0, 100);
     await db.updateUserProfile(req.user.id, { name: sanitizedName });
@@ -561,7 +585,7 @@ router.post('/change-password', requireLogin, async (req, res) => {
 });
 
 // DELETE account
-router.delete('/account', requireLogin, async (req, res) => {
+router.delete('/account', requireLogin, destructiveLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
     await db.deleteUser(req.user.id);
@@ -582,11 +606,17 @@ router.get('/branding', requireLogin, async (req, res) => {
 });
 
 // Save user branding
-router.post('/branding', requireLogin, async (req, res) => {
+router.post('/branding', requireLogin, userActionLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
     const orgId = 'user_' + req.user.id;
     const { brandColor, customIcon, orgName, stampText, waveColor } = req.body;
+    if (orgName && (typeof orgName !== 'string' || orgName.length > 200)) {
+      return res.status(400).json({ success: false, error: 'Organization name must be 200 characters or less' });
+    }
+    if (stampText && (typeof stampText !== 'string' || stampText.length > 500)) {
+      return res.status(400).json({ success: false, error: 'Stamp text must be 500 characters or less' });
+    }
     if (brandColor && !/^#[0-9a-fA-F]{6}$/.test(brandColor)) {
       return res.status(400).json({ success: false, error: 'Invalid color format. Use hex (#RRGGBB)' });
     }

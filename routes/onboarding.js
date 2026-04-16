@@ -46,6 +46,15 @@ const sendCodeLimiter = rateLimit({
   legacyHeaders: false
 });
 
+// Rate limiter for onboarding state updates — 30 per 15 min per IP
+const onboardingStateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  message: { success: false, error: 'Too many requests. Try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
 // ---------------------------------------------------------------------------
 // POST /api/auth/send-code
 // Send a 6-digit verification code to the given email address.
@@ -216,7 +225,7 @@ router.get('/onboarding/state', requireLogin, async (req, res) => {
 // Upsert {current_step, selections, stamp_config} for the current user.
 // ---------------------------------------------------------------------------
 
-router.put('/onboarding/state', requireLogin, async (req, res) => {
+router.put('/onboarding/state', requireLogin, onboardingStateLimiter, async (req, res) => {
   try {
     const { current_step, selections, stamp_config } = req.body;
 

@@ -144,7 +144,12 @@ app.use(helmet({
     features: { camera: [], microphone: [], geolocation: [], payment: [] }
   },
   dnsPrefetchControl: { allow: false },
-  referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  hsts: {
+    maxAge: 63072000,
+    includeSubDomains: true,
+    preload: true
+  }
 }));
 
 const ALLOWED_ORIGINS = [

@@ -29,7 +29,9 @@
     { "name": "Gateway", "description": "Server-side PVF intake and batch verification" },
     { "name": "Organization", "description": "Organization stats and document management" },
     { "name": "Webhooks", "description": "Webhook registration and management" },
-    { "name": "System", "description": "Health checks, docs, and signup" }
+    { "name": "System", "description": "Health checks, docs, and signup" },
+    { "name": "admin", "description": "Operator-only administrative actions" },
+    { "name": "well-known", "description": "Public well-known endpoints for transparency and auditing" }
   ],
   "paths": {
     "/api/signup": {
@@ -263,15 +265,29 @@
     },
     "/api/gateway/batch": {
       "post": {
-        "tags": ["Gateway"],
-        "summary": "Batch verify PVF files",
-        "description": "Upload up to 50 .pvf files for batch verification. Returns individual verification results and a summary count.",
+        "tags": ["gateway"],
+        "summary": "Batch verify multiple PVF files",
+        "description": "Upload and verify multiple .pvf files in a single request. Each file is independently verified.",
+        "security": [
+          { "ApiKeyAuth": [] }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/GatewayBatchRequest"
+                "type": "object",
+                "required": ["files"],
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "Multiple .pvf files to verify"
+                  }
+                }
               }
             }
           }
@@ -282,15 +298,57 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GatewayBatchResponse"
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "filename": { "type": "string" },
+                          "verified": { "type": "boolean" },
+                          "document": {
+                            "type": "object",
+                            "nullable": true,
+                            "description": "Document metadata (only present when verified is true)"
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
           },
-          "400": { "$ref": "#/components/responses/BadRequest" },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "429": { "$ref": "#/components/responses/RateLimited" },
-          "500": { "$ref": "#/components/responses/InternalError" }
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": false },
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": false },
+                    "error": { "type": "string", "example": "Invalid API key" }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -522,6 +580,126 @@
           }
         }
       }
+    },
+    "/api/admin/cache/invalidate-keys": {
+      "post": {
+        "tags": ["admin"],
+        "summary": "Invalidate active primary key cache",
+        "description": "Operator-triggered cache clear for the Ed25519 active primary key. Used during key rotation to force immediate pickup of the new active key.",
+        "security": [
+          { "AdminSecretAuth": [] }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cache invalidated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "invalidated": { "type": "boolean", "example": true },
+                    "activeKeyId": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "The new active key ID after cache invalidation, or null if no active key"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "ISO 8601 timestamp of the invalidation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": false },
+                    "error": { "type": "string", "example": "Unauthorized" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/.well-known/vertifile-rotation-log": {
+      "get": {
+        "tags": ["well-known"],
+        "summary": "Public key rotation history",
+        "description": "Read-only endpoint exposing key rotation history for transparency and third-party auditors. No authentication required.",
+        "security": [],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Number of entries to return (max 1000)",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "description": "Number of entries to skip",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Key rotation history",
+            "headers": {
+              "Cache-Control": {
+                "description": "Caching directive for rotation log",
+                "schema": { "type": "string", "example": "public, max-age=60" }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "entries": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "rotated_at": { "type": "string", "format": "date-time" },
+                          "old_key_id": { "type": "string" },
+                          "new_key_id": { "type": "string" },
+                          "old_fingerprint": { "type": "string" },
+                          "new_fingerprint": { "type": "string" },
+                          "grace_until": { "type": "string", "format": "date-time" },
+                          "reason": { "type": "string" }
+                        }
+                      }
+                    },
+                    "total": { "type": "integer", "description": "Total number of rotation entries" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -531,6 +709,12 @@
         "in": "header",
         "name": "X-API-Key",
         "description": "API key obtained from POST /api/signup. Prefix: vf_live_"
+      },
+      "AdminSecretAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Admin-Secret",
+        "description": "Operator-only admin secret for privileged administrative actions"
       }
     },
     "schemas": {
