@@ -292,6 +292,17 @@ const _ready = (async () => {
     )`);
   } catch (_) {}
 
+  // Login attempt tracking (rolling-window lockout, Issue #lockout-db)
+  try {
+    await pool.query(`CREATE TABLE IF NOT EXISTS login_attempts (
+      id         SERIAL PRIMARY KEY,
+      email      TEXT NOT NULL,
+      ip         TEXT,
+      attempted_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`);
+    await pool.query('CREATE INDEX IF NOT EXISTS idx_login_attempts_email_time ON login_attempts(email, attempted_at DESC)');
+  } catch (_) { /* already exists */ }
+
   // ================================================================
   // ZERO-KNOWLEDGE ARCHITECTURE — PVF 2.0 schema additions
   // ================================================================

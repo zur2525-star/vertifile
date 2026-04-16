@@ -62,6 +62,46 @@ async function updateLastLogin(userId) {
   await pool.query('UPDATE users SET last_login_at = NOW(), updated_at = NOW() WHERE id = $1', [userId]);
 }
 
+/**
+ * Record a failed login attempt for the given email in the DB.
+ * @param {string} email - normalised email address
+ * @param {string|null} ip - client IP (may be null)
+ */
+async function recordFailedLogin(email, ip = null) {
+  await pool.query(
+    'INSERT INTO login_attempts (email, ip) VALUES ($1, $2)',
+    [email, ip || null]
+  );
+}
+
+/**
+ * Count failed login attempts for the given email within the rolling window.
+ * @param {string} email - normalised email address
+ * @param {number} windowMinutes - look-back window in minutes (default 15)
+ * @returns {Promise<number>}
+ */
+async function getRecentFailedAttempts(email, windowMinutes = 15) {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*)::int AS cnt FROM login_attempts
+     WHERE email = $1
+       AND attempted_at > NOW() - make_interval(mins => $2::int)`,
+    [email, windowMinutes]
+  );
+  return rows[0].cnt;
+}
+
+/**
+ * Delete all stored failed login attempts for the given email.
+ * Called on successful login.
+ * @param {string} email - normalised email address
+ */
+async function clearFailedAttempts(email) {
+  await pool.query(
+    'DELETE FROM login_attempts WHERE email = $1',
+    [email]
+  );
+}
+
 async function setEmailVerified(userId, verified = true) {
   await pool.query('UPDATE users SET email_verified = $1, updated_at = NOW() WHERE id = $2', [verified, userId]);
 }
@@ -289,5 +329,8 @@ module.exports = {
     markCodeUsed,
     cleanExpiredCodes,
     getCodeSendCount,
+    recordFailedLogin,
+    getRecentFailedAttempts,
+    clearFailedAttempts,
   },
 };

@@ -145,7 +145,7 @@ async function getOrgStats(orgId) {
 // DASHBOARD HELPERS
 // ================================================================
 async function getRecentDocuments(limit = 10) {
-  const { rows } = await pool.query('SELECT hash, original_name, mime_type, file_size, created_at, org_id, verified FROM documents ORDER BY created_at DESC LIMIT $1', [limit]);
+  const { rows } = await pool.query('SELECT hash, original_name, mime_type, file_size, created_at, org_id FROM documents ORDER BY created_at DESC LIMIT $1', [limit]);
   return rows;
 }
 
@@ -195,7 +195,7 @@ async function getAllDocuments({ limit = 50, offset = 0, search = '' } = {}) {
 // EXPORT HELPERS (admin data export)
 // ================================================================
 async function getAllDocumentsForExport() {
-  const { rows } = await pool.query('SELECT hash, original_name, mime_type, file_size, created_at, org_id, verified FROM documents ORDER BY created_at DESC');
+  const { rows } = await pool.query('SELECT hash, original_name, mime_type, file_size, created_at, org_id FROM documents ORDER BY created_at DESC');
   return rows;
 }
 

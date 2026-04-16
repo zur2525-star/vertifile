@@ -10,7 +10,7 @@ const { sendDocumentReadyEmail } = require('../services/email');
 // Configurable bcrypt rounds (floor of 12) — match auth.js convention
 const BCRYPT_ROUNDS = Math.max(12, parseInt(process.env.BCRYPT_ROUNDS) || 12);
 
-const { requireLogin } = require('../middleware/auth');
+const requireAuth = require('../middleware/requireAuth');
 const { hashBytes, signHash, fixFilename, HMAC_SECRET } = require('../services/pvf-generator');
 const { generatePvfHtml, escapeHtml } = require('../templates/pvf');
 const { obfuscatePvf } = require('../obfuscate');
@@ -68,7 +68,7 @@ router.get('/me', (req, res) => {
 });
 
 // Stamp config (Layer 2 — visual wrapper)
-router.get('/stamp', requireLogin, async (req, res) => {
+router.get('/stamp', requireAuth, async (req, res) => {
   try {
     const db = req.app.get('db');
     const result = await db.getUserStampConfig(req.user.id);
@@ -76,7 +76,7 @@ router.get('/stamp', requireLogin, async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to load stamp config' }); }
 });
 
-router.post('/stamp', requireLogin, userActionLimiter, async (req, res) => {
+router.post('/stamp', requireAuth, userActionLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
     if (!req.body || typeof req.body !== 'object') {
@@ -96,7 +96,7 @@ router.post('/stamp', requireLogin, userActionLimiter, async (req, res) => {
   }
 });
 
-router.get('/documents', requireLogin, async (req, res) => {
+router.get('/documents', requireAuth, async (req, res) => {
   try {
     const db = req.app.get('db');
     const limit = Math.min(parseInt(req.query.limit) || 20, 100);
@@ -131,7 +131,7 @@ router.get('/documents', requireLogin, async (req, res) => {
 //   - PVF_PIPELINE_V2 === '0'  → legacy 121-line per-endpoint path (rollback)
 // The legacy implementation is preserved verbatim as `uploadLegacy` below.
 // ============================================================================
-router.post('/upload', requireLogin, uploadLimiter, (req, res, next) => {
+router.post('/upload', requireAuth, uploadLimiter, (req, res, next) => {
   const upload = req.app.get('upload');
   upload.single('file')(req, res, (err) => {
     if (err) {
@@ -253,7 +253,7 @@ router.post('/upload', requireLogin, uploadLimiter, (req, res, next) => {
 //   mimeType      - original MIME type
 //   originalName  - original filename
 // ============================================================================
-router.post('/upload-encrypted', requireLogin, uploadLimiter, (req, res, next) => {
+router.post('/upload-encrypted', requireAuth, uploadLimiter, (req, res, next) => {
   const upload = req.app.get('upload');
   upload.single('file')(req, res, (err) => {
     if (err) {
@@ -522,7 +522,7 @@ async function uploadLegacy(req, res) {
   }
 }
 
-router.post('/documents/:hash/star', userActionLimiter, requireLogin, async (req, res) => {
+router.post('/documents/:hash/star', userActionLimiter, requireAuth, async (req, res) => {
   try {
     const db = req.app.get('db');
     // Security: validate hash format before DB lookup
@@ -540,7 +540,7 @@ router.post('/documents/:hash/star', userActionLimiter, requireLogin, async (req
 });
 
 // DELETE user document
-router.delete('/documents/:hash', requireLogin, destructiveLimiter, async (req, res) => {
+router.delete('/documents/:hash', requireAuth, destructiveLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
     // Security: validate hash format before DB lookup
@@ -562,7 +562,7 @@ router.delete('/documents/:hash', requireLogin, destructiveLimiter, async (req, 
 });
 
 // UPDATE user profile
-router.put('/profile', requireLogin, userActionLimiter, async (req, res) => {
+router.put('/profile', requireAuth, userActionLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
     const { name } = req.body;
@@ -578,7 +578,7 @@ router.put('/profile', requireLogin, userActionLimiter, async (req, res) => {
 });
 
 // CHANGE password — Issue #5: passes session ID so current session is preserved
-router.post('/change-password', userActionLimiter, requireLogin, async (req, res) => {
+router.post('/change-password', userActionLimiter, requireAuth, async (req, res) => {
   try {
     const db = req.app.get('db');
     const { currentPassword, newPassword } = req.body;
@@ -598,7 +598,7 @@ router.post('/change-password', userActionLimiter, requireLogin, async (req, res
 });
 
 // DELETE account
-router.delete('/account', requireLogin, destructiveLimiter, async (req, res) => {
+router.delete('/account', requireAuth, destructiveLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
     await db.deleteUser(req.user.id);
@@ -609,7 +609,7 @@ router.delete('/account', requireLogin, destructiveLimiter, async (req, res) => 
 });
 
 // Get user branding
-router.get('/branding', requireLogin, async (req, res) => {
+router.get('/branding', requireAuth, async (req, res) => {
   try {
     const db = req.app.get('db');
     const orgId = 'user_' + req.user.id;
@@ -619,7 +619,7 @@ router.get('/branding', requireLogin, async (req, res) => {
 });
 
 // Save user branding
-router.post('/branding', requireLogin, userActionLimiter, async (req, res) => {
+router.post('/branding', requireAuth, userActionLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
     const orgId = 'user_' + req.user.id;
@@ -675,7 +675,7 @@ router.post('/branding', requireLogin, userActionLimiter, async (req, res) => {
 });
 
 // Get user's API key
-router.get('/api-key', requireLogin, async (req, res) => {
+router.get('/api-key', requireAuth, async (req, res) => {
   try {
     const db = req.app.get('db');
     const orgId = 'user_' + req.user.id;
@@ -689,7 +689,7 @@ router.get('/api-key', requireLogin, async (req, res) => {
 });
 
 // Generate API key for user
-router.post('/api-key', userActionLimiter, requireLogin, async (req, res) => {
+router.post('/api-key', userActionLimiter, requireAuth, async (req, res) => {
   try {
     const db = req.app.get('db');
     const orgId = 'user_' + req.user.id;

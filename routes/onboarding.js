@@ -4,7 +4,7 @@ const rateLimit = require('express-rate-limit');
 const logger = require('../services/logger');
 const db = require('../db');
 const { sendVerificationCode } = require('../services/email');
-const { requireLogin } = require('../middleware/auth');
+const requireAuth = require('../middleware/requireAuth');
 
 const router = express.Router();
 
@@ -185,7 +185,7 @@ router.post('/auth/verify-code', verifyCodeLimiter, async (req, res) => {
 // Return the wizard state for the current user.
 // ---------------------------------------------------------------------------
 
-router.get('/onboarding/state', requireLogin, async (req, res) => {
+router.get('/onboarding/state', requireAuth, async (req, res) => {
   try {
     const db = req.app.get('db');
 
@@ -234,7 +234,7 @@ router.get('/onboarding/state', requireLogin, async (req, res) => {
 // Upsert {current_step, selections, stamp_config} for the current user.
 // ---------------------------------------------------------------------------
 
-router.put('/onboarding/state', requireLogin, onboardingStateLimiter, async (req, res) => {
+router.put('/onboarding/state', requireAuth, onboardingStateLimiter, async (req, res) => {
   try {
     const { current_step, selections, stamp_config } = req.body;
 
@@ -276,7 +276,7 @@ router.put('/onboarding/state', requireLogin, onboardingStateLimiter, async (req
 // Finalize the wizard: persist user profile fields, mark wizard done.
 // ---------------------------------------------------------------------------
 
-router.post('/onboarding/complete', onboardingStateLimiter, requireLogin, async (req, res) => {
+router.post('/onboarding/complete', onboardingStateLimiter, requireAuth, async (req, res) => {
   try {
     const db = req.app.get('db');
 

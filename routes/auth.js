@@ -53,59 +53,11 @@ function validatePasswordComplexity(password, email) {
 }
 
 // ---------------------------------------------------------------------------
-// In-memory login attempt tracking — account lockout after 5 fails in 15 min
+// DB-backed login attempt tracking — account lockout after 5 fails in 15 min
+// Replaces the former in-memory Map; survives restarts and horizontal scaling.
 // ---------------------------------------------------------------------------
 const LOCKOUT_MAX_ATTEMPTS = 5;
-const LOCKOUT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-const _loginAttempts = new Map(); // email -> { count, firstAttempt }
-
-// Clean up expired entries every 15 minutes
-setInterval(() => {
-  const now = Date.now();
-  for (const [email, entry] of _loginAttempts) {
-    if (now - entry.firstAttempt > LOCKOUT_WINDOW_MS) {
-      _loginAttempts.delete(email);
-    }
-  }
-}, LOCKOUT_WINDOW_MS).unref();
-
-/**
- * Check if an email is currently locked out. Returns remaining minutes if
- * locked, or 0 if not locked.
- */
-function checkLockout(email) {
-  const entry = _loginAttempts.get(email);
-  if (!entry) return 0;
-  const elapsed = Date.now() - entry.firstAttempt;
-  if (elapsed > LOCKOUT_WINDOW_MS) {
-    _loginAttempts.delete(email);
-    return 0;
-  }
-  if (entry.count >= LOCKOUT_MAX_ATTEMPTS) {
-    return Math.ceil((LOCKOUT_WINDOW_MS - elapsed) / 60000);
-  }
-  return 0;
-}
-
-/**
- * Record a failed login attempt for an email address.
- */
-function recordFailedAttempt(email) {
-  const entry = _loginAttempts.get(email);
-  const now = Date.now();
-  if (!entry || (now - entry.firstAttempt > LOCKOUT_WINDOW_MS)) {
-    _loginAttempts.set(email, { count: 1, firstAttempt: now });
-  } else {
-    entry.count++;
-  }
-}
-
-/**
- * Clear login attempt tracking on successful login.
- */
-function clearAttempts(email) {
-  _loginAttempts.delete(email);
-}
+const LOCKOUT_WINDOW_MINUTES = 15;
 
 // ---------------------------------------------------------------------------
 // Cache-Control middleware for all auth responses — Issue #17
@@ -341,37 +293,51 @@ router.post('/register', signupLimiter, async (req, res) => {
 // POST /auth/login — email + password
 // ---------------------------------------------------------------------------
 
-router.post('/login', authLimiter, (req, res, next) => {
-  // In-memory lockout check before attempting authentication
+router.post('/login', authLimiter, async (req, res, next) => {
+  // DB lockout check before attempting authentication
   const loginEmail = sanitizeEmail(req.body.email);
+  const db = req.app.get('db');
+
   if (loginEmail) {
-    const lockedMinutes = checkLockout(loginEmail);
-    if (lockedMinutes > 0) {
-      return res.status(429).json({
-        success: false,
-        error: 'Account temporarily locked. Try again in ' + lockedMinutes + ' minute' + (lockedMinutes === 1 ? '' : 's') + '.'
-      });
+    try {
+      const recentCount = await db.getRecentFailedAttempts(loginEmail, LOCKOUT_WINDOW_MINUTES);
+      if (recentCount >= LOCKOUT_MAX_ATTEMPTS) {
+        return res.status(429).json({
+          success: false,
+          error: 'Account temporarily locked due to too many failed attempts. Try again in ' + LOCKOUT_WINDOW_MINUTES + ' minutes.'
+        });
+      }
+    } catch (lockoutErr) {
+      logger.error({ err: lockoutErr }, 'Failed to check login lockout from DB');
+      // Fail open — do not block login if the lockout check itself errors
     }
   }
 
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate('local', async (err, user, info) => {
     if (err) {
       logger.error({ err }, 'Login error');
       return res.status(500).json({ success: false, error: 'Server error' });
     }
     if (!user) {
-      // Track failed attempt for in-memory lockout
-      if (loginEmail) recordFailedAttempt(loginEmail);
+      // Record failed attempt in DB
+      if (loginEmail) {
+        db.recordFailedLogin(loginEmail, getClientIP(req)).catch((e) => {
+          logger.warn({ err: e }, 'Failed to record login attempt in DB');
+        });
+      }
 
       // Issue #22: Audit log for failed login
-      const db = req.app.get('db');
-      const email = (req.body.email || '').substring(0, 3) + '***';
-      db.log('login_failed', { email, ip: getClientIP(req), reason: info?.message || 'invalid_credentials' }).catch(() => {});
+      const emailRedacted = (req.body.email || '').substring(0, 3) + '***';
+      db.log('login_failed', { email: emailRedacted, ip: getClientIP(req), reason: info?.message || 'invalid_credentials' }).catch(() => {});
       return res.status(401).json({ success: false, error: info?.message || 'Invalid credentials' });
     }
 
-    // Successful authentication -- clear lockout counter
-    if (loginEmail) clearAttempts(loginEmail);
+    // Successful authentication -- clear lockout records from DB
+    if (loginEmail) {
+      db.clearFailedAttempts(loginEmail).catch((e) => {
+        logger.warn({ err: e }, 'Failed to clear login attempts from DB');
+      });
+    }
 
     // Issue #SF-1: Session fixation — regenerate the session ID before
     // associating it with an authenticated user. Preserving csrfSecret so
@@ -392,7 +358,6 @@ router.post('/login', authLimiter, (req, res, next) => {
         // Issue #26: Set session createdAt for absolute lifetime tracking
         req.session.createdAt = Date.now();
         try {
-          const db = req.app.get('db');
           await db.updateLastLogin(user.id);
           // Issue #22: Audit log for successful login
           await db.log('login_success', { userId: user.id, ip: getClientIP(req), provider: 'email', userAgent: req.get('user-agent') });
@@ -400,7 +365,6 @@ router.post('/login', authLimiter, (req, res, next) => {
 
         // Issue #14: Enforce session limit per user
         try {
-          const db = req.app.get('db');
           await enforceSessionLimit(db, user.id);
         } catch (_) { /* best effort */ }
 
