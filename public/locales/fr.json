@@ -25,7 +25,8 @@
     "stamp": "Mon Tampon",
     "settings": "Parametres",
     "help": "Aide",
-    "skipToContent": "Aller au contenu"
+    "skipToContent": "Aller au contenu",
+    "faq": "FAQ"
   },
   "hero": {
     "headline": "Des documents si securises que meme nous ne pouvons pas les falsifier",
@@ -169,7 +170,8 @@
     "docFaculty": "Faculte d'Ingenierie",
     "docCertTitle": "CERTIFICAT DE DIPLOME",
     "docCertify": "Il est certifie que",
-    "docCompleted": "a rempli avec succes les exigences pour le diplome de"
+    "docCompleted": "a rempli avec succes les exigences pour le diplome de",
+    "comparison": "Comparer côte à côte"
   },
   "industries": {
     "title": "Conçu pour chaque secteur",
@@ -194,7 +196,8 @@
     "button": "Commencer la protection",
     "shareBanner": "Protégé par Vertifile",
     "shareBannerDesc": "Inscrivez-vous gratuitement pour protéger vos documents",
-    "shareBannerBtn": "Commencer gratuitement"
+    "shareBannerBtn": "Commencer gratuitement",
+    "buttonDemo": "Essayer la démo"
   },
   "footer": {
     "description": "Documents numériques inviolables avec des cachets de vérification animés. Aucun accès à votre contenu.",
@@ -222,7 +225,10 @@
     "enterpriseDocProtection": "Protection documentaire entreprise",
     "enterprise": "Entreprise",
     "helpCenter": "Centre d'aide",
-    "patentPending": "Brevet en instance"
+    "patentPending": "Brevet en instance",
+    "patent": "Brevet en attente",
+    "cookiePolicy": "Politique de cookies",
+    "dpa": "DPA"
   },
   "upload": {
     "pageTitle": "Vertifile — Émission sécurisée de documents",
@@ -292,7 +298,8 @@
     "detailHash": "Hachage",
     "detailRegistered": "Enregistre",
     "detailOrg": "Organisation",
-    "detailStatus": "Statut"
+    "detailStatus": "Statut",
+    "openDocument": "Ouvrir le document"
   },
   "enterprise": {
     "badge": "Sécurité de niveau entreprise",
@@ -811,7 +818,18 @@
     "faq5a": "Lorsqu'un document est protégé, son hash cryptographique est enregistré sur la Blockchain Polygon, créant un enregistrement immuable et publiquement auditable. Lors de la vérification, le hash est comparé à l'enregistrement Blockchain. Toute falsification est instantanément détectée car le hash ne correspondra plus.",
     "ctaTitle": "Vous cherchez des solutions entreprise ?",
     "ctaSubtitle": "Offres personnalisées, accès API, solutions en marque blanche et support dédié pour votre organisation.",
-    "ctaButton": "Découvrir les offres entreprise"
+    "ctaButton": "Découvrir les offres entreprise",
+    "ctaDemoBtn": "Réserver une démo",
+    "ctaEnterpriseBtn": "Contacter Enterprise",
+    "errorTitle": "Une erreur s'est produite",
+    "errorDesc": "Nous n'avons pas pu envoyer votre message. Veuillez réessayer.",
+    "tryAgain": "Réessayer",
+    "responseTitle": "Nous vous contacterons",
+    "responseDesc": "Votre message a été reçu. Un membre de l'équipe répondra dans les 24 heures.",
+    "patentTitle": "Technologie brevetée en attente",
+    "patentDesc": "La technologie de vérification de Vertifile est en cours de brevetage.",
+    "formCardTitle": "Envoyez-nous un message",
+    "formCardSubtitle": "Parlez-nous de vos besoins en vérification de documents."
   },
   "langName": "Français",
   "heroDoc": {
@@ -1223,7 +1241,19 @@
       "dpa": "Oui. Les clients Entreprise peuvent demander un DPA à privacy@vertifile.com."
     },
     "breadcrumbHome": "Accueil",
-    "breadcrumbFaq": "FAQ"
+    "breadcrumbFaq": "FAQ",
+    "q1": "Qu'est-ce qu'un fichier PVF ?",
+    "a1": "Un PVF est un format de fichier de document inviolable développé par Vertifile. Il encapsule votre document original avec une vérification cryptographique et un tampon holographique en direct qui prouve l'authenticité en temps réel.",
+    "q2": "Comment ouvrir un fichier PVF ?",
+    "a2": "Les fichiers PVF s'ouvrent directement dans n'importe quel navigateur web moderne — Chrome, Safari, Firefox ou Edge. Aucun logiciel spécial ni plugin requis.",
+    "q3": "Pouvez-vous voir le contenu de mon document ?",
+    "a3": "Non. Vertifile est une plateforme à connaissance zéro — vos documents sont chiffrés dans le navigateur avant de quitter votre appareil. Nous ne pouvons pas lire votre contenu même si nous le voulions.",
+    "q4": "Combien ça coûte ?",
+    "a4": "Vertifile propose Pro (49$/mois, 500 documents), Business (79$/mois, 1 000 documents) et des tarifs Enterprise personnalisés avec des documents illimités.",
+    "q5": "Combien de temps ça prend ?",
+    "a5": "La protection prend quelques secondes. Téléchargez votre document et obtenez instantanément un fichier PVF inviolable.",
+    "q6": "Quels types de documents sont pris en charge ?",
+    "a6": "PDF, images (JPEG, PNG) et fichiers texte. Nous élargissons continuellement les formats pris en charge."
   },
   "paywall": {
     "title": "Votre document est protege !",
@@ -2318,5 +2348,10 @@
         "desc": "Immobilier, logistique, commerce de détail, etc."
       }
     }
+  },
+  "video": {
+    "label": "Voir en action",
+    "title": "Vertifile en 20 secondes",
+    "subtitle": "Découvrez comment les documents deviennent inviolables avec 7 couches de sécurité."
   }
 }

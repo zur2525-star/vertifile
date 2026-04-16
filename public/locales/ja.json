@@ -25,7 +25,8 @@
     "stamp": "マイスタンプ",
     "settings": "設定",
     "help": "ヘルプ",
-    "skipToContent": "コンテンツにスキップ"
+    "skipToContent": "コンテンツにスキップ",
+    "faq": "よくある質問"
   },
   "hero": {
     "headline": "私たちでさえ改ざんできないほど安全��文書",
@@ -169,7 +170,8 @@
     "docFaculty": "工学部",
     "docCertTitle": "学位証明書",
     "docCertify": "ここに証明します",
-    "docCompleted": "以下の学位の要件を無事に修了したことを"
+    "docCompleted": "以下の学位の要件を無事に修了したことを",
+    "comparison": "並べて比較"
   },
   "industries": {
     "title": "あらゆる業界に対応",
@@ -194,7 +196,8 @@
     "button": "今すぐ保護を開始",
     "shareBanner": "Vertifile で保護済み",
     "shareBannerDesc": "無料登録してドキュメントを保護しましょう",
-    "shareBannerBtn": "無料で始める"
+    "shareBannerBtn": "無料で始める",
+    "buttonDemo": "デモを試す"
   },
   "footer": {
     "description": "アニメーション認証スタンプ付きの改ざん防止デジタルドキュメント。コンテンツへのアクセスは一切なし。",
@@ -222,7 +225,10 @@
     "enterpriseDocProtection": "エンタープライズドキュメント保護",
     "enterprise": "エンタープライズ",
     "helpCenter": "ヘルプセンター",
-    "patentPending": "特許出願中"
+    "patentPending": "特許出願中",
+    "patent": "特許出願中",
+    "cookiePolicy": "クッキーポリシー",
+    "dpa": "DPA"
   },
   "upload": {
     "pageTitle": "Vertifile — セキュアドキュメント発行",
@@ -292,7 +298,8 @@
     "detailHash": "ハッシュ",
     "detailRegistered": "登録日",
     "detailOrg": "組織",
-    "detailStatus": "ステータス"
+    "detailStatus": "ステータス",
+    "openDocument": "ドキュメントを開く"
   },
   "enterprise": {
     "badge": "エンタープライズグレードセキュリティ",
@@ -811,7 +818,18 @@
     "faq5a": "ドキュメントが保護されると、暗号ハッシュが Polygon Blockchain に登録され、不変で公開監査可能な記録が作成されます。検証時には、ハッシュが Blockchain の記録と照合されます。いかなる改ざんも、ハッシュが一致しなくなるため即座に検出されます。",
     "ctaTitle": "エンタープライズソリューションをお探しですか？",
     "ctaSubtitle": "カスタムプラン、API アクセス、ホワイトラベルソリューション、組織向け専任サポート。",
-    "ctaButton": "エンタープライズを詳しく見る"
+    "ctaButton": "エンタープライズを詳しく見る",
+    "ctaDemoBtn": "デモを予約",
+    "ctaEnterpriseBtn": "Enterpriseに問い合わせ",
+    "errorTitle": "問題が発生しました",
+    "errorDesc": "メッセージを送信できませんでした。もう一度お試しください。",
+    "tryAgain": "もう一度試す",
+    "responseTitle": "ご連絡いたします",
+    "responseDesc": "メッセージを受信しました。チームメンバーが24時間以内に返答いたします。",
+    "patentTitle": "特許出願中の技術",
+    "patentDesc": "Vertifileの検証技術は特許出願中です。",
+    "formCardTitle": "メッセージを送る",
+    "formCardSubtitle": "文書検証のニーズについてお聞かせください。"
   },
   "langName": "日本語",
   "heroDoc": {
@@ -1223,7 +1241,19 @@
       "dpa": "はい。Enterpriseのお客様はprivacy@vertifile.comでDPAをリクエストできます。"
     },
     "breadcrumbHome": "ホーム",
-    "breadcrumbFaq": "よくある質問"
+    "breadcrumbFaq": "よくある質問",
+    "q1": "PVFファイルとは何ですか？",
+    "a1": "PVFはVertifileが開発した改ざん防止文書ファイル形式です。元の文書を暗号検証とリアルタイムで真正性を証明するライブホログラフィックスタンプでラップします。",
+    "q2": "PVFファイルを開くにはどうすればよいですか？",
+    "a2": "PVFファイルはChrome、Safari、Firefox、EdgeなどのモダンなWebブラウザで直接開けます。特別なソフトウェアやプラグインは不要です。",
+    "q3": "文書の内容を見ることはできますか？",
+    "a3": "いいえ。Vertifileはゼロ知識プラットフォームです。文書はデバイスを離れる前にブラウザで暗号化されます。たとえ望んでも、コンテンツを読むことはできません。",
+    "q4": "費用はいくらですか？",
+    "a4": "VertifileはPro（/月、500文書）、Business（/月、1,000文書）、および無制限文書のカスタムEnterpriseプランを提供しています。",
+    "q5": "どのくらい時間がかかりますか？",
+    "a5": "保護には数秒かかります。文書をアップロードすると、すぐに改ざん防止PVFファイルが得られます。",
+    "q6": "どの文書タイプがサポートされていますか？",
+    "a6": "PDF、画像（JPEG、PNG）、テキストファイルに対応しています。対応形式は継続的に拡張中です。"
   },
   "paywall": {
     "title": "ドキュメントは保護されています！",
@@ -2318,5 +2348,10 @@
         "desc": "不動産、物流、小売など"
       }
     }
+  },
+  "video": {
+    "label": "実際に見てみましょう",
+    "title": "Vertifileを20秒で",
+    "subtitle": "7層のセキュリティで文書が改ざん防止になる様子をご覧ください。"
   }
 }

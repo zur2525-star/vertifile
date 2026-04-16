@@ -25,7 +25,8 @@
     "stamp": "My Stamp",
     "settings": "Settings",
     "help": "Help",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "faq": "FAQ"
   },
   "hero": {
     "headline": "Documents So Secure, Even We Can't Tamper With Them",
@@ -180,7 +181,8 @@
     "docFaculty": "Faculty of Engineering",
     "docCertTitle": "CERTIFICATE OF DEGREE",
     "docCertify": "This is to certify that",
-    "docCompleted": "has successfully completed the requirements for the degree of"
+    "docCompleted": "has successfully completed the requirements for the degree of",
+    "comparison": "Compare Side by Side"
   },
   "industries": {
     "title": "Built for Every Industry",
@@ -205,7 +207,8 @@
     "button": "Start Protecting Now",
     "shareBanner": "Protected by Vertifile",
     "shareBannerDesc": "Sign up to protect your documents",
-    "shareBannerBtn": "Get Started"
+    "shareBannerBtn": "Get Started",
+    "buttonDemo": "Try the Demo"
   },
   "footer": {
     "description": "Tamper-proof digital documents with live animated verification stamps. Zero access to your content.",
@@ -233,7 +236,10 @@
     "enterpriseDocProtection": "Enterprise Document Protection",
     "enterprise": "Enterprise",
     "helpCenter": "Help Center",
-    "patentPending": "Patent Pending"
+    "patentPending": "Patent Pending",
+    "patent": "Patent Pending",
+    "cookiePolicy": "Cookie Policy",
+    "dpa": "DPA"
   },
   "upload": {
     "pageTitle": "Vertifile — Secure Document Issuance",
@@ -303,7 +309,8 @@
     "detailHash": "Hash",
     "detailRegistered": "Registered",
     "detailOrg": "Organization",
-    "detailStatus": "Status"
+    "detailStatus": "Status",
+    "openDocument": "Open Document"
   },
   "enterprise": {
     "badge": "Enterprise-Grade Security",
@@ -982,7 +989,18 @@
     "faq5a": "When a document is protected, its cryptographic hash is registered on the Polygon blockchain, creating an immutable, publicly auditable record. During verification, the hash is compared against the blockchain record. Any tampering is instantly detected because the hash will no longer match.",
     "ctaTitle": "Looking for Enterprise Solutions?",
     "ctaSubtitle": "Custom plans, API access, white-label solutions, and dedicated support for your organization.",
-    "ctaButton": "Explore Enterprise"
+    "ctaButton": "Explore Enterprise",
+    "ctaDemoBtn": "Book a Demo",
+    "ctaEnterpriseBtn": "Contact Enterprise",
+    "errorTitle": "Something Went Wrong",
+    "errorDesc": "We couldn't send your message. Please try again.",
+    "tryAgain": "Try Again",
+    "responseTitle": "We'll be in touch",
+    "responseDesc": "Your message has been received. A team member will respond within 24 hours.",
+    "patentTitle": "Patent-Pending Technology",
+    "patentDesc": "Vertifile's verification technology is patent-pending.",
+    "formCardTitle": "Send Us a Message",
+    "formCardSubtitle": "Tell us about your document verification needs."
   },
   "langName": "English",
   "heroDoc": {
@@ -1406,7 +1424,19 @@
       "dpa": "Yes. Enterprise customers can request a DPA at privacy@vertifile.com."
     },
     "breadcrumbHome": "Home",
-    "breadcrumbFaq": "FAQ"
+    "breadcrumbFaq": "FAQ",
+    "q1": "What is a PVF file?",
+    "a1": "A PVF is a tamper-proof document file format developed by Vertifile. It wraps your original document with cryptographic verification and a live holographic stamp that proves authenticity in real-time.",
+    "q2": "How do I open a PVF file?",
+    "a2": "PVF files open directly in any modern web browser — Chrome, Safari, Firefox, or Edge. No special software or plugins required.",
+    "q3": "Can you see my document content?",
+    "a3": "No. Vertifile is a Zero-Knowledge platform — your documents are encrypted in the browser before they ever leave your device. We cannot read your content even if we wanted to. Only a cryptographic fingerprint is processed on our servers.",
+    "q4": "How much does it cost?",
+    "a4": "Vertifile offers Pro (/month, 500 docs, /bin/zsh.15/doc overage) for individuals and professionals, Business (/month, 1,000 docs, /bin/zsh.10/doc overage) for teams, and custom Enterprise pricing with unlimited documents. Every Pro plan includes a 14-day trial.",
+    "q5": "How long does it take?",
+    "a5": "Protection takes seconds. Upload your document and get a tamper-proof PVF file instantly.",
+    "q6": "What document types are supported?",
+    "a6": "PDF, images (JPEG, PNG), and text files. We are continuously expanding supported formats."
   },
   "blog": {
     "label": "From Our Blog",
@@ -1989,5 +2019,10 @@
         "desc": "Real estate, logistics, retail, etc."
       }
     }
+  },
+  "video": {
+    "label": "See It In Action",
+    "title": "Vertifile In 20 Seconds",
+    "subtitle": "Watch how documents become tamper-proof with 7 layers of security."
   }
 }

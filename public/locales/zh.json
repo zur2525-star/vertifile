@@ -25,7 +25,8 @@
     "stamp": "我的印章",
     "settings": "设置",
     "help": "帮助",
-    "skipToContent": "跳至内容"
+    "skipToContent": "跳至内容",
+    "faq": "常见问题"
   },
   "hero": {
     "headline": "安全到连我们自己都无法篡改的文档",
@@ -169,7 +170,8 @@
     "docFaculty": "工程学院",
     "docCertTitle": "学位证书",
     "docCertify": "特此证明",
-    "docCompleted": "已成功完成以下学位的要求"
+    "docCompleted": "已成功完成以下学位的要求",
+    "comparison": "并排比较"
   },
   "industries": {
     "title": "为各行各业打造",
@@ -194,7 +196,8 @@
     "button": "立即开始保护",
     "shareBanner": "受 Vertifile 保护",
     "shareBannerDesc": "免费注册以保护您的文档",
-    "shareBannerBtn": "免费开始使用"
+    "shareBannerBtn": "免费开始使用",
+    "buttonDemo": "试用演示"
   },
   "footer": {
     "description": "防篡改数字文档，内置动态验证印章。完全不接触您的内容。",
@@ -222,7 +225,10 @@
     "enterpriseDocProtection": "企业级文档保护",
     "enterprise": "企业版",
     "helpCenter": "帮助中心",
-    "patentPending": "专利申请中"
+    "patentPending": "专利申请中",
+    "patent": "专利申请中",
+    "cookiePolicy": "Cookie政策",
+    "dpa": "数据处理协议"
   },
   "upload": {
     "pageTitle": "Vertifile — 安全文档签发",
@@ -292,7 +298,8 @@
     "detailHash": "哈希值",
     "detailRegistered": "注册时间",
     "detailOrg": "组织",
-    "detailStatus": "状态"
+    "detailStatus": "状态",
+    "openDocument": "打开文档"
   },
   "enterprise": {
     "badge": "企业级安全",
@@ -811,7 +818,18 @@
     "faq5a": "当文档受到保护时，其加密 hash 会注册到 Polygon Blockchain 上，创建不可篡改、可公开审计的记录。验证时，hash 会与 Blockchain 记录进行比对。任何篡改都会被即时检测，因为 hash 将不再匹配。",
     "ctaTitle": "需要企业解决方案？",
     "ctaSubtitle": "为您的机构提供定制方案、API 访问、白标解决方案和专属支持。",
-    "ctaButton": "了解企业方案"
+    "ctaButton": "了解企业方案",
+    "ctaDemoBtn": "预约演示",
+    "ctaEnterpriseBtn": "联系企业团队",
+    "errorTitle": "出现错误",
+    "errorDesc": "我们无法发送您的消息。请重试。",
+    "tryAgain": "重试",
+    "responseTitle": "我们会与您联系",
+    "responseDesc": "您的消息已收到。团队成员将在24小时内回复。",
+    "patentTitle": "专利申请中的技术",
+    "patentDesc": "Vertifile的验证技术正在申请专利。",
+    "formCardTitle": "给我们发送消息",
+    "formCardSubtitle": "告诉我们您的文档验证需求。"
   },
   "langName": "简体中文",
   "heroDoc": {
@@ -1223,7 +1241,19 @@
       "dpa": "是的。Enterprise客户可以在privacy@vertifile.com申请DPA。"
     },
     "breadcrumbHome": "首页",
-    "breadcrumbFaq": "常见问题"
+    "breadcrumbFaq": "常见问题",
+    "q1": "什么是PVF文件？",
+    "a1": "PVF是Vertifile开发的防篡改文档文件格式。它将您的原始文档与加密验证和实时全息印章包装在一起，实时证明真实性。",
+    "q2": "如何打开PVF文件？",
+    "a2": "PVF文件可直接在任何现代网络浏览器中打开——Chrome、Safari、Firefox或Edge。无需特殊软件或插件。",
+    "q3": "您能看到我的文档内容吗？",
+    "a3": "不能。Vertifile是零知识平台——您的文档在离开设备之前在浏览器中加密。即使我们想读取您的内容也无法做到。",
+    "q4": "费用是多少？",
+    "a4": "Vertifile提供Pro版（49美元/月，500份文档）、Business版（79美元/月，1,000份文档）和具有无限文档的定制Enterprise定价。",
+    "q5": "需要多长时间？",
+    "a5": "保护只需几秒钟。上传您的文档，即刻获得防篡改的PVF文件。",
+    "q6": "支持哪些文档类型？",
+    "a6": "支持PDF、图像（JPEG、PNG）和文本文件。我们正在持续扩展支持的格式。"
   },
   "paywall": {
     "title": "您的文档已受保护！",
@@ -2318,5 +2348,10 @@
         "desc": "房地产、物流、零售等"
       }
     }
+  },
+  "video": {
+    "label": "观看实际效果",
+    "title": "Vertifile 20秒演示",
+    "subtitle": "观看文档如何通过7层安全保护变得防篡改。"
   }
 }

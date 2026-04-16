@@ -25,7 +25,8 @@
     "stamp": "Mein Stempel",
     "settings": "Einstellungen",
     "help": "Hilfe",
-    "skipToContent": "Zum Inhalt springen"
+    "skipToContent": "Zum Inhalt springen",
+    "faq": "FAQ"
   },
   "hero": {
     "headline": "Dokumente so sicher, dass nicht einmal wir sie manipulieren koennen",
@@ -169,7 +170,8 @@
     "docFaculty": "Fakultaet fuer Ingenieurwesen",
     "docCertTitle": "ABSCHLUSSZEUGNIS",
     "docCertify": "Hiermit wird bescheinigt, dass",
-    "docCompleted": "die Anforderungen fuer den Abschluss erfolgreich erfuellt hat"
+    "docCompleted": "die Anforderungen fuer den Abschluss erfolgreich erfuellt hat",
+    "comparison": "Nebeneinander vergleichen"
   },
   "industries": {
     "title": "Für jede Branche entwickelt",
@@ -194,7 +196,8 @@
     "button": "Jetzt mit dem Schutz beginnen",
     "shareBanner": "Geschützt durch Vertifile",
     "shareBannerDesc": "Registrieren Sie sich kostenlos, um Ihre Dokumente zu schützen",
-    "shareBannerBtn": "Kostenlos starten"
+    "shareBannerBtn": "Kostenlos starten",
+    "buttonDemo": "Demo ausprobieren"
   },
   "footer": {
     "description": "Manipulationssichere digitale Dokumente mit animierten Verifizierungsstempeln. Kein Zugriff auf Ihre Inhalte.",
@@ -222,7 +225,10 @@
     "enterpriseDocProtection": "Enterprise-Dokumentenschutz",
     "enterprise": "Unternehmen",
     "helpCenter": "Hilfecenter",
-    "patentPending": "Patent angemeldet"
+    "patentPending": "Patent angemeldet",
+    "patent": "Patent angemeldet",
+    "cookiePolicy": "Cookie-Richtlinie",
+    "dpa": "AVV"
   },
   "upload": {
     "pageTitle": "Vertifile — Sichere Dokumentenausstellung",
@@ -292,7 +298,8 @@
     "detailHash": "Hash",
     "detailRegistered": "Registriert",
     "detailOrg": "Organisation",
-    "detailStatus": "Status"
+    "detailStatus": "Status",
+    "openDocument": "Dokument öffnen"
   },
   "enterprise": {
     "badge": "Sicherheit auf Enterprise-Niveau",
@@ -811,7 +818,18 @@
     "faq5a": "Wenn ein Dokument geschützt wird, wird sein kryptografischer Hash auf der Polygon-Blockchain registriert und erzeugt einen unveränderlichen, öffentlich überprüfbaren Eintrag. Bei der Verifizierung wird der Hash mit dem Blockchain-Eintrag verglichen. Jede Manipulation wird sofort erkannt, da der Hash nicht mehr übereinstimmt.",
     "ctaTitle": "Suchen Sie Enterprise-Lösungen?",
     "ctaSubtitle": "Individuelle Tarife, API-Zugang, White-Label-Lösungen und dedizierter Support für Ihre Organisation.",
-    "ctaButton": "Enterprise erkunden"
+    "ctaButton": "Enterprise erkunden",
+    "ctaDemoBtn": "Demo buchen",
+    "ctaEnterpriseBtn": "Enterprise kontaktieren",
+    "errorTitle": "Etwas ist schiefgelaufen",
+    "errorDesc": "Wir konnten Ihre Nachricht nicht senden. Bitte versuchen Sie es erneut.",
+    "tryAgain": "Erneut versuchen",
+    "responseTitle": "Wir melden uns",
+    "responseDesc": "Ihre Nachricht wurde empfangen. Ein Teammitglied antwortet innerhalb von 24 Stunden.",
+    "patentTitle": "Patentierte Technologie",
+    "patentDesc": "Die Verifizierungstechnologie von Vertifile ist patent angemeldet.",
+    "formCardTitle": "Schreiben Sie uns",
+    "formCardSubtitle": "Erzählen Sie uns von Ihren Dokumentenverifizierungsanforderungen."
   },
   "langName": "Deutsch",
   "heroDoc": {
@@ -1223,7 +1241,19 @@
       "dpa": "Ja. Enterprise-Kunden koennen einen AVV unter privacy@vertifile.com anfordern."
     },
     "breadcrumbHome": "Startseite",
-    "breadcrumbFaq": "Haufige Fragen"
+    "breadcrumbFaq": "Haufige Fragen",
+    "q1": "Was ist eine PVF-Datei?",
+    "a1": "Eine PVF ist ein manipulationssicheres Dokumentdateiformat von Vertifile. Es umhüllt Ihr Originaldokument mit kryptografischer Verifizierung und einem Live-Hologramm-Stempel, der die Echtheit in Echtzeit beweist.",
+    "q2": "Wie öffne ich eine PVF-Datei?",
+    "a2": "PVF-Dateien öffnen direkt in jedem modernen Webbrowser — Chrome, Safari, Firefox oder Edge. Keine spezielle Software oder Plugins erforderlich.",
+    "q3": "Können Sie meinen Dokumentinhalt sehen?",
+    "a3": "Nein. Vertifile ist eine Zero-Knowledge-Plattform — Ihre Dokumente werden im Browser verschlüsselt, bevor sie Ihr Gerät verlassen. Wir können Ihren Inhalt nicht lesen, selbst wenn wir es wollten.",
+    "q4": "Was kostet es?",
+    "a4": "Vertifile bietet Pro (49$/Monat, 500 Dokumente), Business (79$/Monat, 1.000 Dokumente) und individuelle Enterprise-Preise mit unbegrenzten Dokumenten.",
+    "q5": "Wie lange dauert es?",
+    "a5": "Der Schutz dauert Sekunden. Laden Sie Ihr Dokument hoch und erhalten Sie sofort eine manipulationssichere PVF-Datei.",
+    "q6": "Welche Dokumenttypen werden unterstützt?",
+    "a6": "PDF, Bilder (JPEG, PNG) und Textdateien. Wir erweitern die unterstützten Formate kontinuierlich."
   },
   "paywall": {
     "title": "Ihr Dokument ist geschutzt!",
@@ -2318,5 +2348,10 @@
         "desc": "Immobilien, Logistik, Einzelhandel, usw."
       }
     }
+  },
+  "video": {
+    "label": "Sieh es in Aktion",
+    "title": "Vertifile in 20 Sekunden",
+    "subtitle": "Erlebe, wie Dokumente mit 7 Sicherheitsschichten manipulationssicher werden."
   }
 }
