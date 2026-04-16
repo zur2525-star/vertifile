@@ -37,6 +37,7 @@
     "test:onboarding-codes": "node --test tests/onboarding-codes.test.js",
     "test:google-oauth": "node --test tests/google-oauth.test.js",
     "test:remaining-endpoints": "node --test tests/remaining-endpoints.test.js",
+    "test:e2e": "node scripts/run-e2e.js",
     "test:e2e-auth": "node --test tests/e2e-auth-onboarding.test.js",
     "migrate": "node scripts/migrate.js",
     "backup": "node scripts/backup-neon.js",

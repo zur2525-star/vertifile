@@ -898,7 +898,7 @@
     <p data-i18n="video.subtitle">Watch how documents become tamper-proof with 7 layers of security.</p>
   </div>
   <div class="video-wrapper fade-up">
-    <video loop muted playsinline preload="auto" style="pointer-events:none" id="promoVideo">
+    <video muted playsinline preload="metadata" controls id="promoVideo">
       <source src="/videos/promo.mp4" type="video/mp4">
     </video>
   </div>
@@ -1454,16 +1454,19 @@
   },{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
   document.querySelectorAll('.fade-up').forEach(function(el){observer.observe(el)});
 
-  // ===== PROMO VIDEO — play on scroll into view =====
+  // ===== PROMO VIDEO — user-initiated playback only (no auto-play, no loop) =====
+  // Previously the video auto-played on scroll-into-view and looped. Removed per
+  // user request — the video now has standard browser controls and the user
+  // decides when to play it. Pausing on scroll-out is kept so background tabs
+  // do not keep playing audio/video when the user scrolls away.
   (function(){
     var vid=document.getElementById('promoVideo');
     if(!vid)return;
     var vidObserver=new IntersectionObserver(function(entries){
       entries.forEach(function(e){
-        if(e.isIntersecting){vid.play();vid.currentTime=0;}
-        else{vid.pause();}
+        if(!e.isIntersecting && !vid.paused){ vid.pause(); }
       });
-    },{threshold:0.3});
+    },{threshold:0.1});
     vidObserver.observe(vid);
   })();
 

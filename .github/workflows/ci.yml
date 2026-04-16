@@ -136,7 +136,11 @@ jobs:
       - name: Run tests
         run: npm test
 
-      # 7. Validate JSON locale files
+      # 7. Run E2E tests — requires a live server; runner script handles startup/teardown
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      # 8. Validate JSON locale files
       - name: Validate JSON files
         run: |
           if [ -d "public/locales" ]; then
