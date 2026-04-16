@@ -33,6 +33,7 @@ const keyManager = require('./services/key-manager');
 const { requestLogger } = require('./middleware/request-logger');
 const { responseEnvelope } = require('./middleware/response-envelope');
 const { trackError } = require('./middleware/error-alerter');
+const { csrfProtection, csrfTokenEndpoint } = require('./middleware/csrf');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -160,7 +161,7 @@ const publicCorsMiddleware = cors({
 });
 const restrictiveCorsMiddleware = cors({
   origin: (origin, cb) => { if (!origin || ALLOWED_ORIGINS.includes(origin)) cb(null, true); else cb(new Error('Not allowed by CORS')); },
-  methods: ['GET', 'POST', 'DELETE'], allowedHeaders: ['Content-Type', 'X-API-Key', 'X-Admin-Secret'], credentials: true, maxAge: 86400
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], allowedHeaders: ['Content-Type', 'X-API-Key', 'X-Admin-Secret', 'X-CSRF-Token'], credentials: true, maxAge: 86400
 });
 app.use((req, res, next) => {
   if (PUBLIC_CORS_PATHS.has(req.path)) {
@@ -305,6 +306,16 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   }));
 }
 
+// ---- CSRF protection (synchronizer token pattern) ----
+// Applied after session + passport so the token can be stored in req.session.
+// Excluded routes (API key auth, webhooks, public endpoints) are skipped
+// inside the csrfProtection middleware. See middleware/csrf.js for details.
+app.use(csrfProtection);
+
+// Endpoint for frontend pages to fetch a CSRF token for the current session.
+// Must be mounted AFTER csrfProtection so the session is available.
+app.get('/api/csrf-token', csrfTokenEndpoint);
+
 app.use(requestTimeout(30000));
 
 const globalApiLimiter = rateLimit({
@@ -346,6 +357,11 @@ app.use(async (err, req, res, next) => {
   logger.error('[ERROR]', err.message);
   await db.log('server_error', { path: req.path, method: req.method, error: err.message, ip: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown' });
   if (err.message === 'Not allowed by CORS') return res.status(403).json({ success: false, error: 'CORS: Origin not allowed' });
+  // CSRF token validation failures — return a clear 403 so the frontend can
+  // re-fetch the token and retry, instead of showing a generic 500.
+  if (err.message === 'invalid csrf token' || err.code === 'EBADCSRFTOKEN') {
+    return res.status(403).json({ success: false, error: 'CSRF token missing or invalid. Please refresh the page and try again.' });
+  }
   res.status(500).json({ success: false, error: 'Internal server error' });
 });
 
