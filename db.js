@@ -184,6 +184,18 @@ const _ready = (async () => {
   // Performance indexes
   try { await pool.query('CREATE INDEX IF NOT EXISTS idx_docs_user_id ON documents(user_id)'); } catch (_) { /* already exists */ }
   try { await pool.query('CREATE INDEX IF NOT EXISTS idx_users_provider ON users(provider, provider_id)'); } catch (_) { /* already exists */ }
+  // Composite index: user documents sorted by date (common dashboard query)
+  try { await pool.query('CREATE INDEX IF NOT EXISTS idx_docs_user_created ON documents(user_id, created_at DESC)'); } catch (_) {}
+  // Password resets by user_id (DELETE on new reset request)
+  try { await pool.query('CREATE INDEX IF NOT EXISTS idx_password_resets_user ON password_resets(user_id)'); } catch (_) {}
+  // Audit log: JSONB expression index for org-scoped queries
+  try { await pool.query("CREATE INDEX IF NOT EXISTS idx_audit_org ON audit_log ((details::jsonb->>'orgId'))"); } catch (_) {}
+  // Sessions: JSONB expression index for user session cleanup on logout
+  try { await pool.query("CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions ((sess::jsonb->'passport'->>'user'))"); } catch (_) {}
+  // Health checks: composite for status+time filtered queries
+  try { await pool.query('CREATE INDEX IF NOT EXISTS idx_health_status_time ON health_checks(checked_at, status)'); } catch (_) {}
+  // Verification codes: composite for the common lookup pattern
+  try { await pool.query('CREATE INDEX IF NOT EXISTS idx_verification_codes_lookup ON verification_codes(email, used, expires_at)'); } catch (_) {}
   // Monitoring table
   try {
     await pool.query(`CREATE TABLE IF NOT EXISTS health_checks (
