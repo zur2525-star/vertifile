@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "test": "node tests/api.test.js && node tests/signing.test.js && node tests/verify-ed25519.test.js && node tests/verify-public.test.js && node tests/pipeline-phase2e.test.js && node tests/rotation-schema.test.js && node tests/rotation-phase3b.test.js && node tests/pipeline-pvf-roundtrip.test.js && node tests/zk-encryption.test.js && node --test tests/webhook-security.test.js && node --test tests/sanitize.test.js && node --test tests/env-validator.test.js && node --test tests/well-known.test.js && node --test tests/password-validator.test.js && node --test tests/error-handler.test.js && node --test tests/admin.test.js && node --test tests/password-reset.test.js && node --test tests/account-deletion.test.js && node --test tests/api-key-lifecycle.test.js && node --test tests/user-branding.test.js",
+    "test": "node tests/api.test.js && node tests/signing.test.js && node tests/verify-ed25519.test.js && node tests/verify-public.test.js && node tests/pipeline-phase2e.test.js && node tests/rotation-schema.test.js && node tests/rotation-phase3b.test.js && node tests/pipeline-pvf-roundtrip.test.js && node tests/zk-encryption.test.js && node --test tests/webhook-security.test.js && node --test tests/sanitize.test.js && node --test tests/env-validator.test.js && node --test tests/well-known.test.js && node --test tests/password-validator.test.js && node --test tests/error-handler.test.js && node --test tests/admin.test.js && node --test tests/password-reset.test.js && node --test tests/account-deletion.test.js && node --test tests/api-key-lifecycle.test.js && node --test tests/user-branding.test.js && node --test tests/email-service.test.js && node --test tests/email-templates.test.js && node --test tests/onboarding-emails.test.js",
     "test:api": "node tests/api.test.js",
     "test:signing": "node tests/signing.test.js",
     "test:verify-ed25519": "node tests/verify-ed25519.test.js",
@@ -26,6 +26,9 @@
     "test:account-deletion": "node --test tests/account-deletion.test.js",
     "test:api-key": "node --test tests/api-key-lifecycle.test.js",
     "test:branding": "node --test tests/user-branding.test.js",
+    "test:email-service": "node --test tests/email-service.test.js",
+    "test:email-templates": "node --test tests/email-templates.test.js",
+    "test:onboarding-emails": "node --test tests/onboarding-emails.test.js",
     "test:e2e-auth": "node --test tests/e2e-auth-onboarding.test.js",
     "migrate": "node scripts/migrate.js",
     "backup": "node scripts/backup-neon.js"
