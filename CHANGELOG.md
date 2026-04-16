@@ -6,6 +6,51 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [4.7.0] - 2026-04-16
+
+### Added
+- `ARCHITECTURE.md` — 14-section system design document covering HTTP layer, auth, PVF pipeline, dual-signature model, key rotation state machine, DB schema, and middleware stack
+- `CONTRIBUTING.md` — contributor workflow, code style, testing requirements, PR checklist, commit message conventions
+- `docs/DEPLOYMENT.md` — production runbook with env var reference, secret generation, rotation procedures, monitoring targets, rollback steps, common issues
+- 5 new test suites: email service (53), email templates (87), onboarding emails (27), webhook delivery (30), CSRF rejection (42), middleware timeout (15), requireSubscription (34), request-logger (62), onboarding codes (22), Google OAuth (15), remaining endpoints (56)
+- `scripts/benchmark.js` — performance benchmark script with p50/p95/p99/RPS across 5 key endpoints
+- `.github/dependabot.yml` — weekly npm updates (grouped by type), monthly GitHub Actions updates
+
+### Changed
+- Auth flow unified: `/api/signup` now sends welcome email and schedules onboarding sequence, matching `/auth/register` behavior
+- `requireLogin` replaced with `requireAuth` across 18 routes — 30-day absolute session limit and 7-day sliding window now enforced consistently
+- Login lockout moved from in-memory Map to `login_attempts` DB table — survives restarts and works with horizontal scaling
+- i18n expansion: `onboarding.*` section added (48 keys) across all 10 locales; 17 missing pricing/plan keys added to non-EN locales; en.json grew from 1,748 to 1,796 keys
+- 5 hardcoded JS strings in `app.html` replaced with `vfGetTranslation()` calls (`app.verification.*` namespace)
+- Deprecated `public/dashboard.html` (Dana's UX mockup) — `/dashboard` route redirects to `/app`
+- CI workflow hardened: added `concurrency` group (cancel stale runs), `permissions: contents: read`, `timeout-minutes: 15`, `SESSION_SECRET` and `NODE_ENV` in env block
+- OpenAPI spec: `/api/health/deep` security changed from `[]` to `AdminSecretAuth`; added `/api/metrics` with admin auth; added `SessionCookieAuth` scheme
+- CSRF exclusion list: added `/api/org/` prefix (programmatic X-API-Key auth, no session cookies)
+
+### Fixed
+- Session fixation vulnerability — `req.session.regenerate()` now called before `req.login()` on all 4 auth paths (register, login, Google OAuth, API signup); `csrfSecret` preserved across regeneration
+- 5 missing rate limiters added: `POST /change-password`, `POST /api-key`, `POST /documents/:hash/star`, `POST /api/auth/verify-code` (new 10/15min limiter), `POST /onboarding/complete`
+- `Permissions-Policy` header was silently ignored by helmet v8 — now sent manually via middleware (camera, mic, geolocation, payment, USB all denied)
+- Raw `err.message` from multer no longer leaked to clients in all 6 upload handlers; mapped to safe error strings
+- Raw Postgres error messages no longer leaked in stamp config catch block
+- `/api/health/deep` and `/api/metrics` now require `X-Admin-Secret` (previously exposed Node version, DB pool stats, signing key IDs publicly)
+- `admin-repo.js`: removed references to non-existent `verified` column in `getRecentDocuments` and `getAllDocumentsForExport`
+
+### Security
+- Content Security Policy now uses per-request nonces (progressive enhancement — nonce-aware browsers ignore `'unsafe-inline'`)
+- Ephemeral session secret warning made explicit in `server.js` comments and `.env.example`
+
+### Documentation
+- README.md, CHANGELOG.md added to project root
+- `docs/DEPLOYMENT.md`, `ARCHITECTURE.md`, `CONTRIBUTING.md` added
+
+### Stats
+- Test suite: 1,046 tests, 997 passing, 0 failures (49 skipped for rate-limit safety)
+- Test files: 31 suites
+- `npm audit`: 0 vulnerabilities
+
+---
+
 ## [4.6.0] - 2026-04-16
 
 ### Added
