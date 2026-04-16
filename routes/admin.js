@@ -49,8 +49,12 @@ router.get('/keys', authenticateAdmin, async (req, res) => {
 router.post('/keys', authenticateAdmin, async (req, res) => {
   try {
     const db = req.app.get('db');
-    const { orgName, plan } = req.body;
+    const { escapeHtml } = require('../templates/pvf');
+    let { orgName, plan } = req.body;
     if (!orgName) return res.status(400).json({ success: false, error: 'orgName required' });
+
+    // Sanitize orgName to prevent stored XSS (orgName is rendered in PVF stamps and admin views)
+    orgName = escapeHtml(orgName).substring(0, 100);
 
     const orgId = 'org_' + orgName.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 30) + '_' + crypto.randomBytes(4).toString('hex');
     const apiKey = 'vf_live_' + crypto.randomBytes(20).toString('hex');

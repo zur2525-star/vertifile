@@ -11,7 +11,7 @@ const BCRYPT_ROUNDS = Math.max(12, parseInt(process.env.BCRYPT_ROUNDS) || 12);
 
 const { requireLogin } = require('../middleware/auth');
 const { hashBytes, signHash, fixFilename, HMAC_SECRET } = require('../services/pvf-generator');
-const { generatePvfHtml } = require('../templates/pvf');
+const { generatePvfHtml, escapeHtml } = require('../templates/pvf');
 const { obfuscatePvf } = require('../obfuscate');
 // Phase 1B: unified PVF creation pipeline. Lazy-required inside the upload
 // handler so the legacy code path keeps working unchanged when the feature
@@ -526,7 +526,9 @@ router.put('/profile', requireLogin, async (req, res) => {
     const db = req.app.get('db');
     const { name } = req.body;
     if (!name || !name.trim()) return res.status(400).json({ success: false, error: 'Name is required' });
-    await db.updateUserProfile(req.user.id, { name: name.trim() });
+    // Sanitize name to prevent stored XSS (name is rendered in PVF stamps and dashboard views)
+    const sanitizedName = escapeHtml(name.trim()).substring(0, 100);
+    await db.updateUserProfile(req.user.id, { name: sanitizedName });
     res.json({ success: true });
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to update profile' }); }
 });

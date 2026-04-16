@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:10000"
+    environment:
+      NODE_ENV: production
+      PORT: "10000"
+      DATABASE_URL: postgres://vertifile:vertifile_secret@postgres:5432/vertifile
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGUSER: vertifile
+      PGPASSWORD: vertifile_secret
+      PGDATABASE: vertifile
+      REDIS_URL: redis://redis:6379
+      SESSION_SECRET: local-dev-session-secret-change-in-production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: vertifile
+      POSTGRES_PASSWORD: vertifile_secret
+      POSTGRES_DB: vertifile
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vertifile -d vertifile"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redisdata:

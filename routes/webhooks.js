@@ -1,5 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
+const dns = require('dns').promises;
 const { getClientIP } = require('../middleware/auth');
 const logger = require('../services/logger');
 
@@ -32,8 +33,32 @@ async function fireWebhooks(db, orgId, event, data) {
   }
 }
 
-// Validate webhook URL to prevent SSRF attacks
-function isValidWebhookUrl(urlStr) {
+// Check whether an IP address falls within a private/reserved range.
+// Covers: 127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16,
+// 169.254.0.0/16 (link-local), 0.0.0.0, and IPv6 loopback/unique-local.
+function isPrivateIP(ip) {
+  if (!ip || typeof ip !== 'string') return true;
+  // IPv4 private/reserved ranges
+  if (ip === '0.0.0.0') return true;
+  if (/^127\./.test(ip)) return true;
+  if (/^10\./.test(ip)) return true;
+  const m172 = ip.match(/^172\.(\d+)\./);
+  if (m172 && parseInt(m172[1]) >= 16 && parseInt(m172[1]) <= 31) return true;
+  if (/^192\.168\./.test(ip)) return true;
+  if (/^169\.254\./.test(ip)) return true;
+  if (/^0\./.test(ip)) return true;
+  // IPv6 loopback and private ranges
+  if (ip === '::1') return true;
+  if (/^fe80/i.test(ip)) return true;
+  if (/^fc00/i.test(ip)) return true;
+  if (/^fd/i.test(ip)) return true;
+  return false;
+}
+
+// Validate webhook URL to prevent SSRF and DNS rebinding attacks.
+// This function is async because it resolves the hostname via DNS
+// and checks the resolved IP against the private range blocklist.
+async function isValidWebhookUrl(urlStr) {
   try {
     if (typeof urlStr !== 'string' || urlStr.length > 2048) return false;
     const parsed = new URL(urlStr);
@@ -42,20 +67,35 @@ function isValidWebhookUrl(urlStr) {
     // Reject credentials in URL
     if (parsed.username || parsed.password) return false;
     const host = parsed.hostname.toLowerCase();
-    // Block all loopback and private ranges
+    // Block hostnames that are obviously private/reserved
     if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return false;
     if (host === '[::1]') return false;
-    if (/^10\./.test(host)) return false;
-    const m172 = host.match(/^172\.(\d+)\./);
-    if (m172 && parseInt(m172[1]) >= 16 && parseInt(m172[1]) <= 31) return false;
-    if (/^192\.168\./.test(host)) return false;
-    if (/^169\.254\./.test(host)) return false;
+    if (isPrivateIP(host)) return false;
     if (host.endsWith('.internal') || host.endsWith('.local') || host.endsWith('.localhost')) return false;
-    if (/^0\./.test(host) || /^127\./.test(host)) return false;
     // Block IPv6 link-local (fe80::), loopback (::1), and unique-local (fc00::/fd00::)
     if (/^(\[)?fe80/i.test(host) || /^(\[)?fc00/i.test(host) || /^(\[)?fd/i.test(host)) return false;
     // Must have a proper TLD (at least one dot in hostname)
     if (!host.includes('.')) return false;
+
+    // DNS rebinding protection: resolve the hostname and verify every
+    // resolved IP is public. An attacker could register a domain that
+    // initially resolves to a public IP (passing the hostname checks
+    // above), then switch the DNS record to 127.0.0.1 before the
+    // webhook fires. By resolving here and checking the actual IPs,
+    // we block that attack vector.
+    try {
+      const addresses = await dns.resolve4(host);
+      for (const ip of addresses) {
+        if (isPrivateIP(ip)) {
+          return false;
+        }
+      }
+    } catch (e) {
+      // DNS resolution failed (NXDOMAIN, timeout, etc.) -- reject the URL.
+      // A legitimate webhook endpoint must have a resolvable hostname.
+      return false;
+    }
+
     return true;
   } catch { return false; }
 }
@@ -70,7 +110,7 @@ router.post('/register', (req, res, next) => {
     return res.status(400).json({ success: false, error: 'url and events[] required' });
   }
 
-  if (!isValidWebhookUrl(url)) {
+  if (!(await isValidWebhookUrl(url))) {
     return res.status(400).json({ success: false, error: 'Invalid webhook URL. Must be HTTPS and point to a public endpoint.' });
   }
 

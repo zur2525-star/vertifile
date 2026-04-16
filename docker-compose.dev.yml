@@ -1,0 +1,21 @@
+# Development overrides -- use with:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: deps
+    # Override production CMD with nodemon for hot reload
+    command: ["npx", "nodemon", "--inspect=0.0.0.0:9229", "server.js"]
+    volumes:
+      # Mount source code for live editing (exclude node_modules)
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:10000"
+      - "9229:9229"
+    environment:
+      NODE_ENV: development
