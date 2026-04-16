@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const logger = require('../services/logger');
 const db = require('../db');
+const { sendVerificationCode } = require('../services/email');
 const { requireLogin } = require('../middleware/auth');
 
 const router = express.Router();
@@ -72,10 +73,13 @@ router.post('/auth/send-code', sendCodeLimiter, async (req, res) => {
     const code = generateCode();
     await db.createVerificationCode(normalizedEmail, code, 'onboarding', CODE_TTL_MINUTES);
 
-    // TODO: send email via email service (e.g. services/email.js)
-    // await emailService.sendVerificationCode(normalizedEmail, code);
+    // Send verification code via email (Resend SMTP)
+    const emailSent = await sendVerificationCode(normalizedEmail, code, CODE_TTL_MINUTES);
+    if (!emailSent) {
+      logger.warn({ email: normalizedEmail }, 'Verification code created but email not sent (SMTP not configured)');
+    }
 
-    logger.info({ email: normalizedEmail }, 'Verification code generated');
+    logger.info({ email: normalizedEmail, emailSent }, 'Verification code generated');
 
     // In development expose the code in the response to ease testing.
     const isDev = process.env.NODE_ENV !== 'production';

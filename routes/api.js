@@ -5,6 +5,7 @@ const path = require('path');
 const rateLimit = require('express-rate-limit');
 const { signupLimiter, getClientIP } = require('../middleware/auth');
 const logger = require('../services/logger');
+const { sendEmail } = require('../services/email');
 const { escapeHtml } = require('../templates/pvf');
 const { handleCreatePvf, verifySignature, generateToken, HMAC_SECRET } = require('../services/pvf-generator');
 const { buildOverrideScriptInnerText } = require('../services/stamp-override');
@@ -1034,6 +1035,18 @@ router.post('/contact', contactLimiter, async (req, res) => {
       return res.status(400).json({ success: false, error: 'Invalid email address' });
     }
     await db.log('contact_form', { name, email, organization, orgType: orgType || 'not specified', message: message || '', ip: getClientIP(req) });
+
+    // Send notification email to admin
+    const adminEmail = process.env.ADMIN_EMAILS || 'zur2525@gmail.com';
+    const contactHtml = `<h2>New Contact Form Submission</h2>
+<p><strong>Name:</strong> ${escapeHtml(name)}</p>
+<p><strong>Email:</strong> ${escapeHtml(email)}</p>
+<p><strong>Organization:</strong> ${escapeHtml(organization)}</p>
+<p><strong>Type:</strong> ${escapeHtml(orgType || 'not specified')}</p>
+<p><strong>Message:</strong></p>
+<p>${escapeHtml(message || 'No message provided')}</p>`;
+    sendEmail(adminEmail.split(',')[0].trim(), 'Vertifile Contact: ' + escapeHtml(organization), contactHtml).catch(() => {});
+
     res.json({ success: true });
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to submit contact form' }); }
 });

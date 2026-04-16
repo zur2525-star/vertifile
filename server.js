@@ -56,10 +56,17 @@ const PORT = process.env.PORT || 3002;
   }
 })();
 
-// Session secret — persistent across restarts
-const SESSION_SECRET_FILE = path.join(__dirname, 'data', '.session_secret');
+// Session secret — MUST be set via env var in production
+// In development, falls back to file-based persistence for convenience
 function loadOrCreateSessionSecret() {
   if (process.env.SESSION_SECRET) return process.env.SESSION_SECRET;
+  // In production (Render), require SESSION_SECRET env var — no file fallback
+  if (process.env.RENDER || process.env.NODE_ENV === 'production') {
+    logger.warn('[SECURITY] SESSION_SECRET env var not set in production — generating ephemeral secret (sessions will not survive restarts)');
+    return 'vf_session_' + crypto.randomBytes(32).toString('hex');
+  }
+  // Development only: file-based persistence
+  const SESSION_SECRET_FILE = path.join(__dirname, 'data', '.session_secret');
   try {
     if (fs.existsSync(SESSION_SECRET_FILE)) {
       const s = fs.readFileSync(SESSION_SECRET_FILE, 'utf8').trim();
@@ -115,12 +122,20 @@ app.set('stampCache', stampCache);
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc: ["'self'"], scriptSrc: ["'self'", "'unsafe-inline'"], scriptSrcAttr: ["'unsafe-inline'"],
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://plausible.io"],
+      scriptSrcAttr: ["'none'"],  // Block inline event handlers (onclick, onload, etc.)
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"], imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https://api.vertifile.com", "https://vertifile.com"], frameSrc: ["'self'", "data:", "blob:"],
-      mediaSrc: ["'self'"],   // Allow video/audio from same origin
-      objectSrc: ["'none'"],  // Block <object>/<embed>/<applet>
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://api.vertifile.com", "https://vertifile.com", "https://plausible.io"],
+      frameSrc: ["'self'", "data:", "blob:"],
+      mediaSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],          // Prevent base tag injection
+      formAction: ["'self'"],       // Prevent form submission to external domains
+      frameAncestors: ["'none'"],   // Prevent clickjacking (replaces X-Frame-Options)
+      workerSrc: ["'self'", "blob:"],
     }
   },
   crossOriginEmbedderPolicy: false,
@@ -209,8 +224,12 @@ app.use(express.static(path.join(__dirname, 'public'), {
       // Locale JSON: short cache so translations update quickly
       res.setHeader('Cache-Control', 'public, max-age=300, must-revalidate');
     } else if (fp.endsWith('.js') || fp.endsWith('.css')) {
-      // JS/CSS: 1 hour cache with revalidation (short, since no hash in filename)
-      res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate');
+      // JS/CSS: no-cache forces ETag revalidation on every request (304 if unchanged).
+      // This ensures fresh code immediately after deploy without content-hash filenames.
+      res.setHeader('Cache-Control', 'public, no-cache');
+    } else if (fp.endsWith('.svg') || fp.endsWith('.ico')) {
+      // SVG icons/favicon: 30 days (rarely change)
+      res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
     }
     // Images/fonts keep the default 7d maxAge from express.static
   }
