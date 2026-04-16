@@ -3,12 +3,14 @@ const db = require('../db');
 
 async function backup() {
   await db._ready;
+  const ALLOWED_TABLES = new Set(['documents', 'api_keys', 'users', 'audit_log', 'webhooks', 'health_checks']);
   const tables = ['documents', 'api_keys', 'users', 'audit_log', 'webhooks', 'health_checks'];
   const backup = {};
 
   for (const table of tables) {
+    if (!ALLOWED_TABLES.has(table)) throw new Error('Invalid table name: ' + table);
     try {
-      const { rows } = await db._db.query(`SELECT * FROM ${table}`);
+      const { rows } = await db._db.query(`SELECT * FROM "${table.replace(/"/g, '""')}"`);
       backup[table] = rows;
       logger.info({ table, count: rows.length }, `Backed up ${table}`);
     } catch (e) {

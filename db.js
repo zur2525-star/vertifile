@@ -15,6 +15,13 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
+// Escape LIKE/ILIKE wildcard characters to prevent pattern injection.
+// Callers building LIKE patterns from user input MUST wrap the raw
+// string through this helper before concatenating the leading/trailing %.
+function escapeLike(str) {
+  return str.replace(/[%_\\]/g, '\\$&');
+}
+
 const dbConfig = require('./services/db-config');
 const dbUrl = process.env.DATABASE_URL;
 
@@ -518,7 +525,7 @@ async function getDocumentCount(orgId) {
 async function getAllDocuments({ limit = 50, offset = 0, search = '' } = {}) {
   let rows;
   if (search) {
-    const pattern = '%' + search + '%';
+    const pattern = '%' + escapeLike(search) + '%';
     const res = await pool.query(
       `SELECT hash, original_name, mime_type, file_size, created_at, org_id, org_name, recipient, recipient_hash
        FROM documents WHERE hash LIKE $1 OR original_name LIKE $2 OR org_name LIKE $3
@@ -723,7 +730,7 @@ async function getUserDocuments(userId, { limit = 20, offset = 0, search = '', s
     idx++;
   }
   if (search) {
-    const pattern = '%' + search + '%';
+    const pattern = '%' + escapeLike(search) + '%';
     query += ` AND (original_name ILIKE $${idx} OR hash ILIKE $${idx + 1})`;
     params.push(pattern, pattern);
     idx += 2;
@@ -1535,7 +1542,7 @@ async function logHealthCheck(status, responseMs, details = {}) {
 
 async function getHealthHistory(hours = 24) {
   const { rows } = await pool.query(
-    'SELECT * FROM health_checks WHERE checked_at > NOW() - ($1 || \' hours\')::INTERVAL ORDER BY checked_at DESC LIMIT 500',
+    'SELECT * FROM health_checks WHERE checked_at > NOW() - make_interval(hours => $1::int) ORDER BY checked_at DESC LIMIT 500',
     [hours]
   );
   return rows;
@@ -1543,17 +1550,17 @@ async function getHealthHistory(hours = 24) {
 
 async function getUptimeStats(days = 30) {
   const { rows: total } = await pool.query(
-    "SELECT COUNT(*) as total, COUNT(*) FILTER (WHERE status = 'ok') as ok FROM health_checks WHERE checked_at > NOW() - ($1 || ' days')::INTERVAL",
+    "SELECT COUNT(*) as total, COUNT(*) FILTER (WHERE status = 'ok') as ok FROM health_checks WHERE checked_at > NOW() - make_interval(days => $1::int)",
     [days]
   );
   const r = total[0];
   const uptimePercent = r.total > 0 ? ((r.ok / r.total) * 100).toFixed(2) : '100.00';
   const { rows: incidents } = await pool.query(
-    "SELECT checked_at, details FROM health_checks WHERE status != 'ok' AND checked_at > NOW() - ($1 || ' days')::INTERVAL ORDER BY checked_at DESC LIMIT 20",
+    "SELECT checked_at, details FROM health_checks WHERE status != 'ok' AND checked_at > NOW() - make_interval(days => $1::int) ORDER BY checked_at DESC LIMIT 20",
     [days]
   );
   const { rows: avgResp } = await pool.query(
-    "SELECT ROUND(AVG(response_ms)) as avg_ms FROM health_checks WHERE status = 'ok' AND checked_at > NOW() - ($1 || ' days')::INTERVAL",
+    "SELECT ROUND(AVG(response_ms)) as avg_ms FROM health_checks WHERE status = 'ok' AND checked_at > NOW() - make_interval(days => $1::int)",
     [days]
   );
   return {
@@ -1653,8 +1660,8 @@ async function updateUserPassword(userId, passwordHash) {
 async function createVerificationCode(email, code, type = 'onboarding', expiresInMinutes = 10) {
   await pool.query(
     `INSERT INTO verification_codes (email, code, type, expires_at)
-     VALUES ($1, $2, $3, NOW() + ($4 || ' minutes')::INTERVAL)`,
-    [email, code, type, String(expiresInMinutes)]
+     VALUES ($1, $2, $3, NOW() + make_interval(mins => $4::int))`,
+    [email, code, type, expiresInMinutes]
   );
 }
 
@@ -1724,8 +1731,8 @@ async function cleanExpiredCodes() {
 async function getCodeSendCount(email, minutesWindow = 60) {
   const { rows } = await pool.query(
     `SELECT COUNT(*)::int AS cnt FROM verification_codes
-     WHERE email = $1 AND created_at > NOW() - ($2 || ' minutes')::INTERVAL`,
-    [email, String(minutesWindow)]
+     WHERE email = $1 AND created_at > NOW() - make_interval(mins => $2::int)`,
+    [email, minutesWindow]
   );
   return rows[0].cnt;
 }

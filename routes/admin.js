@@ -176,7 +176,7 @@ router.post('/health-log', authenticateAdmin, async (req, res) => {
 router.get('/monitoring', authenticateAdmin, async (req, res) => {
   try {
     const db = req.app.get('db');
-    const hours = parseInt(req.query.hours) || 24;
+    const hours = Math.max(1, Math.min(8760, parseInt(req.query.hours) || 24));
     const history = await db.getHealthHistory(hours);
     res.json({ success: true, history });
   } catch (e) { logger.error({ err: e }, 'Monitoring error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
@@ -186,7 +186,7 @@ router.get('/monitoring', authenticateAdmin, async (req, res) => {
 router.get('/uptime', authenticateAdmin, async (req, res) => {
   try {
     const db = req.app.get('db');
-    const days = parseInt(req.query.days) || 30;
+    const days = Math.max(1, Math.min(365, parseInt(req.query.days) || 30));
     const stats = await db.getUptimeStats(days);
     res.json({ success: true, ...stats });
   } catch (e) { logger.error({ err: e }, 'Uptime error'); res.status(500).json({ success: false, error: 'Internal server error' }); }
