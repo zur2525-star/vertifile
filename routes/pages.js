@@ -77,6 +77,10 @@ router.get('/legal', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'legal.html'));
 });
 
+router.get('/cookie-policy', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'cookie-policy.html'));
+});
+
 router.get('/healthcare', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'healthcare.html'));
 });

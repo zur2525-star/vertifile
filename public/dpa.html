@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Processing Agreement (DPA) — Vertifile</title>
+  <meta name="description" content="Vertifile Data Processing Agreement (DPA) — GDPR-compliant data processing terms for enterprise customers. Blind processing ensures document content is never read or accessed.">
+  <meta name="keywords" content="data processing agreement, DPA, GDPR, document verification, Vertifile, data protection, processor, controller">
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <meta property="og:title" content="Data Processing Agreement (DPA) — Vertifile">
+  <meta property="og:description" content="Vertifile DPA — GDPR-compliant data processing terms for enterprise customers.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vertifile.com/dpa">
+  <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
+  <link rel="canonical" href="https://vertifile.com/dpa">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Data Processing Agreement (DPA) — Vertifile">
+  <meta name="twitter:description" content="Vertifile DPA — GDPR-compliant data processing terms for enterprise customers.">
+  <meta name="theme-color" content="#ffffff">
+  <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    html{overflow-x:hidden}
+    body{font-family:'Inter','Heebo',sans-serif;color:#374151;background:#ffffff;overflow-x:hidden}
+    [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
+    a{text-decoration:none;color:inherit}
+
+    /* ===== NAVBAR ===== */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:100%;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo img{height:28px}
+    .nav-center{display:flex;gap:28px;position:absolute;left:50%;transform:translateX(-50%)}
+    .nav-center a{font-size:14px;font-weight:500;color:#374151;text-decoration:none;transition:.2s}
+    .nav-center a:hover{color:#7c3aed}
+    [dir="rtl"] .nav-center{direction:rtl}
+    .nav-actions{display:flex;align-items:center;gap:12px}
+    .nav-verify{font-size:13px;font-weight:500;color:#4f46e5;text-decoration:none}
+    .nav-cta{padding:8px 20px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
+    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.3)}
+    .lang-btn{display:flex;align-items:center;gap:5px;cursor:pointer;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#4b5563;border:1px solid rgba(0,0,0,.12);background:transparent;position:relative;transition:.2s}
+    .lang-btn:hover{border-color:rgba(0,0,0,.3);color:#111827}
+    .lang-btn svg{width:16px;height:16px}
+    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.1);min-width:160px;padding:4px 0;display:none;z-index:100}
+    [dir="rtl"] .lang-dropdown{right:auto;left:0}
+    .lang-dropdown.show{display:block}
+    .lang-dropdown a{display:block;padding:8px 16px;font-size:13px;color:#4b5563;transition:.15s}
+    .lang-dropdown a:hover{background:rgba(0,0,0,.03);color:#111827}
+    .lang-dropdown a.active{color:#7c3aed;font-weight:600}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px}
+    .hamburger span{display:block;width:20px;height:2px;background:#111827;margin:4px 0;border-radius:2px}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:#fff;border-bottom:1px solid rgba(0,0,0,.06);padding:16px 24px;z-index:999;flex-direction:column;gap:12px}
+    .mobile-menu.show{display:flex}
+    .mobile-menu a{font-size:15px;color:#374151;text-decoration:none;padding:8px 0}
+    .mob-actions{display:flex;gap:12px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06)}
+    @media(max-width:768px){.nav-center,.nav-actions{display:none}.hamburger{display:block}}
+
+    /* ===== LEGAL PAGE CONTENT ===== */
+    .legal-page{padding:120px 32px 80px;max-width:800px;margin:0 auto}
+    .legal-page h1{font-size:40px;font-weight:900;color:#111827;margin-bottom:8px;letter-spacing:-1.5px}
+    .legal-page .legal-updated{font-size:14px;color:#9ca3af;margin-bottom:48px}
+    .legal-page h2{font-size:22px;font-weight:700;color:#111827;margin-top:48px;margin-bottom:16px;letter-spacing:-.5px}
+    .legal-page h3{font-size:17px;font-weight:600;color:#374151;margin-top:28px;margin-bottom:10px}
+    .legal-page p{font-size:15px;line-height:1.85;color:#4b5563;margin-bottom:16px}
+    .legal-page ul{margin:0 0 16px 24px;font-size:15px;line-height:1.85;color:#4b5563}
+    [dir="rtl"] .legal-page ul{margin:0 24px 16px 0}
+    .legal-page li{margin-bottom:6px}
+    .legal-page a{color:#4f46e5;text-decoration:underline}
+    .legal-page a:hover{color:#7c3aed}
+    .legal-page .highlight-box{background:#f5f3ff;border:1px solid rgba(124,58,237,.12);border-radius:12px;padding:20px 24px;margin:24px 0}
+    .legal-page .highlight-box p{color:#4b5563;margin-bottom:0}
+    .legal-page .highlight-box strong{color:#4f46e5}
+
+    @media(max-width:768px){
+      .legal-page{padding:100px 20px 60px}
+      .legal-page h1{font-size:30px}
+      .legal-page h2{font-size:19px;margin-top:36px}
+    }
+
+    /* ===== FOOTER ===== */
+    footer{background:linear-gradient(180deg,#f8f7ff 0%,#1e1b4b 30%,#1e1b4b 100%);color:#e2e0f0;padding:100px 32px 30px;border-top:none;position:relative;overflow:hidden}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(180deg,#f8f7ff,transparent);pointer-events:none;z-index:1}
+    footer::after{content:'';position:absolute;bottom:0;left:0;right:0;top:30%;background:radial-gradient(ellipse at 30% 80%,rgba(124,58,237,.15),transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(6,182,212,.08),transparent 50%);pointer-events:none}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;max-width:1000px;margin:0 auto;position:relative;z-index:2}
+    .footer-brand .f-logo{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:10px;letter-spacing:-.5px;color:#fff}
+    .footer-brand .f-logo img{height:28px;width:auto;filter:brightness(0) invert(1)}
+    .footer-brand p{font-size:13px;color:rgba(196,181,253,.6);line-height:1.8;max-width:280px}
+    .footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(167,139,250,.7);margin-bottom:16px}
+    .footer-col a{display:block;font-size:14px;color:rgba(196,181,253,.5);padding:5px 0;transition:.2s}
+    .footer-col a:hover{color:#fff}
+    .footer-bottom{max-width:1000px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(196,181,253,.4);position:relative;z-index:2}
+    .footer-lang{display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(196,181,253,.5);font-size:12px;transition:.2s}
+    .footer-lang:hover{color:#fff}
+    .footer-lang svg{stroke:rgba(196,181,253,.5)}
+    .footer-lang:hover svg{stroke:#fff}
+    @media(max-width:768px){
+      .footer-grid{grid-template-columns:1fr 1fr;gap:30px}
+      .footer-bottom{flex-direction:column;gap:10px;text-align:center}
+    }
+    @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+    button:focus-visible,a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+    input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile" height="28"></a>
+    <div class="nav-center">
+      <a href="/" data-i18n="nav.home">Home</a>
+      <a href="/enterprise" data-i18n="nav.enterprise">Enterprise</a>
+      <a href="/pricing" data-i18n="nav.pricing">Pricing</a>
+      <a href="/integration" data-i18n="nav.developers">Developers</a>
+      <a href="/demo" data-i18n="nav.demo">Demo</a>
+      <a href="/blog" data-i18n="nav.blog">Blog</a>
+      <a href="/contact" data-i18n="nav.contact">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        <span id="langLabel">EN</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="?lang=en" onclick="switchLang('en',event)">English</a>
+        <a href="?lang=he" onclick="switchLang('he',event)">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+        <a href="?lang=ar" onclick="switchLang('ar',event)">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+        <a href="?lang=fr" onclick="switchLang('fr',event)">Fran&#231;ais</a>
+        <a href="?lang=es" onclick="switchLang('es',event)">Espa&#241;ol</a>
+        <a href="?lang=de" onclick="switchLang('de',event)">Deutsch</a>
+        <a href="?lang=ru" onclick="switchLang('ru',event)">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</a>
+        <a href="?lang=zh" onclick="switchLang('zh',event)">&#31616;&#20307;&#20013;&#25991;</a>
+        <a href="?lang=ja" onclick="switchLang('ja',event)">&#26085;&#26412;&#35486;</a>
+        <a href="?lang=pt" onclick="switchLang('pt',event)">Portugu&#234;s</a>
+      </div>
+      <a href="/verify" class="nav-verify" data-i18n="nav.verify">Verify</a>
+      <a href="/upload" class="nav-cta" data-i18n="nav.upload">Protect</a>
+      <a href="/app" class="nav-user" title="My Account" data-i18n-title="nav.account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+    </div>
+    <button class="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="closeMobile()" data-i18n="nav.home">Home</a>
+  <a href="/enterprise" onclick="closeMobile()" data-i18n="nav.enterprise">Enterprise</a>
+  <a href="/pricing" onclick="closeMobile()" data-i18n="nav.pricing">Pricing</a>
+  <a href="/integration" onclick="closeMobile()" data-i18n="nav.developers">Developers</a>
+  <a href="/demo" onclick="closeMobile()" data-i18n="nav.demo">Demo</a>
+  <a href="/blog" onclick="closeMobile()" data-i18n="nav.blog">Blog</a>
+  <a href="/contact" onclick="closeMobile()" data-i18n="nav.contact">Contact</a>
+  <a href="/app" onclick="closeMobile()" data-i18n="nav.account">My Account</a>
+  <div class="mob-actions">
+    <a href="/verify" onclick="closeMobile()" data-i18n="nav.verify">Verify</a>
+    <a href="/upload" onclick="closeMobile()" data-i18n="nav.upload">Protect</a>
+  </div>
+</div>
+
+<!-- ===== DATA PROCESSING AGREEMENT ===== -->
+<div class="legal-page">
+  <h1 data-i18n="dpa.title">Data Processing Agreement</h1>
+  <p class="legal-updated" data-i18n="dpa.updated">Effective: April 2026</p>
+
+  <div class="highlight-box">
+    <p><strong data-i18n="dpa.templateLabel">Template DPA:</strong> <span data-i18n="dpa.templateDesc">This is Vertifile's standard Data Processing Agreement. Enterprise customers may request a custom DPA tailored to their specific regulatory and organizational requirements by contacting <a href="mailto:info@vertifile.com">info@vertifile.com</a>.</span></p>
+  </div>
+
+  <p data-i18n="dpa.introDesc">This Data Processing Agreement ("DPA") forms part of the agreement between Vertifile ("Processor") and the customer organization ("Controller") for the use of Vertifile's document verification and digital signature services. This DPA governs the processing of personal data by the Processor on behalf of the Controller in accordance with Regulation (EU) 2016/679 (the General Data Protection Regulation, "GDPR") and applicable data protection legislation.</p>
+
+  <!-- 1. Definitions -->
+  <h2 data-i18n="dpa.definitionsTitle">1. Definitions</h2>
+  <ul>
+    <li><strong data-i18n="dpa.defControllerLabel">Controller:</strong> <span data-i18n="dpa.defControllerDesc">The entity that determines the purposes and means of processing personal data. In the context of this DPA, the Controller is the customer organization using Vertifile's services.</span></li>
+    <li><strong data-i18n="dpa.defProcessorLabel">Processor:</strong> <span data-i18n="dpa.defProcessorDesc">The entity that processes personal data on behalf of the Controller. In the context of this DPA, the Processor is Vertifile.</span></li>
+    <li><strong data-i18n="dpa.defDataSubjectLabel">Data Subject:</strong> <span data-i18n="dpa.defDataSubjectDesc">An identified or identifiable natural person whose personal data is processed. This includes users of the platform and individuals whose documents are verified through the service.</span></li>
+    <li><strong data-i18n="dpa.defPersonalDataLabel">Personal Data:</strong> <span data-i18n="dpa.defPersonalDataDesc">Any information relating to an identified or identifiable natural person, as defined in GDPR Article 4(1).</span></li>
+    <li><strong data-i18n="dpa.defProcessingLabel">Processing:</strong> <span data-i18n="dpa.defProcessingDesc">Any operation or set of operations performed on personal data, whether by automated means or otherwise, including collection, recording, organization, structuring, storage, adaptation, retrieval, use, disclosure, or erasure.</span></li>
+  </ul>
+
+  <!-- 2. Scope of Processing -->
+  <h2 data-i18n="dpa.scopeTitle">2. Scope of Processing</h2>
+  <p data-i18n="dpa.scopeDesc">Vertifile processes a limited set of personal data strictly necessary for the provision of its document verification and digital signature services. The Processor does not access, read, or analyze the content of any documents uploaded to the platform.</p>
+
+  <h3 data-i18n="dpa.scopeDataTitle">Data Processed</h3>
+  <p data-i18n="dpa.scopeDataDesc">The following categories of personal data are processed:</p>
+  <ul>
+    <li><strong data-i18n="dpa.scopeAccountLabel">Account data:</strong> <span data-i18n="dpa.scopeAccountDesc">Email address, full name, organization name</span></li>
+    <li><strong data-i18n="dpa.scopeMetadataLabel">Document metadata:</strong> <span data-i18n="dpa.scopeMetadataDesc">File name, cryptographic hash (SHA-256), timestamp of processing, MIME type</span></li>
+  </ul>
+
+  <h3 data-i18n="dpa.scopeNotProcessedTitle">Data NOT Processed</h3>
+  <div class="highlight-box">
+    <p data-i18n="dpa.scopeNotProcessedDesc">Vertifile operates a blind processing architecture. The content of uploaded documents is never read, accessed, stored, or transmitted to Vertifile's servers. Only cryptographic hashes (one-way fingerprints) are generated and stored. Document content remains exclusively under the Controller's control at all times.</p>
+  </div>
+
+  <!-- 3. Processing Details -->
+  <h2 data-i18n="dpa.detailsTitle">3. Processing Details</h2>
+
+  <h3 data-i18n="dpa.detailsPurposeTitle">Purpose of Processing</h3>
+  <p data-i18n="dpa.detailsPurposeDesc">Personal data is processed solely for the purpose of providing document verification and digital signature services, including the generation of cryptographic signatures, verification of document integrity, and maintenance of audit records.</p>
+
+  <h3 data-i18n="dpa.detailsTypesTitle">Types of Personal Data</h3>
+  <ul>
+    <li data-i18n="dpa.detailsType1">Account information: email address, full name, organization name</li>
+    <li data-i18n="dpa.detailsType2">Document metadata: file name, SHA-256 hash, processing timestamp, MIME type</li>
+    <li data-i18n="dpa.detailsType3">Usage data: number of documents processed, API call records</li>
+  </ul>
+
+  <h3 data-i18n="dpa.detailsSubjectsTitle">Categories of Data Subjects</h3>
+  <ul>
+    <li data-i18n="dpa.detailsSubject1">Users of the Vertifile platform (individuals who create accounts)</li>
+    <li data-i18n="dpa.detailsSubject2">Document signers and recipients whose documents are processed through the service</li>
+  </ul>
+
+  <h3 data-i18n="dpa.detailsDurationTitle">Duration of Processing</h3>
+  <p data-i18n="dpa.detailsDurationDesc">Personal data is retained for the duration of the Controller's active account. Upon account termination or deletion, all personal data associated with the account will be permanently deleted within 30 days, except where retention is required by applicable law or where cryptographic hashes have been anchored to a public blockchain (which cannot be reversed but contain no personal data).</p>
+
+  <!-- 4. Processor Obligations -->
+  <h2 data-i18n="dpa.obligationsTitle">4. Processor Obligations</h2>
+  <p data-i18n="dpa.obligationsIntro">Vertifile, as the Processor, undertakes the following obligations:</p>
+  <ul>
+    <li><strong data-i18n="dpa.oblInstructionsLabel">Documented instructions:</strong> <span data-i18n="dpa.oblInstructionsDesc">Process personal data only on documented instructions from the Controller, unless required to do so by applicable law. In such a case, the Processor shall inform the Controller of that legal requirement before processing, unless prohibited by law.</span></li>
+    <li><strong data-i18n="dpa.oblConfidentialityLabel">Confidentiality:</strong> <span data-i18n="dpa.oblConfidentialityDesc">Ensure that all personnel authorized to process personal data are bound by written confidentiality obligations or are under an appropriate statutory obligation of confidentiality.</span></li>
+    <li><strong data-i18n="dpa.oblSecurityLabel">Security measures:</strong> <span data-i18n="dpa.oblSecurityDesc">Implement and maintain appropriate technical and organizational measures to ensure a level of security appropriate to the risk, as detailed in Section 5 of this DPA.</span></li>
+    <li><strong data-i18n="dpa.oblSubprocessorLabel">Sub-processor restrictions:</strong> <span data-i18n="dpa.oblSubprocessorDesc">Not engage another processor (sub-processor) without prior specific or general written authorization of the Controller. The Controller will be notified at least 30 days before any addition or replacement of sub-processors.</span></li>
+    <li><strong data-i18n="dpa.oblAssistLabel">Data subject requests:</strong> <span data-i18n="dpa.oblAssistDesc">Assist the Controller, by appropriate technical and organizational measures, in fulfilling the Controller's obligation to respond to data subject requests for access, rectification, erasure, restriction, portability, and objection.</span></li>
+    <li><strong data-i18n="dpa.oblDeletionLabel">Data deletion or return:</strong> <span data-i18n="dpa.oblDeletionDesc">At the choice of the Controller, delete or return all personal data after the end of the provision of services, and delete existing copies unless applicable law requires storage of the personal data.</span></li>
+    <li><strong data-i18n="dpa.oblAuditLabel">Audit and compliance:</strong> <span data-i18n="dpa.oblAuditDesc">Make available to the Controller all information necessary to demonstrate compliance with the obligations laid down in GDPR Article 28, and allow for and contribute to audits, including inspections, conducted by the Controller or an auditor mandated by the Controller.</span></li>
+  </ul>
+
+  <!-- 5. Security Measures -->
+  <h2 data-i18n="dpa.securityTitle">5. Security Measures</h2>
+  <p data-i18n="dpa.securityIntro">Vertifile implements the following technical and organizational security measures to protect personal data:</p>
+  <ul>
+    <li><strong data-i18n="dpa.secTransitLabel">Encryption in transit:</strong> <span data-i18n="dpa.secTransitDesc">All data transmitted between clients and Vertifile servers is encrypted using TLS 1.2 or higher.</span></li>
+    <li><strong data-i18n="dpa.secRestLabel">Encryption at rest:</strong> <span data-i18n="dpa.secRestDesc">Database connections to PostgreSQL (hosted on Neon) are encrypted. Data at rest is protected by the infrastructure provider's encryption mechanisms.</span></li>
+    <li><strong data-i18n="dpa.secSignaturesLabel">Dual digital signatures:</strong> <span data-i18n="dpa.secSignaturesDesc">Documents are signed using HMAC-SHA256 and Ed25519 dual-signature architecture, providing both integrity verification and non-repudiation.</span></li>
+    <li><strong data-i18n="dpa.secBlindLabel">Blind processing:</strong> <span data-i18n="dpa.secBlindDesc">Vertifile's core architecture ensures that document content is never read, analyzed, or accessed by the platform. Only cryptographic hashes are processed, making it technically impossible for the Processor to access document content.</span></li>
+    <li><strong data-i18n="dpa.secSessionLabel">Session security:</strong> <span data-i18n="dpa.secSessionDesc">Session data is managed using httpOnly, secure cookies with appropriate expiration policies. Session tokens are not exposed to client-side scripts.</span></li>
+    <li><strong data-i18n="dpa.secAccessLabel">Access controls:</strong> <span data-i18n="dpa.secAccessDesc">Principle of least privilege is applied to all system access. Administrative access is restricted and logged.</span></li>
+    <li><strong data-i18n="dpa.secAuditLabel">Security audits:</strong> <span data-i18n="dpa.secAuditDesc">Regular security assessments are conducted to identify and address vulnerabilities. Security practices are reviewed and updated on an ongoing basis.</span></li>
+  </ul>
+
+  <!-- 6. Sub-processors -->
+  <h2 data-i18n="dpa.subprocessorsTitle">6. Sub-processors</h2>
+  <p data-i18n="dpa.subprocessorsIntro">Vertifile engages the following sub-processors for the provision of its services. Each sub-processor is bound by data processing terms that provide at least the same level of protection as this DPA:</p>
+  <ul>
+    <li><strong>Neon</strong> (<a href="https://neon.tech" target="_blank" rel="noopener">neon.tech</a>) — <span data-i18n="dpa.subNeonDesc">PostgreSQL database hosting. Regions: United States and European Union.</span></li>
+    <li><strong>Render</strong> (<a href="https://render.com" target="_blank" rel="noopener">render.com</a>) — <span data-i18n="dpa.subRenderDesc">Application hosting and infrastructure. Regions: United States and European Union.</span></li>
+    <li><strong>Resend</strong> (<a href="https://resend.com" target="_blank" rel="noopener">resend.com</a>) — <span data-i18n="dpa.subResendDesc">Transactional email delivery (account notifications, verification emails). Region: United States.</span></li>
+  </ul>
+  <p data-i18n="dpa.subprocessorsNotice">The Controller will be notified at least 30 days prior to any changes to this list of sub-processors. The Controller may object to the appointment of a new sub-processor within 14 days of receiving notice. If the Controller objects and the Processor cannot reasonably accommodate the objection, either party may terminate the affected services.</p>
+
+  <!-- 7. International Data Transfers -->
+  <h2 data-i18n="dpa.transfersTitle">7. International Data Transfers</h2>
+  <p data-i18n="dpa.transfersDesc1">Vertifile is based in Israel, which has been recognized by the European Commission as providing an adequate level of data protection (Commission Decision 2011/61/EU).</p>
+  <p data-i18n="dpa.transfersDesc2">Where personal data is transferred to sub-processors located outside the European Economic Area (EEA) in jurisdictions that have not received an adequacy decision, such transfers are governed by Standard Contractual Clauses (SCCs) as approved by the European Commission (Commission Implementing Decision (EU) 2021/914), supplemented by additional safeguards where necessary following a transfer impact assessment.</p>
+  <p data-i18n="dpa.transfersDesc3">The Controller may request copies of the applicable SCCs and transfer impact assessments by contacting Vertifile at <a href="mailto:info@vertifile.com">info@vertifile.com</a>.</p>
+
+  <!-- 8. Data Breach Notification -->
+  <h2 data-i18n="dpa.breachTitle">8. Data Breach Notification</h2>
+  <p data-i18n="dpa.breachDesc1">In the event of a personal data breach, the Processor shall notify the Controller without undue delay, and in any case within 72 hours of becoming aware of the breach, in accordance with GDPR Article 33.</p>
+  <p data-i18n="dpa.breachDesc2">The notification shall include:</p>
+  <ul>
+    <li data-i18n="dpa.breachItem1">A description of the nature of the breach, including the categories and approximate number of data subjects and records concerned</li>
+    <li data-i18n="dpa.breachItem2">The name and contact details of the Processor's point of contact for further information</li>
+    <li data-i18n="dpa.breachItem3">A description of the likely consequences of the breach</li>
+    <li data-i18n="dpa.breachItem4">A description of the measures taken or proposed to address the breach, including measures to mitigate its possible adverse effects</li>
+  </ul>
+  <p data-i18n="dpa.breachDesc3">The Processor shall cooperate fully with the Controller in investigating and remediating the breach, and shall take all reasonable steps to mitigate the effects and minimize any damage resulting from the breach.</p>
+
+  <!-- 9. Data Subject Rights -->
+  <h2 data-i18n="dpa.rightsTitle">9. Data Subject Rights</h2>
+  <p data-i18n="dpa.rightsDesc">The Processor shall assist the Controller in responding to requests from data subjects exercising their rights under the GDPR, including the right of access, right to rectification, right to erasure, right to restriction of processing, right to data portability, and right to object. The Processor shall promptly notify the Controller of any data subject request received directly and shall not respond to such requests without the Controller's prior authorization, unless required by applicable law.</p>
+
+  <!-- 10. Liability and Indemnification -->
+  <h2 data-i18n="dpa.liabilityTitle">10. Liability and Indemnification</h2>
+  <p data-i18n="dpa.liabilityDesc">Each party's liability under this DPA is subject to the limitations and exclusions of liability set out in the underlying service agreement between the parties. Nothing in this DPA limits or excludes liability that cannot be limited or excluded under applicable law.</p>
+
+  <!-- 11. Term and Termination -->
+  <h2 data-i18n="dpa.terminationTitle">11. Term and Termination</h2>
+  <p data-i18n="dpa.terminationDesc1">This DPA shall remain in effect for the duration of the Processor's processing of personal data on behalf of the Controller. Upon termination of the underlying service agreement, the Processor shall, at the Controller's election, either delete or return all personal data within 30 days, unless applicable law requires continued storage.</p>
+  <p data-i18n="dpa.terminationDesc2">The obligations of confidentiality, data breach notification, and cooperation with respect to data subject requests shall survive the termination of this DPA.</p>
+
+  <!-- 12. Governing Law -->
+  <h2 data-i18n="dpa.governingTitle">12. Governing Law</h2>
+  <p data-i18n="dpa.governingDesc">This DPA shall be governed by and construed in accordance with the laws of the State of Israel, without regard to its conflict of law principles, except to the extent that mandatory provisions of GDPR or other applicable data protection laws require otherwise.</p>
+
+  <!-- 13. Contact -->
+  <h2 data-i18n="dpa.contactTitle">13. Contact</h2>
+  <p data-i18n="dpa.contactDesc">For questions regarding this Data Processing Agreement, data protection practices, or to request a custom DPA, please contact:</p>
+  <p>
+    <strong>Vertifile</strong><br>
+    Rishon LeZion, Israel<br>
+    <span data-i18n="dpa.contactEmail">Email:</span> <a href="mailto:info@vertifile.com">info@vertifile.com</a><br>
+    <span data-i18n="dpa.contactWeb">Website:</span> <a href="https://vertifile.com">vertifile.com</a>
+  </p>
+
+  <div class="highlight-box">
+    <p><strong data-i18n="dpa.customLabel">Custom DPA:</strong> <span data-i18n="dpa.customDesc">Enterprise and regulated-industry customers may require additional terms, annexes, or modifications to this standard DPA. Vertifile is prepared to negotiate and execute custom data processing agreements that address specific compliance requirements. Please contact <a href="mailto:info@vertifile.com">info@vertifile.com</a> to initiate the process.</span></p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="f-logo">
+        <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
+      </div>
+      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="#how" data-i18n="nav.howItWorks">How It Works</a>
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="/upload" data-i18n="nav.upload">Protect a Document</a>
+      <a href="/enterprise" data-i18n="footer.enterprise">Enterprise</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.developers">Developers</h4>
+      <a href="/integration" data-i18n="footer.integrationGuide">Integration Guide</a>
+      <a href="/api/docs" data-i18n="footer.apiDocumentation">API Documentation</a>
+      <a href="/verify" data-i18n="nav.verify">Verify a Document</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.company">Company</h4>
+      <a href="/about" data-i18n="footer.about">About</a>
+      <a href="/contact" data-i18n="footer.contact">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.legal">Legal</h4>
+      <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
+      <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
+      <a href="/dpa" data-i18n="footer.dpa">Data Processing Agreement</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="footer.copyright">&copy; 2026 Vertifile. All rights reserved.</span>
+    <img src="/images/marketing/patent-pending-badge.svg" alt="Patent Pending - Israel" class="patent-badge" loading="lazy" width="220" height="36">
+    <div class="footer-lang" onclick="toggleLangDropdown()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+      <span id="footerLangLabel">English</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/i18n.js"></script>
+<script src="/js/nav-user.js"></script>
+<script>
+(function(){
+  window.toggleMobile=function(){document.getElementById('mobileMenu').classList.toggle('show')};
+  window.closeMobile=function(){document.getElementById('mobileMenu').classList.remove('show')};
+})();
+</script>
+<script src="/js/cookie-consent.js" defer></script>
+</body>
+</html>

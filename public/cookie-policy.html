@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terms of Service — Vertifile Document Verification</title>
-  <meta name="description" content="Vertifile Terms of Service — usage terms, acceptable use policies, and legal agreements for our tamper-proof document verification platform. Covers API usage, data handling, and intellectual property rights.">
-  <meta name="keywords" content="document verification, tamper-proof, digital signature, PVF, blockchain verification">
+  <title>Cookie Policy — Vertifile</title>
+  <meta name="description" content="Vertifile Cookie Policy — learn about the essential cookies we use for authentication and session management. No tracking cookies, no third-party cookies.">
+  <meta name="keywords" content="cookie policy, vertifile, privacy, session cookie, GDPR">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
-  <meta property="og:title" content="Terms of Service — Vertifile">
-  <meta property="og:description" content="Vertifile Terms of Service — usage terms for our document verification platform.">
+  <meta property="og:title" content="Cookie Policy — Vertifile">
+  <meta property="og:description" content="Vertifile Cookie Policy — essential cookies only, no tracking.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://vertifile.com/terms">
+  <meta property="og:url" content="https://vertifile.com/cookie-policy">
   <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
-  <link rel="canonical" href="https://vertifile.com/terms">
+  <link rel="canonical" href="https://vertifile.com/cookie-policy">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Terms of Service — Vertifile">
-  <meta name="twitter:description" content="Vertifile Terms of Service — usage terms for our document verification platform.">
+  <meta name="twitter:title" content="Cookie Policy — Vertifile">
+  <meta name="twitter:description" content="Vertifile Cookie Policy — essential cookies only, no tracking.">
   <meta name="theme-color" content="#ffffff">
   <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -74,10 +74,19 @@
     .legal-page .highlight-box p{color:#4b5563;margin-bottom:0}
     .legal-page .highlight-box strong{color:#4f46e5}
 
+    .cookie-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:14px}
+    .cookie-table th{text-align:left;padding:12px 16px;background:#f5f3ff;color:#4f46e5;font-weight:600;border-bottom:2px solid rgba(124,58,237,.15)}
+    [dir="rtl"] .cookie-table th{text-align:right}
+    .cookie-table td{padding:12px 16px;border-bottom:1px solid rgba(0,0,0,.06);color:#4b5563}
+    .cookie-table tr:last-child td{border-bottom:none}
+    .cookie-table code{background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:13px;color:#7c3aed}
+
     @media(max-width:768px){
       .legal-page{padding:100px 20px 60px}
       .legal-page h1{font-size:30px}
       .legal-page h2{font-size:19px;margin-top:36px}
+      .cookie-table{font-size:13px}
+      .cookie-table th,.cookie-table td{padding:10px 12px}
     }
 
     /* ===== FOOTER ===== */
@@ -162,142 +171,100 @@
   </div>
 </div>
 
-<!-- ===== TERMS OF SERVICE ===== -->
+<!-- ===== COOKIE POLICY ===== -->
 <div class="legal-page">
-  <h1 data-i18n="terms.title">Terms of Service</h1>
-  <p class="legal-updated" data-i18n="terms.updated">Last updated: March 25, 2026</p>
+  <h1 data-i18n="cookiePolicy.title">Cookie Policy</h1>
+  <p class="legal-updated" data-i18n="cookiePolicy.updated">Last updated: April 2026</p>
 
-  <h2 data-i18n="terms.serviceTitle">1. Service Description</h2>
-  <p>Vertifile provides a document verification and protection platform that creates tamper-proof .pvf files using cryptographic signatures and blockchain timestamping. Our service includes:</p>
-  <ul>
-    <li>Document protection via SHA-256 hashing and HMAC signatures</li>
-    <li>Blockchain timestamp registration on the Polygon network</li>
-    <li>Live animated verification stamps embedded in .pvf files</li>
-    <li>Document verification through our web interface and API</li>
-    <li>A browser-based .pvf file viewer</li>
-  </ul>
-  <p>Vertifile uses BLIND processing: we never read, access, or store the content of your documents. Only cryptographic hashes are processed.</p>
-
-  <h2 data-i18n="terms.acceptanceTitle">2. Acceptance of Terms</h2>
-  <p>By accessing or using Vertifile's services, you agree to be bound by these Terms of Service. If you are using our services on behalf of an organization, you represent that you have the authority to bind that organization to these terms.</p>
-  <p>If you do not agree to these terms, you must not use our services.</p>
-
-  <h2 data-i18n="terms.accountTitle">3. Account Responsibilities</h2>
-  <p>If you create an account or obtain API credentials:</p>
-  <ul>
-    <li>You are responsible for maintaining the confidentiality of your API keys and credentials</li>
-    <li>You are responsible for all activity that occurs under your account</li>
-    <li>You must notify us immediately of any unauthorized use of your account</li>
-    <li>You must provide accurate and complete registration information</li>
-    <li>You must not share API keys or allow others to use your credentials</li>
-  </ul>
-
-  <h2 data-i18n="terms.acceptableUseTitle">4. Acceptable Use</h2>
-  <p>You agree to use Vertifile only for lawful purposes. You must not:</p>
-  <ul>
-    <li>Use the service to protect, verify, or distribute documents related to illegal activities</li>
-    <li>Attempt to reverse-engineer, decompile, or disassemble any part of the service</li>
-    <li>Attempt to bypass security measures, rate limits, or access controls</li>
-    <li>Use automated tools to scrape or overload the service</li>
-    <li>Impersonate other users or organizations</li>
-    <li>Interfere with or disrupt the service or its infrastructure</li>
-    <li>Use the service to infringe on the intellectual property rights of others</li>
-    <li>Resell or redistribute the service without prior written consent</li>
-  </ul>
-
-  <h2 data-i18n="terms.apiTitle">5. API Usage and Rate Limits</h2>
-  <p>API access is subject to the following conditions:</p>
-  <ul>
-    <li><strong>Pro tier:</strong> Up to 500 documents per month with 100 API requests per day</li>
-    <li><strong>Business tier:</strong> Unlimited documents with 1,000 API requests per day</li>
-    <li><strong>Enterprise tier:</strong> Custom limits based on your agreement</li>
-  </ul>
-  <p>We reserve the right to throttle or suspend API access if usage exceeds agreed limits or if we detect abusive patterns. Rate limit headers are included in all API responses.</p>
-
-  <h2 data-i18n="terms.ipTitle">6. Intellectual Property</h2>
-  <p>All rights, title, and interest in the Vertifile service, including its software, design, trademarks, and documentation, remain the exclusive property of Vertifile.</p>
-  <p>You retain all rights to your documents. Vertifile does not claim any ownership over documents you protect or verify using our service. Since we never access document content, no license to your content is required or implied.</p>
-  <p>The .pvf file format, verification stamps, and related technologies are proprietary to Vertifile.</p>
-
-  <h2 data-i18n="terms.slaTitle">7. Service Level Agreement</h2>
-  <p data-i18n="terms.slaDesc">Vertifile targets 99.9% uptime for all production services. Scheduled maintenance windows will be communicated at least 48 hours in advance. Service credits may be issued for downtime exceeding 0.1% in any calendar month, subject to Enterprise plan terms.</p>
-
-  <h2 data-i18n="terms.forceTitle">8. Force Majeure</h2>
-  <p data-i18n="terms.forceDesc">Neither party shall be liable for failure to perform obligations due to circumstances beyond reasonable control, including but not limited to: natural disasters, war, terrorism, pandemic, government actions, power failures, internet disruptions, or third-party service outages (including blockchain network congestion or cloud provider failures).</p>
-
-  <h2 data-i18n="terms.breachNotifTitle">9. Data Breach Notification</h2>
-  <p data-i18n="terms.breachNotifDesc">In the event of a security breach affecting user data, Vertifile will: (a) notify affected users within 72 hours of confirmed breach discovery, (b) notify relevant supervisory authorities as required by applicable law, (c) provide a detailed incident report within 30 days, and (d) implement remediation measures. Vertifile maintains an incident response plan and conducts regular security assessments.</p>
-
-  <h2 data-i18n="terms.continuityTitle">10. Business Continuity</h2>
-  <p data-i18n="terms.continuityDesc">In the event Vertifile ceases operations: (a) all .pvf files remain functional as self-contained HTML documents, (b) blockchain-anchored verification records on Polygon remain permanently accessible, (c) users will receive 90 days advance notice, (d) all document hashes and verification data will be exported and made available to users, and (e) the .pvf format specification will be published as open documentation.</p>
-
-  <h2 data-i18n="terms.disputeTitle">11. Dispute Resolution</h2>
-  <p data-i18n="terms.disputeDesc">Any dispute arising from these Terms shall first be submitted to good-faith mediation for a period of 30 days. If mediation fails, disputes shall be resolved by binding arbitration under the rules of the Israeli Institute of Commercial Arbitration, or alternatively through the courts of Tel Aviv-Jaffa, Israel. Israeli law shall govern these Terms.</p>
-
-  <h2 data-i18n="terms.dpaTitle">12. Data Processing Agreement</h2>
-  <p data-i18n="terms.dpaDesc">Enterprise customers may request a Data Processing Agreement (DPA) that defines Vertifile's obligations as a data processor under GDPR, including: (a) scope and purpose of processing, (b) data subject rights procedures, (c) sub-processor notifications, (d) cross-border transfer mechanisms (Standard Contractual Clauses), and (e) audit rights. Contact privacy@vertifile.com to request a DPA.</p>
-
-  <h2 data-i18n="terms.warrantyTitle">13. Disclaimer of Warranties</h2>
   <div class="highlight-box">
-    <p data-i18n="terms.warrantyDesc">THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. VERTIFILE DOES NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED, ERROR-FREE, OR COMPLETELY SECURE.</p>
+    <p><strong data-i18n="cookiePolicy.summaryLabel">Summary:</strong> <span data-i18n="cookiePolicy.summaryText">Vertifile uses only one essential cookie for session management. We do not use tracking cookies, advertising cookies, or third-party cookies of any kind.</span></p>
   </div>
-  <p>While we strive for high availability and reliability, we do not guarantee that:</p>
+
+  <h2 data-i18n="cookiePolicy.whatTitle">What Are Cookies</h2>
+  <p data-i18n="cookiePolicy.whatDesc">Cookies are small text files stored on your device by your web browser when you visit a website. They are widely used to make websites function properly, provide security features, and remember user preferences.</p>
+
+  <h2 data-i18n="cookiePolicy.cookiesWeUseTitle">Cookies We Use</h2>
+  <p data-i18n="cookiePolicy.cookiesWeUseDesc">Vertifile uses a single essential cookie required for the service to function. This cookie cannot be disabled without breaking authentication.</p>
+
+  <table class="cookie-table">
+    <thead>
+      <tr>
+        <th data-i18n="cookiePolicy.tableHeaderName">Name</th>
+        <th data-i18n="cookiePolicy.tableHeaderPurpose">Purpose</th>
+        <th data-i18n="cookiePolicy.tableHeaderDuration">Duration</th>
+        <th data-i18n="cookiePolicy.tableHeaderType">Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>connect.sid</code></td>
+        <td data-i18n="cookiePolicy.connectSidPurpose">Session management and user authentication. Maintains your logged-in state as you navigate the application.</td>
+        <td data-i18n="cookiePolicy.connectSidDuration">7 days</td>
+        <td data-i18n="cookiePolicy.connectSidType">Essential, first-party</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 data-i18n="cookiePolicy.technicalTitle">Technical Details</h2>
+  <p data-i18n="cookiePolicy.technicalDesc">The <code>connect.sid</code> cookie has the following security properties:</p>
   <ul>
-    <li>The service will be available at all times</li>
-    <li>Blockchain transactions will be confirmed within a specific timeframe</li>
-    <li>The service will meet all of your specific requirements</li>
+    <li><strong>HttpOnly:</strong> <span data-i18n="cookiePolicy.httpOnlyDesc">The cookie cannot be accessed by client-side JavaScript, protecting against cross-site scripting (XSS) attacks.</span></li>
+    <li><strong>Secure:</strong> <span data-i18n="cookiePolicy.secureDesc">The cookie is only transmitted over encrypted HTTPS connections.</span></li>
+    <li><strong>SameSite (Lax):</strong> <span data-i18n="cookiePolicy.sameSiteDesc">The cookie is not sent with cross-site requests, protecting against cross-site request forgery (CSRF) attacks.</span></li>
+    <li><strong data-i18n="cookiePolicy.firstPartyLabel">First-party only:</strong> <span data-i18n="cookiePolicy.firstPartyDesc">The cookie is set by vertifile.com and is not shared with any third party.</span></li>
   </ul>
 
-  <h2 data-i18n="terms.liabilityTitle">14. Limitation of Liability</h2>
-  <p>To the maximum extent permitted by applicable law, Vertifile shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to:</p>
+  <h2 data-i18n="cookiePolicy.notUseTitle">Cookies We Do NOT Use</h2>
+  <p data-i18n="cookiePolicy.notUseDesc">Vertifile does not use any of the following:</p>
   <ul>
-    <li>Loss of profits, revenue, or data</li>
-    <li>Business interruption</li>
-    <li>Cost of substitute services</li>
-    <li>Damages arising from unauthorized access to or alteration of your data</li>
-  </ul>
-  <p>Our total liability for any claim arising from or related to the service shall not exceed the amount you paid to Vertifile in the twelve (12) months preceding the claim.</p>
-
-  <h2 data-i18n="terms.indemnityTitle">15. Indemnification</h2>
-  <p>You agree to indemnify, defend, and hold harmless Vertifile, its officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including reasonable attorneys' fees) arising from:</p>
-  <ul>
-    <li>Your use of the service</li>
-    <li>Your violation of these terms</li>
-    <li>Your violation of any third-party rights</li>
-    <li>Documents you protect or distribute using the service</li>
+    <li data-i18n="cookiePolicy.noTracking">Tracking cookies</li>
+    <li data-i18n="cookiePolicy.noAdvertising">Advertising or marketing cookies</li>
+    <li data-i18n="cookiePolicy.noThirdParty">Third-party cookies</li>
+    <li data-i18n="cookiePolicy.noAnalyticsCookies">Analytics cookies</li>
+    <li data-i18n="cookiePolicy.noSocialMedia">Social media cookies</li>
+    <li data-i18n="cookiePolicy.noProfiling">Profiling or behavioral targeting cookies</li>
   </ul>
 
-  <h2 data-i18n="terms.terminationTitle">16. Termination</h2>
-  <p>Either party may terminate the use of Vertifile services at any time:</p>
+  <h2 data-i18n="cookiePolicy.analyticsTitle">Analytics</h2>
+  <p data-i18n="cookiePolicy.analyticsDesc">Vertifile uses <a href="https://plausible.io" target="_blank" rel="noopener noreferrer">Plausible Analytics</a>, a privacy-focused analytics service. Plausible:</p>
   <ul>
-    <li><strong>By you:</strong> You may stop using the service and request account deletion at any time</li>
-    <li><strong>By us:</strong> We may suspend or terminate your access if you violate these terms, engage in abusive behavior, or fail to pay applicable fees</li>
+    <li data-i18n="cookiePolicy.plausibleNoCookies">Does not use cookies</li>
+    <li data-i18n="cookiePolicy.plausibleNoPersonal">Does not collect personal data</li>
+    <li data-i18n="cookiePolicy.plausibleNoTracking">Does not track users across websites</li>
+    <li data-i18n="cookiePolicy.plausibleNoFingerprinting">Does not use browser fingerprinting</li>
+    <li data-i18n="cookiePolicy.plausibleCompliant">Is fully GDPR, CCPA, and PECR compliant</li>
   </ul>
-  <p>Upon termination:</p>
+  <p data-i18n="cookiePolicy.analyticsNote">All analytics data is aggregated and anonymous. No individual user can be identified from the analytics data.</p>
+
+  <h2 data-i18n="cookiePolicy.localStorageTitle">Local Storage</h2>
+  <p data-i18n="cookiePolicy.localStorageDesc">In addition to cookies, Vertifile uses browser local storage for non-essential preferences such as language selection and cookie banner dismissal state. Local storage data remains on your device and is never transmitted to our servers.</p>
+
+  <h2 data-i18n="cookiePolicy.legalBasisTitle">Legal Basis</h2>
+  <p data-i18n="cookiePolicy.legalBasisDesc">The <code>connect.sid</code> session cookie is classified as a strictly necessary cookie under GDPR Article 6(1)(b) and the ePrivacy Directive (Article 5(3)). Strictly necessary cookies do not require user consent because they are essential for the service you have requested. Without this cookie, user authentication and session management cannot function.</p>
+
+  <h2 data-i18n="cookiePolicy.manageTitle">How to Manage Cookies</h2>
+  <p data-i18n="cookiePolicy.manageDesc">You can control and delete cookies through your browser settings. Most browsers allow you to:</p>
   <ul>
-    <li>Your API keys will be revoked</li>
-    <li>Existing blockchain records will remain on-chain (they are immutable)</li>
-    <li>Previously issued .pvf files will continue to be verifiable</li>
-    <li>Account data will be deleted within 30 days, subject to legal retention requirements</li>
+    <li data-i18n="cookiePolicy.manageView">View all cookies stored on your device</li>
+    <li data-i18n="cookiePolicy.manageDelete">Delete individual cookies or all cookies</li>
+    <li data-i18n="cookiePolicy.manageBlock">Block cookies from specific websites</li>
+    <li data-i18n="cookiePolicy.manageBlockAll">Block all cookies (note: this will prevent you from logging in to Vertifile)</li>
   </ul>
+  <p data-i18n="cookiePolicy.manageNote">Please note that if you delete or block the <code>connect.sid</code> cookie, you will be logged out and will need to sign in again.</p>
 
-  <h2 data-i18n="terms.modificationsTitle">17. Modifications to Terms</h2>
-  <p>We reserve the right to modify these Terms of Service at any time. Material changes will be communicated to registered users via email at least 30 days before they take effect. Continued use of the service after the effective date constitutes acceptance of the modified terms.</p>
+  <h2 data-i18n="cookiePolicy.changesTitle">Changes to This Policy</h2>
+  <p data-i18n="cookiePolicy.changesDesc">We may update this Cookie Policy if we introduce new cookies or change how existing cookies are used. Any changes will be posted on this page with an updated revision date.</p>
 
-  <h2 data-i18n="terms.governingLawTitle">18. Governing Law</h2>
-  <p>These Terms of Service shall be governed by and construed in accordance with the laws of the State of Israel, without regard to conflict of law principles. Any disputes arising from or related to these terms or the service shall be subject to the exclusive jurisdiction of the courts located in Tel Aviv-Jaffa, Israel.</p>
-
-  <h2 data-i18n="terms.severabilityTitle">19. Severability</h2>
-  <p>If any provision of these Terms is found to be unenforceable or invalid, that provision shall be modified to the minimum extent necessary to make it enforceable, and the remaining provisions shall continue in full force and effect.</p>
-
-  <h2 data-i18n="terms.contactTitle">20. Contact Us</h2>
-  <p>If you have questions about these Terms of Service, contact us at:</p>
+  <h2 data-i18n="cookiePolicy.contactTitle">Contact</h2>
+  <p data-i18n="cookiePolicy.contactDesc">If you have questions about our use of cookies, contact us at:</p>
   <p>
     <strong>Vertifile</strong><br>
     Rishon LeZion, Israel<br>
     Email: <a href="mailto:info@vertifile.com">info@vertifile.com</a><br>
     Website: <a href="https://vertifile.com">vertifile.com</a>
   </p>
+
+  <p style="margin-top:32px"><a href="/privacy" data-i18n="cookiePolicy.privacyLink">Read our full Privacy Policy</a> &middot; <a href="/terms" data-i18n="cookiePolicy.termsLink">Terms of Service</a></p>
 </div>
 
 <footer>
@@ -330,7 +297,7 @@
       <h4 data-i18n="footer.legal">Legal</h4>
       <a href="/privacy" data-i18n="footer.privacy">Privacy Policy</a>
       <a href="/terms" data-i18n="footer.terms">Terms of Service</a>
-      <a href="/dpa" data-i18n="footer.dpa">Data Processing Agreement</a>
+      <a href="/cookie-policy" data-i18n="footer.cookiePolicy">Cookie Policy</a>
     </div>
   </div>
   <div class="footer-bottom">
