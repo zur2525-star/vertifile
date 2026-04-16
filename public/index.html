@@ -596,6 +596,20 @@
     .blog-more a{font-size:14px;font-weight:600;color:#7c3aed;text-decoration:none;transition:.2s}
     .blog-more a:hover{color:#a78bfa;text-decoration:underline}
     @media(max-width:768px){.blog-section{padding:60px 20px}.blog-featured-img{height:180px}.blog-featured-body{padding:20px 20px 24px}.blog-featured h3{font-size:20px}}
+
+    /* ===== SVG BACKGROUND DECORATIONS (restored) ===== */
+    .section-bg-decor{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.28;pointer-events:none;z-index:0;height:auto;filter:drop-shadow(0 0 40px rgba(124,58,237,0.15))}
+    .how{position:relative;overflow:hidden}
+    .how .section-bg-decor{max-width:900px;width:92%;bottom:-10%;top:auto;transform:translateX(-50%)}
+    .security-section{position:relative;overflow:hidden}
+    .security-section .section-bg-decor{max-width:700px;width:85%;opacity:0.22}
+    .industries-section{position:relative;overflow:hidden}
+    .industries-section .section-bg-decor{max-width:1000px;width:97%;opacity:0.25}
+    .how .section-header,.how .steps-grid{position:relative;z-index:1}
+    .security-section .section-header,.security-section .security-visual,.security-section .security-layers{position:relative;z-index:1}
+    .industries-section .section-header,.industries-section .industries-grid{position:relative;z-index:1}
+    @media(max-width:768px){.section-bg-decor{opacity:0.18}}
+
     /* ===== TRUST SECTION RESPONSIVE ===== */
     @media(max-width:1024px){.trust-section>div:last-child{grid-template-columns:repeat(2,1fr)!important}}
     @media(max-width:768px){.trust-section .section-header h2{color:#fff}.trust-section>div:last-child{grid-template-columns:1fr!important;gap:16px!important}}
@@ -863,6 +877,7 @@
 
 <!-- ===== HOW IT WORKS ===== -->
 <section class="how" id="how">
+  <img src="/images/marketing/3-step-process.svg" class="section-bg-decor" aria-hidden="true" alt="">
   <div class="section-header fade-up">
     <div class="label" data-i18n="howItWorks.label">Process</div>
     <h2 data-i18n="howItWorks.title">Three Steps to Bulletproof Documents</h2>
@@ -989,6 +1004,7 @@
 
 <!-- ===== SECURITY ===== -->
 <section class="security-section" id="security">
+  <img src="/images/marketing/pvf-fortress.svg" class="section-bg-decor" aria-hidden="true" alt="">
   <div class="section-header fade-up">
     <div class="label" data-i18n="security.label">Security</div>
     <h2 data-i18n="security.title">7 Layers That Make Forgery Impossible</h2>
@@ -1210,6 +1226,7 @@
 
 <!-- ===== INDUSTRIES ===== -->
 <section class="industries-section" id="industries">
+  <img src="/images/marketing/industry-cards.svg" class="section-bg-decor" aria-hidden="true" alt="">
   <div class="section-header fade-up">
     <div class="label" data-i18n="industries.label">Industries</div>
     <h2 data-i18n="industries.title">Built for Every Industry</h2>
