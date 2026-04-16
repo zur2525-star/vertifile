@@ -18,6 +18,7 @@ const { obfuscatePvf } = require('../obfuscate');
 // handler so the legacy code path keeps working unchanged when the feature
 // flag is off.
 const pvfPipeline = require('../services/pvf-pipeline');
+const { validatePassword } = require('../services/password-validator');
 
 // Rate limiter for upload endpoints — 30 uploads per hour per IP
 const uploadLimiter = rateLimit({
@@ -547,11 +548,11 @@ router.delete('/documents/:hash', requireAuth, destructiveLimiter, async (req, r
     if (!req.params.hash || !/^[a-f0-9]{64}$/.test(req.params.hash)) {
       return res.status(400).json({ success: false, error: 'Invalid document hash' });
     }
+    const doc = await db.getDocument(req.params.hash);
     const deleted = await db.deleteDocument(req.params.hash, req.user.id);
     if (!deleted) return res.status(404).json({ success: false, error: 'Document not found' });
     // Also remove PVF file from disk if it exists
     try {
-      const doc = await db.getDocument(req.params.hash);
       if (doc && doc.shareId) {
         const pvfPath = path.join(__dirname, '..', 'data', 'pvf', doc.shareId + '.html');
         if (fs.existsSync(pvfPath)) fs.unlinkSync(pvfPath);
@@ -583,7 +584,8 @@ router.post('/change-password', userActionLimiter, requireAuth, async (req, res)
     const db = req.app.get('db');
     const { currentPassword, newPassword } = req.body;
     if (!currentPassword || !newPassword) return res.status(400).json({ success: false, error: 'Both passwords required' });
-    if (newPassword.length < 8) return res.status(400).json({ success: false, error: 'Password must be at least 8 characters' });
+    const pwResult = validatePassword(newPassword, req.user.email);
+    if (!pwResult.valid) return res.status(400).json({ success: false, error: 'Password does not meet requirements', details: pwResult.errors });
     const user = await db.getUserById(req.user.id);
     if (!user || !user.password_hash) return res.status(400).json({ success: false, error: 'Cannot change password for OAuth accounts' });
     const valid = await bcrypt.compare(currentPassword, user.password_hash);
@@ -601,6 +603,7 @@ router.post('/change-password', userActionLimiter, requireAuth, async (req, res)
 router.delete('/account', requireAuth, destructiveLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
+    await db.log('user_deleted', { userId: req.user.id, email: req.user.email, ip: req.ip });
     await db.deleteUser(req.user.id);
     req.logout(() => {
       res.json({ success: true });

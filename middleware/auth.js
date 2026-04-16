@@ -28,14 +28,6 @@ function createAuthenticateApiKey(db) {
       });
     }
 
-    // Allow admin secret as API key — grants full access as admin org
-    const adminSecret = process.env.ADMIN_SECRET;
-    if (adminSecret && isValidAdminSecret(apiKey)) {
-      req.org = { orgId: 'org_admin', orgName: 'Vertifile Admin', plan: 'enterprise', documentsCreated: 0, rateLimit: 999, created: new Date().toISOString(), active: true };
-      req.apiKey = apiKey;
-      return next();
-    }
-
     const keyData = await db.getApiKey(apiKey);
 
     if (!keyData) {
@@ -86,10 +78,8 @@ function requireLogin(req, res, next) {
 
 // Helper to extract client IP from request
 function getClientIP(req) {
-  return req.headers['x-forwarded-for']?.split(',')[0]?.trim()
-    || req.headers['x-real-ip']
-    || req.socket?.remoteAddress
-    || 'unknown';
+  // req.ip respects Express's trust proxy setting — the LEFTMOST untrusted IP is used
+  return req.ip || req.socket?.remoteAddress || 'unknown';
 }
 
 // Rate limiter — auth routes (strict: 5 attempts per 15 min)

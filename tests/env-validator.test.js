@@ -44,6 +44,7 @@ const PROD_REQUIRED = {
   DATABASE_URL:   'postgres://test:test@localhost/testdb',
   HMAC_SECRET:    'test-hmac-secret-value',
   SESSION_SECRET: 'test-session-secret-value',
+  ADMIN_SECRET:   'test-admin-secret-value',
 };
 
 // ---------------------------------------------------------------------------

@@ -30,6 +30,7 @@ function validateEnv() {
     { key: 'DATABASE_URL',   desc: 'database connection' },
     { key: 'HMAC_SECRET',    desc: 'PVF HMAC signatures' },
     { key: 'SESSION_SECRET', desc: 'session encryption' },
+    { key: 'ADMIN_SECRET',   desc: 'admin route authentication' },
   ];
 
   for (const { key, desc } of required) {

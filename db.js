@@ -341,6 +341,26 @@ const _ready = (async () => {
   // ================================================================
   // END OVERAGE TRACKING
   // ================================================================
+
+  // ================================================================
+  // ONBOARDING STATE — wizard progress per user
+  // ================================================================
+  try {
+    await pool.query(`CREATE TABLE IF NOT EXISTS onboarding_state (
+      id             SERIAL    PRIMARY KEY,
+      user_id        INTEGER   UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      current_step   INTEGER   NOT NULL DEFAULT 1,
+      selections     JSONB     NOT NULL DEFAULT '{}',
+      stamp_config   JSONB     NOT NULL DEFAULT '{}',
+      started_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      completed_at   TIMESTAMPTZ,
+      last_active_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`);
+    await pool.query('CREATE INDEX IF NOT EXISTS idx_onboarding_state_user_id ON onboarding_state(user_id)');
+  } catch (_) { /* already exists */ }
+  // ================================================================
+  // END ONBOARDING STATE
+  // ================================================================
 })();
 
 // ================================================================
