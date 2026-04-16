@@ -63,8 +63,18 @@ const PORT = process.env.PORT || 3002;
   }
 })();
 
-// Session secret — MUST be set via env var in production
-// In development, falls back to file-based persistence for convenience
+// SESSION_SECRET — MUST be set as an environment variable in production.
+//
+// On Render: Dashboard -> Your Service -> Environment -> Add Environment Variable
+//   Key:   SESSION_SECRET
+//   Value: (generate with: node -e "console.log(require('crypto').randomBytes(48).toString('hex'))")
+//
+// Without SESSION_SECRET in production, every deploy/restart invalidates all
+// active sessions (users get logged out). env-validator.js will fatal-exit if
+// SESSION_SECRET is missing when RENDER or NODE_ENV=production is set.
+//
+// In development: falls back to a file persisted at data/.session_secret so
+// you don't get logged out on every nodemon restart.
 function loadOrCreateSessionSecret() {
   if (process.env.SESSION_SECRET) return process.env.SESSION_SECRET;
   // In production (Render), require SESSION_SECRET env var — no file fallback
