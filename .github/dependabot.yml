@@ -1,0 +1,49 @@
+# Dependabot configuration — Vertifile
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+
+version: 2
+updates:
+  # npm dependencies — weekly, grouped by type
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Asia/Jerusalem
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - automated
+    groups:
+      # Group all non-major updates into a single PR
+      production-dependencies:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+      # Security-critical packages get their own PRs
+      security:
+        applies-to: security-updates
+    # Ignore major version bumps of runtime-critical packages
+    # (require manual review due to breaking changes)
+    ignore:
+      - dependency-name: express
+        update-types: [version-update:semver-major]
+      - dependency-name: passport
+        update-types: [version-update:semver-major]
+      - dependency-name: pg
+        update-types: [version-update:semver-major]
+
+  # GitHub Actions — monthly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+      day: monday
+      time: "06:00"
+      timezone: Asia/Jerusalem
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - github-actions

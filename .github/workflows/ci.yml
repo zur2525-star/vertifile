@@ -6,9 +6,19 @@ on:
   pull_request:
     branches: [main]
 
+# Cancel in-progress runs when a new commit lands on the same branch
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Minimum permissions needed by the workflow
+permissions:
+  contents: read
+
 jobs:
   quality-gates:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     services:
       postgres:
@@ -29,6 +39,8 @@ jobs:
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/vertifile_test
       HMAC_SECRET: test-secret-for-ci-do-not-use-in-production
       ADMIN_SECRET: test-admin-secret-for-ci
+      SESSION_SECRET: test-session-secret-for-ci-do-not-use-in-production
+      NODE_ENV: test
 
     steps:
       - uses: actions/checkout@v4
@@ -150,6 +162,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: quality-gates
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
       - name: Deployment notice
         run: |
