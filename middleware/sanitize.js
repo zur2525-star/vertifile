@@ -77,3 +77,6 @@ function sanitizeBody(req, res, next) {
 }
 
 module.exports = { sanitizeBody };
+
+// Exported for unit tests only — not part of the public API.
+module.exports._test = { escapeStr, sanitizeValue, MAX_DEPTH, LARGE_FIELD_ALLOWLIST, HTML_FIELD_ALLOWLIST };

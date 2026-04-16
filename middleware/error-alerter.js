@@ -39,4 +39,14 @@ function getErrorStats() {
   };
 }
 
-module.exports = { trackError, getRecentErrors, getErrorStats };
+// Exported for unit tests only — do not use in production code
+const _test = {
+  reset() {
+    recentErrors.length = 0;
+  },
+  get MAX_ERRORS() {
+    return MAX_ERRORS;
+  }
+};
+
+module.exports = { trackError, getRecentErrors, getErrorStats, _test };

@@ -170,3 +170,5 @@ router.delete('/:id', webhookDestructiveLimiter, (req, res, next) => {
 
 module.exports = router;
 module.exports.fireWebhooks = fireWebhooks;
+module.exports.isPrivateIP = isPrivateIP;
+module.exports.isValidWebhookUrl = isValidWebhookUrl;

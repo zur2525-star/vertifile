@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "test": "node tests/api.test.js && node tests/signing.test.js && node tests/verify-ed25519.test.js && node tests/verify-public.test.js && node tests/pipeline-phase2e.test.js && node tests/rotation-schema.test.js && node tests/rotation-phase3b.test.js && node tests/pipeline-pvf-roundtrip.test.js && node tests/zk-encryption.test.js",
+    "test": "node tests/api.test.js && node tests/signing.test.js && node tests/verify-ed25519.test.js && node tests/verify-public.test.js && node tests/pipeline-phase2e.test.js && node tests/rotation-schema.test.js && node tests/rotation-phase3b.test.js && node tests/pipeline-pvf-roundtrip.test.js && node tests/zk-encryption.test.js && node --test tests/webhook-security.test.js && node --test tests/sanitize.test.js && node --test tests/env-validator.test.js && node --test tests/well-known.test.js && node --test tests/password-validator.test.js && node --test tests/error-handler.test.js",
     "test:api": "node tests/api.test.js",
     "test:signing": "node tests/signing.test.js",
     "test:verify-ed25519": "node tests/verify-ed25519.test.js",
@@ -15,6 +15,12 @@
     "test:rotation-schema": "node tests/rotation-schema.test.js",
     "test:rotation-phase3b": "node tests/rotation-phase3b.test.js",
     "test:pipeline-pvf-roundtrip": "node tests/pipeline-pvf-roundtrip.test.js",
+    "test:webhook-security": "node --test tests/webhook-security.test.js",
+    "test:sanitize": "node --test tests/sanitize.test.js",
+    "test:env-validator": "node --test tests/env-validator.test.js",
+    "test:well-known": "node --test tests/well-known.test.js",
+    "test:password-validator": "node --test tests/password-validator.test.js",
+    "test:error-handler": "node --test tests/error-handler.test.js",
     "test:e2e-auth": "node --test tests/e2e-auth-onboarding.test.js",
     "migrate": "node scripts/migrate.js",
     "backup": "node scripts/backup-neon.js"
