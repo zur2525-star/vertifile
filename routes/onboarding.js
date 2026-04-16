@@ -55,6 +55,15 @@ const onboardingStateLimiter = rateLimit({
   legacyHeaders: false
 });
 
+// Stricter rate limiter for code verification — 10 per 15 min per IP
+const verifyCodeLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { success: false, error: 'Too many verification attempts. Try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
 // ---------------------------------------------------------------------------
 // POST /api/auth/send-code
 // Send a 6-digit verification code to the given email address.
@@ -109,7 +118,7 @@ router.post('/auth/send-code', sendCodeLimiter, async (req, res) => {
 // Max 5 attempts; code expires after 10 minutes.
 // ---------------------------------------------------------------------------
 
-router.post('/auth/verify-code', async (req, res) => {
+router.post('/auth/verify-code', verifyCodeLimiter, async (req, res) => {
   try {
     const { email, code } = req.body;
     if (!email || !code) {
@@ -267,7 +276,7 @@ router.put('/onboarding/state', requireLogin, onboardingStateLimiter, async (req
 // Finalize the wizard: persist user profile fields, mark wizard done.
 // ---------------------------------------------------------------------------
 
-router.post('/onboarding/complete', requireLogin, async (req, res) => {
+router.post('/onboarding/complete', onboardingStateLimiter, requireLogin, async (req, res) => {
   try {
     const db = req.app.get('db');
 

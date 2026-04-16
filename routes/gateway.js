@@ -11,7 +11,13 @@ router.post('/intake', (req, res, next) => {
 }, (req, res, next) => {
   const upload = req.app.get('upload');
   upload.single('file')(req, res, (err) => {
-    if (err) return res.status(400).json({ success: false, error: err.message });
+    if (err) {
+      const msg = err.code === 'LIMIT_FILE_SIZE' ? 'File too large'
+        : err.code === 'LIMIT_FILE_COUNT' ? 'Too many files'
+        : err.code === 'LIMIT_UNEXPECTED_FILE' ? 'Unexpected file field'
+        : 'File upload failed';
+      return res.status(400).json({ success: false, error: msg });
+    }
     next();
   });
 }, async (req, res) => {
@@ -124,7 +130,13 @@ router.post('/batch', (req, res, next) => {
 }, (req, res, next) => {
   const upload = req.app.get('upload');
   upload.array('files', 50)(req, res, (err) => {
-    if (err) return res.status(400).json({ success: false, error: err.message });
+    if (err) {
+      const msg = err.code === 'LIMIT_FILE_SIZE' ? 'File too large'
+        : err.code === 'LIMIT_FILE_COUNT' ? 'Too many files'
+        : err.code === 'LIMIT_UNEXPECTED_FILE' ? 'Unexpected file field'
+        : 'File upload failed';
+      return res.status(400).json({ success: false, error: msg });
+    }
     next();
   });
 }, async (req, res) => {

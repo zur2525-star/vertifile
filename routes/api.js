@@ -148,11 +148,16 @@ router.post('/signup', signupLimiter, async (req, res) => {
 
     await db.log('user_registered', { userId: user.id, ip: getClientIP(req), provider: 'email', orgId });
 
-    // Create session so user is logged in immediately
-    req.login(user, (loginErr) => {
-      if (loginErr) {
-        logger.warn({ err: loginErr }, 'Auto-login after signup failed');
-        // Still return success — they got their API key, they can log in manually
+    // Create session so user is logged in immediately.
+    // Issue #SF-1: Session fixation — regenerate the session ID before
+    // associating it with the newly created user. Preserving csrfSecret so
+    // any in-flight CSRF token stays valid across the new session.
+    const oldSessionData = { csrfSecret: req.session.csrfSecret };
+    req.session.regenerate((regenErr) => {
+      if (regenErr) {
+        logger.error({ err: regenErr }, 'Session regeneration failed on API signup');
+        // Non-fatal — the API key was already created. Still return success
+        // but without an active session; they can log in manually.
         return res.json({
           success: true,
           apiKey,
@@ -163,18 +168,35 @@ router.post('/signup', signupLimiter, async (req, res) => {
           message: 'Save this API key — it will not be shown again.'
         });
       }
+      if (oldSessionData.csrfSecret) req.session.csrfSecret = oldSessionData.csrfSecret;
 
-      req.session.createdAt = Date.now();
+      req.login(user, (loginErr) => {
+        if (loginErr) {
+          logger.warn({ err: loginErr }, 'Auto-login after signup failed');
+          // Still return success — they got their API key, they can log in manually
+          return res.json({
+            success: true,
+            apiKey,
+            orgId,
+            orgName,
+            plan: selectedPlan,
+            rateLimit: rateLimitVal,
+            message: 'Save this API key — it will not be shown again.'
+          });
+        }
 
-      res.json({
-        success: true,
-        apiKey,
-        orgId,
-        orgName,
-        plan: selectedPlan,
-        rateLimit: rateLimitVal,
-        redirect: '/app',
-        message: 'Account created. Save this API key — it will not be shown again.'
+        req.session.createdAt = Date.now();
+
+        res.json({
+          success: true,
+          apiKey,
+          orgId,
+          orgName,
+          plan: selectedPlan,
+          rateLimit: rateLimitVal,
+          redirect: '/app',
+          message: 'Account created. Save this API key — it will not be shown again.'
+        });
       });
     });
 
@@ -190,7 +212,13 @@ router.post('/signup', signupLimiter, async (req, res) => {
 router.post('/demo/create-pvf', demoLimiter, (req, res, next) => {
   const upload = req.app.get('upload');
   upload.single('file')(req, res, (err) => {
-    if (err) return res.status(400).json({ success: false, error: err.message });
+    if (err) {
+      const msg = err.code === 'LIMIT_FILE_SIZE' ? 'File too large'
+        : err.code === 'LIMIT_FILE_COUNT' ? 'Too many files'
+        : err.code === 'LIMIT_UNEXPECTED_FILE' ? 'Unexpected file field'
+        : 'File upload failed';
+      return res.status(400).json({ success: false, error: msg });
+    }
     next();
   });
 }, (req, res) => {
@@ -208,7 +236,13 @@ router.post('/create-pvf', createLimiter, (req, res, next) => {
 }, (req, res, next) => {
   const upload = req.app.get('upload');
   upload.single('file')(req, res, (err) => {
-    if (err) return res.status(400).json({ success: false, error: err.message });
+    if (err) {
+      const msg = err.code === 'LIMIT_FILE_SIZE' ? 'File too large'
+        : err.code === 'LIMIT_FILE_COUNT' ? 'Too many files'
+        : err.code === 'LIMIT_UNEXPECTED_FILE' ? 'Unexpected file field'
+        : 'File upload failed';
+      return res.status(400).json({ success: false, error: msg });
+    }
     next();
   });
 }, (req, res) => handleCreatePvf(req, res));
@@ -741,7 +775,11 @@ router.get('/health', (req, res) => {
   });
 });
 
-router.get('/health/deep', async (req, res) => {
+router.get('/health/deep', (req, res, next) => {
+  const fn = req.app.get('authenticateAdmin');
+  if (fn) return fn(req, res, next);
+  return res.status(500).json({ success: false, error: 'Admin auth not configured' });
+}, async (req, res) => {
   try {
     const db = req.app.get('db');
     const chain = req.app.get('chain');
@@ -836,7 +874,11 @@ router.get('/health/deep', async (req, res) => {
 });
 
 // ===== Prometheus metrics endpoint =====
-router.get('/metrics', (req, res) => {
+router.get('/metrics', (req, res, next) => {
+  const fn = req.app.get('authenticateAdmin');
+  if (fn) return fn(req, res, next);
+  return res.status(500).json({ success: false, error: 'Admin auth not configured' });
+}, (req, res) => {
   const mem = process.memoryUsage();
   const pool = req.app.get('db')._db;
   const uptime = process.uptime();

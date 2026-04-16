@@ -193,31 +193,50 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 router.get('/google/callback',
   passport.authenticate('google', { failureRedirect: '/app?auth_error=google_failed' }),
-  async (req, res) => {
-    try {
-      const db = req.app.get('db');
-      await db.updateLastLogin(req.user.id);
-      // Issue #26: Set session createdAt for absolute lifetime tracking
-      req.session.createdAt = Date.now();
-      // Issue #22: Audit log for OAuth login
-      await db.log('login_success', { userId: req.user.id, ip: getClientIP(req), provider: 'google', userAgent: req.get('user-agent') });
+  (req, res, next) => {
+    // Issue #SF-1: Session fixation — Passport has already called req.login()
+    // internally, so we must regenerate the session ID now (after the user is
+    // authenticated) and re-save the passport user into the fresh session.
+    const user = req.user;
+    const oldSessionData = { csrfSecret: req.session.csrfSecret };
+    req.session.regenerate((regenErr) => {
+      if (regenErr) {
+        logger.error({ err: regenErr }, 'Session regeneration failed on Google OAuth callback');
+        return res.redirect('/app?auth_error=session_error');
+      }
+      if (oldSessionData.csrfSecret) req.session.csrfSecret = oldSessionData.csrfSecret;
 
-      // Issue #14: Enforce session limit per user
-      await enforceSessionLimit(db, req.user.id);
+      req.login(user, async (loginErr) => {
+        if (loginErr) {
+          logger.error({ err: loginErr }, 'Re-login after session regeneration failed (Google OAuth)');
+          return res.redirect('/app?auth_error=session_error');
+        }
+        try {
+          const db = req.app.get('db');
+          await db.updateLastLogin(user.id);
+          // Issue #26: Set session createdAt for absolute lifetime tracking
+          req.session.createdAt = Date.now();
+          // Issue #22: Audit log for OAuth login
+          await db.log('login_success', { userId: user.id, ip: getClientIP(req), provider: 'google', userAgent: req.get('user-agent') });
 
-      // Schedule onboarding emails for new Google signups (idempotent -- skips if already scheduled)
-      try {
-        await scheduleOnboardingEmails(req.user.id, req.user.email, req.user.name);
-      } catch (_) { /* best effort */ }
+          // Issue #14: Enforce session limit per user
+          await enforceSessionLimit(db, user.id);
 
-      // Send welcome email (best effort -- never blocks OAuth callback)
-      try {
-        await sendWelcomeEmail(req.user.email, req.user.name);
-      } catch (_) { /* best effort */ }
-    } catch (e) {
-      logger.warn({ err: e, userId: req.user?.id }, 'Failed to update last_login on Google callback');
-    }
-    res.redirect('/app');
+          // Schedule onboarding emails for new Google signups (idempotent -- skips if already scheduled)
+          try {
+            await scheduleOnboardingEmails(user.id, user.email, user.name);
+          } catch (_) { /* best effort */ }
+
+          // Send welcome email (best effort -- never blocks OAuth callback)
+          try {
+            await sendWelcomeEmail(user.email, user.name);
+          } catch (_) { /* best effort */ }
+        } catch (e) {
+          logger.warn({ err: e, userId: user?.id }, 'Failed to update last_login on Google callback');
+        }
+        res.redirect('/app');
+      });
+    });
   }
 );
 
@@ -268,36 +287,48 @@ router.post('/register', signupLimiter, async (req, res) => {
     // Issue #25: Audit log for registration
     await db.log('user_registered', { userId: user.id, ip: getClientIP(req), provider: 'email' });
 
-    req.login(user, async (err) => {
-      if (err) {
-        logger.error({ err }, 'Login after register failed');
-        return res.status(500).json({ success: false, error: 'Login failed' });
+    // Issue #SF-1: Session fixation — regenerate the session ID before
+    // associating it with an authenticated user. Preserving csrfSecret so
+    // any in-flight CSRF token stays valid across the new session.
+    const oldSessionData = { csrfSecret: req.session.csrfSecret };
+    req.session.regenerate((regenErr) => {
+      if (regenErr) {
+        logger.error({ err: regenErr }, 'Session regeneration failed on register');
+        return res.status(500).json({ success: false, error: 'Internal server error' });
       }
-      // Issue #26: Set session createdAt for absolute lifetime tracking
-      req.session.createdAt = Date.now();
-      try { await db.updateLastLogin(user.id); } catch (_) { /* best effort */ }
+      if (oldSessionData.csrfSecret) req.session.csrfSecret = oldSessionData.csrfSecret;
 
-      // Issue #14: Enforce session limit per user
-      try { await enforceSessionLimit(db, user.id); } catch (_) { /* best effort */ }
+      req.login(user, async (err) => {
+        if (err) {
+          logger.error({ err }, 'Login after register failed');
+          return res.status(500).json({ success: false, error: 'Login failed' });
+        }
+        // Issue #26: Set session createdAt for absolute lifetime tracking
+        req.session.createdAt = Date.now();
+        try { await db.updateLastLogin(user.id); } catch (_) { /* best effort */ }
 
-      // Schedule onboarding email sequence (best effort -- never blocks signup)
-      try {
-        await scheduleOnboardingEmails(user.id, user.email, user.name);
-      } catch (_) { /* best effort */ }
+        // Issue #14: Enforce session limit per user
+        try { await enforceSessionLimit(db, user.id); } catch (_) { /* best effort */ }
 
-      // Send welcome email (best effort -- never blocks signup)
-      try {
-        await sendWelcomeEmail(user.email, user.name);
-      } catch (_) { /* best effort */ }
+        // Schedule onboarding email sequence (best effort -- never blocks signup)
+        try {
+          await scheduleOnboardingEmails(user.id, user.email, user.name);
+        } catch (_) { /* best effort */ }
 
-      res.json({
-        success: true,
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          avatar: user.avatar_url,
-        },
+        // Send welcome email (best effort -- never blocks signup)
+        try {
+          await sendWelcomeEmail(user.email, user.name);
+        } catch (_) { /* best effort */ }
+
+        res.json({
+          success: true,
+          user: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            avatar: user.avatar_url,
+          },
+        });
       });
     });
   } catch (e) {
@@ -342,34 +373,46 @@ router.post('/login', authLimiter, (req, res, next) => {
     // Successful authentication -- clear lockout counter
     if (loginEmail) clearAttempts(loginEmail);
 
-    req.login(user, async (loginErr) => {
-      if (loginErr) {
-        logger.error({ err: loginErr }, 'Session creation failed');
-        return res.status(500).json({ success: false, error: 'Login failed' });
+    // Issue #SF-1: Session fixation — regenerate the session ID before
+    // associating it with an authenticated user. Preserving csrfSecret so
+    // any in-flight CSRF token stays valid across the new session.
+    const oldSessionData = { csrfSecret: req.session.csrfSecret };
+    req.session.regenerate((regenErr) => {
+      if (regenErr) {
+        logger.error({ err: regenErr }, 'Session regeneration failed on login');
+        return res.status(500).json({ success: false, error: 'Internal server error' });
       }
-      // Issue #26: Set session createdAt for absolute lifetime tracking
-      req.session.createdAt = Date.now();
-      try {
-        const db = req.app.get('db');
-        await db.updateLastLogin(user.id);
-        // Issue #22: Audit log for successful login
-        await db.log('login_success', { userId: user.id, ip: getClientIP(req), provider: 'email', userAgent: req.get('user-agent') });
-      } catch (_) { /* best effort */ }
+      if (oldSessionData.csrfSecret) req.session.csrfSecret = oldSessionData.csrfSecret;
 
-      // Issue #14: Enforce session limit per user
-      try {
-        const db = req.app.get('db');
-        await enforceSessionLimit(db, user.id);
-      } catch (_) { /* best effort */ }
+      req.login(user, async (loginErr) => {
+        if (loginErr) {
+          logger.error({ err: loginErr }, 'Session creation failed');
+          return res.status(500).json({ success: false, error: 'Login failed' });
+        }
+        // Issue #26: Set session createdAt for absolute lifetime tracking
+        req.session.createdAt = Date.now();
+        try {
+          const db = req.app.get('db');
+          await db.updateLastLogin(user.id);
+          // Issue #22: Audit log for successful login
+          await db.log('login_success', { userId: user.id, ip: getClientIP(req), provider: 'email', userAgent: req.get('user-agent') });
+        } catch (_) { /* best effort */ }
 
-      res.json({
-        success: true,
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          avatar: user.avatar_url,
-        },
+        // Issue #14: Enforce session limit per user
+        try {
+          const db = req.app.get('db');
+          await enforceSessionLimit(db, user.id);
+        } catch (_) { /* best effort */ }
+
+        res.json({
+          success: true,
+          user: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            avatar: user.avatar_url,
+          },
+        });
       });
     });
   })(req, res, next);

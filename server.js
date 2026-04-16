@@ -146,9 +146,6 @@ app.use(helmet({
     }
   },
   crossOriginEmbedderPolicy: false,
-  permissionsPolicy: {
-    features: { camera: [], microphone: [], geolocation: [], payment: [] }
-  },
   dnsPrefetchControl: { allow: false },
   referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   hsts: {
@@ -157,6 +154,12 @@ app.use(helmet({
     preload: true
   }
 }));
+
+// helmet v8 silently ignores permissionsPolicy — set the header manually
+app.use((req, res, next) => {
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=()');
+  next();
+});
 
 const ALLOWED_ORIGINS = [
   'https://vertifile.com',

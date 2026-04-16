@@ -91,7 +91,8 @@ router.post('/stamp', requireLogin, userActionLimiter, async (req, res) => {
     await db.log('stamp_config_updated', { userId: req.user.id });
     res.json({ success: true, stampConfig: saved });
   } catch(e) {
-    res.status(400).json({ success: false, error: e.message || 'Failed to update stamp config' });
+    logger.error({ err: e }, 'Stamp config update failed');
+    res.status(400).json({ success: false, error: 'Failed to update stamp config' });
   }
 });
 
@@ -133,7 +134,13 @@ router.get('/documents', requireLogin, async (req, res) => {
 router.post('/upload', requireLogin, uploadLimiter, (req, res, next) => {
   const upload = req.app.get('upload');
   upload.single('file')(req, res, (err) => {
-    if (err) return res.status(400).json({ success: false, error: err.message });
+    if (err) {
+      const msg = err.code === 'LIMIT_FILE_SIZE' ? 'File too large'
+        : err.code === 'LIMIT_FILE_COUNT' ? 'Too many files'
+        : err.code === 'LIMIT_UNEXPECTED_FILE' ? 'Unexpected file field'
+        : 'File upload failed';
+      return res.status(400).json({ success: false, error: msg });
+    }
     next();
   });
 }, async (req, res) => {
@@ -249,7 +256,13 @@ router.post('/upload', requireLogin, uploadLimiter, (req, res, next) => {
 router.post('/upload-encrypted', requireLogin, uploadLimiter, (req, res, next) => {
   const upload = req.app.get('upload');
   upload.single('file')(req, res, (err) => {
-    if (err) return res.status(400).json({ success: false, error: err.message });
+    if (err) {
+      const msg = err.code === 'LIMIT_FILE_SIZE' ? 'File too large'
+        : err.code === 'LIMIT_FILE_COUNT' ? 'Too many files'
+        : err.code === 'LIMIT_UNEXPECTED_FILE' ? 'Unexpected file field'
+        : 'File upload failed';
+      return res.status(400).json({ success: false, error: msg });
+    }
     next();
   });
 }, async (req, res) => {
@@ -509,7 +522,7 @@ async function uploadLegacy(req, res) {
   }
 }
 
-router.post('/documents/:hash/star', requireLogin, async (req, res) => {
+router.post('/documents/:hash/star', userActionLimiter, requireLogin, async (req, res) => {
   try {
     const db = req.app.get('db');
     // Security: validate hash format before DB lookup
@@ -565,7 +578,7 @@ router.put('/profile', requireLogin, userActionLimiter, async (req, res) => {
 });
 
 // CHANGE password — Issue #5: passes session ID so current session is preserved
-router.post('/change-password', requireLogin, async (req, res) => {
+router.post('/change-password', userActionLimiter, requireLogin, async (req, res) => {
   try {
     const db = req.app.get('db');
     const { currentPassword, newPassword } = req.body;
@@ -676,7 +689,7 @@ router.get('/api-key', requireLogin, async (req, res) => {
 });
 
 // Generate API key for user
-router.post('/api-key', requireLogin, async (req, res) => {
+router.post('/api-key', userActionLimiter, requireLogin, async (req, res) => {
   try {
     const db = req.app.get('db');
     const orgId = 'user_' + req.user.id;
