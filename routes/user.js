@@ -5,6 +5,7 @@ const fs = require('fs');
 const bcrypt = require('bcrypt');
 const rateLimit = require('express-rate-limit');
 const logger = require('../services/logger');
+const { sendDocumentReadyEmail } = require('../services/email');
 
 // Configurable bcrypt rounds (floor of 12) — match auth.js convention
 const BCRYPT_ROUNDS = Math.max(12, parseInt(process.env.BCRYPT_ROUNDS) || 12);
@@ -186,6 +187,12 @@ router.post('/upload', requireLogin, uploadLimiter, (req, res, next) => {
         overage: overageFlag,
         overageInfo
       });
+    }
+
+    // Send document-ready notification email (best effort -- never blocks upload response)
+    if (req.user.email) {
+      const docShareUrl = `${req.protocol}://${req.get('host')}/d/${result.shareId}`;
+      sendDocumentReadyEmail(req.user.email, req.file.originalname, docShareUrl).catch(() => {});
     }
 
     return res.json({

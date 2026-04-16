@@ -5,11 +5,12 @@ const fs = require('fs');
 const path = require('path');
 const passport = require('passport');
 const logger = require('../services/logger');
-const { sendPasswordResetEmail } = require('../services/email');
+const { sendPasswordResetEmail, sendWelcomeEmail } = require('../services/email');
 const rateLimit = require('express-rate-limit');
 const { authLimiter, signupLimiter, getClientIP } = require('../middleware/auth');
 const requireAuth = require('../middleware/requireAuth');
 const { scheduleOnboardingEmails } = require('../services/onboarding-emails');
+const { validatePassword } = require('../services/password-validator');
 
 const router = express.Router();
 
@@ -49,6 +50,61 @@ function validatePasswordComplexity(password, email) {
     return 'This password is too common. Please choose a stronger password.';
   }
   return null; // valid
+}
+
+// ---------------------------------------------------------------------------
+// In-memory login attempt tracking — account lockout after 5 fails in 15 min
+// ---------------------------------------------------------------------------
+const LOCKOUT_MAX_ATTEMPTS = 5;
+const LOCKOUT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const _loginAttempts = new Map(); // email -> { count, firstAttempt }
+
+// Clean up expired entries every 15 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [email, entry] of _loginAttempts) {
+    if (now - entry.firstAttempt > LOCKOUT_WINDOW_MS) {
+      _loginAttempts.delete(email);
+    }
+  }
+}, LOCKOUT_WINDOW_MS).unref();
+
+/**
+ * Check if an email is currently locked out. Returns remaining minutes if
+ * locked, or 0 if not locked.
+ */
+function checkLockout(email) {
+  const entry = _loginAttempts.get(email);
+  if (!entry) return 0;
+  const elapsed = Date.now() - entry.firstAttempt;
+  if (elapsed > LOCKOUT_WINDOW_MS) {
+    _loginAttempts.delete(email);
+    return 0;
+  }
+  if (entry.count >= LOCKOUT_MAX_ATTEMPTS) {
+    return Math.ceil((LOCKOUT_WINDOW_MS - elapsed) / 60000);
+  }
+  return 0;
+}
+
+/**
+ * Record a failed login attempt for an email address.
+ */
+function recordFailedAttempt(email) {
+  const entry = _loginAttempts.get(email);
+  const now = Date.now();
+  if (!entry || (now - entry.firstAttempt > LOCKOUT_WINDOW_MS)) {
+    _loginAttempts.set(email, { count: 1, firstAttempt: now });
+  } else {
+    entry.count++;
+  }
+}
+
+/**
+ * Clear login attempt tracking on successful login.
+ */
+function clearAttempts(email) {
+  _loginAttempts.delete(email);
 }
 
 // ---------------------------------------------------------------------------
@@ -153,6 +209,11 @@ router.get('/google/callback',
       try {
         await scheduleOnboardingEmails(req.user.id, req.user.email, req.user.name);
       } catch (_) { /* best effort */ }
+
+      // Send welcome email (best effort -- never blocks OAuth callback)
+      try {
+        await sendWelcomeEmail(req.user.email, req.user.name);
+      } catch (_) { /* best effort */ }
     } catch (e) {
       logger.warn({ err: e, userId: req.user?.id }, 'Failed to update last_login on Google callback');
     }
@@ -177,7 +238,12 @@ router.post('/register', signupLimiter, async (req, res) => {
       return res.status(400).json({ success: false, error: 'Invalid email format' });
     }
 
-    // Issue #6: Password complexity validation
+    // Issue #6: Password complexity validation (structured multi-error response)
+    const pwResult = validatePassword(password, email);
+    if (!pwResult.valid) {
+      return res.status(400).json({ success: false, error: 'Password does not meet requirements', details: pwResult.errors });
+    }
+    // Legacy single-error check (special character + blacklist rules from validatePasswordComplexity)
     const passwordError = validatePasswordComplexity(password, email);
     if (passwordError) {
       return res.status(400).json({ success: false, error: passwordError });
@@ -219,6 +285,11 @@ router.post('/register', signupLimiter, async (req, res) => {
         await scheduleOnboardingEmails(user.id, user.email, user.name);
       } catch (_) { /* best effort */ }
 
+      // Send welcome email (best effort -- never blocks signup)
+      try {
+        await sendWelcomeEmail(user.email, user.name);
+      } catch (_) { /* best effort */ }
+
       res.json({
         success: true,
         user: {
@@ -240,18 +311,37 @@ router.post('/register', signupLimiter, async (req, res) => {
 // ---------------------------------------------------------------------------
 
 router.post('/login', authLimiter, (req, res, next) => {
+  // In-memory lockout check before attempting authentication
+  const loginEmail = sanitizeEmail(req.body.email);
+  if (loginEmail) {
+    const lockedMinutes = checkLockout(loginEmail);
+    if (lockedMinutes > 0) {
+      return res.status(429).json({
+        success: false,
+        error: 'Account temporarily locked. Try again in ' + lockedMinutes + ' minute' + (lockedMinutes === 1 ? '' : 's') + '.'
+      });
+    }
+  }
+
   passport.authenticate('local', (err, user, info) => {
     if (err) {
       logger.error({ err }, 'Login error');
       return res.status(500).json({ success: false, error: 'Server error' });
     }
     if (!user) {
+      // Track failed attempt for in-memory lockout
+      if (loginEmail) recordFailedAttempt(loginEmail);
+
       // Issue #22: Audit log for failed login
       const db = req.app.get('db');
       const email = (req.body.email || '').substring(0, 3) + '***';
       db.log('login_failed', { email, ip: getClientIP(req), reason: info?.message || 'invalid_credentials' }).catch(() => {});
       return res.status(401).json({ success: false, error: info?.message || 'Invalid credentials' });
     }
+
+    // Successful authentication -- clear lockout counter
+    if (loginEmail) clearAttempts(loginEmail);
+
     req.login(user, async (loginErr) => {
       if (loginErr) {
         logger.error({ err: loginErr }, 'Session creation failed');
@@ -347,7 +437,11 @@ router.post('/reset-password', authLimiter, async (req, res) => {
       return res.status(400).json({ success: false, error: 'Token and password required' });
     }
 
-    // Issue #24/#6: Full password complexity validation on reset
+    // Issue #24/#6: Full password complexity validation on reset (structured multi-error response)
+    const resetPwResult = validatePassword(password);
+    if (!resetPwResult.valid) {
+      return res.status(400).json({ success: false, error: 'Password does not meet requirements', details: resetPwResult.errors });
+    }
     const passwordError = validatePasswordComplexity(password);
     if (passwordError) {
       return res.status(400).json({ success: false, error: passwordError });

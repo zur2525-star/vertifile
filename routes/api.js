@@ -5,7 +5,8 @@ const path = require('path');
 const rateLimit = require('express-rate-limit');
 const { signupLimiter, getClientIP } = require('../middleware/auth');
 const logger = require('../services/logger');
-const { sendEmail } = require('../services/email');
+const { sendEmail, sendContactConfirmationEmail } = require('../services/email');
+const { validatePassword } = require('../services/password-validator');
 const { escapeHtml } = require('../templates/pvf');
 const { handleCreatePvf, verifySignature, generateToken, HMAC_SECRET } = require('../services/pvf-generator');
 const { buildOverrideScriptInnerText } = require('../services/stamp-override');
@@ -69,8 +70,10 @@ router.post('/signup', signupLimiter, async (req, res) => {
       return res.status(400).json({ success: false, error: 'orgName, contactName, email, and password are required' });
     }
 
-    if (typeof password !== 'string' || password.length < 8) {
-      return res.status(400).json({ success: false, error: 'Password must be at least 8 characters' });
+    // Full password strength validation
+    const pwResult = validatePassword(password, email);
+    if (!pwResult.valid) {
+      return res.status(400).json({ success: false, error: 'Password does not meet requirements', details: pwResult.errors });
     }
 
     // Daily IP signup limit (max 3 per day)
@@ -1046,6 +1049,9 @@ router.post('/contact', contactLimiter, async (req, res) => {
 <p><strong>Message:</strong></p>
 <p>${escapeHtml(message || 'No message provided')}</p>`;
     sendEmail(adminEmail.split(',')[0].trim(), 'Vertifile Contact: ' + escapeHtml(organization), contactHtml).catch(() => {});
+
+    // Send confirmation email to the person who submitted the form (best effort)
+    sendContactConfirmationEmail(email, name).catch(() => {});
 
     res.json({ success: true });
   } catch(e) { res.status(500).json({ success: false, error: 'Failed to submit contact form' }); }

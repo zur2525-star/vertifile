@@ -34,6 +34,7 @@ const { requestLogger } = require('./middleware/request-logger');
 const { responseEnvelope } = require('./middleware/response-envelope');
 const { trackError } = require('./middleware/error-alerter');
 const { csrfProtection, csrfTokenEndpoint } = require('./middleware/csrf');
+const { errorHandler } = require('./middleware/error-handler');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -370,19 +371,21 @@ app.use('/api', onboardingRoutes);
 app.use('/.well-known', wellKnownRoutes);
 app.use('/', pageRoutes);
 
-// Global error handler
+// Audit-log errors to the database (best effort, before the standardized handler)
 app.use(async (err, req, res, next) => {
-  trackError(err, req);
-  logger.error('[ERROR]', err.message);
-  await db.log('server_error', { path: req.path, method: req.method, error: err.message, ip: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown' });
-  if (err.message === 'Not allowed by CORS') return res.status(403).json({ success: false, error: 'CORS: Origin not allowed' });
-  // CSRF token validation failures — return a clear 403 so the frontend can
-  // re-fetch the token and retry, instead of showing a generic 500.
-  if (err.message === 'invalid csrf token' || err.code === 'EBADCSRFTOKEN') {
-    return res.status(403).json({ success: false, error: 'CSRF token missing or invalid. Please refresh the page and try again.' });
-  }
-  res.status(500).json({ success: false, error: 'Internal server error' });
+  try {
+    await db.log('server_error', {
+      path: req.path,
+      method: req.method,
+      error: err.message,
+      ip: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown'
+    });
+  } catch (_) { /* audit logging is best effort -- never swallow the original error */ }
+  next(err);
 });
+
+// Standardized error response middleware -- must be LAST (after all routes)
+app.use(errorHandler);
 
 // Bootstrap
 db._ready.then(async () => {
