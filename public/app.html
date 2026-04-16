@@ -2333,7 +2333,7 @@ window.Dashboard = {
       indicator.style.display = 'flex';
       indicator.className = 'vf-live-verify loading';
       var textEl = indicator.querySelector('.vf-live-text');
-      if (textEl) textEl.textContent = 'Verifying...';
+      if (textEl) textEl.textContent = window.vfGetTranslation?.('app.verification.verifying') || 'Verifying...';
       var tsEl = document.getElementById('liveVerifyTs');
       if (tsEl) tsEl.textContent = '';
     }
@@ -2364,7 +2364,7 @@ window.Dashboard = {
 
     // Show loading state
     if (indicator) indicator.className = 'vf-live-verify loading';
-    if (textEl) textEl.textContent = 'Verifying...';
+    if (textEl) textEl.textContent = window.vfGetTranslation?.('app.verification.verifying') || 'Verifying...';
 
     fetch('/api/token/refresh', {
       method: 'POST',
@@ -2377,7 +2377,7 @@ window.Dashboard = {
       if (!indicator) return;
       if (data.success) {
         indicator.className = 'vf-live-verify active';
-        if (textEl) textEl.textContent = 'Live verified';
+        if (textEl) textEl.textContent = window.vfGetTranslation?.('app.verification.liveVerified') || 'Live verified';
         if (tsEl) {
           var now = new Date();
           var hh = String(now.getHours()).padStart(2, '0');
@@ -2387,14 +2387,14 @@ window.Dashboard = {
         }
       } else {
         indicator.className = 'vf-live-verify expired';
-        if (textEl) textEl.textContent = 'Verification expired';
+        if (textEl) textEl.textContent = window.vfGetTranslation?.('app.verification.expired') || 'Verification expired';
         if (tsEl) tsEl.textContent = '';
       }
     })
     .catch(function() {
       if (!indicator) return;
       indicator.className = 'vf-live-verify expired';
-      if (textEl) textEl.textContent = 'Verification expired';
+      if (textEl) textEl.textContent = window.vfGetTranslation?.('app.verification.expired') || 'Verification expired';
       if (tsEl) tsEl.textContent = '';
     });
   },

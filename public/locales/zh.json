@@ -1101,7 +1101,12 @@
     "passwordPlaceholder": "密码",
     "signInBtn": "登录",
     "signInLink": "登录",
-    "untitled": "未命名"
+    "untitled": "未命名",
+    "verification": {
+      "verifying": "验证中...",
+      "liveVerified": "实时验证",
+      "expired": "验证已过期"
+    }
   },
   "pricing": {
     "badge": "灵活方案",

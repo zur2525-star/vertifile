@@ -1101,7 +1101,12 @@
     "passwordPlaceholder": "Passwort",
     "signInBtn": "Anmelden",
     "signInLink": "Anmelden",
-    "untitled": "Ohne Titel"
+    "untitled": "Ohne Titel",
+    "verification": {
+      "verifying": "Überprüfe...",
+      "liveVerified": "Live verifiziert",
+      "expired": "Überprüfung abgelaufen"
+    }
   },
   "pricing": {
     "badge": "Flexible Plaene",

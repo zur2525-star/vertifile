@@ -1112,7 +1112,12 @@
     "passwordPlaceholder": "סיסמא",
     "signInBtn": "כניסה",
     "signInLink": "התחברות",
-    "untitled": "ללא שם"
+    "untitled": "ללא שם",
+    "verification": {
+      "verifying": "מאמת...",
+      "liveVerified": "מאומת חי",
+      "expired": "האימות פג"
+    }
   },
   "pricing": {
     "badge": "תוכניות גמישות",

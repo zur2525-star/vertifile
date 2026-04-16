@@ -1101,7 +1101,12 @@
     "passwordPlaceholder": "Senha",
     "signInBtn": "Entrar",
     "signInLink": "Entrar",
-    "untitled": "Sem título"
+    "untitled": "Sem título",
+    "verification": {
+      "verifying": "Verificando...",
+      "liveVerified": "Verificado ao vivo",
+      "expired": "Verificação expirada"
+    }
   },
   "pricing": {
     "badge": "Planos flexiveis",

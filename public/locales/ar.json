@@ -1101,7 +1101,12 @@
     "passwordPlaceholder": "كلمة المرور",
     "signInBtn": "تسجيل الدخول",
     "signInLink": "تسجيل الدخول",
-    "untitled": "بدون عنوان"
+    "untitled": "بدون عنوان",
+    "verification": {
+      "verifying": "جاري التحقق...",
+      "liveVerified": "تحقق مباشر",
+      "expired": "انتهت صلاحية التحقق"
+    }
   },
   "pricing": {
     "badge": "خطط مرنة",

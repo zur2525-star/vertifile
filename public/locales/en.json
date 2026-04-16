@@ -1272,7 +1272,12 @@
     "passwordPlaceholder": "Password",
     "signInBtn": "Sign In",
     "signInLink": "Sign in",
-    "untitled": "Untitled"
+    "untitled": "Untitled",
+    "verification": {
+      "verifying": "Verifying...",
+      "liveVerified": "Live verified",
+      "expired": "Verification expired"
+    }
   },
   "pricing": {
     "badge": "Flexible Plans",

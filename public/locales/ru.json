@@ -1101,7 +1101,12 @@
     "passwordPlaceholder": "Пароль",
     "signInBtn": "Войти",
     "signInLink": "Войти",
-    "untitled": "Без названия"
+    "untitled": "Без названия",
+    "verification": {
+      "verifying": "Проверка...",
+      "liveVerified": "Подтверждено",
+      "expired": "Проверка истекла"
+    }
   },
   "pricing": {
     "badge": "Гибкие тарифы",
