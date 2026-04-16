@@ -884,7 +884,9 @@
     "customLogo": "Logo personalizado",
     "logoHint": "Sube un logo SVG o PNG (máx. 50KB) para tu sello de verificación.",
     "colorHint": "Elige un color para el acento de tu sello de verificación.",
-    "resetDefault": "Restablecer valores predeterminados"
+    "resetDefault": "Restablecer valores predeterminados",
+    "business": "Business",
+    "pro": "Pro"
   },
   "dashboard": {
     "title": "Panel de administración",
@@ -1001,7 +1003,8 @@
     "degraded": "Degradado",
     "slidePanel": "Detalles",
     "darkMode": "Modo oscuro",
-    "lightMode": "Modo claro"
+    "lightMode": "Modo claro",
+    "planBusiness": "Business (1.000 docs/mes, $79/mes)"
   },
   "app": {
     "signInTitle": "Inicia sesión en Vertifile",
@@ -1150,7 +1153,15 @@
     "bottomCtaSubtitle": "Comienza a proteger tus documentos con Vertifile hoy.",
     "proOverage": "Excedente: $0.15 por documento adicional",
     "bizOverage": "Excedente: $0.10 por documento adicional",
-    "overageExplanation": "Excediste tu limite? No hay problema -- los documentos adicionales se cobran a la tarifa de excedente. Tu flujo de trabajo nunca se detiene."
+    "overageExplanation": "Excediste tu limite? No hay problema -- los documentos adicionales se cobran a la tarifa de excedente. Tu flujo de trabajo nunca se detiene.",
+    "bottomCtaBtn": "Comenzar",
+    "entF6": "Infraestructura dedicada",
+    "entF7": "Sin cargos por excedente",
+    "faq6a": "Tu flujo de trabajo nunca se detiene. Los documentos adicionales que superen el límite de tu plan se facturan automáticamente a la tarifa de excedente. Pro: $0,15/doc. Business: $0,10/doc. Enterprise: ilimitado, sin excedente.",
+    "faq6q": "¿Qué pasa si supero mi límite de documentos?",
+    "perSeat": "puesto/mes",
+    "proTrialNote": "Prueba de 14 días -- Sin tarjeta de crédito requerida",
+    "seatMin": "Mínimo 5 puestos"
   },
   "faq": {
     "heroTitle": "Preguntas frecuentes",
@@ -1608,7 +1619,11 @@
       "demo": "Ver la demostracion",
       "protectFirst": "Protejan su primer documento",
       "moveBeyond": "Listos para ir mas alla de las firmas PDF?",
-      "see7layers": "Vean las 7 capas trabajando juntas. Suban cualquier documento y experimenten la verificacion a prueba de manipulaciones en accion."
+      "see7layers": "Vean las 7 capas trabajando juntas. Suban cualquier documento y experimenten la verificacion a prueba de manipulaciones en accion.",
+      "seeItYourself": "Protege tu primer documento con Vertifile y comprueba la diferencia tú mismo. Intenta alterarlo.",
+      "tryBtn": "Probar la demo en vivo",
+      "tryDesc": "Sube cualquier documento y observa cómo Vertifile lo protege en tiempo real.",
+      "tryTitle": "Vélo en acción"
     },
     "backToBlog": "Volver al blog"
   },
@@ -1953,7 +1968,8 @@
     "extraDocs": "Documentos adicionales",
     "each": "cada uno",
     "perAdditionalDoc": "por documento adicional",
-    "noOverage": "Sin cargos de excedente"
+    "noOverage": "Sin cargos de excedente",
+    "business": "Business"
   },
   "preview": {
     "pvfDocument": "DOCUMENTO PVF",
@@ -2031,7 +2047,8 @@
   "api": {
     "rate": {
       "pro": "100/día",
-      "enterprise": "10K/día"
+      "enterprise": "10K/día",
+      "business": "1K/día"
     }
   },
   "trust": {
@@ -2206,5 +2223,95 @@
     "ctaSubtitle": "Join financial institutions that trust Vertifile for regulatory-grade document verification.",
     "ctaButton": "Programar demo",
     "footerDesc": "Regulatory-grade financial document verification with immutable blockchain audit trail, SOX compliance, and instant counterparty verification."
+  },
+  "onboarding": {
+    "back": "Atrás",
+    "continue": "Continuar",
+    "step0": {
+      "title": "Verifiquemos tu correo electrónico",
+      "subtitle": "Ingresa el código de 6 dígitos que enviamos a",
+      "resend": "Reenviar código",
+      "changeEmail": "¿Correo incorrecto?",
+      "spam": "¿No recibiste el código? Revisa tu carpeta de spam."
+    },
+    "step1": {
+      "title": "Cuéntanos sobre ti",
+      "subtitle": "Esto nos ayuda a personalizar tu experiencia"
+    },
+    "step2": {
+      "label": "Ahora elige tu sector:"
+    },
+    "step3": {
+      "title": "¿Qué documentos necesitas proteger?",
+      "subtitle": "Selecciona todos los que apliquen — puedes cambiarlo después"
+    },
+    "step4": {
+      "title": "¿Cuántos documentos por mes?",
+      "subtitle": "Esto nos ayuda a recomendarte el plan adecuado"
+    },
+    "step5": {
+      "title": "Elige tu plan",
+      "subtitle": "No se requiere pago ahora. Comienza tu prueba de 14 días después de la configuración.",
+      "noPayment": "No se requiere pago ahora. Tu prueba de 14 días comienza después de la configuración.",
+      "reassure": "Puedes cambiar tu plan en cualquier momento desde tu panel de control.",
+      "enterpriseNote": "Nuestro equipo se pondrá en contacto en 24 horas para configurar tu plan personalizado."
+    },
+    "step6": {
+      "title": "Personalízalo",
+      "subtitle": "Personaliza tu sello Vertifile — así lucirán tus documentos protegidos",
+      "accentColor": "Color de acento",
+      "contrastWarn": "Contraste bajo — el sello puede ser difícil de ver en documentos claros",
+      "waveColor": "Color de onda",
+      "logo": "Logotipo",
+      "optional": "Opcional",
+      "dropText": "Suelta tu logo aquí o haz clic para explorar",
+      "removeLogo": "Eliminar",
+      "stampSize": "Tamaño del sello",
+      "cta": "Continuar"
+    },
+    "step7": {
+      "title": "¡Todo listo!",
+      "subtitle": "Tu cuenta de Vertifile está lista. Comienza a proteger tu primer documento.",
+      "cta": "Comenzar a proteger documentos",
+      "changePlan": "Cambiar plan",
+      "seePlans": "Ver todos los planes"
+    },
+    "types": {
+      "individual": {
+        "title": "Individual",
+        "desc": "Profesional independiente, freelancer, uso personal"
+      },
+      "business": {
+        "title": "Empresa",
+        "desc": "Empresa pequeña o mediana con un equipo"
+      },
+      "organization": {
+        "title": "Organización",
+        "desc": "Universidad, hospital, gobierno, empresa grande"
+      }
+    },
+    "fields": {
+      "legal": {
+        "desc": "Despachos jurídicos, tribunales, notaría"
+      },
+      "healthcare": {
+        "desc": "Hospitales, clínicas, seguros"
+      },
+      "education": {
+        "desc": "Universidades, escuelas, formación"
+      },
+      "finance": {
+        "desc": "Bancos, contabilidad, seguros"
+      },
+      "hr": {
+        "desc": "Recursos humanos, reclutamiento"
+      },
+      "government": {
+        "desc": "Municipal, federal, regulatorio"
+      },
+      "other": {
+        "desc": "Inmobiliaria, logística, minorista, etc."
+      }
+    }
   }
 }

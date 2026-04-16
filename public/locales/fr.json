@@ -884,7 +884,9 @@
     "customLogo": "Logo personnalisé",
     "logoHint": "Téléversez un logo SVG ou PNG (max 50 Ko) pour votre cachet de vérification.",
     "colorHint": "Choisissez une couleur pour l'accent de votre cachet de vérification.",
-    "resetDefault": "Réinitialiser par défaut"
+    "resetDefault": "Réinitialiser par défaut",
+    "business": "Business",
+    "pro": "Pro"
   },
   "dashboard": {
     "title": "Tableau de bord administrateur",
@@ -1001,7 +1003,8 @@
     "degraded": "Dégradé",
     "slidePanel": "Détails",
     "darkMode": "Mode sombre",
-    "lightMode": "Mode clair"
+    "lightMode": "Mode clair",
+    "planBusiness": "Business (1 000 docs/mois, 79$/mois)"
   },
   "app": {
     "signInTitle": "Se connecter à Vertifile",
@@ -1150,7 +1153,15 @@
     "bottomCtaSubtitle": "Commencez a proteger vos documents avec Vertifile des aujourd'hui.",
     "proOverage": "Depassement: 0,15$ par document supplementaire",
     "bizOverage": "Depassement: 0,10$ par document supplementaire",
-    "overageExplanation": "Vous avez depasse votre limite? Pas de probleme -- les documents supplementaires sont factures au tarif de depassement. Votre flux de travail ne s'arrete jamais."
+    "overageExplanation": "Vous avez depasse votre limite? Pas de probleme -- les documents supplementaires sont factures au tarif de depassement. Votre flux de travail ne s'arrete jamais.",
+    "bottomCtaBtn": "Commencer",
+    "entF6": "Infrastructure dédiée",
+    "entF7": "Aucuns frais de dépassement",
+    "faq6a": "Votre flux de travail ne s'arrête jamais. Les documents supplémentaires au-delà de la limite de votre plan sont automatiquement facturés au tarif de dépassement. Pro : 0,15$/doc. Business : 0,10$/doc. Enterprise : illimité, sans dépassement.",
+    "faq6q": "Que se passe-t-il si je dépasse ma limite de documents ?",
+    "perSeat": "siège/mois",
+    "proTrialNote": "Essai de 14 jours -- Aucune carte bancaire requise",
+    "seatMin": "Minimum 5 sièges"
   },
   "faq": {
     "heroTitle": "Questions fréquentes",
@@ -1608,7 +1619,11 @@
       "demo": "Voir la demonstration",
       "protectFirst": "Protegez votre premier document",
       "moveBeyond": "Prets a aller au-dela des signatures PDF ?",
-      "see7layers": "Decouvrez les 7 couches en action. Telechargez n'importe quel document et experimentez la verification inviolable en direct."
+      "see7layers": "Decouvrez les 7 couches en action. Telechargez n'importe quel document et experimentez la verification inviolable en direct.",
+      "seeItYourself": "Protégez votre premier document avec Vertifile et constatez la différence par vous-même. Essayez de le falsifier.",
+      "tryBtn": "Essayer la démo en direct",
+      "tryDesc": "Téléchargez n'importe quel document et regardez Vertifile le protéger en temps réel.",
+      "tryTitle": "Voyez-le en action"
     },
     "backToBlog": "Retour au blog"
   },
@@ -1953,7 +1968,8 @@
     "extraDocs": "Documents supplementaires",
     "each": "chacun",
     "perAdditionalDoc": "par document supplementaire",
-    "noOverage": "Pas de frais de depassement"
+    "noOverage": "Pas de frais de depassement",
+    "business": "Business"
   },
   "preview": {
     "pvfDocument": "DOCUMENT PVF",
@@ -2031,7 +2047,8 @@
   "api": {
     "rate": {
       "pro": "100/jour",
-      "enterprise": "10K/jour"
+      "enterprise": "10K/jour",
+      "business": "1K/jour"
     }
   },
   "trust": {
@@ -2206,5 +2223,95 @@
     "ctaButton": "Planifier une demo",
     "howLabel": "Processus",
     "useCasesLabel": "Cas d'utilisation"
+  },
+  "onboarding": {
+    "back": "Retour",
+    "continue": "Continuer",
+    "step0": {
+      "title": "Vérifions votre adresse e-mail",
+      "subtitle": "Entrez le code à 6 chiffres que nous avons envoyé à",
+      "resend": "Renvoyer le code",
+      "changeEmail": "Mauvaise adresse ?",
+      "spam": "Vous n'avez pas reçu le code ? Vérifiez votre dossier spam."
+    },
+    "step1": {
+      "title": "Parlez-nous de vous",
+      "subtitle": "Cela nous aide à personnaliser votre expérience"
+    },
+    "step2": {
+      "label": "Choisissez maintenant votre secteur :"
+    },
+    "step3": {
+      "title": "Quels documents devez-vous protéger ?",
+      "subtitle": "Sélectionnez tout ce qui s'applique — vous pourrez modifier cela plus tard"
+    },
+    "step4": {
+      "title": "Combien de documents par mois ?",
+      "subtitle": "Cela nous aide à recommander le bon plan"
+    },
+    "step5": {
+      "title": "Choisissez votre plan",
+      "subtitle": "Aucun paiement requis maintenant. Commencez votre essai de 14 jours après la configuration.",
+      "noPayment": "Aucun paiement requis maintenant. Votre essai de 14 jours commence après la configuration.",
+      "reassure": "Vous pouvez changer de plan à tout moment depuis votre tableau de bord.",
+      "enterpriseNote": "Notre équipe vous contactera dans les 24 heures pour mettre en place votre plan personnalisé."
+    },
+    "step6": {
+      "title": "Personnalisez-le",
+      "subtitle": "Personnalisez votre cachet Vertifile — c'est ainsi que vos documents protégés apparaîtront",
+      "accentColor": "Couleur d'accent",
+      "contrastWarn": "Contraste faible — le cachet peut être difficile à voir sur les documents clairs",
+      "waveColor": "Couleur des vagues",
+      "logo": "Logo",
+      "optional": "Facultatif",
+      "dropText": "Déposez votre logo ici ou cliquez pour parcourir",
+      "removeLogo": "Supprimer",
+      "stampSize": "Taille du cachet",
+      "cta": "Continuer"
+    },
+    "step7": {
+      "title": "Tout est prêt !",
+      "subtitle": "Votre compte Vertifile est prêt. Commencez à protéger votre premier document.",
+      "cta": "Commencer à protéger les documents",
+      "changePlan": "Changer de plan",
+      "seePlans": "Voir tous les plans"
+    },
+    "types": {
+      "individual": {
+        "title": "Individuel",
+        "desc": "Praticien indépendant, freelance, usage personnel"
+      },
+      "business": {
+        "title": "Entreprise",
+        "desc": "Petite ou moyenne entreprise avec une équipe"
+      },
+      "organization": {
+        "title": "Organisation",
+        "desc": "Université, hôpital, gouvernement, grande entreprise"
+      }
+    },
+    "fields": {
+      "legal": {
+        "desc": "Cabinets d'avocats, tribunaux, notaire"
+      },
+      "healthcare": {
+        "desc": "Hôpitaux, cliniques, assurances"
+      },
+      "education": {
+        "desc": "Universités, écoles, formation"
+      },
+      "finance": {
+        "desc": "Banques, comptabilité, assurances"
+      },
+      "hr": {
+        "desc": "Ressources humaines, recrutement"
+      },
+      "government": {
+        "desc": "Municipal, fédéral, réglementaire"
+      },
+      "other": {
+        "desc": "Immobilier, logistique, commerce de détail, etc."
+      }
+    }
   }
 }

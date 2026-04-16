@@ -884,7 +884,9 @@
     "customLogo": "カスタムロゴ",
     "logoHint": "検証スタンプ用の SVG または PNG ロゴ（最大 50KB）をアップロード。",
     "colorHint": "検証スタンプのアクセントカラーを選択。",
-    "resetDefault": "デフォルトにリセット"
+    "resetDefault": "デフォルトにリセット",
+    "business": "ビジネス",
+    "pro": "プロ"
   },
   "dashboard": {
     "title": "管理ダッシュボード",
@@ -1001,7 +1003,8 @@
     "degraded": "低下",
     "slidePanel": "詳細",
     "darkMode": "ダークモード",
-    "lightMode": "ライトモード"
+    "lightMode": "ライトモード",
+    "planBusiness": "ビジネス（月1,000件、月額$79）"
   },
   "app": {
     "signInTitle": "Vertifile にサインイン",
@@ -1150,7 +1153,15 @@
     "bottomCtaSubtitle": "今すぐVertifileで文書の保護を始めましょう。",
     "proOverage": "超過料金: 追加文書1件あたり$0.15",
     "bizOverage": "超過料金: 追加文書1件あたり$0.10",
-    "overageExplanation": "制限を超えましたか？問題ありません。追加の文書は超過料金で請求されます。ワークフローは決して止まりません。"
+    "overageExplanation": "制限を超えましたか？問題ありません。追加の文書は超過料金で請求されます。ワークフローは決して止まりません。",
+    "bottomCtaBtn": "始める",
+    "entF6": "専用インフラ",
+    "entF7": "超過料金なし",
+    "faq6a": "業務フローが止まることはありません。プランの上限を超えた書類は自動的に超過料金で請求されます。プロ：$0.15/件。ビジネス：$0.10/件。エンタープライズ：無制限、超過料金なし。",
+    "faq6q": "書類の上限を超えた場合はどうなりますか？",
+    "perSeat": "シート/月",
+    "proTrialNote": "14日間無料トライアル -- クレジットカード不要",
+    "seatMin": "最低5シート"
   },
   "faq": {
     "heroTitle": "よくある質問",
@@ -1608,7 +1619,11 @@
       "demo": "デモを見る",
       "protectFirst": "最初のドキュメントを保護する",
       "moveBeyond": "PDF署名を超える準備はできていますか？",
-      "see7layers": "7つの保護層がすべて連携する様子をご覧ください。任意のドキュメントをアップロードして、改ざん防止検証を体験してください。"
+      "see7layers": "7つの保護層がすべて連携する様子をご覧ください。任意のドキュメントをアップロードして、改ざん防止検証を体験してください。",
+      "seeItYourself": "Vertifileで最初の書類を保護して、その違いを自分の目で確かめてください。改ざんを試みてみてください。",
+      "tryBtn": "ライブデモを試す",
+      "tryDesc": "任意の書類をアップロードして、Vertifileがリアルタイムで保護する様子をご覧ください。",
+      "tryTitle": "実際に見てみましょう"
     },
     "backToBlog": "ブログに戻る"
   },
@@ -1953,7 +1968,8 @@
     "extraDocs": "追加文書",
     "each": "各",
     "perAdditionalDoc": "追加文書1件あたり",
-    "noOverage": "超過料金なし"
+    "noOverage": "超過料金なし",
+    "business": "ビジネス"
   },
   "preview": {
     "pvfDocument": "PVF ドキュメント",
@@ -2031,7 +2047,8 @@
   "api": {
     "rate": {
       "pro": "100/日",
-      "enterprise": "10K/日"
+      "enterprise": "10K/日",
+      "business": "1K/日"
     }
   },
   "trust": {
@@ -2206,5 +2223,95 @@
     "ctaSubtitle": "Join financial institutions that trust Vertifile for regulatory-grade document verification.",
     "ctaButton": "デモを予約",
     "footerDesc": "Regulatory-grade financial document verification with immutable blockchain audit trail, SOX compliance, and instant counterparty verification."
+  },
+  "onboarding": {
+    "back": "戻る",
+    "continue": "続行",
+    "step0": {
+      "title": "メールアドレスを確認しましょう",
+      "subtitle": "送信した6桁のコードを入力してください：",
+      "resend": "コードを再送信",
+      "changeEmail": "メールが違いますか？",
+      "spam": "コードが届きませんか？迷惑メールフォルダを確認してください。"
+    },
+    "step1": {
+      "title": "あなたについて教えてください",
+      "subtitle": "この情報はエクスペリエンスをカスタマイズするために使用されます"
+    },
+    "step2": {
+      "label": "次に分野を選択してください："
+    },
+    "step3": {
+      "title": "どのような書類を保護する必要がありますか？",
+      "subtitle": "該当するものをすべて選択してください — 後で変更できます"
+    },
+    "step4": {
+      "title": "月あたりの書類数は？",
+      "subtitle": "最適なプランをご提案するために使用されます"
+    },
+    "step5": {
+      "title": "プランを選択してください",
+      "subtitle": "今すぐのお支払いは不要です。設定後に14日間の無料トライアルが始まります。",
+      "noPayment": "今すぐのお支払いは不要です。設定後に14日間の無料トライアルが始まります。",
+      "reassure": "ダッシュボードからいつでもプランを変更できます。",
+      "enterpriseNote": "カスタムプランの設定のため、24時間以内にチームからご連絡します。"
+    },
+    "step6": {
+      "title": "カスタマイズしましょう",
+      "subtitle": "Vertifileスタンプをカスタマイズしてください — 保護された書類はこのように表示されます",
+      "accentColor": "アクセントカラー",
+      "contrastWarn": "コントラストが低い — 明るい書類ではスタンプが見にくい場合があります",
+      "waveColor": "ウェーブカラー",
+      "logo": "ロゴ",
+      "optional": "任意",
+      "dropText": "ここにロゴをドロップするか、クリックして参照",
+      "removeLogo": "削除",
+      "stampSize": "スタンプサイズ",
+      "cta": "続行"
+    },
+    "step7": {
+      "title": "準備完了！",
+      "subtitle": "Vertifileアカウントの準備ができました。最初の書類の保護を始めましょう。",
+      "cta": "書類の保護を開始",
+      "changePlan": "プランを変更",
+      "seePlans": "すべてのプランを見る"
+    },
+    "types": {
+      "individual": {
+        "title": "個人",
+        "desc": "個人事業主、フリーランサー、個人利用"
+      },
+      "business": {
+        "title": "企業",
+        "desc": "チームを持つ中小企業"
+      },
+      "organization": {
+        "title": "組織",
+        "desc": "大学、病院、政府機関、大企業"
+      }
+    },
+    "fields": {
+      "legal": {
+        "desc": "法律事務所、裁判所、公証人"
+      },
+      "healthcare": {
+        "desc": "病院、クリニック、保険"
+      },
+      "education": {
+        "desc": "大学、学校、研修"
+      },
+      "finance": {
+        "desc": "銀行、会計、保険"
+      },
+      "hr": {
+        "desc": "人事、採用"
+      },
+      "government": {
+        "desc": "市区町村、連邦、規制機関"
+      },
+      "other": {
+        "desc": "不動産、物流、小売など"
+      }
+    }
   }
 }

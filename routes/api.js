@@ -5,7 +5,8 @@ const path = require('path');
 const rateLimit = require('express-rate-limit');
 const { signupLimiter, getClientIP } = require('../middleware/auth');
 const logger = require('../services/logger');
-const { sendEmail, sendContactConfirmationEmail } = require('../services/email');
+const { sendEmail, sendContactConfirmationEmail, sendWelcomeEmail } = require('../services/email');
+const { scheduleOnboardingEmails } = require('../services/onboarding-emails');
 const { validatePassword } = require('../services/password-validator');
 const { escapeHtml } = require('../templates/pvf');
 const { handleCreatePvf, verifySignature, generateToken, HMAC_SECRET } = require('../services/pvf-generator');
@@ -64,6 +65,22 @@ setInterval(() => {
 
 // ================================================================
 // API: SIGNUP
+// ================================================================
+//
+// Two-path architecture:
+//   POST /api/signup  (this handler) — developer-facing endpoint. Creates a
+//     user account AND an API key in one step. Returns the API key in the
+//     response body because developers need it immediately. Duplicate-email
+//     checks return 409 explicitly — developers expect to know if an email
+//     is already registered (not a public consumer-facing form).
+//
+//   POST /auth/register  (routes/auth.js) — consumer-facing signup used by
+//     the web UI. Never reveals whether an email exists (anti-enumeration).
+//     Creates a user account only; API keys are not issued here.
+//
+// Both paths send a welcome email and schedule onboarding emails after
+// successful account creation. Email failures are fire-and-forget and never
+// block or fail the signup response.
 // ================================================================
 router.post('/signup', signupLimiter, async (req, res) => {
   try {
@@ -132,6 +149,13 @@ router.post('/signup', signupLimiter, async (req, res) => {
     logger.info({ event: 'signup', orgName, plan: selectedPlan, email }, `New org: ${orgName}`);
 
     // --- Create user account so they can log in to /app ---
+    //
+    // Intentional behavior difference from /auth/register:
+    // This is a developer-facing endpoint (API console / programmatic access),
+    // so we return 409 explicitly when the email already exists. Developers
+    // need deterministic feedback to integrate correctly. The consumer-facing
+    // /auth/register route uses a silent fake-success response instead to
+    // prevent email enumeration by anonymous users.
     const existing = await db.getUserByEmail(email);
     if (existing) {
       return res.status(409).json({ success: false, error: 'An account with this email already exists. Please log in instead.' });
@@ -158,6 +182,12 @@ router.post('/signup', signupLimiter, async (req, res) => {
         logger.error({ err: regenErr }, 'Session regeneration failed on API signup');
         // Non-fatal — the API key was already created. Still return success
         // but without an active session; they can log in manually.
+        sendWelcomeEmail(user.email, user.name).catch(err =>
+          logger.warn({ err, userId: user.id }, 'Welcome email failed after signup (regen error path)')
+        );
+        scheduleOnboardingEmails(user.id, user.email, user.name).catch(err =>
+          logger.warn({ err, userId: user.id }, 'Schedule onboarding failed after signup (regen error path)')
+        );
         return res.json({
           success: true,
           apiKey,
@@ -173,7 +203,16 @@ router.post('/signup', signupLimiter, async (req, res) => {
       req.login(user, (loginErr) => {
         if (loginErr) {
           logger.warn({ err: loginErr }, 'Auto-login after signup failed');
-          // Still return success — they got their API key, they can log in manually
+
+          // Send welcome email and schedule onboarding even when auto-login fails.
+          // The account was created successfully — the user just needs to log in manually.
+          sendWelcomeEmail(user.email, user.name).catch(err =>
+            logger.warn({ err, userId: user.id }, 'Welcome email failed after signup (login error path)')
+          );
+          scheduleOnboardingEmails(user.id, user.email, user.name).catch(err =>
+            logger.warn({ err, userId: user.id }, 'Schedule onboarding failed after signup (login error path)')
+          );
+
           return res.json({
             success: true,
             apiKey,
@@ -186,6 +225,15 @@ router.post('/signup', signupLimiter, async (req, res) => {
         }
 
         req.session.createdAt = Date.now();
+
+        // Send welcome email and schedule onboarding emails (fire-and-forget).
+        // Failures are logged but never fail or delay the signup response.
+        sendWelcomeEmail(user.email, user.name).catch(err =>
+          logger.warn({ err, userId: user.id }, 'Welcome email failed after signup')
+        );
+        scheduleOnboardingEmails(user.id, user.email, user.name).catch(err =>
+          logger.warn({ err, userId: user.id }, 'Schedule onboarding failed after signup')
+        );
 
         res.json({
           success: true,

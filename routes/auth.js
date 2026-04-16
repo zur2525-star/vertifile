@@ -194,6 +194,20 @@ router.get('/google/callback',
 
 // ---------------------------------------------------------------------------
 // POST /auth/register — email + password signup
+//
+// Two-path architecture:
+//   POST /auth/register  (this handler) — consumer-facing signup used by the
+//     web UI. Uses anti-enumeration: silently returns a fake success when the
+//     email already exists, so attackers cannot probe whether an address is
+//     registered. Creates a user account only (no API key).
+//
+//   POST /api/signup  (routes/api.js) — developer-facing endpoint. Returns
+//     409 explicitly on duplicate email because developers need deterministic
+//     feedback. Creates a user account AND issues an API key in one step.
+//
+// Both paths send a welcome email and schedule onboarding emails after
+// successful account creation. Email failures are fire-and-forget and never
+// block or fail the signup response.
 // ---------------------------------------------------------------------------
 
 router.post('/register', signupLimiter, async (req, res) => {

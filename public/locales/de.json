@@ -884,7 +884,9 @@
     "customLogo": "Eigenes Logo",
     "logoHint": "Laden Sie ein SVG- oder PNG-Logo (max. 50 KB) für Ihren Verifizierungsstempel hoch.",
     "colorHint": "Wählen Sie eine Farbe für den Akzent Ihres Verifizierungsstempels.",
-    "resetDefault": "Auf Standard zurücksetzen"
+    "resetDefault": "Auf Standard zurücksetzen",
+    "business": "Business",
+    "pro": "Pro"
   },
   "dashboard": {
     "title": "Admin-Dashboard",
@@ -1001,7 +1003,8 @@
     "degraded": "Beeinträchtigt",
     "slidePanel": "Details",
     "darkMode": "Dunkelmodus",
-    "lightMode": "Hellmodus"
+    "lightMode": "Hellmodus",
+    "planBusiness": "Business (1.000 Dokumente/Monat, 79$/Mo.)"
   },
   "app": {
     "signInTitle": "Bei Vertifile anmelden",
@@ -1150,7 +1153,15 @@
     "bottomCtaSubtitle": "Beginnen Sie noch heute, Ihre Dokumente mit Vertifile zu schuetzen.",
     "proOverage": "Zusatzkosten: $0.15 pro zusaetzliches Dokument",
     "bizOverage": "Zusatzkosten: $0.10 pro zusaetzliches Dokument",
-    "overageExplanation": "Limit ueberschritten? Kein Problem -- zusaetzliche Dokumente werden zum Zusatztarif abgerechnet. Ihr Workflow stoppt nie."
+    "overageExplanation": "Limit ueberschritten? Kein Problem -- zusaetzliche Dokumente werden zum Zusatztarif abgerechnet. Ihr Workflow stoppt nie.",
+    "bottomCtaBtn": "Loslegen",
+    "entF6": "Dedizierte Infrastruktur",
+    "entF7": "Keine Überschreitungsgebühren",
+    "faq6a": "Ihr Arbeitsablauf läuft immer weiter. Zusätzliche Dokumente über Ihr Planlimit hinaus werden automatisch zum Überschreitungspreis berechnet. Pro: 0,15$/Dok. Business: 0,10$/Dok. Enterprise: unbegrenzt, keine Überschreitung.",
+    "faq6q": "Was passiert, wenn ich mein Dokumentlimit überschreite?",
+    "perSeat": "Platz/Monat",
+    "proTrialNote": "14-tägige Testphase -- Keine Kreditkarte erforderlich",
+    "seatMin": "Mindestens 5 Plätze"
   },
   "faq": {
     "heroTitle": "Haeufig gestellte Fragen",
@@ -1608,7 +1619,11 @@
       "demo": "Demo ansehen",
       "protectFirst": "Schutzen Sie Ihr erstes Dokument",
       "moveBeyond": "Bereit, uber PDF-Signaturen hinauszugehen?",
-      "see7layers": "Sehen Sie alle 7 Schutzschichten im Zusammenspiel. Laden Sie ein beliebiges Dokument hoch und erleben Sie manipulationssichere Verifizierung in Aktion."
+      "see7layers": "Sehen Sie alle 7 Schutzschichten im Zusammenspiel. Laden Sie ein beliebiges Dokument hoch und erleben Sie manipulationssichere Verifizierung in Aktion.",
+      "seeItYourself": "Schützen Sie Ihr erstes Dokument mit Vertifile und erleben Sie den Unterschied selbst. Versuchen Sie es zu manipulieren.",
+      "tryBtn": "Live-Demo ausprobieren",
+      "tryDesc": "Laden Sie ein beliebiges Dokument hoch und sehen Sie, wie Vertifile es in Echtzeit schützt.",
+      "tryTitle": "In Aktion sehen"
     },
     "backToBlog": "Zuruck zum Blog"
   },
@@ -1953,7 +1968,8 @@
     "extraDocs": "Zusaetzliche Dokumente",
     "each": "pro Stueck",
     "perAdditionalDoc": "pro zusaetzliches Dokument",
-    "noOverage": "Keine Zusatzkosten"
+    "noOverage": "Keine Zusatzkosten",
+    "business": "Business"
   },
   "preview": {
     "pvfDocument": "PVF-DOKUMENT",
@@ -2031,7 +2047,8 @@
   "api": {
     "rate": {
       "pro": "100/Tag",
-      "enterprise": "10K/Tag"
+      "enterprise": "10K/Tag",
+      "business": "1K/Tag"
     }
   },
   "trust": {
@@ -2206,5 +2223,95 @@
     "ctaSubtitle": "Join financial institutions that trust Vertifile for regulatory-grade document verification.",
     "ctaButton": "Demo vereinbaren",
     "footerDesc": "Regulatory-grade financial document verification with immutable blockchain audit trail, SOX compliance, and instant counterparty verification."
+  },
+  "onboarding": {
+    "back": "Zurück",
+    "continue": "Weiter",
+    "step0": {
+      "title": "E-Mail-Adresse bestätigen",
+      "subtitle": "Geben Sie den 6-stelligen Code ein, den wir gesendet haben an",
+      "resend": "Code erneut senden",
+      "changeEmail": "Falsche E-Mail?",
+      "spam": "Code nicht erhalten? Überprüfen Sie Ihren Spam-Ordner."
+    },
+    "step1": {
+      "title": "Erzählen Sie uns von sich",
+      "subtitle": "Dies hilft uns, Ihre Erfahrung anzupassen"
+    },
+    "step2": {
+      "label": "Wählen Sie jetzt Ihr Fachgebiet:"
+    },
+    "step3": {
+      "title": "Welche Dokumente möchten Sie schützen?",
+      "subtitle": "Wählen Sie alle zutreffenden — Sie können dies später ändern"
+    },
+    "step4": {
+      "title": "Wie viele Dokumente pro Monat?",
+      "subtitle": "Dies hilft uns, den richtigen Plan zu empfehlen"
+    },
+    "step5": {
+      "title": "Wählen Sie Ihren Plan",
+      "subtitle": "Jetzt keine Zahlung erforderlich. Starten Sie Ihre 14-tägige Testphase nach der Einrichtung.",
+      "noPayment": "Jetzt keine Zahlung erforderlich. Ihre 14-tägige Testphase beginnt nach der Einrichtung.",
+      "reassure": "Sie können Ihren Plan jederzeit über Ihr Dashboard ändern.",
+      "enterpriseNote": "Unser Team meldet sich innerhalb von 24 Stunden, um Ihren individuellen Plan einzurichten."
+    },
+    "step6": {
+      "title": "Machen Sie es zu Ihrem",
+      "subtitle": "Passen Sie Ihren Vertifile-Stempel an — so werden Ihre geschützten Dokumente aussehen",
+      "accentColor": "Akzentfarbe",
+      "contrastWarn": "Geringer Kontrast — der Stempel ist auf hellen Dokumenten möglicherweise schwer zu sehen",
+      "waveColor": "Wellenfarbe",
+      "logo": "Logo",
+      "optional": "Optional",
+      "dropText": "Logo hier ablegen oder klicken zum Durchsuchen",
+      "removeLogo": "Entfernen",
+      "stampSize": "Stempelgröße",
+      "cta": "Weiter"
+    },
+    "step7": {
+      "title": "Alles bereit!",
+      "subtitle": "Ihr Vertifile-Konto ist eingerichtet. Schützen Sie jetzt Ihr erstes Dokument.",
+      "cta": "Dokumente schützen",
+      "changePlan": "Plan ändern",
+      "seePlans": "Alle Pläne ansehen"
+    },
+    "types": {
+      "individual": {
+        "title": "Einzelperson",
+        "desc": "Einzelpraktiker, Freiberufler, private Nutzung"
+      },
+      "business": {
+        "title": "Unternehmen",
+        "desc": "Kleines oder mittleres Unternehmen mit einem Team"
+      },
+      "organization": {
+        "title": "Organisation",
+        "desc": "Universität, Krankenhaus, Behörde, Großunternehmen"
+      }
+    },
+    "fields": {
+      "legal": {
+        "desc": "Anwaltskanzleien, Gerichte, Notar"
+      },
+      "healthcare": {
+        "desc": "Krankenhäuser, Kliniken, Versicherungen"
+      },
+      "education": {
+        "desc": "Universitäten, Schulen, Weiterbildung"
+      },
+      "finance": {
+        "desc": "Banken, Buchhaltung, Versicherungen"
+      },
+      "hr": {
+        "desc": "Personalwesen, Recruiting"
+      },
+      "government": {
+        "desc": "Kommunal, Bundes, Regulierungsbehörden"
+      },
+      "other": {
+        "desc": "Immobilien, Logistik, Einzelhandel, usw."
+      }
+    }
   }
 }

@@ -1894,5 +1894,95 @@
       "business": "1K/day",
       "enterprise": "10K/day"
     }
+  },
+  "onboarding": {
+    "back": "Back",
+    "continue": "Continue",
+    "step0": {
+      "title": "Let's verify your email",
+      "subtitle": "Enter the 6-digit code we sent to",
+      "resend": "Resend code",
+      "changeEmail": "Wrong email?",
+      "spam": "Didn't receive the code? Check your spam folder."
+    },
+    "step1": {
+      "title": "Tell us about yourself",
+      "subtitle": "This helps us customize your experience"
+    },
+    "step2": {
+      "label": "Now choose your field:"
+    },
+    "step3": {
+      "title": "What documents do you need to protect?",
+      "subtitle": "Select all that apply — you can change this later"
+    },
+    "step4": {
+      "title": "How many documents per month?",
+      "subtitle": "This helps us recommend the right plan"
+    },
+    "step5": {
+      "title": "Choose your plan",
+      "subtitle": "No payment needed now. Start your 14-day trial after setup.",
+      "noPayment": "No payment needed now. You'll start your 14-day trial after setup.",
+      "reassure": "You can change your plan anytime from your dashboard.",
+      "enterpriseNote": "Our team will reach out within 24 hours to set up your custom plan."
+    },
+    "step6": {
+      "title": "Make it yours",
+      "subtitle": "Customize your Vertifile stamp — this is how your protected documents will look",
+      "accentColor": "Accent Color",
+      "contrastWarn": "Low contrast — stamp may be hard to see on light documents",
+      "waveColor": "Wave Color",
+      "logo": "Logo",
+      "optional": "Optional",
+      "dropText": "Drop your logo here or click to browse",
+      "removeLogo": "Remove",
+      "stampSize": "Stamp Size",
+      "cta": "Continue"
+    },
+    "step7": {
+      "title": "You're all set!",
+      "subtitle": "Your Vertifile account is ready. Start protecting your first document.",
+      "cta": "Start Protecting Documents",
+      "changePlan": "Change plan",
+      "seePlans": "See all plans"
+    },
+    "types": {
+      "individual": {
+        "title": "Individual",
+        "desc": "Solo practitioner, freelancer, personal use"
+      },
+      "business": {
+        "title": "Business",
+        "desc": "Small or medium company with a team"
+      },
+      "organization": {
+        "title": "Organization",
+        "desc": "University, hospital, government, enterprise"
+      }
+    },
+    "fields": {
+      "legal": {
+        "desc": "Law firms, courts, notary"
+      },
+      "healthcare": {
+        "desc": "Hospitals, clinics, insurance"
+      },
+      "education": {
+        "desc": "Universities, schools, training"
+      },
+      "finance": {
+        "desc": "Banks, accounting, insurance"
+      },
+      "hr": {
+        "desc": "Human resources, recruitment"
+      },
+      "government": {
+        "desc": "Municipal, federal, regulatory"
+      },
+      "other": {
+        "desc": "Real estate, logistics, retail, etc."
+      }
+    }
   }
 }

@@ -884,7 +884,9 @@
     "customLogo": "自定义 Logo",
     "logoHint": "上传 SVG 或 PNG Logo（最大 50KB）用于您的验证印章。",
     "colorHint": "为您的验证印章选择强调色。",
-    "resetDefault": "重置为默认"
+    "resetDefault": "重置为默认",
+    "business": "企业",
+    "pro": "专业版"
   },
   "dashboard": {
     "title": "管理仪表板",
@@ -1001,7 +1003,8 @@
     "degraded": "降级",
     "slidePanel": "详情",
     "darkMode": "深色模式",
-    "lightMode": "浅色模式"
+    "lightMode": "浅色模式",
+    "planBusiness": "企业版（每月1,000份，$79/月）"
   },
   "app": {
     "signInTitle": "登录 Vertifile",
@@ -1150,7 +1153,15 @@
     "bottomCtaSubtitle": "立即使用Vertifile保护您的文档。",
     "proOverage": "超额费用: 每份额外文件$0.15",
     "bizOverage": "超额费用: 每份额外文件$0.10",
-    "overageExplanation": "超出限额？没问题——额外文件按超额费率计费。您的工作流程永不中断。"
+    "overageExplanation": "超出限额？没问题——额外文件按超额费率计费。您的工作流程永不中断。",
+    "bottomCtaBtn": "立即开始",
+    "entF6": "专用基础设施",
+    "entF7": "无超额费用",
+    "faq6a": "您的工作流程永不中断。超出方案限额的额外文件将自动按超额费率计费。专业版：$0.15/份。企业版：$0.10/份。高级企业版：无限制，无超额。",
+    "faq6q": "如果超出文件数量限制会怎样？",
+    "perSeat": "席位/月",
+    "proTrialNote": "14天免费试用 -- 无需信用卡",
+    "seatMin": "最少5个席位"
   },
   "faq": {
     "heroTitle": "常见问题",
@@ -1608,7 +1619,11 @@
       "demo": "观看演示",
       "protectFirst": "保护您的第一份文档",
       "moveBeyond": "准备好超越PDF签名了吗？",
-      "see7layers": "观看所有7层协同工作。上传任何文档，体验防篡改验证的实际效果。"
+      "see7layers": "观看所有7层协同工作。上传任何文档，体验防篡改验证的实际效果。",
+      "seeItYourself": "使用Vertifile保护您的第一份文件，亲身感受其中的差异。尝试对其进行篡改。",
+      "tryBtn": "试用实时演示",
+      "tryDesc": "上传任何文件，实时观看Vertifile对其进行保护。",
+      "tryTitle": "亲眼看看效果"
     },
     "backToBlog": "返回博客"
   },
@@ -1953,7 +1968,8 @@
     "extraDocs": "额外文件",
     "each": "每份",
     "perAdditionalDoc": "每份额外文件",
-    "noOverage": "无超额费用"
+    "noOverage": "无超额费用",
+    "business": "企业"
   },
   "preview": {
     "pvfDocument": "PVF 文档",
@@ -2031,7 +2047,8 @@
   "api": {
     "rate": {
       "pro": "100/天",
-      "enterprise": "10K/天"
+      "enterprise": "10K/天",
+      "business": "1K/天"
     }
   },
   "trust": {
@@ -2206,5 +2223,95 @@
     "ctaSubtitle": "Join financial institutions that trust Vertifile for regulatory-grade document verification.",
     "ctaButton": "预约演示",
     "footerDesc": "Regulatory-grade financial document verification with immutable blockchain audit trail, SOX compliance, and instant counterparty verification."
+  },
+  "onboarding": {
+    "back": "返回",
+    "continue": "继续",
+    "step0": {
+      "title": "验证您的电子邮件",
+      "subtitle": "请输入我们发送到以下地址的6位验证码：",
+      "resend": "重新发送验证码",
+      "changeEmail": "邮箱填错了？",
+      "spam": "没有收到验证码？请检查垃圾邮件文件夹。"
+    },
+    "step1": {
+      "title": "告诉我们您的情况",
+      "subtitle": "这有助于我们为您定制专属体验"
+    },
+    "step2": {
+      "label": "现在选择您的行业："
+    },
+    "step3": {
+      "title": "您需要保护哪些文件？",
+      "subtitle": "选择所有适用选项 — 您可以稍后更改"
+    },
+    "step4": {
+      "title": "每月需要处理多少份文件？",
+      "subtitle": "这有助于我们为您推荐合适的方案"
+    },
+    "step5": {
+      "title": "选择您的方案",
+      "subtitle": "无需立即付款。设置完成后开始14天免费试用。",
+      "noPayment": "无需立即付款。设置完成后，您的14天免费试用将开始。",
+      "reassure": "您可以随时在仪表板中更改方案。",
+      "enterpriseNote": "我们的团队将在24小时内与您联系，为您设置专属方案。"
+    },
+    "step6": {
+      "title": "个性化定制",
+      "subtitle": "自定义您的Vertifile印章 — 这是您的受保护文件的外观",
+      "accentColor": "强调色",
+      "contrastWarn": "对比度低 — 印章在浅色文件上可能难以辨认",
+      "waveColor": "波浪颜色",
+      "logo": "标志",
+      "optional": "可选",
+      "dropText": "将标志拖放到此处或点击浏览",
+      "removeLogo": "删除",
+      "stampSize": "印章大小",
+      "cta": "继续"
+    },
+    "step7": {
+      "title": "一切就绪！",
+      "subtitle": "您的Vertifile账户已准备就绪。开始保护您的第一份文件。",
+      "cta": "开始保护文件",
+      "changePlan": "更改方案",
+      "seePlans": "查看所有方案"
+    },
+    "types": {
+      "individual": {
+        "title": "个人",
+        "desc": "独立执业者、自由职业者、个人使用"
+      },
+      "business": {
+        "title": "企业",
+        "desc": "拥有团队的中小型企业"
+      },
+      "organization": {
+        "title": "组织",
+        "desc": "大学、医院、政府机关、大型企业"
+      }
+    },
+    "fields": {
+      "legal": {
+        "desc": "律师事务所、法院、公证"
+      },
+      "healthcare": {
+        "desc": "医院、诊所、保险"
+      },
+      "education": {
+        "desc": "大学、学校、培训"
+      },
+      "finance": {
+        "desc": "银行、会计、保险"
+      },
+      "hr": {
+        "desc": "人力资源、招聘"
+      },
+      "government": {
+        "desc": "市政、联邦、监管机构"
+      },
+      "other": {
+        "desc": "房地产、物流、零售等"
+      }
+    }
   }
 }
