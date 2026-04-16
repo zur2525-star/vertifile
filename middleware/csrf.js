@@ -27,7 +27,9 @@ const CSRF_EXCLUDED_PREFIXES = [
   '/api/signup',
   '/api/token/refresh',
   // Admin endpoints authenticate via X-Admin-Secret header, not sessions.
-  '/api/admin/'
+  '/api/admin/',
+  // Org endpoints authenticate via X-API-Key header (programmatic), not sessions.
+  '/api/org/'
 ];
 
 function isCsrfExcluded(reqPath) {

@@ -47,6 +47,7 @@ const { isCsrfExcluded } = (() => {
     '/api/signup',
     '/api/token/refresh',
     '/api/admin/',
+    '/api/org/',
   ];
 
   function isCsrfExcluded(reqPath) {
