@@ -31,7 +31,10 @@
     { "name": "Webhooks", "description": "Webhook registration and management" },
     { "name": "System", "description": "Health checks, docs, and signup" },
     { "name": "admin", "description": "Operator-only administrative actions" },
-    { "name": "well-known", "description": "Public well-known endpoints for transparency and auditing" }
+    { "name": "well-known", "description": "Public well-known endpoints for transparency and auditing" },
+    { "name": "auth", "description": "Authentication — login, register, password management" },
+    { "name": "user", "description": "User dashboard — documents, profile, stamp config" },
+    { "name": "onboarding", "description": "Onboarding wizard — verification codes, state management" }
   ],
   "paths": {
     "/api/signup": {
@@ -543,8 +546,8 @@
       "get": {
         "tags": ["System"],
         "summary": "Deep health check",
-        "description": "Detailed health check including database statistics (document and organization counts) and blockchain connection status.",
-        "security": [],
+        "description": "Detailed health check including database statistics (document and organization counts) and blockchain connection status. Requires admin authentication.",
+        "security": [{ "AdminSecretAuth": [] }],
         "responses": {
           "200": {
             "description": "Detailed service health",
@@ -628,6 +631,1337 @@
               }
             }
           }
+        }
+      }
+    },
+    "/api/metrics": {
+      "get": {
+        "tags": ["admin"],
+        "summary": "Prometheus metrics",
+        "description": "Returns Prometheus-format metrics for heap usage, RSS, uptime, and PostgreSQL connection pool state. Operator-only.",
+        "security": [{ "AdminSecretAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Prometheus text exposition format",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "description": "Prometheus 0.0.4 text format"
+                }
+              }
+            }
+          },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/status": {
+      "get": {
+        "tags": ["System"],
+        "summary": "Service status",
+        "description": "Returns operational status of all critical service URIs, database, blockchain, and Ed25519 signing. Public endpoint, no auth required. Rate limited to 30 requests per minute.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Status summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "enum": ["operational", "degraded", "partial_outage"], "example": "operational" },
+                    "service": { "type": "string", "example": "Vertifile" },
+                    "version": { "type": "string", "example": "4.5.0" },
+                    "timestamp": { "type": "string", "format": "date-time" },
+                    "uptime": { "type": "number", "description": "Process uptime in seconds" },
+                    "components": {
+                      "type": "object",
+                      "properties": {
+                        "database": {
+                          "type": "object",
+                          "properties": {
+                            "status": { "type": "string", "enum": ["operational", "degraded", "down"] },
+                            "responseMs": { "type": "number", "nullable": true }
+                          }
+                        },
+                        "blockchain": { "type": "string", "enum": ["operational", "disabled", "error"] },
+                        "signing": { "type": "string", "enum": ["operational", "disabled", "error"] }
+                      }
+                    },
+                    "endpoints": {
+                      "type": "object",
+                      "description": "Per-endpoint operational status",
+                      "additionalProperties": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    },
+    "/api/contact": {
+      "post": {
+        "tags": ["System"],
+        "summary": "Submit contact form",
+        "description": "Send a contact form message. Sends a notification to the operator and a confirmation to the submitter. Rate limited to 3 requests per hour per IP.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "organization"],
+                "properties": {
+                  "name": { "type": "string", "description": "Sender name" },
+                  "email": { "type": "string", "format": "email", "description": "Sender email" },
+                  "organization": { "type": "string", "description": "Sender organization name" },
+                  "orgType": { "type": "string", "description": "Organization type (optional)" },
+                  "message": { "type": "string", "description": "Message body (optional)" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submitted successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/demo/create-pvf": {
+      "post": {
+        "tags": ["Documents"],
+        "summary": "Create a demo PVF (no auth required)",
+        "description": "Public demo endpoint. Upload a document and receive a .pvf file without an API key. Rate limited to 5 requests per hour per IP. Responds with the binary PVF file by default, or JSON when the Accept header is application/json or ?format=json is set.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Document to protect (PDF, image, text). Max 50 MB."
+                  },
+                  "recipient": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Optional recipient email for binding"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PVF created. Default response is the binary .pvf file. Pass ?format=json or Accept: application/json for the JSON shape below.",
+            "content": {
+              "application/vnd.vertifile.pvf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "The .pvf file"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "hash": { "type": "string", "description": "SHA-256 hex of the document" },
+                    "shareUrl": { "type": "string", "description": "Public viewer URL" },
+                    "shareId": { "type": "string", "description": "Share identifier" },
+                    "fileName": { "type": "string" },
+                    "fileSize": { "type": "integer", "description": "PVF file size in bytes" },
+                    "downloadUrl": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/org/profile": {
+      "get": {
+        "tags": ["Organization"],
+        "summary": "Get organization profile",
+        "description": "Returns the authenticated organization's profile including plan, document count, rate limit, and branding configuration.",
+        "responses": {
+          "200": {
+            "description": "Organization profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "orgId": { "type": "string" },
+                    "orgName": { "type": "string" },
+                    "plan": { "type": "string" },
+                    "documentsCreated": { "type": "integer" },
+                    "rateLimit": { "type": "integer" },
+                    "created": { "type": "string", "format": "date-time" },
+                    "branding": {
+                      "type": "object",
+                      "properties": {
+                        "customIcon": { "type": "string", "nullable": true },
+                        "brandColor": { "type": "string", "nullable": true },
+                        "waveColor": { "type": "string", "nullable": true }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/org/branding": {
+      "get": {
+        "tags": ["Organization"],
+        "summary": "Get organization branding",
+        "description": "Returns the organization's branding settings: custom icon, brand color, and wave color.",
+        "responses": {
+          "200": {
+            "description": "Organization branding",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "customIcon": { "type": "string", "nullable": true, "description": "SVG or data URI" },
+                    "brandColor": { "type": "string", "nullable": true, "example": "#1a73e8" },
+                    "waveColor": { "type": "string", "nullable": true, "example": "#0d47a1" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      },
+      "post": {
+        "tags": ["Organization"],
+        "summary": "Update organization branding",
+        "description": "Update branding settings for the authenticated organization. Colors must be hex (#RRGGBB). Custom icon must be SVG or a data URI.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customIcon": { "type": "string", "description": "SVG string or data:image/... URI. Max ~512 KB." },
+                  "brandColor": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$", "example": "#1a73e8" },
+                  "waveColor": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$", "example": "#0d47a1" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Branding updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Branding updated" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "Register a new user account",
+        "description": "Create a new email+password account. Password must be at least 8 characters and include uppercase, lowercase, digit, and special character. Returns the new user and starts an authenticated session.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string", "minLength": 8, "maxLength": 128, "description": "Must contain uppercase, lowercase, digit, and special character" },
+                  "name": { "type": "string", "maxLength": 255, "description": "Display name (optional; defaults to email local part)" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registration successful. Session cookie set.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "user": { "$ref": "#/components/schemas/AuthUser" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "Log in with email and password",
+        "description": "Authenticate with email and password. Account locks for 15 minutes after 5 consecutive failures. Sets a session cookie on success.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful. Session cookie set.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "user": { "$ref": "#/components/schemas/AuthUser" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "Log out",
+        "description": "Destroys the current session and clears the session cookie.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Logged out",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": ["auth"],
+        "summary": "Get current authenticated user",
+        "description": "Returns the full profile of the currently authenticated user, including plan, document usage, and onboarding status.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "integer" },
+                        "email": { "type": "string" },
+                        "name": { "type": "string" },
+                        "avatar": { "type": "string", "nullable": true },
+                        "provider": { "type": "string", "enum": ["email", "google"] },
+                        "email_verified": { "type": "boolean" },
+                        "plan": { "type": "string" },
+                        "subscription_status": { "type": "string" },
+                        "selected_plan": { "type": "string", "nullable": true },
+                        "onboarding_completed": { "type": "boolean" },
+                        "documents_used": { "type": "integer" },
+                        "documents_limit": { "type": "integer" },
+                        "created_at": { "type": "string", "format": "date-time" },
+                        "last_login_at": { "type": "string", "format": "date-time", "nullable": true }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "Request password reset email",
+        "description": "Sends a password reset link to the given email if an account exists. Always returns the same response to prevent email enumeration. Rate limited to 3 requests per email per hour.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email"],
+                "properties": {
+                  "email": { "type": "string", "format": "email" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reset email dispatched (or silently suppressed if email not found)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "If this email exists, a reset link has been sent" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "Reset password using token",
+        "description": "Validates the reset token (valid for 30 minutes) and updates the user password. Invalidates all existing sessions for the user.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["token", "password"],
+                "properties": {
+                  "token": { "type": "string", "description": "Reset token from the emailed link (64 hex chars)" },
+                  "password": { "type": "string", "minLength": 8, "maxLength": 128, "description": "New password (same complexity rules as registration)" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Password updated successfully. Please sign in with your new password." }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/user/me": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Get current user (dashboard)",
+        "description": "Returns the authenticated user's profile as used by the dashboard, including admin flag, document quota, and stamp config.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "integer" },
+                        "email": { "type": "string" },
+                        "name": { "type": "string" },
+                        "avatar": { "type": "string", "nullable": true },
+                        "plan": { "type": "string" },
+                        "isAdmin": { "type": "boolean" },
+                        "documentsUsed": { "type": "integer" },
+                        "documentsLimit": { "type": "integer" },
+                        "stampConfig": { "type": "object" },
+                        "stampUpdatedAt": { "type": "string", "format": "date-time", "nullable": true }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/user/stamp": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Get stamp configuration",
+        "description": "Returns the user's current visual stamp configuration used on PVF documents.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Stamp configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "stampConfig": { "type": "object", "description": "Stamp visual config object" },
+                    "updatedAt": { "type": "string", "format": "date-time", "nullable": true }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      },
+      "post": {
+        "tags": ["user"],
+        "summary": "Save stamp configuration",
+        "description": "Saves the user's stamp visual configuration. The config object is free-form JSON (max 10 KB). Updates the stamp cache immediately.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Stamp configuration object. Shape is client-defined; the server stores it as-is."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Stamp configuration saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "stampConfig": { "type": "object", "description": "The saved stamp config" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/user/documents": {
+      "get": {
+        "tags": ["user"],
+        "summary": "List user documents",
+        "description": "Returns a paginated, filterable list of documents belonging to the authenticated user. The Ed25519 raw signature blob is stripped; a boolean is_dual_signed field is returned instead.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "parameters": [
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 20, "maximum": 100 } },
+          { "name": "offset", "in": "query", "schema": { "type": "integer", "default": 0 } },
+          { "name": "search", "in": "query", "schema": { "type": "string" }, "description": "Filter by filename" },
+          { "name": "starred", "in": "query", "schema": { "type": "boolean" }, "description": "Return only starred documents when true" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated document list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "documents": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/UserDocument" }
+                    },
+                    "total": { "type": "integer" },
+                    "limit": { "type": "integer" },
+                    "offset": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/user/upload": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Upload a document (dashboard)",
+        "description": "Upload a document from the user dashboard. Accepts PDF, PNG, JPEG, or plain text (max 50 MB). Creates a PVF and returns a share URL. Paid-plan users receive a download link; free/trial users receive a preview-only response.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": { "type": "string", "format": "binary", "description": "Document to protect. Allowed: PDF, PNG, JPEG, plain text. Max 50 MB." }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Document protected. Paid plan returns hash+shareId; free/trial returns preview-only shape.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "hash": { "type": "string", "description": "SHA-256 hex of the document" },
+                    "shareId": { "type": "string" },
+                    "fileName": { "type": "string" },
+                    "documentsUsed": { "type": "integer" },
+                    "documentsLimit": { "type": "integer" },
+                    "overage": { "type": "boolean", "description": "True if user exceeded their document quota" },
+                    "preview": { "type": "boolean", "description": "Present and true for free/trial accounts" },
+                    "previewUrl": { "type": "string", "description": "Viewer URL (present when preview is true)" },
+                    "message": { "type": "string", "description": "Present when preview is true" },
+                    "upgradeUrl": { "type": "string", "description": "Present when preview is true" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/user/upload-encrypted": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Upload a zero-knowledge encrypted document",
+        "description": "Zero-knowledge PVF 2.0 upload. The client encrypts the document with AES-256-GCM before upload; the server only receives the encrypted blob, client-computed SHA-256 hash, and IV. The AES key never touches the server. Idempotent — replays of the same hash return the existing shareId.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file", "hash", "iv"],
+                "properties": {
+                  "file": { "type": "string", "format": "binary", "description": "AES-256-GCM encrypted document blob" },
+                  "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "Client-computed SHA-256 hex of original content" },
+                  "iv": { "type": "string", "description": "Base64-encoded 12-byte AES-GCM IV" },
+                  "mimeType": { "type": "string", "description": "Original MIME type of the unencrypted document" },
+                  "originalName": { "type": "string", "description": "Original filename" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Encrypted document stored",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "hash": { "type": "string" },
+                    "shareId": { "type": "string" },
+                    "slug": { "type": "string" },
+                    "shareUrl": { "type": "string" },
+                    "fileName": { "type": "string" },
+                    "documentsUsed": { "type": "integer" },
+                    "documentsLimit": { "type": "integer" },
+                    "overage": { "type": "boolean" },
+                    "deduplicated": { "type": "boolean", "description": "True when the same document was already uploaded by this user" },
+                    "preview": { "type": "boolean", "description": "Present and true for free/trial accounts" },
+                    "previewUrl": { "type": "string", "description": "Present when preview is true" },
+                    "message": { "type": "string", "description": "Present when preview is true" },
+                    "upgradeUrl": { "type": "string", "description": "Present when preview is true" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/user/documents/{hash}/star": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Star or unstar a document",
+        "description": "Toggle the starred state on a document owned by the authenticated user.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "hash",
+            "in": "path",
+            "required": true,
+            "description": "SHA-256 hex hash of the document (64 chars)",
+            "schema": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["starred"],
+                "properties": {
+                  "starred": { "type": "boolean", "description": "True to star, false to unstar" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Starred state updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "description": "Document not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/user/documents/{hash}": {
+      "delete": {
+        "tags": ["user"],
+        "summary": "Delete a document",
+        "description": "Permanently deletes a document owned by the authenticated user and removes its PVF file from storage.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "hash",
+            "in": "path",
+            "required": true,
+            "description": "SHA-256 hex hash of the document (64 chars)",
+            "schema": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Document deleted",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "description": "Document not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/user/profile": {
+      "put": {
+        "tags": ["user"],
+        "summary": "Update user profile",
+        "description": "Update the display name of the authenticated user. Name is HTML-escaped and capped at 100 characters.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": { "type": "string", "minLength": 1, "maxLength": 100 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/user/change-password": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Change account password",
+        "description": "Change the password for an email-based account. Requires the current password. Invalidates all other active sessions, preserving the current one.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["currentPassword", "newPassword"],
+                "properties": {
+                  "currentPassword": { "type": "string" },
+                  "newPassword": { "type": "string", "minLength": 8 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password changed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/user/account": {
+      "delete": {
+        "tags": ["user"],
+        "summary": "Delete account",
+        "description": "Permanently delete the authenticated user's account and all associated data.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Account deleted",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/user/branding": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Get user branding",
+        "description": "Returns the authenticated user's branding settings (custom icon, brand color, wave color).",
+        "security": [{ "SessionCookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "User branding",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "customIcon": { "type": "string", "nullable": true },
+                    "brandColor": { "type": "string", "nullable": true, "example": "#1a73e8" },
+                    "waveColor": { "type": "string", "nullable": true }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      },
+      "post": {
+        "tags": ["user"],
+        "summary": "Save user branding",
+        "description": "Save branding settings. brandColor must be hex (#RRGGBB). waveColor can be a single hex or a JSON array of 3-10 hex colors. customIcon must be an SVG string or a data:image/ URI (max ~512 KB).",
+        "security": [{ "SessionCookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "brandColor": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+                  "customIcon": { "type": "string", "description": "SVG string or data:image/... URI" },
+                  "orgName": { "type": "string", "maxLength": 200 },
+                  "stampText": { "type": "string", "maxLength": 500 },
+                  "waveColor": {
+                    "oneOf": [
+                      { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+                      { "type": "array", "items": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }, "minItems": 3, "maxItems": 10 }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Branding saved",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/user/api-key": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Get user API key",
+        "description": "Returns the API key linked to the authenticated user's organization. Returns null if no key has been generated yet.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "apiKey": { "type": "string", "nullable": true, "description": "API key (vf_live_... prefix) or null if not yet generated" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      },
+      "post": {
+        "tags": ["user"],
+        "summary": "Generate user API key",
+        "description": "Generates a new API key for the authenticated user's organization (vf_live_ prefix, 48 hex chars). Idempotent — returns the existing key if one already exists.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "API key returned or created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "apiKey": { "type": "string", "example": "vf_live_a1b2c3..." }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/auth/send-code": {
+      "post": {
+        "tags": ["onboarding"],
+        "summary": "Send email verification code",
+        "description": "Generates a 6-digit verification code and sends it to the given email address. Rate limited to 3 sends per email per hour and 20 requests per 15 minutes globally.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email"],
+                "properties": {
+                  "email": { "type": "string", "format": "email" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Code sent (or queued). In development environments the response also includes _dev_code.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Verification code sent" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/auth/verify-code": {
+      "post": {
+        "tags": ["onboarding"],
+        "summary": "Verify email verification code",
+        "description": "Validates the 6-digit code sent to the user's email. Marks the user's email as verified on success. Maximum 5 attempts; code expires after 10 minutes. Rate limited to 10 requests per 15 minutes.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "code"],
+                "properties": {
+                  "email": { "type": "string", "format": "email" },
+                  "code": { "type": "string", "minLength": 6, "maxLength": 6, "pattern": "^[0-9]{6}$" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Code verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Email verified" },
+                    "redirect": { "type": "string", "example": "/onboarding" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or expired code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": false },
+                    "error": { "type": "string" },
+                    "attempts_remaining": { "type": "integer", "description": "Remaining attempts before code is locked" }
+                  }
+                }
+              }
+            }
+          },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/onboarding/state": {
+      "get": {
+        "tags": ["onboarding"],
+        "summary": "Get onboarding wizard state",
+        "description": "Returns the current wizard step, selections, and stamp configuration for the authenticated user. Returns default values if the wizard has not yet been started.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Onboarding state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "state": {
+                      "type": "object",
+                      "properties": {
+                        "current_step": { "type": "integer", "example": 1 },
+                        "selections": { "type": "object", "description": "Wizard answer map keyed by question id" },
+                        "stamp_config": { "type": "object", "description": "Partial stamp config set during the wizard" },
+                        "started_at": { "type": "string", "format": "date-time", "nullable": true },
+                        "completed_at": { "type": "string", "format": "date-time", "nullable": true },
+                        "last_active_at": { "type": "string", "format": "date-time", "nullable": true }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      },
+      "put": {
+        "tags": ["onboarding"],
+        "summary": "Update onboarding wizard state",
+        "description": "Upsert wizard progress. All three body fields are optional but at least one must be present. Object fields (selections, stamp_config) are merged with the existing stored value using JSONB merge.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "current_step": { "type": "integer", "description": "Current wizard step number" },
+                  "selections": { "type": "object", "description": "Partial wizard answer map to merge" },
+                  "stamp_config": { "type": "object", "description": "Partial stamp config to merge" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "State saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "State saved" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/onboarding/complete": {
+      "post": {
+        "tags": ["onboarding"],
+        "summary": "Complete onboarding wizard",
+        "description": "Finalizes the onboarding wizard. Reads the stored state from the database, persists user profile fields and stamp configuration, marks the user account as onboarding-complete, and redirects to /app.",
+        "security": [{ "SessionCookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Onboarding complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Onboarding complete" },
+                    "redirect": { "type": "string", "example": "/app" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/.well-known/vertifile-pubkey.pem": {
+      "get": {
+        "tags": ["well-known"],
+        "summary": "Current Ed25519 public key (PEM)",
+        "description": "Returns the active Ed25519 signing public key in PEM format. Cached for 1 hour. CORS open. Use this to verify PVF documents offline without calling /api/verify.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "PEM-encoded Ed25519 public key",
+            "headers": {
+              "Cache-Control": { "schema": { "type": "string", "example": "public, max-age=3600, must-revalidate" } },
+              "Access-Control-Allow-Origin": { "schema": { "type": "string", "example": "*" } }
+            },
+            "content": {
+              "application/x-pem-file": {
+                "schema": { "type": "string", "description": "PEM-encoded public key", "example": "-----BEGIN PUBLIC KEY-----\n..." }
+              }
+            }
+          },
+          "404": { "description": "No active Ed25519 key configured", "content": { "text/plain": { "schema": { "type": "string" } } } },
+          "500": { "description": "Internal error", "content": { "text/plain": { "schema": { "type": "string" } } } }
+        }
+      }
+    },
+    "/.well-known/vertifile-jwks.json": {
+      "get": {
+        "tags": ["well-known"],
+        "summary": "Active public keys (JWKS)",
+        "description": "Returns the set of active Ed25519 public keys in JWKS format. CORS open. Cached for 1 hour.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "JWKS key set",
+            "headers": {
+              "Cache-Control": { "schema": { "type": "string", "example": "public, max-age=3600, must-revalidate" } },
+              "Access-Control-Allow-Origin": { "schema": { "type": "string", "example": "*" } }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "keys": {
+                      "type": "array",
+                      "items": { "type": "object", "description": "JWK entry for an Ed25519 public key" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/.well-known/security.txt": {
+      "get": {
+        "tags": ["well-known"],
+        "summary": "Security policy (RFC 9116)",
+        "description": "Machine-readable security policy disclosure as defined by RFC 9116. Served from the static file at public/.well-known/security.txt. Cached for 24 hours.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Security policy text",
+            "headers": {
+              "Cache-Control": { "schema": { "type": "string", "example": "public, max-age=86400, must-revalidate" } }
+            },
+            "content": {
+              "text/plain": {
+                "schema": { "type": "string" }
+              }
+            }
+          },
+          "404": { "description": "File not found", "content": { "text/plain": { "schema": { "type": "string" } } } }
         }
       }
     },
@@ -715,6 +2049,12 @@
         "in": "header",
         "name": "X-Admin-Secret",
         "description": "Operator-only admin secret for privileged administrative actions"
+      },
+      "SessionCookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "connect.sid",
+        "description": "Session cookie set by /auth/login or /auth/register. Required for all /auth/* and /api/user/* endpoints."
       }
     },
     "schemas": {
@@ -1129,6 +2469,33 @@
         "properties": {
           "success": { "type": "boolean", "example": false },
           "error": { "type": "string", "description": "Human-readable error message" }
+        }
+      },
+      "AuthUser": {
+        "type": "object",
+        "description": "User object returned by login and register endpoints",
+        "properties": {
+          "id": { "type": "integer", "description": "Internal user ID" },
+          "email": { "type": "string", "format": "email" },
+          "name": { "type": "string" },
+          "avatar": { "type": "string", "nullable": true, "description": "Avatar URL (OAuth accounts only)" }
+        }
+      },
+      "UserDocument": {
+        "type": "object",
+        "description": "Document record as returned by the user dashboard list endpoint",
+        "properties": {
+          "hash": { "type": "string", "description": "SHA-256 hex document hash" },
+          "originalName": { "type": "string" },
+          "mimeType": { "type": "string" },
+          "fileSize": { "type": "integer" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "shareId": { "type": "string" },
+          "slug": { "type": "string", "nullable": true },
+          "is_dual_signed": { "type": "boolean", "description": "True when the document carries an Ed25519 signature in addition to HMAC" },
+          "ed25519_key_id": { "type": "string", "nullable": true },
+          "starred": { "type": "boolean" },
+          "user_id": { "type": "integer" }
         }
       }
     },
