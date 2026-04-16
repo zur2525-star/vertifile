@@ -21,7 +21,13 @@ const CSRF_EXCLUDED_PREFIXES = [
   '/api/gateway/',
   '/api/webhooks/',
   '/api/verify',
-  '/.well-known/'
+  '/.well-known/',
+  // /api/signup and /api/token/refresh are programmatic API endpoints
+  // (no session cookies). CSRF protection is not applicable.
+  '/api/signup',
+  '/api/token/refresh',
+  // Admin endpoints authenticate via X-Admin-Secret header, not sessions.
+  '/api/admin/'
 ];
 
 function isCsrfExcluded(reqPath) {

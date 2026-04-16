@@ -90,8 +90,11 @@ router.get('/vertifile-rotation-log', async (req, res) => {
     const limit = Number.isFinite(rawLimit) ? Math.min(Math.max(rawLimit, 1), 1000) : 100;
     const offset = Number.isFinite(rawOffset) ? Math.max(rawOffset, 0) : 0;
     const entries = await db.listRotationLog({ limit, offset });
-    res.setHeader('Cache-Control', 'public, max-age=60');
     setCorsHeaders(res);
+    // Override the default 1-hour key cache with a shorter TTL — rotation
+    // log changes only during rotations but operators want near-real-time
+    // visibility during a wet drill.
+    res.setHeader('Cache-Control', 'public, max-age=60');
     res.json({ entries, total: entries.length });
   } catch (e) {
     logger.warn({ err: e.message }, '[well-known] rotation-log error');

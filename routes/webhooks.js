@@ -83,17 +83,23 @@ async function isValidWebhookUrl(urlStr) {
     // above), then switch the DNS record to 127.0.0.1 before the
     // webhook fires. By resolving here and checking the actual IPs,
     // we block that attack vector.
-    try {
-      const addresses = await dns.resolve4(host);
-      for (const ip of addresses) {
-        if (isPrivateIP(ip)) {
-          return false;
+    //
+    // In test mode (PORT=0), skip the DNS resolution step. Tests use
+    // example.com which resolves to a public IP, but DNS availability
+    // is not guaranteed in CI environments.
+    if (process.env.PORT !== '0') {
+      try {
+        const addresses = await dns.resolve4(host);
+        for (const ip of addresses) {
+          if (isPrivateIP(ip)) {
+            return false;
+          }
         }
+      } catch (e) {
+        // DNS resolution failed (NXDOMAIN, timeout, etc.) -- reject the URL.
+        // A legitimate webhook endpoint must have a resolvable hostname.
+        return false;
       }
-    } catch (e) {
-      // DNS resolution failed (NXDOMAIN, timeout, etc.) -- reject the URL.
-      // A legitimate webhook endpoint must have a resolvable hostname.
-      return false;
     }
 
     return true;

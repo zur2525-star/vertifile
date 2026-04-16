@@ -22,6 +22,9 @@ const http = require('node:http');
 const HMAC_SECRET = 'test-secret-for-automated-tests';
 const ADMIN_SECRET = 'test-admin-secret-for-tests';
 
+// Unique suffix per test run to avoid 409 Conflict on repeated runs.
+const RUN_ID = crypto.randomBytes(4).toString('hex');
+
 // ---------------------------------------------------------------------------
 // Shared test state (populated during test runs)
 // ---------------------------------------------------------------------------
@@ -234,7 +237,7 @@ describe('Signup', () => {
       body: JSON.stringify({
         orgName: 'Test Organization',
         contactName: 'Test User',
-        email: 'signup-valid@test.example.com',
+        email: `signup-${RUN_ID}@test.example.com`,
         useCase: 'automated testing',
         password: 'TestPassword123!',
       }),
@@ -918,7 +921,65 @@ describe('Organization Endpoints', () => {
 });
 
 // ============================================================================
-// 13. Security Headers
+// 13. Cache Invalidation (Admin endpoint)
+// ============================================================================
+describe('Cache Invalidation', () => {
+
+  it('POST /api/admin/cache/invalidate-keys without admin secret returns 403', async () => {
+    const res = await fetch(`${BASE_URL}/api/admin/cache/invalidate-keys`, {
+      method: 'POST',
+    });
+    assert.equal(res.status, 403);
+  });
+
+  it('POST /api/admin/cache/invalidate-keys with valid secret returns success', async () => {
+    const res = await fetch(`${BASE_URL}/api/admin/cache/invalidate-keys`, {
+      method: 'POST',
+      headers: { 'X-Admin-Secret': ADMIN_SECRET },
+    });
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.success, true);
+    assert.equal(data.invalidated, true);
+    assert.ok(data.timestamp, 'Should return timestamp');
+  });
+});
+
+// ============================================================================
+// 14. Rotation Log (Public endpoint)
+// ============================================================================
+describe('Rotation Log', () => {
+
+  it('GET /.well-known/vertifile-rotation-log returns rotation entries', async () => {
+    const res = await fetch(`${BASE_URL}/.well-known/vertifile-rotation-log`);
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.ok(Array.isArray(data.entries), 'Should return entries array');
+    assert.ok(typeof data.total === 'number', 'Should return total count');
+    // Verify no actor field is exposed (SECURITY_INVARIANT)
+    for (const entry of data.entries) {
+      assert.equal(entry.actor, undefined, 'actor must never appear in public rotation log');
+    }
+  });
+
+  it('GET /.well-known/vertifile-rotation-log respects Cache-Control', async () => {
+    const res = await fetch(`${BASE_URL}/.well-known/vertifile-rotation-log`);
+    const cc = res.headers.get('cache-control');
+    assert.ok(cc && cc.includes('public'), 'Should have public Cache-Control');
+    assert.ok(cc && cc.includes('max-age=60'), 'Should have max-age=60');
+  });
+
+  it('GET /.well-known/vertifile-rotation-log supports limit/offset', async () => {
+    const res = await fetch(`${BASE_URL}/.well-known/vertifile-rotation-log?limit=5&offset=0`);
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.ok(Array.isArray(data.entries), 'Should return entries array');
+    assert.ok(data.entries.length <= 5, 'Should respect limit parameter');
+  });
+});
+
+// ============================================================================
+// 15. Security Headers
 // ============================================================================
 describe('Security Headers', () => {
 
