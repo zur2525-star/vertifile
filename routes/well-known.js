@@ -62,6 +62,21 @@ router.get('/vertifile-jwks.json', async (req, res) => {
   }
 });
 
+// GET /.well-known/security.txt
+// RFC 9116 — machine-readable security policy disclosure.
+// Served from the static file on disk so the content stays in one place.
+router.get('/security.txt', (req, res) => {
+  const filePath = require('path').join(__dirname, '..', 'public', '.well-known', 'security.txt');
+  res.type('text/plain');
+  res.setHeader('Cache-Control', 'public, max-age=86400, must-revalidate');
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      logger.warn({ err: err.message }, '[well-known] security.txt not found');
+      res.status(404).type('text/plain').send('Not found');
+    }
+  });
+});
+
 // OPTIONS preflight
 router.options('/vertifile-pubkey.pem', (req, res) => {
   setCorsHeaders(res);

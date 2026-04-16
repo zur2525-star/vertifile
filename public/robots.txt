@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /app
-Disallow: /dashboard
 Disallow: /api/
+Disallow: /app
+Disallow: /admin
+Disallow: /d/
 Sitemap: https://vertifile.com/sitemap.xml

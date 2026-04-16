@@ -428,24 +428,49 @@ db._ready.then(async () => {
       }, 60000).unref();
     });
 
-    process.on('SIGTERM', gracefulShutdown);
-    process.on('SIGINT', gracefulShutdown);
+    // Graceful shutdown — critical for Render deployments.
+    // Render sends SIGTERM before killing the process. We stop accepting
+    // new connections, drain in-flight requests, flush queues, and close
+    // the DB pool. If everything finishes within the timeout we exit 0;
+    // otherwise we force-exit 1 so the platform knows it was unclean.
+    let isShuttingDown = false;
+    const SHUTDOWN_TIMEOUT_MS = 30000;
 
-    async function gracefulShutdown() {
-      logger.info('Shutting down gracefully...');
-      try { await chain.flushQueue(); } catch (e) { logger.error({ err: e }, 'Queue flush error'); }
+    async function gracefulShutdown(signal) {
+      if (isShuttingDown) return; // prevent double-shutdown from SIGINT+SIGTERM race
+      isShuttingDown = true;
+
+      logger.info({ signal }, 'Shutting down gracefully...');
+
+      // Flush blockchain queue before closing connections
+      try { await chain.flushQueue(); } catch (e) { logger.error({ err: e }, 'Queue flush error during shutdown'); }
+
       if (server) {
+        // Stop accepting new connections — existing ones drain naturally
         server.close(async () => {
-          logger.info('HTTP connections closed');
-          try { await db.close(); } catch(e) {}
-          logger.info('Database pool closed');
+          logger.info('HTTP server closed, no more active connections');
+          try {
+            await db.close();
+            logger.info('Database pool closed');
+          } catch (e) {
+            logger.error({ err: e }, 'Error closing database pool');
+          }
           process.exit(0);
         });
-        setTimeout(() => { logger.error('Forced shutdown after timeout'); process.exit(1); }, 10000);
+
+        // Force exit if draining takes too long
+        const forceTimer = setTimeout(() => {
+          logger.error({ timeoutMs: SHUTDOWN_TIMEOUT_MS }, 'Graceful shutdown timed out, forcing exit');
+          process.exit(1);
+        }, SHUTDOWN_TIMEOUT_MS);
+        forceTimer.unref(); // do not keep the event loop alive just for this timer
       } else {
         process.exit(0);
       }
     }
+
+    process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+    process.on('SIGINT', () => gracefulShutdown('SIGINT'));
   }
 }).catch(err => { logger.error({ err }, 'Database initialization failed'); process.exit(1); });
 
