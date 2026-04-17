@@ -156,7 +156,7 @@ app.use(helmet({
         // in the static HTML pages (hero animation, FAQ toggle, scroll reveal, etc.).
         "https://plausible.io",
       ],
-      scriptSrcAttr: ["'none'"],  // Block inline event handlers (onclick, onload, etc.)
+      scriptSrcAttr: ["'unsafe-inline'"], // inline event handlers (onclick, onload) used throughout static HTML
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
