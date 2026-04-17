@@ -155,11 +155,19 @@ router.post('/auth/verify-code', verifyCodeLimiter, async (req, res) => {
       });
     }
 
-    // Success — mark as used and verify user's email
+    // Success — mark as used and persist email_verified=true on the user.
+    // Persisting to DB is critical: without it, req.user reloads from DB on
+    // the next request and email_verified is back to false, trapping the
+    // user in an onboarding loop.
     await db.markCodeUsed(normalizedEmail, entry.code);
 
-    // If user is authenticated in session, update req.user too
     if (req.user) {
+      try {
+        await db.setEmailVerified(req.user.id, true);
+      } catch (e) {
+        logger.warn({ err: e, userId: req.user.id }, 'setEmailVerified DB update failed');
+      }
+      // Update in-memory session too so this request's downstream code sees it
       req.user.email_verified = true;
     }
 

@@ -1649,6 +1649,36 @@
   }
 
   function loadSavedState() {
+    // First check if the user has verified their email with Vertifile.
+    // Email verification is a hard requirement — EVERY user must complete
+    // step 0 before any saved state can resume past it. This handles the
+    // case where a user partially progressed in a prior session but never
+    // actually verified.
+    fetch('/api/user/me', { credentials: 'same-origin' })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(userData) {
+        var emailVerified = !!(userData && userData.success && userData.user && userData.user.email_verified);
+        if (!emailVerified) {
+          // Cache the email so populateVerifyEmail doesn't need another fetch.
+          if (userData && userData.user && userData.user.email) {
+            window._vfUserEmail = userData.user.email;
+          }
+          // Force step 0 — ignore any saved state past it.
+          goToStep(0);
+          return;
+        }
+        // Email is verified (rare — only happens if a prior onboarding
+        // attempt actually submitted a valid code). Proceed with normal
+        // state resume.
+        loadSavedStateAfterVerify();
+      })
+      .catch(function() {
+        // If /api/user/me fails, fall back to default startFresh behavior.
+        startFresh();
+      });
+  }
+
+  function loadSavedStateAfterVerify() {
     fetch('/api/onboarding/state')
       .then(function(r) { return r.json(); })
       .then(function(data) {

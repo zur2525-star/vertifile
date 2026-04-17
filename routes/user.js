@@ -63,6 +63,7 @@ router.get('/me', (req, res) => {
     isAdmin: adminEmails.has((req.user.email || '').toLowerCase()),
     documentsUsed: req.user.documents_used,
     documentsLimit: req.user.documents_limit,
+    email_verified: !!req.user.email_verified,
     stampConfig: req.user.stamp_config || {},
     stampUpdatedAt: req.user.stamp_updated_at
   }});
