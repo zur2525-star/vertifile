@@ -174,15 +174,21 @@ router.get('/google/callback',
           // Issue #14: Enforce session limit per user
           await enforceSessionLimit(db, user.id);
 
-          // Schedule onboarding emails for new Google signups (idempotent -- skips if already scheduled)
-          try {
-            await scheduleOnboardingEmails(user.id, user.email, user.name);
-          } catch (_) { /* best effort */ }
+          // Only send welcome + schedule onboarding emails for NEW signups.
+          // scheduleOnboardingEmails is already idempotent (checks DB flag),
+          // but sendWelcomeEmail is NOT — it would fire on every Google
+          // login, flooding returning users with duplicate welcome emails.
+          // The _isNewSignup flag is set by the Google strategy in server.js
+          // when a fresh user row is created.
+          if (user._isNewSignup) {
+            try {
+              await scheduleOnboardingEmails(user.id, user.email, user.name);
+            } catch (_) { /* best effort */ }
 
-          // Send welcome email (best effort -- never blocks OAuth callback)
-          try {
-            await sendWelcomeEmail(user.email, user.name);
-          } catch (_) { /* best effort */ }
+            try {
+              await sendWelcomeEmail(user.email, user.name);
+            } catch (_) { /* best effort */ }
+          }
 
           // Route new / incomplete users through the onboarding wizard before /app.
           // Check onboarding_state.completed_at — if null or row missing, send to wizard.

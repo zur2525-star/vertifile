@@ -359,6 +359,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
       }
 
       let user = await db.getUserByProviderId('google', profile.id);
+      let isNewUser = false;
       if (!user) {
         // Auto-link to existing account if email matches.
         // Safe because Google guarantees the email is verified (checked above).
@@ -380,10 +381,16 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
             providerId: profile.id,
             avatarUrl: profile.photos?.[0]?.value || null,
           });
-          // Google-verified email — mark as verified
-          await db.setEmailVerified(user.id, true);
+          isNewUser = true;
+          // Intentionally NOT auto-verifying the email here. Even though Google
+          // attests the email, Vertifile requires its own 6-digit code flow so
+          // every user completes the same onboarding verification. email_verified
+          // stays false until the user submits a valid code via /api/auth/verify-code.
         }
       }
+      // Attach flag so the callback handler can decide whether to send the
+      // welcome email (new accounts only) vs. just log in an existing user.
+      user._isNewSignup = isNewUser;
       done(null, user);
     } catch(e) { done(e); }
   }));
