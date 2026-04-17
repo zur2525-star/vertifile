@@ -1543,11 +1543,7 @@
     var errorEl = document.getElementById('verifyError');
     var inputsWrap = document.getElementById('codeInputs');
 
-    fetch('/api/auth/verify-code', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: getUserEmail(), code: code })
-    })
+    postWithCsrf('/api/auth/verify-code', { email: getUserEmail(), code: code })
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data.success) {
@@ -1575,11 +1571,8 @@
   }
 
   function resendCode() {
-    fetch('/api/auth/send-code', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: getUserEmail() })
-    }).catch(function() {});
+    postWithCsrf('/api/auth/send-code', { email: getUserEmail() })
+      .catch(function() {});
   }
 
   function getUserEmail() {
@@ -1686,13 +1679,78 @@
   }
 
   function startFresh() {
-    // Check if user is already email-verified (via session or query param)
+    // Per product requirement: every user MUST complete the email verification
+    // step, including users who signed in via Google. Even though Google has
+    // already verified the email, Vertifile independently verifies ownership
+    // for a second factor of identity assurance.
+    goToStep(0);
+    populateVerifyEmail();
+    autoSendVerificationCode();
+  }
+
+  // Fetch the authenticated user's email from the server and populate the
+  // verification screen. Falls back to the URL ?email= param, then to the
+  // placeholder that ships in the HTML.
+  function populateVerifyEmail() {
     var params = new URLSearchParams(window.location.search);
-    var skipVerify = params.get('verified') === 'true' || params.get('provider') === 'google';
-    goToStep(skipVerify ? 1 : 0);
-    // Set email display
-    var email = params.get('email');
-    if (email) document.getElementById('verifyEmail').textContent = email;
+    var emailFromUrl = params.get('email');
+    if (emailFromUrl) {
+      document.getElementById('verifyEmail').textContent = emailFromUrl;
+      window._vfUserEmail = emailFromUrl;
+      return;
+    }
+    fetch('/api/user/me', { credentials: 'same-origin' })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(data) {
+        if (data && data.success && data.user && data.user.email) {
+          document.getElementById('verifyEmail').textContent = data.user.email;
+          window._vfUserEmail = data.user.email;
+        }
+      })
+      .catch(function() { /* best effort — placeholder remains */ });
+  }
+
+  // Cache a CSRF token for session POSTs. Auth routes (send-code,
+  // verify-code) are protected by the synchronizer token pattern.
+  var _csrfTokenCache = null;
+  function getCsrfToken() {
+    if (_csrfTokenCache) return Promise.resolve(_csrfTokenCache);
+    return fetch('/api/csrf-token', { credentials: 'same-origin' })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d && d.success && d.csrfToken) {
+          _csrfTokenCache = d.csrfToken;
+          return d.csrfToken;
+        }
+        return null;
+      })
+      .catch(function() { return null; });
+  }
+
+  function postWithCsrf(url, body) {
+    return getCsrfToken().then(function(token) {
+      var headers = { 'Content-Type': 'application/json' };
+      if (token) headers['X-CSRF-Token'] = token;
+      return fetch(url, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: headers,
+        body: JSON.stringify(body)
+      });
+    });
+  }
+
+  // Auto-send the 6-digit verification code as soon as the user lands on
+  // step 0. Idempotent on the server (rate-limited to 3/hour/email).
+  function autoSendVerificationCode() {
+    // Wait one tick so populateVerifyEmail's /api/user/me has a chance to set
+    // window._vfUserEmail.
+    setTimeout(function() {
+      var email = window._vfUserEmail || getUserEmail();
+      if (!email || email === 'your@email.com') return;
+      postWithCsrf('/api/auth/send-code', { email: email })
+        .catch(function() { /* best effort — user can click Resend */ });
+    }, 400);
   }
 
   function restoreCard(gridId, value) {
