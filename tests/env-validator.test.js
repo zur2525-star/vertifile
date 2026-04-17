@@ -248,29 +248,43 @@ describe('validateEnv() — production mode (NODE_ENV=production)', () => {
     assert.equal(exitCode, null);
   });
 
-  it('warns (does not exit) when RESEND_API_KEY is missing', () => {
+  it('warns (does not exit) when SMTP credentials are missing', () => {
     const { exitCode, warnMessages } = runValidator({
       NODE_ENV: 'production',
       ...PROD_REQUIRED,
-      // RESEND_API_KEY deliberately absent
+      // SMTP_* deliberately absent
     });
 
-    assert.equal(exitCode, null, 'RESEND_API_KEY absence must not be fatal');
+    assert.equal(exitCode, null, 'SMTP absence must not be fatal');
     const combined = warnMessages.join('\n');
     assert.ok(
-      combined.includes('RESEND_API_KEY'),
-      `warn messages must mention RESEND_API_KEY — got: ${combined}`
+      combined.includes('SMTP'),
+      `warn messages must mention SMTP — got: ${combined}`
     );
   });
 
-  it('warns (does not exit) when RESEND_API_KEY is whitespace only', () => {
+  it('warns (does not exit) when SMTP_PASS is whitespace only', () => {
     const { exitCode, warnMessages } = runValidator({
       NODE_ENV: 'production',
       ...PROD_REQUIRED,
-      RESEND_API_KEY: '   ',
+      SMTP_HOST: 'smtp.resend.com',
+      SMTP_USER: 'resend',
+      SMTP_PASS: '   ',
     });
     assert.equal(exitCode, null);
-    assert.ok(warnMessages.join('\n').includes('RESEND_API_KEY'));
+    assert.ok(warnMessages.join('\n').includes('SMTP'));
+  });
+
+  it('does NOT warn when all SMTP vars are set', () => {
+    const { exitCode, warnMessages } = runValidator({
+      NODE_ENV: 'production',
+      ...PROD_REQUIRED,
+      SMTP_HOST: 'smtp.resend.com',
+      SMTP_USER: 'resend',
+      SMTP_PASS: 're_example_key',
+    });
+    assert.equal(exitCode, null);
+    assert.ok(!warnMessages.join('\n').includes('SMTP'), 'SMTP warning should not fire when configured');
   });
 
   it('exits with code 1 when GOOGLE_CLIENT_ID is set but GOOGLE_CLIENT_SECRET is missing', () => {
@@ -383,14 +397,14 @@ describe('validateEnv() — development mode (NODE_ENV=development or unset)', (
     assert.equal(exitCode, null);
   });
 
-  it('emits a warning about RESEND_API_KEY in development too', () => {
+  it('emits a warning about SMTP in development too', () => {
     const { exitCode, warnMessages } = runValidator({
       NODE_ENV: 'development',
     });
     assert.equal(exitCode, null);
     assert.ok(
-      warnMessages.join('\n').includes('RESEND_API_KEY'),
-      'RESEND_API_KEY warning must appear in development'
+      warnMessages.join('\n').includes('SMTP'),
+      'SMTP warning must appear in development'
     );
   });
 

@@ -39,9 +39,16 @@ function validateEnv() {
     }
   }
 
-  // RESEND_API_KEY: warn-only -- email will be disabled but app can function
-  if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY.trim() === '') {
-    warnings.push('RESEND_API_KEY is not set -- email sending will be disabled');
+  // SMTP credentials: warn-only -- email will be disabled but app can function.
+  // The email service (services/email.js) uses nodemailer with SMTP, not the
+  // Resend SDK. Required SMTP vars: SMTP_HOST, SMTP_USER, SMTP_PASS.
+  // SMTP_PASS holds the provider API key (e.g. Resend API key starting with re_).
+  const smtpHost = process.env.SMTP_HOST;
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASS;
+  if (!smtpHost || !smtpUser || !smtpPass ||
+      smtpHost.trim() === '' || smtpUser.trim() === '' || smtpPass.trim() === '') {
+    warnings.push('SMTP_HOST/SMTP_USER/SMTP_PASS not fully set -- email sending will be disabled');
   }
 
   // ---- Conditional required --------------------------------------------------
