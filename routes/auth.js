@@ -186,6 +186,8 @@ router.get('/google/callback',
 
           // Route new / incomplete users through the onboarding wizard before /app.
           // Check onboarding_state.completed_at — if null or row missing, send to wizard.
+          // Pass ?provider=google so the wizard knows the email is already verified
+          // by Google and skips step 0 (email verification).
           try {
             const { rows } = await db.query(
               'SELECT completed_at FROM onboarding_state WHERE user_id = $1',
@@ -193,7 +195,7 @@ router.get('/google/callback',
             );
             const completed = rows[0]?.completed_at;
             if (!completed) {
-              return res.redirect('/onboarding');
+              return res.redirect('/onboarding?provider=google');
             }
           } catch (e) {
             logger.warn({ err: e, userId: user.id }, 'Onboarding check failed on Google callback, defaulting to /app');
