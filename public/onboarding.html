@@ -308,6 +308,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
           <span data-i18n="onboarding.back">Back</span>
         </button>
+        <button class="wiz-logout-btn" id="wizLogoutBtn" type="button" aria-label="Sign out"
+          style="background:none;border:none;color:#6b7280;font-size:13px;cursor:pointer;padding:6px 10px;text-decoration:underline;">
+          <span data-i18n="onboarding.signOut">Not you? Sign out</span>
+        </button>
         <div class="wiz-progress" id="progressDots" role="navigation" aria-label="Wizard progress"></div>
       </div>
     </div>
@@ -1019,6 +1023,32 @@
 
   function setupNavigation() {
     backBtn.addEventListener('click', prevStep);
+
+    // "Not you? Sign out" — escape hatch that destroys the current session
+    // and returns the user to the signin/signup chooser on /app.
+    var logoutBtn = document.getElementById('wizLogoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async function() {
+        try {
+          var csrfToken = null;
+          try {
+            var tokenRes = await fetch('/api/csrf-token', { credentials: 'same-origin' });
+            var tokenBody = await tokenRes.json();
+            if (tokenBody && tokenBody.success && tokenBody.csrfToken) {
+              csrfToken = tokenBody.csrfToken;
+            }
+          } catch (_) { /* continue — will fall through to redirect */ }
+          var headers = {};
+          if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
+          await fetch('/auth/logout', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: headers,
+          });
+        } catch (_) { /* best effort */ }
+        window.location.href = '/app';
+      });
+    }
 
     document.getElementById('cta1').addEventListener('click', function() {
       if (!this.disabled) nextStep();
