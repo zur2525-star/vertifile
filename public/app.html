@@ -1599,6 +1599,26 @@ async function checkAuth() {
     if (r.ok) {
       const data = await r.json();
       currentUser = data.user;
+      // Hard requirement: every authenticated user must complete onboarding
+      // before reaching the dashboard. Check onboarding state and redirect
+      // if not yet completed.
+      try {
+        const onb = await fetch('/api/onboarding/state', { credentials: 'same-origin' });
+        if (onb.ok) {
+          const onbData = await onb.json();
+          if (!onbData.state || !onbData.state.completed_at) {
+            window.location.replace('/onboarding');
+            return;
+          }
+        } else {
+          // No onboarding record yet = brand-new user = must onboard
+          window.location.replace('/onboarding');
+          return;
+        }
+      } catch (_) {
+        window.location.replace('/onboarding');
+        return;
+      }
       showApp();
     } else {
       showLoginScreen();
@@ -1616,6 +1636,26 @@ function showLoginScreen() {
   if (mn) mn.style.display = 'none';
   var mf = document.querySelector('.mobile-help-fab');
   if (mf) mf.style.display = 'none';
+
+  // Surface auth errors from URL so the user understands why they bounced back.
+  // Previous behavior: silent redirect to login with no feedback.
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var authError = params.get('auth_error');
+    if (authError) {
+      var errEl = document.getElementById('loginError');
+      if (errEl) {
+        var messages = {
+          google_failed: 'Google sign-in could not be completed. Try again or sign in with email and password.',
+          session_error: 'Session could not be created. Please try again.',
+        };
+        errEl.textContent = messages[authError] || 'Sign-in failed. Please try again.';
+        errEl.style.display = 'block';
+      }
+      // Clear the query param so refresh does not show the error forever.
+      history.replaceState({}, '', window.location.pathname);
+    }
+  } catch (_) { /* best effort */ }
 }
 
 function showApp() {

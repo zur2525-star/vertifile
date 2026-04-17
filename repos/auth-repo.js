@@ -106,6 +106,23 @@ async function setEmailVerified(userId, verified = true) {
   await pool.query('UPDATE users SET email_verified = $1, updated_at = NOW() WHERE id = $2', [verified, userId]);
 }
 
+// Link a Google provider to an existing user account (typically one that
+// signed up with email+password). Called when Google OAuth returns a
+// verified email that matches an existing account — safe because Google
+// guarantees email ownership. Upgrades provider to 'google' but keeps
+// the existing password_hash intact so the user can still log in either way.
+async function linkGoogleProvider(userId, providerId, avatarUrl = null) {
+  await pool.query(
+    `UPDATE users
+     SET provider_id = $1,
+         avatar_url = COALESCE($2, avatar_url),
+         email_verified = TRUE,
+         updated_at = NOW()
+     WHERE id = $3`,
+    [providerId, avatarUrl, userId]
+  );
+}
+
 // ================================================================
 // PASSWORD MANAGEMENT
 // ================================================================
@@ -314,6 +331,7 @@ module.exports = {
     getUserDocumentCount,
     updateLastLogin,
     setEmailVerified,
+    linkGoogleProvider,
     updateUserPassword,
     changeUserPassword,
     saveResetToken,

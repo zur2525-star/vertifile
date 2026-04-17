@@ -360,23 +360,29 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 
       let user = await db.getUserByProviderId('google', profile.id);
       if (!user) {
-        // Issue #8: Don't auto-merge — if email exists with different provider, show error
+        // Auto-link to existing account if email matches.
+        // Safe because Google guarantees the email is verified (checked above).
+        // The existing password_hash is preserved so the user can still log in
+        // with email+password if they want.
         const existingByEmail = await db.getUserByEmail(email.value);
-        if (existingByEmail && existingByEmail.provider !== 'google') {
-          return done(null, false, {
-            message: 'An account with this email exists. Please sign in with your password first, then link Google from settings.'
+        if (existingByEmail) {
+          await db.linkGoogleProvider(
+            existingByEmail.id,
+            profile.id,
+            profile.photos?.[0]?.value || null
+          );
+          user = await db.getUserById(existingByEmail.id);
+        } else {
+          user = await db.createUser({
+            email: email.value,
+            name: profile.displayName,
+            provider: 'google',
+            providerId: profile.id,
+            avatarUrl: profile.photos?.[0]?.value || null,
           });
+          // Google-verified email — mark as verified
+          await db.setEmailVerified(user.id, true);
         }
-
-        user = await db.createUser({
-          email: email.value,
-          name: profile.displayName,
-          provider: 'google',
-          providerId: profile.id,
-          avatarUrl: profile.photos?.[0]?.value || null,
-        });
-        // Google-verified email — mark as verified
-        await db.setEmailVerified(user.id, true);
       }
       done(null, user);
     } catch(e) { done(e); }

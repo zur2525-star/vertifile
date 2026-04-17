@@ -183,6 +183,21 @@ router.get('/google/callback',
           try {
             await sendWelcomeEmail(user.email, user.name);
           } catch (_) { /* best effort */ }
+
+          // Route new / incomplete users through the onboarding wizard before /app.
+          // Check onboarding_state.completed_at — if null or row missing, send to wizard.
+          try {
+            const { rows } = await db.query(
+              'SELECT completed_at FROM onboarding_state WHERE user_id = $1',
+              [user.id]
+            );
+            const completed = rows[0]?.completed_at;
+            if (!completed) {
+              return res.redirect('/onboarding');
+            }
+          } catch (e) {
+            logger.warn({ err: e, userId: user.id }, 'Onboarding check failed on Google callback, defaulting to /app');
+          }
         } catch (e) {
           logger.warn({ err: e, userId: user?.id }, 'Failed to update last_login on Google callback');
         }
