@@ -841,7 +841,7 @@
      STATE
      ================================================================ */
   var state = {
-    currentStep: 0,     // 0=verify, 1=type+field, 3=docs, 4=volume, 5=plan, 6=stamp, 7=ready
+    currentStep: null,  // null until goToStep() is first called — enables first-load step hooks. 0=verify, 1=type+field, 3=docs, 4=volume, 5=plan, 6=stamp, 7=ready
     userType: null,
     industry: null,
     industryOther: '',
@@ -994,6 +994,13 @@
 
     // Step-specific hooks — defer stamp/summary rendering to next frame
     // so the container is fully laid out and visible before we inject
+    if (stepNum === 0 && prevStep !== 0) {
+      // Trigger verification flow whenever we land on step 0, regardless of
+      // whether it was via startFresh or state resume. Populate email and
+      // send the code. Idempotent on the server (rate-limited per email).
+      populateVerifyEmail();
+      autoSendVerificationCode();
+    }
     if (stepNum === 3) reorderDocCards();
     if (stepNum === 5) updatePlanRecommendation();
     if (stepNum === 6) {
@@ -1713,9 +1720,9 @@
     // step, including users who signed in via Google. Even though Google has
     // already verified the email, Vertifile independently verifies ownership
     // for a second factor of identity assurance.
+    // goToStep(0) triggers populateVerifyEmail + autoSendVerificationCode via
+    // the stepNum === 0 hook in goToStep itself.
     goToStep(0);
-    populateVerifyEmail();
-    autoSendVerificationCode();
   }
 
   // Fetch the authenticated user's email from the server and populate the
