@@ -2353,5 +2353,12 @@
     "label": "Vélo en acción",
     "title": "Vertifile en 20 segundos",
     "subtitle": "Mira cómo los documentos se vuelven a prueba de manipulaciones con 7 capas de seguridad."
+  },
+  "navUser": {
+    "dashboard": "Panel",
+    "documents": "Mis Documentos",
+    "upload": "Proteger Documento",
+    "settings": "Configuración",
+    "logout": "Cerrar Sesión"
   }
 }

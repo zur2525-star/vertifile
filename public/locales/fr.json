@@ -2353,5 +2353,12 @@
     "label": "Voir en action",
     "title": "Vertifile en 20 secondes",
     "subtitle": "Découvrez comment les documents deviennent inviolables avec 7 couches de sécurité."
+  },
+  "navUser": {
+    "dashboard": "Tableau de bord",
+    "documents": "Mes Documents",
+    "upload": "Protéger un Document",
+    "settings": "Paramètres",
+    "logout": "Déconnexion"
   }
 }

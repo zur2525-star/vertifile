@@ -2353,5 +2353,12 @@
     "label": "実際に見てみましょう",
     "title": "Vertifileを20秒で",
     "subtitle": "7層のセキュリティで文書が改ざん防止になる様子をご覧ください。"
+  },
+  "navUser": {
+    "dashboard": "ダッシュボード",
+    "documents": "マイドキュメント",
+    "upload": "文書を保護",
+    "settings": "設定",
+    "logout": "ログアウト"
   }
 }

@@ -2353,5 +2353,12 @@
     "label": "观看实际效果",
     "title": "Vertifile 20秒演示",
     "subtitle": "观看文档如何通过7层安全保护变得防篡改。"
+  },
+  "navUser": {
+    "dashboard": "仪表板",
+    "documents": "我的文档",
+    "upload": "保护文档",
+    "settings": "设置",
+    "logout": "退出登录"
   }
 }

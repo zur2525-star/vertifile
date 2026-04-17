@@ -2353,5 +2353,12 @@
     "label": "Veja em ação",
     "title": "Vertifile em 20 segundos",
     "subtitle": "Veja como os documentos se tornam à prova de adulteração com 7 camadas de segurança."
+  },
+  "navUser": {
+    "dashboard": "Painel",
+    "documents": "Meus Documentos",
+    "upload": "Proteger Documento",
+    "settings": "Configurações",
+    "logout": "Sair"
   }
 }

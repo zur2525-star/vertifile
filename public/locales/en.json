@@ -2024,5 +2024,12 @@
     "label": "See It In Action",
     "title": "Vertifile In 20 Seconds",
     "subtitle": "Watch how documents become tamper-proof with 7 layers of security."
+  },
+  "navUser": {
+    "dashboard": "Dashboard",
+    "documents": "My Documents",
+    "upload": "Protect a Document",
+    "settings": "Settings",
+    "logout": "Log Out"
   }
 }

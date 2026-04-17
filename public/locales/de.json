@@ -2353,5 +2353,12 @@
     "label": "Sieh es in Aktion",
     "title": "Vertifile in 20 Sekunden",
     "subtitle": "Erlebe, wie Dokumente mit 7 Sicherheitsschichten manipulationssicher werden."
+  },
+  "navUser": {
+    "dashboard": "Dashboard",
+    "documents": "Meine Dokumente",
+    "upload": "Dokument schützen",
+    "settings": "Einstellungen",
+    "logout": "Abmelden"
   }
 }
