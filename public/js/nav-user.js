@@ -160,13 +160,31 @@
       if (!wrap.contains(e.target)) closeMenu();
     });
 
-    // Logout button
+    // Logout button. /auth/logout requires a CSRF token because it is
+    // a session-changing endpoint. On pages that don't load /js/csrf.js
+    // (e.g. marketing pages), we fetch the token on-demand here.
     var logoutBtn = menu.querySelector('#vfUserLogoutBtn');
     if (logoutBtn) {
       logoutBtn.addEventListener('click', async function() {
         closeMenu();
         try {
-          await fetch('/auth/logout', { method: 'POST', credentials: 'same-origin' });
+          var csrfToken = null;
+          try {
+            var tokenRes = await fetch('/api/csrf-token', { credentials: 'same-origin' });
+            var tokenBody = await tokenRes.json();
+            if (tokenBody && tokenBody.success && tokenBody.csrfToken) {
+              csrfToken = tokenBody.csrfToken;
+            }
+          } catch (_) { /* continue without token — will 403 gracefully */ }
+
+          var headers = {};
+          if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
+
+          await fetch('/auth/logout', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: headers,
+          });
         } catch (_) { /* best effort */ }
         window.location.href = '/';
       });
