@@ -36,7 +36,7 @@
 
     /* ===== TOP BAR ===== */
     .wiz-top{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.04);display:flex;align-items:center;justify-content:center}
-    .wiz-top-inner{width:100%;max-width:960px;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
+    .wiz-top-inner{width:100%;max-width:1280px;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
     .wiz-logo img{height:26px}
     .wiz-top-right{display:flex;align-items:center;gap:12px}
     .wiz-back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-size:13px;font-weight:500;color:#6b7280;padding:8px 14px;border-radius:10px;transition:.2s}
@@ -56,7 +56,7 @@
 
     /* ===== MAIN CONTENT ===== */
     .wiz-main{flex:1;padding:96px 24px 48px;display:flex;justify-content:center}
-    .wiz-container{width:100%;max-width:960px;position:relative}
+    .wiz-container{width:100%;max-width:1280px;position:relative}
 
     /* ===== SCAN LINE ENTRY ANIMATION ===== */
     .wiz-container::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.5),transparent);box-shadow:0 0 20px rgba(124,58,237,.4);pointer-events:none;opacity:0;z-index:100}
@@ -83,8 +83,18 @@
     .card-grid{display:grid;gap:16px}
     .card-grid.cols-3{grid-template-columns:repeat(3,1fr)}
     .card-grid.cols-2{grid-template-columns:repeat(2,1fr)}
-    .card-grid.cols-4{grid-template-columns:repeat(2,1fr)}
+    /* cols-4: fix — was repeat(2,1fr) at base, now correct 4-col desktop default */
+    .card-grid.cols-4{grid-template-columns:repeat(4,1fr)}
+    /* cols-1 keeps its stacked default; volumeGrid gets its own responsive rule below */
     .card-grid.cols-1{grid-template-columns:1fr;max-width:560px;margin:0 auto}
+    /* docGrid dedicated rule — 4 cols on desktop, steps down at breakpoints */
+    #docGrid{grid-template-columns:repeat(4,1fr);max-width:none;margin:0}
+    /* volumeGrid dedicated rule — 4 cols in one row on desktop */
+    #volumeGrid{grid-template-columns:repeat(4,1fr);max-width:none;margin:0}
+    /* Industry features tooltip: hide on wide desktop since auto-advance fires quickly */
+    @media(min-width:1200px){
+      .industry-features{display:none!important}
+    }
 
     /* ===== SELECTION CARD ===== */
     .sel-card{background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.08);border-radius:16px;padding:24px;cursor:pointer;transition:all .25s ease;position:relative;user-select:none;box-shadow:0 2px 8px rgba(124,58,237,.04)}
@@ -303,18 +313,51 @@
     button:focus-visible,a:focus-visible,.sel-card:focus-visible,.plan-card:focus-visible,.size-opt:focus-visible,.color-swatch:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
 
     /* ===== RESPONSIVE ===== */
-    @media(max-width:1024px){
+
+    /* --- 1024–1199px: medium desktop --- */
+    @media(min-width:1024px) and (max-width:1199px){
+      .wiz-container{max-width:960px}
+      .wiz-top-inner{max-width:960px}
+      /* cols-4 (fieldGrid/step2): 3 cols at medium */
+      .card-grid.cols-4{grid-template-columns:repeat(3,1fr)}
+      /* docGrid (step3, 8 cards): 3 cols */
+      #docGrid{grid-template-columns:repeat(3,1fr)}
+      /* volumeGrid (step4, 4 cards): 2 cols at medium — 4-col was cramped with description text */
+      #volumeGrid{grid-template-columns:repeat(2,1fr)}
+      /* industry features visible again below 1200px */
+    }
+
+    /* --- 768–1023px: tablet --- */
+    @media(min-width:768px) and (max-width:1023px){
+      .wiz-container{max-width:768px}
+      .wiz-top-inner{max-width:768px}
       .stamp-layout{grid-template-columns:1fr}
       .stamp-preview-area{position:relative;top:0;order:2}
       .stamp-controls{order:1}
+      /* cols-4 (fieldGrid): 2 cols */
+      .card-grid.cols-4{grid-template-columns:repeat(2,1fr)}
+      /* docGrid (step3): 2 cols */
+      #docGrid{grid-template-columns:repeat(2,1fr)}
+      /* volumeGrid (step4): 2 cols */
+      #volumeGrid{grid-template-columns:repeat(2,1fr)}
+      /* planGrid (step5): 2 cols at tablet — 3 plan cards with feature lists get too narrow at 3 cols */
+      #planGrid{grid-template-columns:repeat(2,1fr)}
     }
 
-    @media(max-width:768px){
+    /* --- <768px: mobile — single column everywhere, unchanged behavior --- */
+    @media(max-width:767px){
+      .wiz-container{max-width:100%}
       #step7{padding:40px 24px;border-radius:20px}
       .step-header h1{font-size:clamp(22px,6vw,32px)}
       .step-header p{font-size:14px}
       .card-grid.cols-3{grid-template-columns:1fr}
       .card-grid.cols-4{grid-template-columns:1fr}
+      /* docGrid and volumeGrid: single column on mobile */
+      #docGrid{grid-template-columns:1fr}
+      #volumeGrid{grid-template-columns:1fr;max-width:560px;margin:0 auto}
+      /* industry features visible on mobile */
+      .industry-features{display:none}
+      .sel-card.selected .industry-features{display:block}
       .sel-card{padding:18px}
       .sel-card .card-icon{width:40px;height:40px;margin-bottom:10px;font-size:20px}
       .sel-card .card-title{font-size:16px}
