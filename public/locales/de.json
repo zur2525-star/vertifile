@@ -2267,29 +2267,34 @@
       "subtitle": "Geben Sie den 6-stelligen Code ein, den wir gesendet haben an",
       "resend": "Code erneut senden",
       "changeEmail": "Falsche E-Mail?",
-      "spam": "Code nicht erhalten? Überprüfen Sie Ihren Spam-Ordner."
+      "spam": "Code nicht erhalten? Überprüfen Sie Ihren Spam-Ordner.",
+      "label": "VERIFIZIEREN"
     },
     "step1": {
       "title": "Erzählen Sie uns von sich",
-      "subtitle": "Dies hilft uns, Ihre Erfahrung anzupassen"
+      "subtitle": "Dies hilft uns, Ihre Erfahrung anzupassen",
+      "label": "ÜBER SIE"
     },
     "step2": {
       "label": "Wählen Sie jetzt Ihr Fachgebiet:"
     },
     "step3": {
       "title": "Welche Dokumente möchten Sie schützen?",
-      "subtitle": "Wählen Sie alle zutreffenden — Sie können dies später ändern"
+      "subtitle": "Wählen Sie alle zutreffenden — Sie können dies später ändern",
+      "label": "DOKUMENTTYPEN"
     },
     "step4": {
       "title": "Wie viele Dokumente pro Monat?",
-      "subtitle": "Dies hilft uns, den richtigen Plan zu empfehlen"
+      "subtitle": "Dies hilft uns, den richtigen Plan zu empfehlen",
+      "label": "UMFANG"
     },
     "step5": {
       "title": "Wählen Sie Ihren Plan",
       "subtitle": "Jetzt keine Zahlung erforderlich. Starten Sie Ihre 14-tägige Testphase nach der Einrichtung.",
       "noPayment": "Jetzt keine Zahlung erforderlich. Ihre 14-tägige Testphase beginnt nach der Einrichtung.",
       "reassure": "Sie können Ihren Plan jederzeit über Ihr Dashboard ändern.",
-      "enterpriseNote": "Unser Team meldet sich innerhalb von 24 Stunden, um Ihren individuellen Plan einzurichten."
+      "enterpriseNote": "Unser Team meldet sich innerhalb von 24 Stunden, um Ihren individuellen Plan einzurichten.",
+      "label": "PLAN"
     },
     "step6": {
       "title": "Machen Sie es zu Ihrem",
@@ -2302,14 +2307,16 @@
       "dropText": "Logo hier ablegen oder klicken zum Durchsuchen",
       "removeLogo": "Entfernen",
       "stampSize": "Stempelgröße",
-      "cta": "Weiter"
+      "cta": "Weiter",
+      "label": "ANPASSUNG"
     },
     "step7": {
       "title": "Alles bereit!",
       "subtitle": "Ihr Vertifile-Konto ist eingerichtet. Schützen Sie jetzt Ihr erstes Dokument.",
       "cta": "Dokumente schützen",
       "changePlan": "Plan ändern",
-      "seePlans": "Alle Pläne ansehen"
+      "seePlans": "Alle Pläne ansehen",
+      "label": "BEREIT"
     },
     "types": {
       "individual": {
@@ -2347,7 +2354,8 @@
       "other": {
         "desc": "Immobilien, Logistik, Einzelhandel, usw."
       }
-    }
+    },
+    "signOut": "Nicht Sie? Abmelden"
   },
   "video": {
     "label": "Sieh es in Aktion",

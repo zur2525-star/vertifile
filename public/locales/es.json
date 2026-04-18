@@ -2267,29 +2267,34 @@
       "subtitle": "Ingresa el código de 6 dígitos que enviamos a",
       "resend": "Reenviar código",
       "changeEmail": "¿Correo incorrecto?",
-      "spam": "¿No recibiste el código? Revisa tu carpeta de spam."
+      "spam": "¿No recibiste el código? Revisa tu carpeta de spam.",
+      "label": "VERIFICAR"
     },
     "step1": {
       "title": "Cuéntanos sobre ti",
-      "subtitle": "Esto nos ayuda a personalizar tu experiencia"
+      "subtitle": "Esto nos ayuda a personalizar tu experiencia",
+      "label": "SOBRE TI"
     },
     "step2": {
       "label": "Ahora elige tu sector:"
     },
     "step3": {
       "title": "¿Qué documentos necesitas proteger?",
-      "subtitle": "Selecciona todos los que apliquen — puedes cambiarlo después"
+      "subtitle": "Selecciona todos los que apliquen — puedes cambiarlo después",
+      "label": "TIPOS DE DOCUMENTOS"
     },
     "step4": {
       "title": "¿Cuántos documentos por mes?",
-      "subtitle": "Esto nos ayuda a recomendarte el plan adecuado"
+      "subtitle": "Esto nos ayuda a recomendarte el plan adecuado",
+      "label": "ESCALA"
     },
     "step5": {
       "title": "Elige tu plan",
       "subtitle": "No se requiere pago ahora. Comienza tu prueba de 14 días después de la configuración.",
       "noPayment": "No se requiere pago ahora. Tu prueba de 14 días comienza después de la configuración.",
       "reassure": "Puedes cambiar tu plan en cualquier momento desde tu panel de control.",
-      "enterpriseNote": "Nuestro equipo se pondrá en contacto en 24 horas para configurar tu plan personalizado."
+      "enterpriseNote": "Nuestro equipo se pondrá en contacto en 24 horas para configurar tu plan personalizado.",
+      "label": "PLAN"
     },
     "step6": {
       "title": "Personalízalo",
@@ -2302,14 +2307,16 @@
       "dropText": "Suelta tu logo aquí o haz clic para explorar",
       "removeLogo": "Eliminar",
       "stampSize": "Tamaño del sello",
-      "cta": "Continuar"
+      "cta": "Continuar",
+      "label": "PERSONALIZACIÓN"
     },
     "step7": {
       "title": "¡Todo listo!",
       "subtitle": "Tu cuenta de Vertifile está lista. Comienza a proteger tu primer documento.",
       "cta": "Comenzar a proteger documentos",
       "changePlan": "Cambiar plan",
-      "seePlans": "Ver todos los planes"
+      "seePlans": "Ver todos los planes",
+      "label": "LISTO"
     },
     "types": {
       "individual": {
@@ -2347,7 +2354,8 @@
       "other": {
         "desc": "Inmobiliaria, logística, minorista, etc."
       }
-    }
+    },
+    "signOut": "¿No eres tú? Cerrar sesión"
   },
   "video": {
     "label": "Vélo en acción",

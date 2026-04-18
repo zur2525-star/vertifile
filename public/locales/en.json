@@ -1938,29 +1938,34 @@
       "subtitle": "Enter the 6-digit code we sent to",
       "resend": "Resend code",
       "changeEmail": "Wrong email?",
-      "spam": "Didn't receive the code? Check your spam folder."
+      "spam": "Didn't receive the code? Check your spam folder.",
+      "label": "VERIFY"
     },
     "step1": {
       "title": "Tell us about yourself",
-      "subtitle": "This helps us customize your experience"
+      "subtitle": "This helps us customize your experience",
+      "label": "ABOUT YOU"
     },
     "step2": {
       "label": "Now choose your field:"
     },
     "step3": {
       "title": "What documents do you need to protect?",
-      "subtitle": "Select all that apply — you can change this later"
+      "subtitle": "Select all that apply — you can change this later",
+      "label": "DOCUMENT TYPES"
     },
     "step4": {
       "title": "How many documents per month?",
-      "subtitle": "This helps us recommend the right plan"
+      "subtitle": "This helps us recommend the right plan",
+      "label": "SCALE"
     },
     "step5": {
       "title": "Choose your plan",
       "subtitle": "No payment needed now. Start your 14-day trial after setup.",
       "noPayment": "No payment needed now. You'll start your 14-day trial after setup.",
       "reassure": "You can change your plan anytime from your dashboard.",
-      "enterpriseNote": "Our team will reach out within 24 hours to set up your custom plan."
+      "enterpriseNote": "Our team will reach out within 24 hours to set up your custom plan.",
+      "label": "PLAN"
     },
     "step6": {
       "title": "Make it yours",
@@ -1973,14 +1978,16 @@
       "dropText": "Drop your logo here or click to browse",
       "removeLogo": "Remove",
       "stampSize": "Stamp Size",
-      "cta": "Continue"
+      "cta": "Continue",
+      "label": "CUSTOMIZATION"
     },
     "step7": {
       "title": "You're all set!",
       "subtitle": "Your Vertifile account is ready. Start protecting your first document.",
       "cta": "Start Protecting Documents",
       "changePlan": "Change plan",
-      "seePlans": "See all plans"
+      "seePlans": "See all plans",
+      "label": "READY"
     },
     "types": {
       "individual": {
@@ -2018,7 +2025,8 @@
       "other": {
         "desc": "Real estate, logistics, retail, etc."
       }
-    }
+    },
+    "signOut": "Not you? Sign out"
   },
   "video": {
     "label": "See It In Action",

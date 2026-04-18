@@ -2267,29 +2267,34 @@
       "subtitle": "Entrez le code à 6 chiffres que nous avons envoyé à",
       "resend": "Renvoyer le code",
       "changeEmail": "Mauvaise adresse ?",
-      "spam": "Vous n'avez pas reçu le code ? Vérifiez votre dossier spam."
+      "spam": "Vous n'avez pas reçu le code ? Vérifiez votre dossier spam.",
+      "label": "VÉRIFICATION"
     },
     "step1": {
       "title": "Parlez-nous de vous",
-      "subtitle": "Cela nous aide à personnaliser votre expérience"
+      "subtitle": "Cela nous aide à personnaliser votre expérience",
+      "label": "VOS INFORMATIONS"
     },
     "step2": {
       "label": "Choisissez maintenant votre secteur :"
     },
     "step3": {
       "title": "Quels documents devez-vous protéger ?",
-      "subtitle": "Sélectionnez tout ce qui s'applique — vous pourrez modifier cela plus tard"
+      "subtitle": "Sélectionnez tout ce qui s'applique — vous pourrez modifier cela plus tard",
+      "label": "TYPES DE DOCUMENTS"
     },
     "step4": {
       "title": "Combien de documents par mois ?",
-      "subtitle": "Cela nous aide à recommander le bon plan"
+      "subtitle": "Cela nous aide à recommander le bon plan",
+      "label": "VOLUME"
     },
     "step5": {
       "title": "Choisissez votre plan",
       "subtitle": "Aucun paiement requis maintenant. Commencez votre essai de 14 jours après la configuration.",
       "noPayment": "Aucun paiement requis maintenant. Votre essai de 14 jours commence après la configuration.",
       "reassure": "Vous pouvez changer de plan à tout moment depuis votre tableau de bord.",
-      "enterpriseNote": "Notre équipe vous contactera dans les 24 heures pour mettre en place votre plan personnalisé."
+      "enterpriseNote": "Notre équipe vous contactera dans les 24 heures pour mettre en place votre plan personnalisé.",
+      "label": "PLAN"
     },
     "step6": {
       "title": "Personnalisez-le",
@@ -2302,14 +2307,16 @@
       "dropText": "Déposez votre logo ici ou cliquez pour parcourir",
       "removeLogo": "Supprimer",
       "stampSize": "Taille du cachet",
-      "cta": "Continuer"
+      "cta": "Continuer",
+      "label": "PERSONNALISATION"
     },
     "step7": {
       "title": "Tout est prêt !",
       "subtitle": "Votre compte Vertifile est prêt. Commencez à protéger votre premier document.",
       "cta": "Commencer à protéger les documents",
       "changePlan": "Changer de plan",
-      "seePlans": "Voir tous les plans"
+      "seePlans": "Voir tous les plans",
+      "label": "PRÊT"
     },
     "types": {
       "individual": {
@@ -2347,7 +2354,8 @@
       "other": {
         "desc": "Immobilier, logistique, commerce de détail, etc."
       }
-    }
+    },
+    "signOut": "Ce n'est pas vous ? Se déconnecter"
   },
   "video": {
     "label": "Voir en action",

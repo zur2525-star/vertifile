@@ -145,6 +145,7 @@
 
     /* ===== CONTINUE BUTTON ===== */
     .wiz-cta-wrap{text-align:center;margin-top:40px}
+    .wiz-cta-wrap.hidden{display:none}
     .wiz-cta{display:inline-flex;align-items:center;gap:10px;padding:16px 48px;border:none;border-radius:14px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(79,70,229,.3);letter-spacing:-.1px}
     .wiz-cta:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,70,229,.5)}
     .wiz-cta:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
@@ -525,7 +526,9 @@
           </div>
         </div>
 
-        <div class="wiz-cta-wrap">
+        <div class="wiz-cta-wrap hidden">
+          <!-- Step 1 auto-advances when both userType and industry are picked.
+               This CTA is retained for a11y fallback and JS state tracking. -->
           <button class="wiz-cta" id="cta1" disabled data-i18n="onboarding.continue">
             <span>Continue</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
@@ -648,7 +651,9 @@
           </div>
         </div>
 
-        <div class="wiz-cta-wrap">
+        <div class="wiz-cta-wrap hidden">
+          <!-- Step 4 auto-advances on volume selection. CTA retained for
+               a11y fallback and existing JS state tracking. -->
           <button class="wiz-cta" id="cta4" disabled>
             <span data-i18n="onboarding.continue">Continue</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
@@ -708,7 +713,10 @@
         <p class="plan-reassure" data-i18n="onboarding.step5.reassure">You can change your plan anytime from your dashboard.</p>
         <div class="plan-enterprise-note" id="enterpriseNote" data-i18n="onboarding.step5.enterpriseNote">Our team will reach out within 24 hours to set up your custom plan.</div>
 
-        <div class="wiz-cta-wrap">
+        <div class="wiz-cta-wrap hidden" id="cta5Wrap">
+          <!-- Step 5: auto-advances for standard plans. Enterprise keeps the
+               button visible so the user can read the enterprise note first
+               and then proceed explicitly. JS toggles the hidden class. -->
           <button class="wiz-cta" id="cta5" disabled>
             <span data-i18n="onboarding.continue">Continue</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
@@ -957,10 +965,12 @@
       state.userType = val;
       showFieldSection();
       updateCta1();
+      maybeAutoAdvanceStep1();
     });
     setupSingleSelect('fieldGrid', function(val) {
       state.industry = val;
       updateCta1();
+      maybeAutoAdvanceStep1();
     });
     setupMultiSelect('docGrid', function(vals) {
       state.documentTypes = vals;
@@ -973,6 +983,7 @@
       var btn = document.getElementById('cta4');
       btn.disabled = false;
       pulseButton(btn);
+      autoAdvance();
     });
     setupPlanSelection();
     setupStampControls();
@@ -1252,7 +1263,34 @@
       // Show enterprise note
       var note = document.getElementById('enterpriseNote');
       note.style.display = val === 'enterprise' ? 'block' : 'none';
+
+      // Enterprise keeps the explicit Continue button visible so the user
+      // can read the enterprise-contact note first. Standard plans auto-advance.
+      var wrap = document.getElementById('cta5Wrap');
+      if (val === 'enterprise') {
+        if (wrap) wrap.classList.remove('hidden');
+      } else {
+        if (wrap) wrap.classList.add('hidden');
+        autoAdvance();
+      }
     });
+  }
+
+  /* ================================================================
+     AUTO-ADVANCE — move to the next step after a user selection.
+     ================================================================ */
+  // Single-selection steps (1 type+industry, 4 volume, 5 plan) now advance
+  // automatically after the user picks, so the "Continue" button becomes
+  // redundant for those steps. The 450ms delay lets the user see the
+  // selection animation (green confirmation flash) before the next step
+  // slides in.
+  function autoAdvance() {
+    setTimeout(function() { nextStep(); }, 450);
+  }
+
+  // Step 1 needs BOTH user-type and industry before auto-advancing.
+  function maybeAutoAdvanceStep1() {
+    if (state.userType && state.industry) autoAdvance();
   }
 
   function updatePlanRecommendation() {
