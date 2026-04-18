@@ -197,6 +197,26 @@ router.get('/onboarding/state', requireAuth, async (req, res) => {
   try {
     const db = req.app.get('db');
 
+    // Hard gate: if the user has not completed Vertifile email verification,
+    // we ALWAYS report current_step=0 with no selections — regardless of any
+    // previously-saved state. This guarantees the client wizard cannot
+    // resume past step 0 (verification) until verify-code succeeds and flips
+    // email_verified=true on the user row.
+    if (!req.user.email_verified) {
+      return res.json({
+        success: true,
+        state: {
+          current_step: 0,
+          selections: {},
+          stamp_config: {},
+          started_at: null,
+          completed_at: null,
+          last_active_at: null,
+          email_verification_required: true
+        }
+      });
+    }
+
     const result = await db.query(
       `SELECT current_step, selections, stamp_config, started_at, completed_at, last_active_at
        FROM onboarding_state
@@ -205,7 +225,8 @@ router.get('/onboarding/state', requireAuth, async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      // No state yet — return defaults so the client can start fresh
+      // No state yet — return defaults so the client can start fresh.
+      // current_step=1 because email_verified is true (handled above).
       return res.json({
         success: true,
         state: {
@@ -244,6 +265,17 @@ router.get('/onboarding/state', requireAuth, async (req, res) => {
 
 router.put('/onboarding/state', requireAuth, onboardingStateLimiter, async (req, res) => {
   try {
+    // Hard gate: cannot save onboarding state until email is verified.
+    // This complements the GET-side gate so the wizard cannot persist any
+    // progress past the verification step.
+    if (!req.user.email_verified) {
+      return res.status(403).json({
+        success: false,
+        error: 'Email verification required',
+        code: 'EMAIL_NOT_VERIFIED'
+      });
+    }
+
     const { current_step, selections, stamp_config } = req.body;
 
     if (current_step === undefined && selections === undefined && stamp_config === undefined) {
@@ -286,6 +318,15 @@ router.put('/onboarding/state', requireAuth, onboardingStateLimiter, async (req,
 
 router.post('/onboarding/complete', onboardingStateLimiter, requireAuth, async (req, res) => {
   try {
+    // Hard gate: cannot complete onboarding until email is verified.
+    if (!req.user.email_verified) {
+      return res.status(403).json({
+        success: false,
+        error: 'Email verification required',
+        code: 'EMAIL_NOT_VERIFIED'
+      });
+    }
+
     const db = req.app.get('db');
 
     // Pull the latest full state from DB so we always work from the canonical version
