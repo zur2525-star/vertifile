@@ -19,7 +19,14 @@
     /* ===== RESET & BASE ===== */
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{overflow-x:hidden;height:100%}
-    body{font-family:'Inter','Heebo',sans-serif;background:#fafafa;min-height:100vh;color:#111827}
+    body{font-family:'Inter','Heebo',sans-serif;background:linear-gradient(180deg,#e8e0ff 0%,#ece9ff 20%,#f5f3ff 60%,#ffffff 100%);min-height:100vh;color:#111827;position:relative;z-index:0}
+    body::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:1400px;height:100%;background-image:linear-gradient(rgba(139,92,246,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.07) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,black 30%,transparent 80%);pointer-events:none;z-index:-1}
+
+    /* ===== NEBULA GLOW BLOBS ===== */
+    .wiz-glow-1{position:fixed;top:-10%;left:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(139,92,246,.07),transparent 70%);filter:blur(80px);animation:nebulaFloat1 20s ease-in-out infinite alternate;pointer-events:none;z-index:-1}
+    .wiz-glow-2{position:fixed;bottom:-15%;right:-5%;width:500px;height:500px;background:radial-gradient(circle,rgba(168,85,247,.05),transparent 70%);filter:blur(80px);animation:nebulaFloat2 25s ease-in-out infinite alternate;pointer-events:none;z-index:-1}
+    @keyframes nebulaFloat1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(40px,30px) scale(1.1)}}
+    @keyframes nebulaFloat2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-30px,-40px) scale(1.15)}}
     [dir="rtl"] body{font-family:'Heebo','Inter',sans-serif}
     a{text-decoration:none;color:inherit}
     button{font-family:inherit}
@@ -39,16 +46,22 @@
     [dir="rtl"] .wiz-back-btn svg{transform:scaleX(-1)}
 
     /* ===== PROGRESS DOTS ===== */
-    .wiz-progress{display:flex;align-items:center;gap:8px;direction:ltr}
-    .wiz-dot{width:10px;height:10px;border-radius:50%;background:#e5e7eb;transition:all .3s;position:relative}
-    .wiz-dot.active{background:#7c3aed;transform:scale(1.2)}
-    .wiz-dot.done{background:#7c3aed}
-    .wiz-dot.done::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:4px;height:4px;background:#fff;border-radius:50%}
+    .wiz-progress{display:flex;align-items:center;gap:6px;direction:ltr}
+    .wiz-dot{width:28px;height:28px;border-radius:50%;background:#e5e7eb;transition:all .3s;position:relative;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#9ca3af;flex-shrink:0}
+    .wiz-dot.active{background:linear-gradient(135deg,#4f46e5,#7c3aed);box-shadow:0 4px 16px rgba(79,70,229,.3);transform:scale(1.1);color:#fff}
+    .wiz-dot.done{background:#7c3aed;color:#fff}
+    .wiz-dot.done .dot-num{display:none}
+    .wiz-dot.done::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:10px;height:10px;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");background-size:contain;background-repeat:no-repeat}
     .wiz-step-label{font-size:11px;font-weight:600;color:#9ca3af;letter-spacing:.5px;text-transform:uppercase;margin-left:12px;white-space:nowrap}
 
     /* ===== MAIN CONTENT ===== */
     .wiz-main{flex:1;padding:96px 24px 48px;display:flex;justify-content:center}
-    .wiz-container{width:100%;max-width:960px}
+    .wiz-container{width:100%;max-width:960px;position:relative}
+
+    /* ===== SCAN LINE ENTRY ANIMATION ===== */
+    .wiz-container::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.5),transparent);box-shadow:0 0 20px rgba(124,58,237,.4);pointer-events:none;opacity:0;z-index:100}
+    @keyframes scanSweep{0%{top:0;opacity:1}100%{top:100%;opacity:0}}
+    .wiz-container.scanning::after{animation:scanSweep .6s ease-in-out forwards}
 
     /* ===== STEP CONTAINERS ===== */
     .wiz-step{display:none;opacity:0;transform:translateY(16px);transition:opacity .3s ease,transform .3s ease}
@@ -57,7 +70,13 @@
 
     /* ===== STEP HEADER ===== */
     .step-header{text-align:center;margin-bottom:40px}
-    .step-header h1{font-size:32px;font-weight:800;color:#111827;letter-spacing:-.5px;margin-bottom:8px}
+    .step-header h1{font-size:clamp(28px,5vw,42px);font-weight:900;color:#111827;letter-spacing:-1px;margin-bottom:8px}
+
+    /* Gradient text for select headings */
+    .wiz-gradient-text{background:linear-gradient(135deg,#a78bfa,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;color:#7c3aed}
+
+    /* Step label pills */
+    .step-pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7c3aed;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.12);padding:6px 14px;border-radius:20px;margin-bottom:16px}
     .step-header p{font-size:16px;color:#6b7280;font-weight:400;max-width:480px;margin:0 auto;line-height:1.6}
 
     /* ===== CARD GRID ===== */
@@ -68,9 +87,15 @@
     .card-grid.cols-1{grid-template-columns:1fr;max-width:560px;margin:0 auto}
 
     /* ===== SELECTION CARD ===== */
-    .sel-card{background:#fff;border:2px solid rgba(0,0,0,.06);border-radius:16px;padding:24px;cursor:pointer;transition:all .25s ease;position:relative;user-select:none}
-    .sel-card:hover{border-color:rgba(124,58,237,.2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.06)}
-    .sel-card.selected{border-color:#7c3aed;background:rgba(124,58,237,.02);transform:scale(1.02)}
+    .sel-card{background:rgba(255,255,255,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.08);border-radius:16px;padding:24px;cursor:pointer;transition:all .25s ease;position:relative;user-select:none;box-shadow:0 2px 8px rgba(124,58,237,.04)}
+    .sel-card:hover{border-color:rgba(124,58,237,.15);transform:translateY(-4px);box-shadow:0 12px 40px rgba(124,58,237,.12),0 0 0 1px rgba(124,58,237,.15)}
+    .sel-card.selected{border-color:#7c3aed;background:rgba(255,255,255,.95);transform:scale(1.02);box-shadow:0 8px 32px rgba(124,58,237,.25);animation:cardSelectFlash .5s ease-out}
+
+    @keyframes cardSelectFlash{
+      0%{box-shadow:0 0 0 0 rgba(52,211,153,0)}
+      40%{box-shadow:0 0 0 6px rgba(52,211,153,.25)}
+      100%{box-shadow:0 8px 32px rgba(124,58,237,.25)}
+    }
     .sel-card.selected .card-check{opacity:1;transform:scale(1)}
     .sel-card:not(.selected){opacity:1;transition:all .25s ease,opacity .3s ease}
     .has-selection .sel-card:not(.selected){opacity:.75}
@@ -129,7 +154,7 @@
 
     /* ===== EMAIL VERIFICATION (Step 0) ===== */
     .verify-card{background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:20px;max-width:440px;margin:0 auto;padding:40px 36px;box-shadow:0 4px 24px rgba(0,0,0,.06);text-align:center}
-    .verify-card .verify-icon{width:56px;height:56px;background:rgba(124,58,237,.06);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+    .verify-card .verify-icon{width:56px;height:56px;background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(6,182,212,.12));border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
     .verify-card .verify-icon svg{width:28px;height:28px;color:#7c3aed}
     .verify-card h2{font-size:22px;font-weight:800;color:#111827;margin-bottom:6px}
     .verify-card .verify-sub{font-size:14px;color:#6b7280;margin-bottom:28px}
@@ -137,7 +162,7 @@
     .code-inputs{display:flex;justify-content:center;gap:10px;margin-bottom:24px;direction:ltr}
     .code-inputs input{width:48px;height:56px;border:2px solid rgba(0,0,0,.1);border-radius:12px;text-align:center;font-size:22px;font-weight:700;font-family:inherit;color:#111827;transition:.2s;outline:none;-moz-appearance:textfield;direction:ltr;unicode-bidi:plaintext}
     .code-inputs input::-webkit-outer-spin-button,.code-inputs input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-    .code-inputs input:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+    .code-inputs input:focus{border-color:#06b6d4;box-shadow:0 0 0 3px rgba(6,182,212,.15)}
     .code-inputs.shake{animation:shakeInputs .4s ease}
     .code-inputs.error input{border-color:#ef4444}
     @keyframes shakeInputs{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
@@ -231,7 +256,26 @@
     .contrast-warn.show{display:flex}
 
     /* ===== READY / SUMMARY (Step 7) ===== */
-    .ready-layout{text-align:center;max-width:640px;margin:0 auto}
+    #step7{background:linear-gradient(135deg,#4338ca 0%,#6d28d9 40%,#7c3aed 70%,#8b5cf6 100%);border-radius:24px;padding:60px 40px;position:relative;overflow:hidden;color:#fff}
+    #step7::before{content:'';position:absolute;top:-20%;left:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);pointer-events:none}
+    #step7::after{content:'';position:absolute;bottom:-20%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(6,182,212,.12),transparent 70%);pointer-events:none}
+    #step7 .step-header h1{color:#fff}
+    #step7 .step-header h1.wiz-gradient-text{-webkit-text-fill-color:#fff;color:#fff;background:none}
+    #step7 .step-header p{color:rgba(255,255,255,.8)}
+    #step7 .step-pill{color:#c4b5fd;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2)}
+    #step7 .summary-card{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.15)}
+    #step7 .sum-label{color:rgba(255,255,255,.6)}
+    #step7 .sum-value{color:#fff}
+    #step7 .ready-plan{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2)}
+    #step7 .rp-label{color:rgba(255,255,255,.6)}
+    #step7 .rp-name{color:#fff}
+    #step7 .rp-price{color:#c4b5fd}
+    #step7 #cta7{background:#fff;color:#6d28d9;font-weight:800;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+    #step7 #cta7:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+    #step7 .ready-secondary a{color:rgba(255,255,255,.6)}
+    #step7 .ready-secondary a:hover{color:#fff}
+
+    .ready-layout{text-align:center;max-width:640px;margin:0 auto;position:relative;z-index:1}
     .ready-stamp-hero{margin:0 auto 32px;width:140px;height:140px}
     #readyStampPreview{width:100%;height:100%}
     .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
@@ -267,7 +311,8 @@
     }
 
     @media(max-width:768px){
-      .step-header h1{font-size:24px}
+      #step7{padding:40px 24px;border-radius:20px}
+      .step-header h1{font-size:clamp(22px,6vw,32px)}
       .step-header p{font-size:14px}
       .card-grid.cols-3{grid-template-columns:1fr}
       .card-grid.cols-4{grid-template-columns:1fr}
@@ -276,6 +321,7 @@
       .sel-card .card-title{font-size:16px}
       .wiz-cta{width:100%;justify-content:center}
       .wiz-step-label{display:none}
+      .wiz-dot{width:22px;height:22px;font-size:10px}
       .code-inputs input{width:42px;height:48px;font-size:18px}
       .plan-card .plan-price{font-size:24px}
       .summary-grid{grid-template-columns:1fr 1fr}
@@ -296,6 +342,8 @@
   <script src="/js/csrf.js"></script>
 </head>
 <body>
+<div class="wiz-glow-1" aria-hidden="true"></div>
+<div class="wiz-glow-2" aria-hidden="true"></div>
 
 <div class="wiz-shell">
 
@@ -327,6 +375,7 @@
           <div class="verify-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
           </div>
+          <span class="step-pill" data-i18n="onboarding.step0.label">VERIFY</span>
           <h2 data-i18n="onboarding.step0.title">Let's verify your email</h2>
           <p class="verify-sub"><span data-i18n="onboarding.step0.subtitle">Enter the 6-digit code we sent to</span> <span class="verify-email" id="verifyEmail">your@email.com</span></p>
           <div class="code-inputs" id="codeInputs" role="group" aria-label="Verification code">
@@ -349,6 +398,7 @@
       <!-- ==================== STEPS 1+2: WHO ARE YOU + YOUR FIELD ==================== -->
       <section class="wiz-step" id="step1" data-step="1">
         <div class="step-header">
+          <span class="step-pill" data-i18n="onboarding.step1.label">ABOUT YOU</span>
           <h1 data-i18n="onboarding.step1.title">Tell us about yourself</h1>
           <p data-i18n="onboarding.step1.subtitle">This helps us customize your experience</p>
         </div>
@@ -486,6 +536,7 @@
       <!-- ==================== STEP 3: DOCUMENT TYPES ==================== -->
       <section class="wiz-step" id="step3" data-step="3">
         <div class="step-header">
+          <span class="step-pill" data-i18n="onboarding.step3.label">DOCUMENT TYPES</span>
           <h1 data-i18n="onboarding.step3.title">What documents do you need to protect?</h1>
           <p data-i18n="onboarding.step3.subtitle">Select all that apply — you can change this later</p>
         </div>
@@ -568,6 +619,7 @@
       <!-- ==================== STEP 4: VOLUME ==================== -->
       <section class="wiz-step" id="step4" data-step="4">
         <div class="step-header">
+          <span class="step-pill" data-i18n="onboarding.step4.label">SCALE</span>
           <h1 data-i18n="onboarding.step4.title">How many documents per month?</h1>
           <p data-i18n="onboarding.step4.subtitle">This helps us recommend the right plan</p>
         </div>
@@ -607,6 +659,7 @@
       <!-- ==================== STEP 5: CHOOSE YOUR PLAN ==================== -->
       <section class="wiz-step" id="step5" data-step="5">
         <div class="step-header">
+          <span class="step-pill" data-i18n="onboarding.step5.label">PLAN</span>
           <h1 data-i18n="onboarding.step5.title">Choose your plan</h1>
           <p data-i18n="onboarding.step5.subtitle">No payment needed now. Start your 14-day trial after setup.</p>
         </div>
@@ -666,7 +719,8 @@
       <!-- ==================== STEP 6: STAMP CUSTOMIZATION ==================== -->
       <section class="wiz-step" id="step6" data-step="6">
         <div class="step-header">
-          <h1 data-i18n="onboarding.step6.title">Make it yours</h1>
+          <span class="step-pill" data-i18n="onboarding.step6.label">CUSTOMIZATION</span>
+          <h1 class="wiz-gradient-text" data-i18n="onboarding.step6.title">Make it yours</h1>
           <p data-i18n="onboarding.step6.subtitle">Customize your Vertifile stamp — this is how your protected documents will look</p>
         </div>
 
@@ -800,7 +854,8 @@
       <!-- ==================== STEP 7: YOU'RE ALL SET ==================== -->
       <section class="wiz-step" id="step7" data-step="7">
         <div class="step-header">
-          <h1 data-i18n="onboarding.step7.title">You're all set!</h1>
+          <span class="step-pill" data-i18n="onboarding.step7.label">READY</span>
+          <h1 class="wiz-gradient-text" data-i18n="onboarding.step7.title">You're all set!</h1>
           <p data-i18n="onboarding.step7.subtitle">Your Vertifile account is ready. Start protecting your first document.</p>
         </div>
 
@@ -936,6 +991,11 @@
       var dot = document.createElement('div');
       dot.className = 'wiz-dot';
       dot.setAttribute('aria-label', STEP_LABELS[i]);
+      // Number span inside the dot (hidden for done state via CSS)
+      var numSpan = document.createElement('span');
+      numSpan.className = 'dot-num';
+      numSpan.textContent = i + 1;
+      dot.appendChild(numSpan);
       progressDots.appendChild(dot);
     }
     // Add step label
@@ -981,6 +1041,15 @@
     // Transition from entering -> active (both are display:block so transition works)
     target.classList.add('active');
     target.classList.remove('entering');
+
+    // Scan line animation on step change
+    var container = document.querySelector('.wiz-container');
+    if (container) {
+      container.classList.remove('scanning');
+      void container.offsetWidth;
+      container.classList.add('scanning');
+      setTimeout(function(){ container.classList.remove('scanning'); }, 700);
+    }
 
     // Update progress
     updateProgressDots();
