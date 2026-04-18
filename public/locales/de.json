@@ -2276,7 +2276,9 @@
       "label": "ÜBER SIE"
     },
     "step2": {
-      "label": "Wählen Sie jetzt Ihr Fachgebiet:"
+      "label": "BRANCHE",
+      "title": "Was ist Ihre Branche?",
+      "subtitle": "Helfen Sie uns, Vertifile auf Ihren Workflow anzupassen"
     },
     "step3": {
       "title": "Welche Dokumente möchten Sie schützen?",
@@ -2321,38 +2323,74 @@
     "types": {
       "individual": {
         "title": "Einzelperson",
-        "desc": "Einzelpraktiker, Freiberufler, private Nutzung"
+        "desc": "Freiberufler, Einzelunternehmer, Privatnutzung"
       },
       "business": {
         "title": "Unternehmen",
-        "desc": "Kleines oder mittleres Unternehmen mit einem Team"
+        "desc": "Kleines oder mittleres Unternehmen mit Team"
       },
       "organization": {
         "title": "Organisation",
-        "desc": "Universität, Krankenhaus, Behörde, Großunternehmen"
+        "desc": "Universität, Krankenhaus, Behörde, Großkonzern"
       }
     },
     "fields": {
       "legal": {
-        "desc": "Anwaltskanzleien, Gerichte, Notar"
+        "desc": "Anwaltskanzleien, Gerichte, Notar",
+        "title": "Recht",
+        "featLabel": "Vertifile für Recht",
+        "feat1": "Vertragsverifizierung",
+        "feat2": "Notarielle Beglaubigung",
+        "feat3": "Gerichtsverwertbarer Nachweis"
       },
       "healthcare": {
-        "desc": "Krankenhäuser, Kliniken, Versicherungen"
+        "desc": "Krankenhäuser, Kliniken, Versicherungen",
+        "title": "Gesundheit",
+        "featLabel": "Vertifile für Gesundheit",
+        "feat1": "Schutz von Krankenakten",
+        "feat2": "Verifizierung von Laborbefunden",
+        "feat3": "Integrität von Versicherungsansprüchen"
       },
       "education": {
-        "desc": "Universitäten, Schulen, Weiterbildung"
+        "desc": "Universitäten, Schulen, Weiterbildung",
+        "title": "Bildung",
+        "featLabel": "Vertifile für Bildung",
+        "feat1": "Diplomverifizierung",
+        "feat2": "Schutz von Zeugnissen",
+        "feat3": "Zertifizierungsauthentifizierung"
       },
       "finance": {
-        "desc": "Banken, Buchhaltung, Versicherungen"
+        "desc": "Banken, Buchhaltung, Versicherungen",
+        "title": "Finanzen",
+        "featLabel": "Vertifile für Finanzen",
+        "feat1": "Integrität von Finanzberichten",
+        "feat2": "Rechnungsauthentifizierung",
+        "feat3": "Schutz des Prüfpfads"
       },
       "hr": {
-        "desc": "Personalwesen, Recruiting"
+        "desc": "Personalwesen, Recruiting",
+        "title": "Personal",
+        "featLabel": "Vertifile für Personal",
+        "feat1": "Schutz von Mitarbeiterdokumenten",
+        "feat2": "Vertragsverifizierung",
+        "feat3": "Integrität von Hintergrundprüfungen"
       },
       "government": {
-        "desc": "Kommunal, Bundes, Regulierungsbehörden"
+        "desc": "Kommunal, Bundes, Regulierungsbehörden",
+        "title": "Behörden",
+        "featLabel": "Vertifile für Behörden",
+        "feat1": "Schutz offizieller Dokumente",
+        "feat2": "Genehmigungsverifizierung",
+        "feat3": "Nachweis der Regulierungskonformität"
       },
       "other": {
-        "desc": "Immobilien, Logistik, Einzelhandel, usw."
+        "desc": "Immobilien, Logistik, Einzelhandel, usw.",
+        "title": "Sonstiges",
+        "featLabel": "Vertifile für Ihre Branche",
+        "feat1": "Schutz beliebiger Dokumenttypen",
+        "feat2": "Verträge, Zertifikate, Berichte",
+        "feat3": "Fälschungssichere Verifizierung",
+        "placeholder": "z.B. Immobilien, Logistik, Einzelhandel"
       }
     },
     "signOut": "Nicht Sie? Abmelden"

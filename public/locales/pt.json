@@ -2276,7 +2276,9 @@
       "label": "SOBRE VOCÊ"
     },
     "step2": {
-      "label": "Agora escolha sua área de atuação:"
+      "label": "SETOR",
+      "title": "Qual é o seu setor?",
+      "subtitle": "Ajude-nos a personalizar o Vertifile para o seu fluxo de trabalho"
     },
     "step3": {
       "title": "Quais documentos você precisa proteger?",
@@ -2321,11 +2323,11 @@
     "types": {
       "individual": {
         "title": "Individual",
-        "desc": "Profissional autônomo, freelancer, uso pessoal"
+        "desc": "Profissional liberal, freelancer, uso pessoal"
       },
       "business": {
         "title": "Empresa",
-        "desc": "Pequena ou média empresa com uma equipe"
+        "desc": "Empresa pequena ou média com equipa"
       },
       "organization": {
         "title": "Organização",
@@ -2334,25 +2336,61 @@
     },
     "fields": {
       "legal": {
-        "desc": "Escritórios de advocacia, tribunais, cartório"
+        "desc": "Escritórios de advocacia, tribunais, cartório",
+        "title": "Jurídico",
+        "featLabel": "Vertifile para Jurídico",
+        "feat1": "Verificação de contratos",
+        "feat2": "Autenticação notarial",
+        "feat3": "Prova admissível em tribunal"
       },
       "healthcare": {
-        "desc": "Hospitais, clínicas, seguros"
+        "desc": "Hospitais, clínicas, seguros",
+        "title": "Saúde",
+        "featLabel": "Vertifile para Saúde",
+        "feat1": "Proteção de registos médicos",
+        "feat2": "Verificação de resultados laboratoriais",
+        "feat3": "Integridade de sinistros de seguro"
       },
       "education": {
-        "desc": "Universidades, escolas, treinamento"
+        "desc": "Universidades, escolas, treinamento",
+        "title": "Educação",
+        "featLabel": "Vertifile para Educação",
+        "feat1": "Verificação de diplomas",
+        "feat2": "Proteção de históricos escolares",
+        "feat3": "Autenticação de certificações"
       },
       "finance": {
-        "desc": "Bancos, contabilidade, seguros"
+        "desc": "Bancos, contabilidade, seguros",
+        "title": "Finanças",
+        "featLabel": "Vertifile para Finanças",
+        "feat1": "Integridade de relatórios financeiros",
+        "feat2": "Autenticação de faturas",
+        "feat3": "Proteção da trilha de auditoria"
       },
       "hr": {
-        "desc": "Recursos humanos, recrutamento"
+        "desc": "Recursos humanos, recrutamento",
+        "title": "RH",
+        "featLabel": "Vertifile para RH",
+        "feat1": "Proteção de documentos de colaboradores",
+        "feat2": "Verificação de contratos",
+        "feat3": "Integridade de verificações de antecedentes"
       },
       "government": {
-        "desc": "Municipal, federal, regulatório"
+        "desc": "Municipal, federal, regulatório",
+        "title": "Governo",
+        "featLabel": "Vertifile para Governo",
+        "feat1": "Proteção de documentos oficiais",
+        "feat2": "Verificação de licenças",
+        "feat3": "Prova de conformidade regulatória"
       },
       "other": {
-        "desc": "Imóveis, logística, varejo, etc."
+        "desc": "Imóveis, logística, varejo, etc.",
+        "title": "Outro",
+        "featLabel": "Vertifile para o seu setor",
+        "feat1": "Proteja qualquer tipo de documento",
+        "feat2": "Contratos, certificados, relatórios",
+        "feat3": "Verificação à prova de adulteração",
+        "placeholder": "ex.: Imobiliário, Logística, Retalho"
       }
     },
     "signOut": "Não é você? Sair"

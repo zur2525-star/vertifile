@@ -2276,7 +2276,9 @@
       "label": "VOS INFORMATIONS"
     },
     "step2": {
-      "label": "Choisissez maintenant votre secteur :"
+      "label": "SECTEUR",
+      "title": "Quel est votre secteur ?",
+      "subtitle": "Aidez-nous à adapter Vertifile à votre flux de travail"
     },
     "step3": {
       "title": "Quels documents devez-vous protéger ?",
@@ -2334,25 +2336,61 @@
     },
     "fields": {
       "legal": {
-        "desc": "Cabinets d'avocats, tribunaux, notaire"
+        "desc": "Cabinets d'avocats, tribunaux, notaire",
+        "title": "Juridique",
+        "featLabel": "Vertifile pour le Juridique",
+        "feat1": "Vérification de contrats",
+        "feat2": "Authentification notariale",
+        "feat3": "Preuve admissible en justice"
       },
       "healthcare": {
-        "desc": "Hôpitaux, cliniques, assurances"
+        "desc": "Hôpitaux, cliniques, assurances",
+        "title": "Santé",
+        "featLabel": "Vertifile pour la Santé",
+        "feat1": "Protection des dossiers médicaux",
+        "feat2": "Vérification des résultats de laboratoire",
+        "feat3": "Intégrité des dossiers d'assurance"
       },
       "education": {
-        "desc": "Universités, écoles, formation"
+        "desc": "Universités, écoles, formation",
+        "title": "Éducation",
+        "featLabel": "Vertifile pour l'Éducation",
+        "feat1": "Vérification des diplômes",
+        "feat2": "Protection des relevés de notes",
+        "feat3": "Authentification des certifications"
       },
       "finance": {
-        "desc": "Banques, comptabilité, assurances"
+        "desc": "Banques, comptabilité, assurances",
+        "title": "Finance",
+        "featLabel": "Vertifile pour la Finance",
+        "feat1": "Intégrité des rapports financiers",
+        "feat2": "Authentification des factures",
+        "feat3": "Protection de la piste d'audit"
       },
       "hr": {
-        "desc": "Ressources humaines, recrutement"
+        "desc": "Ressources humaines, recrutement",
+        "title": "RH",
+        "featLabel": "Vertifile pour les RH",
+        "feat1": "Protection des documents employés",
+        "feat2": "Vérification de contrats",
+        "feat3": "Intégrité des vérifications de casier"
       },
       "government": {
-        "desc": "Municipal, fédéral, réglementaire"
+        "desc": "Municipal, fédéral, réglementaire",
+        "title": "Gouvernement",
+        "featLabel": "Vertifile pour le Gouvernement",
+        "feat1": "Protection des documents officiels",
+        "feat2": "Vérification des permis",
+        "feat3": "Preuve de conformité réglementaire"
       },
       "other": {
-        "desc": "Immobilier, logistique, commerce de détail, etc."
+        "desc": "Immobilier, logistique, commerce de détail, etc.",
+        "title": "Autre",
+        "featLabel": "Vertifile pour votre secteur",
+        "feat1": "Protégez tout type de document",
+        "feat2": "Contrats, certificats, rapports",
+        "feat3": "Vérification inviolable",
+        "placeholder": "p.ex., Immobilier, Logistique, Commerce"
       }
     },
     "signOut": "Ce n'est pas vous ? Se déconnecter"

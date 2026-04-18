@@ -2276,7 +2276,9 @@
       "label": "关于您"
     },
     "step2": {
-      "label": "现在选择您的行业："
+      "label": "行业",
+      "title": "您的行业是什么？",
+      "subtitle": "帮助我们将 Vertifile 定制到您的工作流程"
     },
     "step3": {
       "title": "您需要保护哪些文件？",
@@ -2325,34 +2327,70 @@
       },
       "business": {
         "title": "企业",
-        "desc": "拥有团队的中小型企业"
+        "desc": "拥有团队的中小型公司"
       },
       "organization": {
-        "title": "组织",
+        "title": "组织机构",
         "desc": "大学、医院、政府机关、大型企业"
       }
     },
     "fields": {
       "legal": {
-        "desc": "律师事务所、法院、公证"
+        "desc": "律师事务所、法院、公证",
+        "title": "法律",
+        "featLabel": "Vertifile 法律版",
+        "feat1": "合同验证",
+        "feat2": "公证认证",
+        "feat3": "法庭可采纳证明"
       },
       "healthcare": {
-        "desc": "医院、诊所、保险"
+        "desc": "医院、诊所、保险",
+        "title": "医疗健康",
+        "featLabel": "Vertifile 医疗版",
+        "feat1": "医疗记录保护",
+        "feat2": "实验室结果验证",
+        "feat3": "保险理赔完整性"
       },
       "education": {
-        "desc": "大学、学校、培训"
+        "desc": "大学、学校、培训",
+        "title": "教育",
+        "featLabel": "Vertifile 教育版",
+        "feat1": "学历文凭验证",
+        "feat2": "成绩单保护",
+        "feat3": "资格证书认证"
       },
       "finance": {
-        "desc": "银行、会计、保险"
+        "desc": "银行、会计、保险",
+        "title": "金融财务",
+        "featLabel": "Vertifile 金融版",
+        "feat1": "财务报告完整性",
+        "feat2": "发票认证",
+        "feat3": "审计追踪保护"
       },
       "hr": {
-        "desc": "人力资源、招聘"
+        "desc": "人力资源、招聘",
+        "title": "人力资源",
+        "featLabel": "Vertifile 人力资源版",
+        "feat1": "员工文件保护",
+        "feat2": "合同验证",
+        "feat3": "背景调查完整性"
       },
       "government": {
-        "desc": "市政、联邦、监管机构"
+        "desc": "市政、联邦、监管机构",
+        "title": "政府机构",
+        "featLabel": "Vertifile 政务版",
+        "feat1": "官方文件保护",
+        "feat2": "许可证验证",
+        "feat3": "法规合规证明"
       },
       "other": {
-        "desc": "房地产、物流、零售等"
+        "desc": "房地产、物流、零售等",
+        "title": "其他",
+        "featLabel": "Vertifile 行业定制版",
+        "feat1": "保护任何类型的文件",
+        "feat2": "合同、证书、报告",
+        "feat3": "防篡改验证",
+        "placeholder": "例如：房地产、物流、零售"
       }
     },
     "signOut": "不是您？退出登录"

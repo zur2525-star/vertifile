@@ -131,9 +131,7 @@
     .industry-features li{font-size:12px;color:#4b5563;padding:2px 0;display:flex;align-items:center;gap:6px}
     .industry-features li::before{content:'';width:4px;height:4px;border-radius:50%;background:#7c3aed;flex-shrink:0}
 
-    /* ===== PROGRESSIVE DISCLOSURE (Step 1+2 combined) ===== */
-    .field-section{display:none;margin-top:32px;opacity:0;transform:translateY(12px);transition:opacity .3s ease,transform .3s ease}
-    .field-section.visible{display:block;opacity:1;transform:translateY(0)}
+    /* ===== STEP 2 INDUSTRY GRID ===== */
     .field-section-label{font-size:14px;font-weight:600;color:#6b7280;margin-bottom:16px;text-align:center}
 
     /* ===== OTHER INDUSTRY INPUT ===== */
@@ -396,7 +394,7 @@
         </div>
       </section>
 
-      <!-- ==================== STEPS 1+2: WHO ARE YOU + YOUR FIELD ==================== -->
+      <!-- ==================== STEP 1: WHO ARE YOU ==================== -->
       <section class="wiz-step" id="step1" data-step="1">
         <div class="step-header">
           <span class="step-pill" data-i18n="onboarding.step1.label">ABOUT YOU</span>
@@ -432,105 +430,147 @@
           </div>
         </div>
 
-        <!-- Field/Industry selection (progressive disclosure) -->
-        <div class="field-section" id="fieldSection">
-          <div class="field-section-label" data-i18n="onboarding.step2.label">Now choose your field:</div>
-          <div class="card-grid cols-4" id="fieldGrid" role="radiogroup" aria-label="Industry field">
-            <div class="sel-card" data-value="legal" tabindex="0" role="radio" aria-checked="false">
-              <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-              <div class="card-icon icon-purple">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-              </div>
-              <div class="card-title">Legal</div>
-              <div class="card-desc" data-i18n="onboarding.fields.legal.desc">Law firms, courts, notary</div>
-              <div class="industry-features">
-                <div class="feat-label">Vertifile for Legal</div>
-                <ul><li>Contract verification</li><li>Notary authentication</li><li>Court-admissible proof</li></ul>
-              </div>
+        <div class="wiz-cta-wrap hidden">
+          <!-- Step 1 auto-advances when user type is selected.
+               This CTA is retained for a11y fallback and JS state tracking. -->
+          <button class="wiz-cta" id="cta1" disabled>
+            <span data-i18n="onboarding.continue">Continue</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- ==================== STEP 2: INDUSTRY FIELD ==================== -->
+      <section class="wiz-step" id="step2" data-step="2">
+        <div class="step-header">
+          <span class="step-pill" data-i18n="onboarding.step2.label">INDUSTRY</span>
+          <h1 data-i18n="onboarding.step2.title">What's your industry?</h1>
+          <p data-i18n="onboarding.step2.subtitle">Help us tailor Vertifile to your workflow</p>
+        </div>
+
+        <div class="card-grid cols-4" id="fieldGrid" role="radiogroup" aria-label="Industry field">
+          <div class="sel-card" data-value="legal" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <div class="card-icon icon-purple">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
             </div>
-            <div class="sel-card" data-value="healthcare" tabindex="0" role="radio" aria-checked="false">
-              <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-              <div class="card-icon icon-red">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-              </div>
-              <div class="card-title">Healthcare</div>
-              <div class="card-desc" data-i18n="onboarding.fields.healthcare.desc">Hospitals, clinics, insurance</div>
-              <div class="industry-features">
-                <div class="feat-label">Vertifile for Healthcare</div>
-                <ul><li>Medical record protection</li><li>Lab result verification</li><li>Insurance claim integrity</li></ul>
-              </div>
+            <div class="card-title" data-i18n="onboarding.fields.legal.title">Legal</div>
+            <div class="card-desc" data-i18n="onboarding.fields.legal.desc">Law firms, courts, notary</div>
+            <div class="industry-features">
+              <div class="feat-label" data-i18n="onboarding.fields.legal.featLabel">Vertifile for Legal</div>
+              <ul>
+                <li data-i18n="onboarding.fields.legal.feat1">Contract verification</li>
+                <li data-i18n="onboarding.fields.legal.feat2">Notary authentication</li>
+                <li data-i18n="onboarding.fields.legal.feat3">Court-admissible proof</li>
+              </ul>
             </div>
-            <div class="sel-card" data-value="education" tabindex="0" role="radio" aria-checked="false">
-              <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-              <div class="card-icon icon-blue">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c0 2 4 3 6 3s6-1 6-3v-5"/></svg>
-              </div>
-              <div class="card-title">Education</div>
-              <div class="card-desc" data-i18n="onboarding.fields.education.desc">Universities, schools, training</div>
-              <div class="industry-features">
-                <div class="feat-label">Vertifile for Education</div>
-                <ul><li>Diploma verification</li><li>Transcript protection</li><li>Certification authentication</li></ul>
-              </div>
+          </div>
+          <div class="sel-card" data-value="healthcare" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <div class="card-icon icon-red">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
             </div>
-            <div class="sel-card" data-value="finance" tabindex="0" role="radio" aria-checked="false">
-              <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-              <div class="card-icon icon-green">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              </div>
-              <div class="card-title">Finance</div>
-              <div class="card-desc" data-i18n="onboarding.fields.finance.desc">Banks, accounting, insurance</div>
-              <div class="industry-features">
-                <div class="feat-label">Vertifile for Finance</div>
-                <ul><li>Financial report integrity</li><li>Invoice authentication</li><li>Audit trail protection</li></ul>
-              </div>
+            <div class="card-title" data-i18n="onboarding.fields.healthcare.title">Healthcare</div>
+            <div class="card-desc" data-i18n="onboarding.fields.healthcare.desc">Hospitals, clinics, insurance</div>
+            <div class="industry-features">
+              <div class="feat-label" data-i18n="onboarding.fields.healthcare.featLabel">Vertifile for Healthcare</div>
+              <ul>
+                <li data-i18n="onboarding.fields.healthcare.feat1">Medical record protection</li>
+                <li data-i18n="onboarding.fields.healthcare.feat2">Lab result verification</li>
+                <li data-i18n="onboarding.fields.healthcare.feat3">Insurance claim integrity</li>
+              </ul>
             </div>
-            <div class="sel-card" data-value="hr" tabindex="0" role="radio" aria-checked="false">
-              <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-              <div class="card-icon icon-orange">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              </div>
-              <div class="card-title">HR</div>
-              <div class="card-desc" data-i18n="onboarding.fields.hr.desc">Human resources, recruitment</div>
-              <div class="industry-features">
-                <div class="feat-label">Vertifile for HR</div>
-                <ul><li>Employee document protection</li><li>Contract verification</li><li>Background check integrity</li></ul>
-              </div>
+          </div>
+          <div class="sel-card" data-value="education" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <div class="card-icon icon-blue">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c0 2 4 3 6 3s6-1 6-3v-5"/></svg>
             </div>
-            <div class="sel-card" data-value="government" tabindex="0" role="radio" aria-checked="false">
-              <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-              <div class="card-icon icon-gray">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M12 2l9 8H3l9-8z"/><path d="M5 10v11"/><path d="M19 10v11"/><path d="M9 10v11"/><path d="M15 10v11"/></svg>
-              </div>
-              <div class="card-title">Government</div>
-              <div class="card-desc" data-i18n="onboarding.fields.government.desc">Municipal, federal, regulatory</div>
-              <div class="industry-features">
-                <div class="feat-label">Vertifile for Government</div>
-                <ul><li>Official document protection</li><li>Permit verification</li><li>Regulatory compliance proof</li></ul>
-              </div>
+            <div class="card-title" data-i18n="onboarding.fields.education.title">Education</div>
+            <div class="card-desc" data-i18n="onboarding.fields.education.desc">Universities, schools, training</div>
+            <div class="industry-features">
+              <div class="feat-label" data-i18n="onboarding.fields.education.featLabel">Vertifile for Education</div>
+              <ul>
+                <li data-i18n="onboarding.fields.education.feat1">Diploma verification</li>
+                <li data-i18n="onboarding.fields.education.feat2">Transcript protection</li>
+                <li data-i18n="onboarding.fields.education.feat3">Certification authentication</li>
+              </ul>
             </div>
-            <div class="sel-card" data-value="other" tabindex="0" role="radio" aria-checked="false">
-              <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-              <div class="card-icon icon-pink">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-              </div>
-              <div class="card-title">Other</div>
-              <div class="card-desc" data-i18n="onboarding.fields.other.desc">Real estate, logistics, retail, etc.</div>
-              <div class="other-input-wrap">
-                <input class="other-input" type="text" id="industryOther" placeholder="e.g., Real Estate, Logistics, Retail" maxlength="100">
-              </div>
-              <div class="industry-features">
-                <div class="feat-label">Vertifile for Your Industry</div>
-                <ul><li>Protect any document type</li><li>Contracts, certificates, reports</li><li>Tamper-proof verification</li></ul>
-              </div>
+          </div>
+          <div class="sel-card" data-value="finance" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <div class="card-icon icon-green">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="card-title" data-i18n="onboarding.fields.finance.title">Finance</div>
+            <div class="card-desc" data-i18n="onboarding.fields.finance.desc">Banks, accounting, insurance</div>
+            <div class="industry-features">
+              <div class="feat-label" data-i18n="onboarding.fields.finance.featLabel">Vertifile for Finance</div>
+              <ul>
+                <li data-i18n="onboarding.fields.finance.feat1">Financial report integrity</li>
+                <li data-i18n="onboarding.fields.finance.feat2">Invoice authentication</li>
+                <li data-i18n="onboarding.fields.finance.feat3">Audit trail protection</li>
+              </ul>
+            </div>
+          </div>
+          <div class="sel-card" data-value="hr" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <div class="card-icon icon-orange">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="card-title" data-i18n="onboarding.fields.hr.title">HR</div>
+            <div class="card-desc" data-i18n="onboarding.fields.hr.desc">Human resources, recruitment</div>
+            <div class="industry-features">
+              <div class="feat-label" data-i18n="onboarding.fields.hr.featLabel">Vertifile for HR</div>
+              <ul>
+                <li data-i18n="onboarding.fields.hr.feat1">Employee document protection</li>
+                <li data-i18n="onboarding.fields.hr.feat2">Contract verification</li>
+                <li data-i18n="onboarding.fields.hr.feat3">Background check integrity</li>
+              </ul>
+            </div>
+          </div>
+          <div class="sel-card" data-value="government" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <div class="card-icon icon-gray">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M12 2l9 8H3l9-8z"/><path d="M5 10v11"/><path d="M19 10v11"/><path d="M9 10v11"/><path d="M15 10v11"/></svg>
+            </div>
+            <div class="card-title" data-i18n="onboarding.fields.government.title">Government</div>
+            <div class="card-desc" data-i18n="onboarding.fields.government.desc">Municipal, federal, regulatory</div>
+            <div class="industry-features">
+              <div class="feat-label" data-i18n="onboarding.fields.government.featLabel">Vertifile for Government</div>
+              <ul>
+                <li data-i18n="onboarding.fields.government.feat1">Official document protection</li>
+                <li data-i18n="onboarding.fields.government.feat2">Permit verification</li>
+                <li data-i18n="onboarding.fields.government.feat3">Regulatory compliance proof</li>
+              </ul>
+            </div>
+          </div>
+          <div class="sel-card" data-value="other" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <div class="card-icon icon-pink">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            </div>
+            <div class="card-title" data-i18n="onboarding.fields.other.title">Other</div>
+            <div class="card-desc" data-i18n="onboarding.fields.other.desc">Real estate, logistics, retail, etc.</div>
+            <div class="other-input-wrap">
+              <input class="other-input" type="text" id="industryOther" placeholder="e.g., Real Estate, Logistics, Retail" data-i18n-placeholder="onboarding.fields.other.placeholder" maxlength="100">
+            </div>
+            <div class="industry-features">
+              <div class="feat-label" data-i18n="onboarding.fields.other.featLabel">Vertifile for Your Industry</div>
+              <ul>
+                <li data-i18n="onboarding.fields.other.feat1">Protect any document type</li>
+                <li data-i18n="onboarding.fields.other.feat2">Contracts, certificates, reports</li>
+                <li data-i18n="onboarding.fields.other.feat3">Tamper-proof verification</li>
+              </ul>
             </div>
           </div>
         </div>
 
         <div class="wiz-cta-wrap hidden">
-          <!-- Step 1 auto-advances when both userType and industry are picked.
+          <!-- Step 2 auto-advances when industry is selected.
                This CTA is retained for a11y fallback and JS state tracking. -->
-          <button class="wiz-cta" id="cta1" disabled data-i18n="onboarding.continue">
-            <span>Continue</span>
+          <button class="wiz-cta" id="cta2" disabled>
+            <span data-i18n="onboarding.continue">Continue</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
           </button>
         </div>
@@ -904,7 +944,7 @@
      STATE
      ================================================================ */
   var state = {
-    currentStep: null,  // null until goToStep() is first called — enables first-load step hooks. 0=verify, 1=type+field, 3=docs, 4=volume, 5=plan, 6=stamp, 7=ready
+    currentStep: null,  // null until goToStep() is first called — enables first-load step hooks. 0=verify, 1=type, 2=industry, 3=docs, 4=volume, 5=plan, 6=stamp, 7=ready
     userType: null,
     industry: null,
     industryOther: '',
@@ -920,9 +960,9 @@
   };
 
   // Step order for navigation (mapped to DOM ids)
-  var STEP_ORDER = [0, 1, 3, 4, 5, 6, 7];
-  var STEP_LABELS = ['Verify', 'You', 'Docs', 'Volume', 'Plan', 'Stamp', 'Ready'];
-  var STEP_IDS = ['step0', 'step1', 'step3', 'step4', 'step5', 'step6', 'step7'];
+  var STEP_ORDER = [0, 1, 2, 3, 4, 5, 6, 7];
+  var STEP_LABELS = ['Verify', 'You', 'Industry', 'Docs', 'Volume', 'Plan', 'Stamp', 'Ready'];
+  var STEP_IDS = ['step0', 'step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'step7'];
 
   // Volume -> recommended plan mapping
   var VOLUME_PLAN = {
@@ -963,14 +1003,13 @@
     setupVerification();
     setupSingleSelect('typeGrid', function(val) {
       state.userType = val;
-      showFieldSection();
       updateCta1();
-      maybeAutoAdvanceStep1();
+      autoAdvanceStep1();
     });
     setupSingleSelect('fieldGrid', function(val) {
       state.industry = val;
-      updateCta1();
-      maybeAutoAdvanceStep1();
+      updateCta2();
+      autoAdvanceStep2();
     });
     setupMultiSelect('docGrid', function(vals) {
       state.documentTypes = vals;
@@ -1081,7 +1120,7 @@
       populateVerifyEmail();
       autoSendVerificationCode();
     }
-    if (stepNum === 3) reorderDocCards();
+    if (stepNum === 3) { reorderDocCards(); }
     if (stepNum === 5) updatePlanRecommendation();
     if (stepNum === 6) {
       requestAnimationFrame(function() { updateStampPreview(); });
@@ -1138,6 +1177,9 @@
     }
 
     document.getElementById('cta1').addEventListener('click', function() {
+      if (!this.disabled) nextStep();
+    });
+    document.getElementById('cta2').addEventListener('click', function() {
       if (!this.disabled) nextStep();
     });
     document.getElementById('cta3').addEventListener('click', function() {
@@ -1218,16 +1260,19 @@
   }
 
   /* ================================================================
-     STEPS 1+2: PROGRESSIVE DISCLOSURE
+     STEP 1: USER TYPE / STEP 2: INDUSTRY
      ================================================================ */
-  function showFieldSection() {
-    var section = document.getElementById('fieldSection');
-    section.classList.add('visible');
-  }
-
   function updateCta1() {
     var btn = document.getElementById('cta1');
-    var ready = state.userType && state.industry;
+    var ready = !!state.userType;
+    var wasDisabled = btn.disabled;
+    btn.disabled = !ready;
+    if (wasDisabled && ready) pulseButton(btn);
+  }
+
+  function updateCta2() {
+    var btn = document.getElementById('cta2');
+    var ready = !!state.industry;
     var wasDisabled = btn.disabled;
     btn.disabled = !ready;
     if (wasDisabled && ready) pulseButton(btn);
@@ -1288,9 +1333,14 @@
     setTimeout(function() { nextStep(); }, 450);
   }
 
-  // Step 1 needs BOTH user-type and industry before auto-advancing.
-  function maybeAutoAdvanceStep1() {
-    if (state.userType && state.industry) autoAdvance();
+  // Step 1: auto-advance as soon as a user type is selected.
+  function autoAdvanceStep1() {
+    if (state.userType) autoAdvance();
+  }
+
+  // Step 2: auto-advance as soon as an industry is selected.
+  function autoAdvanceStep2() {
+    if (state.industry) autoAdvance();
   }
 
   function updatePlanRecommendation() {
@@ -1794,7 +1844,7 @@
           if (s.current_step && s.current_step > 0) {
             // Restore selections
             if (s.selections) {
-              if (s.selections.user_type) { state.userType = s.selections.user_type; restoreCard('typeGrid', s.selections.user_type); showFieldSection(); }
+              if (s.selections.user_type) { state.userType = s.selections.user_type; restoreCard('typeGrid', s.selections.user_type); }
               if (s.selections.industry) { state.industry = s.selections.industry; restoreCard('fieldGrid', s.selections.industry); }
               if (s.selections.industry_other) { state.industryOther = s.selections.industry_other; var inp = document.getElementById('industryOther'); if (inp) inp.value = s.selections.industry_other; }
               if (s.selections.document_types && s.selections.document_types.length) { state.documentTypes = s.selections.document_types; s.selections.document_types.forEach(function(v) { restoreCard('docGrid', v); }); document.getElementById('cta3').disabled = false; }
@@ -1837,8 +1887,9 @@
                 if (sv) sv.textContent = s.stamp_config.stamp_size.charAt(0).toUpperCase() + s.stamp_config.stamp_size.slice(1);
               }
             }
-            // Enable CTA for step 1 if needed
-            if (state.userType && state.industry) document.getElementById('cta1').disabled = false;
+            // Enable CTAs for step 1 and step 2 if needed
+            if (state.userType) document.getElementById('cta1').disabled = false;
+            if (state.industry) document.getElementById('cta2').disabled = false;
             // Resume from saved step
             goToStep(s.current_step);
             return;

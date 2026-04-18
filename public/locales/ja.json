@@ -2276,7 +2276,9 @@
       "label": "あなたについて"
     },
     "step2": {
-      "label": "次に分野を選択してください："
+      "label": "業種",
+      "title": "あなたの業種は何ですか？",
+      "subtitle": "Vertifileをあなたのワークフローに最適化します"
     },
     "step3": {
       "title": "どのような書類を保護する必要がありますか？",
@@ -2328,31 +2330,67 @@
         "desc": "チームを持つ中小企業"
       },
       "organization": {
-        "title": "組織",
-        "desc": "大学、病院、政府機関、大企業"
+        "title": "組織・機関",
+        "desc": "大学、病院、行政機関、大企業"
       }
     },
     "fields": {
       "legal": {
-        "desc": "法律事務所、裁判所、公証人"
+        "desc": "法律事務所、裁判所、公証人",
+        "title": "法律",
+        "featLabel": "Vertifile for 法律",
+        "feat1": "契約書の検証",
+        "feat2": "公証人認証",
+        "feat3": "法廷提出可能な証明"
       },
       "healthcare": {
-        "desc": "病院、クリニック、保険"
+        "desc": "病院、クリニック、保険",
+        "title": "医療・ヘルスケア",
+        "featLabel": "Vertifile for 医療",
+        "feat1": "医療記録の保護",
+        "feat2": "検査結果の検証",
+        "feat3": "保険請求の整合性確保"
       },
       "education": {
-        "desc": "大学、学校、研修"
+        "desc": "大学、学校、研修",
+        "title": "教育",
+        "featLabel": "Vertifile for 教育",
+        "feat1": "卒業証書の検証",
+        "feat2": "成績証明書の保護",
+        "feat3": "資格認証の認証"
       },
       "finance": {
-        "desc": "銀行、会計、保険"
+        "desc": "銀行、会計、保険",
+        "title": "金融・財務",
+        "featLabel": "Vertifile for 金融",
+        "feat1": "財務報告書の整合性確保",
+        "feat2": "請求書の認証",
+        "feat3": "監査証跡の保護"
       },
       "hr": {
-        "desc": "人事、採用"
+        "desc": "人事、採用",
+        "title": "人事",
+        "featLabel": "Vertifile for 人事",
+        "feat1": "従業員文書の保護",
+        "feat2": "契約書の検証",
+        "feat3": "身元調査の整合性確保"
       },
       "government": {
-        "desc": "市区町村、連邦、規制機関"
+        "desc": "市区町村、連邦、規制機関",
+        "title": "行政・政府",
+        "featLabel": "Vertifile for 行政",
+        "feat1": "公式文書の保護",
+        "feat2": "許可証の検証",
+        "feat3": "規制遵守の証明"
       },
       "other": {
-        "desc": "不動産、物流、小売など"
+        "desc": "不動産、物流、小売など",
+        "title": "その他",
+        "featLabel": "Vertifile for あなたの業種",
+        "feat1": "あらゆる文書を保護",
+        "feat2": "契約書、証明書、報告書",
+        "feat3": "改ざん防止の検証",
+        "placeholder": "例：不動産、物流、小売"
       }
     },
     "signOut": "あなたではありませんか？ログアウト"

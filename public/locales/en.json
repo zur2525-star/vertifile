@@ -1947,7 +1947,9 @@
       "label": "ABOUT YOU"
     },
     "step2": {
-      "label": "Now choose your field:"
+      "label": "INDUSTRY",
+      "title": "What's your industry?",
+      "subtitle": "Help us tailor Vertifile to your workflow"
     },
     "step3": {
       "title": "What documents do you need to protect?",
@@ -2005,25 +2007,61 @@
     },
     "fields": {
       "legal": {
-        "desc": "Law firms, courts, notary"
+        "desc": "Law firms, courts, notary",
+        "title": "Legal",
+        "featLabel": "Vertifile for Legal",
+        "feat1": "Contract verification",
+        "feat2": "Notary authentication",
+        "feat3": "Court-admissible proof"
       },
       "healthcare": {
-        "desc": "Hospitals, clinics, insurance"
+        "desc": "Hospitals, clinics, insurance",
+        "title": "Healthcare",
+        "featLabel": "Vertifile for Healthcare",
+        "feat1": "Medical record protection",
+        "feat2": "Lab result verification",
+        "feat3": "Insurance claim integrity"
       },
       "education": {
-        "desc": "Universities, schools, training"
+        "desc": "Universities, schools, training",
+        "title": "Education",
+        "featLabel": "Vertifile for Education",
+        "feat1": "Diploma verification",
+        "feat2": "Transcript protection",
+        "feat3": "Certification authentication"
       },
       "finance": {
-        "desc": "Banks, accounting, insurance"
+        "desc": "Banks, accounting, insurance",
+        "title": "Finance",
+        "featLabel": "Vertifile for Finance",
+        "feat1": "Financial report integrity",
+        "feat2": "Invoice authentication",
+        "feat3": "Audit trail protection"
       },
       "hr": {
-        "desc": "Human resources, recruitment"
+        "desc": "Human resources, recruitment",
+        "title": "HR",
+        "featLabel": "Vertifile for HR",
+        "feat1": "Employee document protection",
+        "feat2": "Contract verification",
+        "feat3": "Background check integrity"
       },
       "government": {
-        "desc": "Municipal, federal, regulatory"
+        "desc": "Municipal, federal, regulatory",
+        "title": "Government",
+        "featLabel": "Vertifile for Government",
+        "feat1": "Official document protection",
+        "feat2": "Permit verification",
+        "feat3": "Regulatory compliance proof"
       },
       "other": {
-        "desc": "Real estate, logistics, retail, etc."
+        "desc": "Real estate, logistics, retail, etc.",
+        "title": "Other",
+        "featLabel": "Vertifile for Your Industry",
+        "feat1": "Protect any document type",
+        "feat2": "Contracts, certificates, reports",
+        "feat3": "Tamper-proof verification",
+        "placeholder": "e.g., Real Estate, Logistics, Retail"
       }
     },
     "signOut": "Not you? Sign out"
