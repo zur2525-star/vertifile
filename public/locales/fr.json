@@ -40,7 +40,8 @@
     "trustIANA": "Type MIME enregistre a l'IANA",
     "trustBlockchain": "Verifie par Blockchain",
     "hashLabel": "Empreinte numerique unique du document",
-    "ctaDemo": "Reserver une demo"
+    "ctaDemo": "Reserver une demo",
+    "scrollExplore": "Faites défiler pour explorer"
   },
   "stats": {
     "encryption": "Chiffrement de grade militaire",

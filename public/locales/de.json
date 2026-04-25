@@ -40,7 +40,8 @@
     "trustIANA": "IANA MIME-Typ registriert",
     "trustBlockchain": "Blockchain-verifiziert",
     "hashLabel": "Einzigartiger Dokument-Fingerabdruck",
-    "ctaDemo": "Demo buchen"
+    "ctaDemo": "Demo buchen",
+    "scrollExplore": "Scrollen zum Entdecken"
   },
   "stats": {
     "encryption": "Verschluesselung auf Militaerniveau",

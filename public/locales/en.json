@@ -40,7 +40,8 @@
     "trustIANA": "IANA MIME Type Registered",
     "trustBlockchain": "Blockchain Verified",
     "hashLabel": "Unique Document Fingerprint",
-    "ctaDemo": "Book a Demo"
+    "ctaDemo": "Book a Demo",
+    "scrollExplore": "Scroll to explore"
   },
   "stats": {
     "encryption": "Military-Grade Encryption",

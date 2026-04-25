@@ -40,7 +40,8 @@
     "trustIANA": "IANA MIMEタイプ登録済み",
     "trustBlockchain": "ブロックチェーン検証済み",
     "hashLabel": "固有のドキュメントフィンガープリント",
-    "ctaDemo": "デモを予約"
+    "ctaDemo": "デモを予約",
+    "scrollExplore": "スクロールして探索"
   },
   "stats": {
     "encryption": "軍事レベルの暗号化",

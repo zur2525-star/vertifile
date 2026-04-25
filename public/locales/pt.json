@@ -40,7 +40,8 @@
     "trustIANA": "Tipo MIME registrado na IANA",
     "trustBlockchain": "Verificado por Blockchain",
     "hashLabel": "Impressao digital unica do documento",
-    "ctaDemo": "Agendar demonstracao"
+    "ctaDemo": "Agendar demonstracao",
+    "scrollExplore": "Role para explorar"
   },
   "stats": {
     "encryption": "Encriptacao de grau militar",

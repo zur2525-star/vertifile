@@ -40,7 +40,8 @@
     "trustIANA": "IANA MIME类型已注册",
     "trustBlockchain": "区块链验证",
     "hashLabel": "唯一文档指纹",
-    "ctaDemo": "预约演示"
+    "ctaDemo": "预约演示",
+    "scrollExplore": "滚动以探索"
   },
   "stats": {
     "encryption": "军事级加密",

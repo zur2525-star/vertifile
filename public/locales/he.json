@@ -40,7 +40,8 @@
     "trustIANA": "סוג MIME רשום ב-IANA",
     "trustBlockchain": "מאומת בלוקצ'יין",
     "hashLabel": "טביעת אצבע ייחודית למסמך",
-    "ctaDemo": "הזמנת הדגמה"
+    "ctaDemo": "הזמנת הדגמה",
+    "scrollExplore": "גלול לחקור"
   },
   "stats": {
     "encryption": "הצפנה ברמה צבאית",

@@ -40,7 +40,8 @@
     "trustIANA": "نوع MIME مسجل في IANA",
     "trustBlockchain": "مصادق عبر البلوكتشين",
     "hashLabel": "بصمة رقمية فريدة للمستند",
-    "ctaDemo": "احجز عرضاً توضيحياً"
+    "ctaDemo": "احجز عرضاً توضيحياً",
+    "scrollExplore": "مرر للاستكشاف"
   },
   "stats": {
     "encryption": "تشفير بمستوى عسكري",
