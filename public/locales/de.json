@@ -2293,7 +2293,6 @@
     "step5": {
       "title": "Wählen Sie Ihren Plan",
       "subtitle": "Jetzt keine Zahlung erforderlich. Starten Sie Ihre 14-tägige Testphase nach der Einrichtung.",
-      "noPayment": "Jetzt keine Zahlung erforderlich. Ihre 14-tägige Testphase beginnt nach der Einrichtung.",
       "reassure": "Sie können Ihren Plan jederzeit über Ihr Dashboard ändern.",
       "enterpriseNote": "Unser Team meldet sich innerhalb von 24 Stunden, um Ihren individuellen Plan einzurichten.",
       "label": "PLAN"
@@ -2310,7 +2309,11 @@
       "removeLogo": "Entfernen",
       "stampSize": "Stempelgröße",
       "cta": "Weiter",
-      "label": "ANPASSUNG"
+      "label": "ANPASSUNG",
+      "dropHint": "PNG, JPG, SVG. Max. 2 MB.",
+      "sizeSmall": "Klein",
+      "sizeMedium": "Mittel",
+      "sizeLarge": "Groß"
     },
     "step7": {
       "title": "Alles bereit!",
@@ -2393,7 +2396,91 @@
         "placeholder": "z.B. Immobilien, Logistik, Einzelhandel"
       }
     },
-    "signOut": "Nicht Sie? Abmelden"
+    "signOut": "Nicht Sie? Abmelden",
+    "docTypes": {
+      "contracts": {
+        "title": "Verträge & Vereinbarungen",
+        "desc": "Rechtliche Verträge, NDAs, Dienstleistungsverträge, Mietverträge"
+      },
+      "identity": {
+        "title": "Identitätsdokumente",
+        "desc": "Reisepässe, Ausweise, Führerscheine, Visa"
+      },
+      "certificates": {
+        "title": "Zeugnisse & Diplome",
+        "desc": "Abschlüsse, Notenübersichten, berufliche Zertifizierungen"
+      },
+      "medical": {
+        "title": "Medizinische Unterlagen",
+        "desc": "Laborergebnisse, Rezepte, Entlassungsberichte"
+      },
+      "financial": {
+        "title": "Finanzberichte & Rechnungen",
+        "desc": "Einkommensberichte, Bilanzen, Steuerrechnungen"
+      },
+      "receipts": {
+        "title": "Quittungen & Zahlungsbelege",
+        "desc": "Zahlungsbestätigungen, Banküberweisungen, Quittungen"
+      },
+      "permits": {
+        "title": "Genehmigungen & Lizenzen",
+        "desc": "Gewerbegenehmigungen, Berufslizenzen, Zulassungen"
+      },
+      "other": {
+        "title": "Sonstige Dokumente",
+        "desc": "Briefe, Berichte, interne Dokumente und mehr"
+      }
+    },
+    "volumes": {
+      "under50": {
+        "title": "Bis 50",
+        "desc": "Typisch für Einzelunternehmer und Freiberufler"
+      },
+      "range50to500": {
+        "title": "50 – 500",
+        "desc": "Typisch für kleine Unternehmen und Anwaltskanzleien"
+      },
+      "range500to5000": {
+        "title": "500 – 5.000",
+        "desc": "Typisch für mittelständische Organisationen"
+      },
+      "over5000": {
+        "title": "5.000+",
+        "desc": "Enterprise — Universitäten, Krankenhäuser, Behörden"
+      },
+      "enterpriseBadge": "Enterprise"
+    },
+    "plans": {
+      "recommendedBadge": "Für Sie empfohlen",
+      "pro": {
+        "name": "Pro",
+        "price": "$29",
+        "priceUnit": "/Mon.",
+        "for": "Für Einzelpersonen und kleine Teams",
+        "feat1": "Bis zu 50 Dokumente/Monat",
+        "feat2": "Individueller Verifizierungsstempel",
+        "feat3": "E-Mail-Support"
+      },
+      "proPlus": {
+        "name": "Pro+",
+        "price": "$79",
+        "priceUnit": "/Mon.",
+        "for": "Für wachsende Unternehmen",
+        "feat1": "Bis zu 1.000 Dokumente/Monat",
+        "feat2": "Priority-Support",
+        "feat3": "Erweiterte Analysen",
+        "feat4": "Team-Stempel"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "Auf Anfrage",
+        "for": "Für große Organisationen",
+        "feat1": "Unbegrenzte Dokumente",
+        "feat2": "Persönlicher Account Manager",
+        "feat3": "SSO & SLA",
+        "feat4": "Individuelle Integrationen"
+      }
+    }
   },
   "video": {
     "label": "Sieh es in Aktion",

@@ -2293,7 +2293,6 @@
     "step5": {
       "title": "选择您的方案",
       "subtitle": "无需立即付款。设置完成后开始14天免费试用。",
-      "noPayment": "无需立即付款。设置完成后，您的14天免费试用将开始。",
       "reassure": "您可以随时在仪表板中更改方案。",
       "enterpriseNote": "我们的团队将在24小时内与您联系，为您设置专属方案。",
       "label": "方案"
@@ -2310,7 +2309,11 @@
       "removeLogo": "删除",
       "stampSize": "印章大小",
       "cta": "继续",
-      "label": "个性化"
+      "label": "个性化",
+      "dropHint": "PNG、JPG、SVG。最大 2 MB。",
+      "sizeSmall": "小",
+      "sizeMedium": "中",
+      "sizeLarge": "大"
     },
     "step7": {
       "title": "一切就绪！",
@@ -2393,7 +2396,91 @@
         "placeholder": "例如：房地产、物流、零售"
       }
     },
-    "signOut": "不是您？退出登录"
+    "signOut": "不是您？退出登录",
+    "docTypes": {
+      "contracts": {
+        "title": "合同与协议",
+        "desc": "法律合同、保密协议、服务协议和租赁合同"
+      },
+      "identity": {
+        "title": "身份证件",
+        "desc": "护照、身份证、驾照和签证"
+      },
+      "certificates": {
+        "title": "证书与学历文凭",
+        "desc": "学位、成绩单和专业认证"
+      },
+      "medical": {
+        "title": "医疗记录",
+        "desc": "化验结果、处方和出院小结"
+      },
+      "financial": {
+        "title": "财务报告与发票",
+        "desc": "收入报告、资产负债表和税务发票"
+      },
+      "receipts": {
+        "title": "收据与付款凭证",
+        "desc": "付款确认、银行转账和收据"
+      },
+      "permits": {
+        "title": "许可证与执照",
+        "desc": "营业许可、专业执照和各类批准"
+      },
+      "other": {
+        "title": "其他文件",
+        "desc": "信函、报告、内部文件等"
+      }
+    },
+    "volumes": {
+      "under50": {
+        "title": "不超过 50 份",
+        "desc": "适合个人执业者和自由职业者"
+      },
+      "range50to500": {
+        "title": "50 - 500 份",
+        "desc": "适合小型企业和律师事务所"
+      },
+      "range500to5000": {
+        "title": "500 - 5,000 份",
+        "desc": "适合中型组织"
+      },
+      "over5000": {
+        "title": "5,000 份以上",
+        "desc": "企业级 — 大学、医院、政府机构"
+      },
+      "enterpriseBadge": "Enterprise"
+    },
+    "plans": {
+      "recommendedBadge": "为您推荐",
+      "pro": {
+        "name": "Pro",
+        "price": "$29",
+        "priceUnit": "/月",
+        "for": "适合个人和小团队",
+        "feat1": "每月最多 50 份文件",
+        "feat2": "自定义验证印章",
+        "feat3": "邮件支持"
+      },
+      "proPlus": {
+        "name": "Pro+",
+        "price": "$79",
+        "priceUnit": "/月",
+        "for": "适合成长中的企业",
+        "feat1": "每月最多 1,000 份文件",
+        "feat2": "优先支持",
+        "feat3": "高级分析",
+        "feat4": "团队印章"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "定制",
+        "for": "适合大型组织",
+        "feat1": "文件数量不限",
+        "feat2": "专属客户经理",
+        "feat3": "SSO 和 SLA",
+        "feat4": "定制集成"
+      }
+    }
   },
   "video": {
     "label": "观看实际效果",

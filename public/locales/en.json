@@ -1964,7 +1964,6 @@
     "step5": {
       "title": "Choose your plan",
       "subtitle": "No payment needed now. Start your 14-day trial after setup.",
-      "noPayment": "No payment needed now. You'll start your 14-day trial after setup.",
       "reassure": "You can change your plan anytime from your dashboard.",
       "enterpriseNote": "Our team will reach out within 24 hours to set up your custom plan.",
       "label": "PLAN"
@@ -1978,8 +1977,12 @@
       "logo": "Logo",
       "optional": "Optional",
       "dropText": "Drop your logo here or click to browse",
+      "dropHint": "PNG, JPG, SVG. Max 2MB.",
       "removeLogo": "Remove",
       "stampSize": "Stamp Size",
+      "sizeSmall": "Small",
+      "sizeMedium": "Medium",
+      "sizeLarge": "Large",
       "cta": "Continue",
       "label": "CUSTOMIZATION"
     },
@@ -1990,6 +1993,90 @@
       "changePlan": "Change plan",
       "seePlans": "See all plans",
       "label": "READY"
+    },
+    "docTypes": {
+      "contracts": {
+        "title": "Contracts & Agreements",
+        "desc": "Legal contracts, NDAs, service agreements, leases"
+      },
+      "identity": {
+        "title": "Identity Documents",
+        "desc": "Passports, IDs, driver's licenses, visas"
+      },
+      "certificates": {
+        "title": "Certificates & Diplomas",
+        "desc": "Degrees, transcripts, professional certifications"
+      },
+      "medical": {
+        "title": "Medical Records",
+        "desc": "Lab results, prescriptions, discharge summaries"
+      },
+      "financial": {
+        "title": "Financial Reports & Invoices",
+        "desc": "Income reports, balance sheets, tax invoices"
+      },
+      "receipts": {
+        "title": "Receipts & Payment Records",
+        "desc": "Payment confirmations, bank transfers, receipts"
+      },
+      "permits": {
+        "title": "Permits & Licenses",
+        "desc": "Business permits, professional licenses, approvals"
+      },
+      "other": {
+        "title": "Other Documents",
+        "desc": "Letters, reports, internal documents, and more"
+      }
+    },
+    "volumes": {
+      "under50": {
+        "title": "Up to 50",
+        "desc": "Typical for solo practitioners and freelancers"
+      },
+      "range50to500": {
+        "title": "50 - 500",
+        "desc": "Typical for small businesses and law firms"
+      },
+      "range500to5000": {
+        "title": "500 - 5,000",
+        "desc": "Typical for mid-size organizations"
+      },
+      "over5000": {
+        "title": "5,000+",
+        "desc": "Enterprise — universities, hospitals, government"
+      },
+      "enterpriseBadge": "Enterprise"
+    },
+    "plans": {
+      "recommendedBadge": "Recommended for you",
+      "pro": {
+        "name": "Pro",
+        "price": "$29",
+        "priceUnit": "/mo",
+        "for": "For individuals and small teams",
+        "feat1": "Up to 50 documents/month",
+        "feat2": "Custom verification stamp",
+        "feat3": "Email support"
+      },
+      "proPlus": {
+        "name": "Pro+",
+        "price": "$79",
+        "priceUnit": "/mo",
+        "for": "For growing businesses",
+        "feat1": "Up to 1,000 documents/month",
+        "feat2": "Priority support",
+        "feat3": "Advanced analytics",
+        "feat4": "Team stamps"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "Custom",
+        "for": "For large organizations",
+        "feat1": "Unlimited documents",
+        "feat2": "Dedicated account manager",
+        "feat3": "SSO & SLA",
+        "feat4": "Custom integrations"
+      }
     },
     "types": {
       "individual": {

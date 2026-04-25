@@ -2293,7 +2293,6 @@
     "step5": {
       "title": "Choisissez votre plan",
       "subtitle": "Aucun paiement requis maintenant. Commencez votre essai de 14 jours après la configuration.",
-      "noPayment": "Aucun paiement requis maintenant. Votre essai de 14 jours commence après la configuration.",
       "reassure": "Vous pouvez changer de plan à tout moment depuis votre tableau de bord.",
       "enterpriseNote": "Notre équipe vous contactera dans les 24 heures pour mettre en place votre plan personnalisé.",
       "label": "PLAN"
@@ -2310,7 +2309,11 @@
       "removeLogo": "Supprimer",
       "stampSize": "Taille du cachet",
       "cta": "Continuer",
-      "label": "PERSONNALISATION"
+      "label": "PERSONNALISATION",
+      "dropHint": "PNG, JPG, SVG. Max. 2 Mo.",
+      "sizeSmall": "Petit",
+      "sizeMedium": "Moyen",
+      "sizeLarge": "Grand"
     },
     "step7": {
       "title": "Tout est prêt !",
@@ -2393,7 +2396,91 @@
         "placeholder": "p.ex., Immobilier, Logistique, Commerce"
       }
     },
-    "signOut": "Ce n'est pas vous ? Se déconnecter"
+    "signOut": "Ce n'est pas vous ? Se déconnecter",
+    "docTypes": {
+      "contracts": {
+        "title": "Contrats et accords",
+        "desc": "Contrats juridiques, accords de confidentialité, contrats de service et baux"
+      },
+      "identity": {
+        "title": "Documents d'identité",
+        "desc": "Passeports, cartes d'identité, permis de conduire et visas"
+      },
+      "certificates": {
+        "title": "Certificats et diplômes",
+        "desc": "Diplômes, relevés de notes et certifications professionnelles"
+      },
+      "medical": {
+        "title": "Dossiers médicaux",
+        "desc": "Résultats de laboratoire, ordonnances et comptes rendus de sortie"
+      },
+      "financial": {
+        "title": "Rapports financiers et factures",
+        "desc": "Rapports de revenus, bilans et factures fiscales"
+      },
+      "receipts": {
+        "title": "Reçus et justificatifs de paiement",
+        "desc": "Confirmations de paiement, virements bancaires et reçus"
+      },
+      "permits": {
+        "title": "Permis et licences",
+        "desc": "Permis d'exploitation, licences professionnelles et autorisations"
+      },
+      "other": {
+        "title": "Autres documents",
+        "desc": "Lettres, rapports, documents internes et plus"
+      }
+    },
+    "volumes": {
+      "under50": {
+        "title": "Jusqu'à 50",
+        "desc": "Typique pour les indépendants et freelances"
+      },
+      "range50to500": {
+        "title": "50 - 500",
+        "desc": "Typique pour les petites entreprises et cabinets d'avocats"
+      },
+      "range500to5000": {
+        "title": "500 - 5 000",
+        "desc": "Typique pour les organisations de taille moyenne"
+      },
+      "over5000": {
+        "title": "5 000+",
+        "desc": "Enterprise — universités, hôpitaux, administrations"
+      },
+      "enterpriseBadge": "Enterprise"
+    },
+    "plans": {
+      "recommendedBadge": "Recommandé pour vous",
+      "pro": {
+        "name": "Pro",
+        "price": "$29",
+        "priceUnit": "/mois",
+        "for": "Pour les particuliers et petites équipes",
+        "feat1": "Jusqu'à 50 documents/mois",
+        "feat2": "Tampon de vérification personnalisé",
+        "feat3": "Assistance par e-mail"
+      },
+      "proPlus": {
+        "name": "Pro+",
+        "price": "$79",
+        "priceUnit": "/mois",
+        "for": "Pour les entreprises en croissance",
+        "feat1": "Jusqu'à 1 000 documents/mois",
+        "feat2": "Assistance prioritaire",
+        "feat3": "Analyses avancées",
+        "feat4": "Tampons d'équipe"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "Sur mesure",
+        "for": "Pour les grandes organisations",
+        "feat1": "Documents illimités",
+        "feat2": "Gestionnaire de compte dédié",
+        "feat3": "SSO et SLA",
+        "feat4": "Intégrations personnalisées"
+      }
+    }
   },
   "video": {
     "label": "Voir en action",

@@ -2293,7 +2293,6 @@
     "step5": {
       "title": "Elige tu plan",
       "subtitle": "No se requiere pago ahora. Comienza tu prueba de 14 días después de la configuración.",
-      "noPayment": "No se requiere pago ahora. Tu prueba de 14 días comienza después de la configuración.",
       "reassure": "Puedes cambiar tu plan en cualquier momento desde tu panel de control.",
       "enterpriseNote": "Nuestro equipo se pondrá en contacto en 24 horas para configurar tu plan personalizado.",
       "label": "PLAN"
@@ -2310,7 +2309,11 @@
       "removeLogo": "Eliminar",
       "stampSize": "Tamaño del sello",
       "cta": "Continuar",
-      "label": "PERSONALIZACIÓN"
+      "label": "PERSONALIZACIÓN",
+      "dropHint": "PNG, JPG, SVG. Máx. 2 MB.",
+      "sizeSmall": "Pequeño",
+      "sizeMedium": "Mediano",
+      "sizeLarge": "Grande"
     },
     "step7": {
       "title": "¡Todo listo!",
@@ -2393,7 +2396,91 @@
         "placeholder": "p.ej., Inmobiliaria, Logística, Retail"
       }
     },
-    "signOut": "¿No eres tú? Cerrar sesión"
+    "signOut": "¿No eres tú? Cerrar sesión",
+    "docTypes": {
+      "contracts": {
+        "title": "Contratos y acuerdos",
+        "desc": "Contratos legales, acuerdos de confidencialidad, contratos de servicio y arrendamientos"
+      },
+      "identity": {
+        "title": "Documentos de identidad",
+        "desc": "Pasaportes, cédulas de identidad, licencias de conducir y visas"
+      },
+      "certificates": {
+        "title": "Certificados y diplomas",
+        "desc": "Títulos, expedientes académicos y certificaciones profesionales"
+      },
+      "medical": {
+        "title": "Registros médicos",
+        "desc": "Resultados de laboratorio, recetas e informes de alta"
+      },
+      "financial": {
+        "title": "Informes financieros y facturas",
+        "desc": "Informes de ingresos, balances y facturas fiscales"
+      },
+      "receipts": {
+        "title": "Recibos y comprobantes de pago",
+        "desc": "Confirmaciones de pago, transferencias bancarias y recibos"
+      },
+      "permits": {
+        "title": "Permisos y licencias",
+        "desc": "Permisos comerciales, licencias profesionales y aprobaciones"
+      },
+      "other": {
+        "title": "Otros documentos",
+        "desc": "Cartas, informes, documentos internos y más"
+      }
+    },
+    "volumes": {
+      "under50": {
+        "title": "Hasta 50",
+        "desc": "Habitual para profesionales independientes y autónomos"
+      },
+      "range50to500": {
+        "title": "50 - 500",
+        "desc": "Habitual para pequeñas empresas y bufetes de abogados"
+      },
+      "range500to5000": {
+        "title": "500 - 5.000",
+        "desc": "Habitual para organizaciones medianas"
+      },
+      "over5000": {
+        "title": "5.000+",
+        "desc": "Enterprise — universidades, hospitales, gobierno"
+      },
+      "enterpriseBadge": "Enterprise"
+    },
+    "plans": {
+      "recommendedBadge": "Recomendado para ti",
+      "pro": {
+        "name": "Pro",
+        "price": "$29",
+        "priceUnit": "/mes",
+        "for": "Para individuos y equipos pequeños",
+        "feat1": "Hasta 50 documentos/mes",
+        "feat2": "Sello de verificación personalizado",
+        "feat3": "Soporte por correo electrónico"
+      },
+      "proPlus": {
+        "name": "Pro+",
+        "price": "$79",
+        "priceUnit": "/mes",
+        "for": "Para empresas en crecimiento",
+        "feat1": "Hasta 1.000 documentos/mes",
+        "feat2": "Soporte prioritario",
+        "feat3": "Analítica avanzada",
+        "feat4": "Sellos de equipo"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "Personalizado",
+        "for": "Para grandes organizaciones",
+        "feat1": "Documentos ilimitados",
+        "feat2": "Gestor de cuenta dedicado",
+        "feat3": "SSO y SLA",
+        "feat4": "Integraciones personalizadas"
+      }
+    }
   },
   "video": {
     "label": "Vélo en acción",
