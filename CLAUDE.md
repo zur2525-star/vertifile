@@ -397,3 +397,5 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-04-25 07:31 | FIX | public/index.html | PvfLoop translateX direction flipped (LTR +25%, RTL -25%) + RTL shield angle corrected (rotateY +5deg compensates scaleX). Vertical stack preserved. | ✓
 
 2026-04-25 07:45 | FIX | public/index.html | Reverted .hero-split to horizontal flex per Zur (kept RTL shield angle fix + translateX + backface-visibility) | ✓
+
+2026-04-25 07:42 | FIX | public/index.html | PvfLoop translateX flipped back toward center (LTR -25%, RTL +25%) per Zur | ✓
