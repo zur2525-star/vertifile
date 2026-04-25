@@ -1,5 +1,91 @@
 # Vertifile PVF — Master Architecture & Work Plan
 
+## Behavioral Guidelines
+
+These apply to every agent and sub-agent working on this project. They bias toward caution over speed and reduce common LLM coding mistakes. For trivial tasks, use judgment.
+
+### 1. Think Before Coding
+Don't assume. Don't hide confusion. Surface tradeoffs.
+
+Before implementing:
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them — don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+### 2. Simplicity First
+Minimum code that solves the problem. Nothing speculative.
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+### 3. Surgical Changes
+Touch only what you must. Clean up only your own mess.
+
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it — don't delete it.
+
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: every changed line should trace directly to the user's request.
+
+### 4. Goal-Driven Execution
+Define success criteria. Loop until verified.
+
+Transform tasks into verifiable goals:
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+These guidelines are working if: fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+---
+
+## Project Work Rules
+
+### Ping-Pong Workflow
+Every change goes through: **build → review → fix → approve → MERGE**.
+- Minimum 2 reviewers before merge.
+- Quality > speed. Always.
+- No MVP, no early launch — ship only when 100% complete.
+
+### No Emojis in Product
+**Absolute rule:** no emojis anywhere in product files (HTML, JS, CSS, locales). SVG icons only.
+(Internal agent communication and commit messages are exempt.)
+
+### Agent Naming
+Always write the agent's name + role together.
+- Correct: "משה (Backend)", "דנה (UX)"
+- Wrong: "משה" alone.
+
+### Claude Doesn't Edit Code Directly
+All code changes go through a sub-agent — even a 1px CSS tweak. Documentation/configuration files (CLAUDE.md, MEMORY.md) are the only exception.
+
+### Build to 100%
+Patent filed in Israel (March 2026). IANA MIME type approved (2026-04-15). Commerce activation only after the product is fully complete.
+
+---
+
 ## Overview
 Tamper-proof document verification platform. Creates cryptographically signed .pvf files with BLIND processing (never reads document content). Live at **vertifile.com**.
 Patent filed in Israel (March 2026). IANA MIME type registered: application/vnd.vertifile.pvf (approved 2026-04-15).
@@ -298,3 +384,4 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-04-25 03:15 | I18N | public/onboarding.html + public/locales/*.json (10 files) | Added 49 onboarding keys + 441 translations for step3/4/5/6 cards in 10 languages, removed orphan step5.noPayment | JSON valid all 10 ✓ | reviewed by Chen 9.5/10 | ✓
 2026-04-25 03:41 | FIX | public/onboarding.html | Stamp preview: em-based text scaling (fits Small/Medium) + added missing wave-strip containers and inject calls (waves now visible in Step 6/7) | reviewed by Amit 8.5/10 | ✓
 2026-04-25 04:04 | FIX | public/onboarding.html | Stamp waves redesigned as concentric ripples on document mock (CSS pseudo-elements with --wave-color variable), replacing the previous wave-strip approach that was visually invalid. Wave color updates real-time. Stamp-component.js untouched. | reviewed by Amit 9/10 | ✓
+2026-04-25 04:19 | FIX | public/onboarding.html | Waves: reverted invalid ripples redesign, placed real renderWaves output INSIDE .mock-document (Step 6) and .ready-layout (Step 7). Logo: removed inline 24×24px style that was overriding the correct .vfs-custom-logo CSS — uploaded logos now fill the inner stamp circle. | reviewed by Amit 9.5/10 | ✓
