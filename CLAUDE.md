@@ -399,3 +399,5 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-04-25 07:45 | FIX | public/index.html | Reverted .hero-split to horizontal flex per Zur (kept RTL shield angle fix + translateX + backface-visibility) | ✓
 
 2026-04-25 07:42 | FIX | public/index.html | PvfLoop translateX flipped back toward center (LTR -25%, RTL +25%) per Zur | ✓
+
+2026-04-25 16:44 | I18N | public/locales/*.json (10 files) | Updated hero.headline1/headline2/subheadline with shorter practical copy in all 10 languages | ✓
