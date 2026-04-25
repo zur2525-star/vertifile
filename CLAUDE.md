@@ -393,3 +393,5 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-04-25 07:25 | REVERT | public/index.html | Reverted bdad5b8 — restored original PvfLoop animation direction per Zur request | ✓
 
 2026-04-25 07:17 | FIX | public/index.html | PvfLoop polish: more aggressive translateX (-25%/+25%), shield logo Z 90px + z-index:2 (logo no longer disappears on language switch), text z-index above loop (no track overlap) | ✓
+
+2026-04-25 07:31 | FIX | public/index.html | PvfLoop translateX direction flipped (LTR +25%, RTL -25%) + RTL shield angle corrected (rotateY +5deg compensates scaleX). Vertical stack preserved. | ✓
