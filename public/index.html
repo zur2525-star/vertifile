@@ -166,7 +166,7 @@
     .hero-split{max-width:1280px;margin:0 auto;position:relative;z-index:7;display:flex;align-items:center;gap:60px;min-height:760px;padding:0 0}
 
     /* Hero Right — Text (light on dark) */
-    .hero-right{flex:1;text-align:left}
+    .hero-right{flex:1;text-align:left;position:relative;z-index:8}
     [dir="rtl"] .hero-right{text-align:right}
     .hero-badge{display:inline-flex;align-items:center;gap:10px;padding:8px 18px;background:rgba(124,58,237,.12);border:1px solid rgba(167,139,250,.3);border-radius:9999px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:28px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(124,58,237,.2),0 0 0 1px rgba(255,255,255,.04) inset}
     .hero-badge span:not(.pulse){background:linear-gradient(135deg,#c4b5fd,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -238,8 +238,8 @@
     }
 
     /* ===== PVF LOOP — volumetric 3D portal animation ===== */
-    .pvf-loop-container{position:relative;width:840px;max-width:100%;height:560px;perspective:2000px;perspective-origin:50% 45%;z-index:7;transform:translateX(-15%)}
-    [dir="rtl"] .pvf-loop-container{transform:translateX(15%)}
+    .pvf-loop-container{position:relative;width:840px;max-width:100%;height:560px;perspective:2000px;perspective-origin:50% 45%;z-index:5;transform:translateX(-25%)}
+    [dir="rtl"] .pvf-loop-container{transform:translateX(25%)}
     .pvf-loop-stage{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(22deg) rotateY(-5deg)}
     /* Track */
     .pvfl-track{position:absolute;left:50%;top:62%;width:840px;height:130px;transform:translate(-50%,-50%);transform-style:preserve-3d}
@@ -256,7 +256,7 @@
     .pvfl-halo svg{width:100%;height:100%;overflow:visible}
     .pvfl-halo-1{transform:translate(-50%,-50%) translateZ(58px) scale(1.12)}
     .pvfl-halo-2{transform:translate(-50%,-50%) translateZ(58px) scale(1.24);animation-delay:.4s}
-    .pvfl-gate-logo{position:absolute;left:50%;top:42%;width:92px;height:auto;transform:translate(-50%,-50%) translateZ(60px);filter:drop-shadow(0 0 18px rgba(255,255,255,.85)) drop-shadow(0 0 36px rgba(167,139,250,.6));animation:vfl-logo-glow 3s ease-in-out infinite}
+    .pvfl-gate-logo{position:absolute;left:50%;top:42%;width:92px;height:auto;transform:translate(-50%,-50%) translateZ(90px);filter:drop-shadow(0 0 18px rgba(255,255,255,.85)) drop-shadow(0 0 36px rgba(167,139,250,.6));animation:vfl-logo-glow 3s ease-in-out infinite;z-index:2}
     .pvfl-gate-label{position:absolute;left:0;right:0;top:72%;text-align:center;font-size:13px;font-weight:800;letter-spacing:5px;color:#fff;transform:translateZ(60px);text-shadow:0 0 14px rgba(167,139,250,.95)}
     /* Documents */
     .pvfl-doc-slot{position:absolute;left:50%;top:42%;width:92px;height:122px;transform-style:preserve-3d;animation-iteration-count:infinite;animation-timing-function:linear}
@@ -326,8 +326,8 @@
     [dir="rtl"] .pvfl-pvf-logo,
     [dir="rtl"] .pvfl-pvf-label,
     [dir="rtl"] .pvfl-pvf-sub{transform:scaleX(-1)}
-    [dir="rtl"] .pvfl-gate-logo{transform:translate(-50%,-50%) translateZ(42px) scaleX(-1)}
-    [dir="rtl"] .pvfl-gate-label{transform:translateZ(42px) scaleX(-1)}
+    [dir="rtl"] .pvfl-gate-logo{transform:translate(-50%,-50%) translateZ(90px) scaleX(-1)}
+    [dir="rtl"] .pvfl-gate-label{transform:translateZ(60px) scaleX(-1)}
     @media(prefers-reduced-motion:reduce){
       .pvf-loop-container *,.pvf-loop-container *::before,.pvf-loop-container *::after{animation:none !important;transition:none !important}
     }
