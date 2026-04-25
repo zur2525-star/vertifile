@@ -216,9 +216,21 @@
     .mock-line.w50{width:50%}
     .mock-line.w40{width:40%}
     .mock-line.spacer{background:transparent;height:16px}
-    .mock-stamp-wrap{position:absolute;bottom:24px;right:24px;width:100px;height:100px}
+    .mock-stamp-wrap{position:absolute;bottom:24px;right:24px;width:100px;height:100px;font-size:5.4px}
     [dir="rtl"] .mock-stamp-wrap{right:auto;left:24px}
     #stampPreview{width:100%;height:100%}
+    /* Wave strip — holographic waves below the stamp (matches app.html pattern) */
+    .stamp-wave-strip{margin-top:16px;background:rgba(124,58,237,.04);border:1px solid rgba(0,0,0,.04);border-radius:10px;height:48px;overflow:hidden;position:relative}
+    .stamp-wave-strip svg{width:200%;height:100%;position:absolute;left:0;top:0}
+    .ready-wave-strip{margin:16px auto 0;max-width:320px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;height:48px;overflow:hidden;position:relative}
+    .ready-wave-strip svg{width:200%;height:100%;position:absolute;left:0;top:0}
+    /* Proportional scaling for stamp inner content (Small/Medium/Large) — overrides fixed px in stamp-component.js. Specificity 2 (.mock-stamp-wrap .vfs-*) beats the component's single-class rules. */
+    .mock-stamp-wrap .vfs-center svg.vfs-stamp-logo,.mock-stamp-wrap .vfs-center .vfs-stamp-logo{width:3.5em;height:3.5em}
+    .mock-stamp-wrap .vfs-brand{font-size:1em;margin-top:.15em}
+    .mock-stamp-wrap .vfs-lbl{font-size:1em;margin-top:.15em}
+    .ready-stamp-hero .vfs-center svg.vfs-stamp-logo,.ready-stamp-hero .vfs-center .vfs-stamp-logo{width:3.5em;height:3.5em}
+    .ready-stamp-hero .vfs-brand{font-size:1em;margin-top:.15em}
+    .ready-stamp-hero .vfs-lbl{font-size:1em;margin-top:.15em}
 
     /* Controls */
     .stamp-controls{display:flex;flex-direction:column;gap:24px}
@@ -285,7 +297,7 @@
     #step7 .ready-secondary a:hover{color:#fff}
 
     .ready-layout{text-align:center;max-width:640px;margin:0 auto;position:relative;z-index:1}
-    .ready-stamp-hero{margin:0 auto 32px;width:140px;height:140px}
+    .ready-stamp-hero{margin:0 auto 32px;width:140px;height:140px;font-size:7.54px}
     #readyStampPreview{width:100%;height:100%}
     .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
     .summary-card{background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:12px;padding:16px;text-align:center}
@@ -842,6 +854,7 @@
                 <div id="stampPreview"></div>
               </div>
             </div>
+            <div class="stamp-wave-strip" id="stampWaveStrip" aria-hidden="true"></div>
           </div>
 
           <!-- Controls -->
@@ -954,6 +967,7 @@
           <div class="ready-stamp-hero">
             <div id="readyStampPreview"></div>
           </div>
+          <div class="ready-wave-strip" id="readyWaveStrip" aria-hidden="true"></div>
 
           <div class="summary-grid" id="summaryGrid"></div>
 
@@ -1624,8 +1638,11 @@
     if (wrap) {
       wrap.style.width = sz + 'px';
       wrap.style.height = sz + 'px';
+      // Proportional font-size: 7px@130 (Large baseline) → text+logo scale via em with overrides above.
+      wrap.style.fontSize = (sz / 130 * 7) + 'px';
     }
     VertifileStamp.inject('stampPreview', 'stamp', stampOpts);
+    VertifileStamp.inject('stampWaveStrip', 'waves', stampOpts);
   }
 
   function generateWaveGradient(baseColor, accentColor) {
@@ -1677,6 +1694,7 @@
       stampOpts.customIcon = '<img src="' + cfg.logoDataUrl + '" style="width:24px;height:24px;border-radius:4px;object-fit:cover" alt="Logo">';
     }
     VertifileStamp.inject('readyStampPreview', 'stamp', stampOpts);
+    VertifileStamp.inject('readyWaveStrip', 'waves', stampOpts);
 
     // Summary cards
     var grid = document.getElementById('summaryGrid');
