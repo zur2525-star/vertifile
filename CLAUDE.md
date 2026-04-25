@@ -389,3 +389,4 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-04-25 06:01 | FEAT | public/index.html | Hero v2 background: added hex grid drift on scroll + 3D mouse parallax on orbit rings, with prefers-reduced-motion support and AbortController cleanup. Background-only — no text/layout changes. | reviewed by Amit 10/10 | ✓
 2026-04-25 06:38 | FEAT | public/index.html + 10 locales | Hero v2 cinematic atmosphere + PvfLoop 3D portal animation. Dead code cleanup. New i18n key. | reviewed by Amit 9/10 | ✓
 2026-04-25 06:51 | FIX | public/index.html | Hero polish: RTL PvfLoop direction (scaleX flip + counter-flip on logos), hero taller +140px, sharp edge to stats-bar, stats-bar margin removed, PvfLoop +50% size + centered with translateX | ✓
+2026-04-25 07:15 | FIX | public/index.html | Reversed PvfLoop animation direction (LTR L→R, RTL R→L mirror via scaleX) | ✓
