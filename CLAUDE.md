@@ -293,3 +293,6 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-03-22 13:30 | FEAT | routes/admin.js | GET /admin/errors endpoint | ✓
 
 2026-03-22 14:00 | FIX | demo.html + locales/*.json | Full demo page i18n — badges, verified/forged lists, format section, privacy notice in all 10 languages | ✓
+
+2026-04-25 03:15 | SECURITY | routes/onboarding.js + routes/api.js + tests/health-email-and-503.test.js | Fixed SMTP silent failure (503 response) + added /api/health/email endpoint with transporter.verify() | npm audit ✓ | tests ✓ | reviewed by Avi 9/10 | ✓
+2026-04-25 03:15 | I18N | public/onboarding.html + public/locales/*.json (10 files) | Added 49 onboarding keys + 441 translations for step3/4/5/6 cards in 10 languages, removed orphan step5.noPayment | JSON valid all 10 ✓ | reviewed by Chen 9.5/10 | ✓
