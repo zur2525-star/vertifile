@@ -94,7 +94,15 @@ router.post('/auth/send-code', sendCodeLimiter, async (req, res) => {
     // Send verification code via email (Resend SMTP)
     const emailSent = await sendVerificationCode(normalizedEmail, code, CODE_TTL_MINUTES);
     if (!emailSent) {
-      logger.warn({ email: normalizedEmail }, 'Verification code created but email not sent (SMTP not configured)');
+      logger.warn({ email: normalizedEmail }, 'Verification code created but email not sent (SMTP not configured or send failed)');
+      // Fail loudly: returning success here would tell the user "code sent" while
+      // no email reached them. 503 surfaces a transient infra problem without
+      // leaking SMTP internals to the client.
+      return res.status(503).json({
+        success: false,
+        error: 'email_service_unavailable',
+        message: 'Verification email could not be sent. Please try again later or contact support.'
+      });
     }
 
     logger.info({ email: normalizedEmail, emailSent }, 'Verification code generated');

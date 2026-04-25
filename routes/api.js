@@ -921,6 +921,107 @@ router.get('/health/deep', (req, res, next) => {
   } catch(e) { res.status(500).json({ status: 'error', error: 'Health check failed' }); }
 });
 
+// ===== API: Email service health =====
+// Admin-only — runs transporter.verify() against the configured SMTP server.
+// Slow on purpose (network round-trip), so we cap the verify call at 5s and
+// gate the route with authenticateAdmin to keep it off the public surface.
+// Never returns SMTP_PASS or any other credential.
+router.get('/health/email', (req, res, next) => {
+  const fn = req.app.get('authenticateAdmin');
+  if (fn) return fn(req, res, next);
+  return res.status(500).json({ success: false, error: 'Admin auth not configured' });
+}, async (req, res) => {
+  const host = process.env.SMTP_HOST || null;
+  const portRaw = process.env.SMTP_PORT;
+  const port = portRaw ? parseInt(portRaw, 10) : null;
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+  const from = process.env.SMTP_FROM || 'Vertifile <noreply@vertifile.com>';
+
+  const configured = !!(host && portRaw && user && pass);
+
+  // If env is incomplete we cannot build a transporter — short-circuit.
+  if (!configured) {
+    return res.json({
+      configured: false,
+      verified: false,
+      host,
+      port,
+      from,
+      error: 'smtp_not_configured'
+    });
+  }
+
+  let nodemailer;
+  try {
+    nodemailer = require('nodemailer');
+  } catch (_) {
+    return res.json({
+      configured,
+      verified: false,
+      host,
+      port,
+      from,
+      error: 'nodemailer_unavailable'
+    });
+  }
+
+  let transporter;
+  try {
+    transporter = nodemailer.createTransport({
+      host,
+      port,
+      secure: port === 465,
+      auth: { user, pass }
+    });
+  } catch (e) {
+    return res.json({
+      configured,
+      verified: false,
+      host,
+      port,
+      from,
+      error: 'transport_create_failed'
+    });
+  }
+
+  // 5s timeout — verify() can hang on a black-holed SMTP host.
+  const verifyPromise = transporter.verify().then(() => true).catch(() => false);
+  const timeoutPromise = new Promise(resolve =>
+    setTimeout(() => resolve('__timeout__'), 5000).unref?.()
+  );
+
+  let verified = false;
+  let error = null;
+  try {
+    const result = await Promise.race([verifyPromise, timeoutPromise]);
+    if (result === '__timeout__') {
+      verified = false;
+      error = 'verify_timeout';
+    } else if (result === true) {
+      verified = true;
+    } else {
+      verified = false;
+      error = 'verify_failed';
+    }
+  } catch (_) {
+    verified = false;
+    error = 'verify_failed';
+  } finally {
+    // Always release the connection — verify() opens one.
+    try { transporter.close(); } catch (_) { /* noop */ }
+  }
+
+  return res.json({
+    configured,
+    verified,
+    host,
+    port,
+    from,
+    error
+  });
+});
+
 // ===== Prometheus metrics endpoint =====
 router.get('/metrics', (req, res, next) => {
   const fn = req.app.get('authenticateAdmin');
