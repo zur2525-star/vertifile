@@ -219,11 +219,27 @@
     .mock-stamp-wrap{position:absolute;bottom:24px;right:24px;width:100px;height:100px;font-size:5.4px}
     [dir="rtl"] .mock-stamp-wrap{right:auto;left:24px}
     #stampPreview{width:100%;height:100%}
-    /* Wave strip — holographic waves below the stamp (matches app.html pattern) */
-    .stamp-wave-strip{margin-top:16px;background:rgba(124,58,237,.04);border:1px solid rgba(0,0,0,.04);border-radius:10px;height:48px;overflow:hidden;position:relative}
-    .stamp-wave-strip svg{width:200%;height:100%;position:absolute;left:0;top:0}
-    .ready-wave-strip{margin:16px auto 0;max-width:320px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;height:48px;overflow:hidden;position:relative}
-    .ready-wave-strip svg{width:200%;height:100%;position:absolute;left:0;top:0}
+    /* Holographic wave halo — concentric ripples on the document around the stamp.
+       Two pseudo-element rings expand outward from behind the stamp coin, simulating
+       the holographic foil effect of a physical Vertifile stamp on real paper.
+       Color comes from --wave-color (set by applyStamp from state.stampConfig.waveColor),
+       so the live color picker updates the ripples in real-time. */
+    .mock-stamp-wrap::before,.mock-stamp-wrap::after,
+    .ready-stamp-hero::before,.ready-stamp-hero::after{
+      content:'';position:absolute;top:50%;left:50%;width:100%;height:100%;
+      border-radius:50%;border:2px solid var(--wave-color,#7c3aed);
+      transform:translate(-50%,-50%) scale(.6);opacity:0;pointer-events:none;z-index:0;
+      animation:onbHaloRipple 3s ease-out infinite;
+    }
+    .mock-stamp-wrap::after,.ready-stamp-hero::after{animation-delay:1.5s}
+    .mock-stamp-wrap,.ready-stamp-hero{position:relative}
+    .mock-stamp-wrap{position:absolute}
+    .mock-stamp-wrap>#stampPreview,.ready-stamp-hero>#readyStampPreview{position:relative;z-index:1}
+    @keyframes onbHaloRipple{
+      0%{transform:translate(-50%,-50%) scale(.7);opacity:0}
+      30%{opacity:.55}
+      100%{transform:translate(-50%,-50%) scale(1.65);opacity:0}
+    }
     /* Proportional scaling for stamp inner content (Small/Medium/Large) — overrides fixed px in stamp-component.js. Specificity 2 (.mock-stamp-wrap .vfs-*) beats the component's single-class rules. */
     .mock-stamp-wrap .vfs-center svg.vfs-stamp-logo,.mock-stamp-wrap .vfs-center .vfs-stamp-logo{width:3.5em;height:3.5em}
     .mock-stamp-wrap .vfs-brand{font-size:1em;margin-top:.15em}
@@ -854,7 +870,6 @@
                 <div id="stampPreview"></div>
               </div>
             </div>
-            <div class="stamp-wave-strip" id="stampWaveStrip" aria-hidden="true"></div>
           </div>
 
           <!-- Controls -->
@@ -967,7 +982,6 @@
           <div class="ready-stamp-hero">
             <div id="readyStampPreview"></div>
           </div>
-          <div class="ready-wave-strip" id="readyWaveStrip" aria-hidden="true"></div>
 
           <div class="summary-grid" id="summaryGrid"></div>
 
@@ -1640,9 +1654,10 @@
       wrap.style.height = sz + 'px';
       // Proportional font-size: 7px@130 (Large baseline) → text+logo scale via em with overrides above.
       wrap.style.fontSize = (sz / 130 * 7) + 'px';
+      // Holographic halo color — picked up by ::before/::after ripple animation.
+      wrap.style.setProperty('--wave-color', wc);
     }
     VertifileStamp.inject('stampPreview', 'stamp', stampOpts);
-    VertifileStamp.inject('stampWaveStrip', 'waves', stampOpts);
   }
 
   function generateWaveGradient(baseColor, accentColor) {
@@ -1694,7 +1709,9 @@
       stampOpts.customIcon = '<img src="' + cfg.logoDataUrl + '" style="width:24px;height:24px;border-radius:4px;object-fit:cover" alt="Logo">';
     }
     VertifileStamp.inject('readyStampPreview', 'stamp', stampOpts);
-    VertifileStamp.inject('readyWaveStrip', 'waves', stampOpts);
+    // Holographic halo color — picked up by ::before/::after ripple animation around the stamp hero.
+    var hero = document.querySelector('#step7 .ready-stamp-hero');
+    if (hero) hero.style.setProperty('--wave-color', wc);
 
     // Summary cards
     var grid = document.getElementById('summaryGrid');
