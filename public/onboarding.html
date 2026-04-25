@@ -1863,11 +1863,7 @@
       }
     };
 
-    fetch('/api/onboarding/state', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).catch(function() {
+    putWithCsrf('/api/onboarding/state', payload).catch(function() {
       // Silent fail — state is also in memory
     });
   }
@@ -2032,6 +2028,23 @@
     });
   }
 
+  // Same as postWithCsrf but for PUT (used by saveState).
+  // Without this, /api/onboarding/state PUT fails with 403 CSRF_ERROR,
+  // so the wizard's progress is never persisted server-side and the
+  // user re-enters at step 0 / 1 on every reload.
+  function putWithCsrf(url, body) {
+    return getCsrfToken().then(function(token) {
+      var headers = { 'Content-Type': 'application/json' };
+      if (token) headers['X-CSRF-Token'] = token;
+      return fetch(url, {
+        method: 'PUT',
+        credentials: 'same-origin',
+        headers: headers,
+        body: JSON.stringify(body)
+      });
+    });
+  }
+
   // Auto-send the 6-digit verification code as soon as the user lands on
   // step 0. Idempotent on the server (rate-limited to 3/hour/email).
   function autoSendVerificationCode() {
@@ -2062,21 +2075,24 @@
     var otherInput = document.getElementById('industryOther');
     if (otherInput) state.industryOther = otherInput.value;
 
-    fetch('/api/onboarding/complete', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
-    })
+    postWithCsrf('/api/onboarding/complete', {})
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data.success) {
         window.location.href = data.redirect || '/app';
       } else {
-        // Still redirect — the user completed the wizard locally
-        window.location.href = '/app?onboarding=complete';
+        // Server rejected the completion (e.g. EMAIL_NOT_VERIFIED, no state).
+        // Do NOT redirect to /app: the dashboard's checkAuth() will see an
+        // unfinished onboarding_state.completed_at and bounce the user back
+        // here, producing the loop reported by Zur. Surface the error so
+        // the user (or QA) can see what's wrong instead.
+        var msg = (data && data.error) ? data.error : 'Could not finish onboarding. Please try again.';
+        try { alert(msg); } catch (_) { /* best effort */ }
       }
     })
     .catch(function() {
-      window.location.href = '/app?onboarding=complete';
+      // Network failure — do not pretend it succeeded.
+      try { alert('Network error. Please check your connection and try again.'); } catch (_) {}
     });
   }
 

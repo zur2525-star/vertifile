@@ -373,6 +373,29 @@ describe('CSRF-protected endpoints -- token required', () => {
     await assertCsrfRejected('/api/user/branding');
   });
 
+  // Regression guard: the onboarding wizard's final CTA POSTs to
+  // /api/onboarding/complete and the wizard's progress saver PUTs to
+  // /api/onboarding/state. Both rely on session auth, so they MUST be
+  // CSRF-protected. If a future refactor accidentally adds them to
+  // CSRF_EXCLUDED_PREFIXES, this test fails loudly.
+  // Conversely, the client-side onboarding.html MUST send a CSRF token on
+  // these calls — otherwise step 7's CTA gets 403 and the user enters an
+  // infinite onboarding -> /app -> /onboarding loop (bug 2026-04-20).
+  it('POST /api/onboarding/complete without CSRF token returns 403 CSRF_ERROR', async () => {
+    await assertCsrfRejected('/api/onboarding/complete');
+  });
+
+  it('PUT /api/onboarding/state without CSRF token returns 403 CSRF_ERROR', async () => {
+    const res = await request('PUT', '/api/onboarding/state', { body: { current_step: 2 } });
+    assert.equal(
+      res.status,
+      403,
+      `PUT /api/onboarding/state without CSRF token must return 403. Got ${res.status}: ${res.text}`
+    );
+    assert.equal(res.json?.code, 'CSRF_ERROR', `Expected CSRF_ERROR. Got: ${JSON.stringify(res.json)}`);
+    assert.equal(res.json?.success, false);
+  });
+
 });
 
 // ============================================================================
