@@ -247,7 +247,7 @@
     .pvfl-rail{position:absolute;left:0;right:0;top:50%;height:3px;transform:translateY(-50%);background:linear-gradient(90deg,transparent 0%,rgba(167,139,250,.9) 20%,#e9d5ff 50%,rgba(167,139,250,.9) 80%,transparent 100%);box-shadow:0 0 20px #a78bfa,0 0 40px rgba(139,92,246,.6)}
     .pvfl-track-floor{position:absolute;left:-60px;right:-60px;top:100%;height:280px;transform:rotateX(90deg);transform-origin:top center;background:linear-gradient(180deg,rgba(139,92,246,.15) 0%,transparent 60%);filter:blur(16px);pointer-events:none}
     /* Gate */
-    .pvfl-gate{position:absolute;left:50%;top:42%;width:230px;height:290px;transform:translate(-50%,-50%) translate3d(210px,0,90px);transform-style:preserve-3d;pointer-events:none}
+    .pvfl-gate{position:absolute;left:50%;top:42%;width:230px;height:290px;transform:translate(-50%,-50%) translate3d(-210px,0,90px);transform-style:preserve-3d;pointer-events:none}
     .pvfl-shield{position:absolute;inset:0;filter:drop-shadow(0 0 32px rgba(167,139,250,.8)) drop-shadow(0 0 64px rgba(124,58,237,.5))}
     .pvfl-shield svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
     .pvfl-shield-back{transform:translateZ(-58px);opacity:.55;filter:drop-shadow(0 0 18px rgba(167,139,250,.44))}
@@ -287,29 +287,29 @@
     .pvfl-edge-right{top:0;right:0;width:14px;height:100%;transform:rotateY(90deg) translateZ(7px);transform-origin:right}
     /* Keyframes */
     @keyframes vfl-travel-in{
-      0%{transform:translate(-50%,-50%) translate3d(630px,0,90px) rotateY(8deg);opacity:0}
+      0%{transform:translate(-50%,-50%) translate3d(-630px,0,90px) rotateY(-8deg);opacity:0}
       5%{opacity:1}
-      40%{transform:translate(-50%,-50%) translate3d(270px,0,90px) rotateY(8deg);opacity:1}
-      46%{transform:translate(-50%,-50%) translate3d(220px,0,-60px) rotateY(8deg) scale(.9);opacity:.3}
+      40%{transform:translate(-50%,-50%) translate3d(-270px,0,90px) rotateY(-8deg);opacity:1}
+      46%{transform:translate(-50%,-50%) translate3d(-220px,0,-60px) rotateY(-8deg) scale(.9);opacity:.3}
       48%{opacity:0}
       100%{opacity:0}
     }
     @keyframes vfl-travel-out{
-      0%,48%{transform:translate(-50%,-50%) translate3d(220px,0,-60px) scale(.8);opacity:0}
-      50%{transform:translate(-50%,-50%) translate3d(220px,0,120px) scale(1.1);opacity:1}
-      52%{transform:translate(-50%,-50%) translate3d(210px,0,90px) scale(1);opacity:1}
-      78%{transform:translate(-50%,-50%) translate3d(-300px,0,90px);opacity:1}
-      92%{transform:translate(-50%,-50%) translate3d(-570px,0,90px);opacity:0}
-      100%{transform:translate(-50%,-50%) translate3d(-660px,0,90px);opacity:0}
+      0%,48%{transform:translate(-50%,-50%) translate3d(-220px,0,-60px) scale(.8);opacity:0}
+      50%{transform:translate(-50%,-50%) translate3d(-220px,0,120px) scale(1.1);opacity:1}
+      52%{transform:translate(-50%,-50%) translate3d(-210px,0,90px) scale(1);opacity:1}
+      78%{transform:translate(-50%,-50%) translate3d(300px,0,90px);opacity:1}
+      92%{transform:translate(-50%,-50%) translate3d(570px,0,90px);opacity:0}
+      100%{transform:translate(-50%,-50%) translate3d(660px,0,90px);opacity:0}
     }
     @keyframes vfl-shadow{
-      0%{transform:translate(-50%,-50%) translate3d(630px,0,0) rotateX(90deg);opacity:0}
+      0%{transform:translate(-50%,-50%) translate3d(-630px,0,0) rotateX(90deg);opacity:0}
       5%{opacity:.35}
-      40%{transform:translate(-50%,-50%) translate3d(270px,0,0) rotateX(90deg);opacity:.35}
+      40%{transform:translate(-50%,-50%) translate3d(-270px,0,0) rotateX(90deg);opacity:.35}
       48%{opacity:0}
-      52%{transform:translate(-50%,-50%) translate3d(210px,0,0) rotateX(90deg);opacity:.35}
-      95%{transform:translate(-50%,-50%) translate3d(-615px,0,0) rotateX(90deg);opacity:.35}
-      100%{transform:translate(-50%,-50%) translate3d(-660px,0,0) rotateX(90deg);opacity:0}
+      52%{transform:translate(-50%,-50%) translate3d(-210px,0,0) rotateX(90deg);opacity:.35}
+      95%{transform:translate(-50%,-50%) translate3d(615px,0,0) rotateX(90deg);opacity:.35}
+      100%{transform:translate(-50%,-50%) translate3d(660px,0,0) rotateX(90deg);opacity:0}
     }
     @keyframes vfl-gate-pulse{0%,100%{opacity:.5}50%{opacity:.9}}
     @keyframes vfl-ring{0%,100%{opacity:.4}50%{opacity:.8}}
