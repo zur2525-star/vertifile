@@ -407,3 +407,5 @@ npm audit --audit-level=high → נכשל = חסום push
 2026-04-25 17:28 | I18N | public/locales/*.json (9 files) | Reverted hero text in en/ar/de/es/fr/ja/pt/ru/zh to pre-265da16 wording per Zur. Together with 729f4da (he), all 10 languages now have the original copy. | ✓
 
 2026-04-25 17:35 | FIX | public/index.html | Widened hero subheadline max-width 540→680px per Zur (fewer lines) | ✓
+
+2026-04-25 10:41 | DOCS | docs/patent-updates/* | Patent 327212 pre-examination response materials (md source + build script + signature SVG + HTML/PDF artifacts) | ✓
