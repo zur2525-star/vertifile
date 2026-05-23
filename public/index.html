@@ -977,7 +977,7 @@
     <p data-i18n="video.subtitle">Watch how documents become tamper-proof with 7 layers of security.</p>
   </div>
   <div class="video-wrapper fade-up">
-    <video autoplay loop muted playsinline preload="auto" id="promoVideo">
+    <video autoplay loop muted playsinline preload="auto" controls id="promoVideo">
       <source src="/videos/promo.mp4" type="video/mp4">
     </video>
   </div>
@@ -1614,19 +1614,20 @@
   },{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
   document.querySelectorAll('.fade-up').forEach(function(el){observer.observe(el)});
 
-  // ===== PROMO VIDEO — user-initiated playback only (no auto-play, no loop) =====
-  // Previously the video auto-played on scroll-into-view and looped. Removed per
-  // user request — the video now has standard browser controls and the user
-  // decides when to play it. Pausing on scroll-out is kept so background tabs
-  // do not keep playing audio/video when the user scrolls away.
+  // ===== PROMO VIDEO — auto-play on scroll into view, pause on scroll out =====
+  // The video has native `controls` as a fallback for browsers that block autoplay.
+  // play() is wrapped in .catch() because some browsers reject silent-autoplay
+  // when the page hasn't yet had a user gesture — in that case the user can
+  // simply click the controls.
   (function(){
     var vid=document.getElementById('promoVideo');
     if(!vid)return;
     var vidObserver=new IntersectionObserver(function(entries){
       entries.forEach(function(e){
-        if(!e.isIntersecting && !vid.paused){ vid.pause(); }
+        if(e.isIntersecting && vid.paused){ vid.play().catch(function(){}); }
+        else if(!e.isIntersecting && !vid.paused){ vid.pause(); }
       });
-    },{threshold:0.1});
+    },{threshold:0.4});
     vidObserver.observe(vid);
   })();
 
