@@ -62,12 +62,15 @@ function createAuthenticateApiKey(db) {
 
 function createAuthenticateAdmin(db) {
   return async function authenticateAdmin(req, res, next) {
+    // Pass if EITHER a valid X-Admin-Secret header (programmatic/existing) OR
+    // an authenticated admin session (set by POST /api/admin/login). This lets
+    // the logged-in dashboard call every existing /api/admin/* endpoint.
     const adminSecret = req.headers['x-admin-secret'];
-    if (!isValidAdminSecret(adminSecret)) {
-      await db.log('auth_failed', { reason: 'invalid_admin_secret', ip: getClientIP(req), path: req.path });
-      return res.status(403).json({ success: false, error: 'Unauthorized' });
+    if (isValidAdminSecret(adminSecret) || (req.session && req.session.isAdmin === true)) {
+      return next();
     }
-    next();
+    await db.log('auth_failed', { reason: 'invalid_admin_secret', ip: getClientIP(req), path: req.path });
+    return res.status(403).json({ success: false, error: 'Unauthorized' });
   };
 }
 

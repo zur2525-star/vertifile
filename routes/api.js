@@ -1312,29 +1312,52 @@ router.get('/org/branding', createLimiter, (req, res, next) => {
 // ================================================================
 const contactLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 3, message: { error: 'Too many submissions' } });
 
+// Allowed contact subjects (Contract B). Anything else falls back to 'general'.
+const CONTACT_SUBJECTS = ['general', 'support', 'enterprise', 'partnership'];
+
 router.post('/contact', contactLimiter, async (req, res) => {
   try {
     const db = req.app.get('db');
-    const { name, email, organization, orgType, message } = req.body;
-    if (!name || !email || !organization) {
-      return res.status(400).json({ success: false, error: 'Name, email, and organization are required' });
+    const body = req.body || {};
+
+    // Trim + length-cap every field. organization is accepted but NO LONGER required.
+    const name = String(body.name || '').trim().slice(0, 120);
+    const email = String(body.email || '').trim().slice(0, 160);
+    const phone = String(body.phone || '').trim().slice(0, 40);
+    const organization = String(body.organization || '').trim().slice(0, 120);
+    const message = String(body.message || '').trim().slice(0, 5000);
+    const wantsCallback = body.wantsCallback === true || body.wantsCallback === 'true';
+    let subject = String(body.subject || '').trim().toLowerCase();
+    if (!CONTACT_SUBJECTS.includes(subject)) subject = 'general';
+
+    // Validate: name + valid email ONLY.
+    if (!name || !email) {
+      return res.status(400).json({ success: false, error: 'Name and email are required' });
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res.status(400).json({ success: false, error: 'Invalid email address' });
     }
-    await db.log('contact_form', { name, email, organization, orgType: orgType || 'not specified', message: message || '', ip: getClientIP(req) });
 
-    // Send notification email to admin
+    const ip = getClientIP(req);
+
+    // Persist the lead (clean leads list) ...
+    await db.createLead({ name, email, phone, organization, subject, message, wantsCallback, source: 'contact_form', ip });
+    // ... and keep the audit trail.
+    await db.log('contact_form', { name, email, organization: organization || 'not specified', subject, phone: phone || '', wantsCallback, message, ip });
+
+    // Send notification email to admin (includes phone + callback flag)
     const adminEmail = (process.env.ADMIN_EMAILS || '').split(',')[0].trim();
     const contactHtml = `<h2>New Contact Form Submission</h2>
 <p><strong>Name:</strong> ${escapeHtml(name)}</p>
 <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-<p><strong>Organization:</strong> ${escapeHtml(organization)}</p>
-<p><strong>Type:</strong> ${escapeHtml(orgType || 'not specified')}</p>
+<p><strong>Phone:</strong> ${escapeHtml(phone || 'not provided')}</p>
+<p><strong>Organization:</strong> ${escapeHtml(organization || 'not specified')}</p>
+<p><strong>Subject:</strong> ${escapeHtml(subject)}</p>
+<p><strong>Wants callback:</strong> ${wantsCallback ? 'yes' : 'no'}</p>
 <p><strong>Message:</strong></p>
 <p>${escapeHtml(message || 'No message provided')}</p>`;
     if (adminEmail) {
-      sendEmail(adminEmail, 'Vertifile Contact: ' + escapeHtml(organization), contactHtml).catch(() => {});
+      sendEmail(adminEmail, 'Vertifile Contact: ' + escapeHtml(name), contactHtml).catch(() => {});
     }
 
     // Send confirmation email to the person who submitted the form (best effort)

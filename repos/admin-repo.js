@@ -121,6 +121,127 @@ async function getAuditLog({ limit = 50, offset = 0, event, orgId } = {}) {
 }
 
 // ================================================================
+// LEADS
+// ================================================================
+
+/**
+ * Insert a new lead (contact-form submission). All text fields are stored
+ * as-is (callers trim + length-cap before calling). Returns the inserted row.
+ */
+async function createLead({ name, email, phone, organization, subject, message, wantsCallback = false, source = 'contact_form', ip }) {
+  const { rows } = await pool.query(
+    `INSERT INTO leads (name, email, phone, organization, subject, message, wants_callback, source, ip)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+     RETURNING id, name, email, phone, organization, subject, message, wants_callback, status, source, created_at`,
+    [name, email, phone || null, organization || null, subject || null, message || null, !!wantsCallback, source, ip || null]
+  );
+  return rows[0];
+}
+
+/**
+ * List leads newest-first, optionally filtered by status.
+ * password_hash N/A here — leads carry no secrets.
+ */
+async function listLeads({ status, limit = 50, offset = 0 } = {}) {
+  const cols = 'id, name, email, phone, organization, subject, message, wants_callback, status, source, created_at';
+  if (status) {
+    const { rows } = await pool.query(
+      `SELECT ${cols} FROM leads WHERE status = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3`,
+      [status, limit, offset]
+    );
+    return rows;
+  }
+  const { rows } = await pool.query(
+    `SELECT ${cols} FROM leads ORDER BY created_at DESC LIMIT $1 OFFSET $2`,
+    [limit, offset]
+  );
+  return rows;
+}
+
+/**
+ * Aggregate lead counts in a single query:
+ *   { new, contacted, closed, total, pendingCallbacks }
+ * pendingCallbacks = wants_callback = true AND status != 'closed'.
+ */
+async function countLeadsByStatus() {
+  const { rows } = await pool.query(`
+    SELECT
+      COUNT(*) FILTER (WHERE status = 'new')::int       AS new,
+      COUNT(*) FILTER (WHERE status = 'contacted')::int AS contacted,
+      COUNT(*) FILTER (WHERE status = 'closed')::int    AS closed,
+      COUNT(*)::int                                     AS total,
+      COUNT(*) FILTER (WHERE wants_callback = TRUE AND status != 'closed')::int AS pending_callbacks
+    FROM leads
+  `);
+  const r = rows[0];
+  return {
+    new: r.new,
+    contacted: r.contacted,
+    closed: r.closed,
+    total: r.total,
+    pendingCallbacks: r.pending_callbacks,
+  };
+}
+
+/**
+ * Update a lead's status (and updated_at). Returns the updated row, or null
+ * if no lead with that id exists. Caller validates `status` against the
+ * allowlist before calling.
+ */
+async function updateLeadStatus(id, status) {
+  const { rows } = await pool.query(
+    `UPDATE leads SET status = $1, updated_at = now()
+     WHERE id = $2
+     RETURNING id, name, email, phone, organization, subject, message, wants_callback, status, source, created_at`,
+    [status, id]
+  );
+  return rows[0] || null;
+}
+
+// ================================================================
+// USERS (admin views — SAFE columns only, NEVER password_hash)
+// ================================================================
+
+/**
+ * List registered users for the admin dashboard. Returns SAFE columns only —
+ * password_hash is intentionally never selected. Optional case-insensitive
+ * search over email + name (parameterized, LIKE wildcards escaped).
+ */
+async function listUsers({ limit = 50, offset = 0, search = '' } = {}) {
+  const cols = 'id, email, name, plan, email_verified, created_at, last_login_at, documents_used, documents_limit';
+  if (search) {
+    const pattern = '%' + escapeLike(search) + '%';
+    const { rows } = await pool.query(
+      `SELECT ${cols} FROM users
+       WHERE email ILIKE $1 OR name ILIKE $1
+       ORDER BY created_at DESC LIMIT $2 OFFSET $3`,
+      [pattern, limit, offset]
+    );
+    return rows;
+  }
+  const { rows } = await pool.query(
+    `SELECT ${cols} FROM users ORDER BY created_at DESC LIMIT $1 OFFSET $2`,
+    [limit, offset]
+  );
+  return rows;
+}
+
+/** Total registered users. */
+async function countUsers() {
+  const { rows } = await pool.query('SELECT COUNT(*)::int AS count FROM users');
+  return rows[0].count;
+}
+
+/** Users created within the last N days (default 7). */
+async function countNewUsers(days = 7) {
+  const { rows } = await pool.query(
+    "SELECT COUNT(*)::int AS count FROM users WHERE created_at > NOW() - make_interval(days => $1::int)",
+    [days]
+  );
+  return rows[0].count;
+}
+
+// ================================================================
 // STATS
 // ================================================================
 async function getStats() {
@@ -526,6 +647,15 @@ module.exports = {
     getBranding,
     log,
     getAuditLog,
+    // Leads
+    createLead,
+    listLeads,
+    countLeadsByStatus,
+    updateLeadStatus,
+    // Users (admin views)
+    listUsers,
+    countUsers,
+    countNewUsers,
     getStats,
     getOrgStats,
     getRecentDocuments,

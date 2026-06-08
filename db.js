@@ -139,6 +139,24 @@ const SCHEMA_SQL = `
   );
   CREATE INDEX IF NOT EXISTS idx_sessions_expire ON sessions (expire);
 
+  CREATE TABLE IF NOT EXISTS leads (
+    id             SERIAL PRIMARY KEY,
+    name           TEXT NOT NULL,
+    email          TEXT NOT NULL,
+    phone          TEXT,
+    organization   TEXT,
+    subject        TEXT,
+    message        TEXT,
+    wants_callback BOOLEAN NOT NULL DEFAULT FALSE,
+    status         TEXT NOT NULL DEFAULT 'new',
+    source         TEXT NOT NULL DEFAULT 'contact_form',
+    ip             TEXT,
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+  );
+  CREATE INDEX IF NOT EXISTS idx_leads_status  ON leads(status);
+  CREATE INDEX IF NOT EXISTS idx_leads_created ON leads(created_at DESC);
+
   CREATE INDEX IF NOT EXISTS idx_docs_org ON documents(org_id);
   CREATE INDEX IF NOT EXISTS idx_docs_created ON documents(created_at);
   CREATE INDEX IF NOT EXISTS idx_audit_event ON audit_log(event);

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Vertifile — ניהול</title>
+  <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{overflow-x:hidden}
+    body{font-family:'Heebo','Inter',sans-serif;background:#0f0e17;color:#e2e0f0;min-height:100vh;transition:background .3s,color .3s}
+    a{text-decoration:none;color:inherit}
+
+    /* ===== LOGIN SCREEN ===== */
+    .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .login-screen::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,.15),transparent 70%);top:-100px;right:-100px;pointer-events:none}
+    .login-screen::after{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(79,70,229,.1),transparent 70%);bottom:-100px;left:-100px;pointer-events:none}
+    .login-card{background:rgba(26,24,48,.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(124,58,237,.15);border-radius:20px;padding:48px;box-shadow:0 8px 40px rgba(0,0,0,.4);max-width:420px;width:90%;text-align:center;position:relative;z-index:1}
+    .login-card img{height:34px;margin-bottom:24px;filter:brightness(1.1)}
+    .login-card .login-shield{width:52px;height:52px;border-radius:14px;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+    .login-card .login-shield svg{width:26px;height:26px;color:#a78bfa}
+    .login-card h2{font-size:21px;font-weight:700;margin-bottom:6px;color:#e2e0f0}
+    .login-card p{font-size:13px;color:#8b89a6;margin-bottom:24px}
+    .login-input{width:100%;padding:13px 16px;border:1px solid rgba(124,58,237,.15);border-radius:12px;font-size:14px;font-family:inherit;outline:none;transition:border .2s,background .2s;margin-bottom:12px;background:rgba(15,14,23,.5);color:#e2e0f0;text-align:right}
+    .login-input::placeholder{color:#8b89a6}
+    .login-input:focus{border-color:#7c3aed;background:rgba(15,14,23,.8)}
+    .login-submit{width:100%;padding:13px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:4px;transition:all .2s}
+    .login-submit:hover{box-shadow:0 4px 20px rgba(124,58,237,.4);transform:translateY(-1px)}
+    .login-submit:disabled{opacity:.6;cursor:default;transform:none}
+    .login-error{color:#f87171;font-size:13px;margin-top:14px;display:none;background:rgba(220,38,38,.1);padding:9px 12px;border-radius:8px}
+
+    /* ===== APP SHELL ===== */
+    .admin{display:none}
+    .topbar{height:60px;background:rgba(15,14,23,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(124,58,237,.1);display:flex;align-items:center;padding:0 24px;gap:12px;position:fixed;top:0;left:0;right:0;z-index:100}
+    .topbar-logo{display:flex;align-items:center;gap:10px}
+    .topbar-logo img{height:24px;filter:brightness(1.1)}
+    .topbar-logo .badge{font-size:11px;color:#a78bfa;font-weight:600;background:rgba(124,58,237,.12);padding:2px 8px;border-radius:4px}
+    .topbar-spacer{flex:1}
+    .topbar-actions{display:flex;align-items:center;gap:8px}
+    .icon-btn{background:none;border:1px solid rgba(124,58,237,.15);border-radius:10px;padding:8px 10px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px;color:#e2e0f0;font-size:13px;font-weight:500;font-family:inherit}
+    .icon-btn:hover{border-color:#7c3aed;background:rgba(124,58,237,.08)}
+    .icon-btn svg{width:16px;height:16px}
+
+    .wrap{max-width:1200px;margin:0 auto;padding:88px 24px 48px}
+
+    /* ===== SUMMARY CARDS ===== */
+    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+    @media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:520px){.cards{grid-template-columns:1fr}}
+    .card{background:rgba(26,24,48,.5);backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.1);border-radius:16px;padding:20px;display:flex;align-items:center;gap:16px;transition:.2s}
+    .card:hover{border-color:rgba(124,58,237,.25);transform:translateY(-2px)}
+    .card-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .card-icon svg{width:22px;height:22px}
+    .card-icon.c1{background:rgba(79,70,229,.12);border:1px solid rgba(79,70,229,.2)}
+    .card-icon.c1 svg{color:#818cf8}
+    .card-icon.c2{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2)}
+    .card-icon.c2 svg{color:#fbbf24}
+    .card-icon.c3{background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2)}
+    .card-icon.c3 svg{color:#22d3ee}
+    .card-icon.c4{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2)}
+    .card-icon.c4 svg{color:#34d399}
+    .card-meta{min-width:0}
+    .card-value{font-size:28px;font-weight:800;line-height:1.1;color:#e2e0f0}
+    .card-label{font-size:12px;color:#8b89a6;margin-top:4px;font-weight:500}
+
+    /* ===== TABS ===== */
+    .tabs{display:flex;gap:4px;background:rgba(15,14,23,.5);border:1px solid rgba(124,58,237,.1);border-radius:12px;padding:4px;margin-bottom:18px;width:fit-content}
+    .tab{padding:9px 22px;border:none;background:transparent;color:#8b89a6;font-size:13px;font-weight:600;cursor:pointer;border-radius:9px;font-family:inherit;transition:.2s;display:flex;align-items:center;gap:7px}
+    .tab svg{width:15px;height:15px}
+    .tab.active{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff}
+
+    .panel{display:none}
+    .panel.active{display:block}
+
+    /* ===== TOOLBAR (filters/search) ===== */
+    .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+    .filter-group{display:flex;gap:4px;background:rgba(15,14,23,.5);border:1px solid rgba(124,58,237,.1);border-radius:10px;padding:3px}
+    .filter-btn{padding:7px 14px;border:none;background:transparent;color:#8b89a6;font-size:12px;font-weight:600;cursor:pointer;border-radius:8px;font-family:inherit;transition:.2s}
+    .filter-btn:hover{color:#e2e0f0}
+    .filter-btn.active{background:rgba(124,58,237,.15);color:#a78bfa}
+    .search-box{position:relative;flex:1;max-width:320px}
+    .search-box input{width:100%;padding:9px 38px 9px 14px;border:1px solid rgba(124,58,237,.12);border-radius:10px;font-size:13px;font-family:inherit;outline:none;background:rgba(26,24,48,.5);color:#e2e0f0;transition:border .2s,background .2s}
+    .search-box input::placeholder{color:#8b89a6}
+    .search-box input:focus{border-color:#7c3aed;background:rgba(26,24,48,.8)}
+    .search-box svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:#8b89a6;pointer-events:none}
+    [dir="rtl"] .search-box input{padding:9px 14px 9px 38px}
+    [dir="rtl"] .search-box svg{left:auto;right:12px}
+
+    /* ===== TABLE ===== */
+    .table-card{background:rgba(26,24,48,.4);border:1px solid rgba(124,58,237,.1);border-radius:14px;overflow:hidden}
+    .table-scroll{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;min-width:760px}
+    thead th{text-align:right;font-size:11px;font-weight:700;color:#8b89a6;text-transform:uppercase;letter-spacing:.5px;padding:13px 16px;border-bottom:1px solid rgba(124,58,237,.12);white-space:nowrap;background:rgba(15,14,23,.4)}
+    tbody td{padding:13px 16px;font-size:13px;color:#e2e0f0;border-bottom:1px solid rgba(124,58,237,.05);vertical-align:middle}
+    tbody tr:last-child td{border-bottom:none}
+    tbody tr:hover td{background:rgba(124,58,237,.04)}
+    .cell-muted{color:#8b89a6}
+    .cell-strong{font-weight:600}
+    .cell-email{color:#a78bfa}
+    .cell-nowrap{white-space:nowrap}
+
+    /* badges */
+    .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;line-height:1.5;white-space:nowrap}
+    .badge svg{width:11px;height:11px;flex-shrink:0}
+    .badge-callback{background:rgba(251,191,36,.14);color:#fbbf24;border:1px solid rgba(251,191,36,.25)}
+    .badge-mute{background:rgba(107,114,128,.15);color:#9ca3af;border:1px solid rgba(107,114,128,.2)}
+    .badge-yes{background:rgba(52,211,153,.14);color:#34d399;border:1px solid rgba(52,211,153,.25)}
+    .badge-no{background:rgba(220,38,38,.12);color:#f87171;border:1px solid rgba(220,38,38,.2)}
+    .badge-plan{background:rgba(124,58,237,.14);color:#c4b5fd;border:1px solid rgba(124,58,237,.25);text-transform:capitalize}
+
+    /* status select */
+    .status-select{padding:6px 28px 6px 10px;border:1px solid rgba(124,58,237,.18);border-radius:8px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;outline:none;background:rgba(15,14,23,.6) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238b89a6' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat left 8px center;transition:.2s}
+    .status-select:focus{border-color:#7c3aed}
+    .status-select:disabled{opacity:.5;cursor:wait}
+    .status-select.s-new{color:#818cf8;border-color:rgba(79,70,229,.4)}
+    .status-select.s-contacted{color:#fbbf24;border-color:rgba(251,191,36,.4)}
+    .status-select.s-closed{color:#9ca3af;border-color:rgba(107,114,128,.4)}
+
+    /* message expand */
+    .msg-btn{background:none;border:1px solid rgba(124,58,237,.15);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:600;color:#8b89a6;cursor:pointer;font-family:inherit;transition:.2s;display:inline-flex;align-items:center;gap:5px}
+    .msg-btn:hover{border-color:#7c3aed;color:#a78bfa}
+    .msg-btn svg{width:12px;height:12px}
+    .msg-row td{background:rgba(15,14,23,.35);padding:0 16px}
+    .msg-content{padding:14px 16px;font-size:13px;line-height:1.7;color:#c4b5fd;white-space:pre-wrap;word-break:break-word;border-right:3px solid rgba(124,58,237,.4)}
+
+    /* states */
+    .state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;color:#8b89a6}
+    .state .state-icon{width:56px;height:56px;border-radius:50%;background:rgba(124,58,237,.08);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+    .state .state-icon svg{width:26px;height:26px;color:#8b89a6}
+    .state h3{font-size:16px;font-weight:600;color:#e2e0f0;margin-bottom:6px}
+    .state p{font-size:13px;max-width:340px;line-height:1.6}
+    .state.error .state-icon{background:rgba(220,38,38,.1)}
+    .state.error .state-icon svg{color:#f87171}
+    .state .retry-btn{margin-top:18px;padding:9px 22px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+    .state .retry-btn:hover{box-shadow:0 4px 16px rgba(124,58,237,.4);transform:translateY(-1px)}
+
+    .table-foot{padding:11px 16px;font-size:12px;color:#8b89a6;border-top:1px solid rgba(124,58,237,.08);display:flex;align-items:center;gap:6px}
+    .spin{width:34px;height:34px;border:3px solid rgba(124,58,237,.2);border-top-color:#7c3aed;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loading-wrap{padding:60px 24px;text-align:center}
+
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1830;border:1px solid rgba(124,58,237,.25);color:#e2e0f0;padding:12px 22px;border-radius:12px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:200;display:flex;align-items:center;gap:9px}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .toast svg{width:16px;height:16px;flex-shrink:0}
+    .toast.ok svg{color:#34d399}
+    .toast.err{border-color:rgba(220,38,38,.4)}
+    .toast.err svg{color:#f87171}
+
+    /* ===== LIGHT MODE ===== */
+    body.light-mode{background:#f8f7ff;color:#1e1b4b}
+    body.light-mode .login-card{background:rgba(255,255,255,.9);border-color:#e5e7eb;box-shadow:0 8px 40px rgba(0,0,0,.08)}
+    body.light-mode .login-card h2{color:#1e1b4b}
+    body.light-mode .login-card p{color:#6b7280}
+    body.light-mode .login-input{background:#f9fafb;border-color:#d1d5db;color:#1e1b4b}
+    body.light-mode .login-input::placeholder{color:#9ca3af}
+    body.light-mode .login-input:focus{border-color:#7c3aed;background:#fff}
+    body.light-mode .topbar{background:rgba(255,255,255,.9);border-bottom:1px solid #e5e7eb}
+    body.light-mode .icon-btn{border-color:#e5e7eb;color:#374151}
+    body.light-mode .icon-btn:hover{border-color:#7c3aed;background:#faf9ff}
+    body.light-mode .card{background:#fff;border-color:#e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+    body.light-mode .card:hover{border-color:rgba(124,58,237,.25)}
+    body.light-mode .card-value{color:#1e1b4b}
+    body.light-mode .card-label{color:#6b7280}
+    body.light-mode .tabs,body.light-mode .filter-group{background:#f1f0f9;border-color:#e5e7eb}
+    body.light-mode .tab,body.light-mode .filter-btn{color:#6b7280}
+    body.light-mode .filter-btn:hover{color:#1e1b4b}
+    body.light-mode .filter-btn.active{background:rgba(124,58,237,.1);color:#6d28d9}
+    body.light-mode .search-box input{background:#fff;border-color:#d1d5db;color:#1e1b4b}
+    body.light-mode .search-box input::placeholder{color:#9ca3af}
+    body.light-mode .table-card{background:#fff;border-color:#e5e7eb}
+    body.light-mode thead th{color:#6b7280;background:#faf9ff;border-bottom-color:#e5e7eb}
+    body.light-mode tbody td{color:#1e1b4b;border-bottom-color:#f3f4f6}
+    body.light-mode tbody tr:hover td{background:#faf9ff}
+    body.light-mode .cell-muted{color:#6b7280}
+    body.light-mode .cell-email{color:#6d28d9}
+    body.light-mode .status-select{background-color:#fff}
+    body.light-mode .msg-row td{background:#faf9ff}
+    body.light-mode .msg-content{color:#4338ca}
+    body.light-mode .msg-btn{color:#6b7280}
+    body.light-mode .state h3{color:#1e1b4b}
+    body.light-mode .toast{background:#fff;color:#1e1b4b;border-color:#e5e7eb}
+
+    button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login-screen" id="loginScreen" style="display:none">
+  <div class="login-card">
+    <div class="login-shield">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+    </div>
+    <h2>כניסת מנהל</h2>
+    <p>אזור מאובטח — נדרשת סיסמת מנהל</p>
+    <form id="loginForm">
+      <input type="password" id="adminPassword" class="login-input" placeholder="סיסמת מנהל" autocomplete="current-password" required>
+      <button type="submit" class="login-submit" id="loginBtn">כניסה</button>
+    </form>
+    <div class="login-error" id="loginError">סיסמה שגויה. נסו שוב.</div>
+  </div>
+</div>
+
+<!-- ===== BOOT SPINNER ===== -->
+<div class="loading-wrap" id="bootSpinner">
+  <div class="spin"></div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div class="admin" id="admin">
+  <div class="topbar">
+    <div class="topbar-logo">
+      <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
+      <span class="badge">ניהול</span>
+    </div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="refreshBtn" title="רענון">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+        <span>רענון</span>
+      </button>
+      <button class="icon-btn" id="themeBtn" title="מצב תצוגה" aria-label="החלפת מצב תצוגה">
+        <span id="themeIcon"></span>
+      </button>
+      <button class="icon-btn" id="logoutBtn" title="התנתקות">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span>התנתקות</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <!-- Summary cards -->
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon c1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="card-meta">
+          <div class="card-value" id="cardNewLeads">—</div>
+          <div class="card-label">לידים חדשים</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon c2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.94.36 1.86.7 2.73a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.35-1.35a2 2 0 012.11-.45c.87.34 1.79.57 2.73.7A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <div class="card-meta">
+          <div class="card-value" id="cardCallbacks">—</div>
+          <div class="card-label">ממתינים לחזרה טלפונית</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon c3">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="card-meta">
+          <div class="card-value" id="cardUsers">—</div>
+          <div class="card-label">נרשמים</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon c4">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        </div>
+        <div class="card-meta">
+          <div class="card-value" id="cardNewUsers">—</div>
+          <div class="card-label">נרשמים חדשים 7 ימים</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" id="tabLeadsBtn" data-tab="leads">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        לידים
+      </button>
+      <button class="tab" id="tabUsersBtn" data-tab="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        נרשמים
+      </button>
+    </div>
+
+    <!-- LEADS PANEL -->
+    <div class="panel active" id="panelLeads">
+      <div class="toolbar">
+        <div class="filter-group" id="leadFilters">
+          <button class="filter-btn active" data-status="">הכל</button>
+          <button class="filter-btn" data-status="new">חדש</button>
+          <button class="filter-btn" data-status="contacted">יצרתי קשר</button>
+          <button class="filter-btn" data-status="closed">סגור</button>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>שם</th><th>אימייל</th><th>טלפון</th><th>נושא</th>
+                <th>חזרה טלפונית</th><th>סטטוס</th><th>תאריך</th><th>הודעה</th>
+              </tr>
+            </thead>
+            <tbody id="leadsBody"></tbody>
+          </table>
+        </div>
+        <div id="leadsState"></div>
+        <div class="table-foot" id="leadsFoot" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- USERS PANEL -->
+    <div class="panel" id="panelUsers">
+      <div class="toolbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="userSearch" placeholder="חיפוש לפי שם או אימייל" autocomplete="off">
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>שם</th><th>אימייל</th><th>חבילה</th><th>מאומת</th>
+                <th>נרשם</th><th>התחבר לאחרונה</th><th>מסמכים</th>
+              </tr>
+            </thead>
+            <tbody id="usersBody"></tbody>
+          </table>
+        </div>
+        <div id="usersState"></div>
+        <div class="table-foot" id="usersFoot" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastIcon"></span><span id="toastMsg"></span></div>
+
+<script>
+(function(){
+  'use strict';
+
+  // ---------- DOM refs ----------
+  var $ = function(id){ return document.getElementById(id); };
+  var loginScreen=$('loginScreen'), bootSpinner=$('bootSpinner'), admin=$('admin');
+  var loginForm=$('loginForm'), loginBtn=$('loginBtn'), loginError=$('loginError'), adminPassword=$('adminPassword');
+
+  // ---------- SVG icon strings (used only in icon-creation helpers, never with server data) ----------
+  var ICON = {
+    sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>',
+    moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>',
+    ok:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    err:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.94.36 1.86.7 2.73a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.35-1.35a2 2 0 012.11-.45c.87.34 1.79.57 2.73.7A2 2 0 0122 16.92z"/></svg>',
+    check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>',
+    inbox:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>',
+    warn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+  };
+
+  // ---------- fetch helper (admin session cookie travels via credentials) ----------
+  function api(path, opts){
+    opts = opts || {};
+    opts.credentials = 'same-origin';
+    opts.headers = opts.headers || {};
+    if (opts.body && !opts.headers['Content-Type']) opts.headers['Content-Type']='application/json';
+    return fetch(path, opts);
+  }
+
+  // ---------- toast ----------
+  var toastTimer=null;
+  function toast(msg, kind){
+    var t=$('toast');
+    $('toastIcon').innerHTML = kind==='err' ? ICON.err : ICON.ok;
+    $('toastMsg').textContent = msg;
+    t.className = 'toast show ' + (kind==='err'?'err':'ok');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(function(){ t.className='toast'; }, 3200);
+  }
+
+  // ---------- theme ----------
+  function applyTheme(){
+    var light = localStorage.getItem('vf-app-theme')==='light';
+    document.body.classList.toggle('light-mode', light);
+    $('themeIcon').innerHTML = light ? ICON.moon : ICON.sun;
+  }
+  $('themeBtn').addEventListener('click', function(){
+    var nowLight = !document.body.classList.contains('light-mode');
+    localStorage.setItem('vf-app-theme', nowLight ? 'light' : 'dark');
+    applyTheme();
+  });
+
+  // ---------- date formatting ----------
+  function fmtDate(iso){
+    if(!iso) return '—';
+    var d=new Date(iso);
+    if(isNaN(d.getTime())) return '—';
+    var dd=String(d.getDate()).padStart(2,'0');
+    var mm=String(d.getMonth()+1).padStart(2,'0');
+    var yy=d.getFullYear();
+    var hh=String(d.getHours()).padStart(2,'0');
+    var mi=String(d.getMinutes()).padStart(2,'0');
+    return dd+'/'+mm+'/'+yy+' '+hh+':'+mi;
+  }
+  function fmtDateShort(iso){
+    if(!iso) return '—';
+    var d=new Date(iso);
+    if(isNaN(d.getTime())) return '—';
+    return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();
+  }
+
+  var SUBJECT_HE = { general:'כללי', support:'תמיכה', enterprise:'ארגוני', partnership:'שותפות' };
+  var STATUS_HE  = { 'new':'חדש', 'contacted':'יצרתי קשר', 'closed':'סגור' };
+
+  // ---------- small DOM builders (all text via textContent) ----------
+  function el(tag, cls, text){
+    var e=document.createElement(tag);
+    if(cls) e.className=cls;
+    if(text!=null) e.textContent=text;
+    return e;
+  }
+  function td(cls, text){ return el('td', cls, text); }
+  function badge(cls, iconKey, label){
+    var b=el('span','badge '+cls);
+    if(iconKey){ var s=document.createElement('span'); s.style.display='inline-flex'; s.innerHTML=ICON[iconKey]; b.appendChild(s.firstChild); }
+    b.appendChild(document.createTextNode(label));
+    return b;
+  }
+  function stateBox(target, kind, iconKey, title, msg, retryFn){
+    target.innerHTML='';
+    var box=el('div','state'+(kind==='error'?' error':''));
+    var ic=el('div','state-icon'); ic.innerHTML=ICON[iconKey]; box.appendChild(ic);
+    box.appendChild(el('h3', null, title));
+    if(msg) box.appendChild(el('p', null, msg));
+    if(retryFn){
+      var rb=el('button','retry-btn','נסו שוב');
+      rb.addEventListener('click', retryFn);
+      box.appendChild(rb);
+    }
+    target.appendChild(box);
+  }
+  function spinner(target){
+    target.innerHTML='';
+    var w=el('div','loading-wrap');
+    w.appendChild(el('div','spin'));
+    target.appendChild(w);
+  }
+
+  // ================= LEADS =================
+  var leadsState={ status:'', loading:false };
+
+  function loadLeads(){
+    if(leadsState.loading) return;
+    leadsState.loading=true;
+    var body=$('leadsBody'), foot=$('leadsFoot');
+    body.innerHTML=''; foot.style.display='none';
+    spinner($('leadsState'));
+
+    api('/api/admin/leads?status='+encodeURIComponent(leadsState.status)+'&limit=500')
+      .then(function(r){
+        if(r.status===401){ showLogin(); throw new Error('unauth'); }
+        if(!r.ok) throw new Error('http '+r.status);
+        return r.json();
+      })
+      .then(function(data){
+        leadsState.loading=false;
+        $('leadsState').innerHTML='';
+        renderLeads(data.leads||[]);
+        if(data.counts) updateLeadCards(data.counts);
+        var n=(data.leads||[]).length;
+        if(n){ foot.style.display='flex'; foot.textContent='מציג '+n+' לידים'; }
+      })
+      .catch(function(e){
+        leadsState.loading=false;
+        if(e && e.message==='unauth') return;
+        stateBox($('leadsState'),'error','warn','שגיאה בטעינת הלידים','לא הצלחנו לטעון את הרשימה. בדקו את החיבור ונסו שוב.', loadLeads);
+      });
+  }
+
+  function renderLeads(leads){
+    var body=$('leadsBody');
+    body.innerHTML='';
+    if(!leads.length){
+      stateBox($('leadsState'),'empty','inbox','אין לידים להצגה', leadsState.status ? 'אין לידים בסטטוס הנבחר.' : 'עדיין לא התקבלו פניות דרך טופס יצירת הקשר.', null);
+      return;
+    }
+    leads.forEach(function(lead){
+      var tr=document.createElement('tr');
+      tr.appendChild(td('cell-strong', lead.name || '—'));
+
+      // email
+      var em=td('cell-email cell-nowrap'); em.textContent=lead.email || '—'; tr.appendChild(em);
+
+      // phone
+      tr.appendChild(td('cell-nowrap'+(lead.phone?'':' cell-muted'), lead.phone || '—'));
+
+      // subject
+      tr.appendChild(td(null, SUBJECT_HE[lead.subject] || lead.subject || '—'));
+
+      // callback badge
+      var cbCell=td(null);
+      cbCell.appendChild(lead.wants_callback ? badge('badge-callback','phone','כן') : badge('badge-mute',null,'לא'));
+      tr.appendChild(cbCell);
+
+      // status dropdown
+      var stCell=td(null);
+      var sel=document.createElement('select');
+      sel.className='status-select s-'+(lead.status||'new');
+      sel.setAttribute('data-prev', lead.status||'new');
+      ['new','contacted','closed'].forEach(function(s){
+        var o=document.createElement('option');
+        o.value=s; o.textContent=STATUS_HE[s];
+        if(s===lead.status) o.selected=true;
+        sel.appendChild(o);
+      });
+      sel.addEventListener('change', function(){ changeStatus(lead.id, sel); });
+      stCell.appendChild(sel);
+      tr.appendChild(stCell);
+
+      // date
+      tr.appendChild(td('cell-muted cell-nowrap', fmtDate(lead.created_at)));
+
+      // message expand
+      var msgCell=td(null);
+      var hasMsg = lead.message && String(lead.message).trim().length;
+      if(hasMsg){
+        var btn=el('button','msg-btn');
+        btn.innerHTML=ICON.chat;
+        btn.appendChild(document.createTextNode('הצגה'));
+        var msgTr=document.createElement('tr');
+        msgTr.className='msg-row';
+        msgTr.style.display='none';
+        var mtd=document.createElement('td'); mtd.colSpan=8;
+        var mc=el('div','msg-content', lead.message); // textContent — XSS-safe
+        mtd.appendChild(mc); msgTr.appendChild(mtd);
+        btn.addEventListener('click', function(){
+          var open = msgTr.style.display==='none';
+          msgTr.style.display = open ? '' : 'none';
+          btn.lastChild.textContent = open ? 'הסתרה' : 'הצגה';
+        });
+        msgCell.appendChild(btn);
+        tr.appendChild(msgCell);
+        body.appendChild(tr);
+        body.appendChild(msgTr);
+      } else {
+        msgCell.className='cell-muted';
+        msgCell.textContent='—';
+        tr.appendChild(msgCell);
+        body.appendChild(tr);
+      }
+    });
+  }
+
+  function changeStatus(id, sel){
+    var prev=sel.getAttribute('data-prev') || sel.value;
+    var next=sel.value;
+    sel.disabled=true;
+    api('/api/admin/leads/'+encodeURIComponent(id), {
+      method:'PATCH',
+      body: JSON.stringify({ status: next })
+    })
+    .then(function(r){
+      if(r.status===401){ showLogin(); throw new Error('unauth'); }
+      if(!r.ok) throw new Error('http '+r.status);
+      return r.json();
+    })
+    .then(function(data){
+      sel.disabled=false;
+      var applied=(data.lead && data.lead.status) ? data.lead.status : next;
+      sel.value=applied;
+      sel.className='status-select s-'+applied;
+      sel.setAttribute('data-prev', applied);
+      toast('הסטטוס עודכן', 'ok');
+      // refresh summary cards (pendingCallbacks / new may change) — lightweight recount
+      refreshLeadCounts();
+    })
+    .catch(function(e){
+      sel.disabled=false;
+      if(e && e.message==='unauth') return;
+      sel.value=prev;
+      sel.className='status-select s-'+prev;
+      toast('עדכון הסטטוס נכשל', 'err');
+    });
+  }
+
+  // recount cards without disturbing the visible (filtered) table
+  function refreshLeadCounts(){
+    api('/api/admin/leads?status=&limit=1')
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(data){ if(data && data.counts) updateLeadCards(data.counts); })
+      .catch(function(){});
+  }
+
+  function updateLeadCards(counts){
+    $('cardNewLeads').textContent = (counts.new!=null ? counts.new : 0);
+    $('cardCallbacks').textContent = (counts.pendingCallbacks!=null ? counts.pendingCallbacks : 0);
+  }
+
+  // ================= USERS =================
+  var usersState={ search:'', loading:false, seq:0 };
+
+  function loadUsers(){
+    var seq= ++usersState.seq;
+    usersState.loading=true;
+    var body=$('usersBody'), foot=$('usersFoot');
+    body.innerHTML=''; foot.style.display='none';
+    spinner($('usersState'));
+
+    api('/api/admin/users?search='+encodeURIComponent(usersState.search)+'&limit=500')
+      .then(function(r){
+        if(r.status===401){ showLogin(); throw new Error('unauth'); }
+        if(!r.ok) throw new Error('http '+r.status);
+        return r.json();
+      })
+      .then(function(data){
+        if(seq!==usersState.seq) return; // stale response, ignore
+        usersState.loading=false;
+        $('usersState').innerHTML='';
+        renderUsers(data.users||[]);
+        $('cardUsers').textContent = (data.total!=null ? data.total : (data.users||[]).length);
+        $('cardNewUsers').textContent = (data.newLast7d!=null ? data.newLast7d : 0);
+        var n=(data.users||[]).length;
+        if(n){ foot.style.display='flex'; foot.textContent='מציג '+n+' מתוך '+(data.total!=null?data.total:n)+' נרשמים'; }
+      })
+      .catch(function(e){
+        if(seq!==usersState.seq) return;
+        usersState.loading=false;
+        if(e && e.message==='unauth') return;
+        stateBox($('usersState'),'error','warn','שגיאה בטעינת הנרשמים','לא הצלחנו לטעון את הרשימה. בדקו את החיבור ונסו שוב.', loadUsers);
+      });
+  }
+
+  function renderUsers(users){
+    var body=$('usersBody');
+    body.innerHTML='';
+    if(!users.length){
+      stateBox($('usersState'),'empty','inbox', usersState.search ? 'לא נמצאו תוצאות' : 'אין נרשמים להצגה', usersState.search ? 'נסו מונח חיפוש אחר.' : 'עדיין אין משתמשים רשומים במערכת.', null);
+      return;
+    }
+    users.forEach(function(u){
+      var tr=document.createElement('tr');
+      tr.appendChild(td('cell-strong', u.name || '—'));
+      var em=td('cell-email cell-nowrap'); em.textContent=u.email || '—'; tr.appendChild(em);
+
+      var planCell=td(null);
+      planCell.appendChild(badge('badge-plan', null, u.plan || 'free'));
+      tr.appendChild(planCell);
+
+      var vCell=td(null);
+      vCell.appendChild(u.email_verified ? badge('badge-yes','check','מאומת') : badge('badge-no','x','לא'));
+      tr.appendChild(vCell);
+
+      tr.appendChild(td('cell-muted cell-nowrap', fmtDateShort(u.created_at)));
+      tr.appendChild(td('cell-muted cell-nowrap', u.last_login_at ? fmtDate(u.last_login_at) : '—'));
+
+      var used = (u.documents_used!=null ? u.documents_used : 0);
+      var lim  = (u.documents_limit!=null ? u.documents_limit : null);
+      tr.appendChild(td('cell-nowrap', lim!=null ? (used+' / '+lim) : String(used)));
+
+      body.appendChild(tr);
+    });
+  }
+
+  // ================= TABS =================
+  document.querySelectorAll('.tab').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var tab=btn.getAttribute('data-tab');
+      document.querySelectorAll('.tab').forEach(function(b){ b.classList.toggle('active', b===btn); });
+      $('panelLeads').classList.toggle('active', tab==='leads');
+      $('panelUsers').classList.toggle('active', tab==='users');
+      if(tab==='users' && usersState.seq===0) loadUsers();
+    });
+  });
+
+  // lead status filter
+  $('leadFilters').addEventListener('click', function(e){
+    var b=e.target.closest('.filter-btn');
+    if(!b) return;
+    document.querySelectorAll('#leadFilters .filter-btn').forEach(function(x){ x.classList.toggle('active', x===b); });
+    leadsState.status=b.getAttribute('data-status')||'';
+    loadLeads();
+  });
+
+  // user search (debounced)
+  var searchTimer=null;
+  $('userSearch').addEventListener('input', function(){
+    clearTimeout(searchTimer);
+    var v=this.value.trim();
+    searchTimer=setTimeout(function(){ usersState.search=v; loadUsers(); }, 300);
+  });
+
+  $('refreshBtn').addEventListener('click', function(){
+    loadLeads();
+    if(usersState.seq>0) loadUsers();
+  });
+
+  // ================= AUTH =================
+  function showLogin(){
+    bootSpinner.style.display='none';
+    admin.style.display='none';
+    loginScreen.style.display='flex';
+    setTimeout(function(){ adminPassword.focus(); }, 50);
+  }
+  function showDashboard(){
+    bootSpinner.style.display='none';
+    loginScreen.style.display='none';
+    admin.style.display='block';
+    loadLeads();
+  }
+
+  loginForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    loginError.style.display='none';
+    loginBtn.disabled=true;
+    var orig=loginBtn.textContent;
+    loginBtn.textContent='מתחבר...';
+    api('/api/admin/login', { method:'POST', body: JSON.stringify({ password: adminPassword.value }) })
+      .then(function(r){
+        if(r.ok) return r.json();
+        if(r.status===401){ loginError.textContent='סיסמה שגויה. נסו שוב.'; loginError.style.display='block'; throw new Error('bad'); }
+        if(r.status===429){ loginError.textContent='יותר מדי ניסיונות. המתינו מספר דקות ונסו שוב.'; loginError.style.display='block'; throw new Error('rate'); }
+        loginError.textContent='אירעה שגיאה. נסו שוב.'; loginError.style.display='block'; throw new Error('err');
+      })
+      .then(function(){
+        adminPassword.value='';
+        showDashboard();
+      })
+      .catch(function(){})
+      .finally(function(){ loginBtn.disabled=false; loginBtn.textContent=orig; });
+  });
+
+  $('logoutBtn').addEventListener('click', function(){
+    api('/api/admin/logout', { method:'POST' })
+      .catch(function(){})
+      .finally(function(){
+        // reset client state so a fresh login starts clean
+        usersState.seq=0; usersState.search=''; $('userSearch').value='';
+        leadsState.status='';
+        showLogin();
+      });
+  });
+
+  // ================= BOOT =================
+  applyTheme();
+  api('/api/admin/session')
+    .then(function(r){ return r.ok ? r.json() : { isAdmin:false }; })
+    .then(function(data){
+      if(data && data.isAdmin) showDashboard();
+      else showLogin();
+    })
+    .catch(function(){ showLogin(); });
+})();
+</script>
+</body>
+</html>

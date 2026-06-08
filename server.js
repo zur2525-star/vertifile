@@ -439,6 +439,16 @@ app.get('/api/keys', (req, res, next) => { req.url = '/keys-legacy'; adminRoutes
 app.use('/api', onboardingRoutes);
 // Mount /.well-known/ BEFORE the static/page handler so it takes priority over wildcards.
 app.use('/.well-known', wellKnownRoutes);
+
+// Admin dashboard page — served at /admin (the page itself is public; the
+// data endpoints behind it enforce admin auth). public/admin.html is built
+// separately; fall through with a 404 if it is not present yet.
+app.get('/admin', (req, res, next) => {
+  const adminPage = path.join(__dirname, 'public', 'admin.html');
+  if (!fs.existsSync(adminPage)) return next();
+  res.sendFile(adminPage);
+});
+
 app.use('/', pageRoutes);
 
 // Audit-log errors to the database (best effort, before the standardized handler)

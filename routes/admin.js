@@ -2,7 +2,7 @@ const express = require('express');
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const logger = require('../services/logger');
-const { getClientIP } = require('../middleware/auth');
+const { getClientIP, authLimiter } = require('../middleware/auth');
 const router = express.Router();
 
 // Use shared authenticateAdmin from middleware — set via app.set('authenticateAdmin') in server.js
@@ -11,6 +11,144 @@ function authenticateAdmin(req, res, next) {
   if (fn) return fn(req, res, next);
   return res.status(500).json({ success: false, error: 'Admin auth not configured' });
 }
+
+// ================================================================
+// ADMIN AUTH (session login for the dashboard)
+// ================================================================
+// Timing-safe compare of the submitted password against the configured admin
+// secret. Prefers ADMIN_PASSWORD; if unset, falls back to ADMIN_SECRET (the
+// same value the X-Admin-Secret header check uses). Always does a compare
+// against a fixed-length dummy when no secret is configured / lengths differ,
+// so failures don't leak timing information.
+function isValidAdminPassword(provided) {
+  if (typeof provided !== 'string' || !provided) return false;
+  const expected = process.env.ADMIN_PASSWORD || process.env.ADMIN_SECRET;
+  if (!expected) return false;
+  try {
+    const a = Buffer.from(provided);
+    const b = Buffer.from(expected);
+    if (a.length !== b.length) return false;
+    return crypto.timingSafeEqual(a, b);
+  } catch { return false; }
+}
+
+// POST /api/admin/login — { password } → set admin session. Rate-limited 5/15min.
+router.post('/login', authLimiter, async (req, res) => {
+  const db = req.app.get('db');
+  const { password } = req.body || {};
+  if (!isValidAdminPassword(password)) {
+    await db.log('auth_failed', { reason: 'admin_login_failed', ip: getClientIP(req) });
+    return res.status(401).json({ success: false });
+  }
+  // Regenerate the session before marking it admin to prevent session fixation:
+  // a pre-auth session id must never be elevated to an authenticated one.
+  if (req.session && req.session.regenerate) {
+    return req.session.regenerate((regenErr) => {
+      if (regenErr) {
+        logger.error({ err: regenErr }, 'Admin login session regenerate error');
+        return res.status(500).json({ success: false });
+      }
+      req.session.isAdmin = true;
+      req.session.save(async (saveErr) => {
+        if (saveErr) {
+          logger.error({ err: saveErr }, 'Admin login session save error');
+          return res.status(500).json({ success: false });
+        }
+        await db.log('admin_login', { ip: getClientIP(req) });
+        res.json({ success: true });
+      });
+    });
+  }
+  if (req.session) {
+    req.session.isAdmin = true;
+  }
+  await db.log('admin_login', { ip: getClientIP(req) });
+  res.json({ success: true });
+});
+
+// POST /api/admin/logout — clear the admin session flag.
+router.post('/logout', (req, res) => {
+  if (req.session) {
+    req.session.isAdmin = false;
+  }
+  res.json({ success: true });
+});
+
+// GET /api/admin/session — report whether the caller has an admin session.
+// No auth required; reads the session only.
+router.get('/session', (req, res) => {
+  res.json({ isAdmin: !!(req.session && req.session.isAdmin === true) });
+});
+
+// ================================================================
+// LEADS (admin)
+// ================================================================
+const LEAD_STATUSES = ['new', 'contacted', 'closed'];
+
+// GET /api/admin/leads?status=&limit=&offset=
+router.get('/leads', authenticateAdmin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const limit = Math.min(parseInt(req.query.limit, 10) || 50, 500);
+    const offset = Math.max(parseInt(req.query.offset, 10) || 0, 0);
+    let status = req.query.status;
+    if (status !== undefined && !LEAD_STATUSES.includes(status)) {
+      return res.status(400).json({ success: false, error: 'Invalid status filter' });
+    }
+    const [leads, counts] = await Promise.all([
+      db.listLeads({ status, limit, offset }),
+      db.countLeadsByStatus(),
+    ]);
+    res.json({ success: true, leads, counts, limit, offset });
+  } catch (e) {
+    logger.error({ err: e }, 'Admin leads listing error');
+    res.status(500).json({ success: false, error: 'Failed to list leads' });
+  }
+});
+
+// PATCH /api/admin/leads/:id — { status } ∈ {new,contacted,closed}
+router.patch('/leads/:id', authenticateAdmin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const id = parseInt(req.params.id, 10);
+    if (!id || isNaN(id)) {
+      return res.status(400).json({ success: false, error: 'Invalid lead ID' });
+    }
+    const { status } = req.body || {};
+    if (!LEAD_STATUSES.includes(status)) {
+      return res.status(400).json({ success: false, error: 'Invalid status. Must be one of: ' + LEAD_STATUSES.join(', ') });
+    }
+    const lead = await db.updateLeadStatus(id, status);
+    if (!lead) return res.status(404).json({ success: false, error: 'Lead not found' });
+    await db.log('lead_status_changed', { id, status, ip: getClientIP(req) });
+    res.json({ success: true, lead });
+  } catch (e) {
+    logger.error({ err: e }, 'Admin lead status update error');
+    res.status(500).json({ success: false, error: 'Failed to update lead' });
+  }
+});
+
+// ================================================================
+// USERS (admin) — safe columns only, NEVER password_hash
+// ================================================================
+// GET /api/admin/users?limit=&offset=&search=
+router.get('/users', authenticateAdmin, async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const limit = Math.min(parseInt(req.query.limit, 10) || 50, 500);
+    const offset = Math.max(parseInt(req.query.offset, 10) || 0, 0);
+    const search = (req.query.search || '').toString().slice(0, 120);
+    const [users, total, newLast7d] = await Promise.all([
+      db.listUsers({ limit, offset, search }),
+      db.countUsers(),
+      db.countNewUsers(7),
+    ]);
+    res.json({ success: true, users, total, newLast7d, limit, offset });
+  } catch (e) {
+    logger.error({ err: e }, 'Admin users listing error');
+    res.status(500).json({ success: false, error: 'Failed to list users' });
+  }
+});
 
 // Admin stats — global overview
 router.get('/stats', authenticateAdmin, async (req, res) => {
