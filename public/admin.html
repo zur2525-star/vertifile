@@ -660,7 +660,13 @@
 
       var used = (u.documents_used!=null ? u.documents_used : 0);
       var lim  = (u.documents_limit!=null ? u.documents_limit : null);
-      tr.appendChild(td('cell-nowrap', lim!=null ? (used+' / '+lim) : String(used)));
+      var docCell = td('cell-nowrap');
+      var docSpan = document.createElement('span');
+      docSpan.setAttribute('dir','ltr');
+      docSpan.style.display = 'inline-block';
+      docSpan.textContent = (lim!=null ? (used + ' / ' + lim) : String(used));
+      docCell.appendChild(docSpan);
+      tr.appendChild(docCell);
 
       body.appendChild(tr);
     });
