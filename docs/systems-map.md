@@ -35,7 +35,7 @@
 | Obfuscation worker | Per-PVF JS obfuscation thread | `workers/obfuscate-worker.js` | runs automatically per upload | `[LIVE]` |
 | Outreach/sales cron | Sends YOUR sales emails (not the product) | `scripts/send-outreach.js` + `.sh` | cron / manual run | `[LIVE]` |
 | Blockchain anchoring | On-chain proof on Polygon | `blockchain.js`, `contracts/VertifileRegistry.sol` | turns on with 2 env vars + deploy | `[DORMANT]` |
-| Ed25519 dual-signing | Asymmetric signature alongside HMAC | `services/signing.js`, `services/key-manager.js` | turns on with flags + a key | `[DORMANT]` |
+| Ed25519 dual-signing | Asymmetric signature alongside HMAC | `services/signing.js`, `services/key-manager.js` | ON in prod (env + DB key, `ED25519_REQUIRED=1` fail-closed); `[DORMANT]` by code-default | `[LIVE]` |
 | Database | Neon Postgres (Frankfurt) | `db.js` + `repos/` | via `DATABASE_URL` (do not connect) | `[LIVE]` |
 | Email (transactional) | Welcome / reset / verify / doc-ready | `services/email.js` | via Resend SMTP | `[LIVE]` |
 | Auth & sessions | Login, passwords, lockout, OAuth | `routes/auth.js` + session in `server.js` | `https://vertifile.com/signup` | `[LIVE]` |
@@ -154,7 +154,7 @@
 מודל ההצפנה (מאומת בהערות הצינור):
 1. `SHA-256` עיוור של המסמך.
 2. `HMAC-SHA256` עם המפתח `HMAC_SECRET`.
-3. חתימת Ed25519 כפולה — אופציונלית (ראה סעיף H, כבוי כרגע).
+3. חתימת Ed25519 כפולה — אופציונלית בקוד, אך **פעילה בפרודקשן** (ראה סעיף H; `[DORMANT]` בברירת-מחדל של הקוד, `[LIVE]` בפרודקשן fail-closed).
 4. ערבול JS דטרמיניסטי (seed = 8 התווים ההקס הראשונים של ה‑hash).
 5. "chain token" = `HMAC-SHA256(HMAC_SECRET, hash + signature + orgId + codeIntegrity)` — HMAC עם מפתח, מאומת ב‑`services/pvf-pipeline.js` (הערת הקוד הסמוכה ממפתת אותו בטעות כ‑`sha256`).
 
@@ -220,14 +220,16 @@ Ed25519 (לסעיף H): מחרוזת ה‑payload = `hash|orgId|createdAt|recipi
 
 ---
 
-## H. חתימה כפולה Ed25519 (Dual-signing) — `[DORMANT]`
+## H. חתימה כפולה Ed25519 (Dual-signing) — `[LIVE]` בפרודקשן (`[DORMANT]` בברירת-מחדל של הקוד)
 
 **מה זה.** חתימה אסימטרית (Ed25519) במקביל ל‑HMAC, להוכחה ציבורית שניתן לאמת עם מפתח ציבורי.
-**מי משתמש.** אף אחד היום — כבוי. החתימות כיום הן HMAC בלבד.
+**מי משתמש.** הפרודקשן — פעיל ו‑fail-closed. כל PVF חדש נחתם כפול (Ed25519 לצד HMAC) או נדחה. (בברירת-מחדל של הקוד זה כבוי: `.env.example` מגיע עם הדגלים על `0`, וב‑`services/key-manager.js` אם `ED25519_PRIVATE_KEY_PEM` לא מוגדר `signEd25519()` מחזיר `null` והאפליקציה רצה HMAC בלבד.)
 **איפה זה.** `services/signing.js`, `services/key-manager.js`, טבלאות `ed25519_keys` + `key_rotation_log`, ונקודת קצה jwks ב‑`/.well-known`.
 **איך מדליקים.** הדגלים `ED25519_SIGNING_ENABLED`, `ED25519_VERIFY_ENABLED`, `ED25519_REQUIRED` (כולם `0` ב‑`.env.example`) + טעינת מפתח (`ED25519_PRIVATE_KEY_PEM`).
 
 מאומת: ב‑`services/key-manager.js`, אם `ED25519_PRIVATE_KEY_PEM` לא מוגדר — אזהרה ו‑`signEd25519()` מחזיר `null`; האפליקציה מתפקדת לחלוטין בלי Ed25519. אכיפת `ED25519_REQUIRED==='1'` נמצאת בצינור (`services/pvf-pipeline.js`), ומפילה יצירת PVF אם אין חתימה. הערה: בקוד מצאתי שימוש ב‑process.env רק ב‑`ED25519_REQUIRED`; הדגלים `ED25519_SIGNING_ENABLED`/`VERIFY_ENABLED` מופיעים ב‑`.env.example` אבל ההדלקה בפועל נשלטת ע"י נוכחות מפתח + שורת `state='active'` ב‑DB.
+
+בפרודקשן: התכונה **מוגדרת ולכן פעילה** — `ED25519_PRIVATE_KEY_PEM` מוגדר, יש שורת מפתח פעיל ב‑DB (`ed25519_keys WHERE state='active'`, keyId `0f65ad1b92590c92`), ו‑`ED25519_REQUIRED=1` הופך אותה ל‑fail-closed. לוג ה‑boot החי מאשר: `[key-manager] primary key slot loaded, keyId 0f65ad1b92590c92, type ed25519` ו‑`[key-manager] Phase 2E fail-closed enforcement ACTIVE — every new PVF will be dual-signed or rejected`. האכיפה היא ב‑`services/pvf-pipeline.js` (בדיקת `ED25519_REQUIRED==='1'` שזורקת `ED25519_REQUIRED_NO_SIGNATURE` אם אין חתימה).
 
 ---
 
@@ -270,7 +272,7 @@ Ed25519 (לסעיף H): מחרוזת ה‑payload = `hash|orgId|createdAt|recipi
 **איך מגיעים.** `https://vertifile.com/signup`, `https://vertifile.com/reset-password`.
 
 מאומת:
-- סיסמאות: `bcrypt`, `BCRYPT_ROUNDS = max(12, env)`; סיסמאות חלשות נחסמות ע"י `common-passwords.txt`.
+- סיסמאות: `bcrypt`, `BCRYPT_ROUNDS = max(12, env)`; סיסמאות חלשות נחסמות ע"י רשימת חסימה הנטענת מ‑`data/common-passwords.txt` (קבוע `COMMON_PASSWORDS_PATH` ב‑`routes/auth.js`, גם ב‑`services/password-validator.js`). אם הקובץ חסר הטעינה מדלגת בשקט (`catch` ב‑`routes/auth.js`) והבדיקה `if (commonPasswords.size > 0 && ...)` פשוט לא חוסמת. **תיקון מול הקוד:** הקובץ נמצא תחת `data/` שמופיע ב‑`.gitignore` (שורה 8), ולכן מעולם לא נשלח ל‑Render — חסימת הסיסמאות החלשות הייתה **כבויה בשקט בפרודקשן** (לוג ה‑boot: `Common password blacklist not found at data/common-passwords.txt — skipping`). מתוקן ע"י `git add -f` של רשימת המילים הסטטית לריפו כדי להבטיח שתישלח לפרודקשן.
 - סשנים: `express-session` + `connect-pg-simple` (טבלת `sessions`). מזהה הסשן מתחדש בכל מעבר הזדהות. עוגיית הדפדפן היא 7 ימים **קבועים** (אין `rolling: true` ב‑`server.js`), אם כי `connect-pg-simple` מבצע `touch` ל‑`expire` של שורת הסשן בצד השרת. מקס 5 סשנים למשתמש; כולם מבוטלים באיפוס סיסמה.
 - **תיקון מול הקוד:** הבריפינג אמר נעילה אחרי 5 כשלונות. אבל ב‑`server.js` (`LocalStrategy`) הנעילה היא **אחרי 10 כשלונות**, לנעילה של **30 דקות** (`if (attempts >= 10) ... 30 * 60 * 1000`). יש בנוסף מגביל קצב נפרד (`authLimiter`) ל‑5/15 דק' על נקודות הזדהות וטבלת `login_attempts`. סומכים על הקוד: lockout = 10 כשלונות / 30 דק'.
 - Google OAuth אופציונלי (passport) — נטען רק אם `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` מוגדרים.
@@ -337,7 +339,7 @@ Ed25519 (לסעיף H): מחרוזת ה‑payload = `hash|orgId|createdAt|recipi
  services/pvf-pipeline.js
    -> templates/pvf.js (generatePvfHtml)
    -> obfuscate (workers/obfuscate-worker.js)
-   -> services/signing.js (HMAC; Ed25519 dormant)
+   -> services/signing.js (HMAC + Ed25519 active in prod, fail-closed)
    -> blockchain.js (dormant)
             |
             v
@@ -445,7 +447,7 @@ Ed25519 (לסעיף H): מחרוזת ה‑payload = `hash|orgId|createdAt|recipi
 2. **כפילות Viewer למחיקה** (`[RETIRE]`) — `viewer-tauri/` ו‑`~/Desktop/VertifileViewer.app` מתים. בנוסף, ה‑`appId` המשותף `com.vertifile.viewer` יוצר התנגשות שיוך `.pvf` ב‑macOS — מחיקתם משאירה רק את ה‑Electron האמיתי.
 3. **אי-התאמת שמות תוכניות** — ה‑UI אומר `pro_plus`, השרת/אדמין אומרים `business`. ליישר אוצר-מילים.
 4. **דריפ אימייל על `setTimeout`** — הטיימר החי אובד בריסטרט תהליך (המצב כן נשמר ב‑`onboarding_emails`, אבל ההזמנה החיה לא). ההמלצה בקוד: לעבור לתור עבודות (pg-boss/BullMQ).
-5. **Blockchain ו‑Ed25519 כבויים** (`[DORMANT]`) — מקודדים אבל לא מופעלים. אלה **לא פערים**, רק לא דלוקים; נדלקים ע"י משתני סביבה (ראה G, H).
+5. **Blockchain כבוי** (`[DORMANT]`) — מקודד אבל לא מופעל (לוג ה‑boot: `[BLOCKCHAIN] Skipped`). זה **לא פער**, רק לא דלוק; נדלק ע"י משתני סביבה (ראה G). Ed25519 לעומת זאת **פעיל בפרודקשן** (`[LIVE]`, fail-closed) — ראה H.
 
 ### תיקונים שבוצעו מול הקוד (corrections)
 - **chain token** = `HMAC-SHA256` עם מפתח `HMAC_SECRET` על `hash + signature + orgId + codeIntegrity` — לפי `services/pvf-pipeline.js`.
