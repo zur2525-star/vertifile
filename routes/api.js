@@ -1100,12 +1100,6 @@ router.get('/docs', (req, res) => {
     service: 'Vertifile API',
     version: _pkgVersion,
     description: 'Document protection and verification platform with blockchain anchoring',
-    security: {
-      authentication: 'API Key (X-API-Key header) or Admin Secret (X-Admin-Secret header)',
-      encryption: 'HMAC-SHA256 signatures, blind hashing (server never reads content)',
-      pvfProtection: ['Code obfuscation', 'Recipient binding', 'Screen capture detection', 'DevTools detection', 'Unique visual fingerprint per document'],
-      blockchain: 'Polygon (optional on-chain registration)'
-    },
     endpoints: {
       document: {
         'POST /api/create-pvf': {
@@ -1172,26 +1166,6 @@ router.get('/docs', (req, res) => {
         'DELETE /api/webhooks/:id': {
           description: 'Remove a webhook',
           auth: 'X-API-Key header'
-        }
-      },
-      admin: {
-        'GET /api/admin/stats': {
-          description: 'Global system statistics + blockchain status',
-          auth: 'X-Admin-Secret header'
-        },
-        'GET /api/admin/audit': {
-          description: 'Audit log viewer (paginated, filterable by event/org)',
-          auth: 'X-Admin-Secret header',
-          query: '?limit=50&offset=0&event=pvf_created&orgId=org_xxx'
-        },
-        'POST /api/keys/create': {
-          description: 'Create a new API key for an organization',
-          auth: 'X-Admin-Secret header',
-          body: '{ orgName, plan: "pro"|"business"|"enterprise" }'
-        },
-        'GET /api/keys': {
-          description: 'List all API keys',
-          auth: 'X-Admin-Secret header'
         }
       },
       system: {
