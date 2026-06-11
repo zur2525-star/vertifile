@@ -2,7 +2,7 @@
 
 **Tamper-proof document verification platform**
 
-`Version 4.6.0` | `IANA Registered: application/vnd.vertifile.pvf (2026-04-15)`
+`Version 4.7.0` | `IANA Registered: application/vnd.vertifile.pvf (2026-04-15)`
 
 ---
 

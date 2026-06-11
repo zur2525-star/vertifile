@@ -13,6 +13,7 @@ const { handleCreatePvf, verifySignature, generateToken, HMAC_SECRET } = require
 const { buildOverrideScriptInnerText } = require('../services/stamp-override');
 const signing = require('../services/signing');
 const keyManager = require('../services/key-manager');
+const _pkgVersion = require('../package.json').version;
 
 const router = express.Router();
 
@@ -799,7 +800,7 @@ router.get('/status', statusLimiter, async (req, res) => {
   res.json({
     status: overall,
     service: 'Vertifile',
-    version: '4.5.0',
+    version: _pkgVersion,
     timestamp,
     uptime: process.uptime(),
     components: {
@@ -812,7 +813,6 @@ router.get('/status', statusLimiter, async (req, res) => {
 });
 
 // ===== API: Health =====
-const _pkgVersion = require('../package.json').version;
 router.get('/health', (req, res) => {
   res.json({
     status: 'online',
@@ -875,7 +875,7 @@ router.get('/health/deep', (req, res, next) => {
     res.json({
       status: 'online',
       service: 'Vertifile',
-      version: '4.1.0',
+      version: _pkgVersion,
       uptime: process.uptime(),
       timestamp: new Date().toISOString(),
       documents: stats.totalDocuments,
@@ -1098,7 +1098,7 @@ router.post('/admin/cache/invalidate-keys', (req, res, next) => {
 router.get('/docs', (req, res) => {
   res.json({
     service: 'Vertifile API',
-    version: '4.1.0',
+    version: _pkgVersion,
     description: 'Document protection and verification platform with blockchain anchoring',
     security: {
       authentication: 'API Key (X-API-Key header) or Admin Secret (X-Admin-Secret header)',
