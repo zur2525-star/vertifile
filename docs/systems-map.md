@@ -398,7 +398,7 @@ Ed25519 (לסעיף H): מחרוזת ה‑payload = `hash|orgId|createdAt|recipi
 מציאות הדפלוי: ה‑**Render** הוא האמיתי. קיים `Dockerfile` (מאומת: `EXPOSE 10000`, `node:18-alpine`) ותצורות legacy (`vercel.json`, `railway.json`, `nixpacks.toml`) — אלה ישנות, לא בשימוש. **אין `render.yaml`** (מאומת). אין Sentry/analytics מחוברים.
 
 איפה לקרוא עוד (Docs map):
-- `README.md` — התחל פה. **תיקון/דריפט:** הכותרת אומרת `Version 4.6.0` בעוד `package.json` הוא `4.7.0` (מאומת — צריך ליישר).
+- `README.md` — התחל פה. דיווח הגרסה מאוחד כעת ל‑`package.json` (`4.7.0`) על פני `README.md` + ארבע נקודות הקצה (`/api/status`, `/api/health`, `/api/health/deep`, `/api/docs`) דרך קבוע `_pkgVersion` יחיד (`routes/api.js`, commit `5e7f5a2`) — אין יותר דריפט גרסה.
 - `ARCHITECTURE.md`, `SECURITY.md`, `CHANGELOG.md` (האחרון `[4.7.0]` 2026-04-16, מאומת).
 - `docs/DEPLOYMENT.md` (מסמך התפעול הכי טוב), `docs/ZERO-KNOWLEDGE-SPEC.md`.
 - `spec/PVF-FORMAT-SPEC-v1.0.md` + `spec/IANA-REGISTRATION.md` (מאומת).
@@ -442,11 +442,10 @@ Ed25519 (לסעיף H): מחרוזת ה‑payload = `hash|orgId|createdAt|recipi
 ## פערים וחובות טכניים (Known gaps & drift)
 
 1. **תשלומים לא נבנו** (`[NOT BUILT]`) — אין ספק תשלום, אין קוד גבייה. פער טרום-השקה לפי כלל "100% לפני השקה".
-2. **דריפט גרסה** — `package.json` = `4.7.0` אבל כותרת `README.md` = `4.6.0`. ליישר.
-3. **כפילות Viewer למחיקה** (`[RETIRE]`) — `viewer-tauri/` ו‑`~/Desktop/VertifileViewer.app` מתים. בנוסף, ה‑`appId` המשותף `com.vertifile.viewer` יוצר התנגשות שיוך `.pvf` ב‑macOS — מחיקתם משאירה רק את ה‑Electron האמיתי.
-4. **אי-התאמת שמות תוכניות** — ה‑UI אומר `pro_plus`, השרת/אדמין אומרים `business`. ליישר אוצר-מילים.
-5. **דריפ אימייל על `setTimeout`** — הטיימר החי אובד בריסטרט תהליך (המצב כן נשמר ב‑`onboarding_emails`, אבל ההזמנה החיה לא). ההמלצה בקוד: לעבור לתור עבודות (pg-boss/BullMQ).
-6. **Blockchain ו‑Ed25519 כבויים** (`[DORMANT]`) — מקודדים אבל לא מופעלים. אלה **לא פערים**, רק לא דלוקים; נדלקים ע"י משתני סביבה (ראה G, H).
+2. **כפילות Viewer למחיקה** (`[RETIRE]`) — `viewer-tauri/` ו‑`~/Desktop/VertifileViewer.app` מתים. בנוסף, ה‑`appId` המשותף `com.vertifile.viewer` יוצר התנגשות שיוך `.pvf` ב‑macOS — מחיקתם משאירה רק את ה‑Electron האמיתי.
+3. **אי-התאמת שמות תוכניות** — ה‑UI אומר `pro_plus`, השרת/אדמין אומרים `business`. ליישר אוצר-מילים.
+4. **דריפ אימייל על `setTimeout`** — הטיימר החי אובד בריסטרט תהליך (המצב כן נשמר ב‑`onboarding_emails`, אבל ההזמנה החיה לא). ההמלצה בקוד: לעבור לתור עבודות (pg-boss/BullMQ).
+5. **Blockchain ו‑Ed25519 כבויים** (`[DORMANT]`) — מקודדים אבל לא מופעלים. אלה **לא פערים**, רק לא דלוקים; נדלקים ע"י משתני סביבה (ראה G, H).
 
 ### תיקונים שבוצעו מול הקוד (corrections)
 - **chain token** = `HMAC-SHA256` עם מפתח `HMAC_SECRET` על `hash + signature + orgId + codeIntegrity` — לפי `services/pvf-pipeline.js`.
@@ -458,4 +457,4 @@ Ed25519 (לסעיף H): מחרוזת ה‑payload = `hash|orgId|createdAt|recipi
 
 ---
 
-נבדק מול הקוד בתאריך 2026-06-09
+נבדק מול הקוד בתאריך 2026-06-12
