@@ -36,6 +36,7 @@ const { trackError } = require('./middleware/error-alerter');
 const { csrfProtection, csrfTokenEndpoint } = require('./middleware/csrf');
 const { errorHandler } = require('./middleware/error-handler');
 const { validateEnv } = require('./services/env-validator');
+const { version: APP_VERSION } = require('./package.json');
 
 // ---- Startup environment validation ----
 // Must run before any middleware or routes so missing vars cause a clear
@@ -493,7 +494,7 @@ db._ready.then(async () => {
       const stats = await db.getStats();
       const keys = await db.listApiKeys();
       const dk = keys.length > 0 ? keys[0].apiKey : null;
-      logger.info({ port: PORT, docs: stats.totalDocuments, orgs: stats.totalOrganizations }, `Vertifile v4.1 | Port ${PORT}`);
+      logger.info({ port: PORT, docs: stats.totalDocuments, orgs: stats.totalOrganizations }, `Vertifile v${APP_VERSION} | Port ${PORT}`);
       chain.init().then(c => logger.info(c ? 'Blockchain on-chain active' : 'Blockchain off-chain mode'));
 
       // Memory monitor — check every 60 seconds
