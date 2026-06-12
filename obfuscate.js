@@ -1,5 +1,4 @@
 /**
-const logger = require("./services/logger");
  * Vertifile PVF Obfuscation Module
  * Obfuscates the JavaScript inside .pvf files to prevent tampering.
  * Uses worker threads to avoid blocking the event loop.
@@ -7,6 +6,7 @@ const logger = require("./services/logger");
 
 const { Worker } = require('worker_threads');
 const path = require('path');
+const logger = require('./services/logger');
 
 const OBFUSCATION_OPTIONS = {
   compact: true,
@@ -102,9 +102,11 @@ async function obfuscatePvf(pvfHtml, seed) {
 
   try {
     const obfuscatedScript = await obfuscateCode(originalScript, seed);
+    // Replacement is a function so '$&'/'$$' sequences in the obfuscated
+    // code are inserted literally instead of being expanded by String.replace.
     return pvfHtml.replace(
       `<script>${originalScript}</script>`,
-      `<script>${obfuscatedScript}</script>`
+      () => `<script>${obfuscatedScript}</script>`
     );
   } catch (error) {
     logger.error('[OBFUSCATION] Failed, using original code:', error.message);

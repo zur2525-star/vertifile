@@ -33,6 +33,9 @@ function generatePvfHtml(fileBase64, originalName, fileHash, mimeType, signature
   if (customIcon && customIcon.startsWith('<svg')) {
     customIcon = sanitizeSvg(customIcon);
   }
+  // Defense in depth (XSS): mimeType is interpolated into HTML attributes and
+  // inline JSON below — strip anything outside the legal MIME charset.
+  mimeType = String(mimeType || '').replace(/[^a-z0-9/+.-]/gi, '');
   const isImage = mimeType.startsWith('image/');
   const isPdf = mimeType === 'application/pdf';
   const safeOriginalName = escapeHtml(originalName);

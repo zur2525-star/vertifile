@@ -78,10 +78,10 @@ const PORT = process.env.PORT || 3002;
 // you don't get logged out on every nodemon restart.
 function loadOrCreateSessionSecret() {
   if (process.env.SESSION_SECRET) return process.env.SESSION_SECRET;
-  // In production (Render), require SESSION_SECRET env var — no file fallback
+  // In production (Render), require SESSION_SECRET env var — no file fallback,
+  // no ephemeral generation (every restart would invalidate all sessions).
   if (process.env.RENDER || process.env.NODE_ENV === 'production') {
-    logger.warn('[SECURITY] SESSION_SECRET env var not set in production — generating ephemeral secret (sessions will not survive restarts)');
-    return 'vf_session_' + crypto.randomBytes(32).toString('hex');
+    throw new Error('SESSION_SECRET is not set — refusing to generate an ephemeral session secret in production. Set the SESSION_SECRET environment variable and redeploy.');
   }
   // Development only: file-based persistence
   const SESSION_SECRET_FILE = path.join(__dirname, 'data', '.session_secret');
@@ -363,11 +363,17 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
       let isNewUser = false;
       if (!user) {
         // Auto-link to existing account if email matches.
-        // Safe because Google guarantees the email is verified (checked above).
+        // Google attests the Google-side email (checked above), but the LOCAL
+        // account must ALSO have verified its email. Otherwise an attacker who
+        // pre-registered the victim's email with a password would capture the
+        // victim's Google login inside the attacker-created account.
         // The existing password_hash is preserved so the user can still log in
         // with email+password if they want.
         const existingByEmail = await db.getUserByEmail(email.value);
         if (existingByEmail) {
+          if (!existingByEmail.email_verified) {
+            return done(null, false, { message: 'An unverified account exists for this email. Log in with your password and verify your email first.' });
+          }
           await db.linkGoogleProvider(
             existingByEmail.id,
             profile.id,
@@ -515,7 +521,7 @@ db._ready.then(async () => {
     // the DB pool. If everything finishes within the timeout we exit 0;
     // otherwise we force-exit 1 so the platform knows it was unclean.
     let isShuttingDown = false;
-    const SHUTDOWN_TIMEOUT_MS = 30000;
+    const SHUTDOWN_TIMEOUT_MS = 45000;
 
     async function gracefulShutdown(signal) {
       if (isShuttingDown) return; // prevent double-shutdown from SIGINT+SIGTERM race
@@ -523,13 +529,13 @@ db._ready.then(async () => {
 
       logger.info({ signal }, 'Shutting down gracefully...');
 
-      // Flush blockchain queue before closing connections
-      try { await chain.flushQueue(); } catch (e) { logger.error({ err: e }, 'Queue flush error during shutdown'); }
-
       if (server) {
-        // Stop accepting new connections — existing ones drain naturally
+        // Stop accepting new connections FIRST — existing ones drain naturally,
+        // then flush queues once no new work can arrive.
         server.close(async () => {
           logger.info('HTTP server closed, no more active connections');
+          // Flush blockchain queue before closing the DB pool
+          try { await chain.flushQueue(); } catch (e) { logger.error({ err: e }, 'Queue flush error during shutdown'); }
           try {
             await db.close();
             logger.info('Database pool closed');
@@ -546,6 +552,7 @@ db._ready.then(async () => {
         }, SHUTDOWN_TIMEOUT_MS);
         forceTimer.unref(); // do not keep the event loop alive just for this timer
       } else {
+        try { await chain.flushQueue(); } catch (e) { logger.error({ err: e }, 'Queue flush error during shutdown'); }
         process.exit(0);
       }
     }

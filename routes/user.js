@@ -87,7 +87,24 @@ router.post('/stamp', requireAuth, userActionLimiter, async (req, res) => {
     if (JSON.stringify(req.body).length > 10000) {
       return res.status(400).json({ success: false, error: 'Stamp configuration too large' });
     }
-    const saved = await db.updateUserStampConfig(req.user.id, req.body);
+    // Whitelist: accept ONLY the keys the override builder (services/stamp-override.js
+    // sanitizeCfg) actually consumes, plus 'size' which is UI-state only
+    // (read back by app.html applyStampConfigToUI; sanitizeCfg ignores it).
+    // Unknown keys are dropped before saving.
+    const cfg = {};
+    for (const key of ['waveColors', 'accentColor', 'customLogo', 'brandText', 'size']) {
+      if (req.body[key] !== undefined) cfg[key] = req.body[key];
+    }
+    for (const key of ['accentColor', 'customLogo', 'brandText']) {
+      if (cfg[key] !== undefined && typeof cfg[key] !== 'string') {
+        return res.status(400).json({ success: false, error: 'Invalid stamp configuration: ' + key + ' must be a string' });
+      }
+    }
+    // size: exact values the dashboard sends (Small/Medium/Large in px)
+    if (cfg.size !== undefined && ![96, 120, 160].includes(cfg.size)) {
+      return res.status(400).json({ success: false, error: 'Invalid stamp configuration: size must be 96, 120 or 160' });
+    }
+    const saved = await db.updateUserStampConfig(req.user.id, cfg);
     // Invalidate cache so next /d/:shareId/raw rebuilds with new stamp
     if (req.app.get('stampCache')) req.app.get('stampCache').delete(req.user.id);
     await db.log('stamp_config_updated', { userId: req.user.id });
@@ -189,6 +206,18 @@ router.post('/upload', requireAuth, uploadLimiter, (req, res, next) => {
     } catch (err) {
       if (err && (err.message === 'INVALID_MIME_TYPE' || err.message === 'EMPTY_FILE')) {
         return res.status(400).json({ success: false, error: 'Unsupported file type' });
+      }
+      if (err && err.message === 'DUPLICATE_DOCUMENT') {
+        // Cross-tenant guard: reveal the existing share URL only to the
+        // document owner. Anyone else gets a generic 409 with no link.
+        if (err.user_id && err.user_id === req.user.id && (err.slug || err.shareId)) {
+          return res.status(409).json({
+            success: false,
+            error: 'This document is already protected.',
+            shareUrl: '/d/' + (err.slug || err.shareId)
+          });
+        }
+        return res.status(409).json({ success: false, error: 'A document with identical content already exists' });
       }
       throw err;
     }
@@ -336,6 +365,18 @@ router.post('/upload-encrypted', requireAuth, uploadLimiter, (req, res, next) =>
       }
       if (err && err.message === 'EMPTY_FILE') {
         return res.status(400).json({ success: false, error: 'Empty file' });
+      }
+      if (err && err.message === 'DUPLICATE_DOCUMENT') {
+        // Cross-tenant guard: reveal the existing share URL only to the
+        // document owner. Anyone else gets a generic 409 with no link.
+        if (err.user_id && err.user_id === req.user.id && (err.slug || err.shareId)) {
+          return res.status(409).json({
+            success: false,
+            error: 'This document is already protected.',
+            shareUrl: '/d/' + (err.slug || err.shareId)
+          });
+        }
+        return res.status(409).json({ success: false, error: 'A document with identical content already exists' });
       }
       throw err;
     }

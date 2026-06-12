@@ -51,12 +51,25 @@ pool.on('error', (err) => {
 // ================================================================
 // QUERY RETRY WITH BACKOFF
 // ================================================================
+// Only transient connection-class errors are retried. Everything else
+// (constraint violations, syntax errors, etc.) is deterministic — retrying
+// just repeats the failure and can double-apply side effects.
+function isTransientDbError(e) {
+  const code = e && e.code;
+  if (typeof code !== 'string') return false;
+  if (code.startsWith('08')) return true; // pg class 08 — connection exceptions
+  if (code === '57P01' || code === '57P02' || code === '57P03') return true; // admin shutdown / crash
+  if (code === '53300') return true; // too_many_connections
+  if (code === '40001' || code === '40P01') return true; // serialization_failure / deadlock_detected
+  return ['ECONNRESET', 'ECONNREFUSED', 'ETIMEDOUT', 'EPIPE'].includes(code); // Node network errnos
+}
+
 async function queryWithRetry(text, params, retries = 3) {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       return await pool.query(text, params);
     } catch (e) {
-      if (attempt === retries) throw e;
+      if (attempt === retries || !isTransientDbError(e)) throw e;
       const delay = attempt * 500; // 500ms, 1000ms, 1500ms
       logger.warn({ attempt, delay, error: e.message }, 'DB query retry');
       await new Promise(r => setTimeout(r, delay));

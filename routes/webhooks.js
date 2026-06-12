@@ -25,14 +25,26 @@ async function fireWebhooks(db, orgId, event, data) {
         const payload = JSON.stringify({ event, data, timestamp: new Date().toISOString() });
         const hmac = crypto.createHmac('sha256', wh.secret).update(payload).digest('hex');
 
-        // Fire and forget
+        // SSRF defense: re-validate at fire time — DNS may have been rebound
+        // to a private IP since registration.
+        if (!(await isValidWebhookUrl(wh.url))) {
+          logger.error(`[WEBHOOK] Skipping delivery to ${wh.url}: URL failed fire-time validation`);
+          continue;
+        }
+
+        // Fire and forget — redirects are NOT followed and count as failure
         fetch(wh.url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'X-Vertifile-Signature': hmac
           },
-          body: payload
+          body: payload,
+          redirect: 'manual'
+        }).then(resp => {
+          if (resp.status >= 300 && resp.status < 400) {
+            logger.error(`[WEBHOOK] Failed to deliver to ${wh.url}:`, `redirect response ${resp.status} not followed`);
+          }
         }).catch(err => {
           logger.error(`[WEBHOOK] Failed to deliver to ${wh.url}:`, err.message);
         });

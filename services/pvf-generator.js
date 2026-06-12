@@ -21,7 +21,12 @@ function loadOrCreateHmacSecret() {
       if (secret.length >= 32) return secret;
     }
   } catch (e) { /* fall through */ }
-  // 3. Generate new secret and persist it
+  // 3. Production hard-fail — NEVER generate an ephemeral secret here. A fresh
+  // HMAC secret would invalidate the signature of every document ever issued.
+  if (process.env.NODE_ENV === 'production' || process.env.RENDER) {
+    throw new Error('HMAC_SECRET is not set — refusing to generate an ephemeral HMAC secret in production (it would invalidate all issued documents). Set the HMAC_SECRET environment variable and redeploy.');
+  }
+  // 4. Generate new secret and persist it (development only)
   const secret = 'vf_secret_' + crypto.randomBytes(32).toString('hex');
   try {
     const dir = path.dirname(HMAC_FILE);
@@ -180,6 +185,22 @@ async function handleCreatePvf(req, res) {
       if (err && err.message === 'EMPTY_FILE') {
         return res.status(400).json({ success: false, error: 'Empty file uploaded' });
       }
+      if (err && err.message === 'DUPLICATE_DOCUMENT') {
+        // Cross-tenant guard: reveal the existing share URL only when the
+        // requesting org owns the document. Demo uploads all share the
+        // anonymous 'org_demo' id, so they NEVER get the URL. Everyone
+        // else gets a generic 409 with no link.
+        if (req.apiKey !== 'demo' && err.org_id && req.org && err.org_id === req.org.orgId && (err.slug || err.shareId)) {
+          const dupProto = req.get('x-forwarded-proto') || req.protocol;
+          const dupBase = process.env.BASE_URL || `${dupProto}://${req.get('host')}`;
+          return res.status(409).json({
+            success: false,
+            error: 'This document is already protected.',
+            shareUrl: `${dupBase}/d/${err.slug || err.shareId}`
+          });
+        }
+        return res.status(409).json({ success: false, error: 'A document with identical content already exists' });
+      }
       throw err;
     }
 
@@ -235,10 +256,11 @@ async function handleCreatePvfLegacy(req, res) {
     const originalName = (req.file.originalname || 'document').replace(/[<>:"/\\|?*]/g, '_'); // Sanitize filename
     const mimeType = req.file.mimetype || 'application/octet-stream';
 
-    // Validate file type
-    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif', 'text/plain', 'text/html',
+    // Validate file type — EXACT allowlist only (the previous loose top-level
+    // match accepted attacker-controlled subtypes interpolated into PVF HTML)
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'text/plain', 'text/html',
       'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if (!allowedTypes.some(t => mimeType.startsWith(t.split('/')[0] + '/') || mimeType === t)) {
+    if (!allowedTypes.includes(mimeType)) {
       await db.log('create_rejected', { reason: 'invalid_file_type', mimeType, ip: getClientIP(req) });
       return res.status(400).json({ success: false, error: 'Unsupported file type: ' + mimeType });
     }

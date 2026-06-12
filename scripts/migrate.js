@@ -96,7 +96,8 @@ async function main() {
     } catch (e) {
       logError(`Cannot read ${file}: ${e.message}`);
       failed++;
-      continue;
+      logError(`Aborting migration run: ${file} could not be read. Remaining files were NOT executed.`);
+      break;
     }
 
     if (!sql) {
@@ -114,7 +115,10 @@ async function main() {
       const ms = Date.now() - start;
       logError(`  FAIL  ${file} (${ms}ms): ${e.message}`);
       failed++;
-      // Continue to next file — migrations should be independent
+      // Abort on first failure — later files may depend on earlier ones,
+      // and continuing would leave the schema in a half-migrated state.
+      logError(`Aborting migration run: ${file} failed. Remaining files were NOT executed.`);
+      break;
     }
   }
 

@@ -71,6 +71,7 @@ const ALLOWED_MIME_TYPES = [
   'image/jpeg',
   'image/jpg',
   'image/gif',
+  'image/webp',
   'text/plain',
   'text/html',
   'application/msword',
@@ -174,11 +175,10 @@ async function createPvf(opts) {
   if (!mimeType || typeof mimeType !== 'string') {
     throw new Error('INVALID_MIME_TYPE');
   }
-  // Allow exact match OR same top-level type (e.g. image/png matches image/jpeg
-  // family — preserves the existing pvf-generator.js loose match)
-  const mimeOk = ALLOWED_MIME_TYPES.some(
-    t => mimeType === t || mimeType.startsWith(t.split('/')[0] + '/')
-  );
+  // EXACT allowlist match only. The previous loose top-level match
+  // (mimeType.startsWith('image/') etc.) accepted attacker-controlled
+  // subtypes that get interpolated into the PVF HTML (XSS surface).
+  const mimeOk = ALLOWED_MIME_TYPES.includes(mimeType);
   if (!mimeOk) {
     // Audit log mirrors pvf-generator.js:102
     await db.log('create_rejected', {
@@ -391,7 +391,21 @@ async function createPvf(opts) {
   // 11. CREATE DOCUMENT ROW
   // The richer API-flow shape includes token/recipient/recipientHash; for
   // dashboard uploads these are simply null. createDocument handles nulls.
+  // Duplicate guard: hash is the PK — a re-upload of identical bytes would
+  // otherwise surface as an opaque 500. createDocument's ON CONFLICT check
+  // covers the remaining race window with the same typed error.
   // -----------------------------------------------------------------
+  const existingDoc = await db.getDocument(fileHash);
+  if (existingDoc) {
+    const dupErr = new Error('DUPLICATE_DOCUMENT');
+    dupErr.shareId = existingDoc.shareId || null;
+    dupErr.slug = existingDoc.slug || null;
+    // Owner fields — handlers MUST check these before revealing shareId/slug
+    // to the requester (cross-tenant info disclosure otherwise).
+    dupErr.user_id = existingDoc.user_id || null;
+    dupErr.org_id = existingDoc.orgId || null;
+    throw dupErr;
+  }
   await db.createDocument({
     hash: fileHash,
     signature,
@@ -641,8 +655,9 @@ function generateSlug(filename) {
 }
 
 /**
- * Generate a unique slug, retrying with random suffixes on collision.
- * Falls back to shareId if all retries fail.
+ * Generate a unique slug. A short random suffix is ALWAYS appended —
+ * a bare filename-derived slug is guessable (the first 'invoice.pdf'
+ * would be served at /d/invoice). Falls back to shareId if all retries fail.
  *
  * @param {string} originalName - Original filename
  * @param {string} shareId - Fallback identifier
@@ -651,13 +666,9 @@ function generateSlug(filename) {
 async function generateUniqueSlug(originalName, shareId) {
   const base = generateSlug(originalName);
 
-  // Try the bare slug first
-  const existing = await db.getDocumentBySlug(base);
-  if (!existing) return base;
-
-  // Collision — retry with random 4-hex-char suffix, up to 3 times
+  // Always suffix with 6 random hex chars; retry on collision, up to 3 times
   for (let attempt = 0; attempt < 3; attempt++) {
-    const suffix = crypto.randomBytes(2).toString('hex');
+    const suffix = crypto.randomBytes(3).toString('hex');
     const candidate = base + '-' + suffix;
     const collision = await db.getDocumentBySlug(candidate);
     if (!collision) return candidate;
@@ -754,9 +765,8 @@ async function createPvfEncrypted(opts) {
   if (!mimeType || typeof mimeType !== 'string') {
     throw new Error('INVALID_MIME_TYPE');
   }
-  const mimeOk = ALLOWED_MIME_TYPES.some(
-    t => mimeType === t || mimeType.startsWith(t.split('/')[0] + '/')
-  );
+  // EXACT allowlist match only — same hardening as createPvf() above.
+  const mimeOk = ALLOWED_MIME_TYPES.includes(mimeType);
   if (!mimeOk) {
     await db.log('create_rejected', {
       reason: 'invalid_file_type',
@@ -913,7 +923,21 @@ async function createPvfEncrypted(opts) {
 
   // -----------------------------------------------------------------
   // 11. CREATE DOCUMENT ROW
+  // Duplicate guard — same typed error as createPvf(). The route-level
+  // same-user idempotency check runs first; this catches cross-user
+  // duplicates that previously died as an opaque 500 on the PK.
   // -----------------------------------------------------------------
+  const existingDoc = await db.getDocument(fileHash);
+  if (existingDoc) {
+    const dupErr = new Error('DUPLICATE_DOCUMENT');
+    dupErr.shareId = existingDoc.shareId || null;
+    dupErr.slug = existingDoc.slug || null;
+    // Owner fields — handlers MUST check these before revealing shareId/slug
+    // to the requester (cross-tenant info disclosure otherwise).
+    dupErr.user_id = existingDoc.user_id || null;
+    dupErr.org_id = existingDoc.orgId || null;
+    throw dupErr;
+  }
   await db.createDocument({
     hash: fileHash,
     signature,

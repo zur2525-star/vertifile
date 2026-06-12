@@ -10,7 +10,7 @@ const { scheduleOnboardingEmails } = require('../services/onboarding-emails');
 const { validatePassword } = require('../services/password-validator');
 const { escapeHtml } = require('../templates/pvf');
 const { handleCreatePvf, verifySignature, generateToken, HMAC_SECRET } = require('../services/pvf-generator');
-const { buildOverrideScriptInnerText } = require('../services/stamp-override');
+const { buildOverrideScriptInnerText, buildOverrideScriptInnerTextLegacy } = require('../services/stamp-override');
 const signing = require('../services/signing');
 const keyManager = require('../services/key-manager');
 const _pkgVersion = require('../package.json').version;
@@ -461,8 +461,15 @@ router.post('/verify', verifyLimiter, async (req, res) => {
               }
               if (cfg && Object.keys(cfg).length > 0) {
                 // Rebuild the override script inner text deterministically.
-                const overrideInner = buildOverrideScriptInnerText(cfg);
-                if (overrideInner) {
+                // Files downloaded before the builder rewrite carry the OLD
+                // template text, so hash BOTH the current and the frozen
+                // legacy variants and accept either. The legacy text is only
+                // hashed for comparison here — it is never injected.
+                const overrideCandidates = [
+                  buildOverrideScriptInnerText(cfg),
+                  buildOverrideScriptInnerTextLegacy(cfg)
+                ].filter(Boolean);
+                if (overrideCandidates.length) {
                   // Extract the ORIGINAL script textContent from pvf_content.
                   // Doc generation stores exactly one <script>...</script>
                   // tag before the override is injected, and code_integrity
@@ -478,18 +485,21 @@ router.post('/verify', verifyLimiter, async (req, res) => {
                       // tampered with server-side — hard fail.
                       const originalHash = crypto.createHash('sha256').update(originalScript).digest('hex');
                       if (originalHash === doc.code_integrity) {
-                        const expectedWithOverride = crypto.createHash('sha256')
-                          .update(originalScript + overrideInner)
-                          .digest('hex');
-                        if (crypto.timingSafeEqual(
-                          Buffer.from(codeIntegrity, 'hex'),
-                          Buffer.from(expectedWithOverride, 'hex')
-                        )) {
-                          integrityOk = true;
-                          // Chained token was computed over doc.code_integrity
-                          // at creation time. Use that, not the client's
-                          // override-inclusive hash, for the chain check.
-                          effectiveCodeIntegrity = doc.code_integrity;
+                        for (const overrideInner of overrideCandidates) {
+                          const expectedWithOverride = crypto.createHash('sha256')
+                            .update(originalScript + overrideInner)
+                            .digest('hex');
+                          if (crypto.timingSafeEqual(
+                            Buffer.from(codeIntegrity, 'hex'),
+                            Buffer.from(expectedWithOverride, 'hex')
+                          )) {
+                            integrityOk = true;
+                            // Chained token was computed over doc.code_integrity
+                            // at creation time. Use that, not the client's
+                            // override-inclusive hash, for the chain check.
+                            effectiveCodeIntegrity = doc.code_integrity;
+                            break;
+                          }
                         }
                       }
                     }

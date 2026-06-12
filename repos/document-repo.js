@@ -51,14 +51,31 @@ async function createDocument({ hash, signature, originalName, mimeType, fileSiz
   // matches the timestamp used to build the Ed25519 signing payload. Legacy
   // callers without the field fall back to a fresh ISO string (byte-identical
   // to the previous behavior).
-  await queryWithRetry(
+  const result = await queryWithRetry(
     `INSERT INTO documents (hash, signature, original_name, mime_type, file_size, created_at, token, token_created_at, org_id, org_name, recipient, recipient_hash, share_id, ed25519_signature, ed25519_key_id)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)`,
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
+     ON CONFLICT (hash) DO NOTHING`,
     [hash, signature, originalName || null, mimeType || null, fileSize || null,
      createdAt || new Date().toISOString(), token || null, tokenCreatedAt || null,
      orgId, orgName, recipient || null, recipientHash || null, shareId || null,
      ed25519_signature || null, ed25519_key_id || null]
   );
+  // Race-window backstop: a concurrent insert of the same hash between the
+  // pipeline's getDocument() pre-check and this INSERT lands here. Same typed
+  // error as the pipeline pre-check so routes map both to a friendly 409.
+  if (result.rowCount === 0) {
+    const err = new Error('DUPLICATE_DOCUMENT');
+    const { rows } = await queryWithRetry('SELECT share_id, slug, user_id, org_id FROM documents WHERE hash = $1', [hash]);
+    if (rows.length) {
+      err.shareId = rows[0].share_id || null;
+      err.slug = rows[0].slug || null;
+      // Owner fields — handlers MUST check these before revealing shareId/slug
+      // to the requester (cross-tenant info disclosure otherwise).
+      err.user_id = rows[0].user_id || null;
+      err.org_id = rows[0].org_id || null;
+    }
+    throw err;
+  }
 }
 
 async function setShareId(hash, shareId) {

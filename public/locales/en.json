@@ -1433,7 +1433,7 @@
     "q3": "Can you see my document content?",
     "a3": "No. Vertifile is a Zero-Knowledge platform — your documents are encrypted in the browser before they ever leave your device. We cannot read your content even if we wanted to. Only a cryptographic fingerprint is processed on our servers.",
     "q4": "How much does it cost?",
-    "a4": "Vertifile offers Pro (/month, 500 docs, /bin/zsh.15/doc overage) for individuals and professionals, Business (/month, 1,000 docs, /bin/zsh.10/doc overage) for teams, and custom Enterprise pricing with unlimited documents. Every Pro plan includes a 14-day trial.",
+    "a4": "Vertifile offers Pro ($49/month, 500 docs, $0.15/doc overage) for individuals and professionals, Business ($79/month, 1,000 docs, $0.10/doc overage) for teams, and custom Enterprise pricing with unlimited documents. Every Pro plan includes a 14-day trial.",
     "q5": "How long does it take?",
     "a5": "Protection takes seconds. Upload your document and get a tamper-proof PVF file instantly.",
     "q6": "What document types are supported?",
