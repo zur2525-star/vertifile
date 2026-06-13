@@ -74,5 +74,8 @@
   },
   "devDependencies": {
     "imapflow": "^1.3.3"
+  },
+  "overrides": {
+    "ws": "^8.21.0"
   }
 }
