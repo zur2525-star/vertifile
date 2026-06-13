@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Why PDF Signatures Failed -- And What Replaced Them | Vertifile Blog</title>
-  <meta name="description" content="PDF digital signatures verify who signed a document, not whether it was changed after. Learn how Vertifile PVF replaces the broken architecture entirely with tamper-proof verification.">
+  <meta name="description" content="PDF digital signatures verify who signed a document, not whether it was changed after. Learn how Vertifile PVF replaces the broken architecture entirely with tamper-evident verification.">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
   <meta property="og:title" content="Why PDF Signatures Failed -- And What Replaced Them">
   <meta property="og:description" content="PDF signatures protect who signed, not what was signed. Vertifile PVF wraps the entire document in verification -- the protection IS the document.">
@@ -298,12 +298,12 @@
       <tr>
         <td data-i18n="blog.post.pvfbeats.rowPrivacy">Privacy</td>
         <td class="cell-bad" data-i18n="blog.post.pvfbeats.rowPrivacyPdf">Signer's certificate exposed</td>
-        <td class="cell-good" data-i18n="blog.post.pvfbeats.rowPrivacyPvf">Zero-knowledge &mdash; content never leaves device</td>
+        <td class="cell-good" data-i18n="blog.post.pvfbeats.rowPrivacyPvf">Blind mode &mdash; content encrypted on your device</td>
       </tr>
       <tr>
         <td data-i18n="blog.post.pvfbeats.rowTiming">Timing proof</td>
         <td class="cell-bad" data-i18n="blog.post.pvfbeats.rowTimingPdf">Signer's local clock (can be faked)</td>
-        <td class="cell-good" data-i18n="blog.post.pvfbeats.rowTimingPvf">Blockchain timestamp (immutable, public)</td>
+        <td class="cell-good" data-i18n="blog.post.pvfbeats.rowTimingPvf">Trusted cryptographic timestamp at sealing</td>
       </tr>
       <tr>
         <td data-i18n="blog.post.pvfbeats.rowViewer">Viewer required</td>
@@ -325,11 +325,11 @@
 
   <p data-i18n="blog.post.pvfbeats.cascade1">In a PDF, tampering can survive undetected. Shadow attacks, incremental saves, and signature stripping all allow a forged document to maintain the appearance of validity. The green checkmark stays green while the content changes underneath.</p>
 
-  <p data-i18n="blog.post.pvfbeats.cascade2">In a PVF file, any modification triggers instant cascade failure across all seven security layers. The Chained Token architecture means every layer is cryptographically bound to every other layer. Change one byte and the fingerprint changes. The fingerprint change invalidates the signature. The signature change breaks the blockchain anchor. The broken anchor corrupts the audit trail. The entire verification structure collapses simultaneously. There is no surgical tampering. There is no partial forgery. There is only total failure &mdash; visible, immediate, and undeniable.</p>
+  <p data-i18n="blog.post.pvfbeats.cascade2">In a PVF file, any modification triggers instant cascade failure across all seven security layers. The Chained Token architecture means every layer is cryptographically bound to every other layer. Change one byte and the fingerprint changes. The fingerprint change invalidates the signature. The broken signature breaks the registry seal. The broken seal corrupts the audit trail. The entire verification structure collapses simultaneously. There is no surgical tampering. There is no partial forgery. There is only total failure &mdash; visible, immediate, and undeniable.</p>
 
   <h2 data-i18n="blog.post.pvfbeats.h2.usecases">Where the Difference Matters Most</h2>
 
-  <p data-i18n="blog.post.pvfbeats.usecase1"><strong>Contracts:</strong> Two parties sign a deal. Six months later, a dispute. With PDF, both sides can present different signed versions &mdash; both technically valid. With PVF, the blockchain timestamp proves which version existed first. No ambiguity. No expert witnesses. Mathematical proof.</p>
+  <p data-i18n="blog.post.pvfbeats.usecase1"><strong>Contracts:</strong> Two parties sign a deal. Six months later, a dispute. With PDF, both sides can present different signed versions &mdash; both technically valid. With PVF, the trusted timestamp and cryptographic record prove which version existed first. No ambiguity. No expert witnesses. Mathematical proof.</p>
 
   <p data-i18n="blog.post.pvfbeats.usecase2"><strong>Payslips:</strong> An employee submits a payslip to secure a mortgage. With PDF, the salary figure can be modified without breaking the employer's signature. With PVF, any modification freezes the stamp red. The bank knows instantly whether to trust it.</p>
 
@@ -346,7 +346,7 @@
   <h2 data-i18n="blog.post.pvfbeats.h2.glossary">Glossary</h2>
 
   <ul>
-    <li data-i18n="blog.post.pvfbeats.gloss1"><strong>Cascade Failure</strong> &mdash; In PVF architecture, a security response where modifying any single element triggers simultaneous failure across all seven verification layers. This makes partial or surgical tampering impossible.</li>
+    <li data-i18n="blog.post.pvfbeats.gloss1"><strong>Cascade Failure</strong> &mdash; In PVF architecture, a security response where modifying any single element triggers simultaneous failure across all seven verification layers. This means partial or surgical tampering cannot pass verification.</li>
     <li data-i18n="blog.post.pvfbeats.gloss2"><strong>Trust Model Inversion</strong> &mdash; The shift from assuming documents are trustworthy (PDF approach) to requiring documents to prove their trustworthiness (PVF approach). This reversal of the burden of proof is what separates file verification from reality verification.</li>
     <li data-i18n="blog.post.pvfbeats.gloss3"><strong>Traceable Process</strong> &mdash; A verification system that monitors document integrity continuously throughout its lifecycle, as opposed to a static snapshot that only captures the state at the moment of signing.</li>
   </ul>
@@ -377,7 +377,7 @@
   <div class="footer-grid">
     <div class="footer-brand">
       <div class="f-logo"><img src="/images/logo-horizontal.png?v=3" alt="Vertifile"></div>
-      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+      <p data-i18n="footer.description">Tamper-evident digital documents with live animated verification stamps. Blind mode keeps content encrypted on your device.</p>
       <div class="patent-badge" data-i18n="footer.patent">Patent Pending</div>
     </div>
     <div class="footer-col">
