@@ -314,7 +314,7 @@ function upgradeEmail(userName, plan) {
             <tr>
               <td>
                 <p style="margin:0 0 4px;font-size:18px;font-weight:800;color:#1e1b4b">Pro</p>
-                <p style="margin:0 0 8px;font-size:24px;font-weight:800;color:#4f46e5">$49<span style="font-size:14px;font-weight:400;color:#6b7280">/month</span></p>
+                <p style="margin:0 0 8px;font-size:24px;font-weight:800;color:#4f46e5">$29<span style="font-size:14px;font-weight:400;color:#6b7280">/month</span></p>
               </td>
             </tr>
             <tr>
@@ -366,7 +366,7 @@ ${greeting(userName)}
 
 Your Vertifile trial wraps up soon. To keep protecting and verifying your documents, choose the plan that fits you best.
 
-Pro -- $49/month
+Pro -- $29/month
 - Up to 500 documents/month
 - Custom stamp branding
 - Share links with verification

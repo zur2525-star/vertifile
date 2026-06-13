@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verify a Document — Vertifile Tamper-Proof Checker</title>
+  <title>Verify a Document — Vertifile Tamper-Evident Checker</title>
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
-  <meta name="description" content="Verify document authenticity instantly with Vertifile's tamper-proof verification system. Drag and drop any .pvf file to check if it is genuine or has been tampered with — results appear in under a second.">
-  <meta name="keywords" content="document verification, tamper-proof, digital signature, PVF, blockchain verification">
+  <meta name="description" content="Verify document authenticity instantly with Vertifile's tamper-evident verification system. Drag and drop any .pvf file to check if it is genuine or has been tampered with — results appear in under a second.">
+  <meta name="keywords" content="document verification, tamper-evident, digital signature, PVF, anti-forgery">
   <meta property="og:title" content="Verify a Document — Vertifile">
-  <meta property="og:description" content="Verify document authenticity instantly with Vertifile's tamper-proof verification system.">
+  <meta property="og:description" content="Verify document authenticity instantly with Vertifile's tamper-evident verification system.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vertifile.com/verify">
   <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
   <link rel="canonical" href="https://vertifile.com/verify">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Verify a Document — Vertifile">
-  <meta name="twitter:description" content="Verify document authenticity instantly with Vertifile's tamper-proof verification system.">
+  <meta name="twitter:description" content="Verify document authenticity instantly with Vertifile's tamper-evident verification system.">
   <meta name="theme-color" content="#ffffff">
   <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -278,7 +278,7 @@
   <div class="card-body">
 
     <!-- PVF Explainer -->
-    <p data-i18n="verify.pvfExplainer" style="text-align:center;font-size:14px;color:#6b7280;margin:0 0 20px;line-height:1.6;">A .pvf file is a tamper-proof document created by Vertifile. Drop one here to check if it's authentic.</p>
+    <p data-i18n="verify.pvfExplainer" style="text-align:center;font-size:14px;color:#6b7280;margin:0 0 20px;line-height:1.6;">A .pvf file is a tamper-evident document created by Vertifile. Drop one here to check if it's authentic.</p>
 
     <!-- Drop Zone -->
     <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
@@ -336,7 +336,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
       </div>
       <h3 class="ok" data-i18n="verify.verified">Document is Authentic</h3>
-      <p data-i18n="verify.verifiedDesc">This document has been verified against the blockchain registry. The stamp is live and valid.</p>
+      <p data-i18n="verify.verifiedDesc">This document's cryptographic signature has been verified against the Vertifile registry. The stamp is live and valid.</p>
       <div class="meta" id="metaOk"></div>
       <button class="open-doc-btn" id="openDocBtn" onclick="openDocument()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
@@ -371,7 +371,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </div>
       <div class="sec-text">
-        <strong data-i18n="verify.blockchainTitle">Blockchain Verification</strong> &mdash; <span data-i18n="verify.blockchainDesc">Each document hash is compared against the immutable blockchain registry. The verification confirms the document has not been modified since it was originally protected.</span>
+        <strong data-i18n="verify.blockchainTitle">Cryptographic Verification</strong> &mdash; <span data-i18n="verify.blockchainDesc">Verification checks the document's hash and signature against the Vertifile registry, confirming the document has not been modified since it was originally protected.</span>
       </div>
     </div>
 

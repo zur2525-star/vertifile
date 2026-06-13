@@ -331,7 +331,7 @@
       <span class="topic-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
     </div>
     <div class="topic-answer"><div class="topic-answer-inner" data-i18n="support.topic4a">
-      Vertifile uses BLIND processing, meaning the server never reads or stores your document content. When you share a .pvf file, only the cryptographic fingerprint is verified server-side. The document content remains encrypted and visible only to the recipient who opens the file in their browser.
+      In Blind mode, your document is encrypted in your browser, and Vertifile processes only ciphertext and the cryptographic fingerprint. When you share a .pvf, the recipient opens it in their browser; verification checks the fingerprint server-side.
     </div></div>
   </div>
 
@@ -341,7 +341,7 @@
       <span class="topic-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
     </div>
     <div class="topic-answer"><div class="topic-answer-inner" data-i18n="support.topic5a">
-      To verify a document, go to <a href="/verify">Verify</a> and drag the .pvf file into the upload zone. The system will check the cryptographic signature against the blockchain registry. A green spinning stamp means authentic; a frozen red stamp means the document was tampered with.
+      To verify a document, go to <a href="/verify">Verify</a> and drag the .pvf file into the upload zone. The system checks the cryptographic signature against the Vertifile registry. A green spinning stamp means authentic; a frozen red stamp means the document was tampered with.
     </div></div>
   </div>
 
@@ -388,7 +388,7 @@
       <div class="f-logo">
         <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
       </div>
-      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+      <p data-i18n="footer.description">Tamper-evident digital documents with live animated verification stamps. Blind mode keeps content encrypted on your device.</p>
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer.product">Product</h4>

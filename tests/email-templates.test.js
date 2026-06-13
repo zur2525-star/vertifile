@@ -373,9 +373,9 @@ describe('upgradeEmail', () => {
     assertContains(html, 'Jake', 'upgradeEmail html');
   });
 
-  it('html shows Pro plan pricing ($49)', () => {
+  it('html shows Pro plan pricing ($29)', () => {
     const { html } = upgradeEmail(NAME);
-    assertContains(html, '$49', 'upgradeEmail Pro plan price');
+    assertContains(html, '$29', 'upgradeEmail Pro plan price');
   });
 
   it('html shows Business plan pricing ($79)', () => {

@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy — Vertifile Blind Processing & GDPR</title>
-  <meta name="description" content="Vertifile Privacy Policy — learn how we protect your data with blind processing, zero-knowledge hashing, and GDPR-compliant practices. Your document content is never read, stored, or accessed by our servers.">
-  <meta name="keywords" content="document verification, tamper-proof, digital signature, PVF, blockchain verification">
+  <meta name="description" content="Vertifile Privacy Policy — learn how we handle your data. In Blind mode, content is encrypted in your browser and we cannot read it; in standard mode, your sealed file is stored to power share links and can be deleted anytime. GDPR-aligned practices.">
+  <meta name="keywords" content="document verification, tamper-evident, digital signature, PVF, privacy policy">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
   <meta property="og:title" content="Privacy Policy — Vertifile">
   <meta property="og:description" content="Vertifile Privacy Policy — how we protect your data with blind processing.">
@@ -168,7 +168,7 @@
   <p class="legal-updated" data-i18n="privacy.updated">Last updated: March 25, 2026</p>
 
   <div class="highlight-box">
-    <p><strong data-i18n="privacy.blindLabel">BLIND Processing:</strong> <span data-i18n="privacy.blindSummary">Vertifile never reads, accesses, or stores the content of your documents. We only process cryptographic hashes (fingerprints) of your files. Your document content never leaves your device.</span></p>
+    <p><strong data-i18n="privacy.blindLabel">BLIND Processing:</strong> <span data-i18n="privacy.blindSummary">In Blind mode, documents are encrypted and hashed in your browser before upload — Vertifile cannot read their content. In standard mode, files are processed server-side to generate the sealed .pvf and stored to power share links. Details below.</span></p>
   </div>
 
   <h2 data-i18n="privacy.introTitle">Introduction</h2>
@@ -200,7 +200,7 @@
 
   <h2 data-i18n="privacy.notCollectTitle">What We Do NOT Collect</h2>
   <div class="highlight-box">
-    <p data-i18n="privacy.notCollectDesc">We do not collect, read, store, transmit, or access the content of your documents at any point. Our BLIND processing architecture means that document content is hashed entirely on the client side. Only the resulting cryptographic fingerprint is sent to our servers. It is mathematically impossible to reconstruct document content from a hash.</p>
+    <p data-i18n="privacy.notCollectDesc">In Blind mode, we do not collect, read, or access readable document content at any point: encryption and hashing happen client-side, and only ciphertext and the cryptographic fingerprint reach our servers. In standard mode (public upload and share links), the uploaded file is processed and stored so we can generate and serve your sealed .pvf; we do not read its content for any other purpose, and you can delete it at any time. It is mathematically impossible to reconstruct document content from a hash.</p>
   </div>
   <p>We also do not collect:</p>
   <ul>
@@ -214,7 +214,7 @@
   <p>We use the information we collect for the following purposes:</p>
   <ul>
     <li><strong>Document verification:</strong> Comparing submitted hashes against stored records to verify document authenticity</li>
-    <li><strong>Blockchain registration:</strong> Recording document hashes on the Polygon blockchain for immutable proof of authenticity</li>
+    <li><strong>Blockchain anchoring (where enabled):</strong> Anchoring document hashes to the Polygon blockchain for an immutable public record</li>
     <li><strong>Audit logging:</strong> Maintaining records of verification attempts for security and compliance</li>
     <li><strong>Service improvement:</strong> Analyzing usage patterns to improve our platform</li>
     <li><strong>Security:</strong> Detecting and preventing fraud, abuse, and unauthorized access</li>
@@ -222,25 +222,25 @@
   </ul>
 
   <h2 data-i18n="privacy.storageTitle">Data Storage Location</h2>
-  <p data-i18n="privacy.storageDesc">Your data is processed and stored on cloud infrastructure located in the United States and Europe. Cryptographic hashes of your documents may be anchored on the Polygon blockchain, a public, decentralized network. No document content is ever transmitted to or stored on any server or blockchain.</p>
+  <p data-i18n="privacy.storageDesc">Your data is processed and stored on cloud infrastructure located in the United States and Europe. Where blockchain anchoring is enabled, cryptographic hashes of your documents may be anchored to the Polygon blockchain, a public, decentralized network. Document content is never written to the blockchain. In Blind mode, content is encrypted in your browser before upload and we cannot read it. In standard mode, your file is processed on our servers to generate the sealed .pvf and is stored to power share links; you can delete it at any time.</p>
 
   <h2 data-i18n="privacy.legalBasisTitle">Legal Basis for Processing (GDPR Article 6)</h2>
   <p data-i18n="privacy.legalBasisIntro">We process personal data under the following legal bases as defined in GDPR Article 6:</p>
   <ul>
-    <li><strong data-i18n="privacy.legalBasisContractLabel">Contract performance:</strong> <span data-i18n="privacy.legalBasisContractDesc">Processing necessary to provide you with the Vertifile service, including document verification, hash generation, and blockchain registration.</span></li>
+    <li><strong data-i18n="privacy.legalBasisContractLabel">Contract performance:</strong> <span data-i18n="privacy.legalBasisContractDesc">Processing necessary to provide you with the Vertifile service, including document verification, hash generation, sealed file generation and delivery, and blockchain anchoring where enabled.</span></li>
     <li><strong data-i18n="privacy.legalBasisLegitLabel">Legitimate interest:</strong> <span data-i18n="privacy.legalBasisLegitDesc">Processing necessary for security monitoring, fraud prevention, abuse detection, and service improvement.</span></li>
     <li><strong data-i18n="privacy.legalBasisConsentLabel">Consent:</strong> <span data-i18n="privacy.legalBasisConsentDesc">Where applicable, we obtain your consent for optional analytics and marketing communications. You may withdraw consent at any time.</span></li>
   </ul>
 
   <h2 data-i18n="privacy.blockchainTitle">Blockchain Records</h2>
-  <p>When a document is protected, its SHA-256 hash and HMAC signature are registered on the Polygon blockchain. These records are:</p>
+  <p>Where blockchain anchoring is enabled, a document's SHA-256 hash may be anchored to the Polygon blockchain. Such on-chain records are:</p>
   <ul>
     <li><strong>Immutable:</strong> Once recorded, they cannot be modified or deleted</li>
     <li><strong>Public:</strong> Transaction hashes are publicly visible on the blockchain</li>
     <li><strong>Non-reversible:</strong> The hash cannot be used to reconstruct the original document</li>
     <li><strong>Permanent:</strong> Records exist on the blockchain indefinitely</li>
   </ul>
-  <p>Blockchain records contain only cryptographic hashes, timestamps, and transaction metadata. No personal information or document content is stored on the blockchain.</p>
+  <p>On-chain records contain only cryptographic hashes, timestamps, and transaction metadata. No personal information or document content is ever written to the blockchain.</p>
 
   <h2 data-i18n="privacy.cookiesTitle">Cookies and Analytics</h2>
   <p data-i18n="privacy.cookiesIntro">We use minimal cookies for essential functionality:</p>
@@ -305,7 +305,7 @@
   <p data-i18n="privacy.controllerDesc">Vertifile acts as a Data Processor when processing documents on behalf of organizations using our API. For individual users, Vertifile acts as the Data Controller. Organizations using our Enterprise plan can request a Data Processing Agreement (DPA).</p>
 
   <h2 data-i18n="privacy.blockchainErasureTitle">Blockchain &amp; Right to Erasure</h2>
-  <p data-i18n="privacy.blockchainErasureDesc">Document hashes anchored on the Polygon blockchain are cryptographic fingerprints that cannot be reversed to reconstruct document content. While blockchain records are immutable, the hash alone does not constitute personal data as it cannot be linked to an individual without additional information held separately by Vertifile. Upon account deletion, all linking information is permanently removed, rendering blockchain hashes anonymous.</p>
+  <p data-i18n="privacy.blockchainErasureDesc">Where blockchain anchoring is enabled, document hashes anchored to the Polygon blockchain are cryptographic fingerprints that cannot be reversed to reconstruct document content. While blockchain records are immutable, the hash alone does not constitute personal data, as it cannot be linked to an individual without additional information held separately by Vertifile. Upon account deletion, all linking information is permanently removed, rendering on-chain hashes anonymous.</p>
 
   <h2 data-i18n="privacy.transfersTitle">International Data Transfers</h2>
   <p data-i18n="privacy.transfersDesc">When your data is transferred outside the European Economic Area (EEA), we ensure appropriate safeguards are in place. International transfers are protected by Standard Contractual Clauses (SCCs) approved by the European Commission, where applicable. We evaluate the data protection laws of recipient countries and implement supplementary measures when necessary to ensure your data remains protected.</p>
@@ -344,7 +344,7 @@
       <div class="f-logo">
         <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
       </div>
-      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+      <p data-i18n="footer.description">Tamper-evident digital documents with live animated verification stamps. Blind mode keeps content encrypted on your device.</p>
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer.product">Product</h4>

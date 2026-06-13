@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Vertifile — Our Mission to End Document Forgery</title>
-  <meta name="description" content="Meet the team behind Vertifile — building tamper-proof document verification that is accessible, secure, and privacy-first. Founded by Zur Halfon in Israel with a mission to end document forgery worldwide.">
-  <meta name="keywords" content="document verification, tamper-proof, digital signature, PVF, blockchain verification, Zur Halfon, Vertifile">
+  <meta name="description" content="Meet the team behind Vertifile — building tamper-evident document verification that is accessible, secure, and privacy-first. Founded by Zur Halfon in Israel with a mission to end document forgery worldwide.">
+  <meta name="keywords" content="document verification, tamper-evident, digital signature, PVF, anti-forgery, Zur Halfon, Vertifile">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
   <meta property="og:title" content="About — Vertifile">
   <meta property="og:description" content="Meet the team behind Vertifile — making document verification accessible, secure, and privacy-first. Founded by Zur Halfon in Israel.">
@@ -315,7 +315,7 @@
       Founded in Israel, 2026
     </div>
     <h1 data-i18n="about.heroTitle">The Team Behind <span class="gradient" data-i18n="about.heroTitleGradient">Vertifile</span></h1>
-    <p class="sub" data-i18n="about.heroSubtitle">Real people, building real technology to make document forgery impossible. Transparency starts with knowing who we are.</p>
+    <p class="sub" data-i18n="about.heroSubtitle">Real people, building real technology to make forged documents fail verification. Transparency starts with knowing who we are.</p>
   </div>
 </div>
 
@@ -341,7 +341,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         <span data-i18n="about.founderTitle">Founder &amp; CEO</span>
       </div>
-      <p class="founder-bio" data-i18n="about.founderBio">Security researcher and entrepreneur passionate about making document forgery impossible. Built Vertifile after witnessing firsthand how easy it is to forge critical documents — diplomas, medical records, legal contracts. Filed a patent for the PVF format and submitted the first IANA MIME type registration for document verification.</p>
+      <p class="founder-bio" data-i18n="about.founderBio">Security researcher and entrepreneur passionate about making forged documents fail verification. Built Vertifile after witnessing firsthand how easy it is to forge critical documents — diplomas, medical records, legal contracts. Filed a patent for the PVF format and submitted the first IANA MIME type registration for document verification.</p>
       <div class="founder-links">
         <a href="mailto:info@vertifile.com" class="founder-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -367,7 +367,7 @@
   </div>
   <div class="mission-content">
     <p data-i18n="about.missionP1">Every year, millions of forged documents circulate worldwide — fake university diplomas, altered medical records, fraudulent legal contracts. The damage is enormous: unqualified professionals in critical roles, insurance fraud costing billions, and individuals whose identities are stolen through forged paperwork.</p>
-    <p data-i18n="about.missionP2">Vertifile was born from a simple realization: if we can make currency nearly impossible to counterfeit, why can't we do the same for documents? We built a cryptographic verification system that makes any document tamper-proof while keeping your content completely private.</p>
+    <p data-i18n="about.missionP2">Vertifile was born from a simple realization: if we can make currency nearly impossible to counterfeit, why can't we do the same for documents? We built a cryptographic verification system that makes any document tamper-evident, while keeping your content private in Blind mode.</p>
   </div>
 </section>
 
@@ -378,7 +378,7 @@
   <div class="section-header">
     <span class="label" data-i18n="about.blindLabel">Privacy by Design</span>
     <h2 data-i18n="about.blindTitle">BLIND Processing</h2>
-    <p data-i18n="about.blindSubtitle">Your content stays yours. Always. Our server never reads a single word.</p>
+    <p data-i18n="about.blindSubtitle">Your content stays yours. In Blind mode, our servers receive only ciphertext and fingerprints — not a single readable word.</p>
   </div>
   <div class="blind-content">
     <div class="blind-steps">
@@ -387,7 +387,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         </div>
         <h4 data-i18n="about.blindStep1Title">Client-Side Hashing</h4>
-        <p data-i18n="about.blindStep1Desc">Your document is hashed locally in the browser using SHA-256. The file content never leaves your device.</p>
+        <p data-i18n="about.blindStep1Desc">In Blind mode, your document is encrypted and hashed locally in the browser using SHA-256. Readable content never leaves your device.</p>
       </div>
       <div class="blind-step fade-up">
         <div class="blind-step-icon hash">
@@ -400,8 +400,8 @@
         <div class="blind-step-icon lock">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
         </div>
-        <h4 data-i18n="about.blindStep3Title">Blockchain Sealed</h4>
-        <p data-i18n="about.blindStep3Desc">The hash is registered on blockchain, creating an immutable proof of authenticity. Zero knowledge of your content.</p>
+        <h4 data-i18n="about.blindStep3Title">Cryptographically Sealed</h4>
+        <p data-i18n="about.blindStep3Desc">The fingerprint is sealed with our cryptographic signature, creating immutable proof of authenticity — with zero knowledge of your content.</p>
       </div>
     </div>
   </div>
@@ -435,8 +435,8 @@
       <div class="tech-icon blockchain">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="6" height="6" rx="1"/><rect x="9" y="4" width="6" height="6" rx="1"/><rect x="17" y="4" width="6" height="6" rx="1"/><rect x="1" y="14" width="6" height="6" rx="1"/><rect x="9" y="14" width="6" height="6" rx="1"/><rect x="17" y="14" width="6" height="6" rx="1"/><line x1="4" y1="10" x2="4" y2="14"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="20" y1="10" x2="20" y2="14"/></svg>
       </div>
-      <h3 data-i18n="about.techBlockchainTitle">Blockchain Anchoring</h3>
-      <p data-i18n="about.techBlockchainDesc">Every document hash is permanently recorded on Polygon blockchain, creating an immutable, publicly auditable trail that exists forever.</p>
+      <h3 data-i18n="about.techBlockchainTitle">Cryptographic Sealing</h3>
+      <p data-i18n="about.techBlockchainDesc">Every document is sealed with HMAC-SHA256 + Ed25519 dual-signing, creating independent, verifiable proof of integrity that anyone can check.</p>
     </div>
   </div>
 </section>
@@ -448,7 +448,7 @@
   <div class="section-header">
     <span class="label" data-i18n="about.statsLabel">By the Numbers</span>
     <h2 data-i18n="about.statsTitle">Growing Every Day</h2>
-    <p data-i18n="about.statsSubtitle">Trusted by organizations worldwide.</p>
+    <p data-i18n="about.statsSubtitle">Real credentials, verifiable by anyone.</p>
   </div>
   <div class="stats-grid">
     <div class="stat-card fade-up">
@@ -485,21 +485,21 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
       <h3 data-i18n="about.value1Title">Security First</h3>
-      <p data-i18n="about.value1Desc">Eight layers of cryptographic protection, blockchain anchoring, and live anti-forgery stamps make document tampering impossible.</p>
+      <p data-i18n="about.value1Desc">Layered cryptographic protection and live anti-forgery stamps ensure any tampering is exposed the moment a document is verified.</p>
     </div>
     <div class="value-card fade-up">
       <div class="value-icon privacy">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
       </div>
       <h3 data-i18n="about.value2Title">Privacy by Design</h3>
-      <p data-i18n="about.value2Desc">We architected our entire system so we never have access to your document content. Privacy is not a feature — it is the foundation.</p>
+      <p data-i18n="about.value2Desc">We built Blind mode so that, when you choose it, we never have access to your readable document content. Privacy is not a feature — it is the foundation.</p>
     </div>
     <div class="value-card fade-up">
       <div class="value-icon transparency">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
       </div>
       <h3 data-i18n="about.value3Title">Transparency</h3>
-      <p data-i18n="about.value3Desc">Every verification is publicly auditable on the blockchain. Our process is open, our records are immutable, and our integrity is verifiable.</p>
+      <p data-i18n="about.value3Desc">Our format is IANA-registered and our verification is open — anyone can check a document's authenticity. Our process is transparent and our integrity is verifiable.</p>
     </div>
     <div class="value-card fade-up">
       <div class="value-icon innovation">
@@ -524,7 +524,7 @@
       <div class="f-logo">
         <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
       </div>
-      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+      <p data-i18n="footer.description">Tamper-evident digital documents with live animated verification stamps. Blind mode keeps content encrypted on your device.</p>
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer.product">Product</h4>

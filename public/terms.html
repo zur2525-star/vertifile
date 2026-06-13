@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Terms of Service — Vertifile Document Verification</title>
-  <meta name="description" content="Vertifile Terms of Service — usage terms, acceptable use policies, and legal agreements for our tamper-proof document verification platform. Covers API usage, data handling, and intellectual property rights.">
-  <meta name="keywords" content="document verification, tamper-proof, digital signature, PVF, blockchain verification">
+  <meta name="description" content="Vertifile Terms of Service — usage terms, acceptable use policies, and legal agreements for our tamper-evident document verification platform. Covers API usage, data handling, and intellectual property rights.">
+  <meta name="keywords" content="document verification, tamper-evident, digital signature, PVF, terms of service">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
   <meta property="og:title" content="Terms of Service — Vertifile">
   <meta property="og:description" content="Vertifile Terms of Service — usage terms for our document verification platform.">
@@ -168,15 +168,15 @@
   <p class="legal-updated" data-i18n="terms.updated">Last updated: March 25, 2026</p>
 
   <h2 data-i18n="terms.serviceTitle">1. Service Description</h2>
-  <p>Vertifile provides a document verification and protection platform that creates tamper-proof .pvf files using cryptographic signatures and blockchain timestamping. Our service includes:</p>
+  <p>Vertifile provides a document verification and protection platform that creates tamper-evident .pvf files using cryptographic signatures. Our service includes:</p>
   <ul>
-    <li>Document protection via SHA-256 hashing and HMAC signatures</li>
-    <li>Blockchain timestamp registration on the Polygon network</li>
+    <li>Document protection via SHA-256 hashing and HMAC-SHA256 + Ed25519 signatures</li>
+    <li>Blockchain anchoring on the Polygon network where enabled</li>
     <li>Live animated verification stamps embedded in .pvf files</li>
     <li>Document verification through our web interface and API</li>
     <li>A browser-based .pvf file viewer</li>
   </ul>
-  <p>Vertifile uses BLIND processing: we never read, access, or store the content of your documents. Only cryptographic hashes are processed.</p>
+  <p>Vertifile offers a BLIND mode: when used, documents are encrypted in your browser before upload and we cannot read their content. In standard mode, your file is processed to generate the sealed .pvf and stored to power share links; you can delete it at any time.</p>
 
   <h2 data-i18n="terms.acceptanceTitle">2. Acceptance of Terms</h2>
   <p>By accessing or using Vertifile's services, you agree to be bound by these Terms of Service. If you are using our services on behalf of an organization, you represent that you have the authority to bind that organization to these terms.</p>
@@ -229,7 +229,7 @@
   <p data-i18n="terms.breachNotifDesc">In the event of a security breach affecting user data, Vertifile will: (a) notify affected users within 72 hours of confirmed breach discovery, (b) notify relevant supervisory authorities as required by applicable law, (c) provide a detailed incident report within 30 days, and (d) implement remediation measures. Vertifile maintains an incident response plan and conducts regular security assessments.</p>
 
   <h2 data-i18n="terms.continuityTitle">10. Business Continuity</h2>
-  <p data-i18n="terms.continuityDesc">In the event Vertifile ceases operations: (a) all .pvf files remain functional as self-contained HTML documents, (b) blockchain-anchored verification records on Polygon remain permanently accessible, (c) users will receive 90 days advance notice, (d) all document hashes and verification data will be exported and made available to users, and (e) the .pvf format specification will be published as open documentation.</p>
+  <p data-i18n="terms.continuityDesc">In the event Vertifile ceases operations: (a) all .pvf files remain functional as self-contained HTML documents, (b) where blockchain anchoring was enabled, anchored verification records on Polygon remain publicly accessible, (c) users will receive 90 days advance notice, (d) all document hashes and verification data will be exported and made available to users, and (e) the .pvf format specification will be published as open documentation.</p>
 
   <h2 data-i18n="terms.disputeTitle">11. Dispute Resolution</h2>
   <p data-i18n="terms.disputeDesc">Any dispute arising from these Terms shall first be submitted to good-faith mediation for a period of 30 days. If mediation fails, disputes shall be resolved by binding arbitration under the rules of the Israeli Institute of Commercial Arbitration, or alternatively through the courts of Tel Aviv-Jaffa, Israel. Israeli law shall govern these Terms.</p>
@@ -276,7 +276,7 @@
   <p>Upon termination:</p>
   <ul>
     <li>Your API keys will be revoked</li>
-    <li>Existing blockchain records will remain on-chain (they are immutable)</li>
+    <li>Where blockchain anchoring was enabled, existing on-chain records will remain (they are immutable)</li>
     <li>Previously issued .pvf files will continue to be verifiable</li>
     <li>Account data will be deleted within 30 days, subject to legal retention requirements</li>
   </ul>
@@ -306,7 +306,7 @@
       <div class="f-logo">
         <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
       </div>
-      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+      <p data-i18n="footer.description">Tamper-evident digital documents with live animated verification stamps. Blind mode keeps content encrypted on your device.</p>
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer.product">Product</h4>

@@ -4,17 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vertifile — How Document Protection Works</title>
-  <meta name="description" content="See Vertifile in action — learn how documents are protected with cryptographic signatures, blockchain verification, and live animated holographic stamps. Try the interactive demo with real and forged documents.">
+  <meta name="description" content="See Vertifile in action — learn how documents are protected with HMAC-SHA256 + Ed25519 cryptographic signatures and live animated holographic stamps. Try the interactive demo with real and forged documents.">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
   <meta property="og:title" content="How It Works — Vertifile">
-  <meta property="og:description" content="Learn how Vertifile protects documents with cryptographic signatures, blockchain verification, and live animated stamps.">
+  <meta property="og:description" content="Learn how Vertifile protects documents with cryptographic signatures and live animated stamps.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vertifile.com/demo">
   <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
   <link rel="canonical" href="https://vertifile.com/demo">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="How It Works — Vertifile">
-  <meta name="twitter:description" content="Learn how Vertifile protects documents with cryptographic signatures, blockchain verification, and live animated stamps.">
+  <meta name="twitter:description" content="Learn how Vertifile protects documents with cryptographic signatures and live animated stamps.">
   <meta name="theme-color" content="#ffffff">
   <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -244,10 +244,10 @@
 <!-- Hero -->
 <section class="hero">
   <h1 data-i18n="demo.heroTitle">How Vertifile Protects Documents</h1>
-  <p data-i18n="demo.heroSubtitle">Understand how a document becomes tamper-proof, what makes a .pvf file unique, and how verification detects forgery in real time.</p>
+  <p data-i18n="demo.heroSubtitle">Understand how a document becomes tamper-evident, what makes a .pvf file unique, and how verification detects forgery in real time.</p>
   <div class="hero-badges">
     <div class="badge"><svg style="width:16px;height:16px;display:inline;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> <span data-i18n="demo.badgeHash">Cryptographic Hashing</span></div>
-    <div class="badge"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg> <span data-i18n="demo.badgeBlockchain">Blockchain Registry</span></div>
+    <div class="badge"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg> <span data-i18n="demo.badgeBlockchain">Cryptographic Seal</span></div>
     <div class="badge"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6l2.1 2.1M5.6 18.4l2.1-2.1m8.6-8.6l2.1-2.1"/></svg> <span data-i18n="demo.badgeStamp">Live Animated Stamp</span></div>
     <div class="badge"><svg style="width:16px;height:16px;display:inline;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> <span data-i18n="demo.badgeBLIND">BLIND Processing</span></div>
   </div>
@@ -279,7 +279,7 @@
           <li><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span data-i18n="demo.verified1">Live animated holographic waves</span></li>
           <li><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span data-i18n="demo.verified2">Rotating verification stamp with green checkmark</span></li>
           <li><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span data-i18n="demo.verified3">Stamp continuously spins (proves it's live)</span></li>
-          <li><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span data-i18n="demo.verified4">Hash matches blockchain registry</span></li>
+          <li><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span data-i18n="demo.verified4">Hash matches the Vertifile registry</span></li>
           <li><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span data-i18n="demo.verified5">White background — clean document</span></li>
         </ul>
       </div>
@@ -317,14 +317,14 @@
   </div>
 
   <h2 data-i18n="demo.securityTitle">What Makes It Work — The 5-Layer Security</h2>
-  <p data-i18n="demo.securitySubtitle">Vertifile uses multiple layers of security to ensure documents cannot be forged or tampered with:</p>
+  <p data-i18n="demo.securitySubtitle">Vertifile layers multiple security mechanisms so that any forgery or tampering is exposed the moment the document is verified:</p>
 
   <div class="process-steps">
     <div class="process-step">
       <div class="ps-num">1</div>
       <div class="ps-content">
         <h4 data-i18n="demo.step1Title">BLIND Hashing</h4>
-        <p data-i18n="demo.step1Desc">When you upload a document, the system <strong>never reads its content</strong>. It only computes a SHA-256 cryptographic hash — a unique 64-character fingerprint. Even a single pixel change produces a completely different hash.</p>
+        <p data-i18n="demo.step1Desc">In Blind mode, your document is encrypted and hashed in your browser — the server receives only ciphertext and a SHA-256 fingerprint, a unique 64-character code. Even a single pixel change produces a completely different hash.</p>
       </div>
     </div>
     <div class="process-step">
@@ -337,8 +337,8 @@
     <div class="process-step">
       <div class="ps-num">3</div>
       <div class="ps-content">
-        <h4 data-i18n="demo.step3Title">Blockchain Registration</h4>
-        <p data-i18n="demo.step3Desc">The hash and signature are anchored to the Polygon blockchain — an immutable, public, decentralized ledger. Once registered, the record cannot be altered or deleted by anyone.</p>
+        <h4 data-i18n="demo.step3Title">Ed25519 Digital Signature</h4>
+        <p data-i18n="demo.step3Desc">The hash is also signed with an Ed25519 private key. Anyone can verify the matching public key — proving the seal is authentic and that a forged signature cannot pass verification.</p>
       </div>
     </div>
     <div class="process-step">
@@ -365,7 +365,7 @@
       <div class="fl-icon red">&#128275;</div>
       <div class="fl-text">
         <h4 data-i18n="demo.trigger1Title">Content Modification</h4>
-        <p data-i18n="demo.trigger1Desc">If even one byte of the original document is changed, the hash no longer matches the blockchain registry. Verification fails instantly.</p>
+        <p data-i18n="demo.trigger1Desc">If even one byte of the original document is changed, the hash no longer matches the registered fingerprint. Verification fails instantly.</p>
       </div>
     </li>
     <li>
@@ -413,7 +413,7 @@
       <div class="fl-icon blue"><svg style="width:14px;height:14px;display:inline;vertical-align:-2px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6l2.1 2.1M5.6 18.4l2.1-2.1m8.6-8.6l2.1-2.1"/></svg></div>
       <div class="fl-text">
         <h4 data-i18n="demo.format3Title">Verification UI + Security Code</h4>
-        <p data-i18n="demo.format3Desc">The animated stamp, holographic waves, and all anti-tamper detection code are built into the file. It works offline too (with local verification).</p>
+        <p data-i18n="demo.format3Desc">The animated stamp, holographic waves, and anti-tamper checks are built into the file. You can view it offline — offline checks give a first-line indication, while authoritative verification runs online.</p>
       </div>
     </li>
   </ul>
@@ -421,7 +421,7 @@
   <div class="info-box green">
     <div class="ib-icon"><svg style="width:16px;height:16px;display:inline;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
     <div class="ib-text">
-      <span data-i18n="demo.privacyNotice"><strong>Privacy by design:</strong> Vertifile uses BLIND processing. The server never reads, stores, or transmits your document content. Only the cryptographic hash (fingerprint) is stored and verified. Your document stays on your device.</span>
+      <span data-i18n="demo.privacyNotice"><strong>Privacy by design:</strong> In Blind mode, your document is encrypted in your browser before upload — the server processes only ciphertext and the cryptographic hash. In standard mode, your file is processed to generate the sealed .pvf and stored to power share links; delete it anytime.</span>
     </div>
   </div>
 

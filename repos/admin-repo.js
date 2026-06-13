@@ -418,7 +418,7 @@ async function migrateFromJson() {
 // ================================================================
 
 // Plan pricing map -- monthly base price per plan
-const PLAN_PRICES = { pro: 49, business: 79, enterprise: 0 };
+const PLAN_PRICES = { pro: 29, business: 79, enterprise: 0 };
 const PLAN_LIMITS = { pro: 500, business: 1000, enterprise: Infinity };
 const OVERAGE_RATES = { pro: 0.15, business: 0.10, enterprise: 0 };
 

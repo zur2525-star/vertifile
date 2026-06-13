@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vertifile — Secure Document Issuance</title>
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
-  <meta name="description" content="Protect your documents with Vertifile's cryptographic signatures and blockchain verification. Upload any PDF, image, or text file to create a tamper-proof .pvf file with a live holographic verification stamp.">
-  <meta name="keywords" content="document verification, tamper-proof, digital signature, PVF, blockchain verification">
+  <meta name="description" content="Protect your documents with Vertifile's cryptographic signatures. Upload any PDF, image, or text file to create a tamper-evident .pvf file with a live holographic verification stamp.">
+  <meta name="keywords" content="document verification, tamper-evident, digital signature, PVF, anti-forgery">
   <meta property="og:title" content="Protect a Document — Vertifile">
-  <meta property="og:description" content="Protect your documents with Vertifile's cryptographic signatures and blockchain verification.">
+  <meta property="og:description" content="Protect your documents with Vertifile's cryptographic signatures and a live verification stamp.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vertifile.com/upload">
   <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
   <link rel="canonical" href="https://vertifile.com/upload">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Protect a Document — Vertifile">
-  <meta name="twitter:description" content="Protect your documents with Vertifile's cryptographic signatures and blockchain verification.">
+  <meta name="twitter:description" content="Protect your documents with Vertifile's cryptographic signatures and a live verification stamp.">
   <meta name="theme-color" content="#ffffff">
   <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -326,7 +326,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
       </div>
       <div class="text">
-        <strong data-i18n="upload.privacyTitle">Total Privacy</strong> — <span data-i18n="upload.privacyDesc">The system never reads or stores your document content. It only computes a unique fingerprint and embeds a tamper-proof verification layer into the file.</span>
+        <strong data-i18n="upload.privacyTitle">Total Privacy</strong> — <span data-i18n="upload.privacyDesc">Your file is processed to compute its unique fingerprint and embed a tamper-evident verification layer. The sealed file is stored to power your share link — delete it anytime. For client-side encryption, use Blind mode in the dashboard.</span>
       </div>
     </div>
 
@@ -354,7 +354,7 @@
     <div class="steps" id="steps">
       <div class="step" id="s1"><div class="s-dot"></div><span data-i18n="upload.s1">Receiving file...</span></div>
       <div class="step" id="s2"><div class="s-dot"></div><span data-i18n="upload.s2">Computing fingerprint (hash)...</span></div>
-      <div class="step" id="s3"><div class="s-dot"></div><span data-i18n="upload.s3">Registering on Blockchain...</span></div>
+      <div class="step" id="s3"><div class="s-dot"></div><span data-i18n="upload.s3">Sealing document...</span></div>
       <div class="step" id="s4"><div class="s-dot"></div><span data-i18n="upload.s4">Attaching live stamp...</span></div>
       <div class="step" id="s5"><div class="s-dot"></div><span data-i18n="upload.s5">Creating PVF file...</span></div>
     </div>
@@ -436,7 +436,7 @@
   <div class="paywall-card">
     <button class="paywall-close" onclick="closePaywall()">&times;</button>
     <h2 data-i18n="paywall.title">Your document is protected!</h2>
-    <p data-i18n="paywall.subtitle">See how your document looks with Vertifile's tamper-proof stamp.</p>
+    <p data-i18n="paywall.subtitle">See how your document looks with Vertifile's tamper-evident stamp.</p>
     <div class="pvf-preview" id="pvfPreviewFrame">
       <!-- iframe loaded dynamically -->
       <div class="pvf-preview-watermark">
@@ -446,7 +446,7 @@
     <div class="paywall-cta">
       <h3 data-i18n="paywall.ctaTitle">Ready to download and share?</h3>
       <p data-i18n="paywall.ctaDesc">Subscribe to Pro to unlock downloading, sharing, and full verification.</p>
-      <a href="/pricing" class="btn-primary" data-i18n="paywall.ctaBtn">Upgrade to Pro -- $49/mo</a>
+      <a href="/pricing" class="btn-primary" data-i18n="paywall.ctaBtn">Upgrade to Pro -- $29/mo</a>
       <p class="paywall-note" data-i18n="paywall.ctaNote">Includes 500 documents/month, custom branding, API access</p>
     </div>
     <button class="paywall-another" onclick="closePaywallAndReset()" data-i18n="paywall.uploadAnother">Upload another document</button>

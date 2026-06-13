@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vertifile — API & SDK Integration Guide</title>
-  <meta name="description" content="Vertifile API and SDK integration guide — integrate tamper-proof document verification into your applications with simple REST endpoints, webhook events, and batch processing for automated workflows.">
-  <meta name="keywords" content="document verification, tamper-proof, digital signature, PVF, blockchain verification">
+  <title>Vertifile — REST API Integration Guide</title>
+  <meta name="description" content="Vertifile REST API integration guide — integrate tamper-evident document verification into your applications with simple REST endpoints, webhook events, and batch processing for automated workflows.">
+  <meta name="keywords" content="document verification, tamper-evident, digital signature, PVF, REST API">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
-  <meta property="og:title" content="API & SDK Integration — Vertifile">
-  <meta property="og:description" content="Vertifile API documentation — integrate tamper-proof document verification into your applications.">
+  <meta property="og:title" content="REST API Integration — Vertifile">
+  <meta property="og:description" content="Vertifile API documentation — integrate tamper-evident document verification into your applications.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vertifile.com/integration">
   <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
@@ -16,8 +16,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#ffffff">
   <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
-  <meta name="twitter:title" content="API & SDK Integration — Vertifile">
-  <meta name="twitter:description" content="Vertifile API documentation — integrate tamper-proof document verification into your applications.">
+  <meta name="twitter:title" content="REST API Integration — Vertifile">
+  <meta name="twitter:description" content="Vertifile API documentation — integrate tamper-evident document verification into your applications.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/common.css">
@@ -293,7 +293,7 @@
     <span data-i18n="integration.badge">Developer Platform</span>
   </div>
   <h1 data-i18n="integration.heroTitle">Build with <span>Vertifile</span></h1>
-  <p data-i18n="integration.heroSubtitle">Integrate tamper-proof document protection into your application with a simple REST API. Protect, verify, and manage documents programmatically.</p>
+  <p data-i18n="integration.heroSubtitle">Integrate tamper-evident document protection into your application with a simple REST API. Protect, verify, and manage documents programmatically.</p>
   <div class="hero-actions">
     <a href="#quickstart" class="btn-primary">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
@@ -340,13 +340,13 @@
           </div>
           <div class="step">
             <div class="step-num">2</div>
-            <h3 data-i18n="integration.step2Title">Install the SDK</h3>
-            <p data-i18n="integration.step2Desc">Install our official SDK for Node.js or Python, or use the REST API directly with cURL.</p>
+            <h3 data-i18n="integration.step2Title">Call the REST API</h3>
+            <p data-i18n="integration.step2Desc">Use the REST API directly from any language — copy-paste examples for cURL, Node.js, and Python are below.</p>
           </div>
           <div class="step">
             <div class="step-num">3</div>
             <h3 data-i18n="integration.step3Title">Protect a Document</h3>
-            <p data-i18n="integration.step3Desc">Upload any file to create a tamper-proof .pvf document with embedded verification.</p>
+            <p data-i18n="integration.step3Desc">Upload any file to create a tamper-evident .pvf document with embedded verification.</p>
           </div>
         </div>
 
@@ -401,7 +401,7 @@
     <!-- ===== CODE EXAMPLES ===== -->
     <section id="examples">
       <div class="container">
-        <div class="section-label" data-i18n="integration.sdkLabel">SDK</div>
+        <div class="section-label" data-i18n="integration.sdkLabel">Examples</div>
         <div class="section-title" data-i18n="integration.codeExamplesTitle">Code Examples</div>
         <div class="section-desc" data-i18n="integration.codeExamplesDesc">Full examples for creating protected documents, verifying them, and using the gateway API.</div>
 
@@ -696,7 +696,7 @@ BASE_URL <span class="vr">=</span> <span class="str">'https://api.vertifile.com'
         <div class="endpoint">
           <span class="endpoint-method method-post">POST</span>
           <span class="endpoint-path">/api/create-pvf</span>
-          <p class="endpoint-desc">Upload a file and receive a tamper-proof .pvf document. Optionally bind the document to a specific recipient email.</p>
+          <p class="endpoint-desc">Upload a file and receive a tamper-evident .pvf document. Optionally bind the document to a specific recipient email.</p>
 
           <div class="response-label">Parameters</div>
           <div class="param-list">
@@ -1107,7 +1107,7 @@ app.<span class="fn">post</span>(<span class="str">'/webhooks/vertifile'</span>,
       <div class="f-logo">
         <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
       </div>
-      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+      <p data-i18n="footer.description">Tamper-evident digital documents with live animated verification stamps. Blind mode keeps content encrypted on your device.</p>
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer.product">Product</h4>
@@ -1118,7 +1118,7 @@ app.<span class="fn">post</span>(<span class="str">'/webhooks/vertifile'</span>,
     <div class="footer-col">
       <h4 data-i18n="footer.developers">Developers</h4>
       <a href="/integration" data-i18n="nav.developers">API Docs</a>
-      <a href="/integration#examples" data-i18n="footer.sdkExamples">SDK Examples</a>
+      <a href="/integration#examples" data-i18n="footer.sdkExamples">Code Examples</a>
       <a href="/integration#webhooks" data-i18n="footer.webhooks">Webhooks</a>
       <a href="/integration#rate-limits" data-i18n="footer.rateLimits">Rate Limits</a>
     </div>

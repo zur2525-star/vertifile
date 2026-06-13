@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FAQ — Vertifile Document Verification & .pvf Files</title>
-  <meta name="description" content="Frequently asked questions about Vertifile — document verification, .pvf files, security, pricing, API integration, and legal compliance. Learn how tamper-proof documents work and how to get started.">
+  <meta name="description" content="Frequently asked questions about Vertifile — document verification, .pvf files, security, pricing, API integration, and legal compliance. Learn how tamper-evident documents work and how to get started.">
   <meta name="keywords" content="vertifile FAQ, document verification questions, pvf file format, vertifile pricing, vertifile security">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
   <meta property="og:title" content="FAQ — Vertifile">
@@ -32,7 +32,7 @@
         "name": "What is Vertifile?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Vertifile is a document anti-forgery platform. It takes any document (PDF, image, text) and creates a tamper-proof .pvf file with a live holographic stamp that freezes red if the document is altered."
+          "text": "Vertifile is a document anti-forgery platform. It takes any document (PDF, image, text) and creates a tamper-evident .pvf file with a live holographic stamp that freezes red if the document is altered."
         }
       },
       {
@@ -64,7 +64,7 @@
         "name": "Do I need to install anything?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. .pvf files open in any modern browser (Chrome, Firefox, Safari, Edge). For a better experience, download the PVF Viewer desktop app."
+          "text": "No. .pvf files open in any modern browser (Chrome, Firefox, Safari, Edge). Nothing to install."
         }
       },
       {
@@ -72,7 +72,7 @@
         "name": "Does Vertifile read my documents?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. Vertifile uses BLIND Processing — the server never reads, accesses, or stores your document content. Only a cryptographic hash (fingerprint) is computed. Your document stays on your device."
+          "text": "In Blind mode, no — encryption and hashing happen in your browser, and only ciphertext plus the cryptographic fingerprint reach our servers. In standard mode, your sealed file is stored to power share links; delete it anytime."
         }
       },
       {
@@ -80,7 +80,7 @@
         "name": "What are the 9 security layers?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "SHA-256 Hash, HMAC-SHA256 Signature, 5-Minute Token Refresh, Code Integrity Hash, Chained Token, Anti-DevTools Detection, JavaScript Obfuscation, Holographic Animated Stamp, and Polygon Blockchain Anchoring."
+          "text": "SHA-256 Hash, HMAC-SHA256 Signature, Ed25519 Digital Signature, 5-Minute Token Refresh, Code Integrity Hash, Chained Token, Anti-DevTools Detection, JavaScript Obfuscation, and Holographic Animated Stamp."
         }
       },
       {
@@ -88,7 +88,7 @@
         "name": "How much does it cost?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Pro: $49/month for 500 documents with custom branding and API access ($0.15/doc overage). Business: $79/month for 1,000 documents with team management ($0.10/doc overage). Enterprise: Custom pricing for unlimited documents, no overage."
+          "text": "Pro: $29/month for 500 documents with custom branding and API access ($0.15/doc overage). Business: $79/month for 1,000 documents with team management ($0.10/doc overage). Enterprise: Custom pricing for unlimited documents, no overage. Free during early access — no credit card required."
         }
       },
       {
@@ -316,7 +316,7 @@
         <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
       </div>
       <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.whatIsVertifile">
-        Vertifile is a document anti-forgery platform. It takes any document (PDF, image, text) and creates a tamper-proof .pvf file with a live holographic stamp that freezes red if the document is altered.
+        Vertifile is a document anti-forgery platform. It takes any document (PDF, image, text) and creates a tamper-evident .pvf file with a live holographic stamp that freezes red if the document is altered.
       </div></div>
     </div>
 
@@ -367,7 +367,7 @@
         <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
       </div>
       <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.install">
-        No. .pvf files open in any modern browser (Chrome, Firefox, Safari, Edge). For a better experience, download the PVF Viewer desktop app.
+        No. .pvf files open in any modern browser (Chrome, Firefox, Safari, Edge). Nothing to install.
       </div></div>
     </div>
   </div>
@@ -382,7 +382,7 @@
         <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
       </div>
       <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.readDocs">
-        No. Vertifile uses BLIND Processing — the server never reads, accesses, or stores your document content. Only a cryptographic hash (fingerprint) is computed. Your document stays on your device.
+        In Blind mode, no — encryption and hashing happen in your browser, and only ciphertext plus the cryptographic fingerprint reach our servers. In standard mode, your sealed file is stored to power share links; delete it anytime.
       </div></div>
     </div>
 
@@ -395,13 +395,13 @@
         <ol>
           <li>SHA-256 Hash (document fingerprint)</li>
           <li>HMAC-SHA256 Signature (server-signed)</li>
+          <li>Ed25519 Digital Signature</li>
           <li>5-Minute Token Refresh</li>
           <li>Code Integrity Hash</li>
           <li>Chained Token (binds all parameters)</li>
           <li>Anti-DevTools Detection</li>
           <li>JavaScript Obfuscation</li>
           <li>Holographic Animated Stamp</li>
-          <li>Polygon Blockchain Anchoring</li>
         </ol>
       </div></div>
     </div>
@@ -412,7 +412,7 @@
         <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
       </div>
       <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.dataStored">
-        Cryptographic hashes are stored on US/EU cloud infrastructure (Render + Neon PostgreSQL). Document content is never stored on our servers. Blockchain records are on Polygon (decentralized).
+        Cryptographic hashes are stored on US/EU cloud infrastructure (Render + Neon PostgreSQL). In Blind mode, content is encrypted in your browser and we cannot read it. In standard mode, your sealed file is stored to power share links and can be deleted anytime.
       </div></div>
     </div>
 
@@ -422,7 +422,7 @@
         <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
       </div>
       <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.shutdown">
-        Your .pvf files remain functional — they're self-contained HTML documents. Blockchain records on Polygon remain permanently accessible. We commit to 90 days advance notice.
+        Your .pvf files remain functional — they're self-contained HTML documents. We commit to 90 days advance notice, and all your document hashes and verification data can be exported.
       </div></div>
     </div>
   </div>
@@ -438,11 +438,11 @@
       </div>
       <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.cost">
         <ul>
-          <li><strong>Pro:</strong> $49/month -- 500 documents, custom branding, API access. Overage: $0.15/doc</li>
+          <li><strong>Pro:</strong> $29/month -- 500 documents, custom branding, API access. Overage: $0.15/doc</li>
           <li><strong>Business:</strong> $79/month -- 1,000 documents, team management. Overage: $0.10/doc</li>
-          <li><strong>Enterprise:</strong> Custom pricing -- unlimited documents, no overage, white-label, on-premise, SLA</li>
+          <li><strong>Enterprise:</strong> Custom pricing -- unlimited documents, no overage, white-label, on-premise, custom SLA terms</li>
         </ul>
-        <p style="margin-top:8px;font-size:14px;color:#6b7280">Exceed your limit? No problem -- extra documents are billed at the overage rate. Your workflow never stops.</p>
+        <p style="margin-top:8px;font-size:14px;color:#6b7280">Free during early access -- no credit card required. Exceed your limit later? Extra documents are billed at the overage rate. Your workflow never stops.</p>
       </div></div>
     </div>
 
@@ -452,7 +452,7 @@
         <span class="faq-icon"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
       </div>
       <div class="faq-answer"><div class="faq-answer-inner" data-i18n="faq.a.trial">
-        Yes! Every Pro plan includes a 14-day trial. No credit card required.
+        Vertifile is free during early access — no credit card required. Paid plans take effect when billing launches: Pro $29/month, Business $79/month.
       </div></div>
     </div>
 
@@ -565,7 +565,7 @@
       <div class="f-logo">
         <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
       </div>
-      <p data-i18n="footer.description">Tamper-proof digital documents with live animated verification stamps. Zero access to your content.</p>
+      <p data-i18n="footer.description">Tamper-evident digital documents with live animated verification stamps. Blind mode keeps content encrypted on your device.</p>
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer.product">Product</h4>

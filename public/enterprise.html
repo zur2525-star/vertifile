@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vertifile Enterprise — Secure Document Protection</title>
-  <meta name="description" content="Enterprise-grade document protection with blockchain verification, REST API integration, white-label branding, and dedicated support. Trusted by universities, governments, and financial institutions.">
-  <meta name="keywords" content="document verification, tamper-proof, digital signature, PVF, blockchain verification">
+  <meta name="description" content="Enterprise document verification built on the first IANA-registered verification format (application/vnd.vertifile.pvf), with patent-filed technology, HMAC-SHA256 + Ed25519 dual-signing, REST API integration, and white-label branding.">
+  <meta name="keywords" content="document verification, tamper-evident, digital signature, PVF, anti-forgery">
   <link rel="icon" type="image/png" href="/images/logo-icon.png?v=3">
   <meta property="og:title" content="Enterprise — Vertifile">
-  <meta property="og:description" content="Enterprise document protection with blockchain verification, API integration, and white-label solutions.">
+  <meta property="og:description" content="Enterprise document protection with cryptographic verification, API integration, and white-label solutions.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vertifile.com/enterprise">
   <meta property="og:image" content="https://vertifile.com/images/logo-horizontal.png?v=3">
   <link rel="canonical" href="https://vertifile.com/enterprise">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Enterprise — Vertifile">
-  <meta name="twitter:description" content="Enterprise document protection with blockchain verification, API integration, and white-label solutions.">
+  <meta name="twitter:description" content="Enterprise document protection with cryptographic verification, API integration, and white-label solutions.">
   <meta name="theme-color" content="#ffffff">
   <script defer data-domain="vertifile.com" src="https://plausible.io/js/script.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -396,13 +396,13 @@
   <div class="hero-content fade-up">
     <div class="hero-badge"><div class="pulse"></div><span data-i18n="enterprise.badge">Enterprise-Grade Security</span></div>
     <h1><span data-i18n="enterprise.heroTitle1">Secure Document Infrastructure</span><br><span class="gradient" data-i18n="enterprise.heroTitle2">for Organizations</span></h1>
-    <p class="sub" data-i18n="enterprise.heroSubtitle">Protect diplomas, licenses, medical records, and compliance documents with tamper-proof .pvf files. HMAC-SHA256 integrity, Polygon blockchain anchoring, and complete blind processing.</p>
+    <p class="sub" data-i18n="enterprise.heroSubtitle">Protect diplomas, licenses, medical records, and compliance documents with tamper-evident .pvf files. HMAC-SHA256 + Ed25519 dual-signing and a client-side encrypted Blind mode.</p>
     <div class="hero-buttons">
       <a href="#contact" class="btn-primary" data-i18n="enterprise.requestDemo">Request Demo</a>
       <a href="#integration" class="btn-secondary" data-i18n="enterprise.viewApiDocs">View API Docs</a>
     </div>
     <div class="hero-trust">
-      <span data-i18n="enterprise.trustedBy">Built for organizations that take document integrity seriously</span>
+      <span data-i18n="enterprise.trustedBy">Built on patent-filed, IANA-registered verification technology</span>
     </div>
   </div>
 </section>
@@ -448,7 +448,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
       </div>
       <h3 data-i18n="enterprise.healthcareTitle">Healthcare</h3>
-      <p data-i18n="enterprise.healthcareDesc">Protect sensitive medical documents while maintaining full HIPAA compliance.</p>
+      <p data-i18n="enterprise.healthcareDesc">Protect sensitive medical documents with a workflow designed to support HIPAA compliance.</p>
       <ul class="use-list">
         <li data-i18n="enterprise.healthcareItem1">Medical Records</li>
         <li data-i18n="enterprise.healthcareItem2">Provider Certifications</li>
@@ -489,13 +489,13 @@
     </div>
     <div class="step-item fade-up">
       <div class="step-num">2</div>
-      <h3 data-i18n="enterprise.step2Title">Integrate the SDK</h3>
-      <p data-i18n="enterprise.step2Desc">Drop our lightweight SDK into your existing workflow. Available for Node.js, Python, Java, Go, and REST.</p>
+      <h3 data-i18n="enterprise.step2Title">Integrate the REST API</h3>
+      <p data-i18n="enterprise.step2Desc">Connect through our REST API with ready-to-use code examples for Node.js, Python, and cURL. SDKs are on the roadmap.</p>
     </div>
     <div class="step-item fade-up">
       <div class="step-num">3</div>
       <h3 data-i18n="enterprise.step3Title">Protect Documents</h3>
-      <p data-i18n="enterprise.step3Desc">Every document is automatically converted to a tamper-proof .pvf file with a live animated verification stamp.</p>
+      <p data-i18n="enterprise.step3Desc">Every document is automatically converted to a tamper-evident .pvf file with a live animated verification stamp.</p>
     </div>
   </div>
 </section>
@@ -514,15 +514,15 @@
       <div class="benefit-icon blind">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
       </div>
-      <h3 data-i18n="enterprise.blindTitle">Blind Processing</h3>
-      <p data-i18n="enterprise.blindDesc">Vertifile never reads, stores, or accesses your document content. Hashing is performed entirely client-side before upload.</p>
+      <h3 data-i18n="enterprise.blindTitle">Blind Mode</h3>
+      <p data-i18n="enterprise.blindDesc">With Blind mode, encryption and hashing happen entirely in the client before upload — Vertifile receives ciphertext and fingerprints, never readable content.</p>
     </div>
     <div class="benefit-card fade-up">
       <div class="benefit-icon blockchain">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="6" height="6" rx="1"/><rect x="9" y="4" width="6" height="6" rx="1"/><rect x="17" y="4" width="6" height="6" rx="1"/><rect x="1" y="14" width="6" height="6" rx="1"/><rect x="9" y="14" width="6" height="6" rx="1"/><rect x="17" y="14" width="6" height="6" rx="1"/></svg>
       </div>
-      <h3 data-i18n="enterprise.blockchainTitle">Blockchain Verified</h3>
-      <p data-i18n="enterprise.blockchainDesc">Every document hash is anchored to the Polygon blockchain, creating an immutable, publicly auditable proof of authenticity.</p>
+      <h3 data-i18n="enterprise.blockchainTitle">Cryptographically Sealed</h3>
+      <p data-i18n="enterprise.blockchainDesc">Every document is sealed with HMAC-SHA256 + Ed25519 dual-signing, creating independent, publicly verifiable proof of authenticity.</p>
     </div>
     <div class="benefit-card fade-up">
       <div class="benefit-icon instant">
@@ -536,7 +536,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
       </div>
       <h3 data-i18n="enterprise.antiForgeryTitle">Anti-Forgery Stamps</h3>
-      <p data-i18n="enterprise.antiForgeryDesc">Live animated holographic stamps embedded in every .pvf file. Impossible to replicate with screenshots or copies.</p>
+      <p data-i18n="enterprise.antiForgeryDesc">Live animated holographic stamps embedded in every .pvf file. A screenshot or static copy cannot pass verification.</p>
     </div>
     <div class="benefit-card fade-up">
       <div class="benefit-icon api">
@@ -566,8 +566,8 @@
   </div>
   <div class="stats-grid">
     <div class="stat-card fade-up">
-      <div class="stat-num"><span class="accent">99.99%</span></div>
-      <div class="stat-label" data-i18n="enterprise.statUptime">Platform Uptime SLA</div>
+      <div class="stat-num"><span class="accent">99.9%</span></div>
+      <div class="stat-label" data-i18n="enterprise.statUptime">Uptime Target</div>
     </div>
     <div class="stat-card fade-up">
       <div class="stat-num"><span class="accent">&lt;100ms</span></div>
@@ -578,8 +578,8 @@
       <div class="stat-label" data-i18n="enterprise.statBreaches">Data Breaches</div>
     </div>
     <div class="stat-card fade-up">
-      <div class="stat-num"><span class="accent">10K+</span></div>
-      <div class="stat-label" data-i18n="enterprise.statDocuments">Documents Protected</div>
+      <div class="stat-num"><span class="accent">First</span></div>
+      <div class="stat-label" data-i18n="enterprise.statDocuments">IANA-Registered Verification Format</div>
     </div>
   </div>
 </section>
@@ -661,7 +661,7 @@ console.<span class="fn">log</span>(<span class="str">`Blockchain TX: <span clas
         </li>
         <li>
           <span class="gw-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
-          <span data-i18n="enterprise.gatewayFeature4">End-to-end encryption with zero-knowledge architecture for maximum data privacy</span>
+          <span data-i18n="enterprise.gatewayFeature4">Client-side encryption available (Blind mode) for maximum data privacy</span>
         </li>
       </ul>
     </div>
@@ -794,7 +794,7 @@ console.<span class="fn">log</span>(<span class="str">`Blockchain TX: <span clas
 <div style="padding:0 32px;">
   <div class="bottom-cta fade-up">
     <h2 data-i18n="enterprise.bottomCtaTitle">Ready to Secure Your Documents?</h2>
-    <p data-i18n="enterprise.bottomCtaSubtitle">Join organizations worldwide that trust Vertifile to protect their most important records.</p>
+    <p data-i18n="enterprise.bottomCtaSubtitle">Be among the first organizations to issue independently verifiable documents.</p>
     <a href="#contact" class="btn-white" data-i18n="enterprise.scheduleCall">Schedule a Call</a>
   </div>
 </div>
@@ -806,7 +806,7 @@ console.<span class="fn">log</span>(<span class="str">`Blockchain TX: <span clas
       <div class="f-logo">
         <img src="/images/logo-horizontal.png?v=3" alt="Vertifile">
       </div>
-      <p data-i18n="enterprise.footerDesc">Enterprise-grade document protection with tamper-proof .pvf files, blockchain verification, and complete blind processing.</p>
+      <p data-i18n="enterprise.footerDesc">Enterprise-grade document protection with tamper-evident .pvf files and a client-side encrypted Blind mode.</p>
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer.product">Product</h4>
