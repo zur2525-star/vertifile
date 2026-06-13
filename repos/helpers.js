@@ -41,6 +41,10 @@ function mapDocRow(row) {
     encrypted: !!row.encrypted,
     iv: row.iv || null,
     pvf_version: row.pvf_version || '1.0',
+    // Blockchain anchoring — surfaced by /api/verify to build the public
+    // Polygonscan proof link once a document has been anchored on-chain.
+    blockchain_status: row.blockchain_status || null,
+    tx_hash: row.tx_hash || null,
   };
 }
 

@@ -501,7 +501,13 @@ db._ready.then(async () => {
       const keys = await db.listApiKeys();
       const dk = keys.length > 0 ? keys[0].apiKey : null;
       logger.info({ port: PORT, docs: stats.totalDocuments, orgs: stats.totalOrganizations }, `Vertifile v${APP_VERSION} | Port ${PORT}`);
-      chain.init().then(c => logger.info(c ? 'Blockchain on-chain active' : 'Blockchain off-chain mode'));
+      chain.init().then(c => {
+        logger.info(c ? 'Blockchain on-chain active' : 'Blockchain off-chain mode');
+        // Start the durable anchor worker once the chain is live. It drains
+        // documents marked blockchain_status='pending' (including any left
+        // over from a previous run) and writes back tx_hash on success.
+        if (c) chain.startAnchorWorker(db);
+      });
 
       // Memory monitor — check every 60 seconds
       setInterval(() => {

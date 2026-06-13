@@ -499,6 +499,14 @@ async function verifyFile(){
         +'<div class="row"><span class="label">'+lReg+'</span><span class="val">'+new Date(data.timestamp).toLocaleDateString()+'</span></div>'
         +'<div class="row"><span class="label">'+lOrg+'</span><span class="val">'+(data.orgName||'Vertifile')+'</span></div>'
         +'<div class="row"><span class="label">'+lStat+'</span><span class="val verified"><span class="dot"></span> '+lVerified+'</span></div>';
+      // On-chain proof — only shown once the document has been anchored on
+      // Polygon (tx_hash present). Links to the public Polygonscan record so
+      // anyone can independently verify the registration.
+      if(data.blockchain && data.blockchain.txHash && data.blockchain.polygonscan && data.blockchain.polygonscan.startsWith('https://')){
+        var lChain=t['verify.detailBlockchain']||'Blockchain';
+        var lView=t['verify.viewOnPolygonscan']||'View on Polygonscan';
+        meta.innerHTML+='<div class="row"><span class="label">'+lChain+'</span><span class="val"><a href="'+data.blockchain.polygonscan+'" target="_blank" rel="noopener noreferrer" style="color:#7c3aed;text-decoration:none;font-weight:600">'+lView+' &rarr;</a></span></div>';
+      }
       document.getElementById('resultOk').classList.add('show');
     }else{
       var failEl=document.getElementById('resultFail');

@@ -10,13 +10,8 @@ module.exports = {
   },
   networks: {
     amoy: {
-      url: 'https://rpc-amoy.polygon.technology',
+      url: process.env.POLYGON_RPC_URL || 'https://rpc-amoy.polygon.technology',
       chainId: 80002,
-      accounts: process.env.POLYGON_PRIVATE_KEY ? [process.env.POLYGON_PRIVATE_KEY] : []
-    },
-    mumbai: {
-      url: 'https://rpc-mumbai.maticvigil.com',
-      chainId: 80001,
       accounts: process.env.POLYGON_PRIVATE_KEY ? [process.env.POLYGON_PRIVATE_KEY] : []
     },
     polygon: {

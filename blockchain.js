@@ -1,6 +1,6 @@
 /**
  * Vertifile Blockchain Integration
- * Connects to Polygon (Mumbai testnet / Mainnet) for on-chain document registration.
+ * Connects to Polygon (Amoy testnet / Mainnet) for on-chain document registration.
  *
  * Usage:
  *   const chain = require('./blockchain');
@@ -27,12 +27,6 @@ const CONTRACT_ABI = [
 
 // Network configs
 const NETWORKS = {
-  mumbai: {
-    name: 'Polygon Mumbai Testnet',
-    rpc: 'https://rpc-mumbai.maticvigil.com',
-    chainId: 80001,
-    explorer: 'https://mumbai.polygonscan.com'
-  },
   amoy: {
     name: 'Polygon Amoy Testnet',
     rpc: 'https://rpc-amoy.polygon.technology',
@@ -104,7 +98,8 @@ function saveState(state) {
  * Requires environment variables:
  *   POLYGON_PRIVATE_KEY — wallet private key
  *   POLYGON_CONTRACT    — deployed contract address
- *   POLYGON_NETWORK     — 'mumbai', 'amoy', or 'polygon' (default: amoy)
+ *   POLYGON_NETWORK     — 'amoy' or 'polygon' (default: amoy)
+ *   POLYGON_RPC_URL     — optional RPC override (default: network's public RPC)
  */
 async function init() {
   if (initialized) return true;
@@ -125,12 +120,16 @@ async function init() {
 
   networkConfig = NETWORKS[network];
   if (!networkConfig) {
-    logger.error(`[BLOCKCHAIN] Unknown network: ${network}. Use: mumbai, amoy, polygon`);
+    logger.error(`[BLOCKCHAIN] Unknown network: ${network}. Use: amoy, polygon`);
     return false;
   }
 
+  // Allow overriding the RPC endpoint via env (e.g. a paid provider like
+  // Alchemy/Infura for production reliability). Falls back to the public RPC.
+  const rpcUrl = process.env.POLYGON_RPC_URL || networkConfig.rpc;
+
   try {
-    provider = new ethers.JsonRpcProvider(networkConfig.rpc, networkConfig.chainId);
+    provider = new ethers.JsonRpcProvider(rpcUrl, networkConfig.chainId);
     wallet = new ethers.Wallet(privateKey, provider);
     contract = new ethers.Contract(contractAddress, CONTRACT_ABI, wallet);
 
@@ -392,7 +391,7 @@ async function verify(hash, signature) {
     };
   } catch (error) {
     logger.error('[BLOCKCHAIN] Verify failed:', error.message);
-    return { onChain: false, error: error.message };
+    return { onChain: false, error: 'Blockchain RPC error' };
   }
 }
 
@@ -423,7 +422,8 @@ async function getStats() {
       queueSize: queue.length
     };
   } catch (error) {
-    return { connected: true, error: error.message };
+    logger.error('[BLOCKCHAIN] Stats failed:', error.message);
+    return { connected: true, error: 'Blockchain RPC error' };
   }
 }
 
@@ -441,6 +441,108 @@ function getQueueSize() {
   return queue.length;
 }
 
+/**
+ * Build the public block-explorer URL for a transaction hash on the current
+ * network (e.g. https://polygonscan.com/tx/0x... or the Amoy explorer).
+ * Returns null when the chain isn't connected or no hash is supplied.
+ * @param {string} txHash
+ * @returns {string|null}
+ */
+function getExplorerTxUrl(txHash) {
+  if (!txHash || !networkConfig) return null;
+  return `${networkConfig.explorer}/tx/${txHash}`;
+}
+
+// ================================================================
+// DURABLE ANCHOR WORKER
+// ================================================================
+// The legacy register()/flushQueue() path keeps its pending items only in
+// memory, so anything not yet flushed is lost on restart. This worker makes
+// anchoring durable: documents are marked blockchain_status='pending' in the
+// DB at creation time, and this worker periodically pulls them, anchors each
+// on-chain, and writes back tx_hash + status='anchored'. Failures leave the
+// row 'pending' so the next pass retries it — surviving restarts.
+const ANCHOR_INTERVAL_MS = 30000; // Drain pending docs every 30 seconds
+const ANCHOR_BATCH = 25;          // Max docs anchored per pass (bounds tx burst)
+let anchorTimer = null;
+let anchoring = false;            // Overlap lock — never run two passes at once
+
+/**
+ * Anchor one pass of pending documents from the DB. Idempotent and safe to
+ * call repeatedly; only acts when the chain is connected. Each document is
+ * anchored individually (registerImmediate) so a single failing tx doesn't
+ * block the others — failed rows simply stay 'pending' for the next pass.
+ * @param {object} db — the db module (must expose listPendingBlockchainDocs / markDocumentAnchored)
+ * @returns {object} { anchored, failed }
+ */
+async function anchorPending(db) {
+  if (!initialized) return { anchored: 0, failed: 0, skipped: 'not_initialized' };
+  if (anchoring) return { anchored: 0, failed: 0, skipped: 'in_progress' };
+  anchoring = true;
+
+  let anchored = 0;
+  let failed = 0;
+  try {
+    const pending = await db.listPendingBlockchainDocs(ANCHOR_BATCH);
+    if (pending.length === 0) return { anchored: 0, failed: 0 };
+    logger.info(`[BLOCKCHAIN] Anchor worker: ${pending.length} pending document(s)`);
+
+    for (const doc of pending) {
+      try {
+        const result = await registerImmediate(doc.hash, doc.signature, doc.orgName);
+        if (result && result.success) {
+          // alreadyRegistered rows have no txHash to recover — mark anchored
+          // anyway (tx_hash stays null) so we stop retrying them forever.
+          await db.markDocumentAnchored(doc.hash, result.txHash || null);
+          anchored++;
+        } else {
+          // Leave status='pending' — retried next pass.
+          failed++;
+          logger.warn(`[BLOCKCHAIN] Anchor failed for ${doc.hash.substring(0, 16)}...: ${result && result.error}`);
+        }
+      } catch (e) {
+        failed++;
+        logger.warn(`[BLOCKCHAIN] Anchor threw for ${doc.hash.substring(0, 16)}...: ${e.message}`);
+      }
+    }
+    logger.info(`[BLOCKCHAIN] Anchor worker pass complete: ${anchored} anchored, ${failed} retried-later`);
+  } catch (e) {
+    logger.error('[BLOCKCHAIN] Anchor worker pass error:', e.message);
+  } finally {
+    anchoring = false;
+  }
+  return { anchored, failed };
+}
+
+/**
+ * Start the background anchor worker. Runs one pass immediately (so pending
+ * docs left over from a previous run / before a restart are handled on boot)
+ * then on a fixed interval. No-op if already started or chain not connected.
+ * @param {object} db — the db module
+ */
+function startAnchorWorker(db) {
+  if (anchorTimer) return;
+  if (!initialized) return;
+  // Boot pass — recover any pending docs that predate this process.
+  anchorPending(db).catch(e => logger.error('[BLOCKCHAIN] Anchor boot pass error:', e.message));
+  anchorTimer = setInterval(() => {
+    anchorPending(db).catch(e => logger.error('[BLOCKCHAIN] Anchor interval error:', e.message));
+  }, ANCHOR_INTERVAL_MS);
+  // Don't keep the event loop alive solely for this timer.
+  if (anchorTimer.unref) anchorTimer.unref();
+  logger.info('[BLOCKCHAIN] Anchor worker started');
+}
+
+/**
+ * Stop the background anchor worker.
+ */
+function stopAnchorWorker() {
+  if (anchorTimer) {
+    clearInterval(anchorTimer);
+    anchorTimer = null;
+  }
+}
+
 module.exports = {
   init,
   register,
@@ -452,5 +554,9 @@ module.exports = {
   toBytes32,
   flushQueue,
   getQueueSize,
-  stopFlushTimer
+  stopFlushTimer,
+  getExplorerTxUrl,
+  anchorPending,
+  startAnchorWorker,
+  stopAnchorWorker
 };

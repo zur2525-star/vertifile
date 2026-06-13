@@ -551,12 +551,22 @@ router.post('/verify', verifyLimiter, async (req, res) => {
       logger.info({ event: 'verify_ok', hash: lookupHash.substring(0, 16) }, 'Document verified');
       await db.log('verify_attempt', { hash: lookupHash, ip: getClientIP(req), result: 'verified' });
 
-      // Include blockchain verification if connected
+      // Include blockchain verification if connected.
+      // The on-chain verify() proves the hash is registered; we additionally
+      // surface the stored tx_hash + a public Polygonscan link so the client
+      // can show a clickable, independently-checkable proof. The link is only
+      // present once the anchor worker has confirmed the tx (tx_hash set).
       let blockchainProof = null;
       if (chain.isConnected()) {
         try {
           blockchainProof = await chain.verify(lookupHash, signature);
         } catch (e) { /* non-critical */ }
+      }
+      if (doc.tx_hash) {
+        if (!blockchainProof) blockchainProof = {};
+        blockchainProof.txHash = doc.tx_hash;
+        const explorerUrl = chain.getExplorerTxUrl ? chain.getExplorerTxUrl(doc.tx_hash) : null;
+        if (explorerUrl) blockchainProof.polygonscan = explorerUrl;
       }
 
       res.json({

@@ -351,6 +351,24 @@ const _ready = (async () => {
   // ================================================================
 
   // ================================================================
+  // BLOCKCHAIN ANCHORING — durable on-chain registration queue
+  // ================================================================
+  // blockchain_status: NULL (anchoring not requested / off) | 'pending'
+  //   (queued for the anchor worker) | 'anchored' (tx confirmed, tx_hash set)
+  //   | 'failed' (reserved; the worker currently leaves rows 'pending' so
+  //   they retry on the next pass — see blockchain.js anchorPending()).
+  // tx_hash: the Polygon transaction hash once anchored (used to build the
+  //   public Polygonscan proof link in /api/verify).
+  try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS blockchain_status TEXT'); } catch (_) {}
+  try { await pool.query('ALTER TABLE documents ADD COLUMN IF NOT EXISTS tx_hash TEXT'); } catch (_) {}
+  // Partial index so the anchor worker's "pull pending docs" query stays cheap
+  // even as the documents table grows (only un-anchored rows are indexed).
+  try { await pool.query("CREATE INDEX IF NOT EXISTS idx_docs_blockchain_pending ON documents(blockchain_status) WHERE blockchain_status = 'pending'"); } catch (_) {}
+  // ================================================================
+  // END BLOCKCHAIN ANCHORING
+  // ================================================================
+
+  // ================================================================
   // OVERAGE TRACKING — per-user monthly usage & overage billing
   // ================================================================
   try {

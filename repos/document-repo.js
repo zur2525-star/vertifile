@@ -167,6 +167,43 @@ async function getPvfContent(shareId) {
   return rows.length ? rows[0].pvf_content : null;
 }
 
+// ================================================================
+// BLOCKCHAIN ANCHORING — durable on-chain registration queue
+// ================================================================
+// Marks a freshly-created document as queued for on-chain anchoring. The
+// background anchor worker (blockchain.js) picks these up. Only sets the
+// flag when it is still NULL so we never clobber an already-anchored row.
+async function markDocumentBlockchainPending(hash) {
+  await pool.query(
+    "UPDATE documents SET blockchain_status = 'pending' WHERE hash = $1 AND blockchain_status IS NULL",
+    [hash]
+  );
+}
+
+// Returns up to `limit` documents still waiting to be anchored on-chain.
+// hash + signature + org_name are everything the anchor worker needs to call
+// the contract. Ordered oldest-first so the queue drains FIFO.
+async function listPendingBlockchainDocs(limit = 25) {
+  const { rows } = await queryWithRetry(
+    "SELECT hash, signature, org_name FROM documents WHERE blockchain_status = 'pending' ORDER BY created_at ASC LIMIT $1",
+    [limit]
+  );
+  return rows.map(row => ({
+    hash: row.hash,
+    signature: row.signature,
+    orgName: row.org_name,
+  }));
+}
+
+// Records a successful on-chain anchor: stores the tx hash and flips status
+// to 'anchored'. After this the document is no longer picked up by the worker.
+async function markDocumentAnchored(hash, txHash) {
+  await pool.query(
+    "UPDATE documents SET blockchain_status = 'anchored', tx_hash = $1 WHERE hash = $2",
+    [txHash, hash]
+  );
+}
+
 async function deleteDocument(hash, userId) {
   const { rowCount } = await pool.query('DELETE FROM documents WHERE hash = $1 AND user_id = $2', [hash, userId]);
   if (rowCount > 0) {
@@ -535,6 +572,10 @@ module.exports = {
     getPvfContent,
     deleteDocument,
     markDocumentPreviewOnly,
+    // Blockchain anchoring queue (durable on-chain registration)
+    markDocumentBlockchainPending,
+    listPendingBlockchainDocs,
+    markDocumentAnchored,
     // Ed25519 key CRUD (Phase 2A)
     getEd25519KeyById,
     getPrimaryEd25519Key,

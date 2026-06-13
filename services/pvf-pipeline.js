@@ -533,37 +533,19 @@ async function createPvf(opts) {
   }
 
   // -----------------------------------------------------------------
-  // 20. FIRE-AND-FORGET BLOCKCHAIN REGISTRATION
-  // Same global._blockchainRetryQueue pattern from pvf-generator.js:199-211.
-  // Moving the queue out of the global is Phase 1C cleanup, not 1B's job.
+  // 20. DURABLE BLOCKCHAIN ANCHORING (non-blocking)
+  // Instead of the old in-memory queue (lost on restart), we mark the
+  // document blockchain_status='pending' in the DB. The background anchor
+  // worker (blockchain.js startAnchorWorker) drains pending rows, anchors
+  // them on-chain, and writes back tx_hash — surviving restarts and never
+  // blocking or failing PVF creation.
   // -----------------------------------------------------------------
   try {
     if (chain.isConnected()) {
-      chain.register(fileHash, signature, orgName).then(async (result) => {
-        if (result && result.success && result.txHash) {
-          await db.log('blockchain_registered', {
-            hash: fileHash,
-            txHash: result.txHash,
-            blockNumber: result.blockNumber
-          });
-        }
-      }).catch(async (err) => {
-        logger.warn({ err, event: 'blockchain_retry' }, 'Registration failed, queued for retry');
-        await db.log('blockchain_failed', {
-          hash: fileHash,
-          orgId,
-          error: err && err.message
-        }).catch(() => { /* never block */ });
-        if (!global._blockchainRetryQueue) global._blockchainRetryQueue = [];
-        // Cap retry queue at 1000 entries to prevent unbounded memory growth
-        if (global._blockchainRetryQueue.length < 1000) {
-          global._blockchainRetryQueue.push({
-            hash: fileHash,
-            signature,
-            orgName,
-            failedAt: Date.now()
-          });
-        }
+      db.markDocumentBlockchainPending(fileHash).catch((err) => {
+        // Anchoring failures NEVER break PVF creation. The row simply isn't
+        // flagged pending; nothing else in the flow depends on it.
+        logger.warn({ err, event: 'blockchain_mark_pending_error' }, 'Could not mark doc pending for anchoring');
       });
     }
   } catch (e) {
@@ -1059,36 +1041,15 @@ async function createPvfEncrypted(opts) {
   }
 
   // -----------------------------------------------------------------
-  // 21. FIRE-AND-FORGET BLOCKCHAIN REGISTRATION
+  // 21. DURABLE BLOCKCHAIN ANCHORING (non-blocking)
+  // See createPvf step 20 — the document is flagged pending in the DB and
+  // the background anchor worker handles the on-chain tx. Never blocks or
+  // fails encrypted PVF creation.
   // -----------------------------------------------------------------
   try {
     if (chain.isConnected()) {
-      chain.register(fileHash, signature, orgName).then(async (result) => {
-        if (result && result.success && result.txHash) {
-          await db.log('blockchain_registered', {
-            hash: fileHash,
-            txHash: result.txHash,
-            blockNumber: result.blockNumber
-          });
-        }
-      }).catch(async (err) => {
-        logger.warn({ err, event: 'blockchain_retry' }, 'Registration failed, queued for retry');
-        await db.log('blockchain_failed', {
-          hash: fileHash,
-          orgId,
-          encrypted: true,
-          error: err && err.message
-        }).catch(() => {});
-        if (!global._blockchainRetryQueue) global._blockchainRetryQueue = [];
-        // Cap retry queue at 1000 entries to prevent unbounded memory growth
-        if (global._blockchainRetryQueue.length < 1000) {
-          global._blockchainRetryQueue.push({
-            hash: fileHash,
-            signature,
-            orgName,
-            failedAt: Date.now()
-          });
-        }
+      db.markDocumentBlockchainPending(fileHash).catch((err) => {
+        logger.warn({ err, event: 'blockchain_mark_pending_error' }, 'Could not mark doc pending for anchoring');
       });
     }
   } catch (e) {

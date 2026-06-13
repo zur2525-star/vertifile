@@ -319,6 +319,8 @@
     "detailRegistered": "נרשם",
     "detailOrg": "ארגון",
     "detailStatus": "סטטוס",
+    "detailBlockchain": "בלוקצ'יין",
+    "viewOnPolygonscan": "צפייה ב-Polygonscan",
     "openDocument": "פתח מסמך"
   },
   "enterprise": {

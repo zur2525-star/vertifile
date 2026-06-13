@@ -319,6 +319,8 @@
     "detailRegistered": "Registered",
     "detailOrg": "Organization",
     "detailStatus": "Status",
+    "detailBlockchain": "Blockchain",
+    "viewOnPolygonscan": "View on Polygonscan",
     "openDocument": "Open Document"
   },
   "enterprise": {
